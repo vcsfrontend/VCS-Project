@@ -1,0 +1,473 @@
+<div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h1 class="page-title fw-medium fs-18 mb-2">Projects</h1>
+    <nav>
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Projects</li>
+        </ol>
+    </nav>
+</div>
+<!-- <div class="col-xl-12 col-xxl-12 col-md-12 col-lg-12 col-sm-12">
+    <div class="card custom-card ">
+        <div class="card-header justify-content-center " >
+            <div class="btn-list ">
+                <button type="button" class="btn btn-primary btn-wave">Project Information</button>
+                <button type="button" class="btn btn-primary btn-wave">Project list</button>
+                <button type="button" class="btn btn-primary btn-wave">Primary</button>
+                <button type="button" class="btn btn-primary btn-wave">Primary</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="row">
+    <div class="col-lg-12 col-xxl-12">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    <h4>Project List </h4> 
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <mat-form-field class="m-1 mat-filter">
+                        <mat-label>Filter</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" #input>
+                    </mat-form-field>
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSource">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="created">
+                                <th mat-header-cell *matHeaderCellDef> created </th>
+                                <td mat-cell *matCellDef="let element"> {{element.created}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="planPic">
+                                <th mat-header-cell *matHeaderCellDef> planPic </th>
+                                <td mat-cell *matCellDef="let element"> {{element.planPic | slice:0:7}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="commName">
+                                <th mat-header-cell *matHeaderCellDef> commName </th>
+                                <td mat-cell *matCellDef="let element"> {{element.commName}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="specName">
+                                <th mat-header-cell *matHeaderCellDef> specName </th>
+                                <td mat-cell *matCellDef="let element"> {{element.specName}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="city">
+                                <th mat-header-cell *matHeaderCellDef> city name</th>
+                                <td mat-cell *matCellDef="let element"> {{element.city }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="modifiedTime">
+                                <th mat-header-cell *matHeaderCellDef> modifiedTime</th>
+                                <td mat-cell *matCellDef="let element"> {{element.modifiedTime}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="coverPic">
+                                <th mat-header-cell *matHeaderCellDef> coverPic </th>
+                                <td mat-cell *matCellDef="let element"> {{element.coverPic | slice:0:7}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="designPanoUrl">
+                                <th mat-header-cell *matHeaderCellDef> designPanoUrl </th>
+                                <td mat-cell *matCellDef="let element"> {{element.designPanoUrl}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="tagId">
+                                <th mat-header-cell *matHeaderCellDef> tagId </th>
+                                <td mat-cell *matCellDef="let element"> {{element.tagId}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Bom">
+                                <th mat-header-cell *matHeaderCellDef> Bom </th>
+                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalLg" (click)="VerticallyScrolling(Content15);
+                                getProjBomList(element)"><i class="fe fe-eye text-muted"></i></td>
+                            </ng-container>
+                            <ng-container matColumnDef="Auxx">
+                                <th mat-header-cell *matHeaderCellDef> Auxx </th>
+                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalLg" (click)="VerticallyScrolling2(Content16);
+                                getAuxilaryCosts(element)"><i class="fe fe-eye text-muted"></i></td>
+                            </ng-container>
+                            <ng-container matColumnDef="designId">
+                                <th mat-header-cell *matHeaderCellDef> designId </th>
+                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);
+                                getProjectFurniture(element)"> {{element.designId}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="planId">
+                                <th mat-header-cell *matHeaderCellDef> planId </th>
+                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalLg" (click)="VerticallyScroll(Content13);
+                                getProjBasicInfo(element)"> {{element.planId }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef> status </th>
+                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="renders">
+                                <th mat-header-cell *matHeaderCellDef> renders </th>
+                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalLg" (click)="VerticallyScrolling3(Content17);
+                                getRenderings(element)"> <i class="fe fe-eye text-muted"></i> </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements">
+                    </mat-paginator>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+<ng-template #Content12 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Project Furniture Data</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">name</th>
+                                            <th scope="col">roomId</th>
+                                            <th scope="col">roomTypeId</th>
+                                            <th scope="col">levelId</th>
+                                            <th scope="col">level</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let element of furnitureData">
+                                            <td ata-bs-toggle="modal"
+                                            data-bs-target="#exampleModalLg" (click)="openScrollableContent(Content14);furnitureData(element)">{{ element.name }}</td>
+                                            <td>{{ element.roomId }}</td>
+                                            <td>{{ element.roomTypeId }}</td>
+                                            <td>{{ element.levelId }}</td>
+                                            <td>{{ element.level }}</td>
+                                            <td>
+                                            </td>
+                                        </tr>                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #Content13 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Project Basic Information</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="..."></th> -->
+                                            <th scope="col">planId</th>
+                                            <th scope="col">designId</th>
+                                            <th scope="col">commName</th>
+                                            <th scope="col">city</th>
+                                            <th scope="col">name</th>
+                                            <th scope="col">created</th>
+                                            <th scope="col">modifiedTime</th>
+                                            <th scope="col">coverPic</th>
+                                            <th scope="col">tagId</th>
+                                            <th scope="col">designPanoUrl</th>
+                                            <th scope="col">srcArea</th>
+                                            <th scope="col">area</th>
+                                            <th scope="col">realArea</th>
+                                            <th scope="col">planPic</th>
+                                            <th scope="col">level</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let element of ProjBasicInfo">
+                                            <!-- <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel2" value="" aria-label="..."></th> -->
+                                            <td>{{element.planId}}</td>
+                                            <td>{{element.designId}}</td>
+                                            <td>{{element.commName}}</td>
+                                            <td>{{element.city}}</td>
+                                            <td>{{element.name}}</td>
+                                            <td>{{element.created}}</td>
+                                            <td>{{element.modifiedTime}}</td>
+                                            <td>{{element.coverPic | slice:0:7 }}</td>
+                                            <td>{{element.tagId?.toString() | slice:0:7 }}</td>
+                                            <td>{{element.designPanoUrl}}</td>
+                                            <td>{{element.srcArea}}</td>
+                                            <td>{{element.area}}</td>
+                                            <td>{{element.realArea}}</td>
+                                            <td>{{element.planPic | slice:0:7}}</td>
+                                            <td>{{element.specName}}</td>
+                                            <td>{{element.level | slice:0:7 }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #Content14 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Project Furniture Data</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">name</th>
+                                            <th scope="col">angle</th>
+                                            <th scope="col">y</th>
+                                            <th scope="col">x</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody *ngFor="let element of furnitureData">
+                                        <tr *ngFor="let finfoItem of element.finfo">
+                                            <td>{{ finfoItem.furnitureName }}</td>
+                                            <td>{{ finfoItem.angle }}</td>
+                                            <td>{{ finfoItem.y }}</td>
+                                            <td>{{ finfoItem.x }}</td>
+                                        </tr>
+                                      </tbody>                                      
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #Content15 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">bom List</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <!-- <th scope="col">totalCount</th>
+                                            <th scope="col">count</th>
+                                            <th scope="col">hasMore</th> -->
+                                            <th scope="col">brandName</th>
+                                            <th scope="col">name</th>
+                                            <th scope="col">type</th>
+                                            <th scope="col">largeImgUrl</th>
+                                            <th scope="col">imgUrl</th>
+                                            <th scope="col">prodUrl</th>
+                                            <th scope="col">quantity</th>
+                                            <th scope="col">roomName</th>
+                                            <th scope="col">roomId</th>
+                                            <th scope="col">position</th>
+                                            <!-- <th scope="col">z</th>
+                                            <th scope="col">y</th>
+                                            <th scope="col">x</th> -->
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of BomLst">
+                                            <!-- <td>{{ item.totalCount }}</td>
+                                            <td>{{ item.count }}</td>
+                                            <td>{{ item.hasMore }}</td> -->
+                                            <td>{{ item.brandName }}</td>
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.type }}</td>
+                                            <td>{{ item.largeImgUrl }}</td>
+                                            <td>{{ item.imgUrl }}</td>
+                                            <td>{{ item.prodUrl }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td>{{ item.roomName }}</td>
+                                            <td>{{ item.roomId }}</td>
+                                            <td>{{ item.position }}</td>
+                                            <!-- <td>{{ item.z }}</td>
+                                            <td>{{ item.y }}</td>
+                                            <td>{{ item.x }}</td> -->
+                                        </tr>
+                                      </tbody>                                      
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #Content16 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Aux List</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">roomName</th>
+                                            <th scope="col">roomId</th>
+                                            <th scope="col">totalPrice</th>
+                                            <th scope="col">pricePerArea</th>
+                                            <th scope="col">name</th>
+                                            <th scope="col">type</th>
+                                            <th scope="col">largeImgUrl</th>
+                                            <th scope="col">imgUrl</th>
+                                            <th scope="col">prodUrl</th>
+                                            <th scope="col">quantity</th>
+                                            <th scope="col">roomName</th>
+                                            <th scope="col">roomId</th>
+                                            <th scope="col">position</th>
+                                            <th scope="col">z</th>
+                                            <th scope="col">y</th>
+                                            <th scope="col">x</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of AuxList">
+                                            <td>{{ item.roomName }}</td>
+                                            <td>{{ item.roomId }}</td>
+                                            <td>{{ item.totalPrice }}</td>
+                                            <td>{{ item.pricePerArea }}</td>
+                                            <td>{{ item.itemNum }}</td>
+                                            <td>{{ item.itemNumWithoutPrice }}</td>
+                                            <td>{{ item.assistantMaterialPrice }}</td>
+                                            <td>{{ item.labourPrice }}</td>
+                                            <td>{{ item.totalPrice1 }}</td>
+                                            <td>{{ item.formatUnitPrice }}</td>
+                                            <td>{{ item.itemNum }}</td>
+                                            <td>{{ item.itemNumWithoutPrice }}</td>
+                                            <td>{{ item.hasPrice }}</td>
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.calType }}</td>
+                                            <td>{{ item.formatQuantity }}</td>
+                                            <td>{{ item.calTypeId }}</td>
+                                          </tr>                                          
+                                      </tbody>                                      
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #Content17 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Project Renders Data</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">count</th>
+                                            <th scope="col">hasMore</th>
+                                            <th scope="col">totalCount</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let element of Renders">
+                                            <td>{{ element.count }}</td>
+                                            <td>{{ element.hasMore }}</td>
+                                            <td>{{ element.totalCount }}</td>
+                                            <td>
+                                            </td>
+                                        </tr>                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>

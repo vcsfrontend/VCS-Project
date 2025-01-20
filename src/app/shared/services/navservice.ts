@@ -125,6 +125,26 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/projects',
     },
+    {
+      title: 'enterprise',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: 'bi-file-earmark',
+      active: false,
+      selected: false,
+      path: '/dashboard/enterprise',
+    },
+    {
+      title: 'bom',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: 'bi bi-graph-up',
+      active: false,
+      selected: false,
+      path: '/dashboard/bom',
+    },
     // {
     //   title: 'Adonai',
     //   icon: 'bi bi-rulers',
@@ -172,16 +192,6 @@ export class NavService implements OnDestroy {
     //   active: false,
     //   path : "/dashboard/settings"
     // },
-    {
-      title: 'Design',
-      icon: 'bi-file-earmark',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path : "/dashboard/design"
-    },
-    
     
     // {
     //   title: 'Analytics',
@@ -204,15 +214,15 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/crm2',
     // },
-    // {
-    //   title: 'superadmin',
-    //   icon: 'bi bi-shield-lock',
-    //   dirchange: false,
-    //   type: 'link',
-    //   linkType : 'internal',
-    //   active: false,
-    //   path : "/dashboard/superadmin"
-    // },
+    {
+      title: 'superadmin',
+      icon: 'bi bi-shield-lock',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path : "/dashboard/superadmin"
+    },
     {
       title: 'Dashboard2',
       icon: 'bi bi-shield-lock',
