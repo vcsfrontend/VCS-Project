@@ -1,67 +1,85 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation, ViewContainerRef } from '@angular/core';
-import { NgbModal, NgbModalConfig,NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgbTooltipModule,NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
-import { ShowcodeCardComponent } from '../../../shared/common/includes/showcode-card/showcode-card.component';
-import * as prismCodeData from '../../../shared/prismData/advancedUi/models'
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexStroke,
+  ApexYAxis, ApexTitleSubtitle, ApexLegend, ApexResponsive, NgApexchartsModule } from 'ng-apexcharts';
+import { SharedModule } from '../../../shared/common/sharedmodule';
+import { FormBuilder, FormGroup, Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http'; // Import HttpClient for making HTTP requests
+import { FilePondOptions } from 'filepond';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MatNativeDateModule } from '@angular/material/core';
+import { NgbDropdownModule,NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, DatePipe } from '@angular/common';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
+import { FirebaseService } from '../../../shared/services/firebase.service';
+import { SwitherService } from '../../../shared/services/swither.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { RouterModule } from '@angular/router';
-import { FlatpickrModule, FlatpickrDefaults } from 'angularx-flatpickr';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Router, RouterModule } from '@angular/router';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
+import { ShowcodeCardComponent } from '../../../shared/common/includes/showcode-card/showcode-card.component';
 import { ShowCodeContentDirective } from '../../../shared/directives/show-code-content.directive';
-import { FirebaseService } from '../../../shared/services/firebase.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatTableModule } from '@angular/material/table'; // Import MatTableModule
-import { MatButtonModule } from '@angular/material/button'; 
-import { SwitherService } from '../../../shared/services/swither.service';
-import { MatCommonModule } from '@angular/material/core';
-import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
-import type { EChartsOption } from 'echarts';
-import { ThemeOption } from 'ngx-echarts';
-import * as echarts from 'echarts';
-import { elementAt } from 'rxjs';
+import { BaseComponent } from '../../../shared/base/base.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormControl, FormArray,  } from '@angular/forms'  
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  stroke: ApexStroke;
+  dataLabels: ApexDataLabels;
+  yaxis: ApexYAxis;
+  title: ApexTitleSubtitle;
+  labels: string[];
+  legend: ApexLegend;
+  subtitle: ApexTitleSubtitle;
+  tooltip: ApexTooltip;
+  plotOptions: ApexPlotOptions;
+  responsive: ApexResponsive[];
+  fill: ApexFill;
+  grid: any; //ApexGrid;
+  colors: any;
+  toolbar: any;
+};
+
 @Component({
   selector: 'app-enterprise',
   standalone: true,
-  imports: [RouterModule,NgbModule,FormsModule,ReactiveFormsModule ,AngularFireModule,
+  imports: [RouterModule,NgbModule,FormsModule,ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule,  MatFormFieldModule, MatSelectModule, FlatpickrModule,
-    AngularFirestoreModule,ToastrModule,  ShowcodeCardComponent, MaterialModuleModule,
-    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgbTooltipModule,
-    NgbPopoverModule, NgbDropdownModule,MatCommonModule, NgxEchartsModule],
-  providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, 
-      FlatpickrDefaults, DatePipe, NgbModalConfig, NgbModal,
-      {
-        provide: NGX_ECHARTS_CONFIG,
-        useFactory: () => ({ echarts: echarts }),
-      },],
+    AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
+    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
+    NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,NgSelectModule, ],
+  providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './enterprise.component.html',
   styleUrl: './enterprise.component.scss'
 })
 export class EnterpriseComponent {
-  displayedColumns: string[] = ['slNo', 'created', 'planPic', 'commName', 'name', 'specName',  'city', 'modifiedTime', 'coverPic', 'Bom', 'Auxx','designId', 'planId',  'status', 'renders' ]; // 'designPanoUrl' 'tagId',
+  displayedColumns: string[] = ['slNo', 'created', 'planPic', 'name', 'specName',  'city', 'modifiedTime', 'coverPic', 'Bom', 'Aux','designId', 'planId',  'status', 'renders' ]; // 'designPanoUrl' 'tagId', 'commName'
 
   dataSource = new MatTableDataSource<any>(); 
   @ViewChild('paginator') paginator!: MatPaginator;
   @ViewChild('paginator1') paginator1!: MatPaginator;
   @ViewChild('paginator2') paginator2!: MatPaginator;
-  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>; 
-  @ViewChild('template', { static: true }) templateRef!: TemplateRef<any>;
+  // @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>; 
+  // @ViewChild('template', { static: true }) templateRef!: TemplateRef<any>;
   private modalRef: any;
-  PjList : any; furnitureData : any; ProjBasicInfo : any; BomLst : any; AuxList : any; Renders: any;
+  PjList : any; furnitureData : any; ProjBasicInfo : any; BomLst : any; AuxList : any; Renders: any; 
+  RoomFurData: any; showMore = false; 
   
   
-  constructor(config: NgbModalConfig, private modalService: NgbModal, private viewContainerRef: ViewContainerRef,
-    public switchService: SwitherService, private toastr: ToastrService, private dp: DatePipe) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal,
+    private toastr: ToastrService, public switchService: SwitherService, private dp: DatePipe,
+    private router: Router) {
   }
 
   applyFilter(event: Event) {
@@ -97,20 +115,9 @@ export class EnterpriseComponent {
       }
     })
   }
-  // getProjectFurniture(data: any) { 
-  //   this.switchService.ProjFurniture(data.designId).subscribe({
-  //       next: (res: any) => {
-  //           if (res) {
-  //               this.furnitureData = res; 
-  //               console.log(res); 
-  //           }
-  //       },
-  //       error: (err: any) => {
-  //           console.error("Error fetching project furniture:", err); // Handle errors
-  //       }
-  //   });
-  // }
+  
   getProjectFurniture(data: any) { 
+    console.log('roomdata',data);
     this.switchService.ProjFurniture(data.designId).subscribe({
       next: (res: any) => {
         if (res && Array.isArray(res)) {
@@ -164,42 +171,7 @@ export class EnterpriseComponent {
       },
     });
   }
-
-  getAuxilaryCosts(data: any): void {
-    this.switchService.AuxilaryCosts(data.designId).subscribe({
-      next: (res: any) => {
-        // console.log('API Response:', res);
-         if (res && Array.isArray(res[0].requestAuxilary)) {
-
-          console.log('API Response:', res[0].requestAuxilary);
-          
-          this.AuxList = res[0].requestAuxilary.map((requestAuxilary: any) => ({
-            roomName: res.roomName, 
-            roomId: res.roomId,     
-            totalPrice: res.totalPrice, 
-            pricePerArea: res.pricePerArea, 
-            itemNum: requestAuxilary.itemNum, 
-            itemNumWithoutPrice: requestAuxilary.itemNumWithoutPrice, 
-            assistantMaterialPrice: requestAuxilary.assistantMaterialPrice,
-            labourPrice: requestAuxilary.labourPrice,
-            totalPrice1: requestAuxilary.totalPrice,
-            formatUnitPrice: requestAuxilary.formatUnitPrice,
-            hasPrice: requestAuxilary.hasPrice,
-            name: requestAuxilary.name,
-            calType: requestAuxilary.calType,
-            formatQuantity: requestAuxilary.formatQuantity,
-            calTypeId: requestAuxilary.calTypeId
-          }));
-          
-          // Set the data for the table
-          // this.dataSource.data = this.AuxList; 
-        } 
-      },
-      error: (err: any) => {
-        console.error('Error fetching auxiliary costs:', err);
-      }
-    });
-  }
+  
   getProjBasicInfo(data: any) { 
     this.switchService.ProjBasicInfo(data.designId).subscribe({
         next: (res: any) => {
@@ -216,29 +188,58 @@ export class EnterpriseComponent {
         }
     });
   }
-  getRenderings(data: any): void {
-    console.log('Calling getRenderings API with designId:', data.designId); // Debug log for input
 
+  getAuxilaryCosts(data: any): void {
+    this.switchService.AuxilaryCosts(data.designId).subscribe({
+      next: (res: any) => {
+        // console.log('API Response:', res);
+         if (res && Array.isArray(res[0].requestAuxilary)) {
+          console.log('API Response:', res[0].requestAuxilary);
+          this.AuxList = res[0].requestAuxilary.map((requestAuxilary: any) => ({
+            roomName: res[0].roomName, 
+            roomId: res[0].roomId,     
+            totalPrice: res[0].totalPrice, 
+            pricePerArea: res[0].pricePerArea, 
+            itemNum: res[0].itemNum, 
+            itemNumWithoutPrice: res[0].itemNumWithoutPrice, 
+            assistantMaterialPrice: requestAuxilary.assistantMaterialPrice,
+            labourPrice: requestAuxilary.labourPrice,
+            totalPrice1: requestAuxilary.totalPrice,
+            formatUnitPrice: requestAuxilary.formatUnitPrice,
+            hasPrice: requestAuxilary.hasPrice,
+            name: requestAuxilary.name,
+            calType: requestAuxilary.calType,
+            formatQuantity: requestAuxilary.formatQuantity,
+            calTypeId: requestAuxilary.calTypeId
+          }));
+        } 
+      },
+      error: (err: any) => {
+        console.error('Error fetching auxiliary costs:', err);
+      }
+    });
+  }
+
+  getRenderings(data: any): void {
     this.switchService.Renderings(data.designId).subscribe({
         next: (res: any) => {
-            console.log('API Response:', res); // Debug log for API response
             if (res && Array.isArray(res.rendersList)) {
-                // Map and handle null values explicitly
-                this.Renders = res.rendersList.map((render: any) => ({
-                  count: render.count || '',
-                  hasMore: render.hasMore || '', // Handle null or missing values
-                  totalCount: render.totalCount || '',
-                    // panoLink: render.panoLink || 'No Pano Link',
-                    // picId: render.picId || 'N/A',
-                    // picType: render.picType || 'Unknown',
-                    // picDetailType: render.picDetailType || 'Unknown',
-                    // roomName: render.roomName || 'Unknown Room',
-                    // level: render.level || 'N/A',
-                    // roomIndex: render.roomIndex || 'N/A',
-                    // roomTypeId: render.roomTypeId || 'N/A',
-                }));
-
-                console.log('Processed Renderings:', this.Renders);
+              console.log('API Response:', res.rendersList);
+              this.Renders = res.rendersList.map((rendersList: any) => ({
+                count: res.count, 
+                hasMore: res.hasMore,
+                totalCount: res.totalCount,
+                created: rendersList.created,
+                img: rendersList.img,
+                panoLink: rendersList.panoLink,
+                picId: rendersList.picId,
+                picType: rendersList.picType,
+                picDetailType: rendersList.picDetailType,
+                roomName: rendersList.roomName,
+                level: rendersList.level,
+                roomIndex: rendersList.roomIndex,
+                roomTypeId: rendersList.roomTypeId,
+              }));
             } else {
                 console.warn('Unexpected API response structure or empty rendersList:', res);
             }
@@ -249,6 +250,13 @@ export class EnterpriseComponent {
     });
   }
 
+  toggleShowMore(): void {
+    this.showMore = !this.showMore;
+    // this.PjList();
+  }
+  // updateDisplayedCards(): void {
+  //   this.PjList = this.showMore ?  this.PjList?.slice(0, 4) : this.PjList;
+  // }
 
   openLg(content10:any) {
 		this.modalService.open(content10, { size: 'lg' },);
@@ -260,7 +268,9 @@ export class EnterpriseComponent {
   VerticallyScroll(content13:any) {
     this.modalService.open(content13, {  scrollable: true,centered: true,size: 'xl' });
   }
-  openScrollableContent(content14:any) {
+  openScrollableContent(content14:any,roomData:any) {
+    console.log('roodFurnite',roomData);
+    this.RoomFurData=roomData;
 		this.modalService.open(content14, { scrollable: true,centered: true,size: 'lg' });
 	}
   VerticallyScrolling(content15:any) {
@@ -272,6 +282,576 @@ export class EnterpriseComponent {
   VerticallyScrolling3(content17:any) {
     this.modalService.open(content17, {  scrollable: true,centered: true,size: 'xl' });
   }
+  chartOptions: any = {
+    series: [
+      {
+        data: [98, 110, 80, 145, 105, 112, 87, 148, 102],
+      },
+    ],
+    chart: {
+      height: 70,
+      type: 'area',
+      fontFamily: 'Poppins, sans-serif',
+      foreColor: '#5d6162',
+      zoom: {
+        enabled: false,
+      },
+      sparkline: {
+        enabled: true,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false,
+      },
+      y: {
+        title: {
+          formatter: function (seriesName: any) {
+            return '';
+          },
+        },
+      },
+      marker: {
+        show: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+      width: '1',
+    },
+    title: {
+      text: undefined,
+    },
+    grid: {
+      borderColor: 'transparent',
+    },
+    xaxis: {
+      crosshairs: {
+        show: false,
+      },
+    },
+    colors: ['var(--primary-color)'],
+    stroke1: {
+      width: [1],
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.5,
+        opacityTo: 0.2,
+        stops: [0, 60],
+        colorStops: [
+          [
+            {
+              offset: 0,
+              color: 'var(--primary02)',
+              opacity: 1,
+            },
+            {
+              offset: 60,
+              color: 'var(--primary02)',
+              opacity: 0.1,
+            },
+          ],
+        ],
+      },
+    },
+  };
+  chartOptions1: any = {
+    series: [
+      {
+        data: [98, 110, 80, 145, 105, 112, 87, 148, 102],
+      },
+    ],
+    chart: {
+      height: 70,
+      type: 'area',
+      fontFamily: 'Poppins, sans-serif',
+      foreColor: '#5d6162',
+      zoom: {
+        enabled: false,
+      },
+      sparkline: {
+        enabled: true,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false,
+      },
+      y: {
+        title: {
+          formatter: function (seriesName: any) {
+            return '';
+          },
+        },
+      },
+      marker: {
+        show: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+      width: '1',
+    },
+    title: {
+      text: undefined,
+    },
+    grid: {
+      borderColor: 'transparent',
+    },
+    xaxis: {
+      crosshairs: {
+        show: false,
+      },
+    },
+    colors: ['rgb(52, 152, 219)'],
+    stroke1: {
+      width: [1],
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.5,
+        opacityTo: 0.2,
+        stops: [0, 60],
+      },
+    },
+  };
+  chartOptions2: any = {
+    series: [
+      {
+        data: [98, 110, 80, 145, 105, 112, 87, 148, 102],
+      },
+    ],
+    chart: {
+      height: 70,
+      type: 'area',
+      fontFamily: 'Poppins, sans-serif',
+      foreColor: '#5d6162',
+      zoom: {
+        enabled: false,
+      },
+      sparkline: {
+        enabled: true,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false,
+      },
+      y: {
+        title: {
+          formatter: function (seriesName: any) {
+            return '';
+          },
+        },
+      },
+      marker: {
+        show: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+      width: '1',
+    },
+    title: {
+      text: undefined,
+    },
+    grid: {
+      borderColor: 'transparent',
+    },
+    xaxis: {
+      crosshairs: {
+        show: false,
+      },
+    },
+    colors: ['rgb(46, 204, 113)'],
+    stroke1: {
+      width: [1],
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.5,
+        opacityTo: 0.2,
+        stops: [0, 60],
+      },
+    },
+  };
+  chartOptions3: any = {
+    series: [
+      {
+        data: [98, 110, 80, 145, 105, 112, 87, 148, 102],
+      },
+    ],
+    chart: {
+      height: 70,
+      type: 'area',
+      fontFamily: 'Poppins, sans-serif',
+      foreColor: '#5d6162',
+      zoom: {
+        enabled: false,
+      },
+      sparkline: {
+        enabled: true,
+      },
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false,
+      },
+      y: {
+        title: {
+          formatter: function (seriesName: any) {
+            return '';
+          },
+        },
+      },
+      marker: {
+        show: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: 'smooth',
+      width: '1',
+    },
+    title: {
+      text: undefined,
+    },
+    grid: {
+      borderColor: 'transparent',
+    },
+    xaxis: {
+      crosshairs: {
+        show: false,
+      },
+    },
+    colors: ['rgb(231, 76, 60)'],
+    stroke1: {
+      width: [1],
+    },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.5,
+        opacityTo: 0.2,
+        stops: [0, 60],
+      },
+    },
+  };
+  chartOptions4: any = {
+    series: [
+      {
+        name: 'Income',
+        data: [44, 42, 57, 86, 58, 55, 70, 43, 23, 54, 77, 34],
+      },
+      {
+        name: 'Expenses',
+        data: [-34, -22, -37, -56, -21, -35, -60, -34, -56, -78, -89, -53],
+      },
+    ],
+    chart: {
+      toolbar: {
+        show: false,
+      },
+      type: 'bar',
+      fontFamily: "'Poppins', sans-serif",
+      height: 380,
+      stacked: true,
+    },
+    colors: ['var(--primary-color)', 'rgb(69, 214, 91)'],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '22%',
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      show: true,
+      width: ['6', '6'],
+      curve: 'smooth',
+    },
+    legend: {
+      show: true,
+      position: 'top',
+      offsetX: 0,
+      offsetY: 8,
+      markers: {
+        width: 5,
+        height: 5,
+        strokeWidth: 0,
+        strokeColor: '#fff',
+        fillColors: undefined,
+        radius: 12,
+        customHTML: undefined,
+        onClick: undefined,
+        offsetX: 0,
+        offsetY: 0,
+      },
+    },
+    grid: {
+      borderColor: 'rgba(0,0,0,0.1)',
+      strokeDashArray: 3,
+      xaxis: {
+        lines: {
+          show: false,
+        },
+      },
+    },
+    xaxis: {
+      axisBorder: {
+        show: false,
+      },
+      categories: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ],
+    },
+    yaxis: {
+      tickAmount: 4,
+    },
+  };
+  chartOptions5: any = {
+    chart: {
+      type: 'line',
+      height: 45,
+      sparkline: {
+        enabled: true,
+      },
+      dropShadow: {
+        enabled: true,
+        enabledOnSeries: undefined,
+        top: 0,
+        left: 0,
+        blur: 1,
+        color: '#fff',
+        opacity: 0.05,
+      },
+    },
+    stroke: {
+      show: true,
+      curve: 'smooth',
+      lineCap: 'butt',
+      colors: undefined,
+      width: 2,
+      dashArray: 0,
+    },
+    fill: {
+      gradient: {
+        enabled: false,
+      },
+    },
+    series: [
+      {
+        name: 'Value',
+        data: [54, 38, 56, 35, 65, 43, 53, 45, 62, 80, 35, 48],
+      },
+    ],
+    yaxis: {
+      min: 0,
+      show: false,
+    },
+    xaxis: {
+      axisBorder: {
+        show: false,
+      },
+    },
+    yaxis1: {
+      axisBorder: {
+        show: false,
+      },
+    },
+    colors: ['rgba(243, 156, 18, 0.2)'],
+    tooltip: {
+      enabled: true,
+    },
+  };
+  chartOptions6: any = {
+    chart: {
+      height: 150,
+      width: 150,
+      type: 'radialBar',
+    },
 
+    series: [48],
+    colors: ['rgb(69, 214, 91)'],
+    plotOptions: {
+      radialBar: {
+        hollow: {
+          margin: 0,
+          size: '70%',
+          background: '#fff',
+        },
+        dataLabels: {
+          name: {
+            offsetY: -10,
+            color: '#4b9bfa',
+            fontSize: '10px',
+            show: false,
+          },
+          value: {
+            offsetY: 5,
+            color: '#4b9bfa',
+            fontSize: '12px',
+            show: true,
+            fontWeight: 800,
+          },
+        },
+      },
+    },
+    stroke: {
+      lineCap: "round"
+    },
+    labels: ['Followers'],
+  };
+  chartOptions7:any= {
+    series: [
+      {
+        name: "Recieved Income",
+        type: "column",
+        data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6,5.6,6.6,7.8,9.7]
+      },
+      {
+        name: "Pending Income",
+        type: "column",
+        data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5,9.5,10,8.6,7.6]
+      },
+      {
+        name: "Revenue",
+        type: "line",
+        data: [20, 29, 37, 36, 44, 45, 50, 58,65,43,55,60]
+      }
+    ],
+    colors:['#b94eed','#44c2e9','#f6c364'],
+    chart: {
+      height: 350,
+      type: "line",
+      stacked: false
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      width: [1, 1, 4]
+    },
+    title: {
+      text: "XYZ - Stock Analysis (2009 - 2016)",
+      align: "left",
+      offsetX: 110
+    },
+    xaxis: {
+      // categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+      categories: ['Jan','Feb','March','April','May','June','July','Aug','Sep','Oct','Nov','Dec']
+    },
+    yaxis: [
+      {
+        axisTicks: {
+          show: true
+        },
+        axisBorder: {
+          show: true,
+          color: "#9673e4"
+        },
+        labels: {
+          style: {
+            color: "#9673e4"
+          }
+        },
+        title: {
+          text: "Income (thousand crores)",
+          style: {
+            color: "#9673e4"
+          }
+        },
+      
+      },
+      {
+        
+        opposite: true,
+        axisTicks: {
+          show: true
+        },
+        axisBorder: {
+          show: true,
+          color: "#44c2e9"
+        },
+        labels: {
+          style: {
+            color: "#44c2e9"
+          }
+        },
+        title: {
+          text: "Operating Cashflow (thousand crores)",
+          style: {
+            color: "#44c2e9"
+          }
+        }
+      },
+      {
+       
+        opposite: true,
+        axisTicks: {
+          show: true
+        },
+        axisBorder: {
+          show: true,
+          color: "#FEB019"
+        },
+        labels: {
+          style: {
+            color: "#FEB019"
+          }
+        },
+        title: {
+          text: "Revenue (thousand crores)",
+          style: {
+            color: "#FEB019"
+          }
+        }
+      }
+    ],
+    tooltip: {
+      fixed: {
+        enabled: true,
+        position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+        offsetY: 30,
+        offsetX: 60
+      }
+    },
+    legend: {
+      horizontalAlign: "left",
+      offsetX: 40
+    }
+  };
 
 }

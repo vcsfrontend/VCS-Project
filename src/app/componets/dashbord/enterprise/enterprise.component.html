@@ -1,4 +1,4 @@
-<div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
+<!-- <div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
     <h1 class="page-title fw-medium fs-18 mb-2">Projects</h1>
     <nav>
         <ol class="breadcrumb mb-0">
@@ -6,129 +6,264 @@
             <li class="breadcrumb-item active" aria-current="page">Projects</li>
         </ol>
     </nav>
-</div>
-<!-- <div class="col-xl-12 col-xxl-12 col-md-12 col-lg-12 col-sm-12">
-    <div class="card custom-card ">
-        <div class="card-header justify-content-center " >
-            <div class="btn-list ">
-                <button type="button" class="btn btn-primary btn-wave">Project Information</button>
-                <button type="button" class="btn btn-primary btn-wave">Project list</button>
-                <button type="button" class="btn btn-primary btn-wave">Primary</button>
-                <button type="button" class="btn btn-primary btn-wave">Primary</button>
+</div> -->
+
+<!-- <div class="row">
+    <div class="col-xxl-12">
+        <div class="row">
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-success-transparent">
+                                    <i class="ti ti-album fs-20"></i>
+                                </span>
+                                <span class="badge bg-danger-transparent"></span>
+                            </div>
+                            <div class="text-muted mb-2">Total Projects</div>
+                            <h4 class="mb-0"></h4>
+                        </div>
+                        <div id="total-projects">
+                            <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
+                                [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors"
+                                [fill]="chartOptions2.fill" [stroke]="chartOptions2.stroke"
+                                [tooltip]="chartOptions2.tooltip" [dataLabels]="chartOptions2.dataLabels"
+                                [grid]="chartOptions2.grid" [yaxis]="chartOptions2.yaxis"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-primary-transparent">
+                                    <i class="ti ti-file-check fs-20"></i>
+                                </span>
+                                <span class="badge bg-success-transparent"></span>
+                            </div>
+                            <div class="text-muted mb-2">Completed Projects</div>
+                            <h4 class="mb-0"></h4>
+                        </div>
+                        <div id="completed-projects">
+                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                                [xaxis]="chartOptions.xaxis" [colors]="chartOptions.colors" [fill]="chartOptions.fill"
+                                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+                                [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid"
+                                [yaxis]="chartOptions.yaxis"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-danger-transparent">
+                                    <i class="ti ti-chart-pie-2 fs-20"></i>
+                                </span>
+                                <span class="badge bg-success-transparent"></span>
+                            </div>
+                            <div class="text-muted mb-2">Pending Projects</div>
+                            <h4 class="mb-0"></h4>
+                        </div>
+                        <div id="pending-projects">
+                            <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
+                                [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors"
+                                [fill]="chartOptions3.fill" [stroke]="chartOptions3.stroke"
+                                [tooltip]="chartOptions3.tooltip" [dataLabels]="chartOptions3.dataLabels"
+                                [grid]="chartOptions3.grid" [yaxis]="chartOptions3.yaxis"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-info-transparent">
+                                    <i class="ti ti-briefcase fs-20"></i>
+                                </span>
+                                <span class="badge bg-success-transparent"></span>
+                            </div>
+                            <div class="text-muted mb-2">Overdue Projects</div>
+                            <h4 class="mb-0"></h4>
+                        </div>
+                        <div id="overdue-projects">
+                            <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart"
+                                [xaxis]="chartOptions1.xaxis" [colors]="chartOptions1.colors"
+                                [fill]="chartOptions1.fill" [stroke]="chartOptions1.stroke"
+                                [tooltip]="chartOptions1.tooltip" [dataLabels]="chartOptions1.dataLabels"
+                                [grid]="chartOptions1.grid" [yaxis]="chartOptions1.yaxis"></apx-chart>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div> -->
-
-<div class="row">
-    <div class="col-lg-12 col-xxl-12">
+<div class="row pt-3">
+    <div class="col-xl-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <div class="card-title">
-                    <h4>Project List </h4> 
-                </div>
+                <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Projects</div>
+                <div class="text-center">
+                    <button class="btn btn-primary" (click)="toggleShowMore()">
+                        {{ showMore ? 'Show Less' : 'Show More' }}
+                    </button>
             </div>
-            <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <mat-form-field class="m-1 mat-filter">
-                        <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" #input>
-                    </mat-form-field>
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSource">
-                            <ng-container matColumnDef="slNo">
-                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="created">
-                                <th mat-header-cell *matHeaderCellDef> created </th>
-                                <td mat-cell *matCellDef="let element"> {{element.created}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="planPic">
-                                <th mat-header-cell *matHeaderCellDef> planPic </th>
-                                <td mat-cell *matCellDef="let element"> {{element.planPic | slice:0:7}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="commName">
-                                <th mat-header-cell *matHeaderCellDef> commName </th>
-                                <td mat-cell *matCellDef="let element"> {{element.commName}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="specName">
-                                <th mat-header-cell *matHeaderCellDef> specName </th>
-                                <td mat-cell *matCellDef="let element"> {{element.specName}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="city">
-                                <th mat-header-cell *matHeaderCellDef> city name</th>
-                                <td mat-cell *matCellDef="let element"> {{element.city }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="modifiedTime">
-                                <th mat-header-cell *matHeaderCellDef> modifiedTime</th>
-                                <td mat-cell *matCellDef="let element"> {{element.modifiedTime}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="coverPic">
-                                <th mat-header-cell *matHeaderCellDef> coverPic </th>
-                                <td mat-cell *matCellDef="let element"> {{element.coverPic | slice:0:7}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="designPanoUrl">
-                                <th mat-header-cell *matHeaderCellDef> designPanoUrl </th>
-                                <td mat-cell *matCellDef="let element"> {{element.designPanoUrl}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="tagId">
-                                <th mat-header-cell *matHeaderCellDef> tagId </th>
-                                <td mat-cell *matCellDef="let element"> {{element.tagId}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="Bom">
-                                <th mat-header-cell *matHeaderCellDef> Bom </th>
-                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLg" (click)="VerticallyScrolling(Content15);
-                                getProjBomList(element)"><i class="fe fe-eye text-muted"></i></td>
-                            </ng-container>
-                            <ng-container matColumnDef="Auxx">
-                                <th mat-header-cell *matHeaderCellDef> Auxx </th>
-                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLg" (click)="VerticallyScrolling2(Content16);
-                                getAuxilaryCosts(element)"><i class="fe fe-eye text-muted"></i></td>
-                            </ng-container>
-                            <ng-container matColumnDef="designId">
-                                <th mat-header-cell *matHeaderCellDef> designId </th>
-                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);
-                                getProjectFurniture(element)"> {{element.designId}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="planId">
-                                <th mat-header-cell *matHeaderCellDef> planId </th>
-                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLg" (click)="VerticallyScroll(Content13);
-                                getProjBasicInfo(element)"> {{element.planId }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="status">
-                                <th mat-header-cell *matHeaderCellDef> status </th>
-                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="renders">
-                                <th mat-header-cell *matHeaderCellDef> renders </th>
-                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLg" (click)="VerticallyScrolling3(Content17);
-                                getRenderings(element)"> <i class="fe fe-eye text-muted"></i> </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                        </table>
+        </div>
+    </div>
+    <div class="col-xxl-12" [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'visible' : 'auto' }">
+        <div class="row">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let item of PjList">
+                <div class="card custom-card" style="width: 18rem;">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="me-2 align-items-center">
+                        <img class="custom-img-size" [src]="item.planPic" alt="Project Image" *ngIf="item.planPic; else noImage"
+                        style="width: 240px; height: 200px; border-radius: 4px; align-items: center;" />
+                        <ng-template #noImage>
+                            <span>No image available</span>
+                        </ng-template>
                     </div>
-                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                        aria-label="Select page of periodic elements">
-                    </mat-paginator>
+                    <p class="pj-name" data-bs-toggle="tooltip"
+                    tooltipClass="tooltip-primary" placement="top" ngbTooltip="{{item.name}}">{{item.name | slice:0:13 }} </p>
+                    <!-- <div class="btn-list">
+                        <button type="button" class="btn btn-sm btn-primary btn-wave" data-bs-toggle="tooltip"
+                            tooltipClass="tooltip-primary" placement="top" ngbTooltip="{{item.name}}">
+                            {{item.name | slice:0:13 }}
+                        </button> -->
+                    <p class="pj-name">{{item.modifiedTime}} </p>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a class="btn btn-sm btn-primary btn-wave me-3" ><i
+                            class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Details</a>
+                        <a class="btn btn-sm btn-primary btn-wave ms-5 d-flex" ><i
+                            class="ri-add-line align-middle me-1 fw-medium"></i> </a>
+                    </div>
                 </div>
-            </div>
-            
+            </div>  
         </div>
     </div>
 </div>
-
-
+<div class="col-lg-12 col-xxl-12 pt-2">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                <h4>Project List </h4> 
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <mat-form-field class="m-1 mat-filter">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" #input>
+                </mat-form-field>
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource">
+                        <ng-container matColumnDef="slNo">
+                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="created">
+                            <th mat-header-cell *matHeaderCellDef> created </th>
+                            <td mat-cell *matCellDef="let element"> {{element.created}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="planPic">
+                            <th mat-header-cell *matHeaderCellDef> Plan Pic </th>
+                            <td mat-cell *matCellDef="let element">
+                                <img [src]="element.planPic" alt="Image" *ngIf="element.planPic; else noImage" style="width: 50px; height: auto;" />
+                                <ng-template #noImage>
+                                    <span>No image available</span>
+                                </ng-template>
+                            </td>
+                        </ng-container>                            
+                        <!-- <ng-container matColumnDef="commName">
+                            <th mat-header-cell *matHeaderCellDef> commName </th>
+                            <td mat-cell *matCellDef="let element"> {{element.commName}} </td>
+                        </ng-container> -->
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.name | slice:0:12 }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="specName">
+                            <th mat-header-cell *matHeaderCellDef> specName </th>
+                            <td mat-cell *matCellDef="let element"> {{element.specName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="city">
+                            <th mat-header-cell *matHeaderCellDef> city name</th>
+                            <td mat-cell *matCellDef="let element"> {{element.city }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="modifiedTime">
+                            <th mat-header-cell *matHeaderCellDef> modifiedTime</th>
+                            <td mat-cell *matCellDef="let element"> {{element.modifiedTime}} </td>
+                        </ng-container>     
+                        <ng-container matColumnDef="coverPic">
+                            <th mat-header-cell *matHeaderCellDef> coverPic </th>
+                            <td mat-cell *matCellDef="let element">
+                                <img [src]="element.coverPic" alt="Image" *ngIf="element.coverPic; else noImage" style="width: 50px; height: auto;" />
+                                <ng-template #noImage>
+                                    <span>No image available</span>
+                                </ng-template>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="designPanoUrl">
+                            <th mat-header-cell *matHeaderCellDef> designPanoUrl </th>
+                            <td mat-cell *matCellDef="let element"> {{element.designPanoUrl}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="tagId">
+                            <th mat-header-cell *matHeaderCellDef> tagId </th>
+                            <td mat-cell *matCellDef="let element"> {{element.tagId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="Bom">
+                            <th mat-header-cell *matHeaderCellDef> Bom </th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLg" (click)="VerticallyScrolling(Content15);
+                            getProjBomList(element)"><i class="fe fe-eye text-muted"></i></td>
+                        </ng-container>
+                        <ng-container matColumnDef="Aux">
+                            <th mat-header-cell *matHeaderCellDef> Aux </th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLg" (click)="VerticallyScrolling2(Content16);
+                            getAuxilaryCosts(element)"><i class="fe fe-eye text-muted"></i></td>
+                        </ng-container>
+                        <ng-container matColumnDef="designId">
+                            <th mat-header-cell *matHeaderCellDef> designId </th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);
+                            getProjectFurniture(element)"> {{element.designId}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="planId">
+                            <th mat-header-cell *matHeaderCellDef> planId </th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLg" (click)="VerticallyScroll(Content13);
+                            getProjBasicInfo(element)"> {{element.planId }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef> status </th>
+                            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="renders">
+                            <th mat-header-cell *matHeaderCellDef> renders </th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLg" (click)="VerticallyScrolling3(Content17);
+                            getRenderings(element)"> <i class="fe fe-eye text-muted"></i> </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                    aria-label="Select page of periodic elements">
+                </mat-paginator>
+            </div>
+        </div>
+        
+    </div>
+</div>
 
 <ng-template #Content12 id="addtask" let-modal>
     <div class="modal-content">
@@ -156,7 +291,7 @@
                                     <tbody>
                                         <tr *ngFor="let element of furnitureData">
                                             <td ata-bs-toggle="modal"
-                                            data-bs-target="#exampleModalLg" (click)="openScrollableContent(Content14);furnitureData(element)">{{ element.name }}</td>
+                                            data-bs-target="#exampleModalLg" (click)="openScrollableContent(Content14,element.finfo);">{{ element.name }}</td>
                                             <td>{{ element.roomId }}</td>
                                             <td>{{ element.roomTypeId }}</td>
                                             <td>{{ element.levelId }}</td>
@@ -195,44 +330,62 @@
                                 <table class="table text-nowrap table-hover">
                                     <thead>
                                         <tr>
-                                            <!-- <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="..."></th> -->
-                                            <th scope="col">planId</th>
-                                            <th scope="col">designId</th>
-                                            <th scope="col">commName</th>
-                                            <th scope="col">city</th>
-                                            <th scope="col">name</th>
                                             <th scope="col">created</th>
+                                            <th scope="col">planPic</th>
+                                            <th scope="col">commName</th>
+                                            <th scope="col">name</th>
+                                            <th scope="col">city name</th>
                                             <th scope="col">modifiedTime</th>
                                             <th scope="col">coverPic</th>
-                                            <th scope="col">tagId</th>
-                                            <th scope="col">designPanoUrl</th>
+                                            <th scope="col">designId</th>
+                                            <th scope="col">planId</th>
+                                            <!-- <th scope="col">tagId</th>
+                                            <th scope="col">designPanoUrl</th> -->
                                             <th scope="col">srcArea</th>
                                             <th scope="col">area</th>
                                             <th scope="col">realArea</th>
-                                            <th scope="col">planPic</th>
                                             <th scope="col">level</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let element of ProjBasicInfo">
-                                            <!-- <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel2" value="" aria-label="..."></th> -->
-                                            <td>{{element.planId}}</td>
-                                            <td>{{element.designId}}</td>
-                                            <td>{{element.commName}}</td>
-                                            <td>{{element.city}}</td>
-                                            <td>{{element.name}}</td>
-                                            <td>{{element.created}}</td>
-                                            <td>{{element.modifiedTime}}</td>
-                                            <td>{{element.coverPic | slice:0:7 }}</td>
-                                            <td>{{element.tagId?.toString() | slice:0:7 }}</td>
-                                            <td>{{element.designPanoUrl}}</td>
-                                            <td>{{element.srcArea}}</td>
-                                            <td>{{element.area}}</td>
-                                            <td>{{element.realArea}}</td>
-                                            <td>{{element.planPic | slice:0:7}}</td>
-                                            <td>{{element.specName}}</td>
-                                            <td>{{element.level | slice:0:7 }}</td>
-                                        </tr>
+                                            <td>{{ element.created }}</td>
+                                            <td>
+                                                <img 
+                                                    *ngIf="element.planPic; else noImage" 
+                                                    [src]="element.planPic" 
+                                                    alt="Image" 
+                                                    style="width: 50px; height: auto;" 
+                                                />
+                                                <ng-template #noImage>
+                                                    <span>No image available</span>
+                                                </ng-template>
+                                            </td>
+                                            <td>{{ element.commName }}</td>
+                                            <td>{{ element.name }}</td>
+                                            <td>{{ element.city }}</td>
+                                            <td>{{ element.modifiedTime }}</td>
+                                            <td>
+                                                <img 
+                                                    *ngIf="element.coverPic; else noImage" 
+                                                    [src]="element.coverPic" 
+                                                    alt="Image" 
+                                                    style="width: 50px; height: auto;" 
+                                                />
+                                                <ng-template #noImage>
+                                                    <span>No image available</span>
+                                                </ng-template>
+                                            </td>
+                                            
+                                            <td>{{ element.designId }}</td>
+                                            <td>{{ element.planId }}</td>
+                                            <!-- <td>{{ element.tagId?.toString() | slice:0:7 }}</td> -->
+                                            <!-- <td>{{ element.designPanoUrl }}</td> -->
+                                            <td>{{ element.srcArea }}</td>
+                                            <td>{{ element.area }}</td>
+                                            <td>{{ element.realArea }}</td>
+                                            <td>{{ element.level | slice:0:7 }}</td>
+                                        </tr>                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -251,7 +404,7 @@
 <ng-template #Content14 id="addtask" let-modal>
     <div class="modal-content">
         <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Project Furniture Data</h6>
+            <h6 class="modal-title" id="mail-ComposeLabel">room Furniture Data</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                 aria-label="Close"></button>
         </div>
@@ -270,8 +423,8 @@
                                             <th scope="col">x</th>
                                         </tr>
                                     </thead>
-                                    <tbody *ngFor="let element of furnitureData">
-                                        <tr *ngFor="let finfoItem of element.finfo">
+                                    <tbody>
+                                        <tr *ngFor="let finfoItem of RoomFurData">
                                             <td>{{ finfoItem.furnitureName }}</td>
                                             <td>{{ finfoItem.angle }}</td>
                                             <td>{{ finfoItem.y }}</td>
@@ -333,9 +486,29 @@
                                             <td>{{ item.brandName }}</td>
                                             <td>{{ item.name }}</td>
                                             <td>{{ item.type }}</td>
-                                            <td>{{ item.largeImgUrl }}</td>
-                                            <td>{{ item.imgUrl }}</td>
-                                            <td>{{ item.prodUrl }}</td>
+                                            <td>
+                                                <img 
+                                                    *ngIf="item.largeImgUrl; else noImage" 
+                                                    [src]="item.largeImgUrl" 
+                                                    alt="Image" 
+                                                    style="width: 50px; height: auto;" 
+                                                />
+                                                <ng-template #noImage>
+                                                    <span>No image available</span>
+                                                </ng-template>
+                                            </td>
+                                            <td>
+                                                <img 
+                                                    *ngIf="item.imgUrl; else noImage" 
+                                                    [src]="item.imgUrl" 
+                                                    alt="Image" 
+                                                    style="width: 50px; height: auto;" 
+                                                />
+                                                <ng-template #noImage>
+                                                    <span>No image available</span>
+                                                </ng-template>
+                                            </td>
+                                            <td>{{ item.prodUrl | slice:0:7}}</td>
                                             <td>{{ item.quantity }}</td>
                                             <td>{{ item.roomName }}</td>
                                             <td>{{ item.roomId }}</td>
@@ -379,18 +552,19 @@
                                             <th scope="col">roomId</th>
                                             <th scope="col">totalPrice</th>
                                             <th scope="col">pricePerArea</th>
+                                            <th scope="col">itemNum</th>
+                                            <th scope="col">itemNumWithoutPrice</th>
+                                            <th scope="col">assistantMaterialPrice</th>
+                                            <th scope="col">labourPrice</th>
+                                            <th scope="col">totalPrice</th>
+                                            <th scope="col">formatUnitPrice</th>
+                                            <th scope="col">itemNum</th>
+                                            <th scope="col">itemNumWithoutPrice</th>
+                                            <th scope="col">hasPrice</th>
                                             <th scope="col">name</th>
-                                            <th scope="col">type</th>
-                                            <th scope="col">largeImgUrl</th>
-                                            <th scope="col">imgUrl</th>
-                                            <th scope="col">prodUrl</th>
-                                            <th scope="col">quantity</th>
-                                            <th scope="col">roomName</th>
-                                            <th scope="col">roomId</th>
-                                            <th scope="col">position</th>
-                                            <th scope="col">z</th>
-                                            <th scope="col">y</th>
-                                            <th scope="col">x</th>
+                                            <th scope="col">calType</th>
+                                            <th scope="col">formatQuantity</th>
+                                            <th scope="col">calTypeId</th>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let item of AuxList">
@@ -402,7 +576,7 @@
                                             <td>{{ item.itemNumWithoutPrice }}</td>
                                             <td>{{ item.assistantMaterialPrice }}</td>
                                             <td>{{ item.labourPrice }}</td>
-                                            <td>{{ item.totalPrice1 }}</td>
+                                            <td>{{ item.totalPrice }}</td>
                                             <td>{{ item.formatUnitPrice }}</td>
                                             <td>{{ item.itemNum }}</td>
                                             <td>{{ item.itemNumWithoutPrice }}</td>
@@ -446,17 +620,60 @@
                                             <th scope="col">count</th>
                                             <th scope="col">hasMore</th>
                                             <th scope="col">totalCount</th>
-                                            
+                                            <th scope="col">created</th>
+                                            <th scope="col">img</th>
+                                            <th scope="col">panoLink</th>
+                                            <th scope="col">picId</th>
+                                            <th scope="col">picType</th>
+                                            <th scope="col">picDetailType</th>
+                                            <th scope="col">roomName</th>
+                                            <th scope="col">level</th>
+                                            <th scope="col">roomIndex</th>
+                                            <th scope="col">roomTypeId</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let element of Renders">
-                                            <td>{{ element.count }}</td>
-                                            <td>{{ element.hasMore }}</td>
-                                            <td>{{ element.totalCount }}</td>
-                                            <td>
-                                            </td>
-                                        </tr>                                        
+                                            <tr *ngFor="let item of Renders">
+                                                <td>{{ item.count }}</td>
+                                                <td>{{ item.hasMore }}</td>
+                                                <td>{{ item.totalCount }}</td>
+                                                <td>{{ item.created }}</td>
+                                                <td>
+                                                    <img 
+                                                        *ngIf="item.img; else noImage" 
+                                                        [src]="item.img" 
+                                                        alt="Image" 
+                                                        style="width: 50px; height: auto;" 
+                                                    />
+                                                    <ng-template #noImage>
+                                                        <span>No image available</span>
+                                                    </ng-template>
+                                                </td>
+                                                <td>
+                                                    <img 
+                                                        *ngIf="item.panoLink; else noImage" 
+                                                        [src]="item.panoLink" 
+                                                        alt="Image" 
+                                                        style="width: 50px; height: auto;" 
+                                                    />
+                                                    <ng-template #noImage>
+                                                        <span>No image available</span>
+                                                    </ng-template>
+                                                </td>
+                                                <!-- <td>{{ item.img | slice:0:7 }}</td> -->
+                                                <!-- <td>{{ item.panoLink | slice:0:7 }}</td> -->
+                                                <td>{{ item.picId }}</td>
+                                                <td>{{ item.picType }}</td>
+                                                <td>{{ item.picDetailType }}</td>
+                                                <td>{{ item.roomName }}</td>
+                                                <td>{{ item.level }}</td>
+                                                <td>{{ item.roomIndex }}</td>
+                                                <td>{{ item.roomTypeId }}</td>
+                                                <!-- <td><img [src]="item.img" alt="Image" /></td>
+                                                <td><a [href]="item.panoLink" target="_blank">{{ item.panoLink }}</a></td> -->
+                                                
+                                            </tr>
+                                          
                                     </tbody>
                                 </table>
                             </div>
