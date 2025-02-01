@@ -292,6 +292,16 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/mytask',
     },
+    {
+      title: 'users',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: 'bi-people',
+      active: false,
+      selected: false,
+      path: '/dashboard/users',
+    },
     // {
     //   title: 'Project-details',
     //   dirchange: false,

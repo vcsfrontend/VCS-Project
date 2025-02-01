@@ -142,6 +142,11 @@ export const admin: Routes = [
   loadComponent: () =>
     import('./personal/personal.component').then((m) => m.PersonalComponent),
 },
+{
+  path: 'users',
+  loadComponent: () =>
+    import('./users/users.component').then((m) => m.UsersComponent),
+},
 ]}
 ];
 @NgModule({

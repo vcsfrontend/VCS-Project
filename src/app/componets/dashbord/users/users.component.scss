@@ -1,0 +1,17 @@
+table {
+    width: 100%;
+  }
+th.mat-mdc-header-cell {
+    position: sticky;
+    top: 0;
+    background-color: white; /* Ensure header has a solid background */
+    z-index: 1; /* Ensure header stays on top */
+  }
+  
+  .mat-mdc-header-row {
+    background: #f1f1f1;
+  }
+  .mat-elevation-z8 {
+    max-height: 400px; /* Adjust as necessary */
+    overflow: auto;
+  }
