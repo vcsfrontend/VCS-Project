@@ -20,6 +20,7 @@ import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
+import { SwitherService } from '../../../../shared/services/swither.service';
 @Component({
   selector: 'app-leads',
   standalone: true,
@@ -33,13 +34,14 @@ import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstra
   styleUrl: './leads.component.scss'
 })
 export class LeadsComponent extends BaseComponent  {
-  displayedColumns: string[] = ['slNo', 'Action', 'projStatus', 'businessCategory', 'projectAddress','state','city','projectState','projectEstimation'];
-  dataSource = new MatTableDataSource<any>(); 
+  displayedColumns: string[] = ['slNo', 'phone', ];
+  dataSource = new MatTableDataSource<any>();
+  Crmusers : any[]=[];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
 
   constructor(config: NgbModalConfig,	private modalService: NgbModal,
-    private offcanvasService: NgbOffcanvas,
+    private offcanvasService: NgbOffcanvas,public switchService: SwitherService, private toastr: ToastrService,
 	) {
     super();
   }
@@ -96,6 +98,7 @@ options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
+    this.getCrmUsers();
     // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
       if (searchText && typeof searchText === 'string') {
@@ -107,6 +110,19 @@ options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
         this.filteredOptions.next(this.options); // Reset to all options if searchText is null
       }
     });
+  }
+
+  getCrmUsers(){
+    this.switchService.CrmUsers().subscribe({ next: (res:any) => {
+      if(res){
+        this.Crmusers = res.values;
+        this.dataSource.data = res.values;
+        console.log(res);
+        } else {
+          this.toastr.error(res.message);
+        }
+      }
+    })
   }
   
 }
