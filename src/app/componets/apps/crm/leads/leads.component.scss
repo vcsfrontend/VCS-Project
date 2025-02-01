@@ -1,4 +1,6 @@
 .dropdown {
     width: 300px;
-  }
-  
+}
+::ng-deep .offcanvas {
+  max-width: 40% !important;
+}

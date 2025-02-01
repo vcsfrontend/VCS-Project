@@ -1,206 +1,84 @@
-<div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
-    <h1 class="page-title fw-medium fs-18 mb-2">Projects</h1>
-    <nav>
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Projects</li>
-        </ol>
-    </nav>
-</div>
 
-<div class="row">
-    <div class="col-lg-12 col-xxl-12">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    <h4>Bom Data</h4> 
-                </div>
+<div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Leads </div>
+            <div class="text-center">
+                <button class="btn btn-primary waves-effect waves-light" > 
+                    Pending Follow-Ups
+                </button>
             </div>
-            <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <mat-form-field class="m-1 mat-filter">
-                        <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" #input>
-                    </mat-form-field>
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSource">
-                            <ng-container matColumnDef="slNo">
-                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="brandName">
-                                <th mat-header-cell *matHeaderCellDef> brandName </th>
-                                <td mat-cell *matCellDef="let element"> {{element.brandName}}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="type">
-                                <th mat-header-cell *matHeaderCellDef> type </th>
-                                <td mat-cell *matCellDef="let element"> {{element.type}}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="largeImgUrl">
-                                <th mat-header-cell *matHeaderCellDef> largeImgUrl </th>
-                                <td mat-cell *matCellDef="let element">{{element.largeImgUrl | slice:0:7 }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="imgUrl">
-                                <th mat-header-cell *matHeaderCellDef> imgUrl </th>
-                                <td mat-cell *matCellDef="let element"> {{element.imgUrl | slice:0:7 }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="prodUrl">
-                                <th mat-header-cell *matHeaderCellDef> prodUrl </th>
-                                <td mat-cell *matCellDef="let element"> {{element.prodUrl}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="quantity">
-                                <th mat-header-cell *matHeaderCellDef> quantity </th>
-                                <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="roomName">
-                                <th mat-header-cell *matHeaderCellDef> roomName </th>
-                                <td mat-cell *matCellDef="let element"> {{element.roomName}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="roomId">
-                                <th mat-header-cell *matHeaderCellDef> roomId </th>
-                                <td mat-cell *matCellDef="let element"> {{element.roomId}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="position">
-                                <th mat-header-cell *matHeaderCellDef> position </th>
-                                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="y">
-                                <th mat-header-cell *matHeaderCellDef> y </th>
-                                <td mat-cell *matCellDef="let element"> {{element.y}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="z">
-                                <th mat-header-cell *matHeaderCellDef> z </th>
-                                <td mat-cell *matCellDef="let element"> {{element.z}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="x">
-                                <th mat-header-cell *matHeaderCellDef> x </th>
-                                <td mat-cell *matCellDef="let element"> {{element.x}} </td>
-                            </ng-container>
-                            
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                        </table>
-                    </div>
-                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                        aria-label="Select page of periodic elements">
-                    </mat-paginator>
-                </div>
-            </div>
-            
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-12 col-xxl-12">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    <h4>AuxilaryCosts</h4> 
+<div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">15 records found</div>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-wave">Filter</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave">Bulk Upload</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
+                    data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <mat-form-field class="m-1 mat-filter">
-                        <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" #input>
-                    </mat-form-field>
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="dataSource">
-                            <ng-container matColumnDef="slNo">
-                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="roomName">
-                                <th mat-header-cell *matHeaderCellDef> roomName </th>
-                                <td mat-cell *matCellDef="let element"> {{element.roomName}}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="roomId">
-                                <th mat-header-cell *matHeaderCellDef> roomId </th>
-                                <td mat-cell *matCellDef="let element"> {{element.roomId}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="totalPrice">
-                                <th mat-header-cell *matHeaderCellDef> totalPrice </th>
-                                <td mat-cell *matCellDef="let element"> {{element.totalPrice}}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="pricePerArea">
-                                <th mat-header-cell *matHeaderCellDef> pricePerArea </th>
-                                <td mat-cell *matCellDef="let element">{{element.pricePerArea }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="itemNum">
-                                <th mat-header-cell *matHeaderCellDef> itemNum </th>
-                                <td mat-cell *matCellDef="let element"> {{element.itemNum }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="itemNumWithoutPrice">
-                                <th mat-header-cell *matHeaderCellDef> itemNumWithoutPrice </th>
-                                <td mat-cell *matCellDef="let element"> {{element.itemNumWithoutPrice}} </td>
-                            </ng-container>
-                            <!-- <ng-container matColumnDef="labourPrice">
-                                <th mat-header-cell *matHeaderCellDef> labourPrice </th>
-                                <td mat-cell *matCellDef="let element"> {{element.labourPrice}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="totalPrice1">
-                                <th mat-header-cell *matHeaderCellDef> totalPrice </th>
-                                <td mat-cell *matCellDef="let element"> {{element.totalPrice}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="itemNum2">
-                                <th mat-header-cell *matHeaderCellDef> itemNum2 </th>
-                                <td mat-cell *matCellDef="let element"> {{element.itemNum2}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="formatUnitPrice">
-                                <th mat-header-cell *matHeaderCellDef> formatUnitPrice </th>
-                                <td mat-cell *matCellDef="let element"> {{element.formatUnitPrice}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="itemNum3">
-                                <th mat-header-cell *matHeaderCellDef> itemNum3 </th>
-                                <td mat-cell *matCellDef="let element"> {{element.itemNum3}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="itemNumWithoutPrice1">
-                                <th mat-header-cell *matHeaderCellDef> itemNumWithoutPrice1 </th>
-                                <td mat-cell *matCellDef="let element"> {{element.itemNumWithoutPrice1}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="assistantMaterialPrice">
-                                <th mat-header-cell *matHeaderCellDef> assistantMaterialPrice </th>
-                                <td mat-cell *matCellDef="let element"> {{element.assistantMaterialPrice}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="hasPrice">
-                                <th mat-header-cell *matHeaderCellDef> hasPrice </th>
-                                <td mat-cell *matCellDef="let element"> {{element.hasPrice}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="calType">
-                                <th mat-header-cell *matHeaderCellDef> calType </th>
-                                <td mat-cell *matCellDef="let element"> {{element.calType}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="formatQuantity">
-                                <th mat-header-cell *matHeaderCellDef> formatQuantity </th>
-                                <td mat-cell *matCellDef="let element"> {{element.formatQuantity}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="calTypeId">
-                                <th mat-header-cell *matHeaderCellDef> calTypeId </th>
-                                <td mat-cell *matCellDef="let element"> {{element.calTypeId}} </td>
-                            </ng-container> -->
-                            
-                            <tr mat-header-row *matHeaderRowDef="displayedColumnss"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumnss;"></tr>
-                        </table>
-                    </div>
-                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                        aria-label="Select page of periodic elements">
-                    </mat-paginator>
-                </div>
-            </div>
-            
         </div>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource">
+                        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                            <th mat-header-cell *matHeaderCellDef> {{ column | titlecase }} </th>
+                            <td mat-cell *matCellDef="let element; let i = index">
+                                {{ column === 'slNo' ? getSNo(i) : element[column] !== undefined ? element[column] : '-' }}
+                            </td>
+                        </ng-container>                        
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+        </div>             
     </div>
 </div>
 
 
-
+<ng-template #Content12 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Project Furniture Data</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">name</th>
+                                            <th scope="col">roomId</th>
+                                            <th scope="col">roomTypeId</th>
+                                            <th scope="col">levelId</th>
+                                            <th scope="col">level</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>

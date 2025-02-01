@@ -155,6 +155,7 @@ export class BasicComponent extends BaseComponent implements OnInit {
   // ngAfterViewChecked() {
   //   console.log("60",this.signupFrm.get('tools'))
   // }
+  
   passwordValidator(control: any) {
     const value = control.value;
     const hasUpperCase = /[A-Z]/.test(value);

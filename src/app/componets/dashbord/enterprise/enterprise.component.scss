@@ -11,3 +11,21 @@
 .pj-name {
     cursor: pointer;
 }
+
+.no-space {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+.no {
+    cursor: pointer;
+}
+.tooltip-primary {
+    position: absolute;
+    z-index: 1050; /* Ensure it appears above other elements */
+    pointer-events: none; /* Prevent the tooltip from interacting with layout */
+}
+.opp {
+    margin-top: 115px;
+    margin-bottom: 120px;
+
+}
