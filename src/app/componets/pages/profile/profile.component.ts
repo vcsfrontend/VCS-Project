@@ -1,9 +1,28 @@
-import { Component } from '@angular/core';
+import { Component,TemplateRef, ViewChild } from '@angular/core';
 import { SharedModule } from '../../../shared/common/sharedmodule';
-import { NgbNavModule,NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule,NgbDropdownModule ,NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GalleryItem, Gallery, ImageItem, ImageSize, ThumbnailsPosition, GalleryModule } from 'ng-gallery';
 import { Lightbox, LightboxModule } from 'ng-gallery/lightbox';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { CommonModule, DatePipe } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BaseComponent } from '../../../shared/base/base.component';
+import { RouterModule } from '@angular/router';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { MaterialModuleModule } from '../../..//material-module/material-module.module';
+import { FirebaseService } from '../../../shared/services/firebase.service';
+import { FormControl } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
+import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
 const data = [
   {
     srcUrl: './assets/images/media/media-40.jpg',

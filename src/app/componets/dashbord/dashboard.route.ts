@@ -113,6 +113,16 @@ export const admin: Routes = [
     import('./courses/courses.component').then((m) => m.CoursesComponent),
 },
 {
+  path: 'enterprise',
+  loadComponent: () =>
+    import('./enterprise/enterprise.component').then((m) => m.EnterpriseComponent),
+},
+{
+  path: 'bom',
+  loadComponent: () =>
+    import('./bom/bom.component').then((m) => m.BomComponent),
+},
+{
   path: 'stocks',
   loadComponent: () =>
     import('./stocks/stocks.component').then((m) => m.StocksComponent),
@@ -127,11 +137,22 @@ export const admin: Routes = [
     loadComponent: () =>
     import('./org-settings/org-settings.component').then((m) => m.OrgSettingsComponent),
   },
+  {
+    path: 'leads',
+    loadComponent: () =>
+    import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
+  },
 {
   path: 'personal',
   loadComponent: () =>
     import('./personal/personal.component').then((m) => m.PersonalComponent),
 },
+{
+  path: 'users',
+  loadComponent: () =>
+    import('./users/users.component').then((m) => m.UsersComponent),
+},
+
 ]}
 ];
 @NgModule({

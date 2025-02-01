@@ -759,8 +759,8 @@ chartOptions6:any= {
       "roleId": this.adonaiRoleId,
       "activityStatus": this.adonaiActivitySts,
       "subscriptionDate": this.dp.transform(this.adonaiSubDate, 'dd-MM-yyyy'),
-      "subStartDate": this.dp.transform(this.adonaiSubStartDate, 'dd-MM-yyyy'),
-      "subEndDate": this.dp.transform(this.adonaiSubEndDate, 'dd-MM-yyyy'),
+      "subStartDate": this.dp.transform(this.adonaiSubStartDate, 'yyyy-MM-dd'),
+      "subEndDate": this.dp.transform(this.adonaiSubEndDate, 'yyyy-MM-dd'),
       "remarks": this.adonaiRemarks,
       "updatedBy": localStorage.getItem('username')
     };

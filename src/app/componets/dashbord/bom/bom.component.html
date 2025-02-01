@@ -1,0 +1,84 @@
+
+<div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Leads </div>
+            <div class="text-center">
+                <button class="btn btn-primary waves-effect waves-light" > 
+                    Pending Follow-Ups
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">15 records found</div>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-wave">Filter</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave">Bulk Upload</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
+                    data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource">
+                        <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
+                            <th mat-header-cell *matHeaderCellDef> {{ column | titlecase }} </th>
+                            <td mat-cell *matCellDef="let element; let i = index">
+                                {{ column === 'slNo' ? getSNo(i) : element[column] !== undefined ? element[column] : '-' }}
+                            </td>
+                        </ng-container>                        
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                </div>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+        </div>             
+    </div>
+</div>
+
+
+<ng-template #Content12 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Project Furniture Data</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0">
+                            <div class="table-responsive border border-light">
+                                <table class="table text-nowrap table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">name</th>
+                                            <th scope="col">roomId</th>
+                                            <th scope="col">roomTypeId</th>
+                                            <th scope="col">levelId</th>
+                                            <th scope="col">level</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
