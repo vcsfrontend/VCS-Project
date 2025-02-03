@@ -129,7 +129,7 @@
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label for="zipCode" class="form-label">Zip Code</label>
-                <input type="text" class="form-control" id="zipCode" placeholder="" formControlName="zipCode" [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }">
+                <input type="text" class="form-control" id="zipCode" placeholder="" formControlName="zipCode" [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
                 <div *ngIf="submitted && f['zipCode'].errors" class="invalid-feedback">
                     <span *ngIf="f['zipCode'].errors['required']">Zip Code is required.</span>
                     <span *ngIf="f['zipCode'].errors['minlength']">Zip Code must be at least 6 characters long.</span>
@@ -165,9 +165,11 @@
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label for="contact" class="form-label">Contact</label>
-                <input type="text" class="form-control" id="contact" placeholder="" formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }">
+                <input type="text" class="form-control" id="contact" placeholder="" formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)" 
+                (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)" (paste)="preventCopyPaste($event)">
                 <div *ngIf="submitted && f['contact'].errors" class="invalid-feedback">
-                    <span *ngIf="f['contact'].errors['required']">Contact is required.</span>                    
+                    <span *ngIf="f['contact'].errors['required']">Contact is required.</span> 
+                    <span *ngIf="f['contact'].errors['maxlength']">Contact must be 10 characters.</span>                   
                 </div>
             </div>            
             <div class="col-xl-3 col-lg-3 col-md-3">
