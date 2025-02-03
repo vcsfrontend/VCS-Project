@@ -33,7 +33,6 @@ import { FormControl, FormArray,  } from '@angular/forms'
 import { MatSort } from '@angular/material/sort';
 
 
-
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -47,47 +46,32 @@ import { MatSort } from '@angular/material/sort';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
-  displayedColumns: string[] = ['id', 'name','age','city'];
+  displayedColumns: string[] = ['firstName', 'email','country','phone', 'crmActivityStatus', 'city'];
   dataSource = new MatTableDataSource<any>(); 
-
-  userData:any[]=[
-    { id: 1, name: 'John', age: 25, city: '123 Main St' },
-    { id: 2, name: 'Jane', age: 30, city: '456 Oak St' },
-    { id: 3, name: 'Mike', age: 35, city: '789 Pine St' },
-    { id: 4, name: 'Alice', age: 28, city: '321 Maple St' },
-    // Add more sample data
-  ];
- 
-
+  Crmusers : any;
   @ViewChild('paginator') paginator!: MatPaginator;
 
 
-  constructor() {   
+  constructor( public switchService: SwitherService, private toastr: ToastrService,) {   
     
   }
 
   ngOnInit()
   {
-    this.getList();
+    this.getCrmUsers();
   }
 
-  getList()
-  {
-    this.dataSource =new MatTableDataSource<Element>([
-      { id: 1, name: 'John', age: 25, city: '123 Main St' },
-      { id: 2, name: 'Jane', age: 30, city: '456 Oak St' },
-      { id: 3, name: 'Mike', age: 35, city: '789 Pine St' },
-      { id: 4, name: 'Alice', age: 28, city: '321 Maple St' },
-      { id: 6, name: 'John', age: 25, city: '123 Main St' },
-      { id: 7, name: 'Jane', age: 30, city: '456 Oak St' },
-      { id: 8, name: 'Mike', age: 35, city: '789 Pine St' },
-      { id: 9, name: 'Alice', age: 28, city: '321 Maple St' },
-      { id: 10, name: 'John', age: 25, city: '123 Main St' },
-      { id: 11, name: 'Jane', age: 30, city: '456 Oak St' },
-      { id: 12, name: 'Mike', age: 35, city: '789 Pine St' },
-      { id: 13, name: 'Alice', age: 28, city: '321 Maple St' },
-      // Add more sample data
-    ]);
+  getCrmUsers(){
+    this.switchService.CrmUsers().subscribe({ next: (res:any) => {
+      if(res){
+        this.Crmusers = res;
+        this.dataSource.data = res;
+        console.log(res);
+        } else {
+          this.toastr.error(res.message);
+        }
+      }
+    })
   }
 
   /**

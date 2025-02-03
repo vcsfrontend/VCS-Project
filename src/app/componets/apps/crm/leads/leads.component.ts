@@ -115,8 +115,8 @@ options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
   getCrmUsers(){
     this.switchService.CrmUsers().subscribe({ next: (res:any) => {
       if(res){
-        this.Crmusers = res.values;
-        this.dataSource.data = res.values;
+        this.Crmusers = res;
+        this.dataSource.data = res;
         console.log(res);
         } else {
           this.toastr.error(res.message);
