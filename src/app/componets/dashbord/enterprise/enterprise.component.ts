@@ -73,9 +73,9 @@ export class EnterpriseComponent {
   // @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>; 
   // @ViewChild('template', { static: true }) templateRef!: TemplateRef<any>;
   private modalRef: any;
-  PjList : any; furnitureData : any; ProjBasicInfo : any; BomLst : any; AuxList : any; Renders: any; 
-  RoomFurData: any; showMore = false; 
-  
+  PjList : any[]=[]; furnitureData : any; ProjBasicInfo : any; BomLst : any; AuxList : any; Renders: any; 
+  RoomFurData: any; showMore: boolean = false; tempList : any;
+  externalUrl: string = "https://adonai.vcs.plus/api/saas/openapi/v2/redirect?url=https://adonai.vcs.plus/pub/tool/yundesign/cloud?%26redirecturl=/pub/saas/apps/project/list%26redirectbim=false&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5IjoiSUwiLCJ0dSI6ZmFsc2UsImMiOjE3Mzc2MTcyMzY5MjcsInV0YyI6MiwiYXZhdGFyIjoiaHR0cHM6Ly9xaHN0YXRpY3NzbC5rdWppYWxlLmNvbS9uZXd0LzMyL2ltYWdlL3BuZy8xNTQ1MTIwNTA3NDAxL0YzQzJBNEE0NzU4RjE3REM2QzJBMzU1NzZDOUI5N0Y2LnBuZyIsImxvY2FsZSI6ImVuX1VTIiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9VU0VSIl0sInNfaWQiOm51bGwsInZhbGlkYXRlZCI6ZmFsc2UsImFfaWQiOm51bGwsImlkIjoiM0ZPNEtLUFBWNERPIiwiZXhwIjoxNzM4MjIyMDM3LCJrX2lkIjoiM0ZPNEtLUFBWNERPIiwicl9pZCI6IjNGTzRLMEw3QTM1MiIsImVtYWlsIjoidHZPWktXMnFsVV9iYWxha3Jpc2huYUB2YXJtYWdyb3VwLmNvLmluIiwidXNlcm5hbWUiOiJCYWxha3Jpc2huYSJ9.9Sf8yuOHhhUlnK_cXG3YlPZmEQnC68BURnSt1PpZT0Q&locale=en_US"; // Full URL here
   
   constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal,
     private toastr: ToastrService, public switchService: SwitherService, private dp: DatePipe,
@@ -87,11 +87,14 @@ export class EnterpriseComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   
   ngOnInit(){
     this.getLst();
   }
- 
+
   getSnos(index: number): number {
     return this.paginator ? index + 1 + this.paginator.pageIndex * this.paginator.pageSize : index + 1;
   }
@@ -107,6 +110,7 @@ export class EnterpriseComponent {
     this.switchService.ProjectList().subscribe({ next: (res:any) => {
       if(res){
         this.PjList = res.values;
+        this.tempList=res.values;
         this.dataSource.data = res.values;
         console.log(res);
         } else {
@@ -251,12 +255,16 @@ export class EnterpriseComponent {
   }
 
   toggleShowMore(): void {
-    this.showMore = !this.showMore;
-    // this.PjList();
+    this.showMore = !this.showMore; // Toggle between true and false
   }
-  // updateDisplayedCards(): void {
-  //   this.PjList = this.showMore ?  this.PjList?.slice(0, 4) : this.PjList;
-  // }
+
+  updateDisplayedCards(): void {
+  this.tempList=this.PjList;
+
+    console.log('before',this.PjList);
+    this.PjList = this.showMore ?  this.tempList?.slice(0, 4) : this.PjList;
+    console.log('after',this.PjList);
+  }
 
   openLg(content10:any) {
 		this.modalService.open(content10, { size: 'lg' },);
@@ -281,6 +289,9 @@ export class EnterpriseComponent {
   }
   VerticallyScrolling3(content17:any) {
     this.modalService.open(content17, {  scrollable: true,centered: true,size: 'xl' });
+  }
+  VerticallyScrolling4(content18:any) {
+    this.modalService.open(content18, {  scrollable: true,centered: true,size: 'xl' });
   }
   chartOptions: any = {
     series: [

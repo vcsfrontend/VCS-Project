@@ -8,105 +8,7 @@
     </nav>
 </div> -->
 
-<!-- <div class="row">
-    <div class="col-xxl-12">
-        <div class="row">
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-success-transparent">
-                                    <i class="ti ti-album fs-20"></i>
-                                </span>
-                                <span class="badge bg-danger-transparent"></span>
-                            </div>
-                            <div class="text-muted mb-2">Total Projects</div>
-                            <h4 class="mb-0"></h4>
-                        </div>
-                        <div id="total-projects">
-                            <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
-                                [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors"
-                                [fill]="chartOptions2.fill" [stroke]="chartOptions2.stroke"
-                                [tooltip]="chartOptions2.tooltip" [dataLabels]="chartOptions2.dataLabels"
-                                [grid]="chartOptions2.grid" [yaxis]="chartOptions2.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-primary-transparent">
-                                    <i class="ti ti-file-check fs-20"></i>
-                                </span>
-                                <span class="badge bg-success-transparent"></span>
-                            </div>
-                            <div class="text-muted mb-2">Completed Projects</div>
-                            <h4 class="mb-0"></h4>
-                        </div>
-                        <div id="completed-projects">
-                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                                [xaxis]="chartOptions.xaxis" [colors]="chartOptions.colors" [fill]="chartOptions.fill"
-                                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
-                                [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid"
-                                [yaxis]="chartOptions.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-danger-transparent">
-                                    <i class="ti ti-chart-pie-2 fs-20"></i>
-                                </span>
-                                <span class="badge bg-success-transparent"></span>
-                            </div>
-                            <div class="text-muted mb-2">Pending Projects</div>
-                            <h4 class="mb-0"></h4>
-                        </div>
-                        <div id="pending-projects">
-                            <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
-                                [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors"
-                                [fill]="chartOptions3.fill" [stroke]="chartOptions3.stroke"
-                                [tooltip]="chartOptions3.tooltip" [dataLabels]="chartOptions3.dataLabels"
-                                [grid]="chartOptions3.grid" [yaxis]="chartOptions3.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-info-transparent">
-                                    <i class="ti ti-briefcase fs-20"></i>
-                                </span>
-                                <span class="badge bg-success-transparent"></span>
-                            </div>
-                            <div class="text-muted mb-2">Overdue Projects</div>
-                            <h4 class="mb-0"></h4>
-                        </div>
-                        <div id="overdue-projects">
-                            <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart"
-                                [xaxis]="chartOptions1.xaxis" [colors]="chartOptions1.colors"
-                                [fill]="chartOptions1.fill" [stroke]="chartOptions1.stroke"
-                                [tooltip]="chartOptions1.tooltip" [dataLabels]="chartOptions1.dataLabels"
-                                [grid]="chartOptions1.grid" [yaxis]="chartOptions1.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
-<div class="row pt-3">
+<div class="row pt-3 ">
     <div class="col-xl-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
@@ -118,9 +20,26 @@
             </div>
         </div>
     </div>
-    <div class="col-xxl-12" [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'visible' : 'auto' }">
+    <div class="col-xxl-12 " [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
         <div class="row">
-            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let item of PjList">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" style="width: 100%; max-width: 19.5rem; height: 22rem;">
+                <div class="card custom-card" >
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                    <div class="me-2 align-items-center">
+                        <!-- <img src="assets/images/brand-logos/responce.jpg" alt="" style="width: 240px; height: 200px; border-radius: 4px; align-items: center;"> -->
+                    </div>
+                    <div class=" mb-3">
+                        <a href="https://adonai.vcs.plus/api/saas/openapi/v2/redirect?url=https://adonai.vcs.plus/pub/tool/yundesign/cloud?%26redirecturl=/pub/saas/apps/project/list%26redirectbim=false&token=YOUR_TOKEN&locale=en_US"
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            class="btn btn-primary btn-wave me-3 opp">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i> Create New Project &nbsp; &nbsp; &nbsp; &nbsp; 
+                        </a>
+                    </div>
+                </div>
+            </div>  
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let item of (showMore ? PjList : PjList.slice(0, 3))">
                 <div class="card custom-card" style="width: 18rem;">
                     <div class="card-header d-flex align-items-center justify-content-between">
                     <div class="me-2 align-items-center">
@@ -130,13 +49,8 @@
                             <span>No image available</span>
                         </ng-template>
                     </div>
-                    <p class="pj-name" data-bs-toggle="tooltip"
-                    tooltipClass="tooltip-primary" placement="top" ngbTooltip="{{item.name}}">{{item.name | slice:0:13 }} </p>
-                    <!-- <div class="btn-list">
-                        <button type="button" class="btn btn-sm btn-primary btn-wave" data-bs-toggle="tooltip"
-                            tooltipClass="tooltip-primary" placement="top" ngbTooltip="{{item.name}}">
-                            {{item.name | slice:0:13 }}
-                        </button> -->
+                    <p class="pj-name"  ngbTooltip="{{item.name }}" [container]="'body'" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{item.name | slice:0:13 }}</p>
                     <p class="pj-name">{{item.modifiedTime}} </p>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <a class="btn btn-sm btn-primary btn-wave me-3" ><i
@@ -173,9 +87,11 @@
                             <td mat-cell *matCellDef="let element"> {{element.created}} </td>
                         </ng-container>
                         <ng-container matColumnDef="planPic">
-                            <th mat-header-cell *matHeaderCellDef> Plan Pic </th>
+                            <th mat-header-cell *matHeaderCellDef style="width: 150px; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"> Plan Pic </th>
                             <td mat-cell *matCellDef="let element">
-                                <img [src]="element.planPic" alt="Image" *ngIf="element.planPic; else noImage" style="width: 50px; height: auto;" />
+                                <a *ngIf="element.planPic; else noImage" [href]="element.planPic" target="_blank" rel="noopener noreferrer">
+                                    <img class="custom-img-size" [src]="element.planPic" alt="Project Image" style="width: 50px; height: auto;"/>
+                                </a>
                                 <ng-template #noImage>
                                     <span>No image available</span>
                                 </ng-template>
@@ -190,9 +106,16 @@
                             <td mat-cell *matCellDef="let element"> {{element.name | slice:0:12 }} </td>
                         </ng-container>
                         <ng-container matColumnDef="specName">
-                            <th mat-header-cell *matHeaderCellDef> specName </th>
-                            <td mat-cell *matCellDef="let element"> {{element.specName}} </td>
-                        </ng-container>
+                            <th mat-header-cell *matHeaderCellDef style="width: 200px;">specName</th>
+                            <td
+                            mat-cell
+                            *matCellDef="let element"
+                            ngbTooltip="{{element.specName}}"
+                            [container]="'body'"
+                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ element.specName | slice: 0: 12 }}
+                            </td>
+                          </ng-container>                                                    
                         <ng-container matColumnDef="city">
                             <th mat-header-cell *matHeaderCellDef> city name</th>
                             <td mat-cell *matCellDef="let element"> {{element.city }} </td>
@@ -204,7 +127,14 @@
                         <ng-container matColumnDef="coverPic">
                             <th mat-header-cell *matHeaderCellDef> coverPic </th>
                             <td mat-cell *matCellDef="let element">
-                                <img [src]="element.coverPic" alt="Image" *ngIf="element.coverPic; else noImage" style="width: 50px; height: auto;" />
+                                <a *ngIf="element.coverPic; else noImage" [href]="element.coverPic" target="_blank" rel="noopener noreferrer">
+                                    <img
+                                      class="custom-img-size"
+                                      [src]="element.coverPic"
+                                      alt="Project Image"
+                                      style="width: 50px; height: auto;"
+                                    />
+                                  </a>
                                 <ng-template #noImage>
                                     <span>No image available</span>
                                 </ng-template>
@@ -246,17 +176,23 @@
                             <th mat-header-cell *matHeaderCellDef> status </th>
                             <td mat-cell *matCellDef="let element"> {{element.status}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="renders">
+                        <!-- <ng-container matColumnDef="renders">
                             <th mat-header-cell *matHeaderCellDef> renders </th>
                             <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
                             data-bs-target="#exampleModalLg" (click)="VerticallyScrolling3(Content17);
+                            getRenderings(element)"> <i class="fe fe-eye text-muted"></i> </td>
+                        </ng-container> -->
+                        <ng-container matColumnDef="renders">
+                            <th mat-header-cell *matHeaderCellDef> renders </th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                            data-bs-target="#exampleModalLg" (click)="VerticallyScrolling4(Content18);
                             getRenderings(element)"> <i class="fe fe-eye text-muted"></i> </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
                 </div>
-                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
                     aria-label="Select page of periodic elements">
                 </mat-paginator>
             </div>
@@ -332,9 +268,9 @@
                                         <tr>
                                             <th scope="col">created</th>
                                             <th scope="col">planPic</th>
-                                            <th scope="col">commName</th>
+                                            <!-- <th scope="col">commName</th> -->
                                             <th scope="col">name</th>
-                                            <th scope="col">city name</th>
+                                            <!-- <th scope="col">city name</th> -->
                                             <th scope="col">modifiedTime</th>
                                             <th scope="col">coverPic</th>
                                             <th scope="col">designId</th>
@@ -351,27 +287,31 @@
                                         <tr *ngFor="let element of ProjBasicInfo">
                                             <td>{{ element.created }}</td>
                                             <td>
-                                                <img 
-                                                    *ngIf="element.planPic; else noImage" 
-                                                    [src]="element.planPic" 
-                                                    alt="Image" 
-                                                    style="width: 50px; height: auto;" 
-                                                />
+                                                <a *ngIf="element.planPic; else noImage" [href]="element.planPic" target="_blank" rel="noopener noreferrer">
+                                                    <img 
+                                                        *ngIf="element.planPic; else noImage" 
+                                                        [src]="element.planPic" 
+                                                        alt="Image" 
+                                                        style="width: 50px; height: auto;" 
+                                                    />
+                                                  </a>
                                                 <ng-template #noImage>
                                                     <span>No image available</span>
                                                 </ng-template>
                                             </td>
-                                            <td>{{ element.commName }}</td>
+                                            <!-- <td>{{ element.commName }}</td> -->
                                             <td>{{ element.name }}</td>
-                                            <td>{{ element.city }}</td>
+                                            <!-- <td>{{ element.city }}</td> -->
                                             <td>{{ element.modifiedTime }}</td>
                                             <td>
-                                                <img 
-                                                    *ngIf="element.coverPic; else noImage" 
-                                                    [src]="element.coverPic" 
-                                                    alt="Image" 
-                                                    style="width: 50px; height: auto;" 
-                                                />
+                                                <a *ngIf="element.coverPic; else noImage" [href]="element.coverPic" target="_blank" rel="noopener noreferrer">
+                                                    <img 
+                                                        *ngIf="element.coverPic; else noImage" 
+                                                        [src]="element.planPic" 
+                                                        alt="Image" 
+                                                        style="width: 50px; height: auto;" 
+                                                    />
+                                                </a>
                                                 <ng-template #noImage>
                                                     <span>No image available</span>
                                                 </ng-template>
@@ -464,58 +404,69 @@
                                             <!-- <th scope="col">totalCount</th>
                                             <th scope="col">count</th>
                                             <th scope="col">hasMore</th> -->
-                                            <th scope="col">brandName</th>
-                                            <th scope="col">name</th>
-                                            <th scope="col">type</th>
-                                            <th scope="col">largeImgUrl</th>
-                                            <th scope="col">imgUrl</th>
-                                            <th scope="col">prodUrl</th>
-                                            <th scope="col">quantity</th>
                                             <th scope="col">roomName</th>
+                                            <th scope="col">brandName</th>
+                                            <th scope="col">largeImgUrl</th>
+                                            <th scope="col">Product name</th>
+                                            <!-- <th scope="col">imgUrl</th> -->
+                                            <th scope="col">z</th>
+                                            <th scope="col">y</th>
+                                            <th scope="col">x</th>
+                                            <th scope="col">quantity</th>
+                                            <th scope="col">prodUrl</th>
                                             <th scope="col">roomId</th>
                                             <th scope="col">position</th>
-                                            <!-- <th scope="col">z</th>
-                                            <th scope="col">y</th>
-                                            <th scope="col">x</th> -->
+                                            <!-- <th scope="col">type</th> -->
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let item of BomLst">
                                             <!-- <td>{{ item.totalCount }}</td>
                                             <td>{{ item.count }}</td>
                                             <td>{{ item.hasMore }}</td> -->
+                                            <td>{{ item.roomName }}</td>
                                             <td>{{ item.brandName }}</td>
-                                            <td>{{ item.name }}</td>
-                                            <td>{{ item.type }}</td>
+                                            
                                             <td>
-                                                <img 
+                                                <a *ngIf="item.largeImgUrl; else noImage" [href]="item.largeImgUrl" target="_blank" rel="noopener noreferrer">
+                                                    <img
+                                                      class="custom-img-size"
+                                                      [src]="item.largeImgUrl"
+                                                      alt="Image"
+                                                      style="width: 50px; height: auto;"
+                                                    />
+                                                  </a>
+                                                <!-- <img 
                                                     *ngIf="item.largeImgUrl; else noImage" 
                                                     [src]="item.largeImgUrl" 
                                                     alt="Image" 
                                                     style="width: 50px; height: auto;" 
-                                                />
+                                                /> -->
                                                 <ng-template #noImage>
                                                     <span>No image available</span>
                                                 </ng-template>
                                             </td>
-                                            <td>
-                                                <img 
-                                                    *ngIf="item.imgUrl; else noImage" 
-                                                    [src]="item.imgUrl" 
-                                                    alt="Image" 
-                                                    style="width: 50px; height: auto;" 
-                                                />
-                                                <ng-template #noImage>
-                                                    <span>No image available</span>
-                                                </ng-template>
-                                            </td>
-                                            <td>{{ item.prodUrl | slice:0:7}}</td>
+                                            <td>{{ item.name }}</td>
+                                            <td>{{ item.z }}</td>
+                                            <td>{{ item.y }}</td>
+                                            <td>{{ item.x }}</td>
                                             <td>{{ item.quantity }}</td>
-                                            <td>{{ item.roomName }}</td>
+                                            <!-- <td>{{ item.type }}</td> -->
+                                            <!-- <td>
+                                                <a *ngIf="item.imgUrl; else noImage" [href]="item.imgUrl" target="_blank" rel="noopener noreferrer">
+                                                    <img 
+                                                        *ngIf="item.imgUrl; else noImage" 
+                                                        [src]="item.imgUrl" 
+                                                        alt="Image" 
+                                                        style="width: 50px; height: auto;" 
+                                                    />
+                                                  </a>
+                                                <ng-template #noImage>
+                                                    <span>No image available</span>
+                                                </ng-template>
+                                            </td> -->
+                                            <td>{{ item.prodUrl | slice:0:7}}</td>
                                             <td>{{ item.roomId }}</td>
                                             <td>{{ item.position }}</td>
-                                            <!-- <td>{{ item.z }}</td>
-                                            <td>{{ item.y }}</td>
-                                            <td>{{ item.x }}</td> -->
                                         </tr>
                                       </tbody>                                      
                                 </table>
@@ -671,9 +622,7 @@
                                                 <td>{{ item.roomTypeId }}</td>
                                                 <!-- <td><img [src]="item.img" alt="Image" /></td>
                                                 <td><a [href]="item.panoLink" target="_blank">{{ item.panoLink }}</a></td> -->
-                                                
                                             </tr>
-                                          
                                     </tbody>
                                 </table>
                             </div>
@@ -688,3 +637,54 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #Content18 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Project Renders Data</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="col-xxl-12">
+                <div class="row">
+                    <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let item of Renders">
+                        <div class="card custom-card" style="width: 15rem;">
+                            <div class="card-header d-flex align-items-center justify-content-between">
+                            <div class="me-2 align-items-center">
+                                <a *ngIf="item.img; else noImage" [href]="item.img" target="_blank" rel="noopener noreferrer">
+                                    <img
+                                      class="custom-img-size"
+                                      [src]="item.img"
+                                      alt="Project Image"
+                                      style="width: 200px; height: 160px; border-radius: 4px; align-items: center;"
+                                    />
+                                  </a>
+                                  <ng-template #noImage>
+                                    <span>No image available</span>
+                                  </ng-template>
+                            </div>
+                            <p class="no-space pt-1">Pic id : {{ item.picId }}</p>
+                            <p class="no-space">room name : {{ item.roomName }}</p>
+                            <p class="no-space">Created : {{ item.created }}</p>
+                            <div *ngIf="item.panoLink; else noPanoLink">
+                                <a [href]="item.panoLink" target="_blank" rel="noopener noreferrer">
+                                    3D view : <i class="fe fe-eye text-muted"></i>
+                                </a>
+                              </div>
+                              <ng-template #noPanoLink>
+                                <p>No 3D view available</p>
+                              </ng-template>
+                              
+                        </div>
+                    </div>  
+                </div>
+            </div>     
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+        </div>
+    </div>
+<!-- </ng-template> -->
+

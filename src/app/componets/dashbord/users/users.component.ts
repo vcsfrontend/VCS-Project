@@ -33,7 +33,6 @@ import { FormControl, FormArray,  } from '@angular/forms'
 import { MatSort, MatSortModule } from '@angular/material/sort';
 
 
-
 @Component({
   selector: 'app-users',
   standalone: true,
@@ -50,13 +49,13 @@ export class UsersComponent {
   displayedColumns: string[] = ['id', 'name','userId','email','reporting_to','status','action'];
   dataSource = new MatTableDataSource<any>(); 
   pageSize = 5;
-
+  Crmusers : any;
   @ViewChild('paginator') paginator!: MatPaginator;
   //@ViewChild('sort') sort!: MatSort;
   @ViewChild(MatSort) sort!: MatSort;
   
 
-  constructor() {   
+  constructor( public switchService: SwitherService, private toastr: ToastrService,) {   
     
   }
 
@@ -82,6 +81,19 @@ export class UsersComponent {
       { id: 13, name: 'Alice', userId: 28, email: 'alice@gmail.com',reporting_to:'Vengamma',status:'' },
       // Add more sample data
     ]);
+  }
+
+  getCrmUsers(){
+    this.switchService.CrmUsers().subscribe({ next: (res:any) => {
+      if(res){
+        this.Crmusers = res;
+        this.dataSource.data = res;
+        console.log(res);
+        } else {
+          this.toastr.error(res.message);
+        }
+      }
+    })
   }
 
   /**

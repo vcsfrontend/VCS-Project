@@ -49,10 +49,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './bom.component.scss'
 })
 export class BomComponent {
-  displayedColumns: string[] = ['slNo', 'brandName', 'name', 'type', 'largeImgUrl', 'imgUrl', 'prodUrl', 'quantity', 'roomName', 'roomId', 'position', 'y', 'z', 'x' ];
-  displayedColumnss: string[] = ['slNo', 'roomName', 'roomId', 'totalPrice', 'pricePerArea', 'itemNum', 'itemNumWithoutPrice' ];
-  // displayedColumnss: string[] = ['slNo', 'roomName', 'roomId', 'totalPrice', 'pricePerArea', 'itemNum', 'itemNumWithoutPrice', 'assistantMaterialPrice', 'labourPrice', 'formatUnitPrice', 'itemNumWithoutPrice1', 'hasPrice', 'name', 'calType', 'formatQuantity', 'calTypeId' ];
-  
+  displayedColumns: string[] = ['slNo', 'brandName', 'name', 'type', 'quantity', 'roomName', 'position'];
   ProjBomList : any; BomLst : any; Aux : any;
 
   dataSource = new MatTableDataSource<any>(); 
@@ -84,7 +81,10 @@ export class BomComponent {
     }
     return index + 1; 
   }
-
+  VerticallyScrol(content12:any) {
+    this.modalService.open(content12, {  scrollable: true,centered: true,size: 'xl' });
+  }
+  
   ngOnInit() {
     const designId = "3FO3N8OCM23N"; 
     this.getProjBomList(designId);

@@ -232,6 +232,7 @@ export class NavService implements OnDestroy {
       active: false,
       path : "/dashboard/dashboard2"
     },
+    
         
     // //PAGES
     // { headTitle: 'PAGES' },
@@ -274,6 +275,15 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/projects',
     // },
+    {
+      title: 'leads',
+      icon: 'bi bi-rulers',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path: '/apps/crm/leads'
+    },
     {
       title: 'Designers',
       dirchange: false,

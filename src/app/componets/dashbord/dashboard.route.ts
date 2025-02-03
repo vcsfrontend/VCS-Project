@@ -137,6 +137,11 @@ export const admin: Routes = [
     loadComponent: () =>
     import('./org-settings/org-settings.component').then((m) => m.OrgSettingsComponent),
   },
+  {
+    path: 'leads',
+    loadComponent: () =>
+    import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
+  },
 {
   path: 'personal',
   loadComponent: () =>
@@ -147,6 +152,7 @@ export const admin: Routes = [
   loadComponent: () =>
     import('./users/users.component').then((m) => m.UsersComponent),
 },
+
 ]}
 ];
 @NgModule({

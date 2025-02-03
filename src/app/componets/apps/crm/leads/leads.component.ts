@@ -11,6 +11,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BaseComponent } from '../../../../shared/base/base.component';
 import { RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
@@ -18,168 +19,8 @@ import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
-const DATA=[
-  {
-    img:"./assets/images/faces/4.jpg",
-    name:'Emily',
-    Email:'Emily2981@gmail.com',
-    logo:'./assets/images/company-logos/1.png',
-    company:'Spruko Technologies',
-    phnNo:'1678-28993-223',
-    Status:'New',
-    Source:'Social Media',
-    bg:'primary-transparent',
-    text:'primary',
-    bg1:'primary-transparent',
-    text1:'primary',
-    Lead:'New Lead',
-    Tags:'Prospect'
-  },
-  {
-    img:"./assets/images/faces/12.jpg",
-    name:'James',
-    Status:'Follow-up',
-     Email:'James289@gmail.com',
-    logo:'./assets/images/company-logos/3.png',
-    company:'Spice Infotech',
-    phnNo:'8122-2342-4453',
-    Source:'Direct mail',
-    bg:'primary-transparent',
-    text:'primary',
-    bg1:'danger-transparent',
-    text1:'danger',
-    Lead:'Customer',
-    Tags:'Hot Lead'
-  },
-  {
-    img:"./assets/images/faces/14.jpg",
-    name:'John',
-    Status:'Closed',
-    Email:'John789@gmail.com',
-    logo:'./assets/images/company-logos/4.png',
-    company:'Logitech ecostics',
-    phnNo:'1902-2001-3023',
-    Source:'Blog Articles',
-    bg:'success-transparent',
-    text:'success',
-    bg1:'',
-    text1:'',
-    Lead:'Partner',
-    Tags:''
-  },
-  {
-    img:"./assets/images/faces/6.jpg",
-    name:'Olivia',
-    Status:'Contacted',
-    Email:'Olivia290@gmail.com',
-    logo:'./assets/images/company-logos/5.png',
-    company:'Initech Info',
-    phnNo:'1603-2032-1123',
-    Source:'Affiliates',
-    bg:'light',
-    text:'default',
-    bg1:'secondary-transparent',
-    text1:'secondary',
-    Lead:'LostCustomer',
-    Tags:'Influencer'
-  },
-  {
-    img:"./assets/images/faces/8.jpg",
-    name:'Sophia',
-    Status:'New',
-    Email:'Sophia1993@gmail.com',
-    logo:'./assets/images/company-logos/6.png',
-    company:'Massive Dynamic',
-    phnNo:'1129-2302-1092',
-    Source:'Organic search ',
-    bg:'pink-transparent',
-    text:'pink',
-    bg1:'success-transparent',
-    text1:'success',
-    Lead:'Subscriber',
-    Tags:'Partner'
-  },
-  {
-    img:"./assets/images/faces/9.jpg",
-    name:'Toni Stark',
-    Status:'Follow-up',
-    Email:'tonistark345@gmail.com',
-    logo:'./assets/images/company-logos/7.png',
-    company:'Globex Corporation',
-    phnNo:'9923-2344-2003',
-    Source:'Social media  ',
-    bg:'danger-transparent',
-    text:'danger',
-    bg1:'info-transparent',
-    text1:'info',
-    Lead:'Hot Lead',
-    Tags:'Referral'
-  },
-  {
-    img:"./assets/images/faces/15.jpg",
-    name:'Michael',
-    Status:'Closed',
-    Email:'Michael78@gmail.com',
-    logo:'./assets/images/company-logos/8.png',
-    company:'Acme Corporation',
-    phnNo:'7891-2093-1994',
-    Source:'Blog Articles  ',
-    bg:'warning-transparent',
-    text:'warning',
-    bg1:'purple-transparent',
-    text1:'purple',
-    Lead:'Trial User',
-    Tags:'Cold Lead'
-  },
-  {
-    img:"./assets/images/faces/1.jpg",
-    name:'Emma',
-    Email:'Emma678@gmail.com',
-    Status:'Disqualified',
-    logo:'./assets/images/company-logos/9.png',
-    company:'Soylent Corp',
-    phnNo:'1899-2993-0923',
-    Source:'Organic search  ',
-    bg:'success-transparent',
-    text:'success',
-    bg1:'info-transparent',
-    text1:'info',
-    Lead:'Influencer',
-    Tags:'Partner'
-  },
-  {
-    img:"./assets/images/faces/3.jpg",
-    name:'Isabella',
-    Status:'Qualified',
-    Email:'Isabella289@gmail.com',
-    logo:'./assets/images/company-logos/10.png',
-    company:'Umbrella Corporation',
-    phnNo:'1768-2332-4934',
-    Source:'Affiliates  ',
-    bg:'primary-transparent',
-    text:'primary',
-    bg1:'light',
-    text1:'default',
-    Lead:'New Lead',
-    Tags:'Lost Customer'
-  },
-  {
-    img:"./assets/images/faces/9.jpg",
-    name:'William',
-    Status:'Contacted',
-    Email:'William186@gmail.com',
-    logo:'./assets/images/company-logos/2.png',
-    company:'Hooli Technologies',
-    phnNo:'4788-7822-4786',
-    Source:'Direct mail  ',
-    bg:'primary-transparent',
-    text:'primary',
-    bg1:'pink-transparent',
-    text1:'pink',
-    Lead:'New Lead',
-    Tags:'Subscriber'
-  },
-]
+import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
+import { SwitherService } from '../../../../shared/services/swither.service';
 @Component({
   selector: 'app-leads',
   standalone: true,
@@ -192,28 +33,28 @@ const DATA=[
   templateUrl: './leads.component.html',
   styleUrl: './leads.component.scss'
 })
-export class LeadsComponent {
-  displayedColumns: string[] = ['slNo', 'action', 'id', 'name', 'companyname','executive','products','status','source','followupdate','contact','emailid'];
-  dataSource = new MatTableDataSource<any>(); 
+export class LeadsComponent extends BaseComponent  {
+  displayedColumns: string[] = ['slNo', 'phone', ];
+  dataSource = new MatTableDataSource<any>();
+  Crmusers : any[]=[];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
 
-  constructor(
-		config: NgbModalConfig,
-		private modalService: NgbModal,
+  constructor(config: NgbModalConfig,	private modalService: NgbModal,
+    private offcanvasService: NgbOffcanvas,public switchService: SwitherService, private toastr: ToastrService,
 	) {
-
-	}
-  Leads=DATA
-  click(id:string){
-    const data = this.Leads.filter((x: { Source: string }) => {
-      return x.Source != id;
+    super();
+  }
   
-    })
-    this.Leads = data;
-}
+  
 openModal(content1:any) {
   this.modalService.open(content1,{ centered: true });
+}
+openRight(content: any) {
+  this.offcanvasService.open(content, { position: 'end' });
+}
+openRight1(content1: any) {
+  this.offcanvasService.open(content1, { position: 'end' });
 }
 url1: string = ''; // Assuming url1 is a property in your component
 
@@ -241,8 +82,8 @@ applyFilter(event: Event) {
   const filterValue = (event.target as HTMLInputElement).value;
   this.dataSource.filter = filterValue.trim().toLowerCase();
 }
-VerticallyScrol(content10:any) {
-  this.modalService.open(content10, {  scrollable: true,centered: true,size: 'lg' });
+VerticallyScrol(content12:any) {
+  this.modalService.open(content12, {  scrollable: true,centered: true,size: 'xl' });
 }
 // openLg(content10:any) {
 //   this.modalService.open(content10, { size: 'lg' },);
@@ -257,6 +98,7 @@ options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
+    this.getCrmUsers();
     // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
       if (searchText && typeof searchText === 'string') {
@@ -268,6 +110,19 @@ options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
         this.filteredOptions.next(this.options); // Reset to all options if searchText is null
       }
     });
+  }
+
+  getCrmUsers(){
+    this.switchService.CrmUsers().subscribe({ next: (res:any) => {
+      if(res){
+        this.Crmusers = res;
+        this.dataSource.data = res;
+        console.log(res);
+        } else {
+          this.toastr.error(res.message);
+        }
+      }
+    })
   }
   
 }
