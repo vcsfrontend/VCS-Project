@@ -54,103 +54,143 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"
             (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
     </div>
+    <form [formGroup]="leadForm" (ngSubmit)="onSubmit(modal)">
     <div class="modal-body">
-        <div class="row gy-3">
+
+        <div class="row gy-3 scrollable-content">
             <div class="col-xl-3 col-lg-3 col-md-3">
-                <label for="contact-name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="contact-name" placeholder="Name">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">                
+                    <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                        <span *ngIf="f['name'].errors['required']">Name is required.</span>
+                        <span *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters long.</span>
+                    </div>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label for="contact-mail" class="form-label">Company Name</label>
-                <input type="email" class="form-control" id="contact-mail" placeholder="companyName">
+                <input type="email" class="form-control" id="contact-mail" placeholder="companyName" formControlName="companyName">
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="contact-phone" class="form-label">Executive</label>
-                <input type="tel" class="form-control" id="contact-phone" placeholder="">
+                <input type="tel" class="form-control" id="contact-phone" placeholder="" formControlName="executive">
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label for="company-name" class="form-label">Products</label>
-                <input type="text" class="form-control" id="company-name" placeholder="">
+                <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label for="company-name" class="form-label">Country</label>
-                <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3" class="border rounded">
-                    <ng-option value="Choice 1">Spoke</ng-option>
-                    <ng-option value="Choice 2">Engeged</ng-option>
-                    <ng-option value="Choice 3">Proposal</ng-option>
-                </ng-select>
+                <select class="form-select form-select-lg " 
+                    id="country1" formControlName="country" [(ngModel)]="selectedCountry" 
+                    (change)="onCountryChange($any($event.target).value)"
+                    [ngClass]="{ 'is-invalid': submitted && f['country'].errors }">
+                    <option value="" disabled selected>Select Country</option>
+                    <option *ngFor="let c of countryLst" [value]="c.country">
+                        {{ c.country }}
+                    </option>
+                </select>
 
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label class="form-label"> Stage</label>
-                <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3" class="border rounded">
-                    <ng-option value="Choice 1">Spoke</ng-option>
-                    <ng-option value="Choice 2">Engeged</ng-option>
-                    <ng-option value="Choice 3">Proposal</ng-option>
-                </ng-select>
+                <select class="form-select form-select-lg" id="stage" formControlName="stage" [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
+                    <option value="" disabled selected>Select Stage</option>
+                    <option *ngFor="let c of stageList" [value]="c.name">
+                        {{ c.name }}
+                    </option>
+                </select>   
+                <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
+                    <div *ngIf="f['stage'].errors['required']">Stage is required</div>
+                </div>             
             </div>
             
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label class="form-label"> Status</label>
-                <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3" class="border rounded">
-                    <ng-option value="Choice 1">Unattend</ng-option>
-                    <ng-option value="Choice 2">Active</ng-option>
-                    <ng-option value="Choice 3">Spoke</ng-option>
-                    <ng-option value="Choice 4">Proposal sent</ng-option>
-                    <ng-option value="Choice 5">Meeting Fixed</ng-option>
-                    <ng-option value="Choice 6">Met</ng-option>
-                    <ng-option value="Choice 6">Closed</ng-option>
-                    <ng-option value="Choice 6">Lost</ng-option>
-                    <ng-option value="Choice 6">Conerted to Deal/ opportunity</ng-option>
-                </ng-select>
+                <select class="form-select form-select-lg " 
+                    id="status" formControlName="status" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
+                    <option value="" disabled selected>Select Status</option>
+                    <option *ngFor="let c of leadStatus" [value]="c.name">
+                        {{ c.name }}
+                    </option>
+                </select> 
+                <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                    <div *ngIf="f['status'].errors['required']">Status is required</div>
+                </div> 
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label class="form-label">Lead Source</label>
-                <ng-select  name="choices-multiple-remove-button1" placeholder="Select"  id="choices-multiple-remove-button1" class="border rounded">
-                    <ng-option value="Choice 1">Social Media</ng-option>
-                    <ng-option value="Choice 2">Direct mail</ng-option>
-                    <ng-option value="Choice 3">Adwords</ng-option>
-                    <ng-option value="Choice 4">Leadform</ng-option>
-                    <ng-option value="Choice 5">Referral</ng-option>
-                    <ng-option value="Choice 5">SEO</ng-option>
-                    <ng-option value="Choice 5">Others</ng-option>
-                </ng-select>
+                <select class="form-select form-select-lg " 
+                    id="status" formControlName="leadSource">
+                    <option value="" disabled selected>Select Lead Source</option>
+                    <option *ngFor="let c of leadSource" [value]="c.name">
+                        {{ c.name }}
+                    </option>
+                </select>                 
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
-                <label for="company-name" class="form-label">Zip Code</label>
-                <input type="text" class="form-control" id="company-name" placeholder="">
+                <label for="zipCode" class="form-label">Zip Code</label>
+                <input type="text" class="form-control" id="zipCode" placeholder="" formControlName="zipCode" [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }">
+                <div *ngIf="submitted && f['zipCode'].errors" class="invalid-feedback">
+                    <span *ngIf="f['zipCode'].errors['required']">Zip Code is required.</span>
+                    <span *ngIf="f['zipCode'].errors['minlength']">Zip Code must be at least 6 characters long.</span>
+                </div>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
-                <label for="date" class="form-label">Follow up date</label>
-                <input type="date" class="form-control" id="contact-phone" placeholder="">
+                <label for="followUpDate" class="form-label">Follow up date</label>
+                <input type="date" class="form-control" id="followUpDate" placeholder="" formControlName="followUpDate">
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
-                <label for="company-name" class="form-label">State</label>
-                <input type="text" class="form-control" id="company-name" placeholder="">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" id="state" placeholder="" formControlName="state">
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label for="company-name" class="form-label">City</label>
-                <input type="text" class="form-control" id="company-name" placeholder="">
+                <select class="form-select form-select-lg " 
+                    id="city" formControlName="city" [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
+                    <option value="" disabled selected>Select City</option>
+                    <option *ngFor="let c of cityList" [value]="c.city">
+                        {{ c.city }}
+                    </option>
+                </select> 
+                <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
+                    <div *ngIf="f['city'].errors['required']">City is required</div>
+                </div> 
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
-                <label for="company-name" class="form-label">Address</label>
-                <input type="text" class="form-control" id="company-name" placeholder="">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" placeholder="" formControlName="address" [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
+                <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
+                    <span *ngIf="f['address'].errors['required']">Address is required.</span>                    
+                </div>
             </div>
             <div class="col-xl-3 col-lg-3 col-md-3">
-                <label for="contact-phone" class="form-label">contact</label>
-                <input type="tel" class="form-control" id="contact-phone" placeholder="Enter contact">
-            </div>
+                <label for="contact" class="form-label">Contact</label>
+                <input type="text" class="form-control" id="contact" placeholder="" formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }">
+                <div *ngIf="submitted && f['contact'].errors" class="invalid-feedback">
+                    <span *ngIf="f['contact'].errors['required']">Contact is required.</span>                    
+                </div>
+            </div>            
             <div class="col-xl-3 col-lg-3 col-md-3">
                 <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="contact-phone" placeholder="Enter email">
+                <input type="text" class="form-control form-control-lg  " id="email" 
+                                        placeholder="Enter your email" onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
+                                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
+                                        formControlName="email"  
+                                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" >
+                <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                    <span *ngIf="f['email'].errors['required']">Email is required.</span>
+                    <span *ngIf="f['email'].errors['email']">Invalid email address.</span>
+                </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" >save lead</button>
+        <button type="submit" class="btn btn-secondary">save lead</button>
         <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">cancel</button>
     </div>
+</form>
 </ng-template>
 
 <ng-template #content let-offcanvas>

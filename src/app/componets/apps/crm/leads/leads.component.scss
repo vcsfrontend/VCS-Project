@@ -4,3 +4,8 @@
 ::ng-deep .offcanvas {
   max-width: 40% !important;
 }
+
+.scrollable-content {
+  max-height: 300px; /* You can set a height limit here */
+  overflow-y: auto; /* Enables scrolling for content inside */
+}
