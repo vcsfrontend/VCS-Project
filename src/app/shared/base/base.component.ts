@@ -302,4 +302,28 @@ export class BaseComponent {
     {"country":"Yemen","code":"967","iso":"YE"},
     {"country":"Zambia","code":"260","iso":"ZM"},
     {"country":"Zimbabwe","code":"263","iso":"ZW"}]
+
+    stageList = [{"name":"Spoke"},
+      {"name":"Engaged"},
+      {"name":"Proposal"},
+    ]
+
+    leadStatus = [{"name":"Unattend"},
+      {"name":"Active"},
+      {"name":"Spoke"},
+      {"name":"Proposal sent"},
+      {"name":"Meeting Fixed"},
+      {"name":"Met"},
+      {"name":"Closed"},
+      {"name":"Lost"},
+      {"name":"Conerted to Deal/ opportunity"}
+    ]
+    leadSource = [{"name":"Social Media"},
+      {"name":"Direct mail"},
+      {"name":"Adwords"},
+      {"name":"Leadform"},
+      {"name":"Referral"},
+      {"name":"SEO"},
+      {"name":"Others"}    
+    ]
 }
