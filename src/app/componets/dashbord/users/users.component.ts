@@ -30,7 +30,7 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormArray,  } from '@angular/forms'  
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 
 
@@ -41,26 +41,20 @@ import { MatSort } from '@angular/material/sort';
       AngularFireDatabaseModule, CommonModule,  MatFormFieldModule, MatSelectModule, FlatpickrModule,
       AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
       OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
-      NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,NgSelectModule, MatTableModule],
+      NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,NgSelectModule, MatTableModule,MatSortModule],
     providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
-  displayedColumns: string[] = ['id', 'name','age','city'];
+  displayedColumns: string[] = ['id', 'name','userId','email','reporting_to','status','action'];
   dataSource = new MatTableDataSource<any>(); 
-
-  userData:any[]=[
-    { id: 1, name: 'John', age: 25, city: '123 Main St' },
-    { id: 2, name: 'Jane', age: 30, city: '456 Oak St' },
-    { id: 3, name: 'Mike', age: 35, city: '789 Pine St' },
-    { id: 4, name: 'Alice', age: 28, city: '321 Maple St' },
-    // Add more sample data
-  ];
- 
+  pageSize = 5;
 
   @ViewChild('paginator') paginator!: MatPaginator;
-
+  //@ViewChild('sort') sort!: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
+  
 
   constructor() {   
     
@@ -74,18 +68,18 @@ export class UsersComponent {
   getList()
   {
     this.dataSource =new MatTableDataSource<Element>([
-      { id: 1, name: 'John', age: 25, city: '123 Main St' },
-      { id: 2, name: 'Jane', age: 30, city: '456 Oak St' },
-      { id: 3, name: 'Mike', age: 35, city: '789 Pine St' },
-      { id: 4, name: 'Alice', age: 28, city: '321 Maple St' },
-      { id: 6, name: 'John', age: 25, city: '123 Main St' },
-      { id: 7, name: 'Jane', age: 30, city: '456 Oak St' },
-      { id: 8, name: 'Mike', age: 35, city: '789 Pine St' },
-      { id: 9, name: 'Alice', age: 28, city: '321 Maple St' },
-      { id: 10, name: 'John', age: 25, city: '123 Main St' },
-      { id: 11, name: 'Jane', age: 30, city: '456 Oak St' },
-      { id: 12, name: 'Mike', age: 35, city: '789 Pine St' },
-      { id: 13, name: 'Alice', age: 28, city: '321 Maple St' },
+      { id: 1, name: 'John', userId: 25, email: 'john@gmail.com',reporting_to:'Pavan',status:'Active' },
+      { id: 2, name: 'Jane', userId: 30, email: 'Jane@gmail.com',reporting_to:'Pavan',status:'Active' },
+      { id: 3, name: 'Mike', userId: 35, email: 'mike@gmail.com',reporting_to:'Pavan',status:'Active' },
+      { id: 4, name: 'Alice', userId: 28, email: 'alice@gmail.com',reporting_to:'Pavan',status:'Active' },
+      { id: 6, name: 'John', userId: 25, email: 'mikejohn@gmail.com',reporting_to:'Sasi',status:'In Active' },
+      { id: 7, name: 'Jane', userId: 30, email: 'vimal@gmail.com',reporting_to:'Sasi',status:'In Active' },
+      { id: 8, name: 'Mike', userId: 35, email: 'pavan@gmail.com',reporting_to:'Sasi',status:'In Active' },
+      { id: 9, name: 'Alice', userId: 28, email: 'alice@gmail.com',reporting_to:'Sasi',status:'In Active' },
+      { id: 10, name: 'John', userId: 25, email: 'mikejohn@gmail.com',reporting_to:'Vengamma',status:'Pending' },
+      { id: 11, name: 'Jane', userId: 30, email: 'vimal@gmail.com',reporting_to:'Vengamma',status:'Pending' },
+      { id: 12, name: 'Mike', userId: 35, email: 'pavan@gmail.com',reporting_to:'Vengamma',status:'Pending' },
+      { id: 13, name: 'Alice', userId: 28, email: 'alice@gmail.com',reporting_to:'Vengamma',status:'' },
       // Add more sample data
     ]);
   }
@@ -96,6 +90,7 @@ export class UsersComponent {
    */
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;    
+    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -104,10 +99,27 @@ export class UsersComponent {
   }
 
   getSNo(index: number): number {
-    if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
-        return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageIndex !== undefined) {
+        return this.paginator.pageIndex * this.paginator.pageIndex + index + 1;
     }
     return index + 1; 
+  }
+
+  // Pagination event handler
+  pageEvent(event: any) {
+    console.log('Page changed: ', event);
+  }
+
+  edit(element: any) {
+    console.log('Edit clicked for:', element);
+  }
+
+  view(element: any) {
+    console.log('View clicked for:', element);
+  }
+
+  delete(element: any) {
+    console.log('Delete clicked for:', element);
   }
 
 }
@@ -116,6 +128,8 @@ export class UsersComponent {
 export interface Element {
   id: number;
   name: string;
-  age: number;
-  city: string;
+  userId: number;
+  email: string;
+  reporting_to:string;
+  status:string;
 }
