@@ -230,7 +230,7 @@ export class LeadsComponent extends BaseComponent {
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadSubmitted = false;
       this.uploadLead.reset();
-      this.toastr.error('Please choose Valid Image', 'lead', {
+      this.toastr.error('Please choose Valid file', 'lead', {
         timeOut: 3000, positionClass: 'toast-top-right'
       });
     } else {

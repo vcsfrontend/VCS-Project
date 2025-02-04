@@ -230,25 +230,25 @@
 
                 <div class="container">
                     <div class="row">
-                        <div class="col-xl-8 col-lg-8 col-md-8">
-                            <label for="file">File</label>
-                            <input formControlName="file" id="file" type="file" class="form-control"
+                        <div class="col-xl-12 col-lg-12 col-md-12 d-flex">
+                            <label for="file" class="demo">Select Excel File</label>
+                            <input formControlName="file" id="file" type="file" class="form-control rounded-0"
                                 (change)="onFileChange($event)"
                                 [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
                             <div *ngIf="uploadSubmitted && l['file'].errors" class="invalid-feedback">
                                 <span *ngIf="l['file'].errors['required']">File is required.</span>
                             </div>
                         </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-                            <div class="d-flex gap-3">
-                                <button class="btn btn-primary mr-3" type="submit">Import</button>
-                                <button class="btn btn-secondary" type="button"
-                                    (click)="offcanvas.dismiss('Cross click')">Cancel</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary mr-3" type="submit">Import</button>
+            <button class="btn btn-secondary" type="button"
+                (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
@@ -273,6 +273,13 @@
                     </div>
                 </li>
             </ul>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary mr-3" type="submit">Filter</button>
+            <button class="btn btn-secondary" type="button"
+                (click)="offcanvas.dismiss('Cross click')">Reset Filters</button>
         </div>
     </div>
 </ng-template>
