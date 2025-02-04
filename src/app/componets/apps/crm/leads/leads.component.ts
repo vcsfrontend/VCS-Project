@@ -45,6 +45,10 @@ export class LeadsComponent extends BaseComponent {
   selectedCountry: string = 'India';
   public leadDetails: any = {};
 
+  public uploadLead!: FormGroup;
+  public uploadSubmitted = false;
+  imageFileSrcData: any;
+
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
   ) {
@@ -123,6 +127,11 @@ export class LeadsComponent extends BaseComponent {
       email: ['', [Validators.required, Validators.email]],
     });
 
+    //Upload Lead Validatoin
+    this.uploadLead = this.fb.group({
+      file: ['', [Validators.required]]     
+    });
+
     this.getCrmUsers();
     // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
@@ -141,7 +150,7 @@ export class LeadsComponent extends BaseComponent {
     return this.leadForm.controls;
   }
 
-  onSubmit(modal:any) {
+  onSubmit(modal: any) {
     this.submitted = true;
 
     //this.leadForm.markAllAsTouched();
@@ -161,26 +170,28 @@ export class LeadsComponent extends BaseComponent {
       this.leadDetails.address = this.f['address'].value;
       this.leadDetails.contact = this.f['contact'].value;
       this.leadDetails.email = this.f['email'].value;
-      
+
       this.switchService.AddCrmLeads(this.leadDetails).subscribe({
         next: (res: any) => {
-          if(res.status == true){       
-            modal.close();     
+          if (res.status == true) {
+            modal.close();
             this.submitted = false;
             this.leadForm.reset();
-            this.toastr.success(res.message,'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right' });            
-            } else {              
-              this.toastr.error(res.message,'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right' });
-            }
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
         },
         error: (error) => {
           this.toastr.error(error.statusText);
         },
       })
 
-    } 
+    }
   }
 
   onCountryChange(data: any) {
@@ -197,7 +208,10 @@ export class LeadsComponent extends BaseComponent {
         } else {
           this.toastr.error(res.message);
         }
-      }
+      },
+      error: (error) => {        
+        this.toastr.error(error.statusText);
+      },
     })
   }
 
@@ -206,6 +220,52 @@ export class LeadsComponent extends BaseComponent {
     // alert('Copy, paste, and cut actions are disabled for security reasons.');
     // this.toastr.error('Copy, paste, and cut actions are disabled for security reasons.','signup', {
     //   timeOut: 3000, positionClass: 'toast-top-right' });
+  }
+
+  onFileChange(event: any): void {
+    this.imageFileSrcData = '';
+    const files = event.target.files[0];
+    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    console.log(event.target.files[0].type);
+    if (allExcel.indexOf(event.target.files[0].type) === -1) {
+      this.uploadSubmitted = false;
+      this.uploadLead.reset();
+      this.toastr.error('Please choose Valid Image', 'lead', {
+        timeOut: 3000, positionClass: 'toast-top-right'
+      });
+    } else {
+      this.imageFileSrcData = files;
+    }
+
+  }
+
+  get l() {
+    return this.uploadLead.controls;
+  }
+
+  uploadLeadSubmit(modal: any) {
+    this.uploadSubmitted = true;
+    if (this.uploadLead?.valid) {
+      const formData = new FormData();
+      formData.append('file', this.imageFileSrcData);
+      formData.append('uploadedBy', 'Balakrishna');
+      this.switchService.UploadCrmLeads(formData).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.uploadSubmitted = false;
+            this.uploadLead.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+    }
   }
 
 }
