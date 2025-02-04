@@ -199,7 +199,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
   getCrmUsers() {
-    this.switchService.CrmUsers().subscribe({
+    this.switchService.CrmLeads().subscribe({
       next: (res: any) => {
         if (res) {
           this.Crmusers = res;
