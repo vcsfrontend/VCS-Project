@@ -191,7 +191,7 @@ export class LeadsComponent extends BaseComponent {
         },
       })
 
-    }
+    } 
   }
 
   onCountryChange(data: any) {
