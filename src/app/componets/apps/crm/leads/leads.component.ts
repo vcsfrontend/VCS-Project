@@ -27,7 +27,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
   standalone: true,
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
-    AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule,MatSortModule,
+    AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
     NgbDropdownModule, NgSelectModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
@@ -35,7 +35,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
   styleUrl: './leads.component.scss'
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = ['slNo', 'name', 'companyName', 'executive', 'products', 'status', 'followUpDate', 'contact', 'email',];
+  displayedColumns: string[] = ['slNo', 'name', 'companyName', 'executive', 'products', 'status', 'followUpDate', 'contact', 'email','action'];
   dataSource = new MatTableDataSource<any>();
   Crmusers: any[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -50,7 +50,8 @@ export class LeadsComponent extends BaseComponent {
   public uploadLead!: FormGroup;
   public uploadSubmitted = false;
   imageFileSrcData: any;
-  public leadCount=0;
+  public leadCount = 0;
+  public leadId = 0;
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
@@ -81,7 +82,7 @@ export class LeadsComponent extends BaseComponent {
     }
   }
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;    
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
@@ -96,6 +97,9 @@ export class LeadsComponent extends BaseComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   VerticallyScrol(content12: any) {
+    this.leadId=0;
+    this.submitted = false;
+    this.leadForm.reset();
     this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
   }
   // openLg(content10:any) {
@@ -133,7 +137,7 @@ export class LeadsComponent extends BaseComponent {
 
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
-      file: ['', [Validators.required]]     
+      file: ['', [Validators.required]]
     });
 
     this.getCrmUsers();
@@ -175,27 +179,51 @@ export class LeadsComponent extends BaseComponent {
       this.leadDetails.contact = this.f['contact'].value;
       this.leadDetails.email = this.f['email'].value;
 
-      this.switchService.AddCrmLeads(this.leadDetails).subscribe({
-        next: (res: any) => {
-          if (res.status == true) {
-            modal.close();
-            this.submitted = false;
-            this.leadForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
-      })
+      if (this.leadId > 0) {
+        this.leadDetails.leadId=this.leadId;
+        this.switchService.EditCrmLeads(this.leadDetails).subscribe({
+          next: (res: any) => {
+            if (res.status == true) {
+              modal.close();
+              this.submitted = false;
+              this.leadForm.reset();
+              this.toastr.success(res.message, 'lead', {
+                timeOut: 3000, positionClass: 'toast-top-right'
+              });
+            } else {
+              this.toastr.error(res.message, 'lead', {
+                timeOut: 3000, positionClass: 'toast-top-right'
+              });
+            }
+          },
+          error: (error) => {
+            this.toastr.error(error.statusText);
+          },
+        })
+      }
+      else {
+        this.switchService.AddCrmLeads(this.leadDetails).subscribe({
+          next: (res: any) => {
+            if (res.status == true) {
+              modal.close();
+              this.submitted = false;
+              this.leadForm.reset();
+              this.toastr.success(res.message, 'lead', {
+                timeOut: 3000, positionClass: 'toast-top-right'
+              });
+            } else {
+              this.toastr.error(res.message, 'lead', {
+                timeOut: 3000, positionClass: 'toast-top-right'
+              });
+            }
+          },
+          error: (error) => {
+            this.toastr.error(error.statusText);
+          },
+        })
+      }
 
-    } 
+    }
   }
 
   onCountryChange(data: any) {
@@ -208,13 +236,13 @@ export class LeadsComponent extends BaseComponent {
         if (res) {
           this.Crmusers = res;
           this.dataSource.data = res;
-          this.leadCount=res.length;
+          this.leadCount = res.length;
           console.log(res);
         } else {
           this.toastr.error(res.message);
         }
       },
-      error: (error) => {        
+      error: (error) => {
         this.toastr.error(error.statusText);
       },
     })
@@ -272,5 +300,33 @@ export class LeadsComponent extends BaseComponent {
       })
     }
   }
+
+  sendEmail(element: any) {
+    console.log('View clicked for:', element);
+  }
+
+  editLead(element: any, content12: any) {
+    console.log('View clicked for:', element);
+    if (element.leadId) {
+      this.leadId = element.leadId;
+      this.switchService.CrmGetLeads(this.leadId).subscribe({
+        next: (res: any) => {
+          if (res.leadsEntry) {
+            console.log(res);
+            this.leadForm.patchValue(res.leadsEntry);
+            this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
+
+          } else {
+            this.toastr.error(res.message);
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+    }
+  }
+
+
 
 }

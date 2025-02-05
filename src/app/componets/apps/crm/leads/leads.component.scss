@@ -29,3 +29,12 @@ th.mat-mdc-header-cell {
   max-height: 400px; /* Adjust as necessary */
   overflow: auto;
 }
+
+.action-option:hover{
+  background-color: #10007626 !important;
+  line-height: 1.375;
+  width: calc(100% - 1rem);
+  margin: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  min-width: 10rem;
+}
