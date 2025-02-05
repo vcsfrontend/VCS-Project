@@ -34,7 +34,7 @@ import { SwitherService } from '../../../../shared/services/swither.service';
   styleUrl: './leads.component.scss'
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = ['slNo', 'phone',];
+  displayedColumns: string[] = ['slNo', 'name', 'companyName', 'executive', 'products', 'status', 'followUpDate', 'contact', 'email',];
   dataSource = new MatTableDataSource<any>();
   Crmusers: any[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
