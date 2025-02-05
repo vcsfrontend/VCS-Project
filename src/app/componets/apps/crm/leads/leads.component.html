@@ -267,16 +267,16 @@
                                 <span *ngIf="l['file'].errors['required']">File is required.</span>
                             </div>
                         </div>
+                        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+                            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                                <button class="btn btn-primary mr-3" type="submit">Import</button>
+                                <button class="btn btn-secondary" type="button"
+                                    (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary mr-3" type="submit">Import</button>
-            <button class="btn btn-secondary" type="button"
-                (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
