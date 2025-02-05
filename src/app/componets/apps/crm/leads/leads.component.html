@@ -36,9 +36,37 @@
                             <th mat-header-cell *matHeaderCellDef> S.No. </th>
                             <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="phone">
-                            <th mat-header-cell *matHeaderCellDef> phone </th>
-                            <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="companyName">
+                            <th mat-header-cell *matHeaderCellDef> companyName </th>
+                            <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="executive">
+                            <th mat-header-cell *matHeaderCellDef> executive </th>
+                            <td mat-cell *matCellDef="let element"> {{element.executive}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="products">
+                            <th mat-header-cell *matHeaderCellDef> products </th>
+                            <td mat-cell *matCellDef="let element"> {{element.products}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef> status </th>
+                            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="followUpDate">
+                            <th mat-header-cell *matHeaderCellDef> followUpDate </th>
+                            <td mat-cell *matCellDef="let element"> {{element.followUpDate}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="contact">
+                            <th mat-header-cell *matHeaderCellDef> contact </th>
+                            <td mat-cell *matCellDef="let element"> {{element.contact}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef> email </th>
+                            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
@@ -230,9 +258,9 @@
 
                 <div class="container">
                     <div class="row">
-                        <div class="col-xl-8 col-lg-8 col-md-8">
-                            <label for="file">File</label>
-                            <input formControlName="file" id="file" type="file" class="form-control"
+                        <div class="col-xl-12 col-lg-12 col-md-12 d-flex">
+                            <label for="file" class="demo">Select Excel File</label>
+                            <input formControlName="file" id="file" type="file" class="form-control rounded-0"
                                 (change)="onFileChange($event)"
                                 [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
                             <div *ngIf="uploadSubmitted && l['file'].errors" class="invalid-feedback">
@@ -240,7 +268,7 @@
                             </div>
                         </div>
                         <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-                            <div class="d-flex gap-3">
+                            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
                                 <button class="btn btn-primary mr-3" type="submit">Import</button>
                                 <button class="btn btn-secondary" type="button"
                                     (click)="offcanvas.dismiss('Cross click')">Cancel</button>
@@ -273,6 +301,13 @@
                     </div>
                 </li>
             </ul>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary mr-3" type="submit">Filter</button>
+            <button class="btn btn-secondary" type="button"
+                (click)="offcanvas.dismiss('Cross click')">Reset Filters</button> 
         </div>
     </div>
 </ng-template>

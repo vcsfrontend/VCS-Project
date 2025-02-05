@@ -34,7 +34,7 @@ import { SwitherService } from '../../../../shared/services/swither.service';
   styleUrl: './leads.component.scss'
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = ['slNo', 'phone',];
+  displayedColumns: string[] = ['slNo', 'name', 'companyName', 'executive', 'products', 'status', 'followUpDate', 'contact', 'email',];
   dataSource = new MatTableDataSource<any>();
   Crmusers: any[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -191,7 +191,7 @@ export class LeadsComponent extends BaseComponent {
         },
       })
 
-    }
+    } 
   }
 
   onCountryChange(data: any) {
@@ -199,7 +199,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
   getCrmUsers() {
-    this.switchService.CrmUsers().subscribe({
+    this.switchService.CrmLeads().subscribe({
       next: (res: any) => {
         if (res) {
           this.Crmusers = res;
@@ -230,7 +230,7 @@ export class LeadsComponent extends BaseComponent {
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadSubmitted = false;
       this.uploadLead.reset();
-      this.toastr.error('Please choose Valid Image', 'lead', {
+      this.toastr.error('Please choose Valid file', 'lead', {
         timeOut: 3000, positionClass: 'toast-top-right'
       });
     } else {
