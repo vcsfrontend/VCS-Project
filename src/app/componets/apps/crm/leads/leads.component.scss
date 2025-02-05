@@ -13,3 +13,19 @@
   width: 30%;
   margin: 4px;
 } 
+
+th.mat-mdc-header-cell {
+  position: sticky !important;
+  top: 0;
+  background-color: #4b4b4b !important;
+  z-index: 2 !important;
+  color: #fcfcfc !important;
+}
+
+.mat-mdc-header-row {
+  background: #0f0f0e;
+}
+.mat-elevation-z8 {
+  max-height: 400px; /* Adjust as necessary */
+  overflow: auto;
+}

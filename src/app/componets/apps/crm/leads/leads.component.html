@@ -14,7 +14,7 @@
 <div class="col-xl-12">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
-            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">15 records found</div>
+            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">{{leadCount}} records found</div>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
@@ -30,42 +30,42 @@
         </div>
         <div class="card-body p-0">
             <div class="mat-elevation-z8">
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="dataSource">
+                <div class="mat-elevation-z8">
+                    <table mat-table [dataSource]="dataSource" matSort>
                         <ng-container matColumnDef="slNo">
                             <th mat-header-cell *matHeaderCellDef> S.No. </th>
                             <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
                         </ng-container>
                         <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef> name </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> name </th>
                             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                         </ng-container>
                         <ng-container matColumnDef="companyName">
-                            <th mat-header-cell *matHeaderCellDef> companyName </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> companyName </th>
                             <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
                         </ng-container>
                         <ng-container matColumnDef="executive">
-                            <th mat-header-cell *matHeaderCellDef> executive </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> executive </th>
                             <td mat-cell *matCellDef="let element"> {{element.executive}} </td>
                         </ng-container>
                         <ng-container matColumnDef="products">
-                            <th mat-header-cell *matHeaderCellDef> products </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> products </th>
                             <td mat-cell *matCellDef="let element"> {{element.products}} </td>
                         </ng-container>
                         <ng-container matColumnDef="status">
-                            <th mat-header-cell *matHeaderCellDef> status </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> status </th>
                             <td mat-cell *matCellDef="let element"> {{element.status}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="followUpDate">
-                            <th mat-header-cell *matHeaderCellDef> followUpDate </th>
+                        <ng-container matColumnDef="followUpDate" >
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> followUpDate </th>
                             <td mat-cell *matCellDef="let element"> {{element.followUpDate}} </td>
                         </ng-container>
                         <ng-container matColumnDef="contact">
-                            <th mat-header-cell *matHeaderCellDef> contact </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> contact </th>
                             <td mat-cell *matCellDef="let element"> {{element.contact}} </td>
                         </ng-container>
                         <ng-container matColumnDef="email">
-                            <th mat-header-cell *matHeaderCellDef> email </th>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> email </th>
                             <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

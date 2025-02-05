@@ -21,12 +21,13 @@ import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { NgbOffcanvas, OffcanvasDismissReasons, } from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 @Component({
   selector: 'app-leads',
   standalone: true,
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
-    AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule,
+    AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule,MatSortModule,
     NgbDropdownModule, NgSelectModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
@@ -38,6 +39,7 @@ export class LeadsComponent extends BaseComponent {
   dataSource = new MatTableDataSource<any>();
   Crmusers: any[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
 
   public leadForm!: FormGroup;
@@ -48,6 +50,7 @@ export class LeadsComponent extends BaseComponent {
   public uploadLead!: FormGroup;
   public uploadSubmitted = false;
   imageFileSrcData: any;
+  public leadCount=0;
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
@@ -78,7 +81,8 @@ export class LeadsComponent extends BaseComponent {
     }
   }
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator;    
+    this.dataSource.sort = this.sort;
   }
 
   getSNo(index: number): number {
@@ -204,6 +208,7 @@ export class LeadsComponent extends BaseComponent {
         if (res) {
           this.Crmusers = res;
           this.dataSource.data = res;
+          this.leadCount=res.length;
           console.log(res);
         } else {
           this.toastr.error(res.message);
