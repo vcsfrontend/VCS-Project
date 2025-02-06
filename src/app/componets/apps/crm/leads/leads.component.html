@@ -50,9 +50,9 @@
                               <span class="m-1" ngbDropdown placement="right-top">
                                 <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon" ngbDropdownToggle></i>
                                 <ul class="dropdown-menu" ngbDropdownMenu>
-                                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
-                                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
-                                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                                  <li><a ngbDropdownItem class="dropdown-item" (click)="sendEmail(element)" class="action-option">Send Email</a></li>
+                                  <li><a ngbDropdownItem class="dropdown-item" (click)="editLead(element,Content12)" class="action-option">Edit</a></li>
+                                  
                                 </ul>
                               </span>
                               <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light m-1">
