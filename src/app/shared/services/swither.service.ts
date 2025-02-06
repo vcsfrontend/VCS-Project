@@ -86,6 +86,7 @@ export class SwitherService {
   CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  
   AddCrmLeads(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/add_lead`, data); }
   UploadCrmLeads(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/upload_lead_sheet`, data); }
+  CRMLeadSendMailFollowup(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/send_mail_followup`, data); }
   // CrmGetLeads(lead_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_Lead_view_data/${lead_id}`); }  
   EditCrmLeads(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead`, data); }
   ViewCrmLeads(leadId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_Lead_view_data/${leadId}`); }  
