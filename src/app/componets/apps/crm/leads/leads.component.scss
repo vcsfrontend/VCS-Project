@@ -14,21 +14,24 @@
   margin: 4px;
 } 
 
+table {
+  width: 100%;
+}
 th.mat-mdc-header-cell {
   position: sticky !important;
   top: 0;
-  background-color: #4b4b4b !important;
+  background-color: #006699 !important;
   z-index: 2 !important;
-  color: #fcfcfc !important;
+  color: #ffffff !important;
 }
-
 .mat-mdc-header-row {
-  background: #0f0f0e;
+  background: #006699;
 }
 .mat-elevation-z8 {
   max-height: 400px; /* Adjust as necessary */
   overflow: auto;
 }
+
 .scrollable-content{
   max-height: 400px;
   overflow: hidden; 

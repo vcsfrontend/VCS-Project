@@ -1,87 +1,301 @@
 <div class="col-lg-12 col-xxl-12 pt-2">
   <div class="card custom-card">
-      <div class="card-header justify-content-between">
-          <div class="card-title">
-              <h4>Users </h4> 
-          </div>
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <div class="demo-checkbox" style="font-size: 14px; margin-right: 25px; margin-top: 5px;">
-              <input type="checkbox" id="show_active_users" class="margin-right">
-              <label for="show_active_users" style="text-transform:capitalize;"> Show Only Active users</label>
-            </div>
-            <button type="button" class="btn btn-outline-primary waves-effect">Hierarchy Tree</button>
-            <button type="button" class="btn btn-outline-primary waves-effect">Bulk Upload</button>
-            <button type="button" class="btn btn-outline-primary waves-effect">Add New</button>
-          </div>
+    <div class="card-header justify-content-between">
+      <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">10 Users</div>
+      <div class="text-center">
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+          <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+            (click)="openRight1(content1)" data-bs-target="#offcanvasRight"
+            aria-controls="offcanvasRight">Filter</button>
+          <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+            (click)="openRight(content)" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Bulk
+            Upload</button>
+          <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
+            data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
+        </div>
       </div>
-      <div class="card-body p-0">
-            <!-- <mat-form-field class="m-1 mat-filter">
-              <mat-label>Filter</mat-label>
-              <input matInput (keyup)="applyFilter($event)" #input>
-          </mat-form-field> -->
-                <div class="mat-elevation-z8">
-                  <table mat-table [dataSource]="dataSource" matSort>
-                      <ng-container matColumnDef="slNo"  class=" mat-elevation-z8">
-                          <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                          <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="id" >
-                        <th mat-header-cell *matHeaderCellDef> ID </th>
-                        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-                    </ng-container> 
-                      <ng-container matColumnDef="name" >
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-                          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                      </ng-container>    
-                      <ng-container matColumnDef="userId" >
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> User Id</th>
-                        <td mat-cell *matCellDef="let element"> {{element.userId }} </td>
-                    </ng-container>
-                      <ng-container matColumnDef="email" >
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-                          <td mat-cell *matCellDef="let element"> {{element.email }} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="reporting_to" >
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reporting To</th>
-                        <td mat-cell *matCellDef="let element"> {{element.reporting_to }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="status" >
-                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                      <td mat-cell *matCellDef="let element"> {{element.status }} </td>
-                  </ng-container>
+    </div>
+    <div class="card-body p-0">
+      <!-- <mat-form-field class="m-1 mat-filter">
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" #input>
+        </mat-form-field> -->
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="slNo" class=" mat-elevation-z8">
+            <th mat-header-cell *matHeaderCellDef> S.No. </th>
+            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+          </ng-container>
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+          <ng-container matColumnDef="city">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+              <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                ata-bs-toggle="offcanvas" (click)="openRight1(content3)" 
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                <i class="ri-eye-line"></i>
+              </a>
+              <span class="m-1" ngbDropdown placement="right-top">
+                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon" ngbDropdownToggle></i>
+                <ul class="dropdown-menu" ngbDropdownMenu>
+                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                </ul>
+              </span>
+              <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light m-1">
+                  <i class="ri-delete-bin-line"></i>
+              </a>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+          </ng-container>
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> username </th>
+            <td mat-cell *matCellDef="let element"> {{element.username}} </td>
+          </ng-container>
+          <ng-container matColumnDef="crmActivityStatus">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let element">
+              <span class="badge" [ngClass]="{
+                'bg-success': element.crmActivityStatus === true,
+                'bg-danger': element.crmActivityStatus === false
+                }">
+                {{ element.crmActivityStatus }}
+              </span>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> email</th>
+            <td mat-cell *matCellDef="let element"> {{element.email | slice:0:15 }} </td>
+          </ng-container>
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>phone</th>
+            <td mat-cell *matCellDef="let element"> {{element.phone }} </td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="city">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>city</th>
+            <td mat-cell *matCellDef="let element"> {{element.city }} </td>
+          </ng-container> -->
+          <ng-container matColumnDef="country">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>country</th>
+            <td mat-cell *matCellDef="let element"> {{element.country }} </td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let element">
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="view(element)" class="view-option">View Details</button>
+                <button mat-menu-item (click)="view(element)" class="ban-option">Ban User</button>
+                <button mat-menu-item (click)="delete(element)" class="delete-option">Delete</button>
+              </mat-menu>
+              <button mat-icon-button (click)="edit(element)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+          </ng-container> -->
 
-                  <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef> Actions </th>
-                    <td mat-cell *matCellDef="let element">                     
-                
-                      <!-- Vertical Dot Icon (Menu) -->
-                      <button mat-icon-button [matMenuTriggerFor]="menu">
-                        <mat-icon>more_vert</mat-icon>
-                      </button>
-                
-                      <!-- Menu Options -->
-                      <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="view(element)" class="view-option">View Details</button>
-                        <button mat-menu-item (click)="view(element)" class="ban-option">Ban User</button>
-                        <button mat-menu-item (click)="delete(element)" class="delete-option">Delete</button>
-                      </mat-menu>
-                      <!-- Edit Icon -->
-                      <button mat-icon-button (click)="edit(element)">
-                        <mat-icon>edit</mat-icon>
-                      </button>
-
-                    </td>
-                  </ng-container>
-                      
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
-              </div>
-              <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="pageEvent($event)" showFirstLastButtons
-                  aria-label="Select puserId of periodic elements">
-              </mat-paginator>
-          
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
       </div>
-      
+      <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30]" (page)="pageEvent($event)"
+        showFirstLastButtons aria-label="Select puserId of periodic elements">
+      </mat-paginator>
+    </div>
   </div>
 </div>
+
+<ng-template #Content12 let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title" id="exampleModalLgLabel"><b>Create Lead</b></h6>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+      aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row gy-3">
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="contact-name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="contact-name" placeholder="Name">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="contact-mail" class="form-label">Company Name</label>
+        <input type="email" class="form-control" id="contact-mail" placeholder="companyName">
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6">
+        <label for="contact-phone" class="form-label">Executive</label>
+        <input type="tel" class="form-control" id="contact-phone" placeholder="">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="company-name" class="form-label">Products</label>
+        <input type="text" class="form-control" id="company-name" placeholder="">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="company-name" class="form-label">Country</label>
+        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+          class="border rounded">
+          <ng-option value="Choice 1">Spoke</ng-option>
+          <ng-option value="Choice 2">Engeged</ng-option>
+          <ng-option value="Choice 3">Proposal</ng-option>
+        </ng-select>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label class="form-label"> Stage</label>
+        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+          class="border rounded">
+          <ng-option value="Choice 1">Spoke</ng-option>
+          <ng-option value="Choice 2">Engeged</ng-option>
+          <ng-option value="Choice 3">Proposal</ng-option>
+        </ng-select>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label class="form-label"> Status</label>
+        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+          class="border rounded">
+          <ng-option value="Choice 1">Unattend</ng-option>
+          <ng-option value="Choice 2">Active</ng-option>
+          <ng-option value="Choice 3">Spoke</ng-option>
+          <ng-option value="Choice 4">Proposal sent</ng-option>
+          <ng-option value="Choice 5">Meeting Fixed</ng-option>
+          <ng-option value="Choice 6">Met</ng-option>
+          <ng-option value="Choice 6">Closed</ng-option>
+          <ng-option value="Choice 6">Lost</ng-option>
+          <ng-option value="Choice 6">Conerted to Deal/ opportunity</ng-option>
+        </ng-select>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label class="form-label">Lead Source</label>
+        <ng-select name="choices-multiple-remove-button1" placeholder="Select" id="choices-multiple-remove-button1"
+          class="border rounded">
+          <ng-option value="Choice 1">Social Media</ng-option>
+          <ng-option value="Choice 2">Direct mail</ng-option>
+          <ng-option value="Choice 3">Adwords</ng-option>
+          <ng-option value="Choice 4">Leadform</ng-option>
+          <ng-option value="Choice 5">Referral</ng-option>
+          <ng-option value="Choice 5">SEO</ng-option>
+          <ng-option value="Choice 5">Others</ng-option>
+        </ng-select>
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="company-name" class="form-label">Zip Code</label>
+        <input type="text" class="form-control" id="company-name" placeholder="">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="date" class="form-label">Follow up date</label>
+        <input type="date" class="form-control" id="contact-phone" placeholder="">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="company-name" class="form-label">State</label>
+        <input type="text" class="form-control" id="company-name" placeholder="">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="company-name" class="form-label">City</label>
+        <input type="text" class="form-control" id="company-name" placeholder="">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="company-name" class="form-label">Address</label>
+        <input type="text" class="form-control" id="company-name" placeholder="">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="contact-phone" class="form-label">contact</label>
+        <input type="tel" class="form-control" id="contact-phone" placeholder="Enter contact">
+      </div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label for="email" class="form-label">E-mail</label>
+        <input type="email" class="form-control" id="contact-phone" placeholder="Enter email">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (ngSubmit)="addLead()">save lead</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+      data-bs-dismiss="modal">cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #content let-offcanvas>
+  <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Upload Leads</strong></h5>
+    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+      aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <div>
+      <ul class="list-group list-group-flush mb-0">
+        <li class="list-group-item">
+          <div class="d-flex align-items-center">
+            <div class="flex-fill">
+              <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
+                Format</button>
+              <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then upload it for
+                proper importing of the data.</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #content1 let-offcanvas>
+  <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+      aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <div>
+      <ul class="list-group list-group-flush mb-0">
+        <li class="list-group-item">
+          <div class="d-flex align-items-center">
+            <div class="flex-fill">
+              <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
+                Format</button>
+              <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then upload it for
+                proper importing of the data.</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #content3 let-offcanvas>
+  <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>User Info</strong></h5>
+    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+      aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <div>
+      <ul class="list-group list-group-flush mb-0">
+        <li class="list-group-item">
+          <div class="d-flex align-items-center">
+            <div class="flex-fill">
+              <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
+                Format</button>
+              <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then upload it for
+                proper importing of the data.</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+
+
+

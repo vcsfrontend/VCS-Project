@@ -37,7 +37,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 export class LeadsComponent extends BaseComponent {
   displayedColumns: string[] = ['slNo', 'action', 'name', 'companyName', 'executive', 'status', 'followUpDate', 'contact', 'email'];
   dataSource = new MatTableDataSource<any>();
-  Crmusers: any[] = []; CrmLeads : any;
+  pageSize = 10;
+  Crmusers: any[] = []; CrmLeads: any = {};  element: any = {};
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
@@ -159,7 +161,6 @@ export class LeadsComponent extends BaseComponent {
 
   onSubmit(modal: any) {
     this.submitted = true;
-
     //this.leadForm.markAllAsTouched();
     if (this.leadForm?.valid) {  // Optional chaining is a safety check
       this.leadDetails.name = this.f['name'].value;
@@ -312,6 +313,10 @@ export class LeadsComponent extends BaseComponent {
               currentStage: followup.currentStage || "",
             })) || [],
           };
+
+          // Assign to `element` to ensure template has data
+          this.element = this.CrmLeads;
+
           console.log("Mapped CrmLeads:", this.CrmLeads);
         } else {
           console.warn("Unexpected API structure:", res);

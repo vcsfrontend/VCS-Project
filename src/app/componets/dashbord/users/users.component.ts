@@ -31,6 +31,7 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormArray,  } from '@angular/forms'  
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -46,41 +47,69 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
   styleUrl: './users.component.scss'
 })
 export class UsersComponent {
-  displayedColumns: string[] = ['id', 'name','userId','email','reporting_to','status','action'];
+  displayedColumns: string[] = ['slNo', 'id', 'city', 'firstName', 'username', 'crmActivityStatus', 'email', 'phone', 'country'];
+  leadForm: FormGroup;
+  leads: any[] = [];
   dataSource = new MatTableDataSource<any>(); 
-  pageSize = 5;
+  pageSize = 10;
   Crmusers : any;
   @ViewChild('paginator') paginator!: MatPaginator;
   //@ViewChild('sort') sort!: MatSort;
   @ViewChild(MatSort) sort!: MatSort;
   
 
-  constructor( public switchService: SwitherService, private toastr: ToastrService,) {   
-    
+  constructor( public switchService: SwitherService, private toastr: ToastrService,
+    private modalService: NgbModal, private offcanvasService: NgbOffcanvas,private fb: FormBuilder) {
+      this.leadForm = this.fb.group({
+        name: ['', [Validators.required, Validators.minLength(3)]],  // Required, Min 3 chars
+        companyName: ['', Validators.required],  // Required
+        executive: ['', Validators.required],  // Required
+        products: ['', Validators.required],  // Required
+        country: ['', Validators.required],  // Required
+        stage: ['', Validators.required],  // Required
+        status: ['', Validators.required],  // Required
+        leadSource: ['', Validators.required],  // Required
+        zipCode: ['', [Validators.required, Validators.pattern('^[0-9]{5,6}$')]],  // Only numbers, 5-6 digits
+        followUpDate: ['', Validators.required],  // Required
+        state: ['', Validators.required],  // Required
+        city: ['', Validators.required],  // Required
+        address: ['', Validators.required],  // Required
+        contact: ['', [Validators.required, Validators.pattern('^[0-9]{10,12}$')]],  // 10-12 digit phone number
+        email: ['', [Validators.required, Validators.email]],  // Valid email format
+        currentStage: ['', Validators.required],  // Required
+        updatedBy: ['', Validators.required],  // Required
+        updatedTime: ['', Validators.required],  // Required
+        leadId: [0]  // Default value
+      });
+  }
+
+  addLead() {
+    if (this.leadForm.invalid) {
+      this.toastr.error("Please fill all required fields correctly.", "Validation Error");
+      this.leadForm.markAllAsTouched(); // Highlight all invalid fields
+      return;
+    }
+  
+    const newLead = this.leadForm.value;
+    newLead.leadId = this.leads.length + 1; // Auto-increment ID
+    this.leads.push(newLead);
+  
+    this.toastr.success("Lead added successfully!", "Success");
+    this.leadForm.reset(); // Clear form after submission
+  }
+  
+
+  editLead(lead: any) {
+    this.leadForm.patchValue(lead); // Populate form with selected lead
+  }
+
+  deleteLead(leadId: number) {
+    this.leads = this.leads.filter(lead => lead.leadId !== leadId);
   }
 
   ngOnInit()
   {
-    this.getList();
-  }
-
-  getList()
-  {
-    this.dataSource =new MatTableDataSource<Element>([
-      { id: 1, name: 'John', userId: 25, email: 'john@gmail.com',reporting_to:'Pavan',status:'Active' },
-      { id: 2, name: 'Jane', userId: 30, email: 'Jane@gmail.com',reporting_to:'Pavan',status:'Active' },
-      { id: 3, name: 'Mike', userId: 35, email: 'mike@gmail.com',reporting_to:'Pavan',status:'Active' },
-      { id: 4, name: 'Alice', userId: 28, email: 'alice@gmail.com',reporting_to:'Pavan',status:'Active' },
-      { id: 6, name: 'John', userId: 25, email: 'mikejohn@gmail.com',reporting_to:'Sasi',status:'In Active' },
-      { id: 7, name: 'Jane', userId: 30, email: 'vimal@gmail.com',reporting_to:'Sasi',status:'In Active' },
-      { id: 8, name: 'Mike', userId: 35, email: 'pavan@gmail.com',reporting_to:'Sasi',status:'In Active' },
-      { id: 9, name: 'Alice', userId: 28, email: 'alice@gmail.com',reporting_to:'Sasi',status:'In Active' },
-      { id: 10, name: 'John', userId: 25, email: 'mikejohn@gmail.com',reporting_to:'Vengamma',status:'Pending' },
-      { id: 11, name: 'Jane', userId: 30, email: 'vimal@gmail.com',reporting_to:'Vengamma',status:'Pending' },
-      { id: 12, name: 'Mike', userId: 35, email: 'pavan@gmail.com',reporting_to:'Vengamma',status:'Pending' },
-      { id: 13, name: 'Alice', userId: 28, email: 'alice@gmail.com',reporting_to:'Vengamma',status:'' },
-      // Add more sample data
-    ]);
+    this.getCrmUsers();
   }
 
   getCrmUsers(){
@@ -95,7 +124,19 @@ export class UsersComponent {
       }
     })
   }
-
+  
+  openModal(content1:any) {
+    this.modalService.open(content1,{ centered: true });
+  }
+  openRight(content: any) {
+    this.offcanvasService.open(content, { position: 'end' });
+  }
+  openRight1(content1: any) {
+    this.offcanvasService.open(content1, { position: 'end' });
+  }
+  VerticallyScrol(content12:any) {
+    this.modalService.open(content12, {  scrollable: true,centered: true,size: 'xl' });
+  }
   /**
    * Set the paginator and sort after the view init since this component will
    * be able to query its view for the initialized paginator and sort.

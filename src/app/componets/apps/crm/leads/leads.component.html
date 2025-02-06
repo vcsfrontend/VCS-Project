@@ -77,9 +77,16 @@
                             <td mat-cell *matCellDef="let element"> {{element.products}} </td>
                         </ng-container>
                         <ng-container matColumnDef="status">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> status </th>
-                            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                        </ng-container>
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                            <td mat-cell *matCellDef="let element">
+                              <span class="badge" [ngClass]="{
+                                'bg-success': element.status === true,
+                                'bg-danger': element.status === false
+                                }">
+                                {{element.status}}
+                              </span>
+                            </td>
+                          </ng-container>
                         <ng-container matColumnDef="followUpDate" >
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> followUpDate </th>
                             <td mat-cell *matCellDef="let element"> {{element.followUpDate}} </td>
@@ -110,7 +117,7 @@
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
                 </div>
-                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
             </div>
         </div>
     </div>
@@ -162,7 +169,7 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label"> Stage</label>
                     <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-                        class="border rounded">
+                    formControlName="stage" class="border rounded">
                         <ng-option value="Choice 1">Spoke</ng-option>
                         <ng-option value="Choice 2">Engeged</ng-option>
                         <ng-option value="Choice 3">Proposal</ng-option>
@@ -174,7 +181,7 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label"> Status</label>
                     <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-                        class="border rounded">
+                    formControlName="status" class="border rounded">
                         <ng-option value="Choice 1">Unattend</ng-option>
                         <ng-option value="Choice 2">Active</ng-option>
                         <ng-option value="Choice 3">Spoke</ng-option>
@@ -192,7 +199,7 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label">Lead Source</label>
                     <ng-select name="choices-multiple-remove-button1" placeholder="Select" id="choices-multiple-remove-button1"
-                        class="border rounded">
+                    formControlName="leadSource" class="border rounded">
                         <ng-option value="Choice 1">Social Media</ng-option>
                         <ng-option value="Choice 2">Direct mail</ng-option>
                         <ng-option value="Choice 3">Adwords</ng-option>
@@ -223,8 +230,9 @@
                     <input type="text" class="form-control" id="state" placeholder="Enter Your State" formControlName="state">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="City" class="form-label">City</label>
-                    <input type="text" class="form-control" id="City" placeholder="Enter City Name" formControlName="City">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="Enter City Name" formControlName="city"
+                    [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
                     <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
                         <div *ngIf="f['city'].errors['required']">City is required</div>
                     </div>
@@ -242,7 +250,7 @@
                     <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number" formControlName="contact"
                         [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                        (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)"
+                        (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)" maxlength="10"
                         (paste)="preventCopyPaste($event)">
                     <div *ngIf="submitted && f['contact'].errors" class="invalid-feedback">
                         <span *ngIf="f['contact'].errors['required']">Contact is required.</span>
@@ -264,7 +272,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-secondary">save lead</button>
+            <button type="submit" class="btn btn-secondary" >save lead</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
@@ -355,15 +363,65 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body p-0">
-        <div>
-            <ul class="list-group list-group-flush mb-0">
-                <li class="list-group-item">
-                    <div class="d-flex align-items-center">
-                        
+    <div class="offcanvas-body">
+        <div class="card custom-card border">
+            <div class="card-body">
+                <nav ngbNav #nav24="ngbNav"  class="nav nav-pills flex-column flex-sm-row mb-3 border-bottom py-2" role="tablist">
+                    <ng-container ngbNavItem>
+                    <a ngbNavLink class="flex-sm-fill text-sm-center nav-link " data-bs-toggle="tab" role="tab" aria-current="page"
+                   aria-selected="true">Lead Info</a>
+                   <ng-template ngbNavContent>
+                    <div class="p-3 text-dark" id="pill-flex-home" role="tabpanel">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><span class="fw-semibold me-1">name : </span>{{element.name}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">companyName : </span>{{element.companyName}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">executive : </span>{{element.executive}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">products : </span>{{element.products}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">country : </span>{{element.country}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">stage : </span>{{element.stage}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">status : </span>{{element.status}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">leadSource : </span>{{element.leadSource}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">zipCode : </span>{{element.zipCode}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">followUpDate : </span>{{element.followUpDate}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">state: </span>{{element.state}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">city: </span>{{element.city}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">address: </span>{{element.address}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">contact: </span>{{element.email}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">email: </span>{{element.state}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">currentStage: </span>{{element.currentStage}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">updatedBy: </span>{{element.updatedBy}}</li>
+                            <li class="mb-2"><span class="fw-semibold me-1">updatedTime: </span>{{element.updatedTime}}</li>
+
+                        </ul>
                     </div>
-                </li>
-            </ul>
+                </ng-template>
+                   </ng-container>
+                   <ng-container ngbNavItem>
+                    <a ngbNavLink class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                    aria-selected="false ">Follow-Ups</a>
+                    <ng-template ngbNavContent>
+                        <div class="p-3" id="pill-flex-home" role="tabpanel">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.name}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.companyName}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.executive}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.products}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.country}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.stage}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.status}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.leadSource}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.zipCode}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.followUpDate}}</li>
+                                <li class="mb-2"><span class="fw-semibold me-1">Creator: </span>{{element.state}}</li>
+                            </ul>
+                        </div>
+                    </ng-template>
+                    </ng-container>
+                </nav>
+                <div class="tab-content">
+                    <div [ngbNavOutlet]="nav24" class="mt-2"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
