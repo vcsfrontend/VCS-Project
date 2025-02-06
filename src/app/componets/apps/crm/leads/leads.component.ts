@@ -35,9 +35,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
   styleUrl: './leads.component.scss'
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = ['slNo', 'name', 'companyName', 'executive', 'products', 'status', 'followUpDate', 'contact', 'email','action'];
+  displayedColumns: string[] = ['slNo', 'action', 'name', 'companyName', 'executive', 'status', 'followUpDate', 'contact', 'email'];
   dataSource = new MatTableDataSource<any>();
-  Crmusers: any[] = [];
+  Crmusers: any[] = []; CrmLeads : any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
@@ -115,7 +115,6 @@ export class LeadsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
-
     //Lead Form Validatoin
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -229,6 +228,7 @@ export class LeadsComponent extends BaseComponent {
   onCountryChange(data: any) {
     this.leadForm.patchValue({ country: data });
   }
+  
 
   getCrmUsers() {
     this.switchService.CrmLeads().subscribe({
@@ -276,6 +276,54 @@ export class LeadsComponent extends BaseComponent {
     return this.uploadLead.controls;
   }
 
+  ViewCrmLeads(data: any) {
+    this.switchService.ViewCrmLeads(data.leadId).subscribe({
+      next: (res: any) => {
+        if (res && res.leadsEntry) {
+          this.CrmLeads = {
+            name: res.leadsEntry.name || "",
+            companyName: res.leadsEntry.companyName || "",
+            executive: res.leadsEntry.executive || "",
+            products: res.leadsEntry.products || "",
+            country: res.leadsEntry.country || "",
+            stage: res.leadsEntry.stage || "",
+            status: res.leadsEntry.status || "",
+            leadSource: res.leadsEntry.leadSource || "",
+            zipCode: res.leadsEntry.zipCode || "",
+            followUpDate: res.leadsEntry.followUpDate || "",
+            state: res.leadsEntry.state || "",
+            city: res.leadsEntry.city || "",
+            address: res.leadsEntry.address || "",
+            contact: res.leadsEntry.contact || "",
+            email: res.leadsEntry.email || "",
+            currentStage: res.leadsEntry.currentStage || "",
+            updatedBy: res.leadsEntry.updatedBy || "",
+            updatedTime: res.leadsEntry.updatedTime || "",
+            leadId: res.leadsEntry.leadId || 0,
+            followLeads: res.followLeads?.map((followup: any) => ({
+              id: followup.id || 0,
+              followupDate: followup.followupDate || "",
+              followupTime: followup.followupTime || "",
+              stage: followup.stage || "",
+              status: followup.status || "",
+              comments: followup.comments || "",
+              followUpBy: followup.followUpBy || "",
+              updatedTime: followup.updatedTime || "",
+              currentStage: followup.currentStage || "",
+            })) || [],
+          };
+          console.log("Mapped CrmLeads:", this.CrmLeads);
+        } else {
+          console.warn("Unexpected API structure:", res);
+        }
+      },
+      error: (err: any) => {
+        console.error("Error fetching CRM leads:", err);
+      },
+    });
+  }
+  
+
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
     if (this.uploadLead?.valid) {
@@ -305,27 +353,27 @@ export class LeadsComponent extends BaseComponent {
     console.log('View clicked for:', element);
   }
 
-  editLead(element: any, content12: any) {
-    console.log('View clicked for:', element);
-    if (element.leadId) {
-      this.leadId = element.leadId;
-      this.switchService.CrmGetLeads(this.leadId).subscribe({
-        next: (res: any) => {
-          if (res.leadsEntry) {
-            console.log(res);
-            this.leadForm.patchValue(res.leadsEntry);
-            this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
+  // editLead(element: any, content12: any) {
+  //   console.log('View clicked for:', element);
+  //   if (element.leadId) {
+  //     this.leadId = element.leadId;
+  //     this.switchService.CrmGetLeads(this.leadId).subscribe({
+  //       next: (res: any) => {
+  //         if (res.leadsEntry) {
+  //           console.log(res);
+  //           this.leadForm.patchValue(res.leadsEntry);
+  //           this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
 
-          } else {
-            this.toastr.error(res.message);
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
-      })
-    }
-  }
+  //         } else {
+  //           this.toastr.error(res.message);
+  //         }
+  //       },
+  //       error: (error) => {
+  //         this.toastr.error(error.statusText);
+  //       },
+  //     })
+  //   }
+  // }
 
 
 

@@ -14,7 +14,10 @@
 <div class="col-xl-12">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
-            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">{{leadCount}} records found</div>
+            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                <button class="btn btn-primary waves-effect waves-light">
+                    {{leadCount}} records found
+                </button></div>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
@@ -36,7 +39,27 @@
                             <th mat-header-cell *matHeaderCellDef> S.No. </th>
                             <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
                         </ng-container>
-                        
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef> Actions </th>
+                            <td mat-cell *matCellDef="let element">
+                              <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)" 
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="ri-eye-line"></i>
+                              </a>
+                              <span class="m-1" ngbDropdown placement="right-top">
+                                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon" ngbDropdownToggle></i>
+                                <ul class="dropdown-menu" ngbDropdownMenu>
+                                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
+                                </ul>
+                              </span>
+                              <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light m-1">
+                                  <i class="ri-delete-bin-line"></i>
+                              </a>
+                            </td>
+                        </ng-container>
                         <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> name </th>
                             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -69,23 +92,20 @@
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> email </th>
                             <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="action">
+                        <!-- <ng-container matColumnDef="action">
                             <th mat-header-cell *matHeaderCellDef> Actions </th>
                             <td mat-cell *matCellDef="let element">                     
                         
-                              <!-- Vertical Dot Icon (Menu) -->
                               <button mat-icon-button [matMenuTriggerFor]="menu">
                                 <mat-icon>more_vert</mat-icon>
                               </button>
-                        
-                              <!-- Menu Options -->
                               <mat-menu #menu="matMenu">
                                 <button mat-menu-item (click)="sendEmail(element)" class="action-option">Send Email</button>
                                 <button mat-menu-item (click)="editLead(element,Content12)" class="action-option">Edit</button>                                
                               </mat-menu>                              
         
                             </td>
-                          </ng-container>
+                          </ng-container> -->
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                     </table>
@@ -120,7 +140,7 @@
                     <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
                         formControlName="companyName">
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-6">
+                <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="contact-phone" class="form-label">Executive</label>
                     <input type="tel" class="form-control" id="contact-phone" placeholder=""
                         formControlName="executive">
@@ -131,55 +151,60 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Country</label>
-                    <select class="form-select form-select-lg " id="country1" formControlName="country"
-                        [(ngModel)]="selectedCountry" (change)="onCountryChange($any($event.target).value)"
-                        [ngClass]="{ 'is-invalid': submitted && f['country'].errors }">
-                        <option value="" disabled selected>Select Country</option>
-                        <option *ngFor="let c of countryLst" [value]="c.country">
-                            {{ c.country }}
-                        </option>
-                    </select>
-
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+                        formControlName="country" [(ngModel)]="selectedCountry" 
+                        (change)="onCountryChange($any($event.target).value)"
+                        [ngClass]="{ 'is-invalid': submitted && f['country'].errors }"  class="border rounded">
+                      <ng-option value="" disabled selected></ng-option>
+                      <ng-option *ngFor="let c of countryLst" [value]="c.country">{{ c.country }}</ng-option>
+                    </ng-select>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label"> Stage</label>
-                    <select class="form-select form-select-lg" id="stage" formControlName="stage"
-                        [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
-                        <option value="" disabled selected>Select Stage</option>
-                        <option *ngFor="let c of stageList" [value]="c.name">
-                            {{ c.name }}
-                        </option>
-                    </select>
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+                        class="border rounded">
+                        <ng-option value="Choice 1">Spoke</ng-option>
+                        <ng-option value="Choice 2">Engeged</ng-option>
+                        <ng-option value="Choice 3">Proposal</ng-option>
+                    </ng-select>
                     <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
                         <div *ngIf="f['stage'].errors['required']">Stage is required</div>
                     </div>
                 </div>
-
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label"> Status</label>
-                    <select class="form-select form-select-lg " id="status" formControlName="status"
-                        [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
-                        <option value="" disabled selected>Select Status</option>
-                        <option *ngFor="let c of leadStatus" [value]="c.name">
-                            {{ c.name }}
-                        </option>
-                    </select>
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+                        class="border rounded">
+                        <ng-option value="Choice 1">Unattend</ng-option>
+                        <ng-option value="Choice 2">Active</ng-option>
+                        <ng-option value="Choice 3">Spoke</ng-option>
+                        <ng-option value="Choice 4">Proposal sent</ng-option>
+                        <ng-option value="Choice 5">Meeting Fixed</ng-option>
+                        <ng-option value="Choice 6">Met</ng-option>
+                        <ng-option value="Choice 6">Closed</ng-option>
+                        <ng-option value="Choice 6">Lost</ng-option>
+                        <ng-option value="Choice 6">Conerted to Deal/ opportunity</ng-option>
+                    </ng-select>
                     <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
                         <div *ngIf="f['status'].errors['required']">Status is required</div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label">Lead Source</label>
-                    <select class="form-select form-select-lg " id="status" formControlName="leadSource">
-                        <option value="" disabled selected>Select Lead Source</option>
-                        <option *ngFor="let c of leadSource" [value]="c.name">
-                            {{ c.name }}
-                        </option>
-                    </select>
+                    <ng-select name="choices-multiple-remove-button1" placeholder="Select" id="choices-multiple-remove-button1"
+                        class="border rounded">
+                        <ng-option value="Choice 1">Social Media</ng-option>
+                        <ng-option value="Choice 2">Direct mail</ng-option>
+                        <ng-option value="Choice 3">Adwords</ng-option>
+                        <ng-option value="Choice 4">Leadform</ng-option>
+                        <ng-option value="Choice 5">Referral</ng-option>
+                        <ng-option value="Choice 5">SEO</ng-option>
+                        <ng-option value="Choice 5">Others</ng-option>
+                    </ng-select>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="zipCode" class="form-label">Zip Code</label>
-                    <input type="text" class="form-control" id="zipCode" placeholder="" formControlName="zipCode"
+                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code" formControlName="zipCode"
                         [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }"
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
                     <div *ngIf="submitted && f['zipCode'].errors" class="invalid-feedback">
@@ -195,24 +220,18 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="state" class="form-label">State</label>
-                    <input type="text" class="form-control" id="state" placeholder="" formControlName="state">
+                    <input type="text" class="form-control" id="state" placeholder="Enter Your State" formControlName="state">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">City</label>
-                    <select class="form-select form-select-lg " id="city" formControlName="city"
-                        [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
-                        <option value="" disabled selected>Select City</option>
-                        <option *ngFor="let c of cityList" [value]="c.city">
-                            {{ c.city }}
-                        </option>
-                    </select>
+                    <label for="City" class="form-label">City</label>
+                    <input type="text" class="form-control" id="City" placeholder="Enter City Name" formControlName="City">
                     <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
                         <div *ngIf="f['city'].errors['required']">City is required</div>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="" formControlName="address"
+                    <input type="text" class="form-control" id="address" placeholder="Enter Your Address" formControlName="address"
                         [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
                     <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
                         <span *ngIf="f['address'].errors['required']">Address is required.</span>
@@ -220,7 +239,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="contact" class="form-label">Contact</label>
-                    <input type="text" class="form-control" id="contact" placeholder="" formControlName="contact"
+                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number" formControlName="contact"
                         [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
                         (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)"
@@ -232,7 +251,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="email" class="form-label">E-mail</label>
-                    <input type="text" class="form-control form-control-lg  " id="email" placeholder="Enter your email"
+                    <input type="text" class="form-control  " id="email" placeholder="Enter your email"
                         onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
                                         (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
                                         event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
@@ -316,6 +335,32 @@
                             <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then
                                 upload it for proper importing of the data.</p>
                         </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary mr-3" type="submit">Filter</button>
+            <button class="btn btn-secondary" type="button"
+                (click)="offcanvas.dismiss('Cross click')">Reset Filters</button> 
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content3 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div>
+            <ul class="list-group list-group-flush mb-0">
+                <li class="list-group-item">
+                    <div class="d-flex align-items-center">
+                        
                     </div>
                 </li>
             </ul>

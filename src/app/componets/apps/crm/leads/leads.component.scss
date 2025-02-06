@@ -29,6 +29,10 @@ th.mat-mdc-header-cell {
   max-height: 400px; /* Adjust as necessary */
   overflow: auto;
 }
+.scrollable-content{
+  max-height: 400px;
+  overflow: hidden; 
+}
 
 .action-option:hover{
   background-color: #10007626 !important;
@@ -37,4 +41,12 @@ th.mat-mdc-header-cell {
   margin: 0.25rem 0.5rem;
   border-radius: 0.375rem;
   min-width: 10rem;
+}
+.dropdown-toggle::after {
+  display: none !important;
+}
+.bt-icon {
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
 }
