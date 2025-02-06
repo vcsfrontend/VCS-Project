@@ -24,7 +24,7 @@ import { SwitherService } from '../../../../shared/services/swither.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import * as FilePond from 'filepond';
 import { FilePondComponent, FilePondModule } from 'ngx-filepond';
-import { AngularEditorModule,AngularEditorConfig } from '@kolkov/angular-editor';
+import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-leads',
@@ -32,7 +32,7 @@ import { AngularEditorModule,AngularEditorConfig } from '@kolkov/angular-editor'
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
     AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
-    NgbDropdownModule, NgSelectModule,FilePondModule,AngularEditorModule],
+    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './leads.component.html',
@@ -42,7 +42,7 @@ export class LeadsComponent extends BaseComponent {
   displayedColumns: string[] = ['slNo', 'action', 'name', 'companyName', 'executive', 'status', 'followUpDate', 'contact', 'email'];
   dataSource = new MatTableDataSource<any>();
   pageSize = 10;
-  Crmusers: any[] = []; CrmLeads: any = {};  element: any = {};
+  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -103,7 +103,7 @@ export class LeadsComponent extends BaseComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   VerticallyScrol(content12: any) {
-    this.leadId=0;
+    this.leadId = 0;
     this.submitted = false;
     this.leadForm.reset();
     this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
@@ -138,6 +138,7 @@ export class LeadsComponent extends BaseComponent {
       address: ['', [Validators.required]],
       contact: ['', [Validators.required, Validators.maxLength(10)]],
       email: ['', [Validators.required, Validators.email]],
+      leadId: [''],
     });
 
     //Upload Lead Validatoin
@@ -165,7 +166,6 @@ export class LeadsComponent extends BaseComponent {
 
   onSubmit(modal: any) {
     this.submitted = true;
-    //this.leadForm.markAllAsTouched();
     if (this.leadForm?.valid) {  // Optional chaining is a safety check
       this.leadDetails.name = this.f['name'].value;
       this.leadDetails.companyName = this.f['companyName'].value ? this.f['companyName'].value : '';
@@ -182,50 +182,27 @@ export class LeadsComponent extends BaseComponent {
       this.leadDetails.address = this.f['address'].value;
       this.leadDetails.contact = this.f['contact'].value;
       this.leadDetails.email = this.f['email'].value;
+      this.leadDetails.leadId = this.f['leadId'].value;
 
-      if (this.leadId > 0) {
-        this.leadDetails.leadId=this.leadId;
-        this.switchService.EditCrmLeads(this.leadDetails).subscribe({
-          next: (res: any) => {
-            if (res.status == true) {
-              modal.close();
-              this.submitted = false;
-              this.leadForm.reset();
-              this.toastr.success(res.message, 'lead', {
-                timeOut: 3000, positionClass: 'toast-top-right'
-              });
-            } else {
-              this.toastr.error(res.message, 'lead', {
-                timeOut: 3000, positionClass: 'toast-top-right'
-              });
-            }
-          },
-          error: (error) => {
-            this.toastr.error(error.statusText);
-          },
-        })
-      }
-      else {
-        this.switchService.AddCrmLeads(this.leadDetails).subscribe({
-          next: (res: any) => {
-            if (res.status == true) {
-              modal.close();
-              this.submitted = false;
-              this.leadForm.reset();
-              this.toastr.success(res.message, 'lead', {
-                timeOut: 3000, positionClass: 'toast-top-right'
-              });
-            } else {
-              this.toastr.error(res.message, 'lead', {
-                timeOut: 3000, positionClass: 'toast-top-right'
-              });
-            }
-          },
-          error: (error) => {
-            this.toastr.error(error.statusText);
-          },
-        })
-      }
+      this.switchService.AddCrmLeads(this.leadDetails).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.submitted = false;
+            this.leadForm.reset();            
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
 
     }
   }
@@ -233,7 +210,7 @@ export class LeadsComponent extends BaseComponent {
   onCountryChange(data: any) {
     this.leadForm.patchValue({ country: data });
   }
-  
+
 
   getCrmUsers() {
     this.switchService.CrmLeads().subscribe({
@@ -286,7 +263,7 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         if (res && res.leadsEntry) {
           this.CrmLeads = {
-            name: res.leadsEntry.name || "",           
+            name: res.leadsEntry.name || "",
             companyName: res.leadsEntry.companyName || "",
             executive: res.leadsEntry.executive || "",
             products: res.leadsEntry.products || "",
@@ -331,7 +308,7 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
-  
+
 
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
@@ -362,40 +339,40 @@ export class LeadsComponent extends BaseComponent {
     console.log('View clicked for:', element);
   }
 
-   editLead(element: any, content12: any) {
-     console.log('View clicked for:', element);
-     if (element.leadId) {
-       this.leadId = element.leadId;
-       this.switchService.ViewCrmLeads(this.leadId).subscribe({
-         next: (res: any) => {
-           if (res.leadsEntry) {
-             console.log(res);
-             this.leadForm.patchValue(res.leadsEntry);
-             this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
+  editLead(element: any, content12: any) {
+    console.log('View clicked for:', element);
+    if (element.leadId) {
+      //this.leadId = element.leadId;
+      this.switchService.ViewCrmLeads(element.leadId).subscribe({
+        next: (res: any) => {
+          if (res.leadsEntry) {
+            console.log(res);
+            this.leadForm.patchValue(res.leadsEntry);
+            this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
 
-           } else {
-             this.toastr.error(res.message);
-           }
-         },
-         error: (error) => {
-           this.toastr.error(error.statusText);
-         },
-       })
-     }
+          } else {
+            this.toastr.error(res.message);
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+    }
   }
   @ViewChild("myPond") myPond!: FilePondComponent;
   pondOptions: FilePond.FilePondOptions = {
-      allowMultiple: true,
-      labelIdle: "Drop files here to Upload...",
-    };
+    allowMultiple: true,
+    labelIdle: "Drop files here to Upload...",
+  };
   pondFiles: FilePond.FilePondOptions["files"] = [
-      {
-        source: "assets/photo.jpeg",
-        options: {
-          type: "local",
-        },
+    {
+      source: "assets/photo.jpeg",
+      options: {
+        type: "local",
       },
-    ];
+    },
+  ];
   pondHandleInit() {
     console.log("FilePond has initialised");
   }
