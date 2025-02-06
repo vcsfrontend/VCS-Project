@@ -9,10 +9,9 @@
   max-height: 300px; /* You can set a height limit here */
   overflow-y: auto; /* Enables scrolling for content inside */
 }
-.demo{
-  width: 30%;
-  margin: 4px;
-} 
+.demo.position-relative.d-flex.gap-2 {
+  margin-top: 200px;
+}
 
 table {
   width: 100%;

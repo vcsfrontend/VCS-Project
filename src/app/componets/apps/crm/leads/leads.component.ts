@@ -22,13 +22,17 @@ import { MatInputModule } from '@angular/material/input';
 import { NgbOffcanvas, OffcanvasDismissReasons, } from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import * as FilePond from 'filepond';
+import { FilePondComponent, FilePondModule } from 'ngx-filepond';
+import { AngularEditorModule,AngularEditorConfig } from '@kolkov/angular-editor';
+
 @Component({
   selector: 'app-leads',
   standalone: true,
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
     AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
-    NgbDropdownModule, NgSelectModule],
+    NgbDropdownModule, NgSelectModule,FilePondModule,AngularEditorModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './leads.component.html',
@@ -379,7 +383,39 @@ export class LeadsComponent extends BaseComponent {
        })
      }
   }
+  @ViewChild("myPond") myPond!: FilePondComponent;
+  pondOptions: FilePond.FilePondOptions = {
+      allowMultiple: true,
+      labelIdle: "Drop files here to Upload...",
+    };
+  pondFiles: FilePond.FilePondOptions["files"] = [
+      {
+        source: "assets/photo.jpeg",
+        options: {
+          type: "local",
+        },
+      },
+    ];
+  pondHandleInit() {
+    console.log("FilePond has initialised");
+  }
+  pondHandleAddFile(event: any) {
+    console.log("A file was added", event);
+  }
+  pondHandleActivateFile(event: any) {
+    console.log("A file was activated", event);
+  }
+  editorContent: string = '<p>Start writing here...</p>';
 
-
-
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '200px',
+    minHeight: '0',
+    placeholder: 'Enter text here...',
+    translate: 'no',
+    defaultFontName: 'Arial',
+    defaultFontSize: '14',
+    toolbarHiddenButtons: [['bold', 'italic']],
+  };
 }
