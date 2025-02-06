@@ -281,7 +281,7 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         if (res && res.leadsEntry) {
           this.CrmLeads = {
-            name: res.leadsEntry.name || "",
+            name: res.leadsEntry.name || "",           
             companyName: res.leadsEntry.companyName || "",
             executive: res.leadsEntry.executive || "",
             products: res.leadsEntry.products || "",
@@ -353,27 +353,27 @@ export class LeadsComponent extends BaseComponent {
     console.log('View clicked for:', element);
   }
 
-  // editLead(element: any, content12: any) {
-  //   console.log('View clicked for:', element);
-  //   if (element.leadId) {
-  //     this.leadId = element.leadId;
-  //     this.switchService.CrmGetLeads(this.leadId).subscribe({
-  //       next: (res: any) => {
-  //         if (res.leadsEntry) {
-  //           console.log(res);
-  //           this.leadForm.patchValue(res.leadsEntry);
-  //           this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
+   editLead(element: any, content12: any) {
+     console.log('View clicked for:', element);
+     if (element.leadId) {
+       this.leadId = element.leadId;
+       this.switchService.ViewCrmLeads(this.leadId).subscribe({
+         next: (res: any) => {
+           if (res.leadsEntry) {
+             console.log(res);
+             this.leadForm.patchValue(res.leadsEntry);
+             this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
 
-  //         } else {
-  //           this.toastr.error(res.message);
-  //         }
-  //       },
-  //       error: (error) => {
-  //         this.toastr.error(error.statusText);
-  //       },
-  //     })
-  //   }
-  // }
+           } else {
+             this.toastr.error(res.message);
+           }
+         },
+         error: (error) => {
+           this.toastr.error(error.statusText);
+         },
+       })
+     }
+  }
 
 
 
