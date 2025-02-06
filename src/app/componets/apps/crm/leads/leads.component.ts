@@ -59,6 +59,9 @@ export class LeadsComponent extends BaseComponent {
   public leadCount = 0;
   public leadId = 0;
 
+  public sendLeadForm!: FormGroup;
+  public sendLeadSubmitted=false;
+
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
   ) {
@@ -144,6 +147,16 @@ export class LeadsComponent extends BaseComponent {
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]]
+    });
+
+    //Send Email 
+    this.sendLeadForm = this.fb.group({
+      email: ['', [Validators.required]],
+      template: ['', [Validators.required]],
+      subject: ['', [Validators.required, Validators.minLength(3)]],
+      cc: ['', [Validators.required, Validators.email]],
+      bc: ['', [Validators.required, Validators.email]],
+      content: ['', [Validators.required]],
     });
 
     this.getCrmUsers();
@@ -357,6 +370,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
   sendEmail(element: any) {
+    this.sendLeadForm.patchValue({ email: element.email });
     console.log('View clicked for:', element);
   }
 
@@ -381,6 +395,37 @@ export class LeadsComponent extends BaseComponent {
       })
     }
   }
+
+  get s() {
+    return this.sendLeadForm.controls;
+  }
+
+  sendMailLeadSubmit(modal:any) {
+    this.sendLeadSubmitted = true;
+    if (this.sendLeadForm?.valid) {
+      this.switchService.CRMLeadSendMailFollowup(this.sendLeadForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.submitted = false;
+            this.leadForm.reset();            
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+
+    }
+  }
+
   @ViewChild("myPond") myPond!: FilePondComponent;
   pondOptions: FilePond.FilePondOptions = {
     allowMultiple: true,
