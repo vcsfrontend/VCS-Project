@@ -61,6 +61,12 @@ export class LeadsComponent extends BaseComponent {
 
   public sendLeadForm!: FormGroup;
   public sendLeadSubmitted=false;
+  
+
+  public followupName='';
+  public executiveName='';
+  public followupLeadForm!: FormGroup;
+  public followupLeadSubmitted=false;
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
@@ -78,6 +84,13 @@ export class LeadsComponent extends BaseComponent {
   openRight1(content1: any) {
     this.offcanvasService.open(content1, { position: 'end' });
   }
+
+  openFollowup(element:any,content1: any) {
+    this.followupName=element.name;
+    this.executiveName=element.executive;
+    this.offcanvasService.open(content1, { position: 'end' });
+  }
+
   url1: string = ''; // Assuming url1 is a property in your component
 
   handleFileInput(event: any): void {
@@ -157,6 +170,16 @@ export class LeadsComponent extends BaseComponent {
       cc: ['', [Validators.required, Validators.email]],
       bcc: ['', [Validators.required, Validators.email]],
       content: ['', [Validators.required]],
+    });
+
+    //Send Email 
+    this.followupLeadForm = this.fb.group({
+      followupDate: ['', [Validators.required]],
+      followupTime: ['', [Validators.required]],
+      stage: ['', [Validators.required]],
+      status: ['', [Validators.required]],
+      comments: ['', [Validators.required]],
+      followUpBy: ['']      
     });
 
     this.getCrmUsers();
@@ -425,6 +448,37 @@ export class LeadsComponent extends BaseComponent {
 
     }
   }
+
+  get e() {
+    return this.followupLeadForm.controls;
+  }
+
+  followupLeadSubmit(modal:any) {
+    this.followupLeadSubmitted = true;    
+    if (this.followupLeadForm?.valid) {
+      this.followupLeadForm.patchValue({followUpBy:this.executiveName});
+      this.switchService.CRMAddFollowupLead(this.followupLeadForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.followupLeadSubmitted = false;
+            this.followupLeadForm.reset(); 
+            this.executiveName='';           
+            this.followupName='';           
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+
+    }
+  }
+
 
   @ViewChild("myPond") myPond!: FilePondComponent;
   pondOptions: FilePond.FilePondOptions = {
