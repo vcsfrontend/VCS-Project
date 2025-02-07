@@ -155,7 +155,7 @@ export class LeadsComponent extends BaseComponent {
       template: ['', [Validators.required]],
       subject: ['', [Validators.required, Validators.minLength(3)]],
       cc: ['', [Validators.required, Validators.email]],
-      bc: ['', [Validators.required, Validators.email]],
+      bcc: ['', [Validators.required, Validators.email]],
       content: ['', [Validators.required]],
     });
 
@@ -275,7 +275,7 @@ export class LeadsComponent extends BaseComponent {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-    console.log(event.target.files[0].type);
+    
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadSubmitted = false;
       this.uploadLead.reset();
