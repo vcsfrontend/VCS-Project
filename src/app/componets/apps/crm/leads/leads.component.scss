@@ -55,3 +55,19 @@ th.mat-mdc-header-cell {
 .overflowSendMailForm{
   overflow: auto;
 }
+
+.filter-field {
+  margin-top: -13px !important;
+  margin-bottom: -35px !important;
+  width: 15%; /* Adjust width if needed */
+  max-height: 72px !important;
+  margin-left: 6% !important;
+}
+
+.title {
+  position: relative;
+  margin-block-end: 0;
+  font-size: 1.15rem;
+  text-transform: capitalize;
+  font-weight: 600;
+}

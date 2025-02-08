@@ -122,7 +122,7 @@ export class LeadsComponent extends BaseComponent {
     this.leadId = 0;
     this.submitted = false;
     this.leadForm.reset();
-    this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
+    this.modalService.open(content12, { backdrop: 'static', keyboard: false  , scrollable: true, centered: true, size: 'xl' });
   }
   // openLg(content10:any) {
   //   this.modalService.open(content10, { size: 'lg' },);

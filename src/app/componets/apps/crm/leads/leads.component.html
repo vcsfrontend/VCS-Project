@@ -14,11 +14,13 @@
 <div class="col-xl-12">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
-            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
-                <button class="btn btn-primary waves-effect waves-light">
-                    {{leadCount}} records found
-                </button>
+            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                    {{leadCount}} Leads found
             </div>
+            <mat-form-field class="filter-field">
+                    <mat-label>Seach</mat-label> 
+                    <input matInput (keyup)="applyFilter($event)" #input>
+                </mat-form-field>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
@@ -34,103 +36,107 @@
         </div>
         <div class="card-body p-0">
             <div class="mat-elevation-z8">
-                <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="dataSource" matSort>
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="action">
-                            <th mat-header-cell *matHeaderCellDef> Actions </th>
-                            <td mat-cell *matCellDef="let element">
-                                <a href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                    ata-bs-toggle="offcanvas" (click)="openFollowup(element,Content4);"
-                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                    <i class="ri-alarm-line"></i>
-                                </a>
-                                <a href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                    ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)"
-                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                    <i class="ri-eye-line"></i>
-                                </a>
-                                <span class="m-1" ngbDropdown placement="right-top">
-                                    <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
-                                        ngbDropdownToggle></i>
-                                    <ul class="dropdown-menu" ngbDropdownMenu>
-                                        <li><a ngbDropdownItem class="dropdown-item" (click)="sendEmail(element)"
-                                                class="action-option" data-bs-toggle="offcanvas"
-                                                (click)="openRight(Content2)" data-bs-target="#offcanvasRight"
-                                                aria-controls="offcanvasRight">Send Email</a></li>
-                                        <li><a ngbDropdownItem class="dropdown-item"
-                                                (click)="editLead(element,Content12)" class="action-option">Edit</a>
-                                        </li>
-
-                                    </ul>
-                                </span>
-                                <a href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light m-1">
-                                    <i class="ri-delete-bin-line"></i>
-                                </a>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> name </th>
-                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="companyName">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> companyName </th>
-                            <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="executive">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> executive </th>
-                            <td mat-cell *matCellDef="let element"> {{element.executive}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="products">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> products </th>
-                            <td mat-cell *matCellDef="let element"> {{element.products}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="status">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                            <td mat-cell *matCellDef="let element">
-                                <span class="badge me-1" [ngClass]="getStatusClass(element.status)">
-                                    {{ element.status }}
-                                </span>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="followUpDate">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> followUpDate </th>
-                            <td mat-cell *matCellDef="let element"> {{element.followUpDate}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="contact">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> contact </th>
-                            <td mat-cell *matCellDef="let element"> {{element.contact}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="email">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> email </th>
-                            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-                        </ng-container>
-                        <!-- <ng-container matColumnDef="action">
-                            <th mat-header-cell *matHeaderCellDef> Actions </th>
-                            <td mat-cell *matCellDef="let element">                     
-                        
-                              <button mat-icon-button [matMenuTriggerFor]="menu">
-                                <mat-icon>more_vert</mat-icon>
-                              </button>
-                              <mat-menu #menu="matMenu">
-                                <button mat-menu-item (click)="sendEmail(element)" class="action-option">Send Email</button>
-                                <button mat-menu-item (click)="editLead(element,Content12)" class="action-option">Edit</button>                                
-                              </mat-menu>                              
-        
-                            </td>
-                          </ng-container> -->
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
-                </div>
-                <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">
+                            <a href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                ata-bs-toggle="offcanvas" (click)="openFollowup(element,Content4);"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="ri-alarm-line"></i>
+                            </a>
+                            <a href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            <span class="m-1" ngbDropdown placement="right-top">
+                                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
+                                    ngbDropdownToggle></i>
+                                <ul class="dropdown-menu" ngbDropdownMenu>
+                                    <li class="m-2">
+                                        <button class="btn btn-warning label-btn label-end w-100"  (click)="sendEmail(element)"
+                                         data-bs-toggle="offcanvas"
+                                        (click)="openRight(Content2)" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">
+                                            Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
+                                        </button>                                                                     
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100" (click)="editLead(element,Content12)">
+                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
+                                        </button>                                                                     
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-danger label-btn label-end w-100">
+                                            Delete<i class="ri-delete-bin-line label-btn-icon"></i>
+                                        </button>                                                                     
+                                    </li>
+                                </ul>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="companyName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> companyName </th>
+                        <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="executive">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> executive </th>
+                        <td mat-cell *matCellDef="let element"> {{element.executive}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="products">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> products </th>
+                        <td mat-cell *matCellDef="let element"> {{element.products}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="badge me-1" [ngClass]="getStatusClass(element.status)">
+                                {{ element.status }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="followUpDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> followUpDate </th>
+                        <td mat-cell *matCellDef="let element"> {{element.followUpDate}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contact">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> contact </th>
+                        <td mat-cell *matCellDef="let element"> {{element.contact}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> email </th>
+                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">                     
+                    
+                            <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="sendEmail(element)" class="action-option">Send Email</button>
+                            <button mat-menu-item (click)="editLead(element,Content12)" class="action-option">Edit</button>                                
+                            </mat-menu>                              
+    
+                        </td>
+                        </ng-container> -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
             </div>
+            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
     </div>
 </div>
