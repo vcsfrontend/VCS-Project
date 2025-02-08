@@ -68,10 +68,13 @@ export class LeadsComponent extends BaseComponent {
   public followupLeadForm!: FormGroup;
   public followupLeadSubmitted=false;
 
+  public userData: any;
+  public userList: any;
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
-  ) {
+  ) {    
     super();
+    this.userData = localStorage.getItem('userDetails');
   }
 
 
@@ -183,6 +186,8 @@ export class LeadsComponent extends BaseComponent {
     });
 
     this.getCrmUsers();
+
+    this.getUsers();
     // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
       if (searchText && typeof searchText === 'string') {
@@ -476,6 +481,29 @@ export class LeadsComponent extends BaseComponent {
         }
       })
 
+    }
+  }
+
+  getUsers(){
+    if(JSON.parse(this.userData).type == 2){
+      // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
+        let cn = JSON.parse(this.userData).companyName;
+        let cc = JSON.parse(this.userData).companyCode ;
+        this.switchService.cmpnyUsers(cn, cc).subscribe({ next: (res:any) => {
+        if(res){
+          console.log(res);
+          this.userList = res;
+          } else{
+            this.toastr.error(res.message,'signup', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
     }
   }
 

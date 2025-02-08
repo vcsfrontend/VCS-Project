@@ -27,8 +27,8 @@ th.mat-mdc-header-cell {
   background: #006699;
 }
 .mat-elevation-z8 {
-  max-height: 400px; /* Adjust as necessary */
-  overflow: auto;
+  max-height: 400px; /* Adjust as necessary */  
+  overflow-y: auto;
 }
 
 .scrollable-content{

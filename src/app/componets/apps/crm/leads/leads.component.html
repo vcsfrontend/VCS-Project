@@ -15,12 +15,12 @@
     <div class="card custom-card">
         <div class="card-header justify-content-between">
             <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
-                    {{leadCount}} Leads found
+                {{leadCount}} Leads found
             </div>
             <mat-form-field class="filter-field">
-                    <mat-label>Seach</mat-label> 
-                    <input matInput (keyup)="applyFilter($event)" #input>
-                </mat-form-field>
+                <mat-label>Seach</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
@@ -61,22 +61,23 @@
                                     ngbDropdownToggle></i>
                                 <ul class="dropdown-menu" ngbDropdownMenu>
                                     <li class="m-2">
-                                        <button class="btn btn-warning label-btn label-end w-100"  (click)="sendEmail(element)"
-                                         data-bs-toggle="offcanvas"
-                                        (click)="openRight(Content2)" data-bs-target="#offcanvasRight"
-                                        aria-controls="offcanvasRight">
+                                        <button class="btn btn-warning label-btn label-end w-100"
+                                            (click)="sendEmail(element)" data-bs-toggle="offcanvas"
+                                            (click)="openRight(Content2)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
                                             Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
-                                        </button>                                                                     
+                                        </button>
                                     </li>
                                     <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100" (click)="editLead(element,Content12)">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="editLead(element,Content12)">
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
-                                        </button>                                                                     
+                                        </button>
                                     </li>
                                     <li class="m-2">
                                         <button class="btn btn-danger label-btn label-end w-100">
                                             Delete<i class="ri-delete-bin-line label-btn-icon"></i>
-                                        </button>                                                                     
+                                        </button>
                                     </li>
                                 </ul>
                             </span>
@@ -169,9 +170,10 @@
                         formControlName="companyName">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-phone" class="form-label">Executive</label>
-                    <input type="tel" class="form-control" id="contact-phone" placeholder=""
-                        formControlName="executive">
+                    <label for="contact-phone" class="form-label">Executive</label>        
+                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                        placeholder="Select an Executive">
+                    </ng-select>    
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Products</label>
@@ -542,24 +544,27 @@
                 <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                     <label for="followupDate" class="form-label">Next Follow up date</label>
                     <input type="date" class="form-control" id="followupDate" placeholder=""
-                        formControlName="followupDate" [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }">
-                        <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
-                            <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
-                        </div>
+                        formControlName="followupDate"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }">
+                    <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
+                        <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
+                    </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                     <label for="followupTime" class="form-label">Follow up time</label>
                     <input type="time" class="form-control" id="followupTime" placeholder=""
-                        formControlName="followupTime" [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupTime'].errors }">
-                        <div *ngIf="followupLeadSubmitted && e['followupTime'].errors" class="invalid-feedback">
-                            <div *ngIf="e['followupTime'].errors['required']">Followup Time is required</div>
-                        </div>
+                        formControlName="followupTime"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupTime'].errors }">
+                    <div *ngIf="followupLeadSubmitted && e['followupTime'].errors" class="invalid-feedback">
+                        <div *ngIf="e['followupTime'].errors['required']">Followup Time is required</div>
+                    </div>
                 </div>
 
                 <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                     <label class="form-label" for="stage"> Stage</label>
                     <ng-select formControlName="stage" [items]="stageList" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['stage'].errors }">
+                        placeholder="Select an option"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['stage'].errors }">
                     </ng-select>
                     <div *ngIf="followupLeadSubmitted && e['stage'].errors" class="invalid-feedback">
                         <div *ngIf="e['stage'].errors['required']">Stage is required</div>
@@ -568,7 +573,8 @@
                 <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                     <label class="form-label"> Status</label>
                     <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['status'].errors }">
+                        placeholder="Select an option"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['status'].errors }">
                     </ng-select>
                     <div *ngIf="followupLeadSubmitted && e['status'].errors" class="invalid-feedback">
                         <div *ngIf="e['status'].errors['required']">Status is required</div>
@@ -582,7 +588,7 @@
                 [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }"></angular-editor>
             <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
                 <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
-            </div>            
+            </div>
         </div>
         <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
             <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
