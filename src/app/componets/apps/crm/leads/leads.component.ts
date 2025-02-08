@@ -509,6 +509,7 @@ export class LeadsComponent extends BaseComponent {
 
 
   @ViewChild("myPond") myPond!: FilePondComponent;
+  @ViewChild("followUpPond") followUpPond!: FilePondComponent;
   pondOptions: FilePond.FilePondOptions = {
     allowMultiple: true,
     labelIdle: "Drop files here to Upload...",
