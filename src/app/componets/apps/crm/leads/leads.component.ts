@@ -91,6 +91,7 @@ export class LeadsComponent extends BaseComponent {
   openFollowup(element:any,content1: any) {
     this.followupName=element.name;
     this.executiveName=element.executive;
+    this.leadId =element.leadId;
     this.offcanvasService.open(content1, { position: 'end' });
   }
 
@@ -462,6 +463,9 @@ export class LeadsComponent extends BaseComponent {
     this.followupLeadSubmitted = true;    
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({followUpBy:this.executiveName});
+      let followUpDetails=this.followupLeadForm.value;
+      followUpDetails.leadEntry={leadId:this.leadId};
+      console.log(followUpDetails);
       this.switchService.CRMAddFollowupLead(this.followupLeadForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -469,7 +473,8 @@ export class LeadsComponent extends BaseComponent {
             this.followupLeadSubmitted = false;
             this.followupLeadForm.reset(); 
             this.executiveName='';           
-            this.followupName='';           
+            this.followupName='';    
+            this.leadId=0;       
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -507,9 +512,21 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+  @ViewChild("followUpPond") followUpPond!: FilePondComponent;
+  followUpPondHandleInit() {
+    console.log("FilePond has initialised");
+  }
+  followUpPondHandleAddFile(event: any) {
+    this.imageFileSrcData = '';
+    const files = event.target.files[0];
+    console.log("A file was added", event);
+  }
+  followUpPondHandleActivateFile(event: any) {
+    console.log("A file was activated", event);
+  }
 
   @ViewChild("myPond") myPond!: FilePondComponent;
-  @ViewChild("followUpPond") followUpPond!: FilePondComponent;
+  
   pondOptions: FilePond.FilePondOptions = {
     allowMultiple: true,
     labelIdle: "Drop files here to Upload...",

@@ -591,8 +591,8 @@
             </div>
 
             <div class="card-body mt-3 mb-5">
-                <file-pond #followUpPond [options]="pondOptions" class="multiple-filepond" (oninit)="pondHandleInit()"
-                    (onaddfile)="pondHandleAddFile($event)" (onactivatefile)="pondHandleActivateFile($event)">
+                <file-pond #followUpPond [options]="pondOptions" class="multiple-filepond" (oninit)="followUpPondHandleInit()"
+                    (onaddfile)="followUpPondHandleAddFile($event)" (onactivatefile)="followUpPondHandleActivateFile($event)">
                 </file-pond>
             </div>
 
