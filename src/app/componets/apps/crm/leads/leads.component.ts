@@ -39,7 +39,7 @@ import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor
   styleUrl: './leads.component.scss'
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = ['slNo', 'action', 'name', 'companyName', 'executive', 'status', 'followUpDate', 'contact', 'email'];
+  displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
   dataSource = new MatTableDataSource<any>();
   pageSize = 10;
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
@@ -60,19 +60,25 @@ export class LeadsComponent extends BaseComponent {
   public leadId = 0;
 
   public sendLeadForm!: FormGroup;
-  public sendLeadSubmitted=false;
-  
+  public sendLeadSubmitted = false;
 
-  public followupName='';
-  public executiveName='';
+
+  public followupName = '';
+  public executiveName = '';
   public followupLeadForm!: FormGroup;
-  public followupLeadSubmitted=false;
+  public followupLeadSubmitted = false;
 
   public userData: any;
   public userList: any;
+
+  public allocateForm!: FormGroup;
+  public allocateSubmitted = false;
+
+  selectedIdList: Set<number> = new Set<number>();
+
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
-  ) {    
+  ) {
     super();
     this.userData = localStorage.getItem('userDetails');
   }
@@ -88,10 +94,10 @@ export class LeadsComponent extends BaseComponent {
     this.offcanvasService.open(content1, { position: 'end' });
   }
 
-  openFollowup(element:any,content1: any) {
-    this.followupName=element.name;
-    this.executiveName=element.executive;
-    this.leadId =element.leadId;
+  openFollowup(element: any, content1: any) {
+    this.followupName = element.name;
+    this.executiveName = element.executive;
+    this.leadId = element.leadId;
     this.offcanvasService.open(content1, { position: 'end' });
   }
 
@@ -126,7 +132,7 @@ export class LeadsComponent extends BaseComponent {
     this.leadId = 0;
     this.submitted = false;
     this.leadForm.reset();
-    this.modalService.open(content12, { backdrop: 'static', keyboard: false  , scrollable: true, centered: true, size: 'xl' });
+    this.modalService.open(content12, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, size: 'xl' });
   }
   // openLg(content10:any) {
   //   this.modalService.open(content10, { size: 'lg' },);
@@ -183,7 +189,13 @@ export class LeadsComponent extends BaseComponent {
       stage: ['', [Validators.required]],
       status: ['', [Validators.required]],
       comments: ['', [Validators.required]],
-      followUpBy: ['']      
+      followUpBy: ['']
+    });
+
+
+    //Allocate Lead Executive
+    this.allocateForm = this.fb.group({      
+      executive: ['', [Validators.required]]
     });
 
     this.getCrmUsers();
@@ -231,7 +243,7 @@ export class LeadsComponent extends BaseComponent {
           if (res.status == true) {
             modal.close();
             this.submitted = false;
-            this.leadForm.reset();            
+            this.leadForm.reset();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -248,23 +260,23 @@ export class LeadsComponent extends BaseComponent {
 
     }
   }
-  
+
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {
-        case "active":
-            return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
-        case "proposal sent":
-            return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
-        case "meeting fixed":
-            return "badge bg-dark-transparent ps-3 fs-11 order-status going"; 
-        case "met":
-            return "badge bg-primary-transparent fs-11 order-status iive"; 
-        case "spoke":
-            return "badge bg-danger-transparent ps-3 fs-11 order-status cancel"; 
-        case "converted to deal/opportunity":
-            return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
-        default:
-            return "bg-secondary"; 
+      case "active":
+        return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
+      case "proposal sent":
+        return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
+      case "meeting fixed":
+        return "badge bg-dark-transparent ps-3 fs-11 order-status going";
+      case "met":
+        return "badge bg-primary-transparent fs-11 order-status iive";
+      case "spoke":
+        return "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
+      case "converted to deal/opportunity":
+        return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
+      default:
+        return "bg-secondary";
     }
   }
 
@@ -304,7 +316,7 @@ export class LeadsComponent extends BaseComponent {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-    
+
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadSubmitted = false;
       this.uploadLead.reset();
@@ -429,7 +441,7 @@ export class LeadsComponent extends BaseComponent {
     return this.sendLeadForm.controls;
   }
 
-  sendMailLeadSubmit(modal:any) {
+  sendMailLeadSubmit(modal: any) {
     this.sendLeadSubmitted = true;
     if (this.sendLeadForm?.valid) {
       this.switchService.CRMLeadSendMailFollowup(this.sendLeadForm.value).subscribe({
@@ -437,7 +449,7 @@ export class LeadsComponent extends BaseComponent {
           if (res.status == true) {
             modal.close();
             this.submitted = false;
-            this.leadForm.reset();            
+            this.leadForm.reset();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -459,22 +471,22 @@ export class LeadsComponent extends BaseComponent {
     return this.followupLeadForm.controls;
   }
 
-  followupLeadSubmit(modal:any) {
-    this.followupLeadSubmitted = true;    
+  followupLeadSubmit(modal: any) {
+    this.followupLeadSubmitted = true;
     if (this.followupLeadForm?.valid) {
-      this.followupLeadForm.patchValue({followUpBy:this.executiveName});
-      let followUpDetails=this.followupLeadForm.value;
-      followUpDetails.leadEntry={leadId:this.leadId};
+      this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
+      let followUpDetails = this.followupLeadForm.value;
+      followUpDetails.leadEntry = { leadId: this.leadId };
       console.log(followUpDetails);
       this.switchService.CRMAddFollowupLead(this.followupLeadForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             modal.close();
             this.followupLeadSubmitted = false;
-            this.followupLeadForm.reset(); 
-            this.executiveName='';           
-            this.followupName='';    
-            this.leadId=0;       
+            this.followupLeadForm.reset();
+            this.executiveName = '';
+            this.followupName = '';
+            this.leadId = 0;
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -489,17 +501,18 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-  getUsers(){
-    if(JSON.parse(this.userData).type == 2){
+  getUsers() {
+    if (JSON.parse(this.userData).type == 2) {
       // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
-        let cn = JSON.parse(this.userData).companyName;
-        let cc = JSON.parse(this.userData).companyCode ;
-        this.switchService.cmpnyUsers(cn, cc).subscribe({ next: (res:any) => {
-        if(res){
-          console.log(res);
-          this.userList = res;
-          } else{
-            this.toastr.error(res.message,'signup', {
+      let cn = JSON.parse(this.userData).companyName;
+      let cc = JSON.parse(this.userData).companyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            console.log(res);
+            this.userList = res;
+          } else {
+            this.toastr.error(res.message, 'signup', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
             });
@@ -525,8 +538,79 @@ export class LeadsComponent extends BaseComponent {
     console.log("A file was activated", event);
   }
 
+  get a() {
+    return this.allocateForm.controls;
+  }
+
+  onAllocateSubmit() {
+    this.allocateSubmitted = true;
+    console.log('selected row', this.selectedIdList);
+    console.log('selected size', this.selectedIdList.size);
+
+    if (this.selectedIdList.size == 0) {
+      this.toastr.error('Please choose at least one', 'lead', {
+        timeOut: 3000, positionClass: 'toast-top-right'
+      });
+    }
+
+    if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
+      this.allocateForm.patchValue({ idList: this.allocateForm });
+      let allocateData={idList:[...this.selectedIdList],executive:this.allocateForm.get('executive')?.value}
+      this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            this.allocateSubmitted = false;
+            this.allocateForm.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+
+    }
+  }
+
+
+  // Handle single row selection
+  onRowCheckboxChange(leadId: number, event: any) {
+    if (event.checked) {
+      this.selectedIdList.add(leadId);
+    } else {
+      this.selectedIdList.delete(leadId);
+    }
+  }
+
+  // Handle "select all" checkbox
+  onSelectAllChange(event: any) {
+    if (event.checked) {
+      this.selectedIdList = new Set(this.dataSource.data.map((row: { leadId: any }) => row.leadId));
+    } else {
+      this.selectedIdList.clear();
+    }
+  }
+
+  isAllSelected() {
+    return this.selectedIdList.size === this.dataSource.data.length;
+  }
+
+  isIndeterminate() {
+    return this.selectedIdList.size > 0 && this.selectedIdList.size < this.dataSource.data.length;
+  }
+
+  isSelected(leadId: number) {
+    return this.selectedIdList.has(leadId);
+  }
+
   @ViewChild("myPond") myPond!: FilePondComponent;
-  
+
   pondOptions: FilePond.FilePondOptions = {
     allowMultiple: true,
     labelIdle: "Drop files here to Upload...",
