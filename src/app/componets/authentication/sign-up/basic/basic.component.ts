@@ -19,6 +19,7 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { Title } from 'chart.js';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
 // import { ShowcodeCardComponent } from '../../../shared/common/includes/showcode-card/showcode-card.component';
 
 import { NgbDropdownModule, NgbNavModule, NgbModal, NgbModalConfig, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -29,7 +30,7 @@ import * as prismCodeData from '../../../../shared/prismData/advancedUi/accordio
   standalone: true,
   imports: [RouterModule,NgbModule,FormsModule,ReactiveFormsModule ,ToastrModule, MatIconModule,
     MatFormFieldModule, MatSelectModule, CommonModule, FlatpickrModule, OverlayscrollbarsModule, 
-    NgbAccordionModule,NgbCollapseModule,ShowCodeContentDirective],
+    NgbAccordionModule,NgbCollapseModule,ShowCodeContentDirective,NgSelectModule],
     // AngularFireModule,  AngularFireDatabaseModule, AngularFirestoreModule,
   providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService },FlatpickrDefaults, DatePipe],
   templateUrl: './basic.component.html',
@@ -48,7 +49,13 @@ export class BasicComponent extends BaseComponent implements OnInit {
   adonai = false; btnDisable = false; todayDt = new Date(); isBtnDsbl = false;
   adoanAiRole :any; isEmailDisabled = false; isOtpDisabled = false; isCompany : string = 'col-xl-6';
   crmRole :any; isShowUsers = false; pload:any[] = [];isOkBtn = false; showCity: boolean = true;
-  toolsList = [Tools.Adonai];
+
+  toolsList = Object.keys(Tools).map(key => ({
+    label: Tools[key as keyof typeof Tools],  // Display name
+    value: key                                       // Enum key for binding
+  }));
+
+  //toolsList = [Tools.Adonai,Tools.Crm];
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
   private modalRef: any; noUsers:any=''; users:any = '';
   passwordStrengthMessage: string = '';
@@ -110,7 +117,7 @@ export class BasicComponent extends BaseComponent implements OnInit {
     //   }
     // });
     this.onTodayDt();
-    this.onMinDate();
+    this.onMinDate();    
   }
 
   ngOnDestroy(): void {
@@ -490,4 +497,5 @@ export class BasicComponent extends BaseComponent implements OnInit {
   openBottom(content: any) {
     this.offcanvasService.open(content, { position: 'bottom' });
   }
+  
 }
