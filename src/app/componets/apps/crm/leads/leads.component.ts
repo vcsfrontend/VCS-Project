@@ -263,20 +263,22 @@ export class LeadsComponent extends BaseComponent {
 
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {
-      case "active":
-        return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
-      case "proposal sent":
-        return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
-      case "meeting fixed":
-        return "badge bg-dark-transparent ps-3 fs-11 order-status going";
-      case "met":
-        return "badge bg-primary-transparent fs-11 order-status iive";
-      case "spoke":
-        return "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
-      case "converted to deal/opportunity":
-        return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
-      default:
-        return "bg-secondary";
+        case "active":
+            return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
+        case "proposal sent":
+            return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
+        case "meeting fixed":
+            return "badge bg-dark-transparent ps-3 fs-11 order-status going"; 
+        case "met":
+            return "badge bg-primary-transparent ps-3 fs-11 order-status live"; 
+        case "spoke":
+          return "badge bg-purple-transparent ps-3 fs-11 order-status spoke"; 
+        case "closed":
+            return "badge bg-danger-transparent ps-3 fs-11 order-status cancel"; 
+        case "converted to deal/opportunity":
+            return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
+        default:
+            return "bg-secondary"; 
     }
   }
 
