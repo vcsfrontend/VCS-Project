@@ -46,10 +46,11 @@
                           ></mat-checkbox>
                         </th>
                         <td mat-cell *matCellDef="let element">
-                          <mat-checkbox
+                            <mat-checkbox
                             (change)="onRowCheckboxChange(element.leadId, $event)"
                             [checked]="isSelected(element.leadId)"
-                          ></mat-checkbox>
+                            class="custom-checkbox"
+                          ></mat-checkbox>                          
                         </td>
                       </ng-container>
 
@@ -160,7 +161,7 @@
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"  [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
                     <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
-                        placeholder="Select an Executive">
+                        placeholder="Select an Executive" class="rounded-0">
                     </ng-select>
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
                         id="button-addon1" data-mdb-ripple-color="dark">
@@ -171,6 +172,13 @@
                     <div *ngIf="a['executive'].errors['required']">Executive is required</div>
                 </div>
             </form>
+            <div class="text-center ms-3 ">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-wave"><i class="ri-alarm-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave"><i class="ri-mail-line bt-icon"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave"><i class="ri-delete-bin-line"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -328,8 +336,8 @@
                 <li class="list-group-item">
                     <div class="d-flex align-items-center">
                         <div class="flex-fill">
-                            <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
-                                Format</button>
+                            <a href="assets/images/browsers/Leads Sample Format.xls" download="Leads Sample Format.xls">
+                                <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo </button></a>
                             <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then
                                 upload it for proper importing of the data.</p>
                         </div>

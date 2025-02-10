@@ -71,3 +71,14 @@ th.mat-mdc-header-cell {
   text-transform: capitalize;
   font-weight: 600;
 }
+.ng-select {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 200px;
+  margin-left: 10px;
+  border: 0px;
+}
+.custom-checkbox .mat-checkbox-label {
+  font-size: 2px;
+}
