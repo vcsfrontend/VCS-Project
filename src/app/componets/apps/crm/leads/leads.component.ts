@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
 import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -36,7 +36,8 @@ import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './leads.component.html',
-  styleUrl: './leads.component.scss'
+  styleUrl: './leads.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class LeadsComponent extends BaseComponent {
   displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
@@ -152,7 +153,7 @@ export class LeadsComponent extends BaseComponent {
       name: ['', [Validators.required, Validators.minLength(3)]],
       companyName: [''],
       executive: [''],
-      products: [''],
+      //products: [''],
       country: [''],
       stage: ['', [Validators.required]],
       status: ['', [Validators.required]],
@@ -224,7 +225,7 @@ export class LeadsComponent extends BaseComponent {
       this.leadDetails.name = this.f['name'].value;
       this.leadDetails.companyName = this.f['companyName'].value ? this.f['companyName'].value : '';
       this.leadDetails.executive = this.f['executive'].value;
-      this.leadDetails.products = this.f['products'].value;
+      //this.leadDetails.products = this.f['products'].value;
       this.leadDetails.country = this.f['country'].value;
       this.leadDetails.stage = this.f['stage'].value;
       this.leadDetails.status = this.f['status'].value;
@@ -614,7 +615,8 @@ export class LeadsComponent extends BaseComponent {
   @ViewChild("myPond") myPond!: FilePondComponent;
 
   pondOptions: FilePond.FilePondOptions = {
-    allowMultiple: true,
+    allowMultiple: false,
+    maxFiles: 1,
     labelIdle: "Drop files here to Upload...",
   };
   pondFiles: FilePond.FilePondOptions["files"] = [
