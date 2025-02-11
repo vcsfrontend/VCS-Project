@@ -145,6 +145,7 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/bom',
     },
+    
     // {
     //   title: 'Adonai',
     //   icon: 'bi bi-rulers',
@@ -311,6 +312,15 @@ export class NavService implements OnDestroy {
       active: false,
       selected: false,
       path: '/dashboard/users',
+    },
+    {
+      title: 'optimizer',
+      icon: 'bi-file-earmark',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path : "/dashboard/optimizer"
     },
     // {
     //   title: 'Project-details',
