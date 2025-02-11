@@ -118,6 +118,11 @@ export const admin: Routes = [
     import('./enterprise/enterprise.component').then((m) => m.EnterpriseComponent),
 },
 {
+  path: 'optimizer',
+  loadComponent: () =>
+    import('./optimizer/optimizer.component').then((m) => m.OptimizerComponent),
+},
+{
   path: 'bom',
   loadComponent: () =>
     import('./bom/bom.component').then((m) => m.BomComponent),

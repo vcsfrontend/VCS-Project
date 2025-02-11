@@ -1,0 +1,48 @@
+<div class="row mb-5">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header d-sm-flex d-block">
+                <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block"
+                    role="tablist">
+                    <li [ngbNavItem]="1" class="nav-item m-1">
+                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                            aria-selected="true">Job Details</a>
+                        <ng-template ngbNavContent>
+                            <div id="personal-info" role="tabpanel">
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li [ngbNavItem]="2" class="nav-item m-1">
+                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                            aria-selected="true">Input Terms</a>
+                        <ng-template ngbNavContent>
+                            <div id="account-settings" role="tabpanel">>
+                            </div>
+                        </ng-template>
+                    </li>
+                    <li [ngbNavItem]="2" class="nav-item m-1">
+                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                            aria-selected="true">Input Terms</a>
+                        <ng-template ngbNavContent>
+                            <div id="account-settings" role="tabpanel">>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+            <div class="card-footer">
+                <div class="float-end">
+                    <button class="btn btn-light m-1">
+                        Restore Defaults
+                    </button>
+                    <button class="btn btn-primary m-1">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

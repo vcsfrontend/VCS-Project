@@ -95,7 +95,9 @@ export class SidebarComponent implements AfterViewInit {
           case 'users':
             item.isVisible = true;
             break;  
-          
+          case 'optimizer':
+              item.isVisible = true;
+              break;  
           case 'Settings' :
             this.checkAdminRole(item);
             break;
