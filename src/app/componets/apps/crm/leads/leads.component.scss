@@ -1,6 +1,6 @@
-.dropdown {
-    width: 300px;
-}
+// .dropdown {
+//     width: 300px;
+// }
 ::ng-deep .offcanvas {
   max-width: 40% !important;
 }
@@ -71,19 +71,18 @@ th.mat-mdc-header-cell {
   text-transform: capitalize;
   font-weight: 600;
 }
-.ng-select {
-  position: relative;
-  display: block;
-  box-sizing: border-box;
-  width: 200px;
-  margin-left: 10px;
-  border: 0px;
-}
+
 .custom-checkbox .mat-checkbox-label {
   font-size: 2px;
 }
 .mdc-checkbox__background
 {
-  width: 15px !important;
-  height: 15px !important;
+  width: 11px !important;
+  height: 11px !important;
 }
+
+.custom-editor .angular-editor-textarea {
+  font-size: 14px !important;
+}
+
+

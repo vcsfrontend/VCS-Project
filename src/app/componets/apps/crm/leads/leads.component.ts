@@ -354,11 +354,11 @@ export class LeadsComponent extends BaseComponent {
             state: res.leadsEntry.state || "",
             city: res.leadsEntry.city || "",
             address: res.leadsEntry.address || "",
-            contact: res.leadsEntry.contact || "",
+            contact: this.formatMobileNumber(res.leadsEntry.contact), 
             email: res.leadsEntry.email || "",
             currentStage: res.leadsEntry.currentStage || "",
             updatedBy: res.leadsEntry.updatedBy || "",
-            updatedTime: res.leadsEntry.updatedTime || "",
+            updatedTime: this.formatDateTime(res.leadsEntry.updatedTime), // Convert to readable format
             leadId: res.leadsEntry.leadId || 0,
             followLeads: res.followLeads?.map((followup: any) => ({
               id: followup.id || 0,
@@ -366,16 +366,16 @@ export class LeadsComponent extends BaseComponent {
               followupTime: followup.followupTime || "",
               stage: followup.stage || "",
               status: followup.status || "",
-              comments: followup.comments || "",
+              comments: this.stripHtmlTags(followup.comments || ""), 
               followUpBy: followup.followUpBy || "",
-              updatedTime: followup.updatedTime || "",
+              updatedTime: this.formatDateTime(followup.updatedTime),
               currentStage: followup.currentStage || "",
             })) || [],
           };
-
-          // Assign to `element` to ensure template has data
+  
+          // Assign to `element` for template binding
           this.element = this.CrmLeads;
-
+  
           console.log("Mapped CrmLeads:", this.CrmLeads);
         } else {
           console.warn("Unexpected API structure:", res);
@@ -386,7 +386,22 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
+  
+  formatMobileNumber(mobile: any): string {
+    if (!mobile) return "";
+    return Number(mobile).toFixed(0); // Convert to normal number
+  }
 
+  formatDateTime(dateTimeString: string): string {
+    if (!dateTimeString) return "";
+    const date = new Date(dateTimeString);
+    return date.toLocaleString("en-GB", { hour12: false }); // Converts to "11/02/2025, 09:45:18"
+  }
+  
+  stripHtmlTags(input: string): string {
+    return input.replace(/<\/?[^>]+(>|$)/g, ""); // Removes all HTML tags
+  }
+  
 
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
@@ -427,6 +442,7 @@ export class LeadsComponent extends BaseComponent {
           if (res.leadsEntry) {
             console.log(res);
             this.leadForm.patchValue(res.leadsEntry);
+            this.leadForm.patchValue({contact:this.formatMobileNumber(res.leadsEntry.contact)});
             this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
 
           } else {
