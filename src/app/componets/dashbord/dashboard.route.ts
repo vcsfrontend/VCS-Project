@@ -147,6 +147,11 @@ export const admin: Routes = [
     loadComponent: () =>
     import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
   },
+  {
+    path: 'deals',
+    loadComponent: () =>
+    import('../apps/crm/deals/deals.component').then((m) => m.DealsComponent),
+  },
 {
   path: 'personal',
   loadComponent: () =>

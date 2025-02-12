@@ -4,7 +4,13 @@
             <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Leads </div>
             <div class="text-center">
                 <button class="btn btn-primary waves-effect waves-light">
+                    New Leads
+                </button>
+                <button class="btn btn-primary waves-effect waves-light">
                     Pending Follow-Ups
+                </button>
+                <button class="btn btn-primary waves-effect waves-light">
+                    Closed Leads
                 </button>
             </div>
         </div>
@@ -52,15 +58,13 @@
                             class="custom-checkbox"
                           ></mat-checkbox>                          
                         </td>
-                      </ng-container>
-
-
+                    </ng-container>
                     <ng-container matColumnDef="slNo">
                         <th mat-header-cell *matHeaderCellDef> S.No. </th>
                         <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
                     </ng-container>
                     <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
                             <a href="javascript:void(0);"
                                 class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
@@ -102,7 +106,7 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> name </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
                     </ng-container>
                     <!--<ng-container matColumnDef="companyName">
@@ -110,15 +114,19 @@
                         <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
                     </ng-container>-->
                     <ng-container matColumnDef="executive">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> executive </th>
-                        <td mat-cell *matCellDef="let element"> {{element.executive}} </td>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
+                        <td mat-cell *matCellDef="let element"><a href="javascript:void(0);" data-bs-toggle="tooltip" ngbTooltip="{{element.executive}}"
+                            tooltipClass="tooltip-primary" class="avatar avatar-sm online avatar-rounded">
+                            <img src="./assets/images/brand-logos/profile1.jpg" alt="img">
+                            </a></td>
+                        
                     </ng-container>
                     <ng-container matColumnDef="products">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> products </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Products</th>
                         <td mat-cell *matCellDef="let element"> {{element.products}} </td>
                     </ng-container>
                     <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
                         <td mat-cell *matCellDef="let element">
                             <span class="badge me-1" [ngClass]="getStatusClass(element.status)">
                                 {{ element.status }}
@@ -126,15 +134,15 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="followUpDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> followUpDate </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>FollowUpDate</th>
                         <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date:'dd-MM-yy' }} </td>
                     </ng-container>
                     <ng-container matColumnDef="contact">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> contact </th>
-                        <td mat-cell *matCellDef="let element"> {{element.contact}} </td>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+                        <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
                     </ng-container>
                     <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> email </th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
                         <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                     </ng-container>
                     <!-- <ng-container matColumnDef="action">
@@ -434,23 +442,23 @@
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">leadSource :
                                         </span>{{element.leadSource}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">zipCode : </span>{{element.zipCode}}
+                                    <li class="mb-2"><span class="fw-semibold me-1">ZipCode : </span>{{element.zipCode |slice:0:6}}
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">followUpDate :
-                                        </span>{{element.followUpDate}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">state: </span>{{element.state}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">city: </span>{{element.city}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">address: </span>{{element.address}}
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowUpDate :
+                                        </span>{{element.followUpDate | date: 'dd/MM/yyyy'}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">State: </span>{{element.state}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">City: </span>{{element.city}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Address: </span>{{element.address}}
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">contact: </span>{{element.contact}}
+                                    <li class="mb-2"><span class="fw-semibold me-1">Contact: </span>{{element.contact}}
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">email: </span>{{element.state}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">currentStage:
+                                    <li class="mb-2"><span class="fw-semibold me-1">Email: </span>{{element.email}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">CurrentStage:
                                         </span>{{element.currentStage}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">updatedBy:
+                                    <li class="mb-2"><span class="fw-semibold me-1">UpdatedBy:
                                         </span>{{element.updatedBy}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">updatedTime:
-                                        </span>{{ element.updatedTime | date:'MM-d-yyyy' }}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">UpdatedTime:
+                                        </span>{{ element.updatedTime | date: 'dd/MM/yyyy' }}</li>
 
                                 </ul>
                             </div>
@@ -461,28 +469,16 @@
                             aria-current="page" aria-selected="false ">Follow-Ups</a>
                         <ng-template ngbNavContent>
                             <div class="p-3" id="pill-flex-home" role="tabpanel">
-                                <ul class="list-unstyled">
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.name}}
-                                    </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator :
-                                        </span>{{element.companyName}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator :
-                                        </span>{{element.executive}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator :
-                                        </span>{{element.products}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.country}}
-                                    </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.stage}}
-                                    </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.status}}
-                                    </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator :
-                                        </span>{{element.leadSource}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator : </span>{{element.zipCode}}
-                                    </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator :
-                                        </span>{{element.followUpDate}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Creator: </span>{{element.state}}
+                                <ul class="list-unstyled" *ngFor="let followup of element.followLeads" >
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
+                                    </span>{{followup.followupDate }}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
+                                        </span>{{followup.followupTime }}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Stage :
+                                        </span>{{followup.stage}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
+                                        </span>{{followup.followUpBy}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">CurrentStage : </span>{{followup.currentStage}}
                                     </li>
                                 </ul>
                             </div>
@@ -631,13 +627,6 @@
                 <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
             </div>
 
-            <div class="card-body mt-3 mb-5">
-                <file-pond #followUpPond [options]="pondOptions" class="multiple-filepond"
-                    (oninit)="followUpPondHandleInit()" (onaddfile)="followUpPondHandleAddFile($event)"
-                    (onactivatefile)="followUpPondHandleActivateFile($event)">
-                </file-pond>
-            </div>
-
         </div>
         <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
             <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
@@ -650,3 +639,4 @@
         </div>
     </form>
 </ng-template>
+
