@@ -1,0 +1,16 @@
+.margin{
+    margin-top: -30px;
+}
+.back{
+    cursor: pointer;
+}
+.back:hover{
+    background-color: var(--primary02);
+    color: var(--primary-color);
+}
+.scroll {
+    height: auto;
+    overflow: visible;
+    border: none;
+    margin-bottom: 20px;
+}
