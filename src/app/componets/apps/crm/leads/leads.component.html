@@ -5,11 +5,11 @@
             <div class="text-center">
                 <div class="btn-list">
                     <button type="button" class="btn btn-primary btn-wave">New Leads</button>
-                    <button type="button" class="btn btn-secondary btn-wave">Active</button>
-                    <button type="button" class="btn btn-purple btn-wave">Spoke</button>
-                    <button type="button" class="btn btn-danger btn-wave">Closed</button>
-                    <button type="button" class="btn btn-warning btn-wave">Proposal sent</button>
-                    <button type="button" class="btn btn-dark btn-wave text-white">Meeting Fixed</button>
+                    <button type="button" class="btn btn-secondary btn-wave" (click)="filterStatusList('Active')">Active</button>
+                    <button type="button" class="btn btn-purple btn-wave" (click)="filterStatusList('Spoke')">Spoke</button>
+                    <button type="button" class="btn btn-danger btn-wave" (click)="filterStatusList('Closed')">Closed</button>
+                    <button type="button" class="btn btn-warning btn-wave" (click)="filterStatusList('Proposal sent')">Proposal sent</button>
+                    <button type="button" class="btn btn-dark btn-wave text-white" (click)="filterStatusList('Meeting Fixed')">Meeting Fixed</button>
                 </div>
             </div>
         </div>

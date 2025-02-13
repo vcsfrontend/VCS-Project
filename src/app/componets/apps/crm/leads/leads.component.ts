@@ -97,7 +97,8 @@ export class LeadsComponent extends BaseComponent {
 
   openFollowup(element: any, content1: any) {
     this.followupName = element.name;
-    this.executiveName = element.executive;
+    let executive = this.userData?JSON.parse(this.userData).email:'';
+    this.executiveName = executive;
     this.leadId = element.leadId;
     this.offcanvasService.open(content1, { position: 'end' });
   }
@@ -180,7 +181,7 @@ export class LeadsComponent extends BaseComponent {
       subject: ['', [Validators.required, Validators.minLength(3)]],
       cc: ['', [Validators.required, Validators.email]],
       bcc: ['', [Validators.required, Validators.email]],
-      content: ['', [Validators.required]]      
+      content: ['', [Validators.required]]
     });
 
     //Send Email 
@@ -195,7 +196,7 @@ export class LeadsComponent extends BaseComponent {
 
 
     //Allocate Lead Executive
-    this.allocateForm = this.fb.group({      
+    this.allocateForm = this.fb.group({
       executive: ['', [Validators.required]]
     });
 
@@ -264,25 +265,29 @@ export class LeadsComponent extends BaseComponent {
 
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {
-        case "active":
-            return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
-        case "proposal sent":
-            return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
-        case "meeting fixed":
-            return "badge bg-dark-transparent ps-3 fs-11 order-status going"; 
-        case "met":
-            return "badge bg-primary-transparent ps-3 fs-11 order-status live"; 
-        case "spoke":
-          return "badge bg-purple-transparent ps-3 fs-11 order-status spoke"; 
-        case "closed":
-            return "badge bg-danger-transparent ps-3 fs-11 order-status cancel"; 
-        case "converted to deal/opportunity":
-            return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
-        default:
-            return "bg-secondary"; 
+      case "active":
+        return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
+      case "proposal sent":
+        return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
+      case "meeting fixed":
+        return "badge bg-dark-transparent ps-3 fs-11 order-status going";
+      case "met":
+        return "badge bg-primary-transparent ps-3 fs-11 order-status live";
+      case "spoke":
+        return "badge bg-purple-transparent ps-3 fs-11 order-status spoke";
+      case "closed":
+        return "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
+      case "converted to deal/opportunity":
+        return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
+      default:
+        return "bg-secondary";
     }
   }
 
+
+  filterStatusList(status: string) {
+    this.dataSource.filter = status.trim().toLowerCase();
+  }
 
 
   onCountryChange(data: any) {
@@ -354,7 +359,7 @@ export class LeadsComponent extends BaseComponent {
             state: res.leadsEntry.state || "",
             city: res.leadsEntry.city || "",
             address: res.leadsEntry.address || "",
-            contact: this.formatMobileNumber(res.leadsEntry.contact), 
+            contact: this.formatMobileNumber(res.leadsEntry.contact),
             email: res.leadsEntry.email || "",
             currentStage: res.leadsEntry.currentStage || "",
             updatedBy: res.leadsEntry.updatedBy || "",
@@ -366,16 +371,16 @@ export class LeadsComponent extends BaseComponent {
               followupTime: followup.followupTime || "",
               stage: followup.stage || "",
               status: followup.status || "",
-              comments: this.stripHtmlTags(followup.comments || ""), 
+              comments: this.stripHtmlTags(followup.comments || ""),
               followUpBy: followup.followUpBy || "",
               updatedTime: this.formatDateTime(followup.updatedTime),
               currentStage: followup.currentStage || "",
             })) || [],
           };
-  
+
           // Assign to `element` for template binding
           this.element = this.CrmLeads;
-  
+
           console.log("Mapped CrmLeads:", this.CrmLeads);
         } else {
           console.warn("Unexpected API structure:", res);
@@ -386,7 +391,7 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
-  
+
   formatMobileNumber(mobile: any): string {
     if (!mobile) return "";
     return Number(mobile).toFixed(0); // Convert to normal number
@@ -397,11 +402,11 @@ export class LeadsComponent extends BaseComponent {
     const date = new Date(dateTimeString);
     return date.toLocaleString("en-GB", { hour12: false }); // Converts to "11/02/2025, 09:45:18"
   }
-  
+
   stripHtmlTags(input: string): string {
     return input.replace(/<\/?[^>]+(>|$)/g, ""); // Removes all HTML tags
   }
-  
+
 
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
@@ -442,7 +447,7 @@ export class LeadsComponent extends BaseComponent {
           if (res.leadsEntry) {
             console.log(res);
             this.leadForm.patchValue(res.leadsEntry);
-            this.leadForm.patchValue({contact:this.formatMobileNumber(res.leadsEntry.contact)});
+            this.leadForm.patchValue({ contact: this.formatMobileNumber(res.leadsEntry.contact) });
             this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
 
           } else {
@@ -459,7 +464,7 @@ export class LeadsComponent extends BaseComponent {
   onEmailFileChange(event: any): void {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
-    this.imageFileSrcData = files;   
+    this.imageFileSrcData = files;
 
   }
 
@@ -479,11 +484,11 @@ export class LeadsComponent extends BaseComponent {
       formData.append('cc', this.sendLeadForm.get('cc')?.value);
       formData.append('bcc', this.sendLeadForm.get('bcc')?.value);
       formData.append('content', this.sendLeadForm.get('content')?.value);
-      
+
       this.switchService.CRMLeadSendMailFollowup(formData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
-            this.imageFileSrcData='';
+            this.imageFileSrcData = '';
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
@@ -569,7 +574,7 @@ export class LeadsComponent extends BaseComponent {
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
-    this.imageFileSrcData=files;
+    this.imageFileSrcData = files;
     console.log("A file was added", event);
   }
   followUpPondHandleActivateFile(event: any) {
@@ -581,7 +586,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
   onAllocateSubmit() {
-    this.allocateSubmitted = true;   
+    this.allocateSubmitted = true;
 
     if (this.selectedIdList.size == 0) {
       this.toastr.error('Please choose at least one', 'lead', {
@@ -591,7 +596,7 @@ export class LeadsComponent extends BaseComponent {
 
     if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
       this.allocateForm.patchValue({ idList: this.allocateForm });
-      let allocateData={idList:[...this.selectedIdList],executive:this.allocateForm.get('executive')?.value}
+      let allocateData = { idList: [...this.selectedIdList], executive: this.allocateForm.get('executive')?.value }
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -665,7 +670,7 @@ export class LeadsComponent extends BaseComponent {
       options: {
         type: "local",
       },
-      
+
     },
   ];
   pondHandleInit() {
