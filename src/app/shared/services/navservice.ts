@@ -278,7 +278,7 @@ export class NavService implements OnDestroy {
     // },
     {
       title: 'leads',
-      icon: 'bi bi-rulers',
+      icon: 'bi-layout-text-window side-menu__icon',
       dirchange: false,
       type: 'link',
       linkType : 'internal',
@@ -287,7 +287,7 @@ export class NavService implements OnDestroy {
     },
     {
       title: 'deals',
-      icon: 'bi-layout-text-window side-menu__icon',
+      icon: 'bi-grid side-menu__icon',
       dirchange: false,
       type: 'link',
       linkType : 'internal',

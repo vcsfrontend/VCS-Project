@@ -155,7 +155,7 @@ export class LeadsComponent extends BaseComponent {
       executive: [''],
       //products: [''],
       country: [''],
-      stage: ['', [Validators.required]],
+      // stage: ['', [Validators.required]],
       status: ['', [Validators.required]],
       leadSource: [''],
       zipCode: ['', [Validators.required, Validators.minLength(6)]],
@@ -227,7 +227,7 @@ export class LeadsComponent extends BaseComponent {
       this.leadDetails.executive = this.f['executive'].value;
       //this.leadDetails.products = this.f['products'].value;
       this.leadDetails.country = this.f['country'].value;
-      this.leadDetails.stage = this.f['stage'].value;
+      // this.leadDetails.stage = this.f['stage'].value;
       this.leadDetails.status = this.f['status'].value;
       this.leadDetails.leadSource = this.f['leadSource'].value;
       this.leadDetails.zipCode = this.f['zipCode'].value;

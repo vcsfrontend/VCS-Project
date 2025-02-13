@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgbDropdownModule,NgbTooltipModule  } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '../../../shared/common/sharedmodule';
 interface Contacts {
   image?: string;
   name?: string;
@@ -10,7 +11,7 @@ interface Contacts {
 @Component({
   selector: 'app-contacts',
   standalone: true,
-  imports: [NgbDropdownModule,NgbTooltipModule ],
+  imports: [NgbDropdownModule,NgbTooltipModule , SharedModule],
   templateUrl: './contacts.component.html',
   styleUrl: './contacts.component.scss'
 })
