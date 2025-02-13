@@ -1,17 +1,16 @@
 <div class="col-xl-12 pt-3">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
-            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Leads </div>
+            <div class="card-title">Leads </div>
             <div class="text-center">
-                <button class="btn btn-primary waves-effect waves-light">
-                    New Leads
-                </button>
-                <button class="btn btn-primary waves-effect waves-light">
-                    Pending Follow-Ups
-                </button>
-                <button class="btn btn-primary waves-effect waves-light">
-                    Closed Leads
-                </button>
+                <div class="btn-list">
+                    <button type="button" class="btn btn-primary btn-wave">New Leads</button>
+                    <button type="button" class="btn btn-secondary btn-wave">Active</button>
+                    <button type="button" class="btn btn-purple btn-wave">Spoke</button>
+                    <button type="button" class="btn btn-danger btn-wave">Closed</button>
+                    <button type="button" class="btn btn-warning btn-wave">Proposal sent</button>
+                    <button type="button" class="btn btn-dark btn-wave text-white">Meeting Fixed</button>
+                </div>
             </div>
         </div>
     </div>
@@ -160,12 +159,12 @@
             </div>
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
-        <div class="d-flex mb-5">
+        <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
                     <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
-                        placeholder="Select an Executive" class="rounded-0">
+                        placeholder="Select an Executive" class="rounded-0 ng-selt">
                     </ng-select>
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
                         id="button-addon1" data-mdb-ripple-color="dark">
@@ -333,48 +332,54 @@
 
 <ng-template #content let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Upload Leads</strong></h5>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Bulk Upload</strong></h5>
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0">
-        <div>
-            <ul class="list-group list-group-flush mb-0">
-                <li class="list-group-item">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-fill">
-                            <a href="assets/images/browsers/Leads Sample Format.xls" download="Leads Sample Format.xls">
-                                <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download
-                                    Demo </button></a>
-                            <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then
-                                upload it for proper importing of the data.</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-            <form [formGroup]="uploadLead" (ngSubmit)="uploadLeadSubmit(offcanvas)">
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12 d-flex">
-                            <label for="file" class="w-40 me-2 position-relative">Select Excel File</label>
-                            <input formControlName="file" id="file" type="file"
-                                class="form-control rounded-0 w-50 position-relative" (change)="onFileChange($event)"
-                                [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
-                            <div *ngIf="uploadSubmitted && l['file'].errors" class="invalid-feedback w-50">
-                                <span *ngIf="l['file'].errors['required']">File is required.</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-                            <div class="demo position-relative  d-flex gap-2 ">
-                                <button class="btn btn-primary me-1" type="submit">Import</button>
-                                <button class="btn btn-secondary" type="button"
-                                    (click)="offcanvas.dismiss('Cross click')">Cancel</button>
-                            </div>
-                        </div>
+        <ul class="list-group list-group-flush mb-0">
+            <li class="list-group-item">
+                <div class="d-flex align-items-center">
+                    <div class="flex-fill">
+                        <a href="assets/images/browsers/Leads Sample Format.xls" download="Leads Sample Format.xls">
+                            <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo </button></a>
+                        <p class="px-3">Kindly download the Leads Format and fill your bulk Leads in the proper format and then
+                            upload it for proper importing of the data.</p>
                     </div>
                 </div>
-            </form>
+            </li>
+        </ul>
+        <div class="col-xl-8 mx-auto">
+            <div class="card custom-card bg-light">
+                <div class="card-header">
+                    <div class="card-title">
+                        Upload XL File
+                    </div>
+                </div>
+                <div class="card-body ">
+                    <form [formGroup]="uploadLead" (ngSubmit)="uploadLeadSubmit(offcanvas)">
+                        <div class="container">
+                            <div class="row bg-light">
+                                <div class="col-xl-12 col-lg-12 col-md-12 d-flex">
+                                    <div class="input-group mb-3">
+                                        <input formControlName="file" id="file" type="file"
+                                        class="form-control rounded w-50 position-relative " (change)="onFileChange($event)"
+                                        [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
+                                        <div *ngIf="uploadSubmitted && l['file'].errors" class="invalid-feedback w-50">
+                                            <span *ngIf="l['file'].errors['required']">File is required.</span>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div class="col-xl-12 col-lg-12 col-md-12">
+                                        <button class="btn btn-primary me-1" type="submit">Import</button>
+                                        <button class="btn btn-secondary" type="button"
+                                            (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </ng-template>
@@ -386,7 +391,23 @@
             aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0">
-        <div>
+        <div class="col-xl-12 pt-3">
+            <div class="card custom-card">
+                <div class="card-header justify-content-between">
+                    <div class="text-center">
+                        <div class="btn-list">
+                            <button type="button" class="btn btn-primary btn-wave">New Leads</button>
+                            <button type="button" class="btn btn-secondary btn-wave">Active</button>
+                            <button type="button" class="btn btn-purple btn-wave">Spoke</button>
+                            <button type="button" class="btn btn-danger btn-wave">Closed</button>
+                            <button type="button" class="btn btn-warning btn-wave">Proposal sent</button>
+                            <button type="button" class="btn btn-dark btn-wave text-white">Meeting Fixed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div>
             <ul class="list-group list-group-flush mb-0">
                 <li class="list-group-item">
                     <div class="d-flex align-items-center">
@@ -399,7 +420,7 @@
                     </div>
                 </li>
             </ul>
-        </div>
+        </div> -->
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
