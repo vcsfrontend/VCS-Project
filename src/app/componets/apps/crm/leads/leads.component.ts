@@ -180,7 +180,7 @@ export class LeadsComponent extends BaseComponent {
       subject: ['', [Validators.required, Validators.minLength(3)]],
       cc: ['', [Validators.required, Validators.email]],
       bcc: ['', [Validators.required, Validators.email]],
-      content: ['', [Validators.required]],
+      content: ['', [Validators.required]]      
     });
 
     //Send Email 
@@ -456,6 +456,13 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+  onEmailFileChange(event: any): void {
+    this.imageFileSrcData = '';
+    const files = event.target.files[0];
+    this.imageFileSrcData = files;   
+
+  }
+
   get s() {
     return this.sendLeadForm.controls;
   }
@@ -463,9 +470,20 @@ export class LeadsComponent extends BaseComponent {
   sendMailLeadSubmit(modal: any) {
     this.sendLeadSubmitted = true;
     if (this.sendLeadForm?.valid) {
-      this.switchService.CRMLeadSendMailFollowup(this.sendLeadForm.value).subscribe({
+      console.log(this.imageFileSrcData);
+      const formData = new FormData();
+      formData.append('file', this.imageFileSrcData);
+      formData.append('email', this.sendLeadForm.get('email')?.value);
+      formData.append('template', this.sendLeadForm.get('template')?.value);
+      formData.append('subject', this.sendLeadForm.get('subject')?.value);
+      formData.append('cc', this.sendLeadForm.get('cc')?.value);
+      formData.append('bcc', this.sendLeadForm.get('bcc')?.value);
+      formData.append('content', this.sendLeadForm.get('content')?.value);
+      
+      this.switchService.CRMLeadSendMailFollowup(formData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
+            this.imageFileSrcData='';
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
@@ -551,6 +569,7 @@ export class LeadsComponent extends BaseComponent {
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
+    this.imageFileSrcData=files;
     console.log("A file was added", event);
   }
   followUpPondHandleActivateFile(event: any) {
@@ -634,6 +653,12 @@ export class LeadsComponent extends BaseComponent {
     allowMultiple: false,
     maxFiles: 1,
     labelIdle: "Drop files here to Upload...",
+    server: {
+      url: '/upload',
+      process: '/process',
+      revert: '/revert',
+      restore: '/restore',
+    },
   };
   pondFiles: FilePond.FilePondOptions["files"] = [
     {
@@ -641,6 +666,7 @@ export class LeadsComponent extends BaseComponent {
       options: {
         type: "local",
       },
+      
     },
   ];
   pondHandleInit() {
