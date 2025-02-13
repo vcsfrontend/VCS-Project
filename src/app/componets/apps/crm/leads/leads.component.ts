@@ -581,9 +581,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
   onAllocateSubmit() {
-    this.allocateSubmitted = true;
-    console.log('selected row', this.selectedIdList);
-    console.log('selected size', this.selectedIdList.size);
+    this.allocateSubmitted = true;   
 
     if (this.selectedIdList.size == 0) {
       this.toastr.error('Please choose at least one', 'lead', {
@@ -599,6 +597,7 @@ export class LeadsComponent extends BaseComponent {
           if (res.status == true) {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
+            this.selectedIdList.clear();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
