@@ -25,6 +25,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import * as FilePond from 'filepond';
 import { FilePondComponent, FilePondModule } from 'ngx-filepond';
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-leads',
@@ -32,7 +34,7 @@ import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
     AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
-    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule],
+    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './leads.component.html',
@@ -77,6 +79,25 @@ export class LeadsComponent extends BaseComponent {
   public allocateSubmitted = false;
 
   selectedIdList: Set<number> = new Set<number>();
+
+  public pieChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom',  // Set the legend position to bottom
+      },
+    },
+  };
+  public pieChartLabels = [
+    'Spoke',
+    'Active',
+    'Proposal sent'
+  ];
+  public pieChartDatasets = [{
+    data: [300, 500, 100],
+  }];
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
@@ -215,7 +236,7 @@ export class LeadsComponent extends BaseComponent {
         this.filteredOptions.next(this.options); // Reset to all options if searchText is null
       }
     });
-  }
+  }  
 
   get f() {
     return this.leadForm.controls;
@@ -437,7 +458,7 @@ export class LeadsComponent extends BaseComponent {
           this.uploadSpinner = false;
           this.toastr.error("Error fetching CRM Bulkupload leads", 'lead', {
             timeOut: 3000, positionClass: 'toast-top-right'
-          });          
+          });
         },
       })
     }

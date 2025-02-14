@@ -1,9 +1,13 @@
 <div class="col-xl-12 pt-3">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
-            <div class="card-title">Leads </div>
+            <!--<div class="card-title">Leads </div>-->
             <div class="text-center">
-                <div class="btn-list">
+                <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
+                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                </canvas>
+
+                <!--<div class="btn-list">
                     <button type="button" class="btn btn-primary btn-wave">New Leads</button>
                     <button type="button" class="btn btn-secondary btn-wave"
                         (click)="filterStatusList('Active')">Active</button>
@@ -15,7 +19,7 @@
                         (click)="filterStatusList('Proposal sent')">Proposal sent</button>
                     <button type="button" class="btn btn-dark btn-wave text-white"
                         (click)="filterStatusList('Meeting Fixed')">Meeting Fixed</button>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
@@ -380,7 +384,8 @@
                                 </div>
 
                                 <div class="col-xl-12 col-lg-12 col-md-12">
-                                    <button class="btn btn-primary me-1" type="submit" [disabled]="uploadSpinner">Import</button>
+                                    <button class="btn btn-primary me-1" type="submit"
+                                        [disabled]="uploadSpinner">Import</button>
                                     <button class="btn btn-secondary" type="button"
                                         (click)="offcanvas.dismiss('Cross click')">Cancel</button>
                                 </div>
