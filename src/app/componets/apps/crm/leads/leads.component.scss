@@ -95,3 +95,11 @@ th.mat-mdc-header-cell {
 .marge{
   margin-top: -40px !important;
 }
+
+.uploadSpinner{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}

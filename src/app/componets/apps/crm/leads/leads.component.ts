@@ -56,6 +56,7 @@ export class LeadsComponent extends BaseComponent {
 
   public uploadLead!: FormGroup;
   public uploadSubmitted = false;
+  public uploadSpinner = false;
   imageFileSrcData: any;
   public leadCount = 0;
   public leadId = 0;
@@ -97,7 +98,7 @@ export class LeadsComponent extends BaseComponent {
 
   openFollowup(element: any, content1: any) {
     this.followupName = element.name;
-    let executive = this.userData?JSON.parse(this.userData).email:'';
+    let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
     this.offcanvasService.open(content1, { position: 'end' });
@@ -411,6 +412,7 @@ export class LeadsComponent extends BaseComponent {
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
     if (this.uploadLead?.valid) {
+      this.uploadSpinner = true;
       const formData = new FormData();
       formData.append('file', this.imageFileSrcData);
       formData.append('uploadedBy', 'Balakrishna');
@@ -419,16 +421,24 @@ export class LeadsComponent extends BaseComponent {
           if (res.status == true) {
             modal.close();
             this.uploadSubmitted = false;
+            this.uploadSpinner = false;
             this.uploadLead.reset();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
           } else {
+            this.uploadSpinner = false;
             this.toastr.error(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
           }
-        }
+        },
+        error: (err: any) => {
+          this.uploadSpinner = false;
+          this.toastr.error("Error fetching CRM Bulkupload leads", 'lead', {
+            timeOut: 3000, positionClass: 'toast-top-right'
+          });          
+        },
       })
     }
   }
