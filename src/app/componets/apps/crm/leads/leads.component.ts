@@ -91,10 +91,14 @@ export class LeadsComponent extends BaseComponent {
   public pieChartLabels = [
     'Spoke',
     'Active',
-    'Proposal sent'
+    'Proposal sent',
+    'Meeting Fixed',
+    'Met',
+    'Closed',
+    'Lost'
   ];
   public pieChartDatasets = [{
-    data: [300, 500, 100],
+    data: [200, 150, 100,43,23,78],
   }];
   public pieChartLegend = true;
   public pieChartPlugins = [];
@@ -236,7 +240,8 @@ export class LeadsComponent extends BaseComponent {
         this.filteredOptions.next(this.options); // Reset to all options if searchText is null
       }
     });
-  }  
+  }
+
 
   get f() {
     return this.leadForm.controls;
@@ -306,9 +311,18 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+  filterStatusList(event: any): void {
+    console.log('Chart Clicked:', event);
 
-  filterStatusList(status: string) {
-    this.dataSource.filter = status.trim().toLowerCase();
+    const activePoints = event.active;
+
+    if (activePoints && activePoints.length > 0) {
+      const chartElement = activePoints[0];      
+      const index = chartElement.index;       
+      const label = this.pieChartLabels[index];
+      console.log('Label:', label); 
+      this.dataSource.filter = label.trim().toLowerCase();    
+    }
   }
 
 
