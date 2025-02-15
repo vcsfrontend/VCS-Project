@@ -1,266 +1,685 @@
-<app-page-header title="Deals" title1="CRM" activeTitle="Deals" ></app-page-header>
- <!-- Start::row-1 -->
- <div class="row">
-    <div class="col-xl-12">
-        <div class="card custom-card">
-            <div class="card-body">
-                <div class="d-flex align-items-center flex-wrap gap-2 justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <span class="fw-medium fs-16 me-1">Deals</span><span class="badge bg-light text-default align-middle">16</span>
-                    </div>
-                    <div class="d-flex flex-wrap gap-2">
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#create-contact" (click)="open(content)"><i class="ri-add-line me-1 fw-medium align-middle"></i>New Deal</button>
-                        <button class="btn btn-success-light btn-sm">Export As CSV</button>
-                        <div ngbDropdown  class="dropdown">
-                            <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-light btn-sm btn-wave waves-effect waves-light" data-bs-toggle="dropdown" aria-expanded="false">
-                                Sort By
+<div class="col-xl-12 pt-3">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <!--<div class="card-title">Leads </div>-->
+            <div class="text-center">
+                <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
+                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend" (chartClick)="filterStatusList($event)">
+                </canvas>
+
+                <!--<div class="btn-list">
+                    <button type="button" class="btn btn-primary btn-wave">New Leads</button>
+                    <button type="button" class="btn btn-secondary btn-wave"
+                        (click)="filterStatusList('Active')">Active</button>
+                    <button type="button" class="btn btn-purple btn-wave"
+                        (click)="filterStatusList('Spoke')">Spoke</button>
+                    <button type="button" class="btn btn-danger btn-wave"
+                        (click)="filterStatusList('Closed')">Closed</button>
+                    <button type="button" class="btn btn-warning btn-wave"
+                        (click)="filterStatusList('Proposal sent')">Proposal sent</button>
+                    <button type="button" class="btn btn-dark btn-wave text-white"
+                        (click)="filterStatusList('Meeting Fixed')">Meeting Fixed</button>
+                </div>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                {{leadCount}} Deals found
+            </div>
+            <mat-form-field class="filter-field">
+                <mat-label>Seach</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+                        (click)="openRight1(content1)" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Filter</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+                        (click)="openRight(content)" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Bulk Upload</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
+                                (change)="onSelectAllChange($event)"></mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-checkbox (change)="onRowCheckboxChange(element.leadId, $event)"
+                                [checked]="isSelected(element.leadId)" class="custom-checkbox"></mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                            <a href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                ata-bs-toggle="offcanvas" (click)="openFollowup(element,Content4);"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="ri-alarm-line"></i>
                             </a>
-                            <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
-                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Newest</a></li>
-                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Date Added</a></li>
-                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">A - Z</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--End::row-1 -->
-
-<!-- Start::row-2 -->
-<div class="row">
-    <div class="col-xxl-2 col-md-4">
-        <div class="card custom-card">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-top flex-wrap justify-content-between">
-                    <div>
-                        <div class="fw-medium fs-15 lead-discovered">Leads Discovered</div>
-                        <span class=" badge bg-light text-default">24 Leads</span>
-                    </div>
-                    <div>
-                        <span class="text-primary fw-medium">$25,238</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xxl-2 col-md-4">
-        <div class="card custom-card">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-top flex-wrap justify-content-between">
-                    <div>
-                        <div class="fw-medium fs-15 lead-qualified">Qualified Leads</div>
-                        <span class=" badge bg-light text-default">17 Leads</span>
-                    </div>
-                    <div>
-                        <span class="text-warning fw-medium">$32,453</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xxl-2 col-md-4">
-        <div class="card custom-card">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-top flex-wrap justify-content-between">
-                    <div>
-                        <div class="fw-medium fs-15 contact-initiated">Contact Initiated</div>
-                        <span class=" badge bg-light text-default">5 Leads</span>
-                    </div>
-                    <div>
-                        <span class="text-success fw-medium">$13,756</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xxl-2 col-md-4">
-        <div class="card custom-card">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-top flex-wrap justify-content-between">
-                    <div>
-                        <div class="fw-medium fs-15 need-identified">Needs Identified</div>
-                        <span class=" badge bg-light text-default">43 Leads</span>
-                    </div>
-                    <div>
-                        <span class="text-info fw-medium">$47,093</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xxl-2 col-md-4">
-        <div class="card custom-card">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-top flex-wrap justify-content-between">
-                    <div>
-                        <div class="fw-medium fs-15 negotiation">Negotiation</div>
-                        <span class=" badge bg-light text-default">15 Leads</span>
-                    </div>
-                    <div>
-                        <span class="text-danger fw-medium">$26,146</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xxl-2 col-md-4">
-        <div class="card custom-card">
-            <div class="card-body p-3">
-                <div class="d-flex align-items-top flex-wrap justify-content-between">
-                    <div>
-                        <div class="fw-medium fs-15 deal-finalized">Deal Finalized</div>
-                        <span class=" badge bg-light text-default">127 Deals</span>
-                    </div>
-                    <div>
-                        <span class="text-secondary fw-medium">$1,74,679</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End::row-2 -->
-
-<!-- Start::row-3 -->
-<div class="row" cdkDropListGroup>
-    <div class="col-xxl-2" id="leads-discovered" >
-        <div
-        cdkDropList
-        [cdkDropListData]="col1"
-        id="draggable-right"
-        (cdkDropListDropped)="drop($event)"
-      >
-      @for( item of col1;track $index){
-
-          <div  cdkDrag [innerHTML]="item"></div>
-      }
-    </div>
-    </div>
-    <div class="col-xxl-2" id="leads-qualified"  > 
-        <div
-        cdkDropList
-        [cdkDropListData]="col2"
-        id="draggable-left"
-        (cdkDropListDropped)="drop($event)"
-      >
-      @for( item of col2;track $index){
-
-        <div  cdkDrag [innerHTML]="item"></div>
-    }
-    </div>
-    </div>
-    <div class="col-xxl-2" id="contact-initiated" >
-        <div
-            cdkDropList
-            [cdkDropListData]="col3"
-            id="draggable-left"
-            (cdkDropListDropped)="drop($event)"
-          >
-          @for( item of col3;track $index){
-
-            <div  cdkDrag [innerHTML]="item"></div>
-        }
-        </div>
-    </div>
-    <div class="col-xxl-2" id="needs-identified" >
-        <div
-        cdkDropList
-        [cdkDropListData]="col4"
-        id="draggable-left"
-        (cdkDropListDropped)="drop($event)"
-      >
-      @for( item of col4;track $index){
-
-        <div  cdkDrag [innerHTML]="item"></div>
-    }
-    </div>
-    </div>
-    <div class="col-xxl-2" id="negotiation" >
-        <div
-            cdkDropList
-            [cdkDropListData]="col5"
-            id="draggable-left"
-            (cdkDropListDropped)="drop($event)"
-          >
-          @for( item of col5;track $index){
-
-            <div  cdkDrag [innerHTML]="item"></div>
-        }
-        </div>
-    </div>
-    <div class="col-xxl-2" id="deal-finalized" >
-        <div
-            cdkDropList
-            [cdkDropListData]="col6"
-            id="draggable-left"
-            (cdkDropListDropped)="drop($event)"
-          >
-          @for( item of col6;track $index){
-
-            <div  cdkDrag [innerHTML]="item"></div>
-        }
-        </div>
-    </div>
-</div>
-<!-- End::row-3 -->
-<!-- Start:: New Deal -->
-<div class="modal fade" id="create-contact" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <ng-template #content let-c="close" let-d="dismiss">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title">New Deal</h6>
-                <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body px-4">
-                <div class="row gy-3">
-                    <div class="col-xl-12">
-                        <div class="mb-0 text-center">
-                            <span class="avatar avatar-xxl avatar-rounded">
-                                <img [src]="url1 ? url1 :'./assets/images/faces/9.jpg'" alt="" id="profile-img">
-                                <span class="badge rounded-pill bg-primary avatar-badge">
-                                    <input type="file" name="photo" class="position-absolute w-100 h-100 op-0" id="profile-change"  (change)="handleFileInput($event)" >
-                                    <i class="fe fe-camera"></i>
-                                </span>
+                            <a href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            <span class="m-1" ngbDropdown placement="right-top">
+                                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
+                                    ngbDropdownToggle></i>
+                                <ul class="dropdown-menu z-1" ngbDropdownMenu>
+                                    <li class="m-2">
+                                        <button class="btn btn-warning label-btn label-end w-100"
+                                            (click)="sendEmail(element)" data-bs-toggle="offcanvas"
+                                            (click)="openRight(Content2)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="editLead(element,Content12)">
+                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-danger label-btn label-end w-100">
+                                            Delete<i class="ri-delete-bin-line label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                </ul>
                             </span>
-                        </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <!--<ng-container matColumnDef="companyName">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> companyName </th>
+                        <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
+                    </ng-container>-->
+                    <ng-container matColumnDef="executive">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
+                        <td mat-cell *matCellDef="let element"><a href="javascript:void(0);" data-bs-toggle="tooltip"
+                                ngbTooltip="{{element.executive}}" tooltipClass="tooltip-primary"
+                                class="avatar avatar-sm online avatar-rounded">
+                                <img src="./assets/images/brand-logos/profile1.jpg" alt="img">
+                            </a></td>
+
+                    </ng-container>
+                    <ng-container matColumnDef="products">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Products</th>
+                        <td mat-cell *matCellDef="let element"> {{element.products}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="badge me-1" [ngClass]="getStatusClass(element.status)">
+                                {{ element.status }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="followUpDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>FollowUpDate</th>
+                        <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date:'dd-MM-yy' }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contact">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+                        <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                    </ng-container>
+                    <!-- <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Actions </th>
+                        <td mat-cell *matCellDef="let element">                     
+                    
+                            <button mat-icon-button [matMenuTriggerFor]="menu">
+                            <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                            <button mat-menu-item (click)="sendEmail(element)" class="action-option">Send Email</button>
+                            <button mat-menu-item (click)="editLead(element,Content12)" class="action-option">Edit</button>                                
+                            </mat-menu>                              
+    
+                        </td>
+                        </ng-container> -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        </div>
+        <div class="d-flex mb-2 px-3 marge">
+            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
+                <div class="input-group w-auto"
+                    [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
+                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                        placeholder="Select an Executive" class="rounded-0 ng-selt">
+                    </ng-select>
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
+                        id="button-addon1" data-mdb-ripple-color="dark">
+                        Allocate
+                    </button>
+                </div>
+                <div *ngIf="allocateSubmitted && a['executive'].errors" class="invalid-feedback">
+                    <div *ngIf="a['executive'].errors['required']">Executive is required</div>
+                </div>
+            </form>
+            <div class="text-center ms-3 ">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-wave"><i
+                            class="ri-alarm-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave"><i
+                            class="ri-mail-line bt-icon"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave"><i
+                            class="ri-delete-bin-line"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #Content12 let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLgLabel"><b *ngIf="leadForm">
+                {{ (leadForm.get('leadId')?.value || 0) > 0 ? 'Edit' : 'Add' }}
+            </b>
+        </h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="leadForm" (ngSubmit)="onSubmit(modal)">
+        <div class="modal-body">
+
+            <div class="row gy-3 scrollable-content">
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name"
+                        [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
+                    <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                        <span *ngIf="f['name'].errors['required']">Name is required.</span>
+                        <span *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters long.</span>
                     </div>
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Contact Name</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="contact-mail" class="form-label">Company Name</label>
+                    <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
+                        formControlName="companyName">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="contact-phone" class="form-label">Executive</label>
+                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                        placeholder="Select an Executive">
+                    </ng-select>
+                </div>
+                <!--<div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="company-name" class="form-label">Products</label>
+                    <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
+                </div>-->
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="company-name" class="form-label">Country</label>
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select"
+                        id="choices-multiple-remove-button3" formControlName="country"
+                        (change)="onCountryChange($any($event.target).value)"
+                        [ngClass]="{ 'is-invalid': submitted && f['country'].errors }" class="border rounded">
+                        <ng-option *ngFor="let c of countryLst" [value]="c.country">{{ c.country }}</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label" for="stage"> Stage</label>
+                    <ng-select formControlName="stage" [items]="stageList" bindLabel="name" bindValue="name"
+                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
+                        <div *ngIf="f['stage'].errors['required']">Stage is required</div>
                     </div>
-                    <div class="col-xl-6">
-                        <label for="deal-lead-score" class="form-label">Deal Value</label>
-                        <input type="number" class="form-control" id="deal-lead-score" placeholder="Deal Value">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label"> Status</label>
+                    <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
+                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                        <div *ngIf="f['status'].errors['required']">Status is required</div>
                     </div>
-                    <div class="col-xl-12">
-                        <label for="company-name" class="form-label">Company Name</label>
-                        <input type="text" class="form-control" id="company-name" placeholder="Company Name">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label">Lead Source</label>
+                    <ng-select formControlName="leadSource" [items]="leadSource" bindLabel="name" bindValue="name"
+                        placeholder="Select an option">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="zipCode" class="form-label">Zip Code</label>
+                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
+                        formControlName="zipCode" [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }"
+                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
+                    <div *ngIf="submitted && f['zipCode'].errors" class="invalid-feedback">
+                        <span *ngIf="f['zipCode'].errors['required']">Zip Code is required.</span>
+                        <span *ngIf="f['zipCode'].errors['minlength']">Zip Code must be at least 6 characters
+                            long.</span>
                     </div>
-                    <div class="col-xl-12">
-                        <label class="form-label">Last Contacted</label>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-text text-muted"> <i class="ri-calendar-line"></i> </div>
-                                <!-- <input type="text" class="form-control" id="targetDate" placeholder="Choose date and time"> -->
-                                <input class="form-control" type="text" id="targetDate" placeholder="Choose Date With Time" mwlFlatpickr
-                            [altInput]="true" [convertModelValue]="true" [enableTime]="true" dateFormat="Y-m-dTH:i" />
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="followUpDate" class="form-label">Follow up date</label>
+                    <input type="date" class="form-control" id="followUpDate" placeholder=""
+                        formControlName="followUpDate">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" class="form-control" id="state" placeholder="Enter Your State"
+                        formControlName="state">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="Enter City Name"
+                        formControlName="city" [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
+                    <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
+                        <div *ngIf="f['city'].errors['required']">City is required</div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter Your Address"
+                        formControlName="address" [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
+                    <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
+                        <span *ngIf="f['address'].errors['required']">Address is required.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="contact" class="form-label">Contact</label>
+                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number"
+                        formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
+                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                        (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)" maxlength="10"
+                        (paste)="preventCopyPaste($event)">
+                    <div *ngIf="submitted && f['contact'].errors" class="invalid-feedback">
+                        <span *ngIf="f['contact'].errors['required']">Contact is required.</span>
+                        <span *ngIf="f['contact'].errors['maxlength']">Contact must be 10 characters.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="text" class="form-control  " id="email" placeholder="Enter your email"
+                        onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
+                                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email"
+                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+                    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                        <span *ngIf="f['email'].errors['required']">Email is required.</span>
+                        <span *ngIf="f['email'].errors['email']">Invalid email address.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-secondary">save lead</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">cancel</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Bulk Upload</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush mb-0">
+            <li class="list-group-item">
+                <div class="d-flex align-items-center">
+                    <div class="flex-fill">
+                        <a href="assets/images/browsers/Leads Sample Format.xls" download="Leads Sample Format.xls">
+                            <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
+                            </button></a>
+                        <p class="px-3">Kindly download the Leads Format and fill your bulk Leads in the proper format
+                            and then
+                            upload it for proper importing of the data.</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <div class="col-xl-8 mx-auto">
+            <div class="card custom-card bg-light">
+                <div class="card-header">
+                    <div class="card-title">
+                        Upload XL File
+                    </div>
+                </div>
+                <div class="card-body ">
+                    <form [formGroup]="uploadLead" (ngSubmit)="uploadLeadSubmit(offcanvas)">
+                        <div class="container">
+                            <div class="row bg-light">
+                                <div class="col-xl-12 col-lg-12 col-md-12 d-flex">
+                                    <div class="input-group mb-3">
+                                        <input formControlName="file" id="file" type="file"
+                                            class="form-control rounded w-50 position-relative "
+                                            (change)="onFileChange($event)"
+                                            [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
+                                        <div *ngIf="uploadSubmitted && l['file'].errors" class="invalid-feedback w-50">
+                                            <span *ngIf="l['file'].errors['required']">File is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-12 col-lg-12 col-md-12">
+                                    <button class="btn btn-primary me-1" type="submit"
+                                        [disabled]="uploadSpinner">Import</button>
+                                    <button class="btn btn-secondary" type="button"
+                                        (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+                                </div>
                             </div>
                         </div>
+                    </form>
+                    <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light"
-                    data-bs-dismiss="modal"  (click)="c('Cancel click')">Cancel</button>
-                <button type="button" class="btn btn-primary">Create Deal</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content1 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div class="col-xl-12 pt-3">
+            <div class="card custom-card">
+                <div class="card-header justify-content-between">
+                    <div class="text-center">
+                        <div class="btn-list">
+                            <button type="button" class="btn btn-primary btn-wave">New Leads</button>
+                            <button type="button" class="btn btn-secondary btn-wave">Active</button>
+                            <button type="button" class="btn btn-purple btn-wave">Spoke</button>
+                            <button type="button" class="btn btn-danger btn-wave">Closed</button>
+                            <button type="button" class="btn btn-warning btn-wave">Proposal sent</button>
+                            <button type="button" class="btn btn-dark btn-wave text-white">Meeting Fixed</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </ng-template>
+        <!-- <div>
+            <ul class="list-group list-group-flush mb-0">
+                <li class="list-group-item">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-fill">
+                            <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
+                                Format</button>
+                            <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then
+                                upload it for proper importing of the data.</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div> -->
     </div>
-</div>
-<!-- End:: New Deal -->
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary mr-3" type="submit">Filter</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Reset
+                Filters</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content3 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="card custom-card border">
+            <div class="card-body">
+                <nav ngbNav #nav24="ngbNav" class="nav nav-pills flex-column flex-sm-row mb-3 border-bottom py-2"
+                    role="tablist">
+                    <ng-container ngbNavItem>
+                        <a ngbNavLink class="flex-sm-fill text-sm-center nav-link " data-bs-toggle="tab" role="tab"
+                            aria-current="page" aria-selected="true">Lead Info</a>
+                        <ng-template ngbNavContent>
+                            <div class="p-3 text-dark" id="pill-flex-home" role="tabpanel">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><span class="fw-semibold me-1">name : </span>{{element.name}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">companyName :
+                                        </span>{{element.companyName}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">executive :
+                                        </span>{{element.executive}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">products :
+                                        </span>{{element.products}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">country : </span>{{element.country}}
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">stage : </span>{{element.stage}}
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">status : </span>{{element.status}}
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">leadSource :
+                                        </span>{{element.leadSource}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">ZipCode : </span>{{element.zipCode
+                                        |slice:0:6}}
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowUpDate :
+                                        </span>{{element.followUpDate | date: 'dd/MM/yyyy'}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">State: </span>{{element.state}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">City: </span>{{element.city}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Address: </span>{{element.address}}
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Contact: </span>{{element.contact}}
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Email: </span>{{element.email}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">CurrentStage:
+                                        </span>{{element.currentStage}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">UpdatedBy:
+                                        </span>{{element.updatedBy}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">UpdatedTime:
+                                        </span>{{ element.updatedTime | date: 'dd/MM/yyyy' }}</li>
+
+                                </ul>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                    <ng-container ngbNavItem>
+                        <a ngbNavLink class="flex-sm-fill text-sm-center nav-link" data-bs-toggle="tab" role="tab"
+                            aria-current="page" aria-selected="false ">Follow-Ups</a>
+                        <ng-template ngbNavContent>
+                            <div class="p-3" id="pill-flex-home" role="tabpanel">
+                                <ul class="list-unstyled" *ngFor="let followup of element.followLeads">
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
+                                        </span>{{followup.followupDate }}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
+                                        </span>{{followup.followupTime }}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Stage :
+                                        </span>{{followup.stage}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
+                                        </span>{{followup.followUpBy}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">CurrentStage :
+                                        </span>{{followup.currentStage}}
+                                    </li>
+                                </ul>
+                            </div>
+                        </ng-template>
+                    </ng-container>
+                </nav>
+                <div class="tab-content">
+                    <div [ngbNavOutlet]="nav24" class="mt-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary mr-3" type="submit">Filter</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Reset
+                Filters</button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #Content2 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Email</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvas)" class="overflowSendMailForm">
+        <div class="offcanvas-body p-0 m-4 ">
+            <div class="mb-4">
+                <ng-select name="choices-multiple-remove-button3" placeholder="Select" formControlName="template"
+                    class="border rounded" [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['template'].errors }">
+                    <ng-option value="1">Template 1</ng-option>
+                    <ng-option value="2">Template 2</ng-option>
+                </ng-select>
+                <div *ngIf="sendLeadSubmitted && s['template'].errors" class="invalid-feedback">
+                    <div *ngIf="s['template'].errors['required']">Template is required</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
+                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['subject'].errors }">
+                <div *ngIf="sendLeadSubmitted && s['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                </div>
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="cc" placeholder="CC" formControlName="cc"
+                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['cc'].errors }">
+                <div *ngIf="sendLeadSubmitted && s['cc'].errors" class="invalid-feedback">
+                    <span *ngIf="s['cc'].errors['required']">CC is required.</span>
+                    <span *ngIf="s['cc'].errors['email']">Invalid email address.</span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <input type="text" class="form-control" id="bcc" placeholder="BCC" formControlName="bcc"
+                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['bcc'].errors }">
+                <div *ngIf="sendLeadSubmitted && s['bcc'].errors" class="invalid-feedback">
+                    <span *ngIf="s['bcc'].errors['required']">BCC is required.</span>
+                    <span *ngIf="s['bcc'].errors['email']">Invalid email address.</span>
+                </div>
+            </div>
+
+            <!-- <ckeditor [(ngModel)]="emailContent"></ckeditor> -->
+            <angular-editor [config]="editorConfig" formControlName="content"
+                [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['content'].errors }"></angular-editor>
+            <div *ngIf="sendLeadSubmitted && s['content'].errors" class="invalid-feedback">
+                <span *ngIf="s['content'].errors['required']">Content is required.</span>
+            </div>
+            <div class="card-body mt-3">
+                <input id="file" type="file" class="form-control rounded-0 w-50 position-relative"
+                    (change)="onEmailFileChange($event)">
+                <!--<file-pond #myPond [options]="pondOptions" class="multiple-filepond" (oninit)="pondHandleInit()"
+                    (onaddfile)="pondHandleAddFile($event)" (onactivatefile)="pondHandleActivateFile($event)">
+                </file-pond>-->
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3 w-100" type="submit">Send Mail</button>
+            </div>
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
+                    type="submit">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+
+<!-- Followup lead-->
+<ng-template #Content4 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add New Update {{followupName}}</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
+        <div class="offcanvas-body p-0 m-4 ">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
+                    <label for="followupDate" class="form-label">Next Follow up date</label>
+                    <input type="date" class="form-control" id="followupDate" placeholder=""
+                        formControlName="followupDate"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }">
+                    <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
+                        <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
+                    <label for="followupTime" class="form-label">Follow up time</label>
+                    <input type="time" class="form-control" id="followupTime" placeholder=""
+                        formControlName="followupTime"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupTime'].errors }">
+                    <div *ngIf="followupLeadSubmitted && e['followupTime'].errors" class="invalid-feedback">
+                        <div *ngIf="e['followupTime'].errors['required']">Followup Time is required</div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
+                    <label class="form-label" for="stage"> Stage</label>
+                    <ng-select formControlName="stage" [items]="stageList" bindLabel="name" bindValue="name"
+                        placeholder="Select an option"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['stage'].errors }">
+                    </ng-select>
+                    <div *ngIf="followupLeadSubmitted && e['stage'].errors" class="invalid-feedback">
+                        <div *ngIf="e['stage'].errors['required']">Stage is required</div>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
+                    <label class="form-label"> Status</label>
+                    <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
+                        placeholder="Select an option"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['status'].errors }">
+                    </ng-select>
+                    <div *ngIf="followupLeadSubmitted && e['status'].errors" class="invalid-feedback">
+                        <div *ngIf="e['status'].errors['required']">Status is required</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- <ckeditor [(ngModel)]="emailContent"></ckeditor> -->
+            <angular-editor [config]="editorConfig" formControlName="comments"
+                [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }"></angular-editor>
+            <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
+                <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
+            </div>
+
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3 w-100" type="submit">Update Status</button>
+            </div>
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
+                    type="submit">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
