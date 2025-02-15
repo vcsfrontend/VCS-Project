@@ -4,7 +4,7 @@
             <!--<div class="card-title">Leads </div>-->
             <div class="text-center">
                 <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
-                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend" (chartClick)="filterStatusList($event)">
                 </canvas>
 
                 <!--<div class="btn-list">
