@@ -736,8 +736,8 @@ export class LeadsComponent extends BaseComponent {
     minHeight: '0',
     placeholder: 'Enter text here...',
     translate: 'no',
-    defaultFontName: 'Arial',
-    defaultFontSize: '14',
+    defaultFontName: 'Arial',    
+    defaultFontSize: '2',
     toolbarHiddenButtons: [['bold', 'italic']],
   };
 }
