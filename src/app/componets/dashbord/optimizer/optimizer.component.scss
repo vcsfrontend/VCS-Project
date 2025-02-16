@@ -1,16 +1,21 @@
-.margin{
-    margin-top: -30px;
-}
 .back{
     cursor: pointer;
+    margin-top: 5px;
 }
 .back:hover{
     background-color: var(--primary02);
     color: var(--primary-color);
+    margin-bottom: 5px;
 }
 .scroll {
-    height: auto;
+    height: 300px;
     overflow: visible;
     border: none;
     margin-bottom: 20px;
+}
+.nav-tabs .dropdown-menu {
+    margin-block-start: calc(-1* var(--bs-nav-tabs-border-width));
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
+    cursor: pointer;
 }
