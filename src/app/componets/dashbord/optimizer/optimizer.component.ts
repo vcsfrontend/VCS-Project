@@ -25,4 +25,5 @@ export class OptimizerComponent {
 VerticallyScrol(content: any) {
   this.modalService.open(content, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, size: 'lg' });
 }
+
 }
