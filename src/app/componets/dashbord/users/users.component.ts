@@ -32,7 +32,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormArray,  } from '@angular/forms'  
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
-
+import { MatCommonModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-users',
@@ -41,7 +41,7 @@ import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstra
       AngularFireDatabaseModule, CommonModule,  MatFormFieldModule, MatSelectModule, FlatpickrModule,
       AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
       OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
-      NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,NgSelectModule, MatTableModule,MatSortModule],
+      NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,NgSelectModule, MatTableModule,MatSortModule,MatCommonModule],
     providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss'
@@ -56,8 +56,10 @@ export class UsersComponent {
   @ViewChild('paginator') paginator!: MatPaginator;
   //@ViewChild('sort') sort!: MatSort;
   @ViewChild(MatSort) sort!: MatSort;
-  
-
+  chartOptions4:any;
+  chartOptions1:any;
+  chartOptions2:any;
+  chartOptions3:any;
   constructor( public switchService: SwitherService, private toastr: ToastrService,
     private modalService: NgbModal, private offcanvasService: NgbOffcanvas,private fb: FormBuilder) {
       this.leadForm = this.fb.group({
@@ -80,7 +82,132 @@ export class UsersComponent {
         updatedBy: ['', Validators.required],  // Required
         updatedTime: ['', Validators.required],  // Required
         leadId: [0]  // Default value
-      });
+      }); 
+    this.chartOptions4={
+      series: [55, 45],
+      chart: {
+          height: 277,
+          type: 'donut',
+      },
+      plotOptions: {
+          pie: {
+              startAngle: -90,
+              endAngle: 270
+          }
+      },
+      dataLabels: {
+          enabled: true
+      },
+      fill: {
+          type: 'gradient',
+      },
+      legend: {
+         position:'bottom'
+      },
+      colors: [  "#49b6f5", "#e6533c"],
+      labels: ["In progress","closed"],
+      title: {
+          text: 'Gradient Donut with custom Start-angle',
+          align: 'left',
+          style: {
+              fontSize: '13px',
+              fontWeight: 'bold',
+              color: '#8c9097'
+          },
+      },
+  
+    }
+    this.chartOptions1={
+      series: [44,  41,],
+      chart: {
+          type: 'donut',
+          height: 290
+      },
+      legend: {
+          position: 'bottom'
+      },
+      colors: ["#845adf", "#f5b849",],
+      labels: ["Follow Up","Not Connected"],
+      dataLabels: {
+          dropShadow: {
+              enabled: false
+          }
+      },
+    }
+    this.chartOptions2={
+      series: [44, 55, 13],
+      chart: {
+          height: 280,
+          type: 'donut',
+      },
+      dataLabels: {
+          enabled: false
+      },
+      colors: ["#845adf", "#23b7e5", "#f5b849",],
+      labels: ["Closed By","Converted","Lost"],
+      legend: {
+          position: 'bottom',
+      }
+    }
+    // bar graph
+    this.chartOptions3 = {
+      series: [
+        {
+          name: 'Open',
+          data: [44, 55, 41, 37, 22, 43, 21],
+        },
+        {
+          name: 'Follow Up',
+          data: [53, 32, 33, 52, 13, 43, 32],
+        },
+        {
+          name: 'Not Connected',
+          data: [12, 17, 11, 9, 15, 11, 20],
+        },
+        {
+          name: 'Closed',
+          data: [9, 7, 5, 8, 6, 9, 4],
+        },
+      ],
+      colors:['#28a745','#f5b849','#23b7e5','#e6533c','#49b6f5'],
+
+      chart: {
+        type: 'bar',
+        height: 350,
+        stacked: true,
+        stackType: '100%',
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+        },
+      },
+      stroke: {
+        width: 1,
+        colors: ['#fff'],
+      },
+      title: {
+        text: '',
+      },
+      xaxis: {
+        categories: ['Pathiv','Salman','Kumar','varma','basavraj','group','Kiran'],
+      },
+      tooltip: {
+        y: {
+          formatter: function (val: string) {
+            return val + 'K';
+          },
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+      legend: {
+        position: 'right',
+        horizontalAlign: 'left',
+        offsetX: 10,
+      },
+    };
   }
 
   addLead() {
@@ -128,6 +255,9 @@ export class UsersComponent {
   openModal(content1:any) {
     this.modalService.open(content1,{ centered: true });
   }
+  openLg(content3:any) {
+		this.modalService.open(content3, { size: 'lg' },);
+	}
   openRight(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
   }
@@ -137,6 +267,7 @@ export class UsersComponent {
   VerticallyScrol(content12:any) {
     this.modalService.open(content12, {  scrollable: true,centered: true,size: 'xl' });
   }
+  
   /**
    * Set the paginator and sort after the view init since this component will
    * be able to query its view for the initialized paginator and sort.
@@ -174,8 +305,16 @@ export class UsersComponent {
   delete(element: any) {
     console.log('Delete clicked for:', element);
   }
+  showSettings = false;
 
+  toggleSettings() {
+    this.showSettings = !this.showSettings;
+  }
+
+  
 }
+
+
 
 
 export interface Element {
