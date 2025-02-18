@@ -318,7 +318,13 @@ export class BaseComponent {
       {"name":"Lost"},
       {"name":"Conerted to Deal/ opportunity"}
     ]
-    leadSource = [{"name":"Social Media"},
+    leadSource = [{"name":"Sales"},
+      {"name":"Facebook"},
+      {"name":"Website"},
+      {"name":"Others"}    
+    ]
+
+    pipeLine = [{"name":"Sales"},
       {"name":"Direct mail"},
       {"name":"Adwords"},
       {"name":"Leadform"},
@@ -326,4 +332,39 @@ export class BaseComponent {
       {"name":"SEO"},
       {"name":"Others"}    
     ]
+
+    panelList = [{"name":"Colour Example Board"},
+      {"name":"Glass Example Material"},
+      {"name":"Grain Example Board"},
+      {"name":"White Example Board"},  
+      {"name":"Add New Material"},  
+      
+    ]
+
+    stockType = [{"name":"sheet"},
+      {"name":"linear"},
+      {"name":"roll"},
+    ]
+
+    cutType = [{"name":"guillotine"},
+      {"name":"efficiency"},
+      {"name":"beam"},
+    ]
+
+    cutPreference = [{"name":"w"},
+      {"name":"flex"},
+    ]
+
+    strategy = [{"name":"efficiency"},
+      {"name":"time"}
+    ]
+
+    StockSelection = [{"name":"efficiency"},
+      {"name":"smallest"}
+    ]
+
+    stackingMode = [{"name":"dimensions"},
+      {"name":"identical"}
+    ]
+    
 }

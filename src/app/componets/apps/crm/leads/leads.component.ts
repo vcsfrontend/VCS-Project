@@ -27,6 +27,7 @@ import { FilePondComponent, FilePondModule } from 'ngx-filepond';
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @Component({
   selector: 'app-leads',
@@ -34,7 +35,7 @@ import { ChartOptions } from 'chart.js';
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
     AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
-    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule],
+    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule,NgApexchartsModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './leads.component.html',
@@ -47,6 +48,8 @@ export class LeadsComponent extends BaseComponent {
   pageSize = 10;
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
 
+  chartOptions:any
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
@@ -108,9 +111,27 @@ export class LeadsComponent extends BaseComponent {
   ) {
     super();
     this.userData = localStorage.getItem('userDetails');
+    this.chartOptions={
+      series: [44, 55, 13, 43, 22],
+      chart: {
+          height: 300,
+          type: 'pie',
+      },
+      colors: ["#845adf", "#23b7e5", "#f5b849", "#49b6f5", "#e6533c"],
+      labels: ['Total 250', 'Open 50', 'Inprogress 190', 'Closed 74', 'Team '],
+      legend: {
+          position: "bottom"
+      },
+      dataLabels: {
+          dropShadow: {
+              enabled: false
+          }
+      },
+      }
   }
-
-
+  open(content7: any) {
+    this.modalService.open(content7, { centered: true });
+  }
   openModal(content1: any) {
     this.modalService.open(content1, { centered: true });
   }
@@ -329,7 +350,6 @@ export class LeadsComponent extends BaseComponent {
   onCountryChange(data: any) {
     this.leadForm.patchValue({ country: data });
   }
-
 
   getCrmUsers() {
     this.switchService.CrmLeads().subscribe({

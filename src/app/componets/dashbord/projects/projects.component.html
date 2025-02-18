@@ -137,7 +137,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-12 col-sm-12">
+            <!-- <div class="col-xl-12 col-sm-12">
                 <div class="card custom-card">
                     <div class="card-header justify-content-between">
                         <div class="card-title">Projects Revenue</div>
@@ -230,6 +230,66 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <div class="col-xl-12 mt-2">
+                <div class="card custom-card">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">
+                            Design 
+                        </div>
+                        <div class="d-flex flex-wrap gap-3">
+                            <!-- <mat-form-field class="filter-field">
+                                <mat-label>Fliter</mat-label> 
+                                <input matInput (keyup)="applyFilter($event)" #input>
+                            </mat-form-field> -->
+                            <div>
+                                <a class="btn btn-secondary btn-wave" (click)="openRights(content)"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="ri-add-line align-middle me-1 fw-medium"></i>Add Design</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="mat-elevation-z8">
+                            <div class="table-responsive">
+                                <table mat-table [dataSource]="dataSourcee">
+                                    <ng-container matColumnDef="slNo">
+                                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Nameoffile">
+                                        <th mat-header-cell *matHeaderCellDef> Name of File </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.Nameoffile}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Typeoffile">
+                                        <th mat-header-cell *matHeaderCellDef> Type of File </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.Typeoffile}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Uploadedby">
+                                        <th mat-header-cell *matHeaderCellDef>Uploaded by</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.Uploadedby}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Uploadedon">
+                                        <th mat-header-cell *matHeaderCellDef>Uploaded On</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.Uploadedon}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Status">
+                                        <th mat-header-cell *matHeaderCellDef>Status</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Actions">
+                                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.Actions }} </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumnss"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: displayedColumnss;"></tr>
+                                </table>
+                            </div>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                                aria-label="Select page of periodic elements">
+                            </mat-paginator>
                         </div>
                     </div>
                 </div>
@@ -442,7 +502,6 @@
         </div>
     </div>
 </div>
-
 
 <ng-template #Content10 id="addtask" let-modal>
     <div class="modal-content">
@@ -784,3 +843,18 @@
 </ng-template>
 <!-- End Row 5 -->
   
+<ng-template #content let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Design Stages</strong></h5>
+        <button type="button" class="btn btn-primary float-end" >
+            Add More <i class="ri-add-line align-middle me-1 fw-medium"></i>
+        </button>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush mb-0">
+            <h1>hello</h1>
+        </ul>
+    </div>
+</ng-template>

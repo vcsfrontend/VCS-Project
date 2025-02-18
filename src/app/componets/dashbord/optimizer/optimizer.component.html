@@ -181,7 +181,7 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <div class="col-xl-3 d-flex justify-content-end ">
+                                            <div class="col-xl-4 d-flex justify-content-end ">
                                                 <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block" role="tablist">
                                                     <li [ngbNavItem]="1" class="nav-item dropdown m-1" ngbDropdown>
                                                         <a ngbNavLink class="nav-link dropdown-toggle" id="materialsDropdown" ngbDropdownToggle role="button" aria-expanded="false">
@@ -225,110 +225,230 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-12 d-flex border rounded">
-                                    <div class="col-xl-3 border border-light">
-                                        <div class="custom-card">
-                                            <div class="card-body p-0">
-                                                <div class="p-2 d-grid border-bottom border-block-end-dashed">
-                                                   <h6>Library</h6>
-                                                </div>
-                                                <div class="p-2 border-bottom border-block-end-dashed">
-                                                    <p>Library Item Name</p>
-                                                </div>
-                                                <div class="p-3 task-navigation border-bottom border-block-end-dashed">
-                                                    <ul class="list-unstyled task-main-nav mb-0">
-                                                        <li class="active">
-                                                            <a href="javascript:void(0);">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="me-2 lh-1">
-                                                                        <i class="ri-task-line align-middle fs-14"></i>
-                                                                    </span>
-                                                                    <span class="flex-fill text-nowrap">
-                                                                        Edging
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:void(0);">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="me-2 lh-1">
-                                                                        <i class="ri-star-line align-middle fs-14"></i>
-                                                                    </span>
-                                                                    <span class="flex-fill text-nowrap">
-                                                                        Group
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:void(0);">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="me-2 lh-1">
-                                                                        <i class="ri-delete-bin-5-line align-middle fs-14"></i>
-                                                                    </span>
-                                                                    <span class="flex-fill text-nowrap">
-                                                                        Hardware
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:void(0);">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="me-2 lh-1">
-                                                                        <i class="ri-delete-bin-5-line align-middle fs-14"></i>
-                                                                    </span>
-                                                                    <span class="flex-fill text-nowrap">
-                                                                        Labour
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:void(0);">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="me-2 lh-1">
-                                                                        <i class="ri-delete-bin-5-line align-middle fs-14"></i>
-                                                                    </span>
-                                                                    <span class="flex-fill text-nowrap">
-                                                                        Panel
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:void(0);">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="me-2 lh-1">
-                                                                        <i class="ri-delete-bin-5-line align-middle fs-14"></i>
-                                                                    </span>
-                                                                    <span class="flex-fill text-nowrap">
-                                                                        F300
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:void(0);">
-                                                                <div class="d-flex align-items-center">
-                                                                    <span class="me-2 lh-1">
-                                                                        <i class="ri-delete-bin-5-line align-middle fs-14"></i>
-                                                                    </span>
-                                                                    <span class="flex-fill text-nowrap">
-                                                                        FC90
-                                                                    </span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                <div class="col-xl-12">
+                                    <div class="card custom-card">
+                                        <div class="card-header">
+                                            <div class="card-title">
+                                                Vertical Tab Style-1
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-9">
-                                        <div class="card custom-card">
-                                           
+                                        <div class="card-body d-flex align-items-start">
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div ngbNav #nav17="ngbNav" [activeId]="1" orientation="vertical" class="nav flex-column nav-pills me-3 tab-style-7" id="v-pills-tab"
+                                                    role="tablist" aria-orientation="vertical">
+                                                    <ng-container [ngbNavItem]="1">
+                                                    <button ngbNavLink class="nav-link text-start" id="main-profile-tab" data-bs-toggle="pill"
+                                                        data-bs-target="#main-profile" type="button" role="tab"
+                                                        aria-controls="main-profile" aria-selected="true"><i
+                                                            class="ri-shield-user-line me-1 align-middle d-inline-block"></i>Saw</button>
+                                                            <ng-template ngbNavContent>
+                                                                <div  id="main-profile" role="tabpanel" tabindex="0">
+                                                                    <div class="row ">
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">BladeWidth</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Name">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">StockType</label>
+                                                                            <ng-select formControlName="stage" [items]="stockType" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">CutType</label>
+                                                                            <ng-select formControlName="stage" [items]="cutType" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">CutPreference</label>
+                                                                            <ng-select formControlName="stage" [items]="cutPreference" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            guillotineOptions
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label class="form-label my-2">Strategy</label>
+                                                                            <ng-select formControlName="stage" [items]="strategy" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">MaxPhase</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Name">
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            EfficiencyOptions
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">stackHeight</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Name">
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            Options
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">StockSelection</label>
+                                                                            <ng-select formControlName="stage" [items]="StockSelection" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">minSpacing</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Name">
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">stackingMode</label>
+                                                                            <ng-select formControlName="stage" [items]="stackingMode" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                </ng-template>
+                                                        </ng-container>
+                                                        <ng-container [ngbNavItem]="2">
+                                                    <button ngbNavLink class="nav-link text-start" id="man-password-tab" data-bs-toggle="pill"
+                                                        data-bs-target="#man-password" type="button" role="tab"
+                                                        aria-controls="man-password" aria-selected="false"><i
+                                                            class="ri-u-disk-line me-1 align-middle d-inline-block"></i>Password</button>
+                                                            <ng-template ngbNavContent>
+                                                            <div id="man-password" role="tabpanel" tabindex="0">
+                                                                <ul class="list-unstyled text-muted mb-0">
+                                                                    <li class="mb-2">
+                                                                        Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                                        industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                                                                            ever since the 1500s</b>, when an unknown printer took a galley
+                                                                        of type and scrambled it to make a type specimen book. It has
+                                                                        survived not only five centuries, but also the leap into electronic
+                                                                        typesetting, remaining essentially unchanged. It was popularised in
+                                                                        the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                                                                        passages, and more recently with desktop publishing software like
+                                                                        Aldus PageMaker including versions of Lorem Ipsum.
+                                                                    </li>
+                                                                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                                                                        random text. It has roots in a piece of classical Latin literature
+                                                                        from 45 BC, making it over 2000 years old. Richard McClintock, a
+                                                                        Latin professor at Hampden-Sydney College in Virginia,</li>
+                                                                    <li class="mb-0">There are many variations of passages of Lorem Ipsum
+                                                                        available, but the majority have suffered alteration in some form.
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            </ng-template>
+                                                            </ng-container>
+                                                            <ng-container [ngbNavItem]="3">
+                                                    <button ngbNavLink class="nav-link text-start" id="main-team-tab" data-bs-toggle="pill"
+                                                        data-bs-target="#main-team" type="button" role="tab"
+                                                        aria-controls="main-team" aria-selected="false"><i
+                                                            class="ri-group-line me-1 align-middle d-inline-block"></i>Team</button>
+                                                            <ng-template ngbNavContent>
+                                                                <div  id="main-team" role="tabpanel"
+                                                                aria-labelledby="main-team-tab" tabindex="0">
+                                                                <ul class="list-unstyled text-muted mb-0">
+                                                                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                                                                        random text. It has roots in a piece of classical Latin literature
+                                                                        from 45 BC, making it over 2000 years old. Richard McClintock, a
+                                                                        Latin professor at Hampden-Sydney College in Virginia,</li>
+                                                                    <li class="mb-2">There are many variations of passages of Lorem Ipsum
+                                                                        available, but the majority have suffered alteration in some form.
+                                                                    </li>
+                                                                    <li class="mb-0">
+                                                                        Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                                        industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                                                                            ever since the 1500s</b>, when an unknown printer took a galley
+                                                                        of type and scrambled it to make a type specimen book. It has
+                                                                        survived not only five centuries, but also the leap into electronic
+                                                                        typesetting, remaining essentially unchanged. It was popularised in
+                                                                        the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                                                                        passages, and more recently with desktop publishing software like
+                                                                        Aldus PageMaker including versions of Lorem Ipsum.
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                                </ng-template>
+                                                            </ng-container>
+                                                            <ng-container [ngbNavItem]="4">
+                                                    <button ngbNavLink class="nav-link text-start" id="main-billing-tab" data-bs-toggle="pill"
+                                                        data-bs-target="#main-billing" type="button" role="tab"
+                                                        aria-controls="main-billing" aria-selected="false"><i
+                                                            class="ri-bill-line me-1 align-middle d-inline-block"></i>Billing</button>
+                                                            <ng-template ngbNavContent>
+                                                                <div  id="main-billing" role="tabpanel"
+                                                                aria-labelledby="main-billing-tab" tabindex="0">
+                                                                <ul class="list-unstyled text-muted mb-0">
+                                                                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                                                                        random text. It has roots in a piece of classical Latin literature
+                                                                        from 45 BC, making it over 2000 years old. Richard McClintock, a
+                                                                        Latin professor at Hampden-Sydney College in Virginia,</li>
+                                                                    <li class="mb-2">
+                                                                        Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                                        industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                                                                            ever since the 1500s</b>, when an unknown printer took a galley
+                                                                        of type and scrambled it to make a type specimen book. It has
+                                                                        survived not only five centuries, but also the leap into electronic
+                                                                        typesetting, remaining essentially unchanged. It was popularised in
+                                                                        the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                                                                        passages, and more recently with desktop publishing software like
+                                                                        Aldus PageMaker including versions of Lorem Ipsum.
+                                                                    </li>
+                                                                    <li class="mb-0">There are many variations of passages of Lorem Ipsum
+                                                                        available, but the majority have suffered alteration in some form.
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                                </ng-template>
+                                                            </ng-container>
+                                                            <ng-container [ngbNavItem]="5">
+                                                    <button ngbNavLink class="nav-link text-start mb-1" id="main-email-tab" data-bs-toggle="pill"
+                                                        data-bs-target="#main-email" type="button" role="tab"
+                                                        aria-controls="main-email" aria-selected="false"><i
+                                                            class="ri-mail-line me-1 align-middle d-inline-block"></i>Email</button>
+                                                            <ng-template ngbNavContent>
+                                                                <div  id="main-email" role="tabpanel"
+                                                                aria-labelledby="main-email-tab" tabindex="0">
+                                                                <ul class="list-unstyled text-muted mb-0">
+                                                                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                                                                        random text. It has roots in a piece of classical Latin literature
+                                                                        from 45 BC, making it over 2000 years old. Richard McClintock, a
+                                                                        Latin professor at Hampden-Sydney College in Virginia,</li>
+                                                                    <li class="mb-2">There are many variations of passages of Lorem Ipsum
+                                                                        available, but the majority have suffered alteration in some form.
+                                                                    </li>
+                                                                    <li class="mb-0">
+                                                                        Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                                        industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                                                                            ever since the 1500s</b>, when an unknown printer took a galley
+                                                                        of type and scrambled it to make a type specimen book. It has
+                                                                        survived not only five centuries, but also the leap into electronic
+                                                                        typesetting, remaining essentially unchanged. It was popularised in
+                                                                        the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                                                                        passages, and more recently with desktop publishing software like
+                                                                        Aldus PageMaker including versions of Lorem Ipsum.
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                                </ng-template>
+                                                            </ng-container>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <div class="tab-content" id="v-pills-tabContent">
+                                                       
+                                                        <div [ngbNavOutlet]="nav17" class="mt-2"></div>
+                                                      
+                                                      
+                                                       
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -365,51 +485,49 @@
 <ng-template #Content id="addedge" let-modal>
     <div class="modal-content">
         <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Edging Item Details</h6>
+            <h6 class="modal-title" id="mail-ComposeLabel">Panel Details</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
             (click)="modal.close('Cross click')" aria-label="Close"></button>
         </div>
         <div class="modal-body px-4">
-            <div class="row gy-2">
-                <div class="col-xl-6 col-auto">
-                    <label for="task-name" class="form-label m-2">Name</label>
-                    <input type="text" class="form-control" id="task-name"
-                        placeholder="Name">
-                </div>
-                <div class="col-xl-6 col-auto">
-                    <label for="task-name" class="form-label m-2">Length</label>
-                    <input type="text" class="form-control" id="task-name"
-                        placeholder="Length">
-                </div>
-                <div class="col-xl-6  col-auto">
-                    <label for="task-name" class="form-label m-2">Quantity</label>
-                    <input type="text" class="form-control" id="task-name"
-                        placeholder="Quantity">
-                </div>
-                <div class="col-xl-6  col-auto">
-                    <label class="form-label">Edging Material</label>
-                    <ng-select placeholder="Select" class="js-example-placeholder-single js-states">
-                        <!-- <ng-option value="st-1" selected>Texas</ng-option> -->
-                        <ng-option value="st-2">Colour example Edging</ng-option>
-                        <ng-option value="st-3">Grain example Edging</ng-option>
-                        <ng-option value="st-4">White example Edging</ng-option>
-                    </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label class="form-label">Machining Charge</label>
-                    <ng-select  data-trigger name="choices-single-default" placeholder="select" 
-                        id="choices-single-default">
-                        <ng-option value="" selected>None</ng-option>
-                        <ng-option value="Critical">Apply</ng-option>
-                    </ng-select>
-                </div>
-                <div class="col-xl-6  col-auto">
-                    <label for="contact-address-address" class="form-label">Notes</label>
-                    <textarea class="form-control" id="contact-address-address" rows="1" placeholder="Notes"></textarea>
-                </div>
-                <div class="d-grid gap-2 mb-4">
-                    <button class="btn btn-primary btn-wave" type="button">Advanced</button>
-                    <button class="btn btn-secondary btn-wave" type="button" >Edging material tags</button>
+            <div class="col-xl-8">
+                <div class="row ">
+                    <div class="col-xl-4 col-auto">
+                        <label for="task-name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="task-name"
+                            placeholder="Name">
+                    </div>
+                    <div class="col-xl-4 col-auto">
+                        <label for="task-name" class="form-label">Length</label>
+                        <input type="text" class="form-control" id="task-name"
+                            placeholder="0 mm">
+                    </div>
+                    <div class="col-xl-4 col-auto">
+                        <label for="task-name" class="form-label">Width</label>
+                        <input type="text" class="form-control" id="task-name"
+                            placeholder="0 mm">
+                    </div>
+                    <div class="col-xl-4 col-auto">
+                        <label for="task-name" class="form-label">Quantity</label>
+                        <input type="text" class="form-control" id="task-name"
+                            placeholder="Quantity">
+                    </div>
+                    <div class="col-xl-4 col-auto">
+                        <label class="form-label">Panel Material</label>
+                        <ng-select formControlName="stage" [items]="panelList" bindLabel="name" bindValue="name"
+                            placeholder="Select an option">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-4">
+                        <label class="form-label">Machining Charge</label>
+                        <ng-select formControlName="stage" [items]="panelList" bindLabel="name" bindValue="name"
+                            placeholder="Select an option">
+                        </ng-select>
+                    </div>
+                    <!-- <div class="d-grid gap-2 mb-4">
+                        <button class="btn btn-primary btn-wave" type="button">Advanced</button>
+                        <button class="btn btn-secondary btn-wave" type="button" >Edging material tags</button>
+                    </div> -->
                 </div>
             </div>
         </div>

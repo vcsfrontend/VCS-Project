@@ -8,7 +8,7 @@ import { FilePondOptions } from 'filepond';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NgbDropdownModule,NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule,NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
@@ -30,7 +30,6 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormArray,  } from '@angular/forms'  
-
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -71,6 +70,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate', 
   ];
+  displayedColumnss: string[] = [
+    'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'
+  ];
+
   // displayedColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'businessCategory',
   //   'projectAddress', 'state', 'city', 'projectState', 'projectEstimation',
   //   'projectArea', 'projectStartDate', 'projectEndDate', 'action', 'designId', 'companyName'
@@ -100,6 +103,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit {
   handleEnterKey(event: KeyboardEvent): void {
     this.getMatCardLst();
   }
+  dataSourcee = [
+    { Nameoffile: 'Report1.pdf', Typeoffile: 'PDF', Uploadedby: 'John Doe', Uploadedon: '2024-02-15', Status: 'Approved', Actions: 'View' },
+    { Nameoffile: 'Image1.jpg', Typeoffile: 'Image', Uploadedby: 'Jane Smith', Uploadedon: '2024-02-14', Status: 'Pending', Actions: 'Edit' },
+    { Nameoffile: 'Document.docx', Typeoffile: 'Word', Uploadedby: 'Alex Brown', Uploadedon: '2024-02-13', Status: 'Rejected', Actions: 'Delete' }
+  ];
   
   openLg(content10:any) {
     if(this.stageLst?.f1 == '' || this.stageLst?.f1 == null ){
@@ -111,6 +119,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit {
       this.modalService.open(content10, { size: 'lg' },);
     }
 	}
+
+  openRights(content: any) {
+    this.offcanvasService.open(content, { position: 'end' });
+  } 
+  
   open(content11:any) {
 		this.modalService.open(content11, { size: 'lg' },);
 	}
@@ -126,7 +139,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit {
   
   constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal,
     private toastr: ToastrService, public switchService: SwitherService, private dp: DatePipe,
-    private router: Router
+    private router: Router,
+     private offcanvasService: NgbOffcanvas,
   ) {
     // Initialize FilePond options if needed
     super();
