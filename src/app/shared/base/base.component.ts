@@ -366,5 +366,25 @@ export class BaseComponent {
     stackingMode = [{"name":"dimensions"},
       {"name":"identical"}
     ]
+    Grain = [{"name":"null"},
+      {"name":"l"},
+      {"name":"w"}
+    ]
+    Xtype = [{"name":"Sheet"},
+      {"name":"Linear"},
+      {"name":"Roll"}
+    ]
+    orientationLock = [{"name":"null"},
+      {"name":"l"},
+      {"name":"w"}
+    ]
+    autoAdd = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    allowExactFitShapes = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
     
 }
