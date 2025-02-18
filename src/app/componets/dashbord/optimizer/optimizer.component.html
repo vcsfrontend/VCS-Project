@@ -244,7 +244,8 @@
                                                             class="ri-shield-user-line me-1 align-middle d-inline-block"></i>Saw</button>
                                                             <ng-template ngbNavContent>
                                                                 <div  id="main-profile" role="tabpanel" tabindex="0">
-                                                                    <div class="row ">
+                                                                    <div class="row border m-2 p-2 rounded ">
+                                                                        <h6>Saw</h6>
                                                                         <div class="col-xl-3 col-auto">
                                                                             <label for="task-name" class="form-label my-2">BladeWidth</label>
                                                                             <input type="text" class="form-control" id="task-name"
@@ -311,6 +312,223 @@
                                                                             </ng-select>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="row border m-2 p-2 rounded">
+                                                                        <h6>Stock</h6>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Name</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Name">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Length</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="length">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Width</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Width">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Thickness</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Thickness">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label class="form-label my-2">Material</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Material">
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">Quantity</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Quantity">
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">autoAdd</label>
+                                                                            <ng-select formControlName="stage" [items]="autoAdd" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">Grain</label>
+                                                                            <ng-select formControlName="stage" [items]="Grain" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            Trim
+                                                                        </div>
+                                                                        <div class="col-xl-4">
+                                                                            <label class="form-label my-2">allowExactFitShapes</label>
+                                                                            <ng-select formControlName="stage" [items]="allowExactFitShapes" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-4">
+                                                                            <label class="form-label my-2">Xtype</label>
+                                                                            <ng-select formControlName="stage" [items]="Xtype" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-4">
+                                                                            <label class="form-label my-2">Cost</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Cost">
+                                                                        </div>
+                                                                        <div class="col-xl-6">
+                                                                            <label class="form-label my-2">Notes</label>
+                                                                            <textarea class="form-control" id="contact-address-address" rows="2" placeholder="Notes"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row border m-2 p-2 rounded">
+                                                                        <h6>Parts</h6>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Name</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Name">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Length</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="length">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Width</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Width">
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            Trim
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">X1</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="X1">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">X2</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="X2">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Y1</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Y1">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Y2</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Y2">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Thickness</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="thickness">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label class="form-label my-2">Material</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Material">
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">Quantity</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Quantity">
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            Banding
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">X1</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="X1">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">X2</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="X2">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Y1</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Y1">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Y2</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Y2">
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            XBanding Type
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Xx1</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="X1">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Xx2</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="X2">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Yy1</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Y1">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Yy2</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Y2">
+                                                                        </div>
+                                                                        <div class="card-title my-2">
+                                                                            Finish
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">a</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="a">
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">b</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="a">
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">orientationLock</label>
+                                                                            <ng-select formControlName="stage" [items]="orientationLock" bindLabel="name" bindValue="name"
+                                                                                placeholder="Select an option">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                        <div class="col-xl-3  col-auto">
+                                                                            <label for="contact-address-address" class="form-label">Notes</label>
+                                                                            <textarea class="form-control" id="contact-address-address" rows="1" placeholder="Notes"></textarea>
+                                                                        </div>
+                                                                        
+                                                                    </div>
+                                                                    <div class="row border m-2 p-2 rounded">
+                                                                        <h6>Groups</h6>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Direction</label>
+                                                                            <input type="text" class="form-control" id="task-name"
+                                                                                placeholder="Direction">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-auto">
+                                                                            <label for="task-name" class="form-label my-2">Parts</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Parts">
+                                                                        </div>
+                                                                        <div class="col-xl-3">
+                                                                            <label class="form-label my-2">Quantity</label>
+                                                                            <input type="number" class="form-control" id="task-name"
+                                                                                placeholder="Quantity">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer ">
+                                                                        <button type="button" class="btn btn-primary me-2">submit</button>
+                                                                    </div>
+                                                                    
                                                                 </div>
                                                                 </ng-template>
                                                         </ng-container>
@@ -345,98 +563,99 @@
                                                             </ng-template>
                                                             </ng-container>
                                                             <ng-container [ngbNavItem]="3">
-                                                    <button ngbNavLink class="nav-link text-start" id="main-team-tab" data-bs-toggle="pill"
-                                                        data-bs-target="#main-team" type="button" role="tab"
-                                                        aria-controls="main-team" aria-selected="false"><i
-                                                            class="ri-group-line me-1 align-middle d-inline-block"></i>Team</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div  id="main-team" role="tabpanel"
-                                                                aria-labelledby="main-team-tab" tabindex="0">
-                                                                <ul class="list-unstyled text-muted mb-0">
-                                                                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                        random text. It has roots in a piece of classical Latin literature
-                                                                        from 45 BC, making it over 2000 years old. Richard McClintock, a
-                                                                        Latin professor at Hampden-Sydney College in Virginia,</li>
-                                                                    <li class="mb-2">There are many variations of passages of Lorem Ipsum
-                                                                        available, but the majority have suffered alteration in some form.
-                                                                    </li>
-                                                                    <li class="mb-0">
-                                                                        Lorem Ipsum is simply dummy text of the printing and typesetting
-                                                                        industry. Lorem Ipsum has been the industry's <b>standard dummy text
-                                                                            ever since the 1500s</b>, when an unknown printer took a galley
-                                                                        of type and scrambled it to make a type specimen book. It has
-                                                                        survived not only five centuries, but also the leap into electronic
-                                                                        typesetting, remaining essentially unchanged. It was popularised in
-                                                                        the 1960s with the release of Letraset sheets containing Lorem Ipsum
-                                                                        passages, and more recently with desktop publishing software like
-                                                                        Aldus PageMaker including versions of Lorem Ipsum.
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
+                                                                <button ngbNavLink class="nav-link text-start" id="main-team-tab" data-bs-toggle="pill"
+                                                                    data-bs-target="#main-team" type="button" role="tab"
+                                                                    aria-controls="main-team" aria-selected="false"><i
+                                                                class="ri-group-line me-1 align-middle d-inline-block"></i>Team</button>
+                                                                <ng-template ngbNavContent>
+                                                                    <div  id="main-team" role="tabpanel"
+                                                                    aria-labelledby="main-team-tab" tabindex="0">
+                                                                    <ul class="list-unstyled text-muted mb-0">
+                                                                        <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                                                                            random text. It has roots in a piece of classical Latin literature
+                                                                            from 45 BC, making it over 2000 years old. Richard McClintock, a
+                                                                            Latin professor at Hampden-Sydney College in Virginia,</li>
+                                                                        <li class="mb-2">There are many variations of passages of Lorem Ipsum
+                                                                            available, but the majority have suffered alteration in some form.
+                                                                        </li>
+                                                                        <li class="mb-0">
+                                                                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                                            industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                                                                                ever since the 1500s</b>, when an unknown printer took a galley
+                                                                            of type and scrambled it to make a type specimen book. It has
+                                                                            survived not only five centuries, but also the leap into electronic
+                                                                            typesetting, remaining essentially unchanged. It was popularised in
+                                                                            the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                                                                            passages, and more recently with desktop publishing software like
+                                                                            Aldus PageMaker including versions of Lorem Ipsum.
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                                 </ng-template>
                                                             </ng-container>
                                                             <ng-container [ngbNavItem]="4">
-                                                    <button ngbNavLink class="nav-link text-start" id="main-billing-tab" data-bs-toggle="pill"
-                                                        data-bs-target="#main-billing" type="button" role="tab"
-                                                        aria-controls="main-billing" aria-selected="false"><i
-                                                            class="ri-bill-line me-1 align-middle d-inline-block"></i>Billing</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div  id="main-billing" role="tabpanel"
-                                                                aria-labelledby="main-billing-tab" tabindex="0">
-                                                                <ul class="list-unstyled text-muted mb-0">
-                                                                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                        random text. It has roots in a piece of classical Latin literature
-                                                                        from 45 BC, making it over 2000 years old. Richard McClintock, a
-                                                                        Latin professor at Hampden-Sydney College in Virginia,</li>
-                                                                    <li class="mb-2">
-                                                                        Lorem Ipsum is simply dummy text of the printing and typesetting
-                                                                        industry. Lorem Ipsum has been the industry's <b>standard dummy text
-                                                                            ever since the 1500s</b>, when an unknown printer took a galley
-                                                                        of type and scrambled it to make a type specimen book. It has
-                                                                        survived not only five centuries, but also the leap into electronic
-                                                                        typesetting, remaining essentially unchanged. It was popularised in
-                                                                        the 1960s with the release of Letraset sheets containing Lorem Ipsum
-                                                                        passages, and more recently with desktop publishing software like
-                                                                        Aldus PageMaker including versions of Lorem Ipsum.
-                                                                    </li>
-                                                                    <li class="mb-0">There are many variations of passages of Lorem Ipsum
-                                                                        available, but the majority have suffered alteration in some form.
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
+                                                                <button ngbNavLink class="nav-link text-start" id="main-billing-tab" data-bs-toggle="pill"
+                                                                    data-bs-target="#main-billing" type="button" role="tab"
+                                                                    aria-controls="main-billing" aria-selected="false"><i
+                                                                        class="ri-bill-line me-1 align-middle d-inline-block"></i>Billing</button>
+                                                                <ng-template ngbNavContent>
+                                                                    <div  id="main-billing" role="tabpanel"
+                                                                    aria-labelledby="main-billing-tab" tabindex="0">
+                                                                    <ul class="list-unstyled text-muted mb-0">
+                                                                        <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                                                                            random text. It has roots in a piece of classical Latin literature
+                                                                            from 45 BC, making it over 2000 years old. Richard McClintock, a
+                                                                            Latin professor at Hampden-Sydney College in Virginia,</li>
+                                                                        <li class="mb-2">
+                                                                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                                            industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                                                                                ever since the 1500s</b>, when an unknown printer took a galley
+                                                                            of type and scrambled it to make a type specimen book. It has
+                                                                            survived not only five centuries, but also the leap into electronic
+                                                                            typesetting, remaining essentially unchanged. It was popularised in
+                                                                            the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                                                                            passages, and more recently with desktop publishing software like
+                                                                            Aldus PageMaker including versions of Lorem Ipsum.
+                                                                        </li>
+                                                                        <li class="mb-0">There are many variations of passages of Lorem Ipsum
+                                                                            available, but the majority have suffered alteration in some form.
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                                 </ng-template>
                                                             </ng-container>
                                                             <ng-container [ngbNavItem]="5">
-                                                    <button ngbNavLink class="nav-link text-start mb-1" id="main-email-tab" data-bs-toggle="pill"
-                                                        data-bs-target="#main-email" type="button" role="tab"
-                                                        aria-controls="main-email" aria-selected="false"><i
-                                                            class="ri-mail-line me-1 align-middle d-inline-block"></i>Email</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div  id="main-email" role="tabpanel"
-                                                                aria-labelledby="main-email-tab" tabindex="0">
-                                                                <ul class="list-unstyled text-muted mb-0">
-                                                                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
-                                                                        random text. It has roots in a piece of classical Latin literature
-                                                                        from 45 BC, making it over 2000 years old. Richard McClintock, a
-                                                                        Latin professor at Hampden-Sydney College in Virginia,</li>
-                                                                    <li class="mb-2">There are many variations of passages of Lorem Ipsum
-                                                                        available, but the majority have suffered alteration in some form.
-                                                                    </li>
-                                                                    <li class="mb-0">
-                                                                        Lorem Ipsum is simply dummy text of the printing and typesetting
-                                                                        industry. Lorem Ipsum has been the industry's <b>standard dummy text
-                                                                            ever since the 1500s</b>, when an unknown printer took a galley
-                                                                        of type and scrambled it to make a type specimen book. It has
-                                                                        survived not only five centuries, but also the leap into electronic
-                                                                        typesetting, remaining essentially unchanged. It was popularised in
-                                                                        the 1960s with the release of Letraset sheets containing Lorem Ipsum
-                                                                        passages, and more recently with desktop publishing software like
-                                                                        Aldus PageMaker including versions of Lorem Ipsum.
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
+                                                                <button ngbNavLink class="nav-link text-start mb-1" id="main-email-tab" data-bs-toggle="pill"
+                                                                    data-bs-target="#main-email" type="button" role="tab"
+                                                                    aria-controls="main-email" aria-selected="false"><i
+                                                                    class="ri-mail-line me-1 align-middle d-inline-block"></i>Email</button>
+                                                                <ng-template ngbNavContent>
+                                                                    <div  id="main-email" role="tabpanel"
+                                                                    aria-labelledby="main-email-tab" tabindex="0">
+                                                                    <ul class="list-unstyled text-muted mb-0">
+                                                                        <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                                                                            random text. It has roots in a piece of classical Latin literature
+                                                                            from 45 BC, making it over 2000 years old. Richard McClintock, a
+                                                                            Latin professor at Hampden-Sydney College in Virginia,</li>
+                                                                        <li class="mb-2">There are many variations of passages of Lorem Ipsum
+                                                                            available, but the majority have suffered alteration in some form.
+                                                                        </li>
+                                                                        <li class="mb-0">
+                                                                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                                            industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                                                                                ever since the 1500s</b>, when an unknown printer took a galley
+                                                                            of type and scrambled it to make a type specimen book. It has
+                                                                            survived not only five centuries, but also the leap into electronic
+                                                                            typesetting, remaining essentially unchanged. It was popularised in
+                                                                            the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                                                                            passages, and more recently with desktop publishing software like
+                                                                            Aldus PageMaker including versions of Lorem Ipsum.
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
                                                                 </ng-template>
                                                             </ng-container>
+                                                            
                                                     </div>
                                                 </div>
                                                 <div class="col-md-10">
