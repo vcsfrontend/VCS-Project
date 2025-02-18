@@ -23,8 +23,7 @@
 </div> -->
 <div class="card custom-card card-size">
     <div class="card-header justify-content-between" *ngIf="userType==2">
-        <div class="card-title">
-            <h6>Signup Form</h6>
+        <div class="card-title">Signup Form
         </div>
         <mat-form-field class="filter-field">
             <!-- <mat-label>Filter</mat-label> -->
@@ -38,7 +37,7 @@
             </div>
         </div>
     </div>
-    <div class="card-body p-2" *ngIf="userType==2">
+    <div *ngIf="userType==2">
         <div class="row">
             <div *ngIf="!isAddEdt">
                 <div class="card-body p-0">
@@ -77,13 +76,13 @@
             </div>
             <div *ngIf="isAddEdt">
                 <div class="container mt-2 mb-2">
-                    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="bg-light p-2 text-white bg-opacity-25">
+                    <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class=" p-2 text-white ">
                         <div class="row gy-2">
                             <div class="col-xl-4">
                                 <label for="signup-firstname" class="form-label text-default"><strong>First
                                         Name</strong><span class="text-danger"> *</span></label>
                                 <input type="text"
-                                    class="form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                    class="form-control form-control-lg p-2 font-weight-bold border border-dark"
                                     id="signup-firstname" placeholder="First name" formControlName="firstName"
                                     appShowCodeContent onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && 
                                     event.charCode <= 122) || event.charCode == 8 || event.charCode == 32)'
@@ -96,7 +95,7 @@
                                 <label for="signup-lastname" class="form-label text-default"><strong>Last
                                         Name</strong><span class="text-danger"> *</span></label>
                                 <input type="text"
-                                    class="form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                    class="form-control form-control-lg p-2 font-weight-bold border border-dark"
                                     id="signup-lastname" placeholder="Last name" formControlName="lastName"
                                     appShowCodeContent onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && 
                                     event.charCode <= 122) || event.charCode == 8 ||event.charCode == 32)'
@@ -110,11 +109,11 @@
                                         birth</strong><span class="text-danger"> *</span></label>
                                 <div class="input-group">
                                     <div
-                                        class="input-group-text text-muted bg-light pl-4 font-weight-bold bg-opacity-25 border border-dark">
+                                        class="input-group-text text-muted  pl-4 font-weight-bold border border-dark">
                                         <i class="ri-calendar-line"></i>
                                     </div>
                                     <input
-                                        class="form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                        class="form-control form-control-lg p-2 font-weight-bold border border-dark"
                                         placeholder="Choose date" type="date" formControlName="dob"
                                         [(ngModel)]="todayDate" [max]="maxDate" [min]="minDate">
                                 </div>
@@ -123,7 +122,7 @@
                                 <label for="signup-email" class="form-label text-default"><strong>Email</strong><span
                                         class="text-danger"> *</span></label>
                                 <input type="text"
-                                    class="form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark "
+                                    class="form-control form-control-lg p-2 font-weight-bold border border-dark "
                                     id="signup-email" placeholder="email"
                                     onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
                                     (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
@@ -142,7 +141,7 @@
                                         *</span></label>
                                 <div class="position-relative">
                                     <input type="password"
-                                        class="form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                        class="form-control form-control-lg p-2 font-weight-bold border border-dark"
                                         id="signup-password" placeholder="password"
                                         [type]="showPassword ? 'text' : 'password'" autocomplete
                                         formControlName="password" appShowCodeContent [(ngModel)]="paswrd"
@@ -175,7 +174,7 @@
                                         Password</strong><span class="text-danger"> *</span></label>
                                 <div class="position-relative">
                                     <input type="password"
-                                        class="form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                        class="form-control form-control-lg p-2 font-weight-bold border border-dark"
                                         id="signup-confirmpassword" placeholder="confirm password"
                                         formControlName="confirmPassword" [type]="showPassword1 ? 'text' : 'password'"
                                         autocomplete maxlength="16" (copy)="preventCopyPaste($event)"
@@ -216,7 +215,7 @@
                                         Number</strong><span class="text-danger"> *</span></label>
                                 <div class="input-group custom-input-group">
                                     <select
-                                        class="form-select form-select-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                        class="form-select form-select-lg p-2 font-weight-bold border border-dark"
                                         id="country1" formControlName="country" [(ngModel)]="selectedCountry"
                                         (change)="onCountryChange($any($event.target).value)"
                                         [ngClass]="{ 'is-invalid': submitted && f['country'].errors }">
@@ -228,7 +227,7 @@
                                         </option>
                                     </select>
                                     <input type="text"
-                                        class="form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                        class="form-control form-control-lg p-2 font-weight-bold border border-dark"
                                         formControlName="phoneNumber" maxlength="10"
                                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
                                         (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)"
@@ -243,7 +242,7 @@
                                 <label for="signup-city" class="form-label text-default"><strong>City</strong><span
                                         class="text-danger">*</span></label>
                                 <select
-                                    class="form-select form-control form-control-lg bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                                    class="form-select form-control form-control-lg p-2 font-weight-bold border border-dark"
                                     id="city" formControlName="city" [(ngModel)]="city"
                                     [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
                                     <option value="" disabled selected>Select</option>
@@ -276,8 +275,8 @@
 </div>
 <ng-template #modalTemplate>
     <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
-        <div class="modal-dialog bg-light p-2 text-white ">
-            <div class="modal-content bg-light p-2 text-white ">
+        <div class="modal-dialog p-2 text-white ">
+            <div class="modal-content p-2 text-white ">
                 <div class="modal-header justify-content-center">
                     <h5 class="modal-title">OTP</h5>
                     <!-- <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button> -->
@@ -285,7 +284,7 @@
                 <div class="modal-body">
                     <div class="col-xl-12">
                         <div class="otp-container">
-                            <input class="bg-light p-2 font-weight-bold bg-opacity-25 border border-dark"
+                            <input class=" p-2 font-weight-bold border border-dark"
                                 *ngFor="let digit of otpArray; let i = index" type="text" maxlength="1"
                                 (input)="onInputChange($event, i)" (keydown)="onKeydown($event, i)" [(ngModel)]="otp[i]"
                                 onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)'
@@ -300,7 +299,7 @@
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button"
-                        class="btn btn-lg bg-light p-2 font-weight-bold text-dark bg-opacity-25 border border-dark"
+                        class="btn btn-lg p-2 font-weight-bold text-dark border border-dark"
                         (click)="onOtpCheck()" [disabled]="isOkBtn">Submit</button>
                 </div>
             </div>
@@ -311,8 +310,7 @@
     <div class="col-xl-6">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <div class="card-title">
-                    <h6>Choose a Category for Your Project Stages</h6>
+                <div class="card-title">Choose a Category for Your Project Stages
                 </div>
                 <div class="d-flex float-end">
                     <button class="btn btn-primary" type="button" (click)="openRight(content)"
@@ -325,8 +323,7 @@
     <div class="col-xl-6">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <div class="card-title">
-                    <h6>Choose a Category for Your Project Estimation</h6>
+                <div class="card-title">Choose a Category for Your Project Estimation
                 </div>
                 <div class="d-flex float-end">
                     <button class="btn btn-primary " type="button" (click)="openRight(content1)"
@@ -347,11 +344,11 @@
             <div class="container mt-4 mb-4">
                 <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
                     <div class="col-sm-8">
-                    <input type="text" class="form-control" [ngModel]="field.value" [ngModelOptions]="{standalone: true}"
+                    <input type="text" class="form-control form-control-sm p-2 font-weight-bold border border-dark" [ngModel]="field.value" [ngModelOptions]="{standalone: true}"
                         [readonly]="true">
                     </div>
                     <div class="col-sm-2">
-                        <input type="text"  class="form-control" [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
+                        <input type="text"  class="form-control form-control-sm p-2 font-weight-bold border border-dark" [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
                           onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
                           maxlength="3" placeholder="Percent" [disabled]="isStageDel">
                     </div>
@@ -372,11 +369,11 @@
             <div class="container mt-4 mb-4">
                 <div *ngFor="let field of dynamicPmntFields; let i = index" class="row mb-3 align-items-center">
                     <div class="col-sm-8">
-                    <input type="text" class="form-control" [ngModel]="field.value" [ngModelOptions]="{standalone: true}"
+                    <input type="text" class="form-control form-control-sm p-2 font-weight-bold border border-dark" [ngModel]="field.value" [ngModelOptions]="{standalone: true}"
                         [readonly]="true">
                     </div>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
+                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border border-dark" [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
                           onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
                           maxlength="3" placeholder="Percent" [disabled]="isPmntStageDel">
                     </div>

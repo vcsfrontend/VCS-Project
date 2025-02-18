@@ -135,19 +135,20 @@ export class SettingsComponent extends BaseComponent implements OnInit{
   saveData:any; savePmntData: any;
   
   planDetails = [
-    { name: 'WALL AND DEMOLITION PLAN', checked: false, isDefault: true },
-    { name: 'PROPOSED FURNITURE PLAN', checked: false, isDefault: true },
-    { name: 'FLOORING PLAN', checked: false, isDefault: true },
-    { name: 'ELECTRICAL PLAN', checked: false, isDefault: true },
-    { name: 'MOODBOARD AND RENDERS', checked: false, isDefault: true },
-    { name: 'SWITCH BOARD ELEVATIONS + LEGEND', checked: false, isDefault: true },
-    { name: 'FURNITURE DETAILS', checked: false, isDefault: true },
-    { name: 'REALISTIC 3D RENDERS', checked: false, isDefault: true },
-    { name: 'MATERIAL LIST', checked: false, isDefault: true },
-    { name: 'SECTION WALL ELEVATIONS', checked: false, isDefault: true },
-    { name: 'RCP - REFLECTED CEILING PLAN', checked: false, isDefault: true },
-    { name: 'BOQ-BILL OF QUANTITY ESTIMATE', checked: false, isDefault: true },
+    { name: 'Wall and Demolition Plan', checked: false, isDefault: true },
+    { name: 'Proposed Furniture Plan', checked: false, isDefault: true },
+    { name: 'Flooring Plan', checked: false, isDefault: true },
+    { name: 'Electrical plan', checked: false, isDefault: true },
+    { name: 'Moodboard and Renders', checked: false, isDefault: true },
+    { name: 'Switch Board Elevations + Legend', checked: false, isDefault: true },
+    { name: 'Furniture Details', checked: false, isDefault: true },
+    { name: 'Realistic 3D Renders', checked: false, isDefault: true },
+    { name: 'Material List', checked: false, isDefault: true },
+    { name: 'Section Wall Elevations', checked: false, isDefault: true },
+    { name: 'RCP- Reflected Ceiling Plan', checked: false, isDefault: true },
+    { name: 'BOQ- Bill of Quantity Estimate', checked: false, isDefault: true },
   ];
+  
 
   paymentDetails = [
     { name: 'Advance', checked: false, isDefault: true },
