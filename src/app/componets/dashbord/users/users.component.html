@@ -292,6 +292,277 @@
     </div>
   </div>
 </ng-template>
+<button type="button" class="btn btn-primary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+(click)="openLg(Content3)">Create Campaign</button>
+<ng-template #Content3 let-modal>
+  <div class="modal-header">
+    <h6 class="modal-title" id="exampleModalLgLabel"><b>Create Campaign</b></h6>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+      aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="row gy-3">
+      <div class="col-xl-6 col-lg-6 col-md-6">
+        <label for="contact-name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="contact-name" placeholder="Name">
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6">
+        <label for="company-name" class="form-label">Pipeline</label>
+        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+          class="border rounded">
+          <ng-option value="Choice 1">Spoke</ng-option>
+          <ng-option value="Choice 2">Engeged</ng-option>
+          <ng-option value="Choice 3">Proposal</ng-option>
+        </ng-select>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6">
+        <label class="form-label">Who will be managing this compaign</label>
+        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+          class="border rounded">
+          <ng-option value="Choice 1">Spoke</ng-option>
+          <ng-option value="Choice 2">Engeged</ng-option>
+          <ng-option value="Choice 3">Proposal</ng-option>
+        </ng-select>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-6">
+        <label class="form-label">Select Agents</label>
+        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+          class="border rounded">
+          <ng-option value="Choice 1">Unattend</ng-option>
+          <ng-option value="Choice 2">Active</ng-option>
+          <ng-option value="Choice 3">Spoke</ng-option>
+          <ng-option value="Choice 4">Proposal sent</ng-option>
+          <ng-option value="Choice 5">Meeting Fixed</ng-option>
+          <ng-option value="Choice 6">Met</ng-option>
+          <ng-option value="Choice 6">Closed</ng-option>
+          <ng-option value="Choice 6">Lost</ng-option>
+          <ng-option value="Choice 6">Conerted to Deal/ opportunity</ng-option>
+        </ng-select>
+      </div>
+      <div class="settings-container">
+        <button class="settings-button" (click)="toggleSettings()">
+          Additional Settings
+          <span [ngClass]="{'arrow-down': !showSettings, 'arrow-up': showSettings}"></span>
+        </button>
+      
+        <div class="settings-panel d-flex row gy-2" *ngIf="showSettings">
+          <div class="col-xl-6 col-lg-6 col-md-6">
+            <label class="form-label">Lead Distribution</label>
+            <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+              class="border rounded">
+              <ng-option value="Choice 1">AI Assignment</ng-option>
+              <ng-option value="Choice 2">Equal Assignment</ng-option>
+              <ng-option value="Choice 3">Conditional Assignment</ng-option>
+            </ng-select>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6">
+            <label class="form-label">Campaign Priority</label>
+            <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+              class="border rounded">
+              <ng-option value="Choice 1">High</ng-option>
+              <ng-option value="Choice 2">Medium</ng-option>
+              <ng-option value="Choice 3">Low</ng-option>
+            </ng-select>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6">
+            <label class="form-label">Lead Duplicacy</label>
+            <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+              class="border rounded">
+              <ng-option value="Choice 1">Ignore Duplicate(default)</ng-option>
+              <ng-option value="Choice 2">Merge Duplicate</ng-option>
+              <ng-option value="Choice 3">Create Duplicate Leads</ng-option>
+              <ng-option value="Choice 3">merge Duplicate & Reopen closed Leads</ng-option>
+            </ng-select>
+          </div> 
+        </div>
+      </div>      
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary">Create</button>
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+      data-bs-dismiss="modal">cancel</button>
+  </div>
+</ng-template>
+
+<div class="col-xl-12 mt-3">
+  <div class="card custom-card">
+      <div class="card-header justify-content-between d-flex">
+        <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+            Facebook Automation Leads 2025
+        </div>
+        <div class="text-center">
+          <div class="btn" role="group" aria-label="Basic outlined example">
+            <button type="button" class="btn btn-outline-primary btn-wave me-2">View Leads</button>
+            <button type="button" class="btn btn-outline-primary btn-wave me-2">View Call logs</button>
+            <button type="button" class="btn btn-outline-primary btn-wave me-2">Add New</button>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+<div class="d-flex m-2">
+  <div class="col-xl-4 me-2">
+    <div class="card custom-card">
+        <div class="card-header">
+            <div class="card-title">Leads Statistics</div>
+        </div>
+        <div class="card-body">
+          <div class="row row-cols-12 ps-4 py-3 pe-3 align-items-center flex-wrap justify-content-center">
+            <div class="col-3 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 d-inline-block">Total
+                </span>
+                <div><span class="fs-16">1,624</span>
+                </div>
+            </div>
+            </div>
+            <div class="col-3 p-0">
+                <div>
+                  <span class="text-muted fs-12 mb-1 d-inline-block">Open
+                  </span>
+                  <div><span class="fs-16">1,267</span>
+                  </div>
+                </div>
+            </div>
+            <div class="col-3 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 d-inline-block">In-Progress
+                </span>
+                <div><span class="fs-16">1,153</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-3 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 d-inline-block">Closed
+                </span>
+                <div><span class="fs-16">679</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="donut-gradient">
+              <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart"  [legend]="chartOptions4.legend"
+              [labels]="chartOptions4.labels" [fill]="chartOptions4.fill"  [colors]="chartOptions4.colors"
+              [dataLabels]="chartOptions4.dataLabels" [responsive]="chartOptions4.responsive"></apx-chart>
+          </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-xl-4 me-2">
+    <div class="card custom-card">
+        <div class="card-header">
+            <div class="card-title">In Progress Leads</div>
+        </div>
+        <div class="card-body">
+          <div class="row row-cols-12 ps-4 py-3 pe-3 align-items-center flex-wrap justify-content-center">
+            <div class="col-3 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 d-inline-block">Total
+                </span>
+                <div><span class="fs-16">1,624</span>
+                </div>
+            </div>
+            </div>
+            <div class="col-3 p-0">
+                <div>
+                  <span class="text-muted fs-12 mb-1 d-inline-block">Follow up
+                  </span>
+                  <div><span class="fs-16">1,267</span>
+                  </div>
+                </div>
+            </div>
+            <div class="col-3 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 d-inline-block">Not Connected
+                </span>
+                <div><span class="fs-16">1,153</span>
+                </div>
+              </div>
+            </div>
+          </div>
+            <div id="donut-simple">
+                <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart" [legend]="chartOptions1.legend"
+                [labels]="chartOptions1.labels" [responsive]="chartOptions1.responsive"[colors]="chartOptions1.colors" [dataLabels]="chartOptions1.dataLabels"></apx-chart>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="col-xl-4 me-2">
+    <div class="card custom-card">
+        <div class="card-header">
+            <div class="card-title">Closed Leads</div>
+        </div>
+        <div class="card-body">
+          <div class="row row-cols-12 ps-4 py-3 pe-3 align-items-center flex-wrap justify-content-center">
+            <div class="col-3 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 d-inline-block">Total
+                </span>
+                <div><span class="fs-16">1,624</span>
+                </div>
+            </div>
+            </div>
+            <div class="col-3 p-0">
+                <div>
+                  <span class="text-muted fs-12 mb-1 d-inline-block">Converted
+                  </span>
+                  <div><span class="fs-16">1,267</span>
+                  </div>
+                </div>
+            </div>
+            <div class="col-2 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 d-inline-block">Lost
+                </span>
+                <div><span class="fs-16">1,153</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-4 p-0">
+              <div>
+                <span class="text-muted fs-12 mb-1 ">Closed By System
+                </span>
+                <div><span class="fs-16 ms-3">679</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="donut-update">
+            <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart" [colors]="chartOptions2.colors"
+            [labels]="chartOptions2.labels" [fill]="chartOptions2.fill" [legend]="chartOptions2.legend"
+            [dataLabels]="chartOptions2.dataLabels" [responsive]="chartOptions2.responsive"></apx-chart>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="col-xl-8">
+  <div class="card custom-card">
+      <div class="card-header">
+          <div class="card-title">Lead Distribution</div>
+      </div>
+      <div class="card-body">
+          <div id="bar-full">
+              <apx-chart
+              [series]="chartOptions3.series"
+              [chart]="chartOptions3.chart"
+              [dataLabels]="chartOptions3.dataLabels"
+              [plotOptions]="chartOptions3.plotOptions"
+              [xaxis]="chartOptions3.xaxis"
+              [stroke]="chartOptions3.stroke"
+              [fill]="chartOptions3.fill"
+              [title]="chartOptions3.title"
+              [tooltip]="chartOptions3.tooltip"
+              [legend]="chartOptions3.legend"
+              [colors]="chartOptions3.colors"
+            ></apx-chart>
+          </div>
+      </div>
+  </div>
+</div>
+
 
 
 
