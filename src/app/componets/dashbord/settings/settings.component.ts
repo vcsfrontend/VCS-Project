@@ -84,6 +84,7 @@ export class SettingsComponent extends BaseComponent implements OnInit{
 
   addMoreVisible: boolean = false; // Flag to toggle visibility
   addMorePmntVisible: boolean = false; 
+  searchUser: string = '';
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible; // Toggle visibility
   }
@@ -976,5 +977,13 @@ export class SettingsComponent extends BaseComponent implements OnInit{
   } 
      
   selectedOption: string = '';
+
+
+  filterUserData() {
+    return this.userLst.filter((item: { firstName: string; lastName: string; }) =>
+      item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(this.searchUser.toLowerCase())
+    );
+  }
   
 }
