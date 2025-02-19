@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexStroke,
   ApexYAxis, ApexTitleSubtitle, ApexLegend, ApexResponsive, NgApexchartsModule } from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
@@ -29,7 +29,7 @@ import { ShowcodeCardComponent } from '../../../shared/common/includes/showcode-
 import { ShowCodeContentDirective } from '../../../shared/directives/show-code-content.directive';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormControl, FormArray,  } from '@angular/forms'  
+import { FormControl, FormArray,  } from '@angular/forms' ;
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -66,7 +66,7 @@ export type ChartOptions = {
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
 })
-export class ProjectsComponent extends BaseComponent implements OnInit {
+export class ProjectsComponent extends BaseComponent implements OnInit,AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate', 
   ];
@@ -106,7 +106,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit {
   dataSourcee = [
     { Nameoffile: 'Report1.pdf', Typeoffile: 'PDF', Uploadedby: 'John Doe', Uploadedon: '2024-02-15', Status: 'Approved', Actions: 'View' },
     { Nameoffile: 'Image1.jpg', Typeoffile: 'Image', Uploadedby: 'Jane Smith', Uploadedon: '2024-02-14', Status: 'Pending', Actions: 'Edit' },
-    { Nameoffile: 'Document.docx', Typeoffile: 'Word', Uploadedby: 'Alex Brown', Uploadedon: '2024-02-13', Status: 'Rejected', Actions: 'Delete' }
+    { Nameoffile: 'Document.docx', Typeoffile: 'Word', Uploadedby: 'Alex Brown', Uploadedon: '2024-02-13', Status: 'Rejected', Actions: 'Delete' },
+    { Nameoffile: 'Quotation.xls', Typeoffile: 'exel', Uploadedby: 'Alex Brown', Uploadedon: '2024-02-13', Status: 'Rejected', Actions: 'Delete' }
+
   ];
   
   openLg(content10:any) {
@@ -366,6 +368,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.updateButtons();
   }
 
   getSNo(index: number): number {
@@ -1335,6 +1338,58 @@ export class ProjectsComponent extends BaseComponent implements OnInit {
     } else {
       this.fileName = null; // Reset if no file selected
     }
+  }
+  fields: Array<{ value: string }> = [];
+
+  addMoreFields() {
+    this.fields.push({ value: '' });
+  }
+
+  deleteField(index: number) {
+    this.fields.splice(index, 1);
+  }
+  @ViewChild('scrollContent') scrollContent!: ElementRef;
+
+  items = [
+    { title: 'All Projects' },
+    { title: 'Project Created' },
+    { title: 'Recce Pending' },
+    { title: 'Design Pending' },
+    { title: 'Design Freeze' },
+    { title: 'Scope approval awaited' },
+    { title: 'Partial Scope Approved' },
+    { title: 'full Scope Approved' },
+    { title: 'Execution in progress' },
+    { title: 'Execution completed' },
+    { title: 'Hold' },
+    { title: 'Lost' },
+    { title: 'Rectification' },
+    { title: 'Archived' },
+  ];
+
+  isAtStart: boolean = true;
+  isAtEnd: boolean = false;
+
+  
+  scrollLeft() {
+    this.scrollContent.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
+    setTimeout(() => this.updateButtons(), 300);
+  }
+
+  scrollRight() {
+    this.scrollContent.nativeElement.scrollBy({ left: 200, behavior: 'smooth' });
+    setTimeout(() => this.updateButtons(), 300);
+  }
+
+  updateButtons() {
+    const { scrollLeft, scrollWidth, clientWidth } = this.scrollContent.nativeElement;
+    this.isAtStart = scrollLeft <= 0;
+    this.isAtEnd = scrollLeft + clientWidth >= scrollWidth;
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateButtons();
   }
 
 }
