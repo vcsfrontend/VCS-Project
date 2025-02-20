@@ -43,7 +43,7 @@ export class OptimizerComponent extends BaseComponent {
   ngOnInit(): void {
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
-        bladeWidth: ['', Validators.required],
+        bladeWidth: [0, ],
         stockType: [''],
         cutType: [''],
         cutPreference: [''],

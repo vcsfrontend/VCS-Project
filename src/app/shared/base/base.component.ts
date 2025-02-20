@@ -351,8 +351,9 @@ export class BaseComponent {
       {"name":"beam"},
     ]
 
-    cutPreference = [{"name":"w"},
+    cutPreference = [{"name":"l"},
       {"name":"flex"},
+      {"name":"w"},
     ]
 
     strategy = [{"name":"efficiency"},
@@ -383,6 +384,22 @@ export class BaseComponent {
       
     ]
     allowExactFitShapes = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    X1 = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    X2 = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    Y1 = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    Y2 = [{"name":"true"},
       {"name":"false"},
       
     ]
