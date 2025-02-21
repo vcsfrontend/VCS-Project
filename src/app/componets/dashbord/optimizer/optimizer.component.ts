@@ -69,7 +69,7 @@ export class OptimizerComponent extends BaseComponent {
           t: [0],
           material: [''],
           q: [0],
-          autoAdd: [true],
+          autoAdd: [''],
           grain: [''],
           trim: this.fb.group({
             x1: [0],
