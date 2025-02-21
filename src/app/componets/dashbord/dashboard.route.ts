@@ -147,11 +147,11 @@ export const admin: Routes = [
     loadComponent: () =>
     import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
   },
-  {
-    path: 'contacts',
-    loadComponent: () =>
-    import('../pages/contacts/contacts.component').then((m) => m.ContactsComponent),
-  },
+  // {
+  //   path: 'contacts',
+  //   loadComponent: () =>
+  //   import('../pages/contacts/contacts.component').then((m) => m.ContactsComponent),
+  // },
   
   {
     path: 'deals',

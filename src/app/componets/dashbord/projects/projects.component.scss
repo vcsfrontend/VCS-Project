@@ -159,54 +159,74 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
-@media (max-width: 1200px) {
+@media screen and (max-width: 1200px) {
+  
+  .scroll-container {
+    max-width: 500px;
+  }
+
   .scroll-content {
-    width:100%;
-    margin-left: 30px;
+    margin-left: 20px;
   }
 }
 
-@media (max-width: 992px) {
-  .scroll-content {
-    width: 58%;
-    margin-left: 20px;
+@media screen and (max-width: 992px) {
+  
+  .scroll-container {
+    max-width: 400px;
   }
+
+  .scroll-content {
+    margin-left: 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  
+  .scroll-container {
+    max-width: 500px;
+    overflow-x: auto; /* Allow horizontal scrolling */
+  }
+
+  .scroll-content {
+    width: 800px; /* Set a fixed width to allow scrolling */
+  }
+
   .scroll-item {
     padding: 10px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  
+  .scroll-container {
+    max-width: 100%;
+  }
+
+  .scroll-content {
+    width: 700px; /* Ensures scrolling space */
+  }
+
+  .scroll-item {
+    padding: 8px;
+  }
+
+  .scroll-btn {
     font-size: 14px;
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 400px) {
+ 
   .scroll-content {
-    width: calc(100% - 30px);
-    margin-left: 15px;
+    width: 600px;
   }
+
   .scroll-item {
-    padding: 8px;
+    padding: 6px;
+  }
+
+  .scroll-btn {
     font-size: 12px;
   }
-  .scroll-btn {
-    font-size: 18px;
-  }
 }
-
-@media (max-width: 576px) {
-  .scroll-container {
-    flex-direction: column;
-    align-items: center;
-  }
-  .scroll-content {
-    width: 100%;
-    margin-left: 0;
-  }
-  .scroll-item {
-    padding: 5px;
-    font-size: 10px;
-  }
-  .scroll-btn {
-    position: static;
-    margin: 5px;
-  }
-}
-
