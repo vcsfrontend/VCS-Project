@@ -110,13 +110,7 @@ export class OptimizerComponent extends BaseComponent {
           notes: ['']
         })
       ]),
-      groups: this.fb.array([
-        this.fb.group({
-          direction: [''],
-          parts: this.fb.array([0]),
-          q: [0]
-        })
-      ]),
+      groups: this.fb.array([]),
       webhook: ['']
     });
   }
