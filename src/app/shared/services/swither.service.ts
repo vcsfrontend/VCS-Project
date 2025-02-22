@@ -82,6 +82,7 @@ export class SwitherService {
   Renderings(designId: any): Observable<any> { return this.http.get(`${this.adonaiURL}/enterprise/getRenderings?designId=${designId}`); }
   optimizeImportData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}enterprise/optimize`, data); }
   GeneratedOutput(value:any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/generated_output/${value}`); } 
+  optimizeDownload(optimizeId:any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/generated_output/${optimizeId}`); }
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
   CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  

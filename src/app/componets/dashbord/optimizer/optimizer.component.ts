@@ -25,7 +25,7 @@ import { ToastrService } from 'ngx-toastr';
 export class OptimizerComponent extends BaseComponent {
   public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
-
+  public optimizeId:any=687149;
 
   Selection = [
     { value: 1, label: 'English' },
@@ -177,5 +177,22 @@ export class OptimizerComponent extends BaseComponent {
 
   VerticallyScrol(content: any) {
     this.modalService.open(content, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, size: 'xl' });
+  }
+
+  downloadOptimizerFile() {
+    this.switchService.optimizeDownload(this.optimizeId).subscribe({
+      next: (res: any) => {
+        console.log(res);
+        if (res) {   
+          //window.open(res.url, '_blank');      
+         
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
   }
 }
