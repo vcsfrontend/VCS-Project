@@ -714,9 +714,10 @@
                     EfficiencyOptions
                 </div>
                 <div class="col-xl-3">
-                    <label class="form-label my-2">primaryCompression</label>
-                    <input type="text" class="form-control" id="primaryCompression" placeholder="string"
+                    <label class="form-label my-2">primary Compression</label>
+                    <ng-select [items]="primaryCompression" bindLabel="name" bindValue="name" placeholder="string"
                         formControlName="primaryCompression">
+                    </ng-select>
                 </div>
             </div>
             <div class="col-xl-3">
@@ -768,8 +769,9 @@
                 </div>
                 <div class="col-xl-3 col-auto">
                     <label for="material" class="form-label my-2">Material</label>
-                    <input type="text" class="form-control" id="material" placeholder="string"
+                    <ng-select [items]="material" bindLabel="name" bindValue="name" placeholder="Select an option"
                         formControlName="material">
+                    </ng-select>
                 </div>
                 <div class="col-xl-3">
                     <label for="q" class="form-label my-2">Quantity</label>

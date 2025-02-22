@@ -356,20 +356,20 @@ export class BaseComponent {
       {"name":"w"},
     ]
 
-    strategy = [{"name":"efficiency"},
-      {"name":"time"}
+    strategy = [{"name":"Stock efficiency"},
+      {"name":"time efficiency"}
     ]
 
     StockSelection = [{"name":"efficiency"},
       {"name":"smallest"}
     ]
 
-    stackingMode = [{"name":"dimensions"},
-      {"name":"identical"}
+    stackingMode = [{"name":"Part dimensions"},
+      {"name":"identical Parts"}
     ]
-    Grain = [{"name":"null"},
-      {"name":"l"},
-      {"name":"w"}
+    Grain = [{"name":"nill"},
+      {"name":"Horizontal"},
+      {"name":"Vertical"}
     ]
     Xtype = [{"name":"Sheet"},
       {"name":"Linear"},
@@ -401,6 +401,18 @@ export class BaseComponent {
     ]
     Y2 = [{"name":"true"},
       {"name":"false"},
+      
+    ]
+    primaryCompression = [{"name":"1"},
+      {"name":"1.5"},
+      {"name":"0.8"},
+      {"name":"2.0"},
+      
+    ]
+    material= [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
       
     ]
     
