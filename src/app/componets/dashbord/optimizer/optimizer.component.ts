@@ -25,7 +25,7 @@ import { ToastrService } from 'ngx-toastr';
 export class OptimizerComponent extends BaseComponent {
   public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
-  public optimizeId:any=687149;
+  public optimizeId: any = '';
 
   Selection = [
     { value: 1, label: 'English' },
@@ -34,16 +34,16 @@ export class OptimizerComponent extends BaseComponent {
     { value: 4, label: 'Hindi' },
   ];
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder,public switchService: SwitherService,private toastr: ToastrService) {
+  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
     super();
   }
- 
+
 
 
   ngOnInit(): void {
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
-        bladeWidth: [0, ],
+        bladeWidth: [0, Validators.required],
         stockType: [''],
         cutType: [''],
         cutPreference: [''],
@@ -159,6 +159,7 @@ export class OptimizerComponent extends BaseComponent {
       this.switchService.optimizeImportData(this.optimizerForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
+            this.optimizeId = (res.id) ? res.id : '';
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -181,11 +182,10 @@ export class OptimizerComponent extends BaseComponent {
 
   downloadOptimizerFile() {
     this.switchService.optimizeDownload(this.optimizeId).subscribe({
-      next: (res: any) => {
-        console.log(res);
-        if (res) {   
-          //window.open(res.url, '_blank');      
-         
+      next: (res: any) => {        
+        if (res) {
+          window.open(res.url, '_blank');      
+
         } else {
           this.toastr.error(res.message);
         }
