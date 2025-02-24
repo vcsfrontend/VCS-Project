@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgbNavModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedModule } from '../../../shared/common/sharedmodule';
@@ -8,14 +8,21 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { CommonModule } from '@angular/common';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrService } from 'ngx-toastr';
-
-
+import { MatPaginator,MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MaterialModuleModule } from '../../../material-module/material-module.module';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-optimizer',
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
-    CommonModule
+    CommonModule,MatSortModule,MatFormFieldModule, MatSelectModule,MatSortModule,MatCheckboxModule,MatTableModule,
+    MatPaginatorModule
   ],
   templateUrl: './optimizer.component.html',
   styleUrl: './optimizer.component.scss'
@@ -26,21 +33,32 @@ export class OptimizerComponent extends BaseComponent {
   public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
   public optimizeId: any = '';
-
   Selection = [
     { value: 1, label: 'English' },
     { value: 2, label: 'French' },
     { value: 3, label: 'Arabic' },
     { value: 4, label: 'Hindi' },
   ];
-
+  form: FormGroup;
+  
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
     super();
+    this.form = this.fb.group({
+      step1: this.fb.group({
+        
+      }),
+      step2: this.fb.group({
+        
+      }),
+      step3: this.fb.group({
+        
+      })
+    });
   }
 
-
-
   ngOnInit(): void {
+    optimizerForm: FormGroup;
+    this.stepIndex = 0;
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
         bladeWidth: [0, Validators.required],
@@ -194,5 +212,31 @@ export class OptimizerComponent extends BaseComponent {
         this.toastr.error(error.statusText);
       },
     })
+  }
+
+  stepIndex = 0;
+  nextStep() : void {
+    const stepControls = this.getStepGroup(this.stepIndex);
+    if (stepControls?.valid && this.stepIndex < 2) {
+      this.stepIndex++;
+    } else {
+      stepControls?.markAllAsTouched();
+    }
+  }
+  prevStep() : void {
+    if (this.stepIndex > 0) {
+      this.stepIndex--;
+    }
+  }
+  getStepGroup(index: number): FormGroup {
+    return this.form.get(`step${index + 1}`) as FormGroup;
+  }
+  submitForm() : void {
+    if (this.form.valid) {
+      console.log('Form Data:', this.form.value);
+      alert('Form Submitted Successfully!');
+    } else {
+      this.getStepGroup(this.stepIndex)?.markAllAsTouched();
+    }
   }
 }
