@@ -85,6 +85,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   addMoreVisible: boolean = false; // Flag to toggle visibility
   addMorePmntVisible: boolean = false;
   searchUser: string = '';
+  userDetails: any = {};
+
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible; // Toggle visibility
   }
@@ -1003,6 +1005,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       item.lastName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
       item.email.toLowerCase().includes(this.searchUser.toLowerCase())
     );
+  }
+
+  ViewUserDetails(data: any) {
+    this.userDetails = data;
   }
 
 }
