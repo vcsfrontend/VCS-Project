@@ -1,14 +1,16 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexStroke,
-  ApexYAxis, ApexTitleSubtitle, ApexLegend, ApexResponsive, NgApexchartsModule } from 'ng-apexcharts';
+import {
+  ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexStroke,
+  ApexYAxis, ApexTitleSubtitle, ApexLegend, ApexResponsive, NgApexchartsModule
+} from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
-import { FormBuilder, FormGroup, Validators,ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http'; // Import HttpClient for making HTTP requests
 import { FilePondOptions } from 'filepond';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NgbDropdownModule,NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
@@ -29,7 +31,7 @@ import { ShowcodeCardComponent } from '../../../shared/common/includes/showcode-
 import { ShowCodeContentDirective } from '../../../shared/directives/show-code-content.directive';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormControl, FormArray,  } from '@angular/forms' ;
+import { FormControl, FormArray, } from '@angular/forms';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -56,19 +58,19 @@ export type ChartOptions = {
   // imports: [SharedModule, NgApexchartsModule, CommonModule, FormsModule,
   //   NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,ReactiveFormsModule],
   //   providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, DatePipe],
-    imports: [RouterModule,NgbModule,FormsModule,ReactiveFormsModule, AngularFireModule,
-      AngularFireDatabaseModule, CommonModule,  MatFormFieldModule, MatSelectModule, FlatpickrModule,
-      AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
-      OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
-      NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,NgSelectModule,],
-    providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
-    
+  imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
+    AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
+    AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
+    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
+    NgbDropdownModule, MatDatepickerModule, MatInputModule, MatNativeDateModule, NgSelectModule,],
+  providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
+
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
 })
-export class ProjectsComponent extends BaseComponent implements OnInit,AfterViewInit {
+export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate', 
+    'projectArea', 'projectStartDate', 'projectEndDate',
   ];
   displayedColumnss: string[] = [
     'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'
@@ -78,20 +80,20 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
   //   'projectAddress', 'state', 'city', 'projectState', 'projectEstimation',
   //   'projectArea', 'projectStartDate', 'projectEndDate', 'action', 'designId', 'companyName'
   // ];
-  pjData : any = {}; isSts:boolean = true; submitted: boolean = false; userData: any;
+  pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
-  projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = ''; 
-  action: string = ''; designId: string = ''; companyName: string = ''; matcardLst:any; addFilter: string = '1';
-  projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active="Angular"; btnDisable = false; 
-  estamount : any; hasAddedRow: boolean = false; displayedCards: any; showMore = false;
-  dataSource = new MatTableDataSource<any>(); 
+  projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
+  action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
+  projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
+  estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = false;
+  dataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  modal: any; ttlAmtToBeRcvd: any; projectLst: any; userDetails:any; dateDiff: any; 
-  roleid:any;  actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup;
-  pondOptions: FilePondOptions; lastField:any; ProDataList:any
-  
+  modal: any; ttlAmtToBeRcvd: any; projectLst: any; userDetails: any; dateDiff: any;
+  roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
+  pondOptions: FilePondOptions; lastField: any; ProDataList: any
+
   updateDisplayedCards(): void {
-    this.displayedCards = this.showMore ?  this.matcardLst?.slice(0, 4) : this.matcardLst;
+    this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
   }
 
   toggleShowMore(): void {
@@ -110,42 +112,42 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     { Nameoffile: 'Quotation.xls', Typeoffile: 'exel', Uploadedby: 'Alex Brown', Uploadedon: '2024-02-13', Status: 'Rejected', Actions: 'Delete' }
 
   ];
-  
-  openLg(content10:any) {
-    if(this.stageLst?.f1 == '' || this.stageLst?.f1 == null ){
+
+  openLg(content10: any) {
+    if (this.stageLst?.f1 == '' || this.stageLst?.f1 == null) {
       alert('Please add stages before creating a project')
-    }else if(this.stageLst?.f1Percent == 0){
+    } else if (this.stageLst?.f1Percent == 0) {
       alert('Please add stages percentage before creating a project')
-    }else {
+    } else {
       this.resetForm();
       this.modalService.open(content10, { size: 'lg', centered: true },);
     }
-	}
+  }
   openLg1(content4: any) {
-    this.modalService.open(content4, {size: 'sm',  centered: true},);
+    this.modalService.open(content4, { size: 'sm', centered: true },);
   }
 
   openRights(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
-  } 
-  
-  open(content11:any) {
-		this.modalService.open(content11, { size: 'lg' },);
-	}
-  VerticallyScrol(content12:any) {
-    if(this.pmntStageLst?.f1 == '' || this.pmntStageLst?.f1 == null ){
+  }
+
+  open(content11: any) {
+    this.modalService.open(content11, { size: 'lg' },);
+  }
+  VerticallyScrol(content12: any) {
+    if (this.pmntStageLst?.f1 == '' || this.pmntStageLst?.f1 == null) {
       alert('Please add payment stages before adding project Estimation')
-    }else if(this.pmntStageLst?.f1Percent == 0){
+    } else if (this.pmntStageLst?.f1Percent == 0) {
       alert('Please add payment stages percentage before adding project Estimation')
-    }else {
-      this.modalService.open(content12, {  scrollable: true,centered: true,size: 'xl' });
+    } else {
+      this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
     }
-	}
-  
+  }
+
   constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal,
     private toastr: ToastrService, public switchService: SwitherService, private dp: DatePipe,
     private router: Router,
-     private offcanvasService: NgbOffcanvas,
+    private offcanvasService: NgbOffcanvas,
   ) {
     // Initialize FilePond options if needed
     super();
@@ -155,7 +157,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       // other FilePond options here
     };
   }
- 
+
   ngOnInit(): void {
     this.getLst(); this.getMatCardLst();
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
@@ -179,11 +181,22 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       attachments: [null], // Adjust based on your attachment handling
       email: [JSON.parse(this.userDetails)?.email],
       type: [JSON.parse(this.userDetails)?.type],
-      username: [JSON.parse(this.userDetails)?.username], 
+      username: [JSON.parse(this.userDetails)?.username],
       companyCode: [JSON.parse(this.userDetails)?.companyCode],
       projStatus: [''],
       percentage: ['']
     });
+
+
+    this.getProjectList();
+
+    this.inventoryForm = this.fb.group({
+      email: [JSON.parse(this.userDetails)?.email],
+      type: [JSON.parse(this.userDetails)?.type],
+      designId: ['', Validators.required]
+    });
+
+
   }
 
   get f() {
@@ -213,31 +226,32 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
           percent: this.stageLst[percentName],
           fieldNm: fieldName
         });
-      }      
+      }
     }
     this.lastField = this.dynamicFields[this.dynamicFields.length - 1].value;
     console.log('Last Field:', this.lastField);
     this.getdesignData()
   }
 
-  getAllStages(){
+  getAllStages() {
     let payload = {
       "email": JSON.parse(this.userData).email,
       "companyname": JSON.parse(this.userData).companyName,
       "companycode": JSON.parse(this.userData).companyCode,
       "type": JSON.parse(this.userData).type
     }
-    this.switchService.getStages(payload).subscribe({ next: (res:any) => {
-    if(res){
-      this.stageLst = res;
-      this.initializeDynamicFields();
-      } else {
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
+    this.switchService.getStages(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.stageLst = res;
+          this.initializeDynamicFields();
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
     })
   }
 
@@ -255,40 +269,41 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     }
   }
 
-  getAllPmntStages(){
+  getAllPmntStages() {
     let payload = {
       "email": JSON.parse(this.userData).email,
       "companyname": JSON.parse(this.userData).companyName,
       "companycode": JSON.parse(this.userData).companyCode,
       "type": JSON.parse(this.userData).type
     }
-    this.switchService.getPmntStages(payload).subscribe({ next: (res:any) => {
-    if(res){
-      this.pmntStageLst = res;
-      this.initializeDynamicPmntFields();
-      } else{
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
+    this.switchService.getPmntStages(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.pmntStageLst = res;
+          this.initializeDynamicPmntFields();
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
     })
   }
 
-  onClkDesign(key:string = ''){
+  onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
     this.switchService.onAdonai(JSON.parse(this.userData)?.email).subscribe({
-      next: (res:any) => {
-        if(res.status == false){
+      next: (res: any) => {
+        if (res.status == false) {
           alert(res.message)
           return;
         } else {
-          if(key == 'i'){
+          if (key == 'i') {
             this.dateDiff = res.datediff;
             this.roleid = res.roleId;
             this.actstatus = res.activityStatus;
-          }else{
+          } else {
             window.open(res.newDesign, '_blank');
             this.toastr.success(res.message);
           }
@@ -308,30 +323,30 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       const projectData = this.createProjectForm.value;
       this.btnDisable = true;
       projectData.companyName = JSON.parse(this.userDetails)?.companyName,
-      projectData.email = JSON.parse(this.userDetails)?.email,
-      projectData.type = JSON.parse(this.userDetails)?.type,
-      projectData.username = JSON.parse(this.userDetails)?.username,
-      projectData.companyCode = JSON.parse(this.userDetails)?.companyCode,
-      projectData.projStatus = this.dynamicFields[0].value,
-      projectData.percentage = this.dynamicFields[0].percent,
-      // projectData.projectStartDate = this.dp.transform(projectData.projectStartDate, 'dd-MM-yyyy'),
-      // projectData.projectEndDate = this.dp.transform(projectData.projectEndDate, 'dd-MM-yyyy'),
-      this.switchService.saveProject(projectData).subscribe({
-        next: (response) => {
-          const parts = response.message.split('<>');
-          this.toastr.success(parts[0]);
-          this.getLst(); this.getdesignData(); this.getMatCardLst();
-          this.modalService.dismissAll(); this.onSubmitTaskDetails(parts[1])
-        },
-        error: (error) => {
-          this.toastr.error('Error creating project', error);
-          this.btnDisable = false;
-        },
-        complete: () => {
-          console.log('Project creation process completed.');
-          this.resetForm(); // Optionally reset the form after submission
-        },
-      });
+        projectData.email = JSON.parse(this.userDetails)?.email,
+        projectData.type = JSON.parse(this.userDetails)?.type,
+        projectData.username = JSON.parse(this.userDetails)?.username,
+        projectData.companyCode = JSON.parse(this.userDetails)?.companyCode,
+        projectData.projStatus = this.dynamicFields[0].value,
+        projectData.percentage = this.dynamicFields[0].percent,
+        // projectData.projectStartDate = this.dp.transform(projectData.projectStartDate, 'dd-MM-yyyy'),
+        // projectData.projectEndDate = this.dp.transform(projectData.projectEndDate, 'dd-MM-yyyy'),
+        this.switchService.saveProject(projectData).subscribe({
+          next: (response) => {
+            const parts = response.message.split('<>');
+            this.toastr.success(parts[0]);
+            this.getLst(); this.getdesignData(); this.getMatCardLst();
+            this.modalService.dismissAll(); this.onSubmitTaskDetails(parts[1])
+          },
+          error: (error) => {
+            this.toastr.error('Error creating project', error);
+            this.btnDisable = false;
+          },
+          complete: () => {
+            console.log('Project creation process completed.');
+            this.resetForm(); // Optionally reset the form after submission
+          },
+        });
     } else {
       // Mark all controls as touched to show validation errors
       this.createProjectForm.markAllAsTouched();
@@ -339,7 +354,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     }
   }
 
-  onSubmitTaskDetails(id:any){
+  onSubmitTaskDetails(id: any) {
     let payload = {
       // "id": 0,
       "projectId": id,
@@ -347,14 +362,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       "projectStatus": this.dynamicFields[0].value,
       "description": 'Project start stage',
       updatedBy: JSON.parse(this.userData).username,
-      percentage : this.dynamicFields[0].percent,
+      percentage: this.dynamicFields[0].percent,
     }
-    this.switchService.onAddTaskDtls(payload).subscribe({ next: (res:any) =>{
-    if(res.status == true){
-      this.toastr.success(res.message);
-      return;
-      } else {
-        this.toastr.error(res.message);
+    this.switchService.onAddTaskDtls(payload).subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          this.toastr.success(res.message);
+          return;
+        } else {
+          this.toastr.error(res.message);
         }
       },
       error: (error) => {
@@ -376,18 +392,18 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
 
   getSNo(index: number): number {
     if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
-        return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
 
   addDateDifference() {
-    this.projectLst = this.projectLst.map((e:any) => ({
+    this.projectLst = this.projectLst.map((e: any) => ({
       ...e, dateDifference: this.calculateDateDifference(e.projectEndDate)
     }));
   }
 
-  getLst(){
+  getLst() {
     let payload = {
       email: JSON.parse(this.userDetails)?.email,
       type: JSON.parse(this.userDetails)?.type,
@@ -397,29 +413,30 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       projectname: '',
       filter: 'All',
     }
-    this.switchService.projectLst(payload).subscribe({ next: (res:any) => {
-      if(res){
-        this.projectLst = res.projList;
-        this.dataSource.data = res.projList;
-        // this.projectLst = this.projectLst.filter((e:any) => e.dateDifference >= 0);
-        // this.projectLst.sort((a:any, b:any) => a.dateDifference - b.dateDifference);
+    this.switchService.projectLst(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.projectLst = res.projList;
+          this.dataSource.data = res.projList;
+          // this.projectLst = this.projectLst.filter((e:any) => e.dateDifference >= 0);
+          // this.projectLst.sort((a:any, b:any) => a.dateDifference - b.dateDifference);
         } else {
           this.toastr.error(res.message);
         }
       }
     })
   }
-  onFilterChange(id:any){
+  onFilterChange(id: any) {
     // if(id=='2'){ this.projName = ''} else if (id=='3'){ this.projId = ''} else {this.projName = '', this.projId = '', this.getMatCardLst()}
     id === '2' ? this.projName = '' : id === '3' ? this.projId = '' :
-    (this.projName = '', this.projId = '', this.getMatCardLst());
+      (this.projName = '', this.projId = '', this.getMatCardLst());
   }
 
-  getMatCardLst(){
-    if(this.addFilter=='2' && this.projId == ''){
+  getMatCardLst() {
+    if (this.addFilter == '2' && this.projId == '') {
       this.toastr.warning('Please enter Project Id');
     }
-    else if(this.addFilter=='3' && this.projName== ''){
+    else if (this.addFilter == '3' && this.projName == '') {
       this.toastr.warning('Please enter Project Name');
     } else {
       let payload = {
@@ -427,38 +444,39 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
         type: JSON.parse(this.userDetails)?.type,
         companyname: JSON.parse(this.userDetails)?.companyName,
         companycode: JSON.parse(this.userDetails)?.companyCode,
-        projectId: this.addFilter == '2'? this.projId : '',
-        projectname: this.addFilter == '3'? this.projName : '',
-        filter: this.addFilter == '1'? 'All' : (this.addFilter == '2'? 'projectid' : 'projectname'),
+        projectId: this.addFilter == '2' ? this.projId : '',
+        projectname: this.addFilter == '3' ? this.projName : '',
+        filter: this.addFilter == '1' ? 'All' : (this.addFilter == '2' ? 'projectid' : 'projectname'),
       }
 
-      this.switchService.projectLst(payload).subscribe({ next: (res:any) => {
-      if(res){
-        const projLst = res.projList;
-        const paymentLastLst = res.paymentLastList;
-        const proLastLst = res.projectLastList;
-        projLst?.forEach((project:any) => {
-          const matchedProject = paymentLastLst.find((lastProject:any) => lastProject.projectId === project.projectId);
-          if (matchedProject) {
-            project.paymentPercent = matchedProject.paymentPercent;
-            project.paymentStage = matchedProject.paymentStage  // Add projPercent to the project
-          } else {
-            project.paymentPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
-          }
-        });
-        projLst?.forEach((e:any) => {
-          const matchedProjectstg = proLastLst.find((lastStg:any) => lastStg.projectId === e.projectId);
-          if (matchedProjectstg) {
-            e.projectPercent = matchedProjectstg.projectPercent;
-            e.projectStage = matchedProjectstg.projectStage  // Add projPercent to the project
-          } else {
-            e.projectPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
-          }
-        });
-          this.matcardLst = projLst;
-          // this.addDateDifference();
-          this.matcardLst?.sort((a:any, b:any) => a.priorityDays - b.priorityDays);
-          this.toggleShowMore();
+      this.switchService.projectLst(payload).subscribe({
+        next: (res: any) => {
+          if (res) {
+            const projLst = res.projList;
+            const paymentLastLst = res.paymentLastList;
+            const proLastLst = res.projectLastList;
+            projLst?.forEach((project: any) => {
+              const matchedProject = paymentLastLst.find((lastProject: any) => lastProject.projectId === project.projectId);
+              if (matchedProject) {
+                project.paymentPercent = matchedProject.paymentPercent;
+                project.paymentStage = matchedProject.paymentStage  // Add projPercent to the project
+              } else {
+                project.paymentPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
+              }
+            });
+            projLst?.forEach((e: any) => {
+              const matchedProjectstg = proLastLst.find((lastStg: any) => lastStg.projectId === e.projectId);
+              if (matchedProjectstg) {
+                e.projectPercent = matchedProjectstg.projectPercent;
+                e.projectStage = matchedProjectstg.projectStage  // Add projPercent to the project
+              } else {
+                e.projectPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
+              }
+            });
+            this.matcardLst = projLst;
+            // this.addDateDifference();
+            this.matcardLst?.sort((a: any, b: any) => a.priorityDays - b.priorityDays);
+            this.toggleShowMore();
           } else {
             this.toastr.error(res.message);
           }
@@ -467,7 +485,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     }
   }
 
-  getdesignData(){
+  getdesignData() {
     let payload = {
       "email": JSON.parse(this.userDetails)?.email,
       "type": JSON.parse(this.userDetails)?.type,
@@ -475,91 +493,93 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       "companycode": JSON.parse(this.userDetails)?.companyCode,
       lastStage: this.lastField
     }
-    this.switchService.designersDbData(payload).subscribe({ next: (res:any) =>{
-    if(res){    
-      this.pjData = res;
-    } else {
-      this.toastr.error(res.message,'', {
-        timeOut: 3000,
-        positionClass: 'toast-top-right',
-        });
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
+    this.switchService.designersDbData(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.pjData = res;
+        } else {
+          this.toastr.error(res.message, '', {
+            timeOut: 3000,
+            positionClass: 'toast-top-right',
+          });
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
     })
   }
-  
 
-  onProjectDetails(data:any){
+
+  onProjectDetails(data: any) {
     this.projectName = data.projectName; this.clientName = data.clientName; this.businessCategory = data.businessCategory;
-    this.projectAddress = data.projectAddress; this.projectArea = data.projectArea; this.state = data.state; 
+    this.projectAddress = data.projectAddress; this.projectArea = data.projectArea; this.state = data.state;
     this.city = data.city; this.action = data.action; this.designId = data.designId; this.companyName = data.companyName;
   }
 
-  onProjectAdd(data:any){
-    this.router.navigate(['/dashboard/mytask'], {queryParams: {projectId : data.projectId}});
+  onProjectAdd(data: any) {
+    this.router.navigate(['/dashboard/mytask'], { queryParams: { projectId: data.projectId } });
   }
 
-  onProjectCycle(id:any){
-    this.router.navigate(['/pages/timeline'], {queryParams: {projectId : id.projectId}});
+  onProjectCycle(id: any) {
+    this.router.navigate(['/pages/timeline'], { queryParams: { projectId: id.projectId } });
   }
 
-  lastPendingAmount:any; totalReceivedAmount:any
+  lastPendingAmount: any; totalReceivedAmount: any
   calculateTotalReceivedAmount(): void {
-    this.totalReceivedAmount = this.paymentStages.reduce((sum:any, stage:any) => {
+    this.totalReceivedAmount = this.paymentStages.reduce((sum: any, stage: any) => {
       return sum + parseFloat(stage.receivedAmount);
     }, 0);
-    this.ttlAmtToBeRcvd = this.paymentStages.reduce((sum:any, stage:any) => {
+    this.ttlAmtToBeRcvd = this.paymentStages.reduce((sum: any, stage: any) => {
       return sum + parseFloat(stage.amountToBeRecieved);
     }, 0);
-    this.lastPendingAmount = this.paymentStages.reduce((sum:any, stage:any) => {
+    this.lastPendingAmount = this.paymentStages.reduce((sum: any, stage: any) => {
       return sum + parseFloat(stage.pendingAmount);
     }, 0);
   }
 
-  fetchPaymentStages(data:any) {
+  fetchPaymentStages(data: any) {
     //   this.http.get('https://api.example.com/payment-stages').subscribe((data: any) => {
     //     this.paymentStages = data.map((item: any) => ({ ...item, isNew: false }));
     //   });
-    this.estamount = data.projectEstimation ;
+    this.estamount = data.projectEstimation;
     this.lstData = data
-    this.switchService.getProjEstimation(data.projectId).subscribe({ next: (res:any) =>{
-    if(res){
-      this.paymentStages = res.map((item: any) => ({ ...item, isNew: false }));
-      this.paymentStages.forEach((e:any) => {e.updatedTime = this.convertToIST(e.updatedTime);});
-    // const lastElement = this.paymentStages[this.paymentStages.length - 1];
-    // this.lastPendingAmount = lastElement ? lastElement.pendingAmount : data.projectEstimation;
-    this.calculateTotalReceivedAmount();
-    } else {
-      this.toastr.error(res.message);
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
+    this.switchService.getProjEstimation(data.projectId).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.paymentStages = res.map((item: any) => ({ ...item, isNew: false }));
+          this.paymentStages.forEach((e: any) => { e.updatedTime = this.convertToIST(e.updatedTime); });
+          // const lastElement = this.paymentStages[this.paymentStages.length - 1];
+          // this.lastPendingAmount = lastElement ? lastElement.pendingAmount : data.projectEstimation;
+          this.calculateTotalReceivedAmount();
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
     })
   }
 
   addRow() {
-    const incompleteRow = this.paymentStages.find((e:any) => !e.paymentStage || !e.percantage || !e.receivedAmount);
-  
+    const incompleteRow = this.paymentStages.find((e: any) => !e.paymentStage || !e.percantage || !e.receivedAmount);
+
     if (incompleteRow) {
       this.toastr.warning('Please fill all the fields before adding a new row.', 'Validation Error');
       return;
     } else {
 
-    // const totalPercentage = this.paymentStages.reduce((sum:any, payment:any) => {
-    //   return sum + (payment.percantage ? parseFloat(payment.percantage) : 0);
-    // }, 0);
-  
-    // if (totalPercentage > 100) {
-    //   this.toastr.error('Total percentage cannot exceed 100. Please correct the values.', 'Validation Error');
-    //   return;
-    // }
+      // const totalPercentage = this.paymentStages.reduce((sum:any, payment:any) => {
+      //   return sum + (payment.percantage ? parseFloat(payment.percantage) : 0);
+      // }, 0);
+
+      // if (totalPercentage > 100) {
+      //   this.toastr.error('Total percentage cannot exceed 100. Please correct the values.', 'Validation Error');
+      //   return;
+      // }
       this.hasAddedRow = true;
-      this.paymentStages.push({ 
+      this.paymentStages.push({
         projectId: this.lstData?.projectId,
         projectEstimation: this.lstData?.projectEstimation,
         totalAmount: '',
@@ -571,7 +591,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
         amountToBeRecieved: '',
         updatedBy: JSON.parse(this.userData)?.username,
         updatedTime: '',
-        isNew: true 
+        isNew: true
       });
     }
   }
@@ -583,10 +603,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
   }
 
   isValueSelected(value: string, currentIndex: number): boolean {
-    return this.paymentStages.some((payment:any, index:any) => payment.paymentStage === value && index !== currentIndex);
+    return this.paymentStages.some((payment: any, index: any) => payment.paymentStage === value && index !== currentIndex);
   }
-  
-  updatePercent(payment:any){
+
+  updatePercent(payment: any) {
     const selectedStage = this.dynamicPmntFields.find(item => item.value === payment.paymentStage);
     if (selectedStage) {
       payment.percantage = +selectedStage.percent;
@@ -613,13 +633,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
 
   onPercentageChange(payment: any): void {
     // Calculate the total percentage excluding the current row
-    const totalPercentageExcludingCurrent = this.paymentStages.reduce((sum:any, p:any) => {
+    const totalPercentageExcludingCurrent = this.paymentStages.reduce((sum: any, p: any) => {
       return sum + (p === payment || !p.percantage ? 0 : parseFloat(p.percantage));
     }, 0);
-  
+
     // Check if the new total exceeds 100
     const newTotalPercentage = totalPercentageExcludingCurrent + (payment.percantage ? parseFloat(payment.percantage) : 0);
-  
+
     if (newTotalPercentage > 100) {
       // Show error message and reset the value
       this.toastr.error('Total percentage cannot exceed 100. Please enter a valid value.', 'Validation Error');
@@ -645,8 +665,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
 
   validateField(index: number, field: string): void {
     const payment = this.paymentStages[index];
-    if( payment.paymentStage == ''){ payment.percantage = '', payment.amountToBeRecieved = ''; payment.receivedAmount = ''; payment.pendingAmount = '' };
-    if( payment.percantage == ''){payment.amountToBeRecieved = ''; payment.receivedAmount = ''; payment.pendingAmount = '' };
+    if (payment.paymentStage == '') { payment.percantage = '', payment.amountToBeRecieved = ''; payment.receivedAmount = ''; payment.pendingAmount = '' };
+    if (payment.percantage == '') { payment.amountToBeRecieved = ''; payment.receivedAmount = ''; payment.pendingAmount = '' };
 
     switch (field) {
       case 'paymentStage':
@@ -659,7 +679,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       case 'percantage':
         if (!payment.paymentStage || payment.paymentStage.trim() === '') {
           this.toastr.warning('Please fill the Stage of Payment before entering the Percentage.', 'Validation Error');
-          payment.percantage = ''; 
+          payment.percantage = '';
         }
         break;
 
@@ -688,8 +708,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     }
   }
 
-  savePaymentDetails(){
-    const incompleteRow = this.paymentStages.find((e:any) => !e.paymentStage || !e.percantage || !e.receivedAmount);
+  savePaymentDetails() {
+    const incompleteRow = this.paymentStages.find((e: any) => !e.paymentStage || !e.percantage || !e.receivedAmount);
     if (!this.hasAddedRow) {
       this.toastr.error('Please add a new row before submitting the form.', 'Error');
       return;
@@ -697,11 +717,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     else if (incompleteRow) {
       this.toastr.warning('Please fill all the fields before adding a new row.', 'Validation Error');
       return;
-    }else {
+    } else {
       // let totalPendingSum = this.paymentStages.reduce((sum: number, e: any) => {
       //   return sum + (+e.pendingAmount || 0); 
       // }, 0);
-      let payload = this.paymentStages.map((e:any) => ({
+      let payload = this.paymentStages.map((e: any) => ({
         id: e.id || 0,
         projectId: e.projectId || "",
         paymentStage: e.paymentStage || "",
@@ -1179,25 +1199,25 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     },
     labels: ['Followers'],
   };
-  chartOptions7:any= {
+  chartOptions7: any = {
     series: [
       {
         name: "Recieved Income",
         type: "column",
-        data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6,5.6,6.6,7.8,9.7]
+        data: [1.4, 2, 2.5, 1.5, 2.5, 2.8, 3.8, 4.6, 5.6, 6.6, 7.8, 9.7]
       },
       {
         name: "Pending Income",
         type: "column",
-        data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5,9.5,10,8.6,7.6]
+        data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5, 9.5, 10, 8.6, 7.6]
       },
       {
         name: "Revenue",
         type: "line",
-        data: [20, 29, 37, 36, 44, 45, 50, 58,65,43,55,60]
+        data: [20, 29, 37, 36, 44, 45, 50, 58, 65, 43, 55, 60]
       }
     ],
-    colors:['#b94eed','#44c2e9','#f6c364'],
+    colors: ['#b94eed', '#44c2e9', '#f6c364'],
     chart: {
       height: 350,
       type: "line",
@@ -1216,7 +1236,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     },
     xaxis: {
       // categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
-      categories: ['Jan','Feb','March','April','May','June','July','Aug','Sep','Oct','Nov','Dec']
+      categories: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     },
     yaxis: [
       {
@@ -1238,10 +1258,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
             color: "#9673e4"
           }
         },
-      
+
       },
       {
-        
+
         opposite: true,
         axisTicks: {
           show: true
@@ -1263,7 +1283,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
         }
       },
       {
-       
+
         opposite: true,
         axisTicks: {
           show: true
@@ -1299,15 +1319,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     }
   };
 
-  ReadMore:boolean = true
+  ReadMore: boolean = true
 
   //hiding info box
-  visible:boolean = false
+  visible: boolean = false
 
 
   //onclick toggling both
-  onclick()
-  {
+  onclick() {
     this.ReadMore = !this.ReadMore; //not equal to condition
     this.visible = !this.visible
   }
@@ -1374,7 +1393,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
   isAtStart: boolean = true;
   isAtEnd: boolean = false;
 
-  
+
   scrollLeft() {
     this.scrollContent.nativeElement.scrollBy({ left: -200, behavior: 'smooth' });
     setTimeout(() => this.updateButtons(), 300);
@@ -1395,5 +1414,54 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
   onResize() {
     this.updateButtons();
   }
+
+  getProjectList() {
+
+    this.switchService.ProjectDataList(JSON.parse(this.userDetails)?.email).subscribe({
+      next: (res: any) => {
+        if (res) {
+          console.log(res);
+          this.projectList = res.values;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
+
+  }
+
+  get i() {
+    return this.inventoryForm.controls;
+  }
+
+  onInventorySubmit(modal: any) {
+    this.inventorySubmitted = true;
+    if (this.inventoryForm?.valid) {
+      this.switchService.inventoryCreateData(this.inventoryForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.inventorySubmitted = false;
+            this.inventoryForm.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+    }
+  }
+
+
 
 }

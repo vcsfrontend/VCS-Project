@@ -18,9 +18,9 @@
         </div>
         <div class="card-header justify-content-between" *ngIf="roleid!=7">
             <marquee behavior="scroll" direction="left" class="fs-18 font-weight-bold" style="color: #006699;">
-                <p ><strong> Welcome to adonai, Explore Endless Designs </strong></p>
+                <p><strong> Welcome to adonai, Explore Endless Designs </strong></p>
                 <!-- <p *ngIf="dateDiff=='0'" ><strong> Upgrade Your Plan</strong></p>
-                <p *ngIf="dateDiff!='0'" ><strong> Enjoy Your {{dateDiff}} Days Free Trail </strong></p> --> 
+                <p *ngIf="dateDiff!='0'" ><strong> Enjoy Your {{dateDiff}} Days Free Trail </strong></p> -->
             </marquee>
         </div>
         <div class="row">
@@ -30,14 +30,13 @@
                 </div>
             </div>
             <div class="col-xxl-4 col-lg-4 col-md-4 col-xl-4 text-center mx-auto">
-                <button class="btn button btn-wave btn-w-lg font-weight-bold" 
-                    style="background-color: #006699; color: white;"  aria-expanded="false" (click)="onClkDesign()"
+                <button class="btn button btn-wave btn-w-lg font-weight-bold"
+                    style="background-color: #006699; color: white;" aria-expanded="false" (click)="onClkDesign()"
                     type="button" [disabled]="(roleid == 7 && dateDiff == '0') || (roleid == 12 && actstatus == false)">
-                    Click to Explore Endless Designs </button>
-                    <button class="btn button btn-wave btn-w-lg font-weight-bold" 
-                    style="background-color: #006699; color: white;" type="button"
-                    data-bs-toggle="modal" 
-                        data-bs-target="#exampleModalLg" (click)="openLg1(content4)">
+                    Click to Explore Endless Designs </button>                    
+                <button *ngIf="roleid == 5" class="btn button btn-wave btn-w-lg font-weight-bold"
+                    style="background-color: #006699; color: white;" type="button" data-bs-toggle="modal"
+                    data-bs-target="#exampleModalLg" (click)="openLg1(content4)">
                     Quotation </button>
             </div>
         </div>
@@ -244,14 +243,16 @@
                     <div class="card-header justify-content-between">
                         <div class="text-center">
                             <div class="scroll-container">
-                                <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="isAtStart"><i class="las la-angle-left"></i></button>
+                                <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="isAtStart"><i
+                                        class="las la-angle-left"></i></button>
                                 <div #scrollContent class="scroll-content" (scroll)="updateButtons()">
                                     <div class="scroll-item" *ngFor="let item of items">
-                                      {{ item.title }}
+                                        {{ item.title }}
                                     </div>
                                 </div>
-                                <button class="scroll-btn right" (click)="scrollRight()" [disabled]="isAtEnd"><i class="las la-angle-right"></i></button>
-                            </div>   
+                                <button class="scroll-btn right" (click)="scrollRight()" [disabled]="isAtEnd"><i
+                                        class="las la-angle-right"></i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -260,7 +261,7 @@
                 <div class="card custom-card">
                     <div class="card-header justify-content-between">
                         <div class="card-title">
-                            Design 
+                            Design
                         </div>
                         <div class="d-flex flex-wrap gap-3">
                             <!-- <mat-form-field class="filter-field">
@@ -269,7 +270,8 @@
                             </mat-form-field> -->
                             <div>
                                 <a class="btn btn-secondary btn-wave" (click)="openRights(content)"
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i class="ri-add-line align-middle me-1 fw-medium"></i>Add Design</a>
+                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
+                                        class="ri-add-line align-middle me-1 fw-medium"></i>Add Design</a>
                             </div>
                         </div>
                     </div>
@@ -299,10 +301,12 @@
                                     </ng-container>
                                     <ng-container matColumnDef="Status">
                                         <th mat-header-cell *matHeaderCellDef>Status</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Status}}  <a tabindex="0" data-bs-toggle="popover" triggers="focus"
-                                            placement="bottom" popoverTitle="File History"
-                                            ngbPopover="And here's some amazing content. It's very engaging. Right?"><i class="las la-history history"></i>
-                                        </a> </td>
+                                        <td mat-cell *matCellDef="let element"> {{element.Status}} <a tabindex="0"
+                                                data-bs-toggle="popover" triggers="focus" placement="bottom"
+                                                popoverTitle="File History"
+                                                ngbPopover="And here's some amazing content. It's very engaging. Right?"><i
+                                                    class="las la-history history"></i>
+                                            </a> </td>
                                     </ng-container>
                                     <ng-container matColumnDef="Actions">
                                         <th mat-header-cell *matHeaderCellDef>Actions</th>
@@ -327,145 +331,151 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">top Projects</div>
-                    <!-- <button type="button" class="btn btn-sm btn-primary-light btn-wave waves-effect waves-light">View
+                <!-- <button type="button" class="btn btn-sm btn-primary-light btn-wave waves-effect waves-light">View
                         All</button> -->
-                            <!-- <label for="signup-phone" class="form-label text-default"><strong>Phone Number</strong><span class="text-danger"> *</span></label> -->
+                <!-- <label for="signup-phone" class="form-label text-default"><strong>Phone Number</strong><span class="text-danger"> *</span></label> -->
                 <div class="col-md-4 col-xl-4 col-xxl-4 col-lg-4 col-sm-6 d-flex">
                     <div class="input-group custom-input-group">
-                        <select class="form-select" [(ngModel)]="addFilter" 
+                        <select class="form-select" [(ngModel)]="addFilter"
                             (change)="onFilterChange($any($event.target).value)">
                             <option value="1">All</option>
                             <option value="2">Project Id</option>
                             <option value="3">Project Name</option>
                         </select>
                         <input type="text" class="form-control" *ngIf="addFilter=='1'" [disabled]="true">
-                        <input type="text" class="form-control" *ngIf="addFilter=='2'"
-                            [(ngModel)]="projId" placeholder="enter project Id">
-                        <input type="text" class="form-control" *ngIf="addFilter=='3'"
-                            [(ngModel)]="projName" placeholder="enter project Name">
-                        <button class="btn btn-ghost-light border" type="button" id="button-addon2" (click)="getMatCardLst()"><i
-                            class="ri-search-line text-muted"></i></button>
+                        <input type="text" class="form-control" *ngIf="addFilter=='2'" [(ngModel)]="projId"
+                            placeholder="enter project Id">
+                        <input type="text" class="form-control" *ngIf="addFilter=='3'" [(ngModel)]="projName"
+                            placeholder="enter project Name">
+                        <button class="btn btn-ghost-light border" type="button" id="button-addon2"
+                            (click)="getMatCardLst()"><i class="ri-search-line text-muted"></i></button>
                     </div>
                 </div>
                 <div class="text-center">
                     <button class="btn btn-primary" (click)="toggleShowMore()">
                         {{ showMore ? 'Show More' : 'Show less' }}
                     </button>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-xxl-12" [ngStyle]="{ 'max-height': showMore ? 'auto' : '330px', 'overflow-y': showMore ? 'visible' : 'auto' }">
-        <div class="row">
-            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let project of displayedCards">
-                <div class="card custom-card">
-                    <div class="card-header d-flex align-items-center justify-content-between">
-                        <div class="me-2  align-items-center">
-                            <span class="avatar avatar-rounded p-1 bg-light">
-                                <img src="./assets/images/brand-logos/profile1.jpg" alt="">
-                            </span>
-                        </div>
-                        <div class="flex-fill">
-                            <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
-                                Project: {{project.projectName | slice:0:12}}</a>
-                            <span class="text-muted d-block fs-12">Client: {{project.clientName | slice:0:12}}</span>
+        <div class="col-xxl-12"
+            [ngStyle]="{ 'max-height': showMore ? 'auto' : '330px', 'overflow-y': showMore ? 'visible' : 'auto' }">
+            <div class="row">
+                <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let project of displayedCards">
+                    <div class="card custom-card">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <div class="me-2  align-items-center">
+                                <span class="avatar avatar-rounded p-1 bg-light">
+                                    <img src="./assets/images/brand-logos/profile1.jpg" alt="">
+                                </span>
+                            </div>
+                            <div class="flex-fill">
+                                <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
+                                    Project: {{project.projectName | slice:0:12}}</a>
+                                <span class="text-muted d-block fs-12">Client: {{project.clientName |
+                                    slice:0:12}}</span>
                                 <!-- <span class="text-muted d-block fs-12">Total <strong class="text-default">18/22</strong> tasks
                                     completed</span> -->
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <div class="text-end">
-                                <span class="badge" [ngClass]="{'bg-danger-transparent text-danger': project.priorityDays < 0,
-                                    'bg-success-transparent': project.priorityDays >= 0}">Priority : {{project.priorityDays}} days to go</span>
                             </div>
                         </div>
-                        <div class="mb-1">Project Status : {{project.projStatus}}</div>
-                        <div class="mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="text-end">
+                                    <span class="badge" [ngClass]="{'bg-danger-transparent text-danger': project.priorityDays < 0,
+                                    'bg-success-transparent': project.priorityDays >= 0}">Priority :
+                                        {{project.priorityDays}} days to go</span>
+                                </div>
+                            </div>
+                            <div class="mb-1">Project Status : {{project.projStatus}}</div>
+                            <div class="mb-3">
+                                <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-primary" [style.width.%]="project.projectPercent"></div>
+                                </div>
+                                <div class="mt-1"><span class="text-primary fw-medium">{{project.projectPercent}}
+                                        %</span> Completed</div>
+                            </div>
+                            <div class="mb-1">Payment Status : {{project.paymentStage}}</div>
                             <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
                                 aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar bg-primary" [style.width.%]="project.projectPercent"></div>
+                                <div class="progress-bar bg-primary" [style.width.%]="project.paymentPercent"></div>
                             </div>
-                            <div class="mt-1"><span class="text-primary fw-medium">{{project.projectPercent}} %</span> Completed</div>
+                            <div class="mt-1"><span class="text-primary fw-medium">{{project.paymentPercent}}%</span>
+                                Completed</div>
                         </div>
-                        <div class="mb-1">Payment Status : {{project.paymentStage}}</div>
-                        <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
-                            aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-bar bg-primary" [style.width.%]="project.paymentPercent"></div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <a class="btn btn-sm btn-primary btn-wave ms-3" (click)="onProjectAdd(project)"><i
+                                    class="ri-add-line align-middle me-1 fw-medium"></i>Add</a>
+                            <!-- routerLink="/dashboard/mytask" -->
+                            <a class="btn btn-sm btn-primary btn-wave me-3" (click)="onProjectCycle(project)"><i
+                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Cycle</a>
+                            <!-- routerLink="/pages/timeline" -->
                         </div>
-                        <div class="mt-1"><span class="text-primary fw-medium">{{project.paymentPercent}}%</span> Completed</div>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <a class="btn btn-sm btn-primary btn-wave ms-3" (click)="onProjectAdd(project)"><i
-                            class="ri-add-line align-middle me-1 fw-medium"></i>Add</a>
-                                <!-- routerLink="/dashboard/mytask" -->
-                        <a class="btn btn-sm btn-primary btn-wave me-3" (click)="onProjectCycle(project)"><i
-                            class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Cycle</a>
-                                <!-- routerLink="/pages/timeline" -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- <div class="text-center mt-3">
+    <!-- <div class="text-center mt-3">
     <button class="btn btn-primary" (click)="toggleShowMore()">
       {{ showMore ? 'Show Less' : 'Show More' }}
     </button> -->
 
 
-<div class="col-xl-12 mt-2">
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="card-title">
-                My Projects
-            </div>
-            <div class="d-flex flex-wrap gap-3">
-                <mat-form-field class="filter-field">
-                    <mat-label>Fliter</mat-label> 
-                    <input matInput (keyup)="applyFilter($event)" #input>
-                </mat-form-field>
-                <div ngbDropdown class="dropdown">
-                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                        aria-expanded="false" (click)="onClkDesign()"
-                        type="button" [disabled]="(roleid == 7 && dateDiff == 0 ) || (roleid == 12 && actstatus == false) ">
-                        New Design
-                    </button>
+    <div class="col-xl-12 mt-2">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    My Projects
                 </div>
-                <div>
-                    <a class="btn btn-secondary btn-wave" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="openLg(Content10);submitted=false"><i
-                            class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
+                <div class="d-flex flex-wrap gap-3">
+                    <mat-form-field class="filter-field">
+                        <mat-label>Fliter</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" #input>
+                    </mat-form-field>
+                    <div ngbDropdown class="dropdown">
+                        <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                            aria-expanded="false" (click)="onClkDesign()" type="button"
+                            [disabled]="(roleid == 7 && dateDiff == 0 ) || (roleid == 12 && actstatus == false) ">
+                            New Design
+                        </button>
+                    </div>
+                    <div>
+                        <a class="btn btn-secondary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                            (click)="openLg(Content10);submitted=false"><i
+                                class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="dataSource">
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="projectId">
-                            <th mat-header-cell *matHeaderCellDef> Project Id </th>
-                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalLg"
-                                (click)="openLg(Content11);onProjectDetails(element)"> {{element.projectId | slice:0:7}} </td>
-                        </ng-container>
-                        <!-- <ng-container matColumnDef="projectName">
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSource">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="projectId">
+                                <th mat-header-cell *matHeaderCellDef> Project Id </th>
+                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModalLg"
+                                    (click)="openLg(Content11);onProjectDetails(element)"> {{element.projectId |
+                                    slice:0:7}} </td>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="projectName">
                             <th mat-header-cell *matHeaderCellDef> Project Name </th>
                             <td mat-cell *matCellDef="let element"> {{element.projectName}} </td>
                         </ng-container> -->
-                        <ng-container matColumnDef="clientName">
-                            <th mat-header-cell *matHeaderCellDef> Client Name </th>
-                            <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="projStatus">
-                            <th mat-header-cell *matHeaderCellDef>Project Status</th>
-                            <td mat-cell *matCellDef="let element"> {{element.projStatus}} </td>
-                        </ng-container>
-                        <!-- <ng-container matColumnDef="businessCategory">
+                            <ng-container matColumnDef="clientName">
+                                <th mat-header-cell *matHeaderCellDef> Client Name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="projStatus">
+                                <th mat-header-cell *matHeaderCellDef>Project Status</th>
+                                <td mat-cell *matCellDef="let element"> {{element.projStatus}} </td>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="businessCategory">
                             <th mat-header-cell *matHeaderCellDef> Business Category</th>
                             <td mat-cell *matCellDef="let element"> {{element.businessCategory}} </td>
                         </ng-container>
@@ -485,30 +495,32 @@
                             <th mat-header-cell *matHeaderCellDef>Project Stage</th>
                             <td mat-cell *matCellDef="let element"> {{element.projectState}} </td>
                         </ng-container> -->
-                        <ng-container matColumnDef="projectEstimation">
-                            <th mat-header-cell *matHeaderCellDef>Project Estimation</th>
-                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                            data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12); fetchPaymentStages(element)">
-                                {{element.projectEstimation}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="projectArea">
-                            <th mat-header-cell *matHeaderCellDef>Project Area</th>
-                            <td mat-cell *matCellDef="let element"> {{element.projectArea}} </td>
-                        </ng-container>
-                        <!-- <ng-container matColumnDef="action">
+                            <ng-container matColumnDef="projectEstimation">
+                                <th mat-header-cell *matHeaderCellDef>Project Estimation</th>
+                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModalLg"
+                                    (click)="VerticallyScrol(Content12); fetchPaymentStages(element)">
+                                    {{element.projectEstimation}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="projectArea">
+                                <th mat-header-cell *matHeaderCellDef>Project Area</th>
+                                <td mat-cell *matCellDef="let element"> {{element.projectArea}} </td>
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="action">
                             <th mat-header-cell *matHeaderCellDef>Action</th>
                             <td mat-cell *matCellDef="let element"> {{element.action}} </td>
                         </ng-container> -->
-                        <ng-container matColumnDef="projectStartDate">
-                            <th mat-header-cell *matHeaderCellDef>Project Start Date</th>
-                            <td mat-cell *matCellDef="let element"> {{element.projectStartDate | date:'dd-MM-yyyy'}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="projectEndDate">
-                            <th mat-header-cell *matHeaderCellDef>Project End Date</th>
-                            <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
+                            <ng-container matColumnDef="projectStartDate">
+                                <th mat-header-cell *matHeaderCellDef>Project Start Date</th>
+                                <td mat-cell *matCellDef="let element"> {{element.projectStartDate | date:'dd-MM-yyyy'}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="projectEndDate">
+                                <th mat-header-cell *matHeaderCellDef>Project End Date</th>
+                                <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
                                     ({{calculateDateDifference(element.projectEndDate)}}) </td>
-                        </ng-container>
-                        <!-- <ng-container matColumnDef="designId">
+                            </ng-container>
+                            <!-- <ng-container matColumnDef="designId">
                             <th mat-header-cell *matHeaderCellDef>Design Id</th>
                             <td mat-cell *matCellDef="let element"> {{element.designId}} </td>
                         </ng-container>
@@ -516,67 +528,71 @@
                             <th mat-header-cell *matHeaderCellDef>Company Name</th>
                             <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
                         </ng-container> -->
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                    </table>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements">
+                    </mat-paginator>
                 </div>
-                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                    aria-label="Select page of periodic elements">
-                </mat-paginator>
             </div>
         </div>
     </div>
-</div>
 
-<ng-template #Content10 id="addtask" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Create Project</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card custom-card">
-                            <div class="card-body">
-                                <div class="row gy-3">
-                                    <div class="col-xl-4">
-                                        <label for="projectName" class="form-label">Project Name:</label>
-                                        <input type="text" class="form-control" id="projectName"
-                                            formControlName="projectName" placeholder="Enter Project Name"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectName'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['projectName'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectName'].errors['required']">Project name is required
+    <ng-template #Content10 id="addtask" let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Create Project</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card custom-card">
+                                <div class="card-body">
+                                    <div class="row gy-3">
+                                        <div class="col-xl-4">
+                                            <label for="projectName" class="form-label">Project Name:</label>
+                                            <input type="text" class="form-control" id="projectName"
+                                                formControlName="projectName" placeholder="Enter Project Name"
+                                                [ngClass]="{ 'is-invalid': submitted && f['projectName'].errors }"
+                                                maxlength="50">
+                                            <div *ngIf="submitted && f['projectName'].errors" class="invalid-feedback">
+                                                <div *ngIf="f['projectName'].errors['required']">Project name is
+                                                    required
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="clientName" class="form-label">Client Name:</label>
-                                        <input type="text" class="form-control" id="clientName"
-                                            formControlName="clientName" placeholder="Enter Client Name"
-                                            [ngClass]="{ 'is-invalid': submitted && f['clientName'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['clientName'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['clientName'].errors['required']">Client name is required
+                                        <div class="col-xl-4">
+                                            <label for="clientName" class="form-label">Client Name:</label>
+                                            <input type="text" class="form-control" id="clientName"
+                                                formControlName="clientName" placeholder="Enter Client Name"
+                                                [ngClass]="{ 'is-invalid': submitted && f['clientName'].errors }"
+                                                maxlength="50">
+                                            <div *ngIf="submitted && f['clientName'].errors" class="invalid-feedback">
+                                                <div *ngIf="f['clientName'].errors['required']">Client name is required
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="businessCategory" class="form-label">Business Category:</label>
-                                        <select class="form-select" aria-label="Default select example" formControlName='businessCategory'
-                                            [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }">
-                                            <option value="" disabled selected>select type</option>
-                                            <option value="Commercial">Commercial</option>
-                                            <option value="Residential">Residential</option>  
-                                        </select>   
-                                        <div *ngIf="submitted && f['businessCategory'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['businessCategory'].errors['required']">Business Category is
-                                                required</div>
-                                        </div>
-                                        <!-- <input type="text" class="form-control" id="businessCategory"
+                                        <div class="col-xl-4">
+                                            <label for="businessCategory" class="form-label">Business Category:</label>
+                                            <select class="form-select" aria-label="Default select example"
+                                                formControlName='businessCategory'
+                                                [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }">
+                                                <option value="" disabled selected>select type</option>
+                                                <option value="Commercial">Commercial</option>
+                                                <option value="Residential">Residential</option>
+                                            </select>
+                                            <div *ngIf="submitted && f['businessCategory'].errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f['businessCategory'].errors['required']">Business Category
+                                                    is
+                                                    required</div>
+                                            </div>
+                                            <!-- <input type="text" class="form-control" id="businessCategory"
                                             formControlName="businessCategory" placeholder="Business Category"
                                             [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }"
                                             maxlength="50">
@@ -584,37 +600,40 @@
                                             <div *ngIf="f['businessCategory'].errors['required']">Business Category is
                                                 required</div>
                                         </div> -->
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="projectAddress" class="form-label">Project Address:</label>
-                                        <input type="text" class="form-control" id="projectAddress"
-                                            formControlName="projectAddress" placeholder="Enter Project Address"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectAddress'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['projectAddress'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectAddress'].errors['required']">Project Address is
-                                                required</div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="state" class="form-label">State:</label>
-                                        <input type="text" class="form-control" id="state" formControlName="state"
-                                            placeholder="Enter State"
-                                            [ngClass]="{ 'is-invalid': submitted && f['state'].errors }" maxlength="50">
-                                        <div *ngIf="submitted && f['state'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['state'].errors['required']">State is required</div>
+                                        <div class="col-xl-4">
+                                            <label for="projectAddress" class="form-label">Project Address:</label>
+                                            <input type="text" class="form-control" id="projectAddress"
+                                                formControlName="projectAddress" placeholder="Enter Project Address"
+                                                [ngClass]="{ 'is-invalid': submitted && f['projectAddress'].errors }"
+                                                maxlength="50">
+                                            <div *ngIf="submitted && f['projectAddress'].errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f['projectAddress'].errors['required']">Project Address is
+                                                    required</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="city" class="form-label">City:</label>
-                                        <input type="text" class="form-control" id="city" formControlName="city"
-                                            placeholder="Enter City"
-                                            [ngClass]="{ 'is-invalid': submitted && f['city'].errors }" maxlength="50">
-                                        <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['city'].errors['required']">City is required</div>
+                                        <div class="col-xl-4">
+                                            <label for="state" class="form-label">State:</label>
+                                            <input type="text" class="form-control" id="state" formControlName="state"
+                                                placeholder="Enter State"
+                                                [ngClass]="{ 'is-invalid': submitted && f['state'].errors }"
+                                                maxlength="50">
+                                            <div *ngIf="submitted && f['state'].errors" class="invalid-feedback">
+                                                <div *ngIf="f['state'].errors['required']">State is required</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- <div class="col-xl-4">
+                                        <div class="col-xl-4">
+                                            <label for="city" class="form-label">City:</label>
+                                            <input type="text" class="form-control" id="city" formControlName="city"
+                                                placeholder="Enter City"
+                                                [ngClass]="{ 'is-invalid': submitted && f['city'].errors }"
+                                                maxlength="50">
+                                            <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
+                                                <div *ngIf="f['city'].errors['required']">City is required</div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-xl-4">
                                         <label for="projectState" class="form-label">Project Stage:</label>
                                         <input type="text" class="form-control" id="projectState"
                                             formControlName="projectState" placeholder="Enter Project State"
@@ -625,330 +644,362 @@
                                             </div>
                                         </div>
                                     </div> -->
-                                    <div class="col-xl-4">
-                                        <label for="projectEstimation" class="form-label">Project Estimation:</label>
-                                        <input type="tel" class="form-control" id="projectEstimation" maxlength="10" 
-                                            formControlName="projectEstimation" placeholder="Enter Estimation"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectEstimation'].errors }"
-                                            onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                                        <div *ngIf="submitted && f['projectEstimation'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectEstimation'].errors['required']">Project Estimation is required</div>
+                                        <div class="col-xl-4">
+                                            <label for="projectEstimation" class="form-label">Project
+                                                Estimation:</label>
+                                            <input type="tel" class="form-control" id="projectEstimation" maxlength="10"
+                                                formControlName="projectEstimation" placeholder="Enter Estimation"
+                                                [ngClass]="{ 'is-invalid': submitted && f['projectEstimation'].errors }"
+                                                onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
+                                            <div *ngIf="submitted && f['projectEstimation'].errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f['projectEstimation'].errors['required']">Project
+                                                    Estimation is required</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="projectArea" class="form-label">Project Area (SFT):</label>
-                                        <input type="tel" class="form-control" id="projectArea"
-                                            formControlName="projectArea" placeholder="Enter Project Area"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectArea'].errors }"
-                                            maxlength="6">
-                                        <div *ngIf="submitted && f['projectArea'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectArea'].errors['required']">Project Area is required</div>
+                                        <div class="col-xl-4">
+                                            <label for="projectArea" class="form-label">Project Area (SFT):</label>
+                                            <input type="tel" class="form-control" id="projectArea"
+                                                formControlName="projectArea" placeholder="Enter Project Area"
+                                                [ngClass]="{ 'is-invalid': submitted && f['projectArea'].errors }"
+                                                maxlength="6">
+                                            <div *ngIf="submitted && f['projectArea'].errors" class="invalid-feedback">
+                                                <div *ngIf="f['projectArea'].errors['required']">Project Area is
+                                                    required</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- <mat-form-field appearance="fill">
+                                        <!-- <mat-form-field appearance="fill">
                                     <mat-label>Start Date</mat-label>
                                     <input matInput [matDatepicker]="startPicker" formControlName="projectStartDate" placeholder="Choose Start Date">
                                     <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
                                     <mat-datepicker #startPicker></mat-datepicker>
                                     </mat-form-field> -->
-                                    <div class="col-xl-4">
-                                        <label for="startDate" class="form-label">Start Date:</label>
-                                        <input type="date" class="form-control" id='startDate'
-                                            formControlName='projectStartDate'
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectStartDate'].errors }"
-                                            (change)="onStartDateChange($event)">
-                                        <div *ngIf="submitted && f['projectStartDate'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectStartDate'].errors['required']">Start Date is required
+                                        <div class="col-xl-4">
+                                            <label for="startDate" class="form-label">Start Date:</label>
+                                            <input type="date" class="form-control" id='startDate'
+                                                formControlName='projectStartDate'
+                                                [ngClass]="{ 'is-invalid': submitted && f['projectStartDate'].errors }"
+                                                (change)="onStartDateChange($event)">
+                                            <div *ngIf="submitted && f['projectStartDate'].errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f['projectStartDate'].errors['required']">Start Date is
+                                                    required
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="endDate" class="form-label">End Date:</label>
-                                        <input type="date" class="form-control" id='endDate'
-                                            formControlName='projectEndDate'
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectEndDate'].errors }"
-                                            [min]="minEndDate">
-                                        <div *ngIf="submitted && f['projectEndDate'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectEndDate'].errors['required']">End Date is required
+                                        <div class="col-xl-4">
+                                            <label for="endDate" class="form-label">End Date:</label>
+                                            <input type="date" class="form-control" id='endDate'
+                                                formControlName='projectEndDate'
+                                                [ngClass]="{ 'is-invalid': submitted && f['projectEndDate'].errors }"
+                                                [min]="minEndDate">
+                                            <div *ngIf="submitted && f['projectEndDate'].errors"
+                                                class="invalid-feedback">
+                                                <div *ngIf="f['projectEndDate'].errors['required']">End Date is required
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>  
-                                <!-- <mat-form-field appearance="fill">
+                                        <!-- <mat-form-field appearance="fill">
                                 <mat-label>End Date</mat-label>
                                 <input matInput [matDatepicker]="endPicker" formControlName="projectEndDate" placeholder="Choose End Date">
                                 <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
                                 <mat-datepicker #endPicker></mat-datepicker>
                                 </mat-form-field> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary btn-wave waves-effect waves-light" type="submit" (click)="onSubmit()"
+                    [disabled]="btnDisable">
+                    Create Project</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <!-- <button type="button" class="btn btn-primary">Create</button> -->
+            </div>
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary btn-wave waves-effect waves-light" type="submit" (click)="onSubmit()" [disabled]="btnDisable">
-                Create Project</button>
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-            <!-- <button type="button" class="btn btn-primary">Create</button> -->
-        </div>
-    </div>
-</ng-template>
-<!-- End:: row-3 -->
-<!-- Start Row-4 -->
-<ng-template #Content11 id="addtask" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">project details</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card custom-card">
-                        <!-- <div class="card-header">
+    </ng-template>
+    <!-- End:: row-3 -->
+    <!-- Start Row-4 -->
+    <ng-template #Content11 id="addtask" let-modal>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">project details</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card custom-card">
+                            <!-- <div class="card-header">
                     <div class="card-title">Create Project</div>
                     </div> -->
-                        <div class="card-body">
-                            <div class="row gy-3">
-                                <div class="col-xl-4">
-                                    <label for="projectName" class="form-label">Project Name</label>
-                                    <input type="text" class="form-control" id="projectName" [(ngModel)]="projectName" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="clientName" class="form-label">Client Name</label>
-                                    <input type="text" class="form-control" id="clientName" [(ngModel)]="clientName" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="businessCategory" class="form-label">Business Category:</label>
-                                    <!-- <ng-select class="ti-form-select !rounded-s-none" [(ngModel)]='businessCategory'
+                            <div class="card-body">
+                                <div class="row gy-3">
+                                    <div class="col-xl-4">
+                                        <label for="projectName" class="form-label">Project Name</label>
+                                        <input type="text" class="form-control" id="projectName"
+                                            [(ngModel)]="projectName" [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="clientName" class="form-label">Client Name</label>
+                                        <input type="text" class="form-control" id="clientName" [(ngModel)]="clientName"
+                                            [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="businessCategory" class="form-label">Business Category:</label>
+                                        <!-- <ng-select class="ti-form-select !rounded-s-none" [(ngModel)]='businessCategory'
                                         name="choices-multiple-remove-button" id="businessCategory" [multiple]="true">
                                         <ng-option value="Choice 1" selected>Commercial</ng-option>
                                         <ng-option value="Choice 2">Residential</ng-option>
                                     </ng-select> -->
-                                    <select class="form-select" aria-label="Default select example"  [(ngModel)]='businessCategory' [disabled]="true">
-                                        <option value="">select type</option>
-                                        <option value="Commercial">Commercial</option>
-                                        <option value="Residential">Residential</option>  
-                                    </select>
-                                    
-                                    <!-- <input type="text" class="form-control" id="businessCategory" formControlName="businessCategory" placeholder=""> -->
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="projectAddress" class="form-label">Project Address:</label>
-                                    <input type="text" class="form-control" id="projectAddress" [(ngModel)]="projectAddress" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="state" class="form-label">State:</label>
-                                    <input type="text" class="form-control" id="state" [(ngModel)]="state" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="city" class="form-label">City:</label>
-                                    <input type="text" class="form-control" id="city" [(ngModel)]="city" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="projectArea" class="form-label">Project Area:</label>
-                                    <input type="number" class="form-control" id="projectArea" [(ngModel)]="projectArea" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="action" class="form-label">Action:</label>
-                                    <input type="text" class="form-control" id="action" [(ngModel)]="action" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="designId" class="form-label">Design Id</label>
-                                    <input type="text" class="form-control" id="designId" [(ngModel)]="designId" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="companyName" class="form-label">Company Name:</label>
-                                    <input type="text" class="form-control" id="companyName" [(ngModel)]="companyName" [disabled]="true">
+                                        <select class="form-select" aria-label="Default select example"
+                                            [(ngModel)]='businessCategory' [disabled]="true">
+                                            <option value="">select type</option>
+                                            <option value="Commercial">Commercial</option>
+                                            <option value="Residential">Residential</option>
+                                        </select>
+
+                                        <!-- <input type="text" class="form-control" id="businessCategory" formControlName="businessCategory" placeholder=""> -->
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="projectAddress" class="form-label">Project Address:</label>
+                                        <input type="text" class="form-control" id="projectAddress"
+                                            [(ngModel)]="projectAddress" [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="state" class="form-label">State:</label>
+                                        <input type="text" class="form-control" id="state" [(ngModel)]="state"
+                                            [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="city" class="form-label">City:</label>
+                                        <input type="text" class="form-control" id="city" [(ngModel)]="city"
+                                            [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="projectArea" class="form-label">Project Area:</label>
+                                        <input type="number" class="form-control" id="projectArea"
+                                            [(ngModel)]="projectArea" [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="action" class="form-label">Action:</label>
+                                        <input type="text" class="form-control" id="action" [(ngModel)]="action"
+                                            [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="designId" class="form-label">Design Id</label>
+                                        <input type="text" class="form-control" id="designId" [(ngModel)]="designId"
+                                            [disabled]="true">
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <label for="companyName" class="form-label">Company Name:</label>
+                                        <input type="text" class="form-control" id="companyName"
+                                            [(ngModel)]="companyName" [disabled]="true">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-        </div>
-    </div>
-</ng-template>
-<!-- End row-4 -->
-<!-- Start Row 5 -->
-<ng-template #Content12 id="addtask" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Project Estimation</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>Stage of Payment</th>
-                    <th>Percentage</th>
-                    <th>Amount to be Recieved</th>
-                    <th>Received Amount</th>
-                    <th>Pending Amount</th>
-                    <th>Updated By</th>
-                    <th>Updated Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <!-- <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.paymentStage" 
-                      placeholder="Enter Stage" [disabled]="!payment.isNew" (ngModelChange)="validateField(i, 'paymentStage')"> -->
-                  <tr *ngFor="let payment of paymentStages; let i=index">
-                    <td style="width:15%">
-                        <select class="form-select form-select-sm" [(ngModel)]="payment.paymentStage" 
-                            [disabled]="!payment.isNew" (ngModelChange)="updatePercent(payment); validateField(i, 'paymentStage')">
-                            <option value="" disabled selected>Select</option>
-                            <option *ngFor="let c of dynamicPmntFields" [value]="c.value"
-                            [disabled]="isValueSelected(c.value, i)">{{c.value}}</option>
-                        </select>
-                    </td>
-                    <td style="width:5%">
-                      <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.percantage" placeholder="Enter Percentage"
-                        (ngModelChange)="validateField(i, 'percantage');onPercentageChange(payment)" 
-                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                        [disabled]="true">
-                    </td>
-                    <td style="width:12%">
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.amountToBeRecieved" placeholder="Enter Amount"
-                          [disabled]="true">
-                    </td>
-                    <td style="width:12%">
-                      <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.receivedAmount" placeholder="Enter Received Amount"
-                        [disabled]="!payment.amountToBeRecieved || !payment.percantage || !payment.paymentStage || !payment.isNew" 
-                        (ngModelChange)="calculatePendingAmount(payment)" onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                    </td>
-                    <td  style="width:12%">
-                      <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.pendingAmount" placeholder="Enter Pending Amount"
-                        [disabled]="true" (ngModelChange)="validateField(i, 'pendingAmount')">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.updatedBy" [disabled]="true">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm" [disabled]="true" 
-                        [value]="payment.updatedTime ? (payment.updatedTime | date:'dd-MM-yyyy hh:mm a') : ''">
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            <button class="btn btn-primary btn-sm mt-2" (click)="addRow()" [disabled]='isPercentageLimitReached()'>Add Row</button>
-            <div class="row gy-4 mt-2 justify-content-center">
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                    <p class="mb-2 text-dark">Project Estimation</p>
-                    <input type="text" class="form-control" id="input" [(ngModel)]="estamount" [disabled]="true">
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                    <p class="mb-2 text-dark">Total Amount to be Received</p>
-                    <input type="text" class="form-control" id="input" [(ngModel)]="ttlAmtToBeRcvd" [disabled]="true">
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                    <p class="mb-2 text-dark">Total amount Received</p>
-                    <input type="text" class="form-control" id="input" [(ngModel)]="totalReceivedAmount" [disabled]="true">
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                    <p class="mb-2 text-dark">Total Pending amount</p>
-                    <input type="text" class="form-control" id="input" [(ngModel)]="lastPendingAmount" [disabled]="true">
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="savePaymentDetails()">Submit</button>
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-        </div>
-    </div>
-</ng-template>
-<!-- End Row 5 -->
-  
-<ng-template #content let-offcanvas>
-    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
-      <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Design Stages</strong></h5>
-      <button type="button" class="btn btn-primary float-end" (click)="addMoreFields()">
-        Add More <i class="ri-add-line align-middle me-1 fw-medium"></i>
-      </button>
-      <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body p-0 ">
-      <ul class="list-group list-group-flush mb-0">
-        <div class="p-3">
-            <div class="mb-2">
-                <input class="form-check-input" type="checkbox"
-                        id="checkboxNoLabel1" value="" aria-label="...">
-                    <label for="" class="ms-2">WALL AND DEMOLITION PLAN</label>
-            </div>
-            <div class="mb-2">
-                <input class="form-check-input" type="checkbox"
-                    id="checkboxNoLabel1" value="" aria-label="...">
-                <label for="" class="ms-2">PROPOSED FURNITURE PLAN</label>
-            </div>
-            <div class="mb-2">
-                <input class="form-check-input" type="checkbox"
-                    id="checkboxNoLabel1" value="" aria-label="...">
-                <label for="" class="ms-2">FLOORING PLAN</label>
-            </div>
-            <div class="mb-2">
-                <input class="form-check-input" type="checkbox"
-                    id="checkboxNoLabel1" value="" aria-label="...">
-                <label for="" class="ms-2">ELECTRICAL PLAN</label>
-            </div>
-            <div class="mb-2">
-                <input class="form-check-input" type="checkbox"
-                    id="checkboxNoLabel1" value="" aria-label="...">
-                <label for="" class="ms-2">MOODBOARD AND RENDERS</label>
-            </div>
-        </div>
-        <div *ngFor="let field of fields; let i = index" class="d-flex align-items-center justify-content-between p-2">
-            <label class="me-2 w-25">Field {{i + 1}}</label>
-            <input type="text" class="form-control me-2" [(ngModel)]="field.value" placeholder="Enter value" />
-            <button type="button" class="btn btn-danger btn-sm" (click)="deleteField(i)">
-              Delete
-            </button>
-          </div>
-      </ul>
-    </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary mr-3" type="submit">Save Stages</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
-        </div>
-    </div>
-</ng-template>
-
-  
-<div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345" 
-    data-bs-keyboard="false" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    </ng-template>
+    <!-- End row-4 -->
+    <!-- Start Row 5 -->
+    <ng-template #Content12 id="addtask" let-modal>
         <div class="modal-content">
-            <ng-template #content4 let-modal>
-                <div class="modal-header justify-content-center">
-                    <h6 class="modal-title" id="staticBackdropLabel3">Adonai Information </h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                        (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Project Estimation</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Stage of Payment</th>
+                            <th>Percentage</th>
+                            <th>Amount to be Recieved</th>
+                            <th>Received Amount</th>
+                            <th>Pending Amount</th>
+                            <th>Updated By</th>
+                            <th>Updated Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.paymentStage" 
+                      placeholder="Enter Stage" [disabled]="!payment.isNew" (ngModelChange)="validateField(i, 'paymentStage')"> -->
+                        <tr *ngFor="let payment of paymentStages; let i=index">
+                            <td style="width:15%">
+                                <select class="form-select form-select-sm" [(ngModel)]="payment.paymentStage"
+                                    [disabled]="!payment.isNew"
+                                    (ngModelChange)="updatePercent(payment); validateField(i, 'paymentStage')">
+                                    <option value="" disabled selected>Select</option>
+                                    <option *ngFor="let c of dynamicPmntFields" [value]="c.value"
+                                        [disabled]="isValueSelected(c.value, i)">{{c.value}}</option>
+                                </select>
+                            </td>
+                            <td style="width:5%">
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.percantage"
+                                    placeholder="Enter Percentage"
+                                    (ngModelChange)="validateField(i, 'percantage');onPercentageChange(payment)"
+                                    onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                                    [disabled]="true">
+                            </td>
+                            <td style="width:12%">
+                                <input type="text" class="form-control form-control-sm"
+                                    [(ngModel)]="payment.amountToBeRecieved" placeholder="Enter Amount"
+                                    [disabled]="true">
+                            </td>
+                            <td style="width:12%">
+                                <input type="text" class="form-control form-control-sm"
+                                    [(ngModel)]="payment.receivedAmount" placeholder="Enter Received Amount"
+                                    [disabled]="!payment.amountToBeRecieved || !payment.percantage || !payment.paymentStage || !payment.isNew"
+                                    (ngModelChange)="calculatePendingAmount(payment)"
+                                    onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
+                            </td>
+                            <td style="width:12%">
+                                <input type="text" class="form-control form-control-sm"
+                                    [(ngModel)]="payment.pendingAmount" placeholder="Enter Pending Amount"
+                                    [disabled]="true" (ngModelChange)="validateField(i, 'pendingAmount')">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.updatedBy"
+                                    [disabled]="true">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" [disabled]="true"
+                                    [value]="payment.updatedTime ? (payment.updatedTime | date:'dd-MM-yyyy hh:mm a') : ''">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary btn-sm mt-2" (click)="addRow()"
+                    [disabled]='isPercentageLimitReached()'>Add Row</button>
+                <div class="row gy-4 mt-2 justify-content-center">
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                        <p class="mb-2 text-dark">Project Estimation</p>
+                        <input type="text" class="form-control" id="input" [(ngModel)]="estamount" [disabled]="true">
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                        <p class="mb-2 text-dark">Total Amount to be Received</p>
+                        <input type="text" class="form-control" id="input" [(ngModel)]="ttlAmtToBeRcvd"
+                            [disabled]="true">
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                        <p class="mb-2 text-dark">Total amount Received</p>
+                        <input type="text" class="form-control" id="input" [(ngModel)]="totalReceivedAmount"
+                            [disabled]="true">
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                        <p class="mb-2 text-dark">Total Pending amount</p>
+                        <input type="text" class="form-control" id="input" [(ngModel)]="lastPendingAmount"
+                            [disabled]="true">
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12 col-lg-12 col-md-12">
-                            <label for="contact-phone" class="form-label">Executive</label>
-                            <ng-select formControlName="executive"  bindLabel="email" bindValue="email"
-                                placeholder="Select an Executive">
-                            </ng-select>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="savePaymentDetails()">Submit</button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+            </div>
+        </div>
+    </ng-template>
+    <!-- End Row 5 -->
+
+    <ng-template #content let-offcanvas>
+        <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Design Stages</strong></h5>
+            <button type="button" class="btn btn-primary float-end" (click)="addMoreFields()">
+                Add More <i class="ri-add-line align-middle me-1 fw-medium"></i>
+            </button>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0 ">
+            <ul class="list-group list-group-flush mb-0">
+                <div class="p-3">
+                    <div class="mb-2">
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="...">
+                        <label for="" class="ms-2">WALL AND DEMOLITION PLAN</label>
+                    </div>
+                    <div class="mb-2">
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="...">
+                        <label for="" class="ms-2">PROPOSED FURNITURE PLAN</label>
+                    </div>
+                    <div class="mb-2">
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="...">
+                        <label for="" class="ms-2">FLOORING PLAN</label>
+                    </div>
+                    <div class="mb-2">
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="...">
+                        <label for="" class="ms-2">ELECTRICAL PLAN</label>
+                    </div>
+                    <div class="mb-2">
+                        <input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="...">
+                        <label for="" class="ms-2">MOODBOARD AND RENDERS</label>
+                    </div>
+                </div>
+                <div *ngFor="let field of fields; let i = index"
+                    class="d-flex align-items-center justify-content-between p-2">
+                    <label class="me-2 w-25">Field {{i + 1}}</label>
+                    <input type="text" class="form-control me-2" [(ngModel)]="field.value" placeholder="Enter value" />
+                    <button type="button" class="btn btn-danger btn-sm" (click)="deleteField(i)">
+                        Delete
+                    </button>
+                </div>
+            </ul>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3" type="submit">Save Stages</button>
+                <button class="btn btn-secondary" type="button"
+                    (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            </div>
+        </div>
+    </ng-template>
+
+
+    <div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
+        data-bs-keyboard="false" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <ng-template #content4 let-modal>
+                    <form [formGroup]="inventoryForm" (ngSubmit)="onInventorySubmit(modal)">
+                        <div class="modal-header justify-content-center">
+                            <h6 class="modal-title" id="staticBackdropLabel3">Adonai Information </h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
                         </div>
-                    </div>                      
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary">Update</button>
-                    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-                        data-bs-dismiss="modal">Close</button>
-                </div>
-            </ng-template>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12 col-md-12">
+                                    <label for="contact-phone" class="form-label">Project</label>
+                                    <ng-select formControlName="designId"  [items]="projectList" bindLabel="name" bindValue="designId"
+                                        placeholder="Select Project" [ngClass]="{ 'is-invalid': inventorySubmitted && i['designId'].errors }">
+                                    </ng-select>
+                                    <div *ngIf="inventorySubmitted && i['designId'].errors" class="invalid-feedback">
+                                        <div *ngIf="i['designId'].errors['required']">Project is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-secondary">Update</button>
+                            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                                data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </ng-template>
+            </div>
         </div>
     </div>
-</div>   
