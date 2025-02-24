@@ -34,6 +34,11 @@
                     style="background-color: #006699; color: white;"  aria-expanded="false" (click)="onClkDesign()"
                     type="button" [disabled]="(roleid == 7 && dateDiff == '0') || (roleid == 12 && actstatus == false)">
                     Click to Explore Endless Designs </button>
+                    <button class="btn button btn-wave btn-w-lg font-weight-bold" 
+                    style="background-color: #006699; color: white;" type="button"
+                    data-bs-toggle="modal" 
+                        data-bs-target="#exampleModalLg" (click)="openLg1(content4)">
+                    Quotation </button>
             </div>
         </div>
     </div>
@@ -918,5 +923,32 @@
 </ng-template>
 
   
-  
-
+<div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345" 
+    data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <ng-template #content4 let-modal>
+                <div class="modal-header justify-content-center">
+                    <h6 class="modal-title" id="staticBackdropLabel3">Adonai Information </h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12 col-md-12">
+                            <label for="contact-phone" class="form-label">Executive</label>
+                            <ng-select formControlName="executive"  bindLabel="email" bindValue="email"
+                                placeholder="Select an Executive">
+                            </ng-select>
+                        </div>
+                    </div>                      
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary">Update</button>
+                    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                        data-bs-dismiss="modal">Close</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>   

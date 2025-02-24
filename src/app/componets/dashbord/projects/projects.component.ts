@@ -88,7 +88,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   modal: any; ttlAmtToBeRcvd: any; projectLst: any; userDetails:any; dateDiff: any; 
   roleid:any;  actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup;
-  pondOptions: FilePondOptions; lastField:any;
+  pondOptions: FilePondOptions; lastField:any; ProDataList:any
   
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ?  this.matcardLst?.slice(0, 4) : this.matcardLst;
@@ -118,9 +118,12 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
       alert('Please add stages percentage before creating a project')
     }else {
       this.resetForm();
-      this.modalService.open(content10, { size: 'lg' },);
+      this.modalService.open(content10, { size: 'lg', centered: true },);
     }
 	}
+  openLg1(content4: any) {
+    this.modalService.open(content4, {size: 'sm',  centered: true},);
+  }
 
   openRights(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
@@ -487,6 +490,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit,AfterView
     },
     })
   }
+  
 
   onProjectDetails(data:any){
     this.projectName = data.projectName; this.clientName = data.clientName; this.businessCategory = data.businessCategory;

@@ -57,6 +57,7 @@ export class SwitherService {
   onAdonaiView(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/fetch_data_adonai/${email}`); }
   onAdonaiUpdate(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/update_subscription`, data); }
   adonaiHstry(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/sub_scription_history/${email}`); }
+  userInfo(email:any): Observable<any> { return this.http.get(`${this.apiUrl}auth/fetch_user_info/${email}`); }
   // super admin Crm apis 
   onCrmView(email:any): Observable<any> { return this.http.get(`${this.apiUrl}auth/fetch_data_crm/${email}`); }
   onCrmUpdate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/update_subscription_crm`, data); }
@@ -83,6 +84,7 @@ export class SwitherService {
   optimizeImportData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}enterprise/optimize`, data); }
   GeneratedOutput(value:any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/generated_output/${value}`); } 
   optimizeDownload(optimizeId:any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/generated_output/${optimizeId}`); }
+  ProjectDataList(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}elite/getProjectDataList?email=${email}`); }
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
   CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  
