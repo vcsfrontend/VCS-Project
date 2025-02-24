@@ -253,7 +253,8 @@
                             </ul>
                         </div>
                         <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button">
-                            <i class="ri-heart-3-fill text-danger"></i>
+                            <i class="fe fe-eye text-muted" (click)="openRight(content2)"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i>
                         </button>
                     </div>
                 </div>
@@ -541,5 +542,29 @@
                 </div>
             </li>
         </ul>
+    </div>
+</ng-template>
+<ng-template #content2 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+      <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>User Info</strong></h5>
+      <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="card custom-card border">
+            <div class="card-body">
+                <div class="p-3 text-dark" id="pill-flex-home" role="tabpanel">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><span class="fw-semibold me-1">name : </span>pavan</li>
+                        
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
     </div>
 </ng-template>
