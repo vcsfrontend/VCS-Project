@@ -356,7 +356,7 @@ export class BaseComponent {
       {"name":"w"},
     ]
 
-    strategy = [{"name":"Stock efficiency"},
+    strategy = [{"name":"efficiency"},
       {"name":"time efficiency"}
     ]
 
@@ -368,8 +368,8 @@ export class BaseComponent {
       {"name":"identical Parts"}
     ]
     Grain = [{"name":"nill"},
-      {"name":"Horizontal"},
-      {"name":"Vertical"}
+      {"name":"l"},
+      {"name":"w"}
     ]
     Xtype = [{"name":"Sheet"},
       {"name":"Linear"},

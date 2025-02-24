@@ -715,9 +715,8 @@
                 </div>
                 <div class="col-xl-3">
                     <label class="form-label my-2">primary Compression</label>
-                    <ng-select [items]="primaryCompression" bindLabel="name" bindValue="name" placeholder="string"
-                        formControlName="primaryCompression">
-                    </ng-select>
+                    <input type="text" class="form-control" id="primarycompression" placeholder="string"
+                    formControlName="primarycompression">
                 </div>
             </div>
             <div class="col-xl-3">
@@ -769,9 +768,10 @@
                 </div>
                 <div class="col-xl-3 col-auto">
                     <label for="material" class="form-label my-2">Material</label>
-                    <ng-select [items]="material" bindLabel="name" bindValue="name" placeholder="Select an option"
+                    <input type="text" class="form-control" id="t" placeholder="string" formControlName="material">
+                    <!-- <ng-select [items]="material" bindLabel="name" bindValue="name" placeholder="Select an option"
                         formControlName="material">
-                    </ng-select>
+                    </ng-select> -->
                 </div>
                 <div class="col-xl-3">
                     <label for="q" class="form-label my-2">Quantity</label>
@@ -954,3 +954,299 @@
         <button type="submit" class="btn btn-primary mt-3" (click)="optimizerFormSubmitSubmit()">Submit</button>
     </div>
 </form>
+
+<div class="multi-step-form">
+    <form [formGroup]="optimizerForm" (ngSubmit)="submitForm()">
+        <!-- Step 1 -->
+        <div *ngIf="stepIndex === 0" formGroupName="step1">
+        <h3>Step 1: Saw</h3>
+        <div formGroupName="saw" class="row">
+            <div class="col-xl-3 col-auto">
+                <label for="BladeWidth" class="form-label my-2">Blade Width</label>
+                <input type="number" class="form-control" id="bladeWidth" formControlName="bladeWidth"
+                    placeholder="number">
+            </div>
+            <div class="col-xl-3 col-auto">
+                <label for="task-name" class="form-label my-2">StockType</label>
+                <ng-select formControlName="stockType" [items]="stockType" bindLabel="name" bindValue="name"
+                    placeholder="string">
+                </ng-select>
+            </div>
+            <div class="col-xl-3 col-auto">
+                <label for="task-name" class="form-label my-2">CutType</label>
+                <ng-select formControlName="cutType" [items]="cutType" bindLabel="name" bindValue="name"
+                    placeholder="string">
+                </ng-select>
+            </div>
+            <div class="col-xl-3 col-auto">
+                <label for="task-name" class="form-label my-2">CutPreference</label>
+                <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name" bindValue="name"
+                    placeholder="string">
+                </ng-select>
+            </div>
+            <div formGroupName="guillotineOptions" class="row">
+                <div class="card-title my-2">
+                    guillotineOptions
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label class="form-label my-2">Strategy</label>
+                    <ng-select [items]="strategy" bindLabel="name" bindValue="name" placeholder="string"
+                        formControlName="strategy">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">MaxPhase</label>
+                    <input type="number" class="form-control" id="maxPhase" placeholder="number"
+                        formControlName="maxPhase">
+                </div>
+            </div>
+            <div formGroupName="efficiencyOptions" class="row">
+                <div class="card-title my-2">
+                    EfficiencyOptions
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">primary Compression</label>
+                    <input type="text" class="form-control" id="primarycompression" placeholder="string"
+                    formControlName="primarycompression">
+                </div>
+            </div>
+            <div class="col-xl-3">
+                <label class="form-label my-2">stackHeight</label>
+                <input type="number" class="form-control" id="stackHeight" placeholder="number"
+                    formControlName="stackHeight">
+            </div>
+            <div formGroupName="options" class="row">
+                <div class="card-title my-2">
+                    Options
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">StockSelection</label>
+                    <ng-select [items]="StockSelection" bindLabel="name" bindValue="name" placeholder="string"
+                        formControlName="stockSelection">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">minSpacing</label>
+                    <input type="number" class="form-control" id="minSpacing" placeholder="number"
+                        formControlName="minSpacing">
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">stackingMode</label>
+                    <ng-select [items]="stackingMode" bindLabel="name" bindValue="name" placeholder="string"
+                        formControlName="stackingMode">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <button type="button" (click)="nextStep()">Next</button>
+        </div>
+
+        <!-- Step 2 -->
+        <div *ngIf="stepIndex === 1" formGroupName="step2">
+        <h3>Step 2: Stock</h3>
+        <div formArrayName="stock">
+            <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i" class="row">
+                <div class="col-xl-3 col-auto">
+                    <label for="name" class="form-label my-2">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="string" formControlName="name">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="task-name" class="form-label my-2">Length</label>
+                    <input type="number" class="form-control" id="task-name" placeholder="number" formControlName="l">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="w" class="form-label my-2">Width</label>
+                    <input type="number" class="form-control" id="w" placeholder="number" formControlName="w">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="t" class="form-label my-2">Thickness</label>
+                    <input type="number" class="form-control" id="t" placeholder="number" formControlName="t">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="material" class="form-label my-2">Material</label>
+                    <input type="text" class="form-control" id="t" placeholder="string" formControlName="material">
+                </div>
+                <div class="col-xl-3">
+                    <label for="q" class="form-label my-2">Quantity</label>
+                    <input type="number" class="form-control" id="q" placeholder="number" formControlName="q">
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">autoAdd</label>
+                    <ng-select [items]="autoAdd" bindLabel="name" bindValue="name" placeholder="Select an option"
+                        formControlName="autoAdd">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">Grain</label>
+                    <ng-select [items]="Grain" bindLabel="name" bindValue="name" placeholder="string"
+                        formControlName="grain">
+                    </ng-select>
+                </div>
+                <div formGroupName="trim" class="row">
+                    <div class="card-title my-2">
+                        Trim
+                    </div>
+                    <div class="col-xl-4">
+                        <label class="form-label my-2">x1</label>
+                        <input type="number" class="form-control" id="x1" placeholder="number" formControlName="x1">
+                    </div>
+                    <div class="col-xl-4">
+                        <label class="form-label my-2">x2</label>
+                        <input type="number" class="form-control" id="x2" placeholder="number" formControlName="x2">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label my-2">y1</label>
+                        <input type="number" class="form-control" id="y1" placeholder="number" formControlName="y1">
+
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label my-2">y2</label>
+                        <input type="number" class="form-control" id="y2" placeholder="number" formControlName="y2">
+
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <label class="form-label my-2">allowExactFitShapes</label>
+                    <ng-select [items]="allowExactFitShapes" bindLabel="name" bindValue="name" placeholder="string"
+                        formControlName="allowExactFitShapes">
+                    </ng-select>
+                </div>
+                <div class="col-xl-4">
+                    <label class="form-label my-2">cost</label>
+                    <input type="number" class="form-control" id="cost" placeholder="Cost" formControlName="cost">
+                </div>
+                <div class="col-xl-4">
+                    <label class="form-label my-2">notes</label>
+                    <input type="text" class="form-control" id="notes" placeholder="notes" formControlName="notes">
+                </div>
+
+            </div>
+        </div>
+        
+        <button type="button" (click)="prevStep()">Back</button>
+        <button type="button" (click)="nextStep()">Next</button>
+        </div>
+
+        <!-- Step 3 -->
+        <div *ngIf="stepIndex === 2" formGroupName="step3">
+        <h3>Step 3: Parts</h3>
+        <div formArrayName="parts">
+            <div *ngFor="let partGroup of parts.controls; let i = index" [formGroupName]="i" class="row">
+                <div class="col-xl-3 col-auto">
+                    <label for="task-name" class="form-label my-2">Name</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Name" formControlName="name">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="task-name" class="form-label my-2">Length</label>
+                    <input type="number" class="form-control" id="task-name" placeholder="length" formControlName="l">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="task-name" class="form-label my-2">Width</label>
+                    <input type="number" class="form-control" id="task-name" placeholder="Width" formControlName="w">
+                </div>
+
+                <div class="col-xl-3 col-auto">
+                    <label for="task-name" class="form-label my-2">Thickness</label>
+                    <input type="number" class="form-control" id="task-name" placeholder="number" formControlName="t">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="task-name" class="form-label my-2">material</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="material"
+                        formControlName="material">
+                </div>
+                <div class="col-xl-3 col-auto">
+                    <label for="task-name" class="form-label my-2">q</label>
+                    <input type="number" class="form-control" id="task-name" placeholder="q" formControlName="q">
+                </div>
+                <div formGroupName="banding" class="row">
+                    <div class="card-title my-2">
+                        banding
+                    </div>
+                    <div class="col-xl-4">
+                        <label class="form-label my-2">x1</label>
+                        <ng-select [items]="X1" bindLabel="name" bindValue="name" placeholder="string"
+                            formControlName="x1">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">X2</label>
+                        <ng-select [items]="X2" bindLabel="name" bindValue="name" placeholder="string"
+                            formControlName="x2">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">Y1</label>
+                        <ng-select [items]="Y1" bindLabel="name" bindValue="name" placeholder="string"
+                            formControlName="y1">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">Y2</label>
+                        <ng-select [items]="Y2" bindLabel="name" bindValue="name" placeholder="string"
+                            formControlName="y2">
+                        </ng-select>
+                    </div>
+                </div>
+                <div formGroupName="trim" class="row">
+                    <div class="card-title my-2">
+                        trim
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">x1</label>
+                        <input type="number" class="form-control" id="task-name" placeholder="x1" formControlName="x1">
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">x2</label>
+                        <input type="number" class="form-control" id="task-name" placeholder="x2" formControlName="x2">
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">y1</label>
+                        <input type="number" class="form-control" id="task-name" placeholder="y1" formControlName="y1">
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">y2</label>
+                        <input type="number" class="form-control" id="task-name" placeholder="y2" formControlName="y2">
+                    </div>
+                </div>
+                <div formGroupName="finish" class="row">
+                    <div class="card-title my-2">
+                        Finish
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label my-2">a</label>
+                        <input type="text" class="form-control" id="task-name" placeholder="a" formControlName="a">
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label my-2">b</label>
+                        <input type="text" class="form-control" id="task-name" placeholder="b" formControlName="b">
+                    </div>
+                </div>
+                <div class="col-xl-3">
+                    <label class="form-label my-2">orientationLock</label>
+                    <ng-select [items]="orientationLock" bindLabel="name" bindValue="name"
+                        placeholder="Select an option" formControlName="orientationLock">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3  col-auto">
+                    <label for="contact-address-address" class="form-label">Notes</label>
+                    <textarea class="form-control" id="contact-address-address" rows="1" placeholder="Notes"
+                        formControlName="notes"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-3">
+                <label class="form-label my-2">webhook</label>
+                <input type="text" class="form-control" id="task-name" placeholder="webhook" formControlName="webhook">
+            </div>
+        </div>
+        <button type="button" (click)="prevStep()">Back</button>
+        <a href="javascript:void(0);" download class="btn btn-danger mt-3 me-3" (click)="downloadOptimizerFile()"
+            *ngIf="optimizeId>0">
+            <i class="bi bi-file-pdf-fill"></i> Download PDF
+        </a>
+        <button type="submit"  (click)="optimizerFormSubmitSubmit()">Submit</button>
+        </div>
+
+    </form>
+</div>
