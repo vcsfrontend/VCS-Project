@@ -8,7 +8,7 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { CommonModule } from '@angular/common';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrService } from 'ngx-toastr';
-import { MatPaginator,MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +21,7 @@ import { MatTableModule } from '@angular/material/table';
   selector: 'app-optimizer',
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
-    CommonModule,MatSortModule,MatFormFieldModule, MatSelectModule,MatSortModule,MatCheckboxModule,MatTableModule,
+    CommonModule, MatSortModule, MatFormFieldModule, MatSelectModule, MatSortModule, MatCheckboxModule, MatTableModule,
     MatPaginatorModule
   ],
   templateUrl: './optimizer.component.html',
@@ -33,32 +33,21 @@ export class OptimizerComponent extends BaseComponent {
   public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
   public optimizeId: any = '';
+  public optimizeFormSample!: FormGroup;
+  public stepIndex = 1;
   Selection = [
     { value: 1, label: 'English' },
     { value: 2, label: 'French' },
     { value: 3, label: 'Arabic' },
     { value: 4, label: 'Hindi' },
   ];
-  form: FormGroup;
-  
+
+
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
     super();
-    this.form = this.fb.group({
-      step1: this.fb.group({
-        
-      }),
-      step2: this.fb.group({
-        
-      }),
-      step3: this.fb.group({
-        
-      })
-    });
   }
 
   ngOnInit(): void {
-    optimizerForm: FormGroup;
-    this.stepIndex = 0;
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
         bladeWidth: [0, Validators.required],
@@ -131,6 +120,81 @@ export class OptimizerComponent extends BaseComponent {
       groups: this.fb.array([]),
       webhook: ['']
     });
+
+
+    this.optimizeFormSample = this.fb.group({
+      saw: this.fb.group({
+        bladeWidth: [0, Validators.required],
+        stockType: [''],
+        cutType: [''],
+        cutPreference: [''],
+        guillotineOptions: this.fb.group({
+          strategy: [''],
+          maxPhase: [0]
+        }),
+        efficiencyOptions: this.fb.group({
+          primaryCompression: ['']
+        }),
+        stackHeight: [0],
+        options: this.fb.group({
+          stockSelection: [''],
+          minSpacing: [0],
+          stackingMode: ['']
+        })
+      }),
+      stock: this.fb.array([
+        this.fb.group({
+          name: [''],
+          l: [0],
+          w: [0],
+          t: [0],
+          material: [''],
+          q: [0],
+          autoAdd: [''],
+          grain: [''],
+          trim: this.fb.group({
+            x1: [0],
+            x2: [0],
+            y1: [0],
+            y2: [0]
+          }),
+          allowExactFitShapes: [true],
+          cost: [0],
+          notes: ['']
+        })
+      ]),
+      parts: this.fb.array([
+        this.fb.group({
+          name: [''],
+          l: [0],
+          w: [0],
+          t: [0],
+          material: [''],
+          q: [0],
+          banding: this.fb.group({
+            x1: [true],
+            x2: [true],
+            y1: [true],
+            y2: [true]
+          }),
+          trim: this.fb.group({
+            x1: [0],
+            x2: [0],
+            y1: [0],
+            y2: [0]
+          }),
+          finish: this.fb.group({
+            a: [''],
+            b: ['']
+          }),
+          orientationLock: [''],
+          notes: ['']
+        })
+      ]),
+      groups: this.fb.array([]),
+      webhook: ['']
+    });
+
   }
 
   onSubmit() {
@@ -200,9 +264,9 @@ export class OptimizerComponent extends BaseComponent {
 
   downloadOptimizerFile() {
     this.switchService.optimizeDownload(this.optimizeId).subscribe({
-      next: (res: any) => {        
+      next: (res: any) => {
         if (res) {
-          window.open(res.url, '_blank');      
+          window.open(res.url, '_blank');
 
         } else {
           this.toastr.error(res.message);
@@ -214,29 +278,21 @@ export class OptimizerComponent extends BaseComponent {
     })
   }
 
-  stepIndex = 0;
-  nextStep() : void {
-    const stepControls = this.getStepGroup(this.stepIndex);
-    if (stepControls?.valid && this.stepIndex < 2) {
-      this.stepIndex++;
-    } else {
-      stepControls?.markAllAsTouched();
-    }
+
+  nextStep(id: any): void {
+    this.stepIndex = id;
+
   }
-  prevStep() : void {
-    if (this.stepIndex > 0) {
-      this.stepIndex--;
-    }
+  prevStep(id: any): void {
+    this.stepIndex = id;
   }
-  getStepGroup(index: number): FormGroup {
-    return this.form.get(`step${index + 1}`) as FormGroup;
-  }
-  submitForm() : void {
-    if (this.form.valid) {
-      console.log('Form Data:', this.form.value);
+
+  submitForm(): void {
+    if (this.optimizeFormSample.valid) {
+      console.log('Form Data:', this.optimizeFormSample.value);
       alert('Form Submitted Successfully!');
     } else {
-      this.getStepGroup(this.stepIndex)?.markAllAsTouched();
+
     }
   }
 }

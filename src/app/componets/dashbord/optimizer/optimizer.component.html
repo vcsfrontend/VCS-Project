@@ -956,9 +956,9 @@
 </form>
 
 <div class="multi-step-form">
-    <form [formGroup]="optimizerForm" (ngSubmit)="submitForm()">
+    <form [formGroup]="optimizeFormSample" (ngSubmit)="submitForm()">
         <!-- Step 1 -->
-        <div *ngIf="stepIndex === 0" formGroupName="step1">
+        <div *ngIf="stepIndex === 1">
         <h3>Step 1: Saw</h3>
         <div formGroupName="saw" class="row">
             <div class="col-xl-3 col-auto">
@@ -1038,11 +1038,11 @@
                 </div>
             </div>
         </div>
-        <button type="button" (click)="nextStep()">Next</button>
+        <button type="button" (click)="nextStep(2)">Next</button>
         </div>
 
         <!-- Step 2 -->
-        <div *ngIf="stepIndex === 1" formGroupName="step2">
+        <div *ngIf="stepIndex === 2">
         <h3>Step 2: Stock</h3>
         <div formArrayName="stock">
             <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i" class="row">
@@ -1123,12 +1123,12 @@
             </div>
         </div>
         
-        <button type="button" (click)="prevStep()">Back</button>
-        <button type="button" (click)="nextStep()">Next</button>
+        <button type="button" (click)="prevStep(1)">Back</button>
+        <button type="button" (click)="nextStep(3)">Next</button>
         </div>
 
         <!-- Step 3 -->
-        <div *ngIf="stepIndex === 2" formGroupName="step3">
+        <div *ngIf="stepIndex === 3">
         <h3>Step 3: Parts</h3>
         <div formArrayName="parts">
             <div *ngFor="let partGroup of parts.controls; let i = index" [formGroupName]="i" class="row">
@@ -1240,12 +1240,12 @@
                 <input type="text" class="form-control" id="task-name" placeholder="webhook" formControlName="webhook">
             </div>
         </div>
-        <button type="button" (click)="prevStep()">Back</button>
+        <button type="button" (click)="prevStep(2)">Back</button>
         <a href="javascript:void(0);" download class="btn btn-danger mt-3 me-3" (click)="downloadOptimizerFile()"
             *ngIf="optimizeId>0">
             <i class="bi bi-file-pdf-fill"></i> Download PDF
         </a>
-        <button type="submit"  (click)="optimizerFormSubmitSubmit()">Submit</button>
+        <button type="submit">Submit</button>
         </div>
 
     </form>
