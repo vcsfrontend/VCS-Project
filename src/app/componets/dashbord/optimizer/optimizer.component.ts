@@ -287,12 +287,27 @@ export class OptimizerComponent extends BaseComponent {
     this.stepIndex = id;
   }
 
-  submitForm(): void {
-    if (this.optimizeFormSample.valid) {
-      console.log('Form Data:', this.optimizeFormSample.value);
-      alert('Form Submitted Successfully!');
-    } else {
+  submitForm(): void {   
 
+    if (this.optimizeFormSample.valid) {
+      this.switchService.optimizeImportData(this.optimizeFormSample.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            this.optimizeFormSample.reset();
+            this.optimizeId = (res.id) ? res.id : '';
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })      
+      this.optimizerFormSubmitted = false;
     }
+
   }
 }
