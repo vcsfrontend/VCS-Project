@@ -73,11 +73,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     'projectArea', 'projectStartDate', 'projectEndDate',];
   displayedColumnss: string[] = [
     'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'];
-    displayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName',  'city', 'modifiedTime', 'coverPic', 'Bom', 'Aux','designId', 'planId',  'status', 'renders' ]; 
-  // displayedColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'businessCategory',
-  //   'projectAddress', 'state', 'city', 'projectState', 'projectEstimation',
-  //   'projectArea', 'projectStartDate', 'projectEndDate', 'action', 'designId', 'companyName'
-  // ];
+  displayedColumn: string[] = ['area', 'modifiedTime', 'city', 'created', 'planPic',  'specName', 'srcArea', 'name', 'designId', 'planId','commName', 'coverPic',  'status', 'tagId','designPanoUrl' ]; 
+
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
   projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
