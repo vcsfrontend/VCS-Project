@@ -666,7 +666,7 @@
 </ng-template> -->
 
 
-<form [formGroup]="optimizerForm">
+<!-- <form [formGroup]="optimizerForm">
     <div class="row border m-2 p-2 rounded ">
         <h6>Saw</h6>
         <div formGroupName="saw" class="row">
@@ -769,9 +769,7 @@
                 <div class="col-xl-3 col-auto">
                     <label for="material" class="form-label my-2">Material</label>
                     <input type="text" class="form-control" id="t" placeholder="string" formControlName="material">
-                    <!-- <ng-select [items]="material" bindLabel="name" bindValue="name" placeholder="Select an option"
-                        formControlName="material">
-                    </ng-select> -->
+                   
                 </div>
                 <div class="col-xl-3">
                     <label for="q" class="form-label my-2">Quantity</label>
@@ -934,11 +932,6 @@
                 </div>
             </div>
         </div>
-        <!-- <h6>Groups</h6>
-        <div formArrayName="groups">
-            <div *ngFor="let group of groups.controls; let i = index" [formGroupName]="i" class="row">
-            </div>
-        </div> -->
         <div class="row">
             <div class="col-xl-3">
                 <label class="form-label my-2">webhook</label>
@@ -953,7 +946,7 @@
         </a>
         <button type="submit" class="btn btn-primary mt-3" (click)="optimizerFormSubmitSubmit()">Submit</button>
     </div>
-</form>
+</form> -->
 
 <div class="multi-step-form">
     <form [formGroup]="optimizeFormSample" (ngSubmit)="submitForm()">

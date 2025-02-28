@@ -1,567 +1,369 @@
-<div class="col-lg-12 col-xxl-12 pt-2">
-  <div class="card custom-card">
-    <div class="card-header justify-content-between">
-      <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">10 Users</div>
-      <div class="text-center">
-        <div class="btn-group" role="group" aria-label="Basic outlined example">
-          <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-            (click)="openRight1(content1)" data-bs-target="#offcanvasRight"
-            aria-controls="offcanvasRight">Filter</button>
-          <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-            (click)="openRight(content)" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Bulk
-            Upload</button>
-          <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
-            data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
+
+
+<div class="row mt-3" *ngIf="userType==2">
+  <div class="col-xl-12">
+      <div class="card custom-card">
+          <div class="card-header justify-content-between">
+              <div class="card-title">
+                  Users 
+              </div>
+              <div class="d-flex flex-wrap gap-3">
+                  <input type="text" [(ngModel)]="searchUser" placeholder="Search..."
+                      class="form-control w-auto" />
+                  <button type="button" class="btn btn-primary text-center"
+                      (click)="isAddEdt=!isAddEdt;aeTyp='a';onRst()">Add User
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div *ngIf="isAddEdt">
+      <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class=" px-3 text-white ">
+          <div class="row gy-2 bg-white">
+              <div class="col-xl-4">
+                  <label for="signup-firstname" class="form-label text-default"><strong>First
+                          Name</strong><span class="text-danger"> *</span></label>
+                  <input type="text"
+                      class="form-control form-control-lg p-2 font-weight-bold border border-dark"
+                      id="signup-firstname" placeholder="First name" formControlName="firstName"
+                      appShowCodeContent onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && 
+                      event.charCode <= 122) || event.charCode == 8 || event.charCode == 32)'
+                      [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" maxlength="50">
+                  <div *ngIf="submitted && f['firstName'].errors" class="invalid-feedback">
+                      <div *ngIf="f['firstName'].errors['required']">First name is required</div>
+                  </div>
+              </div>
+              <div class="col-xl-4">
+                  <label for="signup-lastname" class="form-label text-default"><strong>Last
+                          Name</strong><span class="text-danger"> *</span></label>
+                  <input type="text"
+                      class="form-control form-control-lg p-2 font-weight-bold border border-dark"
+                      id="signup-lastname" placeholder="Last name" formControlName="lastName"
+                      appShowCodeContent onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && 
+                      event.charCode <= 122) || event.charCode == 8 ||event.charCode == 32)'
+                      [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" maxlength="50">
+                  <div *ngIf="submitted && f['lastName'].errors" class="invalid-feedback">
+                      <div *ngIf="f['lastName'].errors['required']">Last name is required</div>
+                  </div>
+              </div>
+              <div class="col-xl-4">
+                  <label for="signup-dob" class="form-label text-default"><strong>Date of
+                          birth</strong><span class="text-danger"> *</span></label>
+                  <div class="input-group">
+                      <div class="input-group-text text-muted  pl-4 font-weight-bold border border-dark">
+                          <i class="ri-calendar-line"></i>
+                      </div>
+                      <input class="form-control form-control-lg p-2 font-weight-bold border border-dark"
+                          placeholder="Choose date" type="date" formControlName="dob"
+                          [(ngModel)]="todayDate" [max]="maxDate" [min]="minDate">
+                  </div>
+              </div>
+              <div class="col-xl-4">
+                  <label for="signup-email" class="form-label text-default"><strong>Email</strong><span
+                          class="text-danger"> *</span></label>
+                  <input type="text"
+                      class="form-control form-control-lg p-2 font-weight-bold border border-dark "
+                      id="signup-email" placeholder="email"
+                      onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
+                      (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                      event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email"
+                      appShowCodeContent [(ngModel)]='mailId'
+                      [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
+                  <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                      <span *ngIf="f['email'].errors['required']">Email is required.</span>
+                      <span *ngIf="f['email'].errors['email']">Invalid email address.</span>
+                  </div>
+              </div>
+
+              <div class="col-xl-4">
+                  <label for="signup-password"
+                      class="form-label text-default"><strong>Password</strong><span class="text-danger">
+                          *</span></label>
+                  <div class="position-relative">
+                      <input type="password"
+                          class="form-control form-control-lg p-2 font-weight-bold border border-dark"
+                          id="signup-password" placeholder="password"
+                          [type]="showPassword ? 'text' : 'password'" autocomplete
+                          formControlName="password" appShowCodeContent [(ngModel)]="paswrd"
+                          onkeypress='return ((event.charCode >= 33 && event.charCode <= 127) || event.charCode == 8)'
+                          (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)"
+                          (paste)="preventCopyPaste($event)" maxlength="16"
+                          [ngClass]="{ 'is-invalid': submitted && f['password'].errors }">
+                      <span class="checkmark" *ngIf="isPasswordValid">&#10003;</span>
+                      <a href="javascript:void(0);" class="show-password-button text-muted"
+                          (click)="createpassword()" id="button-addon2"><i
+                              class="ri-eye-{{toggleClass}} align-middle"></i></a>
+                      <div class="message" [style.color]="passwordStrengthColor">
+                          {{ passwordStrengthMessage }}
+                      </div>
+                      <div *ngIf="submitted && f['password'].errors || f['password'].touched"
+                          class="invalid-feedback">
+                          <div *ngIf="isPasswrd && f['password'].errors?.['required']">Password is
+                              required.</div>
+                          <div *ngIf="isPassValid && f['password'].errors?.['invalidPassword']">
+                              Password must be at least 8 characters long, contain one Special character
+                              at least one uppercase
+                              letter, one lowercase letter and one number.
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div class="col-xl-4">
+                  <label for="signup-confirmpassword" class="form-label text-default"><strong>Confirm
+                          Password</strong><span class="text-danger"> *</span></label>
+                  <div class="position-relative">
+                      <input type="password"
+                          class="form-control form-control-lg p-2 font-weight-bold border border-dark"
+                          id="signup-confirmpassword" placeholder="confirm password"
+                          formControlName="confirmPassword" [type]="showPassword1 ? 'text' : 'password'"
+                          autocomplete maxlength="16" (copy)="preventCopyPaste($event)"
+                          (cut)="preventCopyPaste($event)" (paste)="preventCopyPaste($event)"
+                          onkeypress='return ((event.charCode >= 33 && event.charCode <= 127) || event.charCode == 8)'
+                          [(ngModel)]="cnfmPaswrd" appShowCodeContent
+                          [ngClass]="{ 'is-invalid': submitted && f['confirmPassword'].errors }">
+                      <span class="checkmark" *ngIf="isCnfmPwd">&#10003;</span>
+                      <a href="javascript:void(0);" class="show-password-button text-muted"
+                          (click)="createpassword1()" id="button-addon21"><i
+                              class="ri-eye-{{toggleClass1}} align-middle"></i></a>
+                      <div class="message" [style.color]="confirmPasswordStrengthColor">
+                          {{ confirmPasswordStrengthMessage }}
+                      </div>
+                      <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
+                          <div *ngIf="f['confirmPassword'].errors['required']">Confirm Password is
+                              required</div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-xl-4">
+                  <label for="role-id" class="form-label text-default"><strong>Tool ID</strong><span
+                          class="text-danger"> *</span></label>
+                  <br>
+                  <mat-form-field>
+                      <mat-select formControlName="tools" multiple>
+                          @for (topping of toolsList; track topping) {
+                          <mat-option [value]="topping">{{topping}}</mat-option>
+                          }
+                      </mat-select>
+                      <mat-error *ngIf="f['tools'].errors?.['required']">
+                          Please select at least one tool.
+                      </mat-error>
+                  </mat-form-field>
+              </div>
+              <div class="col-xl-4">
+                  <label for="signup-phone" class="form-label text-default"><strong>Phone
+                          Number</strong><span class="text-danger"> *</span></label>
+                  <div class="input-group custom-input-group">
+                      <select class="form-select form-select-lg p-2 font-weight-bold border border-dark"
+                          id="country1" formControlName="country" [(ngModel)]="selectedCountry"
+                          (change)="onCountryChange($any($event.target).value)"
+                          [ngClass]="{ 'is-invalid': submitted && f['country'].errors }">
+                          <option value="" disabled selected>code</option>
+                          <option *ngFor="let c of countryLst" [value]="c.country">
+                              <span *ngIf="selectedCountry !== c.country">{{ c.country }} (+{{ c.code
+                                  }})</span>
+                              <span *ngIf="selectedCountry === c.country">+{{ c.code }}</span>
+                          </option>
+                      </select>
+                      <input type="text"
+                          class="form-control form-control-lg p-2 font-weight-bold border border-dark"
+                          formControlName="phoneNumber" maxlength="10"
+                          onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                          (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)"
+                          (paste)="preventCopyPaste($event)"
+                          [ngClass]="{ 'is-invalid': submitted && f['phoneNumber'].errors }">
+                  </div>
+                  <div *ngIf="submitted && f['phoneNumber'].errors" class="text-danger">
+                      <div *ngIf="f['phoneNumber'].errors['required']">Phone Number is required</div>
+                  </div>
+              </div>
+              <div class="col-xl-4" *ngIf="showCity">
+                  <label for="signup-city" class="form-label text-default"><strong>City</strong><span
+                          class="text-danger">*</span></label>
+                  <select
+                      class="form-select form-control form-control-lg p-2 font-weight-bold border border-dark"
+                      id="city" formControlName="city" [(ngModel)]="city"
+                      [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
+                      <option value="" disabled selected>Select</option>
+                      <option *ngFor="let c of cityList" [value]="c.city">{{c.city}} </option>
+                  </select>
+                  <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
+                      <div *ngIf="f['city'].errors['required']">City is required</div>
+                  </div>
+              </div>
+          </div>
+      </form>
+      <div class="card-footer bg-white " *ngIf="isAddEdt">
+          <div class="col-lg-12 mb-4 p-3">
+              <div class="row gy-3">
+                  <div class="float-end">
+                      <button type="button" class="btn btn-primary text-center me-2" (click)="onSubmit();"
+                          *ngIf="aeTyp == 'a'">Save
+                      </button>
+                      <button type="button" class="btn btn-light" (click)="isAddEdt=!isAddEdt;onRst()">Cancel
+                      </button>
+                  </div>
+              </div>
+              
+          </div>
+      </div>
+  </div>
+  
+  <!-- <div class="row">
+      <div *ngFor="let contact of filterUserData()" class="col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-sm-6">
+          <div class="card custom-card text-center">
+              <div class="card-body p-4">
+                  <div class="avatar avatar-xl avatar-rounded mb-3">
+                      <img [src]="contact.logoUrl ? contact.logoUrl : 'assets/images/profile.jpg'" alt="Profile Image"
+                          class="img-thumbnail">
+                  </div>
+                  <div class="mb-3">
+                      <h6 class="mb-1 fw-medium">
+                          Name: {{ contact.firstName }} {{ contact.lastName }}
+                      </h6>
+                      <p class="fw-medium fs-11 mb-1 text-dark contact-mail text-truncate">
+                          Email: {{ contact.email }}
+                      </p>
+                      <p class="fw-medium fs-11 mb-0 text-primary">
+                          Number: {{ contact.phoneNumber }}
+                      </p>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-center gap-2">
+                      <button type="button" class="btn btn-sm btn-outline-light border"
+                      data-bs-toggle="tooltip" placement="top" ngbTooltip="Adonai: {{ contact.adonai }} Crm: {{ contact.crm }}">
+                          View Tools
+                      </button>
+                      
+                      <div ngbDropdown class="dropdown no-caret">
+                          <button class="btn btn-sm btn-icon btn-outline-light btn-wave border" ngbDropdownToggle
+                              type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <i class="ri-more-2-fill"></i>
+                          </button>
+                          <ul ngbDropdownMenu class="dropdown-menu">
+                              <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">
+                                      <i class="ri-share-line me-2 align-middle d-inline-block"></i>Share</a></li>
+                              <li>
+                          </ul>
+                      </div>
+                      <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button">
+                          <i class="fe fe-eye text-muted"></i>
+                      </button>
+                  </div>
+              </div>
+          </div>
+          
+      </div>
+  </div> -->
+  <div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                 Users found
+            </div>
+            <mat-form-field class="filter-field">
+                <mat-label>Seach</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            <!-- <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+                        (click)="openRight1(content1)" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Filter</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+                        (click)="openRight(content)" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Bulk Upload</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
+                </div>
+            </div> -->
         </div>
-      </div>
-    </div>
-    <div class="card-body p-0">
-      <!-- <mat-form-field class="m-1 mat-filter">
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter($event)" #input>
-        </mat-form-field> -->
-      <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" matSort>
-          <ng-container matColumnDef="slNo" class=" mat-elevation-z8">
-            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-          </ng-container>
-          <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-          </ng-container>
-          <ng-container matColumnDef="city">
-            <th mat-header-cell *matHeaderCellDef> Actions </th>
-            <td mat-cell *matCellDef="let element">
-              <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                ata-bs-toggle="offcanvas" (click)="openRight1(content3)" 
-                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                <i class="ri-eye-line"></i>
-              </a>
-              <span class="m-1" ngbDropdown placement="right-top">
-                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon" ngbDropdownToggle></i>
-                <ul class="dropdown-menu" ngbDropdownMenu>
-                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
-                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
-                  <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Menu item</a></li>
-                </ul>
-              </span>
-              <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light m-1">
-                  <i class="ri-delete-bin-line"></i>
-              </a>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="firstName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-            <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
-          </ng-container>
-          <ng-container matColumnDef="username">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> username </th>
-            <td mat-cell *matCellDef="let element"> {{element.username}} </td>
-          </ng-container>
-          <ng-container matColumnDef="crmActivityStatus">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-            <td mat-cell *matCellDef="let element">
-              <span class="badge" [ngClass]="{
-                'bg-success': element.crmActivityStatus === true,
-                'bg-danger': element.crmActivityStatus === false
-                }">
-                {{ element.crmActivityStatus }}
-              </span>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="email">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> email</th>
-            <td mat-cell *matCellDef="let element"> {{element.email | slice:0:15 }} </td>
-          </ng-container>
-          <ng-container matColumnDef="phone">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>phone</th>
-            <td mat-cell *matCellDef="let element"> {{element.phone }} </td>
-          </ng-container>
-          <!-- <ng-container matColumnDef="city">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>city</th>
-            <td mat-cell *matCellDef="let element"> {{element.city }} </td>
-          </ng-container> -->
-          <ng-container matColumnDef="country">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>country</th>
-            <td mat-cell *matCellDef="let element"> {{element.country }} </td>
-          </ng-container>
-          <!-- <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef> Actions </th>
-            <td mat-cell *matCellDef="let element">
-              <button mat-icon-button [matMenuTriggerFor]="menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu">
-                <button mat-menu-item (click)="view(element)" class="view-option">View Details</button>
-                <button mat-menu-item (click)="view(element)" class="ban-option">Ban User</button>
-                <button mat-menu-item (click)="delete(element)" class="delete-option">Delete</button>
-              </mat-menu>
-              <button mat-icon-button (click)="edit(element)">
-                <mat-icon>edit</mat-icon>
-              </button>
-            </td>
-          </ng-container> -->
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </div>
-      <mat-paginator #paginator [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30]" (page)="pageEvent($event)"
-        showFirstLastButtons aria-label="Select puserId of periodic elements">
-      </mat-paginator>
-    </div>
-  </div>
-</div>
-
-<ng-template #Content12 let-modal>
-  <div class="modal-header">
-    <h6 class="modal-title" id="exampleModalLgLabel"><b>Create Lead</b></h6>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
-      aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    <div class="row gy-3">
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="contact-name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="contact-name" placeholder="Name">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="contact-mail" class="form-label">Company Name</label>
-        <input type="email" class="form-control" id="contact-mail" placeholder="companyName">
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6">
-        <label for="contact-phone" class="form-label">Executive</label>
-        <input type="tel" class="form-control" id="contact-phone" placeholder="">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="company-name" class="form-label">Products</label>
-        <input type="text" class="form-control" id="company-name" placeholder="">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="company-name" class="form-label">Country</label>
-        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-          class="border rounded">
-          <ng-option value="Choice 1">Spoke</ng-option>
-          <ng-option value="Choice 2">Engeged</ng-option>
-          <ng-option value="Choice 3">Proposal</ng-option>
-        </ng-select>
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label class="form-label"> Stage</label>
-        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-          class="border rounded">
-          <ng-option value="Choice 1">Spoke</ng-option>
-          <ng-option value="Choice 2">Engeged</ng-option>
-          <ng-option value="Choice 3">Proposal</ng-option>
-        </ng-select>
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label class="form-label"> Status</label>
-        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-          class="border rounded">
-          <ng-option value="Choice 1">Unattend</ng-option>
-          <ng-option value="Choice 2">Active</ng-option>
-          <ng-option value="Choice 3">Spoke</ng-option>
-          <ng-option value="Choice 4">Proposal sent</ng-option>
-          <ng-option value="Choice 5">Meeting Fixed</ng-option>
-          <ng-option value="Choice 6">Met</ng-option>
-          <ng-option value="Choice 6">Closed</ng-option>
-          <ng-option value="Choice 6">Lost</ng-option>
-          <ng-option value="Choice 6">Conerted to Deal/ opportunity</ng-option>
-        </ng-select>
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label class="form-label">Lead Source</label>
-        <ng-select name="choices-multiple-remove-button1" placeholder="Select" id="choices-multiple-remove-button1"
-          class="border rounded">
-          <ng-option value="Choice 1">Social Media</ng-option>
-          <ng-option value="Choice 2">Direct mail</ng-option>
-          <ng-option value="Choice 3">Adwords</ng-option>
-          <ng-option value="Choice 4">Leadform</ng-option>
-          <ng-option value="Choice 5">Referral</ng-option>
-          <ng-option value="Choice 5">SEO</ng-option>
-          <ng-option value="Choice 5">Others</ng-option>
-        </ng-select>
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="company-name" class="form-label">Zip Code</label>
-        <input type="text" class="form-control" id="company-name" placeholder="">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="date" class="form-label">Follow up date</label>
-        <input type="date" class="form-control" id="contact-phone" placeholder="">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="company-name" class="form-label">State</label>
-        <input type="text" class="form-control" id="company-name" placeholder="">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="company-name" class="form-label">City</label>
-        <input type="text" class="form-control" id="company-name" placeholder="">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="company-name" class="form-label">Address</label>
-        <input type="text" class="form-control" id="company-name" placeholder="">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="contact-phone" class="form-label">contact</label>
-        <input type="tel" class="form-control" id="contact-phone" placeholder="Enter contact">
-      </div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
-        <label for="email" class="form-label">E-mail</label>
-        <input type="email" class="form-control" id="contact-phone" placeholder="Enter email">
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (ngSubmit)="addLead()">save lead</button>
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
-      data-bs-dismiss="modal">cancel</button>
-  </div>
-</ng-template>
-
-<ng-template #content let-offcanvas>
-  <div class="offcanvas-header border-bottom border-block-end-dashed">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Upload Leads</strong></h5>
-    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
-      aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body p-0">
-    <div>
-      <ul class="list-group list-group-flush mb-0">
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-fill">
-              <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
-                Format</button>
-              <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then upload it for
-                proper importing of the data.</p>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #content1 let-offcanvas>
-  <div class="offcanvas-header border-bottom border-block-end-dashed">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
-    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
-      aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body p-0">
-    <div>
-      <ul class="list-group list-group-flush mb-0">
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-fill">
-              <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
-                Format</button>
-              <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then upload it for
-                proper importing of the data.</p>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #content3 let-offcanvas>
-  <div class="offcanvas-header border-bottom border-block-end-dashed">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>User Info</strong></h5>
-    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
-      aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body p-0">
-    <div>
-      <ul class="list-group list-group-flush mb-0">
-        <li class="list-group-item">
-          <div class="d-flex align-items-center">
-            <div class="flex-fill">
-              <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
-                Format</button>
-              <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then upload it for
-                proper importing of the data.</p>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</ng-template>
-<button type="button" class="btn btn-primary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-(click)="openLg(Content3)">Create Campaign</button>
-<ng-template #Content3 let-modal>
-  <div class="modal-header">
-    <h6 class="modal-title" id="exampleModalLgLabel"><b>Create Campaign</b></h6>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
-      aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    <div class="row gy-3">
-      <div class="col-xl-6 col-lg-6 col-md-6">
-        <label for="contact-name" class="form-label">Name</label>
-        <input type="text" class="form-control" id="contact-name" placeholder="Name">
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6">
-        <label for="company-name" class="form-label">Pipeline</label>
-        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-          class="border rounded">
-          <ng-option value="Choice 1">Spoke</ng-option>
-          <ng-option value="Choice 2">Engeged</ng-option>
-          <ng-option value="Choice 3">Proposal</ng-option>
-        </ng-select>
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6">
-        <label class="form-label">Who will be managing this compaign</label>
-        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-          class="border rounded">
-          <ng-option value="Choice 1">Spoke</ng-option>
-          <ng-option value="Choice 2">Engeged</ng-option>
-          <ng-option value="Choice 3">Proposal</ng-option>
-        </ng-select>
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-6">
-        <label class="form-label">Select Agents</label>
-        <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-          class="border rounded">
-          <ng-option value="Choice 1">Unattend</ng-option>
-          <ng-option value="Choice 2">Active</ng-option>
-          <ng-option value="Choice 3">Spoke</ng-option>
-          <ng-option value="Choice 4">Proposal sent</ng-option>
-          <ng-option value="Choice 5">Meeting Fixed</ng-option>
-          <ng-option value="Choice 6">Met</ng-option>
-          <ng-option value="Choice 6">Closed</ng-option>
-          <ng-option value="Choice 6">Lost</ng-option>
-          <ng-option value="Choice 6">Conerted to Deal/ opportunity</ng-option>
-        </ng-select>
-      </div>
-      <div class="settings-container">
-        <button class="settings-button" (click)="toggleSettings()">
-          Additional Settings
-          <span [ngClass]="{'arrow-down': !showSettings, 'arrow-up': showSettings}"></span>
-        </button>
+        <div class="card-body p-0">
+          <div class="mat-elevation-z8">
+              <table mat-table [dataSource]="dataSource" matSort>
       
-        <div class="settings-panel d-flex row gy-2" *ngIf="showSettings">
-          <div class="col-xl-6 col-lg-6 col-md-6">
-            <label class="form-label">Lead Distribution</label>
-            <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-              class="border rounded">
-              <ng-option value="Choice 1">AI Assignment</ng-option>
-              <ng-option value="Choice 2">Equal Assignment</ng-option>
-              <ng-option value="Choice 3">Conditional Assignment</ng-option>
-            </ng-select>
+                  <!-- Serial Number Column -->
+                  <ng-container matColumnDef="slNo">
+                      <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                      <td mat-cell *matCellDef="let element; let i = index"> {{ getSNo(i) }} </td>
+                  </ng-container>
+      
+                  <!-- First Name Column -->
+                  <ng-container matColumnDef="firstName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
+                      <td mat-cell *matCellDef="let element"> {{ element.firstName }} </td>
+                  </ng-container>
+      
+                  <!-- Last Name Column -->
+                  <ng-container matColumnDef="lastName">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+                      <td mat-cell *matCellDef="let element"> {{ element.lastName }} </td>
+                  </ng-container>
+      
+                  <!-- Email Column -->
+                  <ng-container matColumnDef="email">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                      <td mat-cell *matCellDef="let element"> {{ element.email }} </td>
+                  </ng-container>
+      
+                  <!-- DOB Column (Fix: Matched with 'dob' in TS) -->
+                  <ng-container matColumnDef="dob">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>DOB</th>
+                      <td mat-cell *matCellDef="let element"> {{ element.dateOfBirth }} </td>
+                  </ng-container>
+      
+                  <!-- Contact Column -->
+                  <ng-container matColumnDef="contact">
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+                      <td mat-cell *matCellDef="let element"> {{ element.phoneNumber }} </td>
+                  </ng-container>
+      
+                  <!-- Table Headers & Rows -->
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+              </table>
           </div>
-          <div class="col-xl-6 col-lg-6 col-md-6">
-            <label class="form-label">Campaign Priority</label>
-            <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-              class="border rounded">
-              <ng-option value="Choice 1">High</ng-option>
-              <ng-option value="Choice 2">Medium</ng-option>
-              <ng-option value="Choice 3">Low</ng-option>
-            </ng-select>
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-6">
-            <label class="form-label">Lead Duplicacy</label>
-            <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-              class="border rounded">
-              <ng-option value="Choice 1">Ignore Duplicate(default)</ng-option>
-              <ng-option value="Choice 2">Merge Duplicate</ng-option>
-              <ng-option value="Choice 3">Create Duplicate Leads</ng-option>
-              <ng-option value="Choice 3">merge Duplicate & Reopen closed Leads</ng-option>
-            </ng-select>
-          </div> 
-        </div>
-      </div>      
+      
+          <!-- Paginator -->
+          <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+      </div>
+      
+      
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary">Create</button>
-    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
-      data-bs-dismiss="modal">cancel</button>
+</div>
+<ng-template #modalTemplate>
+  <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+      <div class="modal-dialog p-2 text-white ">
+          <div class="modal-content p-2 text-white ">
+              <div class="modal-header justify-content-center">
+                  <h5 class="modal-title">OTP</h5>
+                  <!-- <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button> -->
+              </div>
+              <div class="modal-body">
+                  <div class="col-xl-12">
+                      <div class="otp-container">
+                          <input class=" p-2 font-weight-bold border border-dark"
+                              *ngFor="let digit of otpArray; let i = index" type="text" maxlength="1"
+                              (input)="onInputChange($event, i)" (keydown)="onKeydown($event, i)" [(ngModel)]="otp[i]"
+                              onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)'
+                              [ngModelOptions]="{standalone: true}" [attr.aria-label]="'Digit ' + (i + 1)" />
+                      </div>
+                  </div>
+                  <div class="col-xl-12 justify-content-center text-center text-dark p-3">
+                      <span>Don't get otp ? &nbsp; &nbsp;
+                          <a href="javascript:void(0)" class="text-primary"
+                              (click)="onMailCheck();isResend=true">resend </a></span>
+                  </div>
+              </div>
+              <div class="modal-footer justify-content-center">
+                  <button type="button" class="btn btn-lg p-2 font-weight-bold text-dark border border-dark"
+                      (click)="onOtpCheck()" [disabled]="isOkBtn">Submit</button>
+              </div>
+          </div>
+      </div>
   </div>
 </ng-template>
-
-<div class="col-xl-12 mt-3">
-  <div class="card custom-card">
-      <div class="card-header justify-content-between d-flex">
-        <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
-            Facebook Automation Leads 2025
-        </div>
-        <div class="text-center">
-          <div class="btn" role="group" aria-label="Basic outlined example">
-            <button type="button" class="btn btn-outline-primary btn-wave me-2">View Leads</button>
-            <button type="button" class="btn btn-outline-primary btn-wave me-2">View Call logs</button>
-            <button type="button" class="btn btn-outline-primary btn-wave me-2">Add New</button>
-          </div>
-        </div>
-      </div>
-  </div>
-</div>
-<div class="d-flex m-2">
-  <div class="col-xl-4 me-2">
-    <div class="card custom-card">
-        <div class="card-header">
-            <div class="card-title">Leads Statistics</div>
-        </div>
-        <div class="card-body">
-          <div class="row row-cols-12 ps-4 py-3 pe-3 align-items-center flex-wrap justify-content-center">
-            <div class="col-3 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 d-inline-block">Total
-                </span>
-                <div><span class="fs-16">1,624</span>
-                </div>
-            </div>
-            </div>
-            <div class="col-3 p-0">
-                <div>
-                  <span class="text-muted fs-12 mb-1 d-inline-block">Open
-                  </span>
-                  <div><span class="fs-16">1,267</span>
-                  </div>
-                </div>
-            </div>
-            <div class="col-3 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 d-inline-block">In-Progress
-                </span>
-                <div><span class="fs-16">1,153</span>
-                </div>
-              </div>
-            </div>
-            <div class="col-3 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 d-inline-block">Closed
-                </span>
-                <div><span class="fs-16">679</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="donut-gradient">
-              <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart"  [legend]="chartOptions4.legend"
-              [labels]="chartOptions4.labels" [fill]="chartOptions4.fill"  [colors]="chartOptions4.colors"
-              [dataLabels]="chartOptions4.dataLabels" [responsive]="chartOptions4.responsive"></apx-chart>
-          </div>
-        </div>
-    </div>
-  </div>
-  <div class="col-xl-4 me-2">
-    <div class="card custom-card">
-        <div class="card-header">
-            <div class="card-title">In Progress Leads</div>
-        </div>
-        <div class="card-body">
-          <div class="row row-cols-12 ps-4 py-3 pe-3 align-items-center flex-wrap justify-content-center">
-            <div class="col-3 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 d-inline-block">Total
-                </span>
-                <div><span class="fs-16">1,624</span>
-                </div>
-            </div>
-            </div>
-            <div class="col-3 p-0">
-                <div>
-                  <span class="text-muted fs-12 mb-1 d-inline-block">Follow up
-                  </span>
-                  <div><span class="fs-16">1,267</span>
-                  </div>
-                </div>
-            </div>
-            <div class="col-3 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 d-inline-block">Not Connected
-                </span>
-                <div><span class="fs-16">1,153</span>
-                </div>
-              </div>
-            </div>
-          </div>
-            <div id="donut-simple">
-                <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart" [legend]="chartOptions1.legend"
-                [labels]="chartOptions1.labels" [responsive]="chartOptions1.responsive"[colors]="chartOptions1.colors" [dataLabels]="chartOptions1.dataLabels"></apx-chart>
-            </div>
-        </div>
-    </div>
-  </div>
-  <div class="col-xl-4 me-2">
-    <div class="card custom-card">
-        <div class="card-header">
-            <div class="card-title">Closed Leads</div>
-        </div>
-        <div class="card-body">
-          <div class="row row-cols-12 ps-4 py-3 pe-3 align-items-center flex-wrap justify-content-center">
-            <div class="col-3 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 d-inline-block">Total
-                </span>
-                <div><span class="fs-16">1,624</span>
-                </div>
-            </div>
-            </div>
-            <div class="col-3 p-0">
-                <div>
-                  <span class="text-muted fs-12 mb-1 d-inline-block">Converted
-                  </span>
-                  <div><span class="fs-16">1,267</span>
-                  </div>
-                </div>
-            </div>
-            <div class="col-2 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 d-inline-block">Lost
-                </span>
-                <div><span class="fs-16">1,153</span>
-                </div>
-              </div>
-            </div>
-            <div class="col-4 p-0">
-              <div>
-                <span class="text-muted fs-12 mb-1 ">Closed By System
-                </span>
-                <div><span class="fs-16 ms-3">679</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div id="donut-update">
-            <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart" [colors]="chartOptions2.colors"
-            [labels]="chartOptions2.labels" [fill]="chartOptions2.fill" [legend]="chartOptions2.legend"
-            [dataLabels]="chartOptions2.dataLabels" [responsive]="chartOptions2.responsive"></apx-chart>
-          </div>
-        </div>
-    </div>
-  </div>
-</div>
-<div class="col-xl-8">
-  <div class="card custom-card">
-      <div class="card-header">
-          <div class="card-title">Lead Distribution</div>
-      </div>
-      <div class="card-body">
-          <div id="bar-full">
-              <apx-chart
-              [series]="chartOptions3.series"
-              [chart]="chartOptions3.chart"
-              [dataLabels]="chartOptions3.dataLabels"
-              [plotOptions]="chartOptions3.plotOptions"
-              [xaxis]="chartOptions3.xaxis"
-              [stroke]="chartOptions3.stroke"
-              [fill]="chartOptions3.fill"
-              [title]="chartOptions3.title"
-              [tooltip]="chartOptions3.tooltip"
-              [legend]="chartOptions3.legend"
-              [colors]="chartOptions3.colors"
-            ></apx-chart>
-          </div>
-      </div>
-  </div>
-</div>
 
 
 
