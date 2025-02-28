@@ -82,6 +82,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = false;
   dataSource = new MatTableDataSource<any>();
+  myProjectDataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   modal: any; ttlAmtToBeRcvd: any; projectLst: any; userDetails: any; dateDiff: any;
   roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
@@ -390,6 +391,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.myProjectDataSource.paginator = this.paginator;
     this.updateButtons();
   }
 
@@ -420,8 +422,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       next: (res: any) => {
         if (res) {
           this.projectLst = res.projList;
-          this.dataSource.data = res.projList;
-          console.log(res.projList);
+          this.myProjectDataSource.data = res.projList;
           // this.projectLst = this.projectLst.filter((e:any) => e.dateDifference >= 0);
           // this.projectLst.sort((a:any, b:any) => a.dateDifference - b.dateDifference);
         } else {
@@ -1337,6 +1338,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  applyMyProjectFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.myProjectDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   public generateData(count: number, yrange: { max: number; min: number; }) {
