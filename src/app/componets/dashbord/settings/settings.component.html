@@ -207,8 +207,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <div *ngFor="let contact of filterUserData()" class="col-xxl-2 col-xl-3 col-lg-3 col-md-4 col-sm-6">
+    <div class="row" *ngIf="userType==2">
+        <div *ngFor="let contact of filterUserData()" class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
             <div class="card custom-card text-center">
                 <div class="card-body p-4">
                     <div class="avatar avatar-xl avatar-rounded mb-3">
@@ -564,12 +564,10 @@
                                 userDetails.city?userDetails.city:'' }}</li>
                             <li class="mb-2"><span class="fw-semibold me-1">Country : </span>{{
                                 userDetails.country?userDetails.country:'' }}</li>
-                            <li class="mb-2"><span class="fw-semibold me-1">D.O.B : </span>{{
+                            <li class="mb-2"><span class="fw-semibold me-1">DOB : </span>{{
                                 userDetails.dob?userDetails.dob:'' }}</li>
                             <li class="mb-2"><span class="fw-semibold me-1">Phone : </span>{{
                                 userDetails.phoneNumber?userDetails.phoneNumber:'' }}</li>
-                            <li class="mb-2"><span class="fw-semibold me-1">Updated By : </span>{{
-                                userDetails.updatedBy?userDetails.updatedBy:'' }}</li>
                             <li class="mb-2"><span class="fw-semibold me-1">Username : </span>{{
                                 userDetails.username?userDetails.username:'' }}</li>
                             <li class="mb-2"><span class="fw-semibold me-1">Company Name : </span>{{
