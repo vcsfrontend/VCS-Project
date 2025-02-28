@@ -217,7 +217,7 @@
                     </div>
                     <div class="mb-3">
                         <h6 class="mb-1 fw-medium">
-                            Name: {{ contact.firstName }} {{ contact.lastName }}
+                            Name: {{ contact.firstName }} {{ contact.lastName | slice:0:8}}
                         </h6>
                         <p class="fw-medium fs-11 mb-1 text-dark contact-mail text-truncate">
                             Email: {{ contact.email }}
@@ -342,7 +342,7 @@
             </div>
         </div>
     </ng-template>
-    <div class="row">
+    <div class="row" *ngIf="roleid==7 || roleid==12 || roleid==3">
         <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
@@ -371,7 +371,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="roleid==7 || roleid==12 || roleid==3">
         <div class="col-xl-6" *ngIf="showStages">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">

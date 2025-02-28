@@ -41,7 +41,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   isAddEdt = false; aeTyp = 'a'; playersList: any; editData: any;
   adonai = false; crm = false; userLst: any;
-  submitted = false; userData: any;
+  submitted = false; userData: any; roleid: any;
   // userForm!: FormGroup;
   cnfmPaswrd: any = ''; paswrd: any = '';
   adoanAiRole: any; todayDt = new Date();
@@ -754,7 +754,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     const adonai = this.userForm.get('tools')?.value.includes('Adonai');
     let payload = this.userForm.getRawValue();
     payload.username = payload.firstName + ' ' + payload.lastName,
-      payload.type = 2,
+      payload.type = 1,
       payload.crm = crm,
       payload.adonai = adonai,
       payload.companyCode = JSON.parse(this.userData).companyCode,

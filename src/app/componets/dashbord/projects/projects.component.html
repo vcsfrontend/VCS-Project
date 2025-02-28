@@ -42,7 +42,7 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" *ngIf="roleid==7 || roleid==12 || roleid==3">
     <div class="col-xxl-12">
         <div class="row">
             <div class="col-xl-3 col-sm-6">
@@ -245,75 +245,102 @@
                     </div>
                 </div>
             </div> -->
-            <div class="col-xl-12 mt-2">
-                <div class="card custom-card">
-                    <div class="card-header mr">
-                        <div>
-                            <a class="btn btn-sm btn-secondary btn-wave" (click)="openRights(content)"
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
-                                    class="ri-add-line align-middle me-1 fw-medium"></i></a>
-                        </div>
-                        <div class="text-center">
-                            <div class="scroll-container">
-                                <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="isAtStart"><i
-                                        class="las la-angle-left"></i></button>
-                                <div #scrollContent class="scroll-content" (scroll)="updateButtons()">
-                                    <div class="scroll-item" *ngFor="let item of items">
-                                        {{ item.title }}
-                                    </div>
-                                </div>
-                                <button class="scroll-btn right" (click)="scrollRight()" [disabled]="isAtEnd"><i
-                                        class="las la-angle-right"></i></button>
+            
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="roleid==5">
+    <div class="col-xxl-12">
+        <div class="row">
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-success-transparent">
+                                    <i class="ti ti-album fs-20"></i>
+                                </span>
+                                <span class="badge bg-danger-transparent">0 %</span>
                             </div>
+                            <div class="text-muted mb-2">Total Projects</div>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                        <div id="total-projects">
+                            <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
+                                [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors"
+                                [fill]="chartOptions2.fill" [stroke]="chartOptions2.stroke"
+                                [tooltip]="chartOptions2.tooltip" [dataLabels]="chartOptions2.dataLabels"
+                                [grid]="chartOptions2.grid" [yaxis]="chartOptions2.yaxis"></apx-chart>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
                     <div class="card-body p-0">
-                        <div class="mat-elevation-z8">
-                            <div class="table-responsive">
-                                <table mat-table [dataSource]="dataSourcee">
-                                    <ng-container matColumnDef="slNo">
-                                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Nameoffile">
-                                        <th mat-header-cell *matHeaderCellDef> Name of File </th>
-                                        <td mat-cell *matCellDef="let element"><span
-                                                class="badge bg-success-transparent fs-11 ">V1</span> <img
-                                                src="assets/images/media/xl-icon.jpg" alt="" class="custom-img">
-                                            {{element.Nameoffile}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Typeoffile">
-                                        <th mat-header-cell *matHeaderCellDef> Type of File </th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Typeoffile}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Uploadedby">
-                                        <th mat-header-cell *matHeaderCellDef>Uploaded by</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Uploadedby}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Uploadedon">
-                                        <th mat-header-cell *matHeaderCellDef>Uploaded On</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Uploadedon}} </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Status">
-                                        <th mat-header-cell *matHeaderCellDef>Status</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Status}} <a tabindex="0"
-                                                data-bs-toggle="popover" triggers="focus" placement="bottom"
-                                                popoverTitle="File History"
-                                                ngbPopover="And here's some amazing content. It's very engaging. Right?"><i
-                                                    class="las la-history history"></i>
-                                            </a> </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="Actions">
-                                        <th mat-header-cell *matHeaderCellDef>Actions</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Actions }} </td>
-                                    </ng-container>
-                                    <tr mat-header-row *matHeaderRowDef="displayedColumnss"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: displayedColumnss;"></tr>
-                                </table>
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-primary-transparent">
+                                    <i class="ti ti-file-check fs-20"></i>
+                                </span>
+                                <span class="badge bg-success-transparent">0 %</span>
                             </div>
-                            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                                aria-label="Select page of periodic elements">
-                            </mat-paginator>
+                            <div class="text-muted mb-2">Completed Projects</div>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                        <div id="completed-projects">
+                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                                [xaxis]="chartOptions.xaxis" [colors]="chartOptions.colors" [fill]="chartOptions.fill"
+                                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+                                [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid"
+                                [yaxis]="chartOptions.yaxis"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-danger-transparent">
+                                    <i class="ti ti-chart-pie-2 fs-20"></i>
+                                </span>
+                                <span class="badge bg-success-transparent">0 %</span>
+                            </div>
+                            <div class="text-muted mb-2">Pending Projects</div>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                        <div id="pending-projects">
+                            <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
+                                [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors"
+                                [fill]="chartOptions3.fill" [stroke]="chartOptions3.stroke"
+                                [tooltip]="chartOptions3.tooltip" [dataLabels]="chartOptions3.dataLabels"
+                                [grid]="chartOptions3.grid" [yaxis]="chartOptions3.yaxis"></apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="p-3 pb-0">
+                            <div class="mb-3 d-flex align-items-start justify-content-between">
+                                <span class="avatar avatar-rounded bg-info-transparent">
+                                    <i class="ti ti-briefcase fs-20"></i>
+                                </span>
+                                <span class="badge bg-success-transparent">0 %</span>
+                            </div>
+                            <div class="text-muted mb-2">Overdue Projects</div>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                        <div id="overdue-projects">
+                            <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart"
+                                [xaxis]="chartOptions1.xaxis" [colors]="chartOptions1.colors"
+                                [fill]="chartOptions1.fill" [stroke]="chartOptions1.stroke"
+                                [tooltip]="chartOptions1.tooltip" [dataLabels]="chartOptions1.dataLabels"
+                                [grid]="chartOptions1.grid" [yaxis]="chartOptions1.yaxis"></apx-chart>
                         </div>
                     </div>
                 </div>
@@ -322,7 +349,82 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xl-12">
+    <div class="col-xl-12 mt-2">
+        <div class="card custom-card">
+            <div class="card-header mr">
+                <div>
+                    <a class="btn btn-sm btn-secondary btn-wave" (click)="openRights(content)"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
+                            class="ri-add-line align-middle me-1 fw-medium"></i></a>
+                </div>
+                <div class="text-center">
+                    <div class="scroll-container">
+                        <button class="scroll-btn left" (click)="scrollLeft()" [disabled]="isAtStart"><i
+                                class="las la-angle-left"></i></button>
+                        <div #scrollContent class="scroll-content" (scroll)="updateButtons()">
+                            <div class="scroll-item" *ngFor="let item of items">
+                                {{ item.title }}
+                            </div>
+                        </div>
+                        <button class="scroll-btn right" (click)="scrollRight()" [disabled]="isAtEnd"><i
+                                class="las la-angle-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="dataSourcee">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Nameoffile">
+                                <th mat-header-cell *matHeaderCellDef> Name of File </th>
+                                <td mat-cell *matCellDef="let element"><span
+                                        class="badge bg-success-transparent fs-11 ">V1</span> <img
+                                        src="assets/images/media/xl-icon.jpg" alt="" class="custom-img">
+                                    {{element.Nameoffile}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Typeoffile">
+                                <th mat-header-cell *matHeaderCellDef> Type of File </th>
+                                <td mat-cell *matCellDef="let element"> {{element.Typeoffile}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Uploadedby">
+                                <th mat-header-cell *matHeaderCellDef>Uploaded by</th>
+                                <td mat-cell *matCellDef="let element"> {{element.Uploadedby}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Uploadedon">
+                                <th mat-header-cell *matHeaderCellDef>Uploaded On</th>
+                                <td mat-cell *matCellDef="let element"> {{element.Uploadedon}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Status">
+                                <th mat-header-cell *matHeaderCellDef>Status</th>
+                                <td mat-cell *matCellDef="let element"> {{element.Status}} <a tabindex="0"
+                                        data-bs-toggle="popover" triggers="focus" placement="bottom"
+                                        popoverTitle="File History"
+                                        ngbPopover="And here's some amazing content. It's very engaging. Right?"><i
+                                            class="las la-history history"></i>
+                                    </a> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="Actions">
+                                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                                <td mat-cell *matCellDef="let element"> {{element.Actions }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumnss"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumnss;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                        aria-label="Select page of periodic elements">
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" >
+    <div class="col-xl-12" *ngIf="roleid==7 || roleid==12 || roleid==3">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">top Projects</div>
@@ -418,7 +520,7 @@
     </button> -->
 
 
-    <div class="col-xl-12 mt-2">
+    <div class="col-xl-12 mt-2" *ngIf="roleid==7 || roleid==12 || roleid==3">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
@@ -544,7 +646,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12 col-xxl-12 pt-2"  *ngIf="roleid==7 || roleid==5">
+    <div class="col-lg-12 col-xxl-12 pt-2" *ngIf="roleid==5">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
