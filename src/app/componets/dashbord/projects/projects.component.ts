@@ -1468,7 +1468,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   selectDesignId(data:any)
   {
     console.log(data);
-    //this.inventoryForm.patchValue({ designId: id });
+    this.inventoryForm.patchValue({ designId: data.designId });
   }
 
 
