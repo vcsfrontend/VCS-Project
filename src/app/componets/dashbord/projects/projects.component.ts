@@ -73,7 +73,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     'projectArea', 'projectStartDate', 'projectEndDate'];
   displayedColumnss: string[] = [
     'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'];
-  displayedColumn: string[] = ['area', 'modifiedTime', 'city', 'created', 'planPic',  'specName', 'srcArea', 'name', 'designId', 'planId','commName', 'coverPic',  'status', 'tagId','designPanoUrl' ]; 
+  displayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName', 'city', 'modifiedTime', 'coverPic','designId', 'planId', 'status', ]; 
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
@@ -154,7 +154,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   ngOnInit(): void {
-    
+    this.getProjectList();
     this.getLst(); this.getMatCardLst();
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
@@ -184,13 +184,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     });
 
 
-    this.getProjectList();
+    // this.getProjectList();
 
-    this.inventoryForm = this.fb.group({
-      email: [JSON.parse(this.userDetails)?.email],
-      type: [JSON.parse(this.userDetails)?.type],
-      designId: ['', Validators.required]
-    });
+    // this.inventoryForm = this.fb.group({
+    //   email: [JSON.parse(this.userDetails)?.email],
+    //   type: [JSON.parse(this.userDetails)?.type],
+    //   designId: ['', Validators.required]
+    // });
 
 
   }
@@ -421,6 +421,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.projectLst = res.projList;
           this.dataSource.data = res.projList;
+          console.log(res.projList);
           // this.projectLst = this.projectLst.filter((e:any) => e.dateDifference >= 0);
           // this.projectLst.sort((a:any, b:any) => a.dateDifference - b.dateDifference);
         } else {
@@ -1419,22 +1420,47 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   getProjectList() {
-
-    this.switchService.ProjectDataList(JSON.parse(this.userDetails)?.email).subscribe({
+    const userEmail = JSON.parse(this.userDetails)?.email;
+    if (!userEmail) {
+      this.toastr.error("User email not found.");
+      return;
+    }
+    this.switchService.ProjectDataList(userEmail).subscribe({
       next: (res: any) => {
-        if (res) {
-          console.log(res);
-          this.projectList = res.values;
+        if (res?.values && Array.isArray(res.values)) {
+          this.projectList = res.values.map((project: any) => ({
+            area: project.area || "N/A",
+            modifiedTime: project.modifiedTime || "N/A",
+            city: project.city || "N/A",
+            created: project.created || "N/A",
+            planPic: project.planPic || "N/A",
+            specName: project.specName || "N/A",
+            srcArea: project.srcArea || "N/A",
+            name: project.name || "Unnamed Project",
+            designId: project.designId || "N/A",
+            planId: project.planId || "N/A",
+            commName: project.commName || "N/A",
+            coverPic: project.coverPic || "N/A",
+            status: project.status || "Unknown",
+            tagId: project.tagId || "N/A",
+            designPanoUrl: project.designPanoUrl || "N/A",
+          }));
+          
+          // Assign data to Angular Material Table data source
+          this.dataSource = this.projectList;
+          console.log("Updated DataSource:", this.dataSource);
         } else {
-          this.toastr.error(res.message);
+          this.toastr.error(res?.message || "Invalid response format.");
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText);
+        console.error("API Error:", error);
+        this.toastr.error(error.statusText || "An error occurred while fetching projects.");
       },
-    })
-
+    });
   }
+  
+  
 
   get i() {
     return this.inventoryForm.controls;
