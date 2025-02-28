@@ -111,8 +111,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  width:100%;
-  max-width: 1350px;
+  max-width: 1080px;
   overflow: hidden;
 }
 
@@ -132,14 +131,14 @@
 }
 
 .scroll-item {
-  padding: 15px;
+  padding: 0 15px ;
   text-align: center;
   cursor: pointer;
 }
 
 .scroll-btn {
   color: rgb(13, 0, 0);
-  border: none;
+  border: 5px;
   cursor: pointer;
   position: absolute;
   top: 50%;
@@ -149,17 +148,19 @@
 .left {
   left: 0;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .right {
   right: 0;
   cursor: pointer;
+  border-radius: 5px;
 }
 .scroll-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
-@media screen and (max-width: 1200px) {
+@media (max-width: 1200px) {
   
   .scroll-container {
     max-width: 500px;
@@ -230,3 +231,9 @@
     font-size: 12px;
   }
 }
+.custom-img{
+  width: 20px;
+  height:20px;
+  margin: 0 5px 5px 5px ;
+}
+

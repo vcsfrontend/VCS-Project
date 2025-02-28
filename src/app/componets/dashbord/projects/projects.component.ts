@@ -70,12 +70,10 @@ export type ChartOptions = {
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate',
-  ];
+    'projectArea', 'projectStartDate', 'projectEndDate',];
   displayedColumnss: string[] = [
-    'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'
-  ];
-
+    'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'];
+    displayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName',  'city', 'modifiedTime', 'coverPic', 'Bom', 'Aux','designId', 'planId',  'status', 'renders' ]; 
   // displayedColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'businessCategory',
   //   'projectAddress', 'state', 'city', 'projectState', 'projectEstimation',
   //   'projectArea', 'projectStartDate', 'projectEndDate', 'action', 'designId', 'companyName'
@@ -202,6 +200,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   get f() {
     return this.createProjectForm.controls;
   }
+
+  
 
   minEndDate: string = '';
   onStartDateChange(event: Event): void {
