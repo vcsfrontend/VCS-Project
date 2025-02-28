@@ -70,7 +70,7 @@ export type ChartOptions = {
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate',];
+    'projectArea', 'projectStartDate', 'projectEndDate'];
   displayedColumnss: string[] = [
     'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'];
   displayedColumn: string[] = ['area', 'modifiedTime', 'city', 'created', 'planPic',  'specName', 'srcArea', 'name', 'designId', 'planId','commName', 'coverPic',  'status', 'tagId','designPanoUrl' ]; 
@@ -154,6 +154,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   ngOnInit(): void {
+    
     this.getLst(); this.getMatCardLst();
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
@@ -300,6 +301,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             this.dateDiff = res.datediff;
             this.roleid = res.roleId;
             this.actstatus = res.activityStatus;
+
+            if (this.roleid === 7 || this.roleid === 5) {
+              this.displayedColumns.push('actions');
+            }
+
           } else {
             window.open(res.newDesign, '_blank');
             this.toastr.success(res.message);
