@@ -203,6 +203,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.saveData = {
       id: 0,
@@ -299,6 +300,25 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
+  }
+
+  onClkDesign(key: string = '') {
+    this.userData = localStorage.getItem('userDetails');
+    this.switchService.onAdonai(JSON.parse(this.userData)?.email).subscribe({
+      next: (res: any) => {
+        if (res.status == false) {
+          alert(res.message)
+          return;
+        } else {
+          if (key == 'i') {           
+            this.roleid = res.roleId; 
+          } else {
+            window.open(res.newDesign, '_blank');
+            this.toastr.success(res.message);
+          }
+        }
+      }
+    })
   }
 
   getProjectLst() {
@@ -614,7 +634,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
-            this.userLst = res
+            this.userLst = res;
             // this.dataSource = new MatTableDataSource<any>(res);
             this.dataSource.data = res;
           } else {
