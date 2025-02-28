@@ -55,7 +55,8 @@ const data = [
 
 export class ProfileComponent {
   userData: any = null;
-  userEmail: string = "balakrishna@varmagroup.co.in";
+  userDataStorage = localStorage.getItem('userDetails');
+  userEmail: string = this.userDataStorage ? JSON.parse(this.userDataStorage).email : '';;
   imageData = data; pjData : any;
   items!: GalleryItem[];
   constructor(public gallery: Gallery, public lightbox: Lightbox ,
