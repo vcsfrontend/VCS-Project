@@ -41,7 +41,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   isAddEdt = false; aeTyp = 'a'; playersList: any; editData: any;
   adonai = false; crm = false; userLst: any;
-  submitted = false; userData: any;
+  submitted = false; userData: any; roleid: any;
   // userForm!: FormGroup;
   cnfmPaswrd: any = ''; paswrd: any = '';
   adoanAiRole: any; todayDt = new Date();
