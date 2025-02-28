@@ -217,7 +217,7 @@
                     </div>
                     <div class="mb-3">
                         <h6 class="mb-1 fw-medium">
-                            Name: {{ contact.firstName }} {{ contact.lastName }}
+                            Name: {{ contact.firstName }} {{ contact.lastName | slice:0:8}}
                         </h6>
                         <p class="fw-medium fs-11 mb-1 text-dark contact-mail text-truncate">
                             Email: {{ contact.email }}
