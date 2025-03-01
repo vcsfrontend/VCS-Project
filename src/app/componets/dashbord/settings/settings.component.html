@@ -343,89 +343,91 @@
         </div>
     </ng-template>
     <div class="row" >
-        
         <div *ngIf="roleid==7 || roleid==12 || roleid==3"> 
-            <div class="col-xl-6">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        <div class="card-title">Choose a Category for Your Project Stages
-                        </div>
-                        <div class="d-flex float-end">
-                            <button class="btn btn-primary" type="button" (click)="openRight(content)"
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isStage">Add
-                                Stages</button>
+            <div class="row" >
+                <div class="col-xl-6">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between">
+                            <div class="card-title">Choose a Category for Your Project Stages
+                            </div>
+                            <div class="d-flex float-end">
+                                <button class="btn btn-primary" type="button" (click)="openRight(content)"
+                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isStage">Add
+                                    Stages</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-6">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        <div class="card-title">Choose a Category for Your Project Estimation
-                        </div>
-                        <div class="d-flex float-end">
-                            <button class="btn btn-primary " type="button" (click)="openRight(content1)"
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isPmntStage">Add
-                                Stages</button>
+                <div class="col-xl-6">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between">
+                            <div class="card-title">Choose a Category for Your Project Estimation
+                            </div>
+                            <div class="d-flex float-end">
+                                <button class="btn btn-primary " type="button" (click)="openRight(content1)"
+                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isPmntStage">Add
+                                    Stages</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-6" *ngIf="showStages">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        <div class="card-title">Project Stages</div>
-                    </div>
-                    <div class="container mt-4 mb-4">
-                        <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
-                            <div class="col-sm-8">
-                                <input type="text"
-                                    class="form-control form-control-sm p-2 font-weight-bold border border-dark"
-                                    [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
-                            </div>
-                            <div class="col-sm-2">
-                                <input type="text"
-                                    class="form-control form-control-sm p-2 font-weight-bold border border-dark"
-                                    [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
-                                    onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                                    maxlength="3" placeholder="Percent" [disabled]="isStageDel">
-                            </div>
+                <div class="col-xl-6" *ngIf="showStages">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between">
+                            <div class="card-title">Project Stages</div>
                         </div>
-                        <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"
-                            (click)="saveLastStages()" [disabled]="isStageDel">Save</button>&nbsp;
-                        <button type="button" class="btn btn-danger btn-sm" (click)="onDeleteStages()"
-                            [disabled]="isStageDel">Delete</button>
+                        <div class="container mt-4 mb-4">
+                            <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
+                                <div class="col-sm-8">
+                                    <input type="text"
+                                        class="form-control form-control-sm p-2 font-weight-bold border border-dark"
+                                        [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text"
+                                        class="form-control form-control-sm p-2 font-weight-bold border border-dark"
+                                        [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
+                                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                                        maxlength="3" placeholder="Percent" [disabled]="isStageDel">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"
+                                (click)="saveLastStages()" [disabled]="isStageDel">Save</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm" (click)="onDeleteStages()"
+                                [disabled]="isStageDel">Delete</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xl-6" *ngIf="!showStages"></div>
-            <div class="col-xl-6" *ngIf="showPmntStages">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        <div class="card-title">Project Estimation Stages</div>
-                    </div>
-                    <div class="container mt-4 mb-4">
-                        <div *ngFor="let field of dynamicPmntFields; let i = index" class="row mb-3 align-items-center">
-                            <div class="col-sm-8">
-                                <input type="text"
-                                    class="form-control form-control-sm p-2 font-weight-bold border border-dark"
-                                    [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
-                            </div>
-                            <div class="col-sm-2">
-                                <input type="text"
-                                    class="form-control form-control-sm p-2 font-weight-bold border border-dark"
-                                    [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
-                                    onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                                    maxlength="3" placeholder="Percent" [disabled]="isPmntStageDel">
-                            </div>
+                <div class="col-xl-6" *ngIf="!showStages"></div>
+                <div class="col-xl-6" *ngIf="showPmntStages">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between">
+                            <div class="card-title">Project Estimation Stages</div>
                         </div>
-                        <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"
-                            (click)="savePmntLastStages()" [disabled]="isPmntStageDel">Save</button>&nbsp;
-                        <button type="button" class="btn btn-danger btn-sm" (click)="onDeletePmntStages()"
-                            [disabled]="isPmntStageDel">Delete</button>
+                        <div class="container mt-4 mb-4">
+                            <div *ngFor="let field of dynamicPmntFields; let i = index" class="row mb-3 align-items-center">
+                                <div class="col-sm-8">
+                                    <input type="text"
+                                        class="form-control form-control-sm p-2 font-weight-bold border border-dark"
+                                        [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text"
+                                        class="form-control form-control-sm p-2 font-weight-bold border border-dark"
+                                        [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
+                                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                                        maxlength="3" placeholder="Percent" [disabled]="isPmntStageDel">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"
+                                (click)="savePmntLastStages()" [disabled]="isPmntStageDel">Save</button>&nbsp;
+                            <button type="button" class="btn btn-danger btn-sm" (click)="onDeletePmntStages()"
+                                [disabled]="isPmntStageDel">Delete</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            
+             </div>
         </div>
     </div>
 
