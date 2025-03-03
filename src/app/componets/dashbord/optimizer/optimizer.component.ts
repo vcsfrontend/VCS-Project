@@ -21,8 +21,8 @@ import { MatTableModule } from '@angular/material/table';
   selector: 'app-optimizer',
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
-    CommonModule, MatSortModule, MatFormFieldModule, MatSelectModule, MatSortModule, MatCheckboxModule, MatTableModule,
-    MatPaginatorModule
+    CommonModule,MatFormFieldModule, MatSelectModule,   MaterialModuleModule,
+    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule,MatTableModule
   ],
   templateUrl: './optimizer.component.html',
   styleUrl: './optimizer.component.scss'
@@ -41,13 +41,35 @@ export class OptimizerComponent extends BaseComponent {
     { value: 3, label: 'Arabic' },
     { value: 4, label: 'Hindi' },
   ];
+  displayedColumns: string[] = ['slNo', 'guillotine', 'isTrim', 'x1', 'x2', 'y1', 'y2', 'order', 'id', 'notes'];
+  dataSource = new MatTableDataSource<any>([]);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  responce: any; cutData: any[] = [];
+  offCut: any;
+  metaData: any;
+
 
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
     super();
   }
 
+  getSNo(index: number): number {
+    if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
+      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   ngOnInit(): void {
+    let value = 701883;  // Declare value inside ngOnInit
+    this.getGeneratedOutputJson(value);
+
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
         bladeWidth: [0, Validators.required],
@@ -196,6 +218,9 @@ export class OptimizerComponent extends BaseComponent {
     });
 
   }
+  value(value: any) {
+    throw new Error('Method not implemented.');
+  }
 
   onSubmit() {
     this.optimizerFormSubmitted = true; // Mark form as submitted
@@ -285,6 +310,25 @@ export class OptimizerComponent extends BaseComponent {
   }
   prevStep(id: any): void {
     this.stepIndex = id;
+  }
+  
+  getGeneratedOutputJson(value: any) {
+    this.switchService.generatedOutputJson(value).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.responce = res;
+          this.cutData = res.cuts || []; 
+          this.offCut = res.offcuts || []; 
+          this.metaData = res.metadata || [];
+          console.log("Offcuts Data:", this.offCut);
+        } else {
+          console.error("No data found.");
+        }
+      },
+      error: (err: any) => {
+        console.error("Error fetching data:", err);
+      }
+    });
   }
 
   submitForm(): void {   
