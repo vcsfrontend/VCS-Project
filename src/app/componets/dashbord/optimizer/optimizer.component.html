@@ -1243,3 +1243,144 @@
 
     </form>
 </div>
+
+
+<div class="card custom-card">
+    <div class="card-header justify-content-between">
+        <div class="card-title">
+            cuts
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          
+              <ng-container matColumnDef="slNo">
+                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                <td mat-cell *matCellDef="let element; let i = index"> {{ getSNo(i) }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="guillotine">
+                <th mat-header-cell *matHeaderCellDef> Guillotine </th>
+                <td mat-cell *matCellDef="let element"> {{ element.guillotine }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="isTrim">
+                <th mat-header-cell *matHeaderCellDef> Is Trim </th>
+                <td mat-cell *matCellDef="let element"> {{ element.isTrim }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="x1">
+                <th mat-header-cell *matHeaderCellDef> x1 </th>
+                <td mat-cell *matCellDef="let element"> {{ element.x1 }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="x2">
+                <th mat-header-cell *matHeaderCellDef> x2 </th>
+                <td mat-cell *matCellDef="let element"> {{ element.x2 }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="y1">
+                <th mat-header-cell *matHeaderCellDef> y1 </th>
+                <td mat-cell *matCellDef="let element"> {{ element.y1 }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="y2">
+                <th mat-header-cell *matHeaderCellDef> y2 </th>
+                <td mat-cell *matCellDef="let element"> {{ element.y2 }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="order">
+                <th mat-header-cell *matHeaderCellDef> Order </th>
+                <td mat-cell *matCellDef="let element"> {{ element.order }} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> Stock ID </th>
+                <td mat-cell *matCellDef="let element"> {{ element.id}} </td>
+              </ng-container>
+          
+              <ng-container matColumnDef="notes">
+                <th mat-header-cell *matHeaderCellDef> Notes </th>
+                <td mat-cell *matCellDef="let element"> {{ element.notes }} </td>
+              </ng-container>
+          
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          
+            </table>
+          </div>
+          
+    
+        <!-- Paginator -->
+        <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+        </mat-paginator>
+    </div>
+    
+</div>
+
+<div class="container">
+    <h2>Cut Data</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Sno</th>
+          <th>Guillotine</th>
+          <th>Is Trim</th>
+          <th>X1</th>
+          <th>X2</th>
+          <th>Y1</th>
+          <th>Y2</th>
+          <th>Order</th>
+          <th>Stock ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cut of cutData; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ cut.guillotine }}</td>
+          <td>{{ cut.isTrim }}</td>
+          <td>{{ cut.x1 }}</td>
+          <td>{{ cut.x2 }}</td>
+          <td>{{ cut.y1 }}</td>
+          <td>{{ cut.y2 }}</td>
+          <td>{{ cut.order }}</td>
+          <td>{{ cut.stock?.id }}</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <h2>offCut</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>sno</th>
+            <th>X</th>
+            <th>Y</th>
+            <th>Length</th>
+            <th>Width</th>
+            <th>Thickness</th>
+            <th>Quantity</th>
+            <th>Stock ID</th>
+            <th>Grain</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let offcut of offCut; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ offcut.x }}</td>
+            <td>{{ offcut.y }}</td>
+            <td>{{ offcut.l }}</td>
+            <td>{{ offcut.w }}</td>
+            <td>{{ offcut.t }}</td>
+            <td>{{ offcut.q }}</td>
+            <td>{{ offcut.stock?.id }}</td>
+            <td>{{ offcut.grain }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+  
+  
