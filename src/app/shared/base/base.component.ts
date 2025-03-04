@@ -407,13 +407,47 @@ export class BaseComponent {
       {"name":"1.5"},
       {"name":"0.8"},
       {"name":"2.0"},
-      
+
     ]
     material= [{"name":"Plywood"},
       {"name":"HDHMR"},
       {"name":"Mdf Board"},
       {"name":"Partical Board"},
-      
+    ]
+
+    BasePanel = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    Pressing = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    Thickness = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+    Make = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+    
+    Grade = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    Grains = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
     ]
     
 }
