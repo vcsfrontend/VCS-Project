@@ -164,55 +164,8 @@ export class OptimizerComponent extends BaseComponent {
           stackingMode: ['']
         })
       }),
-      stock: this.fb.array([
-        this.fb.group({
-          name: [''],
-          l: [0],
-          w: [0],
-          t: [0],
-          material: [''],
-          q: [0],
-          autoAdd: [''],
-          grain: [''],
-          trim: this.fb.group({
-            x1: [0],
-            x2: [0],
-            y1: [0],
-            y2: [0]
-          }),
-          allowExactFitShapes: [true],
-          cost: [0],
-          notes: ['']
-        })
-      ]),
-      parts: this.fb.array([
-        this.fb.group({
-          name: [''],
-          l: [0],
-          w: [0],
-          t: [0],
-          material: [''],
-          q: [0],
-          banding: this.fb.group({
-            x1: [true],
-            x2: [true],
-            y1: [true],
-            y2: [true]
-          }),
-          trim: this.fb.group({
-            x1: [0],
-            x2: [0],
-            y1: [0],
-            y2: [0]
-          }),
-          finish: this.fb.group({
-            a: [''],
-            b: ['']
-          }),
-          orientationLock: [''],
-          notes: ['']
-        })
-      ]),
+      stock: this.fb.array([this.createStockGroup()]),
+      parts: this.fb.array([this.createPartGroup()]),
       groups: this.fb.array([]),
       webhook: ['']
     });
@@ -220,6 +173,65 @@ export class OptimizerComponent extends BaseComponent {
   }
   value(value: any) {
     throw new Error('Method not implemented.');
+  }
+
+  createStockGroup(): FormGroup {
+    return  this.fb.group({
+      name: [''],
+      l: [0],
+      w: [0],
+      t: [0],
+      material: [''],
+      q: [0],
+      autoAdd: [''],
+      grain: [''],
+      trim: this.fb.group({
+        x1: [0],
+        x2: [0],
+        y1: [0],
+        y2: [0]
+      }),
+      allowExactFitShapes: [true],
+      cost: [0],
+      notes: ['']
+    });
+  }
+
+  addStock(): void {
+    this.stock.push(this.createStockGroup());
+  }
+
+  createPartGroup(): FormGroup {
+    return  this.fb.group({
+      name: [''],
+      l: [0],
+      w: [0],
+      t: [0],
+      material: [''],
+      q: [0],
+      banding: this.fb.group({
+        x1: [true],
+        x2: [true],
+        y1: [true],
+        y2: [true]
+      }),
+      trim: this.fb.group({
+        x1: [0],
+        x2: [0],
+        y1: [0],
+        y2: [0]
+      }),
+      finish: this.fb.group({
+        a: [''],
+        b: ['']
+      }),
+      orientationLock: [''],
+      notes: ['']
+    });
+  }
+
+  addParts(): void {
+    this.parts.push(this.createPartGroup());
   }
 
   onSubmit() {
@@ -245,12 +257,12 @@ export class OptimizerComponent extends BaseComponent {
 
   // Getter for stock FormArray
   get stock() {
-    return (this.optimizerForm.get('stock') as FormArray);
+    return this.optimizeFormSample.get('stock') as FormArray;    
   }
 
   // Getter for parts FormArray
   get parts() {
-    return (this.optimizerForm.get('parts') as FormArray);
+    return this.optimizeFormSample.get('parts') as FormArray;        
   }
 
   // Getter for groups FormArray
@@ -332,7 +344,7 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   submitForm(): void {   
-
+    this.optimizerFormSubmitted = true;    
     if (this.optimizeFormSample.valid) {
       this.switchService.optimizeImportData(this.optimizeFormSample.value).subscribe({
         next: (res: any) => {
