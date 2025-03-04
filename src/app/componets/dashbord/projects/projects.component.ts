@@ -1460,7 +1460,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           }));
           
           // Assign data to Angular Material Table data source
-          this.eliteDataSource = this.projectList;
+          this.eliteDataSource.data = this.projectList;
           console.log("Updated DataSource:", this.eliteDataSource);
         } else {
           this.toastr.error(res?.message || "Invalid response format.");
