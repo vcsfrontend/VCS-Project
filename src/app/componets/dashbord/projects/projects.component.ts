@@ -71,9 +71,7 @@ export type ChartOptions = {
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate'];
-  displayedColumnss: string[] = [
-    'slNo', 'Nameoffile', 'Typeoffile', 'Uploadedby', 'Uploadedon', 'Status', 'Actions'];
-  displayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName', 'city', 'modifiedTime','designId', 'planId', 'status', 'quotation' ]; 
+  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName', 'city', 'modifiedTime','designId', 'planId', 'status', 'quotation' ]; 
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
@@ -83,7 +81,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = false;
   dataSource = new MatTableDataSource<any>();
   myProjectDataSource = new MatTableDataSource<any>();
+  eliteDataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) elitePaginator!: MatPaginator;
+  pageSize = 5;
   modal: any; ttlAmtToBeRcvd: any; projectLst: any; userDetails: any; dateDiff: any;
   roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
   pondOptions: FilePondOptions; lastField: any; ProDataList: any
@@ -101,13 +102,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   handleEnterKey(event: KeyboardEvent): void {
     this.getMatCardLst();
   }
-  dataSourcee = [
-    { Nameoffile: 'Report1.pdf', Typeoffile: 'PDF', Uploadedby: 'John Doe', Uploadedon: '2024-02-15', Status: 'Approved', Actions: 'View' },
-    { Nameoffile: 'Image1.jpg', Typeoffile: 'Image', Uploadedby: 'Jane Smith', Uploadedon: '2024-02-14', Status: 'Pending', Actions: 'Edit' },
-    { Nameoffile: 'Document.docx', Typeoffile: 'Word', Uploadedby: 'Alex Brown', Uploadedon: '2024-02-13', Status: 'Rejected', Actions: 'Delete' },
-    { Nameoffile: 'Quotation.xls', Typeoffile: 'exel', Uploadedby: 'Alex Brown', Uploadedon: '2024-02-13', Status: 'Rejected', Actions: 'Delete' }
-
-  ];
 
   openLg(content10: any) {
     if (this.stageLst?.f1 == '' || this.stageLst?.f1 == null) {
@@ -392,12 +386,20 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.myProjectDataSource.paginator = this.paginator;
+    this.eliteDataSource.paginator = this.elitePaginator; 
     this.updateButtons();
   }
 
   getSNo(index: number): number {
     if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
       return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+  EliteGetSNo(index: number): number {
+    if (this.elitePaginator && this.elitePaginator.pageIndex !== undefined && this.elitePaginator.pageSize !== undefined) {
+      return this.elitePaginator.pageIndex * this.elitePaginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
@@ -1340,6 +1342,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  EliteApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.eliteDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   applyMyProjectFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.myProjectDataSource.filter = filterValue.trim().toLowerCase();
@@ -1453,8 +1460,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           }));
           
           // Assign data to Angular Material Table data source
-          this.dataSource = this.projectList;
-          console.log("Updated DataSource:", this.dataSource);
+          this.eliteDataSource = this.projectList;
+          console.log("Updated DataSource:", this.eliteDataSource);
         } else {
           this.toastr.error(res?.message || "Invalid response format.");
         }

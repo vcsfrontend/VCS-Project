@@ -250,104 +250,6 @@
     </div>
 </div>
 
-<div class="row" *ngIf="roleid== 5">
-    <div class="col-xxl-12">
-        <div class="row">
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-success-transparent">
-                                    <i class="ti ti-album fs-20"></i>
-                                </span>
-                                <span class="badge bg-danger-transparent">0 %</span>
-                            </div>
-                            <div class="text-muted mb-2">Total Projects</div>
-                            <h4 class="mb-0">0</h4>
-                        </div>
-                        <div id="total-projects">
-                            <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
-                                [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors"
-                                [fill]="chartOptions2.fill" [stroke]="chartOptions2.stroke"
-                                [tooltip]="chartOptions2.tooltip" [dataLabels]="chartOptions2.dataLabels"
-                                [grid]="chartOptions2.grid" [yaxis]="chartOptions2.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-primary-transparent">
-                                    <i class="ti ti-file-check fs-20"></i>
-                                </span>
-                                <span class="badge bg-success-transparent"> 0 %</span>
-                            </div>
-                            <div class="text-muted mb-2">Completed Projects</div>
-                            <h4 class="mb-0">0{{projectList. count}}</h4>
-                        </div>
-                        <div id="completed-projects">
-                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                                [xaxis]="chartOptions.xaxis" [colors]="chartOptions.colors" [fill]="chartOptions.fill"
-                                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
-                                [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid"
-                                [yaxis]="chartOptions.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-danger-transparent">
-                                    <i class="ti ti-chart-pie-2 fs-20"></i>
-                                </span>
-                                <span class="badge bg-success-transparent">0 %</span>
-                            </div>
-                            <div class="text-muted mb-2">Pending Projects</div>
-                            <h4 class="mb-0">0</h4>
-                        </div>
-                        <div id="pending-projects">
-                            <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
-                                [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors"
-                                [fill]="chartOptions3.fill" [stroke]="chartOptions3.stroke"
-                                [tooltip]="chartOptions3.tooltip" [dataLabels]="chartOptions3.dataLabels"
-                                [grid]="chartOptions3.grid" [yaxis]="chartOptions3.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body p-0">
-                        <div class="p-3 pb-0">
-                            <div class="mb-3 d-flex align-items-start justify-content-between">
-                                <span class="avatar avatar-rounded bg-info-transparent">
-                                    <i class="ti ti-briefcase fs-20"></i>
-                                </span>
-                                <span class="badge bg-success-transparent">0 %</span>
-                            </div>
-                            <div class="text-muted mb-2">Overdue Projects</div>
-                            <h4 class="mb-0">0</h4>
-                        </div>
-                        <div id="overdue-projects">
-                            <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart"
-                                [xaxis]="chartOptions1.xaxis" [colors]="chartOptions1.colors"
-                                [fill]="chartOptions1.fill" [stroke]="chartOptions1.stroke"
-                                [tooltip]="chartOptions1.tooltip" [dataLabels]="chartOptions1.dataLabels"
-                                [grid]="chartOptions1.grid" [yaxis]="chartOptions1.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="row" >
     <div class="col-xl-12" *ngIf="roleid==7 || roleid==12 || roleid==3">
         <div class="card custom-card">
@@ -527,7 +429,7 @@
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
                     </div>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                    <mat-paginator #paginator  [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
                         aria-label="Select page of periodic elements">
                     </mat-paginator>
                 </div>
@@ -598,10 +500,10 @@
                     Projects
                 </div>
                 <div class="d-flex flex-wrap gap-3">
-                    <!-- <mat-form-field class="filter-field">
+                    <mat-form-field class="filter-field">
                         <mat-label>Fliter</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" #input>
-                    </mat-form-field> -->
+                        <input matInput (keyup)="EliteApplyFilter($event)" #input>
+                    </mat-form-field>
                     <div ngbDropdown class="dropdown">
                         <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
                             aria-expanded="false" (click)="onClkDesign()" type="button"
@@ -613,7 +515,7 @@
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table mat-table [dataSource]="dataSource">
+                    <table mat-table [dataSource]="eliteDataSource">
                         <ng-container matColumnDef="slNo">
                             <th mat-header-cell *matHeaderCellDef> S.No. </th>
                             <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
@@ -698,16 +600,15 @@
                             <td mat-cell *matCellDef="let element"><button type="button" class="btn btn-primary-gradient btn-wave">Download</button>
                             </td>
                         </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumn;"></tr>
+                        <tr mat-header-row *matHeaderRowDef="EliteDisplayedColumn"></tr>
+                        <tr mat-row *matRowDef="let row; columns: EliteDisplayedColumn;"></tr>
                     </table>
                 </div>
-                <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                <mat-paginator #elitePaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
                     aria-label="Select page of periodic elements">
                 </mat-paginator>
             </div>
         </div>
-
     </div>
 </div>
 <ng-template #Content10 id="addtask" let-modal>
