@@ -21,8 +21,8 @@ import { MatTableModule } from '@angular/material/table';
   selector: 'app-optimizer',
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
-    CommonModule,MatFormFieldModule, MatSelectModule,   MaterialModuleModule,
-    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule,MatTableModule
+    CommonModule, MatFormFieldModule, MatSelectModule, MaterialModuleModule,
+    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule
   ],
   templateUrl: './optimizer.component.html',
   styleUrl: './optimizer.component.scss'
@@ -30,7 +30,7 @@ import { MatTableModule } from '@angular/material/table';
 
 
 export class OptimizerComponent extends BaseComponent {
-  public optimizerForm!: FormGroup;  
+  public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
   public generatedForm!: FormGroup;
   public generatedrFormSubmitted = false;
@@ -49,6 +49,8 @@ export class OptimizerComponent extends BaseComponent {
   responce: any; cutData: any[] = [];
   offCut: any;
   metaData: any;
+  public layoutUrl: string = '';
+  public lableUrl: string = '';
 
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
@@ -73,8 +75,8 @@ export class OptimizerComponent extends BaseComponent {
 
     this.generatedForm = this.fb.group({
       id: [''],
-      type: [''],
-      units: ['']
+      type: ['', [Validators.required]],
+      units: ['', [Validators.required]]
     });
 
     this.optimizerForm = this.fb.group({
@@ -174,7 +176,7 @@ export class OptimizerComponent extends BaseComponent {
       stock: this.fb.array([this.createStockGroup()]),
       parts: this.fb.array([this.createPartGroup()]),
       groups: this.fb.array([]),
-      webhook: ['']
+      webhook: ['https://example.com/webhook']
     });
 
   }
@@ -183,7 +185,7 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   createStockGroup(): FormGroup {
-    return  this.fb.group({
+    return this.fb.group({
       name: [''],
       l: [0],
       w: [0],
@@ -209,7 +211,7 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   createPartGroup(): FormGroup {
-    return  this.fb.group({
+    return this.fb.group({
       name: [''],
       l: [0],
       w: [0],
@@ -264,12 +266,12 @@ export class OptimizerComponent extends BaseComponent {
 
   // Getter for stock FormArray
   get stock() {
-    return this.optimizeFormSample.get('stock') as FormArray;    
+    return this.optimizeFormSample.get('stock') as FormArray;
   }
 
   // Getter for parts FormArray
   get parts() {
-    return this.optimizeFormSample.get('parts') as FormArray;        
+    return this.optimizeFormSample.get('parts') as FormArray;
   }
 
   // Getter for groups FormArray
@@ -325,6 +327,13 @@ export class OptimizerComponent extends BaseComponent {
     })
   }
 
+  downloadOutputFile(url: any) {
+    if (url) {
+      window.open(url, '_blank');
+
+    }
+  }
+
 
   nextStep(id: any): void {
     this.stepIndex = id;
@@ -333,14 +342,14 @@ export class OptimizerComponent extends BaseComponent {
   prevStep(id: any): void {
     this.stepIndex = id;
   }
-  
+
   getGeneratedOutputJson(value: any) {
     this.switchService.generatedOutputJson(value).subscribe({
       next: (res: any) => {
         if (res) {
           this.responce = res;
-          this.cutData = res.cuts || []; 
-          this.offCut = res.offcuts || []; 
+          this.cutData = res.cuts || [];
+          this.offCut = res.offcuts || [];
           this.metaData = res.metadata || [];
           console.log("Offcuts Data:", this.offCut);
         } else {
@@ -353,8 +362,8 @@ export class OptimizerComponent extends BaseComponent {
     });
   }
 
-  submitForm(): void {   
-    this.optimizerFormSubmitted = true;    
+  submitForm(): void {
+    this.optimizerFormSubmitted = true;
     if (this.optimizeFormSample.valid) {
       this.switchService.optimizeImportData(this.optimizeFormSample.value).subscribe({
         next: (res: any) => {
@@ -374,12 +383,15 @@ export class OptimizerComponent extends BaseComponent {
             });
           }
         }
-      })      
+      })
       this.optimizerFormSubmitted = false;
     }
 
   }
 
+  get g() {
+    return this.generatedForm.controls;
+  }
 
   onGeneratedSubmit(modal: any) {
     this.generatedrFormSubmitted = true;
@@ -389,13 +401,17 @@ export class OptimizerComponent extends BaseComponent {
       this.switchService.optimizeGeneratedOutputData(this.generatedForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
-            modal.close();            
-            this.toastr.success(res.message, 'lead', {
+            this.lableUrl = (res.layoutUrl) ? res.layoutUrl : '';
+            this.layoutUrl = (res.lableUrl) ? res.lableUrl : '';
+            modal.close();
+            this.toastr.success(res.message, 'optimize', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
 
           } else {
-
+            this.toastr.error(res.message, 'optimize', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
           }
         }
       })
