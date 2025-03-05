@@ -1,1456 +1,411 @@
-<!-- <div class="row mb-5 mt-3">
-    <div class="col-xl-12">
-        <div class="card custom-card">
-            <div class="card-header d-sm-flex d-block">
-                <div class="col-xl-8">
-                    <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block"
-                        role="tablist">
-                        <li [ngbNavItem]="1" class="nav-item m-1">
-                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true">Job Details</a>
-                            <ng-template ngbNavContent>
-                                <div id="personal-info" role="tabpanel">
-                                    <div class="row gy-1 border p-2 m-3 rounded">
-                                        <h6 class="fw-medium border-bottom pb-2">Job Details</h6>
-                                        <div class="col-xl-6 col-auto">
-                                            <label for="task-name" class="form-label m-2">Jobcode</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Jobcode">
-                                        </div>
-                                        <div class="col-xl-6 col-auto">
-                                            <label for="task-name" class="form-label m-2">Date Required</label>
-                                            <input type="date" class="form-control" id="task-name" placeholder="Length">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Quote number</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Quote number">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Invoice Number</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Invoice Number">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Job Reference</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Job Reference">
-                                        </div>
-                                    </div>
-                                    <div class="row gy-1 border p-2 m-3 rounded">
-                                        <h6 class="fw-medium border-bottom pb-2">Customer Details</h6>
-                                        <div class="col-xl-6 col-auto">
-                                            <label for="task-name" class="form-label m-2">Customer</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Customer Details">
-                                        </div>
-                                        <div class="col-xl-6 col-auto">
-                                            <label for="task-name" class="form-label m-2">Tax registration no</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Tax registration no">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Client Name</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Client Name">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Cell</label>
-                                            <input type="text" class="form-control" id="task-name" placeholder="Cell">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="contact-address-address" class="form-label">Address</label>
-                                            <textarea class="form-control" id="contact-address-address" rows="1"
-                                                placeholder="Address"></textarea>
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <label for="task-name" class="form-label m-2">Phone no</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Phone no">
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <label for="task-name" class="form-label m-2">E-mail</label>
-                                            <input type="text" class="form-control" id="task-name" placeholder="E mail">
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <label for="task-name" class="form-label m-2">Fax no</label>
-                                            <input type="text" class="form-control" id="task-name" placeholder="Fax no">
-                                        </div>
-                                    </div>
-                                    <div class="row gy-1 border p-2 m-3 rounded">
-                                        <h6 class="fw-medium border-bottom pb-2">Delivery Details</h6>
-                                        <div class="col-xl-6 col-auto">
-                                            <label for="task-name" class="form-label m-2">Address1</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Address1">
-                                        </div>
-                                        <div class="col-xl-6 col-auto">
-                                            <label for="task-name" class="form-label m-2">Province</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Province">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Address2</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Address2">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Country</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Country">
-                                        </div>
-                                        <div class="col-xl-6  col-auto">
-                                            <label for="task-name" class="form-label m-2">Area Name</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Area Name">
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <label for="task-name" class="form-label m-2">GPS Co-ords</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="GPS Co-ords">
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <label for="task-name" class="form-label m-2">Area Code</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Quantity">
-                                        </div>
-                                        <div class="col-xl-6">
-                                            <label for="task-name" class="form-label m-2">Charge</label>
-                                            <input type="text" class="form-control" id="task-name" placeholder="Charge">
-                                        </div>
-                                    </div>
-                                    <div class="row gy-1 border p-2 m-3 rounded">
-                                        <h6 class="fw-medium border-bottom pb-2">Job Notes</h6>
-                                        <div class="col-xl-12  col-auto">
-                                            <label for="contact-address-address" class="form-label">Job Notes</label>
-                                            <textarea class="form-control" id="contact-address-address" rows="4"
-                                                placeholder="Notes"></textarea>
+<div class=" multi-step-form mt-2 col-xl-12 col-xxl-12 col-md-12 col-lg-12 col-sm-12">
+<div class="card custom-card ">
+    <div class="card-header justify-content-between">
+
+        <div class="row">
+            <div class="card-body col-xxl-12 col-xl-12 col-md-12 col-lg-12 col-sm-12 ">
+                <form [formGroup]="optimizeFormSample" (ngSubmit)="submitForm()">
+                    <!-- Step 1 -->
+                    <div *ngIf="stepIndex === 1">
+                        <h4>Step 1: Saw</h4>
+                        <div formGroupName="saw" class="row">
+                            <div class="col-xl-3 col-auto">
+                                <label for="BladeWidth" class="form-label my-2">Blade Width</label>
+                                <input type="number" class="form-control" id="bladeWidth"
+                                    formControlName="bladeWidth" placeholder="kerf of the blade">
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">StockType</label>
+                                <ng-select formControlName="stockType" [items]="stockType" bindLabel="name"
+                                    bindValue="name" placeholder="The type of stock">
+                                </ng-select>
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">CutType</label>
+                                <ng-select formControlName="cutType" [items]="cutType" bindLabel="name"
+                                    bindValue="name" placeholder="The cut type">
+                                </ng-select>
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">CutPreference</label>
+                                <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name"
+                                    bindValue="name" placeholder="Required for guillotine & beam cutType">
+                                </ng-select>
+                            </div>
+                            <div formGroupName="guillotineOptions" class="row">
+                                <div class="card-title my-2">
+                                    guillotineOptions
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label class="form-label my-2">Cutting Strategy</label>
+                                    <ng-select [items]="strategy" bindLabel="name" bindValue="name"
+                                        placeholder="The guillotine cutting strategy" formControlName="strategy">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">MaxPhase</label>
+                                    <input type="number" class="form-control" id="maxPhase"
+                                        placeholder="guillotine or beam cutType" formControlName="maxPhase">
+                                </div>
+                            </div>
+                            <div formGroupName="efficiencyOptions" class="row">
+                                <div class="card-title my-2">
+                                    EfficiencyOptions
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">primary Compression</label>
+                                    <input type="text" class="form-control" id="primarycompression"
+                                        placeholder="The stacking preference for the parts"
+                                        formControlName="primaryCompression">
+                                </div>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label my-2">stackHeight</label>
+                                <input type="number" class="form-control" id="stackHeight"
+                                    placeholder="the max stack height for your saw" formControlName="stackHeight">
+                            </div>
+                            <div formGroupName="options" class="row">
+                                <div class="card-title my-2">
+                                    Options
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">StockSelection</label>
+                                    <ng-select [items]="StockSelection" bindLabel="name" bindValue="name"
+                                        placeholder="Choose the most efficient stock,"
+                                        formControlName="stockSelection">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">minSpacing</label>
+                                    <input type="number" class="form-control" id="minSpacing"
+                                        placeholder="Set the minimum gap between parts & edges"
+                                        formControlName="minSpacing">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">stackingMode</label>
+                                    <ng-select [items]="stackingMode" bindLabel="name" bindValue="name"
+                                        placeholder="Set the stock stacking mode." formControlName="stackingMode">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" (click)="nextStep(2)">Next</button>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div *ngIf="stepIndex === 2">
+                        <div class="row">
+                            <div class="col-xl-12 pt-3">
+                                <div class="card custom-card">
+                                    <div class="card-header justify-content-between">
+                                        <h4>Step 2: Stock</h4>
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-primary" (click)="addStock()">Add
+                                                Stock</button>
                                         </div>
                                     </div>
                                 </div>
-                            </ng-template>
-                        </li>
-                        <li [ngbNavItem]="2" class="nav-item m-1">
-                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true">Input Terms</a>
-                            <ng-template ngbNavContent>
-                                <div id="account-settings" role="tabpanel" class="col-xl-12 border mb-3 rounded p-2">
-                                    <div class="custom-card">
-                                        <div class="d-flex">
-                                            <div class="col-xl-8">
-                                                <ul ngbNav #nav="ngbNav" [activeId]="1"
-                                                    class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block"
-                                                    role="tablist">
-                                                    <li [ngbNavItem]="1" class="nav-item m-1">
-                                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab"
-                                                            aria-current="page" aria-selected="true"
-                                                            data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                                                            (click)="VerticallyScrol(Content1);">Import</a>
-                                                        <ng-template ngbNavContent>
-                                                            <div class=" p-0" id="all-tasks" role="tabpanel">
-                                                            </div>
-                                                        </ng-template>
-                                                    </li>
-                                                    <li [ngbNavItem]="2" class="nav-item m-1">
-                                                        <a ngbNavLink class="nav-link" role="tab" aria-current="page"
-                                                            aria-selected="true" data-bs-toggle="modal"
-                                                            data-bs-target="#exampleModalLg"
-                                                            (click)="VerticallyScrol(Content);">Add</a>
-                                                        <ng-template ngbNavContent>
-                                                            <div class="p-0" id="pending" role="tabpanel">
-                                                                <h1>hello</h1>
-                                                            </div>
-                                                        </ng-template>
-                                                    </li>
-                                                    <li [ngbNavItem]="3" class="nav-item m-1">
-                                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab"
-                                                            aria-current="page" aria-selected="true">In Progress</a>
-                                                        <ng-template ngbNavContent>
-                                                            <div class="p-0" id="in-progress" role="tabpanel">
+                            </div>
+                        </div>
+                        <div formArrayName="stock">
+                            <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i"
+                                class="row mt-5">
+                                <div class="col-xl-3 col-auto">
+                                    <label for="name" class="form-label my-2">Stock Name</label>
+                                    <input type="text" class="form-control" placeholder="stock name"
+                                        formControlName="name">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Length</label>
+                                    <input type="number" class="form-control"
+                                        placeholder="enter the length of the stock" formControlName="l">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="w" class="form-label my-2">Width</label>
+                                    <input type="number" class="form-control"
+                                        placeholder="enter the width of the stock" formControlName="w">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="t" class="form-label my-2">Thickness</label>
+                                    <input type="number" class="form-control"
+                                        placeholder="enter the Thickness of the stock" formControlName="t">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="material" class="form-label my-2">Material</label>
+                                    <input type="text" class="form-control"
+                                        placeholder="A material reference, used for stock matching"
+                                        formControlName="material">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label for="q" class="form-label my-2">Quantity</label>
+                                    <input type="number" class="form-control"
+                                        placeholder="The quantity of this stock" formControlName="q">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">autoAdd</label>
+                                    <ng-select [items]="autoAdd" bindLabel="name" bindValue="name"
+                                        placeholder="Whether to automatically add or not" formControlName="autoAdd">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">Grain</label>
+                                    <ng-select [items]="Grain" bindLabel="name" bindValue="name"
+                                        placeholder="select" formControlName="grain">
+                                    </ng-select>
+                                </div>
+                                <div formGroupName="trim" class="row">
+                                    <div class="card-title my-2">
+                                        Trim
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <label class="form-label my-2">Apply trim to the Right side</label>
+                                        <input type="number" class="form-control"
+                                            placeholder="Apply trim to the X1 side" formControlName="x1">
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <label class="form-label my-2">Apply trim to the left side</label>
+                                        <input type="number" class="form-control"
+                                            placeholder="Apply trim to the X2 side" formControlName="x2">
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <label class="form-label my-2">Apply trim to the Top side</label>
+                                        <input type="number" class="form-control"
+                                            placeholder="Apply trim to the Y1 side" formControlName="y1">
 
-                                                            </div>
-                                                        </ng-template>
-                                                    </li>
-                                                    <li [ngbNavItem]="4" class="nav-item m-1">
-                                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab"
-                                                            aria-current="page" aria-selected="true">Completed</a>
-                                                        <ng-template ngbNavContent>
-                                                            <div class="p-0" id="completed" role="tabpanel">
-                                                                <h1>hello</h1>
-                                                            </div>
-                                                        </ng-template>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="col-xl-4 d-flex justify-content-end ">
-                                                <ul ngbNav #nav="ngbNav" [activeId]="1"
-                                                    class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block"
-                                                    role="tablist">
-                                                    <li [ngbNavItem]="1" class="nav-item dropdown m-1" ngbDropdown>
-                                                        <a ngbNavLink class="nav-link dropdown-toggle"
-                                                            id="materialsDropdown" ngbDropdownToggle role="button"
-                                                            aria-expanded="false">
-                                                            Materials
-                                                        </a>
-                                                        <ul class="dropdown-menu" ngbDropdownMenu
-                                                            aria-labelledby="materialsDropdown">
-                                                            <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                                    data-bs-target="#exampleModalLg"
-                                                                    (click)="VerticallyScrol(Content2);">Sheet</a></li>
-                                                            <li><a class="dropdown-item" data-bs-toggle="modal"
-                                                                    data-bs-target="#exampleModalLg"
-                                                                    (click)="VerticallyScrol(Content1);">Edging</a></li>
-                                                            <li><a class="dropdown-item">Hardware</a></li>
-                                                            <li><a class="dropdown-item">Labour</a></li>
-                                                        </ul>
-                                                        <ng-template ngbNavContent>
-                                                            <div class="p-0" id="all-tasks" role="tabpanel">
-                                                            </div>
-                                                        </ng-template>
-                                                    </li>
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <label class="form-label my-2">Apply trim to the Bottom side</label>
+                                        <input type="number" class="form-control"
+                                            placeholder="Apply trim to the Y2 side" formControlName="y2">
 
-                                                    <li [ngbNavItem]="2" class="nav-item m-1">
-                                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab"
-                                                            aria-current="page" aria-selected="true">Library</a>
-                                                        <ng-template ngbNavContent>
-                                                            <div class="p-0" id="pending" role="tabpanel">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4">
+                                    <label class="form-label my-2">allowExactFitShapes</label>
+                                    <ng-select [items]="allowExactFitShapes" bindLabel="name" bindValue="name"
+                                        placeholder="should exact fit shapes be allowed on this stock"
+                                        formControlName="allowExactFitShapes">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-4">
+                                    <label class="form-label my-2">material cost</label>
+                                    <input type="number" class="form-control" placeholder="The raw material cost"
+                                        formControlName="cost">
+                                </div>
+                                <div class="col-xl-4">
+                                    <label class="form-label my-2">notes</label>
+                                    <input type="text" class="form-control" id="notes" placeholder="notes"
+                                        formControlName="notes">
+                                </div>
 
-                                                            </div>
-                                                        </ng-template>
-                                                    </li>
-                                                    <li [ngbNavItem]="3" class="nav-item m-1">
-                                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab"
-                                                            aria-current="page" aria-selected="true">Item defaults</a>
-                                                        <ng-template ngbNavContent>
-                                                            <div class="p-0" id="in-progress" role="tabpanel">
+                            </div>
+                        </div>
 
-                                                            </div>
-                                                        </ng-template>
-                                                    </li>
-                                                </ul>
-                                            </div>
+                        <button type="button" (click)="prevStep(1)">Back</button>
+                        <button type="button" (click)="nextStep(3)">Next</button>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div *ngIf="stepIndex === 3">
+                        <div class="row">
+                            <div class="col-xl-12 pt-3">
+                                <div class="card custom-card">
+                                    <div class="card-header justify-content-between">
+                                        <h4>Step 3: Parts</h4>
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-primary" (click)="addParts()">Add
+                                                Part</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-12">
-                                    <div class="card custom-card">
-                                        <div class="card-header">
-                                            <div class="card-title">
-                                                Vertical Tab Style-1
-                                            </div>
-                                        </div>
-                                        <div class="card-body d-flex align-items-start">
-                                            <div class="row">
-                                                <div class="col-md-2">
-                                                    <div ngbNav #nav17="ngbNav" [activeId]="1" orientation="vertical"
-                                                        class="nav flex-column nav-pills me-3 tab-style-7"
-                                                        id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                                        <ng-container [ngbNavItem]="1">
-                                                            <button ngbNavLink class="nav-link text-start"
-                                                                id="main-profile-tab" data-bs-toggle="pill"
-                                                                data-bs-target="#main-profile" type="button" role="tab"
-                                                                aria-controls="main-profile" aria-selected="true"><i
-                                                                    class="ri-shield-user-line me-1 align-middle d-inline-block"></i>Saw</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div id="main-profile" role="tabpanel" tabindex="0">
-                                                                </div>
-                                                            </ng-template>
-                                                        </ng-container>
-                                                        <ng-container [ngbNavItem]="2">
-                                                            <button ngbNavLink class="nav-link text-start"
-                                                                id="man-password-tab" data-bs-toggle="pill"
-                                                                data-bs-target="#man-password" type="button" role="tab"
-                                                                aria-controls="man-password" aria-selected="false"><i
-                                                                    class="ri-u-disk-line me-1 align-middle d-inline-block"></i>Password</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div id="man-password" role="tabpanel" tabindex="0">
-                                                                    <ul class="list-unstyled text-muted mb-0">
-                                                                        <li class="mb-2">
-                                                                            Lorem Ipsum is simply dummy text of the
-                                                                            printing and typesetting
-                                                                            industry. Lorem Ipsum has been the
-                                                                            industry's <b>standard dummy text
-                                                                                ever since the 1500s</b>, when an
-                                                                            unknown printer took a galley
-                                                                            of type and scrambled it to make a type
-                                                                            specimen book. It has
-                                                                            survived not only five centuries, but also
-                                                                            the leap into electronic
-                                                                            typesetting, remaining essentially
-                                                                            unchanged. It was popularised in
-                                                                            the 1960s with the release of Letraset
-                                                                            sheets containing Lorem Ipsum
-                                                                            passages, and more recently with desktop
-                                                                            publishing software like
-                                                                            Aldus PageMaker including versions of Lorem
-                                                                            Ipsum.
-                                                                        </li>
-                                                                        <li class="mb-2">Contrary to popular belief,
-                                                                            Lorem Ipsum is not simply
-                                                                            random text. It has roots in a piece of
-                                                                            classical Latin literature
-                                                                            from 45 BC, making it over 2000 years old.
-                                                                            Richard McClintock, a
-                                                                            Latin professor at Hampden-Sydney College in
-                                                                            Virginia,</li>
-                                                                        <li class="mb-0">There are many variations of
-                                                                            passages of Lorem Ipsum
-                                                                            available, but the majority have suffered
-                                                                            alteration in some form.
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </ng-template>
-                                                        </ng-container>
-                                                        <ng-container [ngbNavItem]="3">
-                                                            <button ngbNavLink class="nav-link text-start"
-                                                                id="main-team-tab" data-bs-toggle="pill"
-                                                                data-bs-target="#main-team" type="button" role="tab"
-                                                                aria-controls="main-team" aria-selected="false"><i
-                                                                    class="ri-group-line me-1 align-middle d-inline-block"></i>Team</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div id="main-team" role="tabpanel"
-                                                                    aria-labelledby="main-team-tab" tabindex="0">
-                                                                    <ul class="list-unstyled text-muted mb-0">
-                                                                        <li class="mb-2">Contrary to popular belief,
-                                                                            Lorem Ipsum is not simply
-                                                                            random text. It has roots in a piece of
-                                                                            classical Latin literature
-                                                                            from 45 BC, making it over 2000 years old.
-                                                                            Richard McClintock, a
-                                                                            Latin professor at Hampden-Sydney College in
-                                                                            Virginia,</li>
-                                                                        <li class="mb-2">There are many variations of
-                                                                            passages of Lorem Ipsum
-                                                                            available, but the majority have suffered
-                                                                            alteration in some form.
-                                                                        </li>
-                                                                        <li class="mb-0">
-                                                                            Lorem Ipsum is simply dummy text of the
-                                                                            printing and typesetting
-                                                                            industry. Lorem Ipsum has been the
-                                                                            industry's <b>standard dummy text
-                                                                                ever since the 1500s</b>, when an
-                                                                            unknown printer took a galley
-                                                                            of type and scrambled it to make a type
-                                                                            specimen book. It has
-                                                                            survived not only five centuries, but also
-                                                                            the leap into electronic
-                                                                            typesetting, remaining essentially
-                                                                            unchanged. It was popularised in
-                                                                            the 1960s with the release of Letraset
-                                                                            sheets containing Lorem Ipsum
-                                                                            passages, and more recently with desktop
-                                                                            publishing software like
-                                                                            Aldus PageMaker including versions of Lorem
-                                                                            Ipsum.
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </ng-template>
-                                                        </ng-container>
-                                                        <ng-container [ngbNavItem]="4">
-                                                            <button ngbNavLink class="nav-link text-start"
-                                                                id="main-billing-tab" data-bs-toggle="pill"
-                                                                data-bs-target="#main-billing" type="button" role="tab"
-                                                                aria-controls="main-billing" aria-selected="false"><i
-                                                                    class="ri-bill-line me-1 align-middle d-inline-block"></i>Billing</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div id="main-billing" role="tabpanel"
-                                                                    aria-labelledby="main-billing-tab" tabindex="0">
-                                                                    <ul class="list-unstyled text-muted mb-0">
-                                                                        <li class="mb-2">Contrary to popular belief,
-                                                                            Lorem Ipsum is not simply
-                                                                            random text. It has roots in a piece of
-                                                                            classical Latin literature
-                                                                            from 45 BC, making it over 2000 years old.
-                                                                            Richard McClintock, a
-                                                                            Latin professor at Hampden-Sydney College in
-                                                                            Virginia,</li>
-                                                                        <li class="mb-2">
-                                                                            Lorem Ipsum is simply dummy text of the
-                                                                            printing and typesetting
-                                                                            industry. Lorem Ipsum has been the
-                                                                            industry's <b>standard dummy text
-                                                                                ever since the 1500s</b>, when an
-                                                                            unknown printer took a galley
-                                                                            of type and scrambled it to make a type
-                                                                            specimen book. It has
-                                                                            survived not only five centuries, but also
-                                                                            the leap into electronic
-                                                                            typesetting, remaining essentially
-                                                                            unchanged. It was popularised in
-                                                                            the 1960s with the release of Letraset
-                                                                            sheets containing Lorem Ipsum
-                                                                            passages, and more recently with desktop
-                                                                            publishing software like
-                                                                            Aldus PageMaker including versions of Lorem
-                                                                            Ipsum.
-                                                                        </li>
-                                                                        <li class="mb-0">There are many variations of
-                                                                            passages of Lorem Ipsum
-                                                                            available, but the majority have suffered
-                                                                            alteration in some form.
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </ng-template>
-                                                        </ng-container>
-                                                        <ng-container [ngbNavItem]="5">
-                                                            <button ngbNavLink class="nav-link text-start mb-1"
-                                                                id="main-email-tab" data-bs-toggle="pill"
-                                                                data-bs-target="#main-email" type="button" role="tab"
-                                                                aria-controls="main-email" aria-selected="false"><i
-                                                                    class="ri-mail-line me-1 align-middle d-inline-block"></i>Email</button>
-                                                            <ng-template ngbNavContent>
-                                                                <div id="main-email" role="tabpanel"
-                                                                    aria-labelledby="main-email-tab" tabindex="0">
-                                                                    <ul class="list-unstyled text-muted mb-0">
-                                                                        <li class="mb-2">Contrary to popular belief,
-                                                                            Lorem Ipsum is not simply
-                                                                            random text. It has roots in a piece of
-                                                                            classical Latin literature
-                                                                            from 45 BC, making it over 2000 years old.
-                                                                            Richard McClintock, a
-                                                                            Latin professor at Hampden-Sydney College in
-                                                                            Virginia,</li>
-                                                                        <li class="mb-2">There are many variations of
-                                                                            passages of Lorem Ipsum
-                                                                            available, but the majority have suffered
-                                                                            alteration in some form.
-                                                                        </li>
-                                                                        <li class="mb-0">
-                                                                            Lorem Ipsum is simply dummy text of the
-                                                                            printing and typesetting
-                                                                            industry. Lorem Ipsum has been the
-                                                                            industry's <b>standard dummy text
-                                                                                ever since the 1500s</b>, when an
-                                                                            unknown printer took a galley
-                                                                            of type and scrambled it to make a type
-                                                                            specimen book. It has
-                                                                            survived not only five centuries, but also
-                                                                            the leap into electronic
-                                                                            typesetting, remaining essentially
-                                                                            unchanged. It was popularised in
-                                                                            the 1960s with the release of Letraset
-                                                                            sheets containing Lorem Ipsum
-                                                                            passages, and more recently with desktop
-                                                                            publishing software like
-                                                                            Aldus PageMaker including versions of Lorem
-                                                                            Ipsum.
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </ng-template>
-                                                        </ng-container>
+                            </div>
+                        </div>
+                        <div formArrayName="parts">
+                            <div *ngFor="let partGroup of parts.controls; let i = index" [formGroupName]="i"
+                                class="row mt-5">
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Part Name</label>
+                                    <input type="text" class="form-control" id="task-name"
+                                        placeholder="Name of this part" formControlName="name">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">length of this part</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="length of this part" formControlName="l">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Width of this part</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="Width of this part" formControlName="w">
+                                </div>
 
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-10">
-                                                    <div class="tab-content" id="v-pills-tabContent">
-
-                                                        <div [ngbNavOutlet]="nav17" class="mt-2"></div>
-
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Thickness of this part</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="Thickness of this part" formControlName="t">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">material</label>
+                                    <input type="text" class="form-control" id="task-name"
+                                        placeholder="Material reference for stock matching"
+                                        formControlName="material">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">quantity of this part</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="The quantity of this part" formControlName="q">
+                                </div>
+                                <div formGroupName="banding" class="row">
+                                    <div class="card-title my-2">
+                                        banding
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <label class="form-label my-2">Apply banding to the Right side</label>
+                                        <ng-select [items]="X1" bindLabel="name" bindValue="name"
+                                            placeholder="Apply banding to the Right side" formControlName="x1">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-xl-3 col-auto">
+                                        <label for="task-name" class="form-label my-2">Apply banding to the left
+                                            side</label>
+                                        <ng-select [items]="X2" bindLabel="name" bindValue="name"
+                                            placeholder="Apply banding to the left side" formControlName="x2">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-xl-3 col-auto">
+                                        <label for="task-name" class="form-label my-2">Apply banding to the Top
+                                            side</label>
+                                        <ng-select [items]="Y1" bindLabel="name" bindValue="name"
+                                            placeholder="Apply banding to the Top side" formControlName="y1">
+                                        </ng-select>
+                                    </div>
+                                    <div class="col-xl-3 col-auto">
+                                        <label for="task-name" class="form-label my-2">Apply banding to the Bottom
+                                            side</label>
+                                        <ng-select [items]="Y2" bindLabel="name" bindValue="name"
+                                            placeholder="Apply banding to the Bottom side" formControlName="y2">
+                                        </ng-select>
                                     </div>
                                 </div>
-                            </ng-template>
-                        </li>
-                        <li [ngbNavItem]="3" class="nav-item m-1">
-                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true">Optimized sheets</a>
-                            <ng-template ngbNavContent>
-                                <div id="account-settings" role="tabpanel">
-                                    <h1>gdshjdd</h1>
+                                <div formGroupName="trim" class="row">
+                                    <div class="card-title my-2">
+                                        trim
+                                    </div>
+                                    <div class="col-xl-3 col-auto">
+                                        <label for="task-name" class="form-label my-2">Apply Trim to the Right
+                                            side</label>
+                                        <input type="number" class="form-control" id="task-name"
+                                            placeholder="Apply Trim to the Right side" formControlName="x1">
+                                    </div>
+                                    <div class="col-xl-3 col-auto">
+                                        <label for="task-name" class="form-label my-2">Apply Trim to the Left
+                                            side</label>
+                                        <input type="number" class="form-control" id="task-name"
+                                            placeholder="Apply Trim to the Left side" formControlName="x2">
+                                    </div>
+                                    <div class="col-xl-3 col-auto">
+                                        <label for="task-name" class="form-label my-2">Apply Trim to the Top
+                                            side</label>
+                                        <input type="number" class="form-control" id="task-name"
+                                            placeholder="Apply Trim to the Top side" formControlName="y1">
+                                    </div>
+                                    <div class="col-xl-3 col-auto">
+                                        <label for="task-name" class="form-label my-2">Apply Trim to the Bottom
+                                            side</label>
+                                        <input type="number" class="form-control" id="task-name"
+                                            placeholder="Apply Trim to the Bottom side" formControlName="y2">
+                                    </div>
                                 </div>
-                            </ng-template>
-                        </li>
-                        <li [ngbNavItem]="4" class="nav-item m-1">
-                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true">Summary</a>
-                            <ng-template ngbNavContent>
-                                <div id="account-settings" role="tabpanel">
-                                    <h1>twegd</h1>
+                                <div formGroupName="finish" class="row">
+                                    <div class="card-title my-2">
+                                        Finish
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <label class="form-label my-2">Apply finish to the Top side</label>
+                                        <input type="text" class="form-control" id="task-name"
+                                            placeholder="Apply finish to the A side" formControlName="a">
+                                    </div>
+                                    <div class="col-xl-3">
+                                        <label class="form-label my-2">Apply finish to the Bottom side</label>
+                                        <input type="text" class="form-control" id="task-name"
+                                            placeholder="Apply finish to the B side" formControlName="b">
+                                    </div>
                                 </div>
-                            </ng-template>
-                        </li>
-                    </ul>
-                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">orientationLock</label>
+                                    <ng-select [items]="orientationLock" bindLabel="name" bindValue="name"
+                                        placeholder="Select an option" formControlName="orientationLock">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3  col-auto">
+                                    <label for="contact-address-address" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="contact-address-address" rows="1"
+                                        placeholder="Notes" formControlName="notes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-3">
+                                <label class="form-label my-2">webhook</label>
+                                <input type="text" class="form-control" id="task-name" placeholder="webhook"
+                                    formControlName="webhook">
+                            </div>
+                        </div>
+                        <!-- <button type="button" (click)="prevStep(2)">Back</button>
+                        <a href="javascript:void(0);" download class="btn btn-danger ms-3 me-3"
+                            (click)="downloadOptimizerFile()" *ngIf="optimizeId>0">
+                            <i class="bi bi-file-pdf-fill"></i> Download PDF
+                        </a> -->
+                        <button type="submit" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="openLg1(content4)">Submit</button>
+                    </div>
 
-            </div>
-            <div class="card-body">
-                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<ng-template #Content id="addedge" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Panel Details</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <div class="col-xl-8">
-                <div class="row ">
-                    <div class="col-xl-4 col-auto">
-                        <label for="task-name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="task-name" placeholder="Name">
-                    </div>
-                    <div class="col-xl-4 col-auto">
-                        <label for="task-name" class="form-label">Length</label>
-                        <input type="text" class="form-control" id="task-name" placeholder="0 mm">
-                    </div>
-                    <div class="col-xl-4 col-auto">
-                        <label for="task-name" class="form-label">Width</label>
-                        <input type="text" class="form-control" id="task-name" placeholder="0 mm">
-                    </div>
-                    <div class="col-xl-4 col-auto">
-                        <label for="task-name" class="form-label">Quantity</label>
-                        <input type="text" class="form-control" id="task-name" placeholder="Quantity">
-                    </div>
-                    <div class="col-xl-4 col-auto">
-                        <label class="form-label">Panel Material</label>
-                        <ng-select formControlName="stage" [items]="panelList" bindLabel="name" bindValue="name"
-                            placeholder="Select an option">
-                        </ng-select>
-                    </div>
-                    <div class="col-xl-4">
-                        <label class="form-label">Machining Charge</label>
-                        <ng-select formControlName="stage" [items]="panelList" bindLabel="name" bindValue="name"
-                            placeholder="Select an option">
-                        </ng-select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-        </div>
-    </div>
-</ng-template>
-<ng-template #Content1 id="addimport" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Import input items</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <div class="row gy-2">
-                <div class="col-xl-12 col-auto">
-                    <select class="form-select scroll" multiple aria-label="multiple select example">
-                        <option class="back pb-2" selected>Import from csv</option>
-                        <option class="back" value="1">Import from KD Max (poland) v6.1</option>
-                        <option class="back" value="2">Import from KD Max (poland) pre-v6.1</option>
-                        <option class="back" value="3">Import from Cab Master</option>
-                        <option class="back" value="3">Import from Sketch Up</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary">select</button>
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-        </div>
-    </div>
-</ng-template>
-<ng-template #Content2 id="addmaterial" let-modal>
-    <div class="modal-content border">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Sheet Materials Manager</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="mb-2 border p-2 rounded">
-                <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block"
-                    role="tablist">
-                    <li [ngbNavItem]="1" class="nav-item">
-                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                            aria-selected="true" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                            (click)="VerticallyScrol(Content1);"><i class="ri-add-circle-line me-1"></i>Add new
-                            sheet</a>
-                        <ng-template ngbNavContent>
-                            <div class=" p-0" id="all-tasks" role="tabpanel">
 
+
+<div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
+    data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <ng-template #content4 let-modal>
+                <form>
+                    <div class="modal-header justify-content-center">
+                        <h6 class="modal-title" id="staticBackdropLabel3">Adonai Information </h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                <label for="contact-phone" class="form-label">id</label>
+                                <input type="number" class="form-control" id="bladeWidth"
+                                formControlName="id" placeholder="Id">
                             </div>
-                        </ng-template>
-                    </li>
-                    <li [ngbNavItem]="2" class="nav-item">
-                        <a ngbNavLink class="nav-link" role="tab" aria-current="page" aria-selected="true"
-                            data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                            (click)="VerticallyScrol(Content);"><i class="ri-pencil-line me-1"></i>Edit</a>
-                        <ng-template ngbNavContent>
-                            <div class="p-0" id="pending" role="tabpanel">
-
+                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                <label for="contact-phone" class="form-label">type</label>
+                                <ng-select formControlName="type" [items]="type" bindLabel="name"
+                                    bindValue="designId" placeholder="Select type">
+                                </ng-select>
                             </div>
-                        </ng-template>
-                    </li>
-                    <li [ngbNavItem]="3" class="nav-item">
-                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                            aria-selected="true"><i class="las la-minus-circle me-1"></i>Delete</a>
-                        <ng-template ngbNavContent>
-                            <div class="p-0" id="in-progress" role="tabpanel">
-
+                            <div class="col-xl-12 col-lg-12 col-md-12">
+                                <label for="contact-phone" class="form-label">units</label>
+                                <ng-select formControlName="units" [items]="units" bindLabel="name"
+                                    bindValue="designId" placeholder="Select units">
+                                </ng-select>
                             </div>
-                        </ng-template>
-                    </li>
-                    <li [ngbNavItem]="4" class="nav-item">
-                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                            aria-selected="true"><i class="lar la-copy me-1"></i>Duplicate</a>
-                        <ng-template ngbNavContent>
-                            <div class="p-0" id="completed" role="tabpanel">
-                            </div>
-                        </ng-template>
-                    </li>
-                    <li [ngbNavItem]="5" class="nav-item">
-                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                            aria-selected="true"><i class="lar la-copy me-1"></i>import/export</a>
-                        <ng-template ngbNavContent>
-                            <div class="p-0" id="completed" role="tabpanel">
-                            </div>
-                        </ng-template>
-                    </li>
-                </ul>
-            </div>
-            <div class="card-body">
-                <ul ngbNav #nav1="ngbNav" [activeId]="3"
-                    class="nav nav-tabs mb-3 nav-justified nav-style-1 d-sm-flex d-block" role="tablist">
-                    <li [ngbNavItem]="3" class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" role="tab" ngbNavLink aria-selected="false">Name</a>
-                        <ng-template class="tab-content" ngbNavContent>
-                            <div class=" text-muted" id="home1-justified" role="tabpanel">
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr ng-repeat="material in materials">
-                                            <td>grr</td>
-                                            <td>bggg</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </ng-template>
-                    </li>
-                    <li [ngbNavItem]="1" class="nav-item">
-                        <a class="nav-link" data-bs-toggle="tab" role="tab" ngbNavLink
-                            aria-selected="false">Thickness</a>
-                        <ng-template class="tab-content" ngbNavContent>
-                            <div class=" text-muted" id="about1-justified" role="tabpanel">
-                                <b>Lorem Ipsum is simply dummy</b> text of the printing and typesetting
-                                industry. Lorem Ipsum has been the industry's standard dummy text ever since the
-                                1500s, when an unknown printer took a galley of type and scrambled it to make a
-                                type specimen book. It has survived not only five centuries.
-                            </div>
-                        </ng-template>
-                    </li>
-                </ul>
-                <div [ngbNavOutlet]="nav1" class="mt-2"></div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary">select</button>
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-        </div>
-    </div>
-</ng-template> -->
-
-
-<!-- <form [formGroup]="optimizerForm">
-    <div class="row border m-2 p-2 rounded ">
-        <h6>Saw</h6>
-        <div formGroupName="saw" class="row">
-            <div class="col-xl-3 col-auto">
-                <label for="BladeWidth" class="form-label my-2">Blade Width</label>
-                <input type="number" class="form-control" id="bladeWidth" formControlName="bladeWidth"
-                    placeholder="number">
-            </div>
-            <div class="col-xl-3 col-auto">
-                <label for="task-name" class="form-label my-2">StockType</label>
-                <ng-select formControlName="stockType" [items]="stockType" bindLabel="name" bindValue="name"
-                    placeholder="string">
-                </ng-select>
-            </div>
-            <div class="col-xl-3 col-auto">
-                <label for="task-name" class="form-label my-2">CutType</label>
-                <ng-select formControlName="cutType" [items]="cutType" bindLabel="name" bindValue="name"
-                    placeholder="string">
-                </ng-select>
-            </div>
-            <div class="col-xl-3 col-auto">
-                <label for="task-name" class="form-label my-2">CutPreference</label>
-                <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name" bindValue="name"
-                    placeholder="string">
-                </ng-select>
-            </div>
-            <div formGroupName="guillotineOptions" class="row">
-                <div class="card-title my-2">
-                    guillotineOptions
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label class="form-label my-2">Strategy</label>
-                    <ng-select [items]="strategy" bindLabel="name" bindValue="name" placeholder="string"
-                        formControlName="strategy">
-                    </ng-select>
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">MaxPhase</label>
-                    <input type="number" class="form-control" id="maxPhase" placeholder="number"
-                        formControlName="maxPhase">
-                </div>
-            </div>
-            <div formGroupName="efficiencyOptions" class="row">
-                <div class="card-title my-2">
-                    EfficiencyOptions
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">primary Compression</label>
-                    <input type="text" class="form-control" id="primarycompression" placeholder="string"
-                    formControlName="primaryCompression">
-                </div>
-            </div>
-            <div class="col-xl-3">
-                <label class="form-label my-2">stackHeight</label>
-                <input type="number" class="form-control" id="stackHeight" placeholder="number"
-                    formControlName="stackHeight">
-            </div>
-            <div formGroupName="options" class="row">
-                <div class="card-title my-2">
-                    Options
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">StockSelection</label>
-                    <ng-select [items]="StockSelection" bindLabel="name" bindValue="name" placeholder="string"
-                        formControlName="stockSelection">
-                    </ng-select>
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">minSpacing</label>
-                    <input type="number" class="form-control" id="minSpacing" placeholder="number"
-                        formControlName="minSpacing">
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">stackingMode</label>
-                    <ng-select [items]="stackingMode" bindLabel="name" bindValue="name" placeholder="string"
-                        formControlName="stackingMode">
-                    </ng-select>
-                </div>
-            </div>
-        </div>
-        <h6>Stock</h6>
-        <div formArrayName="stock">
-            <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i" class="row">
-                <div class="col-xl-3 col-auto">
-                    <label for="name" class="form-label my-2">Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="string" formControlName="name">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="task-name" class="form-label my-2">Length</label>
-                    <input type="number" class="form-control" id="task-name" placeholder="number" formControlName="l">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="w" class="form-label my-2">Width</label>
-                    <input type="number" class="form-control" id="w" placeholder="number" formControlName="w">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="t" class="form-label my-2">Thickness</label>
-                    <input type="number" class="form-control" id="t" placeholder="number" formControlName="t">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="material" class="form-label my-2">Material</label>
-                    <input type="text" class="form-control" id="t" placeholder="string" formControlName="material">
-                   
-                </div>
-                <div class="col-xl-3">
-                    <label for="q" class="form-label my-2">Quantity</label>
-                    <input type="number" class="form-control" id="q" placeholder="number" formControlName="q">
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">autoAdd</label>
-                    <ng-select [items]="autoAdd" bindLabel="name" bindValue="name" placeholder="Select an option"
-                        formControlName="autoAdd">
-                    </ng-select>
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">Grain</label>
-                    <ng-select [items]="Grain" bindLabel="name" bindValue="name" placeholder="string"
-                        formControlName="grain">
-                    </ng-select>
-                </div>
-                <div formGroupName="trim" class="row">
-                    <div class="card-title my-2">
-                        Trim
-                    </div>
-                    <div class="col-xl-4">
-                        <label class="form-label my-2">x1</label>
-                        <input type="number" class="form-control" id="x1" placeholder="number" formControlName="x1">
-                    </div>
-                    <div class="col-xl-4">
-                        <label class="form-label my-2">x2</label>
-                        <input type="number" class="form-control" id="x2" placeholder="number" formControlName="x2">
-                    </div>
-                    <div class="col-xl-6">
-                        <label class="form-label my-2">y1</label>
-                        <input type="number" class="form-control" id="y1" placeholder="number" formControlName="y1">
-
-                    </div>
-                    <div class="col-xl-6">
-                        <label class="form-label my-2">y2</label>
-                        <input type="number" class="form-control" id="y2" placeholder="number" formControlName="y2">
-
-                    </div>
-                </div>
-                <div class="col-xl-4">
-                    <label class="form-label my-2">allowExactFitShapes</label>
-                    <ng-select [items]="allowExactFitShapes" bindLabel="name" bindValue="name" placeholder="string"
-                        formControlName="allowExactFitShapes">
-                    </ng-select>
-                </div>
-                <div class="col-xl-4">
-                    <label class="form-label my-2">cost</label>
-                    <input type="number" class="form-control" id="cost" placeholder="Cost" formControlName="cost">
-                </div>
-                <div class="col-xl-4">
-                    <label class="form-label my-2">notes</label>
-                    <input type="text" class="form-control" id="notes" placeholder="notes" formControlName="notes">
-                </div>
-
-            </div>
-        </div>
-        <h6>Parts</h6>
-        <div formArrayName="parts">
-            <div *ngFor="let partGroup of parts.controls; let i = index" [formGroupName]="i" class="row">
-                <div class="col-xl-3 col-auto">
-                    <label for="task-name" class="form-label my-2">Name</label>
-                    <input type="text" class="form-control" id="task-name" placeholder="Name" formControlName="name">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="task-name" class="form-label my-2">Length</label>
-                    <input type="number" class="form-control" id="task-name" placeholder="length" formControlName="l">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="task-name" class="form-label my-2">Width</label>
-                    <input type="number" class="form-control" id="task-name" placeholder="Width" formControlName="w">
-                </div>
-
-                <div class="col-xl-3 col-auto">
-                    <label for="task-name" class="form-label my-2">Thickness</label>
-                    <input type="number" class="form-control" id="task-name" placeholder="number" formControlName="t">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="task-name" class="form-label my-2">material</label>
-                    <input type="text" class="form-control" id="task-name" placeholder="material"
-                        formControlName="material">
-                </div>
-                <div class="col-xl-3 col-auto">
-                    <label for="task-name" class="form-label my-2">q</label>
-                    <input type="number" class="form-control" id="task-name" placeholder="q" formControlName="q">
-                </div>
-                <div formGroupName="banding" class="row">
-                    <div class="card-title my-2">
-                        banding
-                    </div>
-                    <div class="col-xl-4">
-                        <label class="form-label my-2">x1</label>
-                        <ng-select [items]="X1" bindLabel="name" bindValue="name" placeholder="string"
-                            formControlName="x1">
-                        </ng-select>
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">X2</label>
-                        <ng-select [items]="X2" bindLabel="name" bindValue="name" placeholder="string"
-                            formControlName="x2">
-                        </ng-select>
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">Y1</label>
-                        <ng-select [items]="Y1" bindLabel="name" bindValue="name" placeholder="string"
-                            formControlName="y1">
-                        </ng-select>
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">Y2</label>
-                        <ng-select [items]="Y2" bindLabel="name" bindValue="name" placeholder="string"
-                            formControlName="y2">
-                        </ng-select>
-                    </div>
-                </div>
-                <div formGroupName="trim" class="row">
-                    <div class="card-title my-2">
-                        trim
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">x1</label>
-                        <input type="number" class="form-control" id="task-name" placeholder="x1" formControlName="x1">
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">x2</label>
-                        <input type="number" class="form-control" id="task-name" placeholder="x2" formControlName="x2">
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">y1</label>
-                        <input type="number" class="form-control" id="task-name" placeholder="y1" formControlName="y1">
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">y2</label>
-                        <input type="number" class="form-control" id="task-name" placeholder="y2" formControlName="y2">
-                    </div>
-                </div>
-                <div formGroupName="finish" class="row">
-                    <div class="card-title my-2">
-                        Finish
-                    </div>
-                    <div class="col-xl-3">
-                        <label class="form-label my-2">a</label>
-                        <input type="text" class="form-control" id="task-name" placeholder="a" formControlName="a">
-                    </div>
-                    <div class="col-xl-3">
-                        <label class="form-label my-2">b</label>
-                        <input type="text" class="form-control" id="task-name" placeholder="b" formControlName="b">
-                    </div>
-                </div>
-                <div class="col-xl-3">
-                    <label class="form-label my-2">orientationLock</label>
-                    <ng-select [items]="orientationLock" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" formControlName="orientationLock">
-                    </ng-select>
-                </div>
-                <div class="col-xl-3  col-auto">
-                    <label for="contact-address-address" class="form-label">Notes</label>
-                    <textarea class="form-control" id="contact-address-address" rows="1" placeholder="Notes"
-                        formControlName="notes"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xl-3">
-                <label class="form-label my-2">webhook</label>
-                <input type="text" class="form-control" id="task-name" placeholder="webhook" formControlName="webhook">
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <a href="javascript:void(0);" download class="btn btn-danger mt-3 me-3" (click)="downloadOptimizerFile()"
-            *ngIf="optimizeId>0">
-            <i class="bi bi-file-pdf-fill"></i> Download PDF
-        </a>
-        <button type="submit" class="btn btn-primary mt-3" (click)="optimizerFormSubmitSubmit()">Submit</button>
-    </div>
-</form> -->
-
-
-<div class=" multi-step-form mt-2 col-xl-12 col-xxl-12 col-md-12 col-lg-12 col-sm-12">
-    <div class="card custom-card ">
-        <div class="card-header justify-content-between">
-
-            <div class="row">
-                <div class="card-body col-xxl-12 col-xl-12 col-md-12 col-lg-12 col-sm-12 ">
-                    <form [formGroup]="optimizeFormSample" (ngSubmit)="submitForm()">
-                        <!-- Step 1 -->
-                        <div *ngIf="stepIndex === 1">
-                            <h4>Step 1: Saw</h4>
-                            <div formGroupName="saw" class="row">
-                                <div class="col-xl-3 col-auto">
-                                    <label for="BladeWidth" class="form-label my-2">Blade Width</label>
-                                    <input type="number" class="form-control" id="bladeWidth"
-                                        formControlName="bladeWidth" placeholder="kerf of the blade">
-                                </div>
-                                <div class="col-xl-3 col-auto">
-                                    <label for="task-name" class="form-label my-2">StockType</label>
-                                    <ng-select formControlName="stockType" [items]="stockType" bindLabel="name"
-                                        bindValue="name" placeholder="The type of stock">
-                                    </ng-select>
-                                </div>
-                                <div class="col-xl-3 col-auto">
-                                    <label for="task-name" class="form-label my-2">CutType</label>
-                                    <ng-select formControlName="cutType" [items]="cutType" bindLabel="name"
-                                        bindValue="name" placeholder="The cut type">
-                                    </ng-select>
-                                </div>
-                                <div class="col-xl-3 col-auto">
-                                    <label for="task-name" class="form-label my-2">CutPreference</label>
-                                    <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name"
-                                        bindValue="name" placeholder="Required for guillotine & beam cutType">
-                                    </ng-select>
-                                </div>
-                                <div formGroupName="guillotineOptions" class="row">
-                                    <div class="card-title my-2">
-                                        guillotineOptions
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label class="form-label my-2">Cutting Strategy</label>
-                                        <ng-select [items]="strategy" bindLabel="name" bindValue="name"
-                                            placeholder="The guillotine cutting strategy" formControlName="strategy">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">MaxPhase</label>
-                                        <input type="number" class="form-control" id="maxPhase"
-                                            placeholder="guillotine or beam cutType" formControlName="maxPhase">
-                                    </div>
-                                </div>
-                                <div formGroupName="efficiencyOptions" class="row">
-                                    <div class="card-title my-2">
-                                        EfficiencyOptions
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">primary Compression</label>
-                                        <input type="text" class="form-control" id="primarycompression"
-                                            placeholder="The stacking preference for the parts"
-                                            formControlName="primaryCompression">
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <label class="form-label my-2">stackHeight</label>
-                                    <input type="number" class="form-control" id="stackHeight"
-                                        placeholder="the max stack height for your saw" formControlName="stackHeight">
-                                </div>
-                                <div formGroupName="options" class="row">
-                                    <div class="card-title my-2">
-                                        Options
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">StockSelection</label>
-                                        <ng-select [items]="StockSelection" bindLabel="name" bindValue="name"
-                                            placeholder="Choose the most efficient stock,"
-                                            formControlName="stockSelection">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">minSpacing</label>
-                                        <input type="number" class="form-control" id="minSpacing"
-                                            placeholder="Set the minimum gap between parts & edges"
-                                            formControlName="minSpacing">
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">stackingMode</label>
-                                        <ng-select [items]="stackingMode" bindLabel="name" bindValue="name"
-                                            placeholder="Set the stock stacking mode." formControlName="stackingMode">
-                                        </ng-select>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" (click)="nextStep(2)">Next</button>
                         </div>
-
-                        <!-- Step 2 -->
-                        <div *ngIf="stepIndex === 2">
-                            <div class="row">
-                                <div class="col-xl-12 pt-3">
-                                    <div class="card custom-card">
-                                        <div class="card-header justify-content-between">
-                                            <h4>Step 2: Stock</h4>
-                                            <div class="text-center">
-                                                <button type="button" class="btn btn-primary"
-                                                    (click)="addStock()">Add Stock</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>                                
-                            </div>                            
-                            <div formArrayName="stock">
-                                <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i"
-                                    class="row mt-5">
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="name" class="form-label my-2">Stock Name</label>
-                                        <input type="text" class="form-control" placeholder="stock name"
-                                            formControlName="name">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Length</label>
-                                        <input type="number" class="form-control" 
-                                            placeholder="enter the length of the stock" formControlName="l">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="w" class="form-label my-2">Width</label>
-                                        <input type="number" class="form-control" 
-                                            placeholder="enter the width of the stock" formControlName="w">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="t" class="form-label my-2">Thickness</label>
-                                        <input type="number" class="form-control" 
-                                            placeholder="enter the Thickness of the stock" formControlName="t">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="material" class="form-label my-2">Material</label>
-                                        <input type="text" class="form-control" 
-                                            placeholder="A material reference, used for stock matching"
-                                            formControlName="material">
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label for="q" class="form-label my-2">Quantity</label>
-                                        <input type="number" class="form-control" 
-                                            placeholder="The quantity of this stock" formControlName="q">
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">autoAdd</label>
-                                        <ng-select [items]="autoAdd" bindLabel="name" bindValue="name"
-                                            placeholder="Whether to automatically add or not" formControlName="autoAdd">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">Grain</label>
-                                        <ng-select [items]="Grain" bindLabel="name" bindValue="name"
-                                            placeholder="select" formControlName="grain">
-                                        </ng-select>
-                                    </div>
-                                    <div formGroupName="trim" class="row">
-                                        <div class="card-title my-2">
-                                            Trim
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the Right side</label>
-                                            <input type="number" class="form-control" 
-                                                placeholder="Apply trim to the X1 side" formControlName="x1">
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the left side</label>
-                                            <input type="number" class="form-control" 
-                                                placeholder="Apply trim to the X2 side" formControlName="x2">
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the Top side</label>
-                                            <input type="number" class="form-control" 
-                                                placeholder="Apply trim to the Y1 side" formControlName="y1">
-
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the Bottom side</label>
-                                            <input type="number" class="form-control" 
-                                                placeholder="Apply trim to the Y2 side" formControlName="y2">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label class="form-label my-2">allowExactFitShapes</label>
-                                        <ng-select [items]="allowExactFitShapes" bindLabel="name" bindValue="name"
-                                            placeholder="should exact fit shapes be allowed on this stock"
-                                            formControlName="allowExactFitShapes">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label class="form-label my-2">material cost</label>
-                                        <input type="number" class="form-control" 
-                                            placeholder="The raw material cost" formControlName="cost">
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label class="form-label my-2">notes</label>
-                                        <input type="text" class="form-control" id="notes" placeholder="notes"
-                                            formControlName="notes">
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <button type="button" (click)="prevStep(1)">Back</button>
-                            <button type="button" (click)="nextStep(3)">Next</button>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div *ngIf="stepIndex === 3">
-                            <div class="row">
-                                <div class="col-xl-12 pt-3">
-                                    <div class="card custom-card">
-                                        <div class="card-header justify-content-between">
-                                            <h4>Step 3: Parts</h4>
-                                            <div class="text-center">
-                                                <button type="button" class="btn btn-primary"
-                                                    (click)="addParts()">Add Part</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>                                
-                            </div>
-                            <div formArrayName="parts">
-                                <div *ngFor="let partGroup of parts.controls; let i = index" [formGroupName]="i"
-                                    class="row mt-5">
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Part Name</label>
-                                        <input type="text" class="form-control" id="task-name"
-                                            placeholder="Name of this part" formControlName="name">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">length of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="length of this part" formControlName="l">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Width of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="Width of this part" formControlName="w">
-                                    </div>
-
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Thickness of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="Thickness of this part" formControlName="t">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">material</label>
-                                        <input type="text" class="form-control" id="task-name"
-                                            placeholder="Material reference for stock matching"
-                                            formControlName="material">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">quantity of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="The quantity of this part" formControlName="q">
-                                    </div>
-                                    <div formGroupName="banding" class="row">
-                                        <div class="card-title my-2">
-                                            banding
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply banding to the Right side</label>
-                                            <ng-select [items]="X1" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the Right side" formControlName="x1">
-                                            </ng-select>
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply banding to the left
-                                                side</label>
-                                            <ng-select [items]="X2" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the left side" formControlName="x2">
-                                            </ng-select>
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply banding to the Top
-                                                side</label>
-                                            <ng-select [items]="Y1" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the Top side" formControlName="y1">
-                                            </ng-select>
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply banding to the Bottom
-                                                side</label>
-                                            <ng-select [items]="Y2" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the Bottom side" formControlName="y2">
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                    <div formGroupName="trim" class="row">
-                                        <div class="card-title my-2">
-                                            trim
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Right
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Right side" formControlName="x1">
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Left
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Left side" formControlName="x2">
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Top
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Top side" formControlName="y1">
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Bottom
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Bottom side" formControlName="y2">
-                                        </div>
-                                    </div>
-                                    <div formGroupName="finish" class="row">
-                                        <div class="card-title my-2">
-                                            Finish
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply finish to the Top side</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Apply finish to the A side" formControlName="a">
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply finish to the Bottom side</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Apply finish to the B side" formControlName="b">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">orientationLock</label>
-                                        <ng-select [items]="orientationLock" bindLabel="name" bindValue="name"
-                                            placeholder="Select an option" formControlName="orientationLock">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3  col-auto">
-                                        <label for="contact-address-address" class="form-label">Notes</label>
-                                        <textarea class="form-control" id="contact-address-address" rows="1"
-                                            placeholder="Notes" formControlName="notes"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-3">
-                                    <label class="form-label my-2">webhook</label>
-                                    <input type="text" class="form-control" id="task-name" placeholder="webhook"
-                                        formControlName="webhook">
-                                </div>
-                            </div>
-                            <button type="button" (click)="prevStep(2)">Back</button>
-                            <a href="javascript:void(0);" download class="btn btn-danger ms-3 me-3"
-                                (click)="downloadOptimizerFile()" *ngIf="optimizeId>0">
-                                <i class="bi bi-file-pdf-fill"></i> Download PDF
-                            </a>
-                            <button type="submit">Submit</button>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-secondary">Update</button>
+                        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                            data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </ng-template>
         </div>
     </div>
-
-
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="card-title">
-                cuts
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-                    <ng-container matColumnDef="slNo">
-                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                        <td mat-cell *matCellDef="let element; let i = index"> {{ getSNo(i) }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="guillotine">
-                        <th mat-header-cell *matHeaderCellDef> Guillotine </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.guillotine }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="isTrim">
-                        <th mat-header-cell *matHeaderCellDef> Is Trim </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.isTrim }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="x1">
-                        <th mat-header-cell *matHeaderCellDef> x1 </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.x1 }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="x2">
-                        <th mat-header-cell *matHeaderCellDef> x2 </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.x2 }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="y1">
-                        <th mat-header-cell *matHeaderCellDef> y1 </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.y1 }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="y2">
-                        <th mat-header-cell *matHeaderCellDef> y2 </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.y2 }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="order">
-                        <th mat-header-cell *matHeaderCellDef> Order </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.order }} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="id">
-                        <th mat-header-cell *matHeaderCellDef> Stock ID </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.id}} </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="notes">
-                        <th mat-header-cell *matHeaderCellDef> Notes </th>
-                        <td mat-cell *matCellDef="let element"> {{ element.notes }} </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                </table>
-            </div>
-
-
-            <!-- Paginator -->
-            <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-            </mat-paginator>
-        </div>
-
-    </div>
-
-    <div class="container">
-        <h2>Cut Data</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Sno</th>
-                    <th>Guillotine</th>
-                    <th>Is Trim</th>
-                    <th>X1</th>
-                    <th>X2</th>
-                    <th>Y1</th>
-                    <th>Y2</th>
-                    <th>Order</th>
-                    <th>Stock ID</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let cut of cutData; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ cut.guillotine }}</td>
-                    <td>{{ cut.isTrim }}</td>
-                    <td>{{ cut.x1 }}</td>
-                    <td>{{ cut.x2 }}</td>
-                    <td>{{ cut.y1 }}</td>
-                    <td>{{ cut.y2 }}</td>
-                    <td>{{ cut.order }}</td>
-                    <td>{{ cut.stock?.id }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="container">
-        <h2>offCut</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>sno</th>
-                    <th>X</th>
-                    <th>Y</th>
-                    <th>Length</th>
-                    <th>Width</th>
-                    <th>Thickness</th>
-                    <th>Quantity</th>
-                    <th>Stock ID</th>
-                    <th>Grain</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let offcut of offCut; let i = index">
-                    <td>{{ i + 1 }}</td>
-                    <td>{{ offcut.x }}</td>
-                    <td>{{ offcut.y }}</td>
-                    <td>{{ offcut.l }}</td>
-                    <td>{{ offcut.w }}</td>
-                    <td>{{ offcut.t }}</td>
-                    <td>{{ offcut.q }}</td>
-                    <td>{{ offcut.stock?.id }}</td>
-                    <td>{{ offcut.grain }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+</div>

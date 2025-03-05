@@ -449,5 +449,17 @@ export class BaseComponent {
       {"name":"Mdf Board"},
       {"name":"Partical Board"},
     ]
-    
+
+    type = [{"name":"pdf"},
+      {"name":"csv"},
+      {"name":"ptx"},
+      {"name":"dxf"},
+      {"name":"svg"},
+    ]
+    units = [{"name":"mm"},
+      {"name":"inch"},
+      {"name":"cm"},
+      {"name":"m"},
+      {"name":"foot"},
+    ]
 }
