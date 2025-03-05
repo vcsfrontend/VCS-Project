@@ -344,13 +344,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="col-xl-3">
                                 <label class="form-label my-2">webhook</label>
                                 <input type="text" class="form-control" id="task-name" placeholder="webhook"
                                     formControlName="webhook">
                             </div>
-                        </div>
+                        </div>-->
                         <!-- <button type="button" (click)="prevStep(2)">Back</button>
                         <a href="javascript:void(0);" download class="btn btn-danger ms-3 me-3"
                             (click)="downloadOptimizerFile()" *ngIf="optimizeId>0">
@@ -358,6 +358,8 @@
                         </a> -->
                         <button type="submit" data-bs-toggle="modal"
                         data-bs-target="#exampleModalLg" (click)="openLg1(content4)">Submit</button>
+                        <button type="button" (click)="downloadOutputFile(layoutUrl)" *ngIf="layoutUrl">Button1</button>
+                        <button type="button" (click)="downloadOutputFile(lableUrl)" *ngIf="lableUrl">Button2</button>
                     </div>
 
                 </form>
@@ -388,14 +390,20 @@
                             <div class="col-xl-12 col-lg-12 col-md-12">
                                 <label for="contact-phone" class="form-label">type</label>
                                 <ng-select formControlName="type" [items]="type" bindLabel="name"
-                                    bindValue="name" placeholder="Select type">
+                                    bindValue="name" placeholder="Select type" [ngClass]="{ 'is-invalid': generatedrFormSubmitted && g['type'].errors }">
                                 </ng-select>
+                                <div *ngIf="generatedrFormSubmitted && g['type'].errors" class="invalid-feedback">
+                                    <div *ngIf="g['type'].errors['required']">Type is required</div>
+                                </div>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12">
                                 <label for="contact-phone" class="form-label">units</label>
                                 <ng-select formControlName="units" [items]="units" bindLabel="name"
-                                    bindValue="name" placeholder="Select units">
+                                    bindValue="name" placeholder="Select units" [ngClass]="{ 'is-invalid': generatedrFormSubmitted && g['units'].errors }">
                                 </ng-select>
+                                <div *ngIf="generatedrFormSubmitted && g['units'].errors" class="invalid-feedback">
+                                    <div *ngIf="g['units'].errors['required']">Units is required</div>
+                                </div>
                             </div>
                         </div>
                     </div>
