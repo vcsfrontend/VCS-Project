@@ -215,24 +215,24 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/crm2',
     // },
-    {
-      title: 'superadmin',
-      icon: 'bi bi-shield-lock',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path : "/dashboard/superadmin"
-    },
-    {
-      title: 'Dashboard2',
-      icon: 'bi bi-shield-lock',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path : "/dashboard/dashboard2"
-    },
+    // {
+    //   title: 'superadmin',
+    //   icon: 'bi bi-shield-lock',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path : "/dashboard/superadmin"
+    // },
+    // {
+    //   title: 'Dashboard2',
+    //   icon: 'bi bi-shield-lock',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path : "/dashboard/dashboard2"
+    // },
     
         
     // //PAGES
@@ -276,52 +276,52 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/projects',
     // },
-    {
-      title: 'leads',
-      icon: 'bi-layout-text-window side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path: '/apps/crm/leads'
-    },
-    {
-      title: 'deals',
-      icon: 'bi-grid side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path: '/apps/crm/deals'
-    },
-    {
-      title: 'Designers',
-      dirchange: false,
-      type: 'link',
-      icon: ' bi-file-earmark-text side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/designers',
-    },
-    {
-      title: 'my-Tasks',
-      dirchange: false,
-      type: 'link',
-      icon: 'bi-layout-text-window side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/mytask',
-    },
-    {
-      title: 'users',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: 'bi-people',
-      active: false,
-      selected: false,
-      path: '/dashboard/users',
-    },
+    // {
+    //   title: 'leads',
+    //   icon: 'bi-layout-text-window side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path: '/apps/crm/leads'
+    // },
+    // {
+    //   title: 'deals',
+    //   icon: 'bi-grid side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path: '/apps/crm/deals'
+    // },
+    // {
+    //   title: 'Designers',
+    //   dirchange: false,
+    //   type: 'link',
+    //   icon: ' bi-file-earmark-text side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/designers',
+    // },
+    // {
+    //   title: 'my-Tasks',
+    //   dirchange: false,
+    //   type: 'link',
+    //   icon: 'bi-layout-text-window side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/mytask',
+    // },
+    // {
+    //   title: 'users',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: 'bi-people',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/users',
+    // },
     {
       title: 'optimizer',
       icon: 'bi-file-earmark',
@@ -331,24 +331,24 @@ export class NavService implements OnDestroy {
       active: false,
       path : "/dashboard/optimizer"
     },
-    {
-      title: 'proposal',
-      icon: 'bi-bag side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path: '/apps/crm/proposal'
-    },
-    {
-      title: 'clients',
-      icon: 'bi-suitcase-lg side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path: '/apps/crm/clients'
-    },
+    // {
+    //   title: 'proposal',
+    //   icon: 'bi-bag side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path: '/apps/crm/proposal'
+    // },
+    // {
+    //   title: 'clients',
+    //   icon: 'bi-suitcase-lg side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path: '/apps/crm/clients'
+    // },
     // {
     //   title: 'Project-details',
     //   dirchange: false,
