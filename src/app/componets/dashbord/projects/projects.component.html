@@ -482,7 +482,7 @@
                         <p class="pj-name">{{item.modifiedTime}} </p>
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <a class="btn btn-sm btn-primary btn-wave me-3" ><i
-                                class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Details</a>
+                                class="bi bi-calendar-date align-middle me-1 fw-medium"></i>{{item.designId}}</a>
                             <a class="btn btn-sm btn-primary btn-wave ms-5 d-flex" ><i
                                 class="ri-add-line align-middle me-1 fw-medium"></i> </a>
                         </div>
@@ -550,7 +550,7 @@
                             {{ element.specName | slice: 0: 12 }}
                             </td>
                           </ng-container>                                                    
-                        <ng-container matColumnDef="city">
+                        <!-- <ng-container matColumnDef="city">
                             <th mat-header-cell *matHeaderCellDef> city name</th>
                             <td
                             mat-cell *matCellDef="let element"
@@ -559,7 +559,7 @@
                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             {{element.city | slice: 0: 12 }}
                             </td>
-                        </ng-container>
+                        </ng-container> -->
                         <ng-container matColumnDef="modifiedTime">
                             <th mat-header-cell *matHeaderCellDef> modifiedTime</th>
                             <td mat-cell *matCellDef="let element"
