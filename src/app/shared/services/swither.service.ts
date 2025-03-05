@@ -82,7 +82,7 @@ export class SwitherService {
   ProjBomList(designId: any): Observable<any> { return this.http.get(`${this.adonaiURL}/enterprise/getBomByProjectId?designId=${designId}`); }
   AuxilaryCosts(designId: any): Observable<any> { return this.http.get(`${this.adonaiURL}/enterprise/getAuxilaryCosts?designId=${designId}`);}
   Renderings(designId: any): Observable<any> { return this.http.get(`${this.adonaiURL}/enterprise/getRenderings?designId=${designId}`); }
-  optimizeImportData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}enterprise/optimize`, data); }
+  optimizeImportData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/optimize`, data); }
   GeneratedOutput(value:any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/generated_output/${value}`); } 
   optimizeDownload(optimizeId:any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/generated_output/${optimizeId}`); }
   ProjectDataList(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}elite/getProjectDataList?email=${email}`); }
