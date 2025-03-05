@@ -30,8 +30,10 @@ import { MatTableModule } from '@angular/material/table';
 
 
 export class OptimizerComponent extends BaseComponent {
-  public optimizerForm!: FormGroup;
+  public optimizerForm!: FormGroup;  
   public optimizerFormSubmitted = false;
+  public generatedForm!: FormGroup;
+  public generatedrFormSubmitted = false;
   public optimizeId: any = '';
   public optimizeFormSample!: FormGroup;
   public stepIndex = 1;
@@ -68,6 +70,12 @@ export class OptimizerComponent extends BaseComponent {
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
     this.getGeneratedOutputJson(value);
+
+    this.generatedForm = this.fb.group({
+      id: [''],
+      type: [''],
+      units: ['']
+    });
 
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
@@ -353,6 +361,9 @@ export class OptimizerComponent extends BaseComponent {
           if (res.status == true) {
             this.optimizeFormSample.reset();
             this.optimizeId = (res.id) ? res.id : '';
+
+            this.generatedForm.patchValue({ id: this.optimizeId });
+
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -368,4 +379,31 @@ export class OptimizerComponent extends BaseComponent {
     }
 
   }
+
+
+  onGeneratedSubmit(modal: any) {
+    this.generatedrFormSubmitted = true;
+    console.log('Form Data:', this.generatedForm.value);
+
+    if (this.generatedForm.valid) {
+      this.switchService.optimizeGeneratedOutputData(this.generatedForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();            
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+
+          }
+        }
+      })
+      // console.log('Form Submitted:', this.optimizerForm.value);
+      // Reset form after submission (optional)
+      this.generatedForm.reset();
+      this.generatedrFormSubmitted = false;
+    }
+  }
+
 }

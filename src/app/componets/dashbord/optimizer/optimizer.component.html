@@ -372,7 +372,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <ng-template #content4 let-modal>
-                <form>
+                <form [formGroup]="generatedForm" (ngSubmit)="onGeneratedSubmit(modal)">
                     <div class="modal-header justify-content-center">
                         <h6 class="modal-title" id="staticBackdropLabel3">Adonai Information </h6>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -388,13 +388,13 @@
                             <div class="col-xl-12 col-lg-12 col-md-12">
                                 <label for="contact-phone" class="form-label">type</label>
                                 <ng-select formControlName="type" [items]="type" bindLabel="name"
-                                    bindValue="designId" placeholder="Select type">
+                                    bindValue="name" placeholder="Select type">
                                 </ng-select>
                             </div>
                             <div class="col-xl-12 col-lg-12 col-md-12">
                                 <label for="contact-phone" class="form-label">units</label>
                                 <ng-select formControlName="units" [items]="units" bindLabel="name"
-                                    bindValue="designId" placeholder="Select units">
+                                    bindValue="name" placeholder="Select units">
                                 </ng-select>
                             </div>
                         </div>
