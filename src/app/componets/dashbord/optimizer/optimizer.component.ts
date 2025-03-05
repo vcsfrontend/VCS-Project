@@ -49,7 +49,6 @@ export class OptimizerComponent extends BaseComponent {
   metaData: any;
 
 
-
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
     super();
   }
@@ -297,6 +296,9 @@ export class OptimizerComponent extends BaseComponent {
 
   VerticallyScrol(content: any) {
     this.modalService.open(content, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, size: 'xl' });
+  }
+  openLg1(content4: any) {
+    this.modalService.open(content4, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, });
   }
 
   downloadOptimizerFile() {
