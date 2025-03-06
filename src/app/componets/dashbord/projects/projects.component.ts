@@ -92,7 +92,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   pageSize = 5;
   modal: any; ttlAmtToBeRcvd: any; projectLst: any=[]; userDetails: any; dateDiff: any;
   roleid:any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
-  pondOptions: FilePondOptions; lastField: any; ProDataList: any
+  pondOptions: FilePondOptions; lastField: any; ProDataList: any;
+  spinnerLoading = false;
+  pendingRequests = 0;
 
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
@@ -241,6 +243,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   getAllStages() {
+    this.startLoading();
     let payload = {
       "email": JSON.parse(this.userData).email,
       "companyname": JSON.parse(this.userData).companyName,
@@ -255,8 +258,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         } else {
           this.toastr.error(res.message)
         }
+        this.stopLoading();
       },
       error: (error) => {
+        this.stopLoading();
         this.toastr.error(error.statusText);
       },
     })
@@ -277,6 +282,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   getAllPmntStages() {
+    this.startLoading();
     let payload = {
       "email": JSON.parse(this.userData).email,
       "companyname": JSON.parse(this.userData).companyName,
@@ -291,8 +297,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         } else {
           this.toastr.error(res.message)
         }
+        this.stopLoading();
       },
       error: (error) => {
+        this.stopLoading();
         this.toastr.error(error.statusText);
       },
     })
@@ -425,6 +433,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   getLst() {
+    this.startLoading();
     let payload = {
       email: JSON.parse(this.userDetails)?.email,
       type: JSON.parse(this.userDetails)?.type,
@@ -444,6 +453,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         } else {
           this.toastr.error(res.message);
         }
+        this.stopLoading();
       }
     })
   }
@@ -454,6 +464,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   getMatCardLst() {
+    this.startLoading();
     if (this.addFilter == '2' && this.projId == '') {
       this.toastr.warning('Please enter Project Id');
     }
@@ -502,7 +513,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           } else {
             this.toastr.error(res.message);
           }
+          this.stopLoading();
         }
+        
       })
     }
   }
@@ -1444,7 +1457,21 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.updateButtons();
   }
 
+  startLoading() {
+    this.pendingRequests++;
+    this.spinnerLoading = true;
+  }
+
+  // Stop loading: Decrease pending requests count and hide spinner when all requests complete
+  stopLoading() {
+    this.pendingRequests--;
+    if (this.pendingRequests === 0) {
+      this.spinnerLoading = false;
+    }
+  }
+
   getProjectList() {
+    this.startLoading();
     const userEmail = JSON.parse(this.userDetails)?.email;
     if (!userEmail) {
       this.toastr.error("User email not found.");
@@ -1479,10 +1506,12 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         } else {
           this.toastr.error(res?.message || "Invalid response format.");
         }
+        this.stopLoading();
       },
       error: (error) => {
         console.error("API Error:", error);
         this.toastr.error(error.statusText || "An error occurred while fetching projects.");
+        this.stopLoading();
       },
     });
   }
