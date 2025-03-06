@@ -79,7 +79,7 @@ jobs:
         run: ls -R ./dist
 
       - name: Upload artifact for deployment
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: angular-app
           path: ./dist/preview/browser  # Adjust this to match your output folder
@@ -89,7 +89,7 @@ jobs:
     needs: build_and_deploy
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: angular-app
       - name: Deploy to Azure Static Web Apps
