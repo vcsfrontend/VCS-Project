@@ -78,7 +78,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
   action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
-  estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = false;
+  estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false;topDisplayedCards: any;
   dataSource = new MatTableDataSource<any>();
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
@@ -91,11 +91,20 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
-  }
+  }  
 
   toggleShowMore(): void {
     this.showMore = !this.showMore;
     this.updateDisplayedCards();
+  }
+
+  updateTopDisplayedCards(): void {
+    this.topDisplayedCards = this.topshowMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
+  }
+
+  toggleTopShowMore(): void {
+    this.topshowMore = !this.topshowMore;
+    this.updateTopDisplayedCards();
   }
 
   @HostListener('document:keydown.enter', ['$event'])
@@ -484,6 +493,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             // this.addDateDifference();
             this.matcardLst?.sort((a: any, b: any) => a.priorityDays - b.priorityDays);
             this.toggleShowMore();
+            this.toggleTopShowMore();
           } else {
             this.toastr.error(res.message);
           }
