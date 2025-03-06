@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnInit, ViewChild } from '@angular/core';
 import {
   ChartComponent, ApexAxisChartSeries, ApexChart, ApexXAxis, ApexDataLabels, ApexStroke,
   ApexYAxis, ApexTitleSubtitle, ApexLegend, ApexResponsive, NgApexchartsModule
@@ -79,14 +79,19 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false;topDisplayedCards: any;
-  dataSource = new MatTableDataSource<any>();
+  
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatPaginator) elitePaginator!: MatPaginator;
+
+  @ViewChild('myProjectPaginator') myProjectPaginator!: MatPaginator;
+@ViewChild('elitePaginator') elitePaginator!: MatPaginator;
+
+  //@ViewChild(MatPaginator) paginator!: MatPaginator;
+  //@ViewChild(MatPaginator) elitePaginator!: MatPaginator;
+
   pageSize = 5;
-  modal: any; ttlAmtToBeRcvd: any; projectLst: any; userDetails: any; dateDiff: any;
-  roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
+  modal: any; ttlAmtToBeRcvd: any; projectLst: any=[]; userDetails: any; dateDiff: any;
+  roleid:any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
   pondOptions: FilePondOptions; lastField: any; ProDataList: any
 
   updateDisplayedCards(): void {
@@ -146,7 +151,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal,
     private toastr: ToastrService, public switchService: SwitherService, private dp: DatePipe,
     private router: Router,
-    private offcanvasService: NgbOffcanvas,
+    private offcanvasService: NgbOffcanvas
   ) {
     // Initialize FilePond options if needed
     super();
@@ -393,15 +398,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.myProjectDataSource.paginator = this.paginator;
+    
+    this.myProjectDataSource.paginator = this.myProjectPaginator;
     this.eliteDataSource.paginator = this.elitePaginator; 
     this.updateButtons();
   }
 
   getSNo(index: number): number {
-    if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
-      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    if (this.myProjectPaginator && this.myProjectPaginator.pageIndex !== undefined && this.myProjectPaginator.pageSize !== undefined) {
+      return this.myProjectPaginator.pageIndex * this.myProjectPaginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
@@ -433,7 +438,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       next: (res: any) => {
         if (res) {
           this.projectLst = res.projList;
-          this.myProjectDataSource.data = res.projList;
+          this.myProjectDataSource.data = this.projectLst;          
           // this.projectLst = this.projectLst.filter((e:any) => e.dateDifference >= 0);
           // this.projectLst.sort((a:any, b:any) => a.dateDifference - b.dateDifference);
         } else {
@@ -1347,10 +1352,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.ReadMore = !this.ReadMore; //not equal to condition
     this.visible = !this.visible
   }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+ 
 
   EliteApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -1471,7 +1473,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           
           // Assign data to Angular Material Table data source
           this.eliteDataSource.data = this.projectList;
+          this.elitePaginator.length=this.projectList.length;          
           console.log("Updated DataSource:", this.eliteDataSource);
+          console.log("Updated DataSource:", this.elitePaginator);
         } else {
           this.toastr.error(res?.message || "Invalid response format.");
         }
