@@ -260,3 +260,21 @@ th {
 .mat-elevation-z8 {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.spinner-overlay {
+  position: fixed; /* Ensures it covers the full viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensures it's above other elements */
+}
+
+.spinner {
+  width: 80px !important;
+  height: 80px !important;
+}
