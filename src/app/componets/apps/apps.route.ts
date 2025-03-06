@@ -183,6 +183,16 @@ export const admin: Routes = [
         import('./crm/leads/leads.component').then((m) => m.LeadsComponent),
     },
     {
+      path: 'crm/proposal',
+      loadComponent: () =>
+        import('./crm/proposal/proposal.component').then((m) => m.ProposalComponent),
+    },
+    {
+      path: 'crm/clients',
+      loadComponent: () =>
+        import('./crm/clients/clients.component').then((m) => m.ClientsComponent),
+    },
+    {
       path: 'crypto/buy-sell',
       loadComponent: () =>
         import('./crypto/buy-sell/buy-sell.component').then(

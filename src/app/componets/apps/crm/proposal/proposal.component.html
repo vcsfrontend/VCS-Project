@@ -1,0 +1,118 @@
+<div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                {{proposalCount}} Proposal found
+            </div>
+            <mat-form-field class="filter-field">
+                <mat-label>Seach</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+                         data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Filter</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
+                         data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Bulk Upload</button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg">Add New</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>                    
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>Actions</th>
+                        <td mat-cell *matCellDef="let element">
+                            <a href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                ata-bs-toggle="offcanvas" 
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="ri-alarm-line"></i>
+                            </a>
+                            <a href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                ata-bs-toggle="offcanvas" 
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                <i class="ri-eye-line"></i>
+                            </a>
+                            <span class="m-1" ngbDropdown placement="right-top">
+                                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
+                                    ngbDropdownToggle></i>
+                                <ul class="dropdown-menu z-1" ngbDropdownMenu>
+                                    <li class="m-2">
+                                        <button class="btn btn-warning label-btn label-end w-100"
+                                             data-bs-toggle="offcanvas"
+                                            data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            >
+                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-danger label-btn label-end w-100">
+                                            Delete<i class="ri-delete-bin-line label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                   
+                    <ng-container matColumnDef="executive">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
+                        <td mat-cell *matCellDef="let element"><a href="javascript:void(0);" data-bs-toggle="tooltip"
+                                ngbTooltip="{{element.executive}}" tooltipClass="tooltip-primary"
+                                class="avatar avatar-sm online avatar-rounded">
+                                <img src="./assets/images/brand-logos/profile1.jpg" alt="img">
+                            </a></td>
+
+                    </ng-container>
+                    <ng-container matColumnDef="products">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Products</th>
+                        <td mat-cell *matCellDef="let element"> {{element.products}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="badge me-1" [ngClass]="getStatusClass(element.status)">
+                                {{ element.status }}
+                            </span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="followUpDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>FollowUpDate</th>
+                        <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date:'dd-MM-yy' }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="contact">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+                        <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                    </ng-container>                    
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        </div>        
+    </div>
+</div>

@@ -17,3 +17,47 @@
     width: 150%;
     margin-left: -15px;
 }
+
+.app-sidebar .side-menu__item.active{
+    padding: 0.65rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 0.82rem;
+    color: white;
+    font-weight: 300;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    letter-spacing: 1px;
+    background-color: #006699 !important;
+}
+.app-sidebar .side-menu__item:hover{
+    padding: 0.65rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-size: 0.82rem;
+    color: white;
+    font-weight: 300;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    letter-spacing: 1px;
+    background-color: #006699 !important;
+}
+
+.app-sidebar .side-menu__item.active .side-menu__label{
+    color: white;
+}
+.app-sidebar .side-menu__item:hover .side-menu__label{
+    color: white;
+}
+.app-sidebar .side-menu__item.active .side-menu__icon{
+    fill: white;
+    color: white;
+}
+.app-sidebar .side-menu__item:hover  .side-menu__icon{
+    fill: white;
+    color: white;
+}

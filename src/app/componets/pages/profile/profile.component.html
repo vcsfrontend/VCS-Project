@@ -1,5 +1,12 @@
-<app-page-header title="Profile" title1="Pages" activeTitle="Profile"></app-page-header>
-
+<div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h1 class="page-title fw-medium fs-18 mb-2">Profile</h1>
+    <nav>
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Profile</li>
+        </ol>
+    </nav>
+</div>
 <div class="row">
     <div class="col-xl-4">
         <div class="card custom-card">
@@ -14,13 +21,12 @@
                             </div>
                             <div class="flex-fill main-profile-info">
                                 <div class="d-flex align-items-center justify-content-between mb-1">
-                                    <h6 class="fw-medium mb-1">Toni Stark</h6>
+                                    <h6 class="fw-medium mb-1">{{ userData.username }}</h6>
                                 </div>
-                                <p class="mb-1 text-muted op-7">Chief Executive Officer (C.E.O)</p>
-                                <p class="fs-12 mb-0 op-5">
-                                    <span class="me-3"><i class="ri-building-line me-1 align-middle"></i>Georgia</span>
-                                    <span><i class="ri-map-pin-line me-1 align-middle"></i>Washington D.C</span>
-                                </p>
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <h6 class="fs-12 m-1"><i class="ri-calendar-line"></i> {{ userData.dob }}</h6>
+                                    <h6 class="fs-12 m-1"><i class="ri-map-pin-line"></i> {{ userData.city }}</h6>
+                                </div>
                             </div>
                         </div>
                         <div class="d-sm-flex justify-content-center mb-0">
@@ -43,20 +49,14 @@
                                     <span class="avatar avatar-sm avatar-rounded me-2 bg-light border text-muted">
                                         <i class="ri-mail-line align-middle fs-14"></i>
                                     </span>
-                                    tonistark2531&#64;gmail.com
+                                    {{ userData.email }}
                                 </p>
                                 <p class="mb-4">
                                     <span class="avatar avatar-sm avatar-rounded me-2 bg-light border text-muted">
                                         <i class="ri-phone-line align-middle fs-14"></i>
                                     </span>
-                                    +(555) 555-1234
+                                    {{ userData.phoneNumber }}
                                 </p>
-                                <!-- <p class="mb-0">
-                                    <span class="avatar avatar-sm avatar-rounded me-2 bg-light border text-muted">
-                                        <i class="ri-map-pin-line align-middle fs-14"></i>
-                                    </span>
-                                    MIG-1-11, Monroe Street, Georgetown, USA,20071
-                                </p> -->
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                 <div
                     class="p-3 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
                     <div>
-                        <ul ngbNav #nav="ngbNav" [activeId]="3"
+                        <ul ngbNav #nav="ngbNav" [activeId]="1"
                             class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab"
                             role="tablist">
                             <li [ngbNavItem]="1" class="nav-item" role="presentation">
@@ -80,46 +80,54 @@
                                         class="ri-gift-line me-1 align-middle d-inline-block"></i>Personal Info</button>
                                 <ng-template ngbNavContent>
                                     <div class="row gy-3">
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="contact-name" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="contact-name" placeholder="Name">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" class="form-control" placeholder="firstName" value="{{ userData.firstName }}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="contact-mail" class="form-label">Company Name</label>
-                                            <input type="email" class="form-control" id="contact-mail" placeholder="companyName">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="lastName" class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" placeholder="lastName" value="{{ userData.lastName }}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="company-name" class="form-label">Products</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="dob" class="form-label">Dob</label>
+                                            <input type="email" class="form-control" placeholder="dob" value="{{ userData.dob}}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="company-name" class="form-label">Zip Code</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="Email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" placeholder="email" value="{{ userData.email }}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="date" class="form-label">Follow up date</label>
-                                            <input type="date" class="form-control" id="contact-phone" placeholder="">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="Country" class="form-label">Country</label>
+                                            <input type="text" class="form-control"  placeholder="Country" value="{{ userData.country }}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="company-name" class="form-label">State</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                                            <input type="text" class="form-control"  placeholder="phoneNumber" value="{{ userData.phoneNumber }}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="company-name" class="form-label">City</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="username" class="form-label">username</label>
+                                            <input type="text" class="form-control" placeholder="username" value="{{ userData.username }}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="company-name" class="form-label">Address</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="city" class="form-label">City</label>
+                                            <input type="text" class="form-control" placeholder="city" value="{{ userData.city }}" disabled="true">
                                         </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="contact-phone" class="form-label">contact</label>
-                                            <input type="tel" class="form-control" id="contact-phone" placeholder="Enter contact">
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="companyName" class="form-label">companyName</label>
+                                            <input type="text" class="form-control"  placeholder="companyName" value="{{ userData.companyName }}" disabled="true">
+                                        </div>
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="createdDate" class="form-label">createdDate</label>
+                                            <input type="tel" class="form-control" placeholder="createdDate" value="{{ userData.createdDate | date:'dd/MM/yyyy' }}" disabled="true">
+                                        </div>
+                                        <div class="col-xl-3 col-lg-3 col-md-3">
+                                            <label for="adonaiRole" class="form-label">Role</label>
+                                            <input type="tel" class="form-control" placeholder="adonaiRole" value="{{ userData.adonaiRole }}" disabled="true">
                                         </div>
                                     </div>
                                 </ng-template>
                             </li>
-                            <li [ngbNavItem]="2" class="nav-item" role="presentation">
+                            <!-- <li [ngbNavItem]="2" class="nav-item" role="presentation">
                                 <button ngbNavLink class="nav-link" id="posts-tab" data-bs-toggle="tab"
                                     data-bs-target="#posts-tab-pane" type="button" role="tab"
                                     aria-controls="posts-tab-pane" aria-selected="false"><i
@@ -190,69 +198,20 @@
                                         </div>
                                     </div>
                                 </ng-template>
-                            </li>
-                            <li [ngbNavItem]="4" class="nav-item" role="presentation">
-                                <button ngbNavLink class="nav-link" id="gallery-tab" data-bs-toggle="tab"
-                                    data-bs-target="#gallery-tab-pane" type="button" role="tab"
-                                    aria-controls="gallery-tab-pane" aria-selected="false"><i
-                                        class="ri-exchange-box-line me-1 align-middle d-inline-block"></i>Dashboard Settings</button>
-                                <ng-template ngbNavContent>
-                                    <div class="row gy-3">
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="contact-name" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="contact-name" placeholder="Name">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="contact-mail" class="form-label">Company Name</label>
-                                            <input type="email" class="form-control" id="contact-mail" placeholder="companyName">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">Products</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">Zip Code</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="date" class="form-label">Follow up date</label>
-                                            <input type="date" class="form-control" id="contact-phone" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">State</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">City</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">Address</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="contact-phone" class="form-label">contact</label>
-                                            <input type="tel" class="form-control" id="contact-phone" placeholder="Enter contact">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="email" class="form-label">E-mail</label>
-                                            <input type="email" class="form-control" id="contact-phone" placeholder="Enter email">
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                 </div>
                 <div class="p-3">
                     <div class="tab-content" id="myTabContent">
-                        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                        <div [ngbNavOutlet]="nav"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
 

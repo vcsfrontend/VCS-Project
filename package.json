@@ -34,6 +34,8 @@
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
     "@ng-select/ng-select": "^12.0.7",
     "@ngneat/input-mask": "^6.1.0",
+    "@ngx-formly/bootstrap": "^6.3.12",
+    "@ngx-formly/core": "^6.3.12",
     "@popperjs/core": "^2.11.8",
     "@swimlane/ngx-datatable": "^20.1.0",
     "@types/google.maps": "^3.55.2",

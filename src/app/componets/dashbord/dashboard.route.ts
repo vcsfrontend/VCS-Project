@@ -47,11 +47,11 @@ export const admin: Routes = [
   loadComponent: () =>
     import('./hrm/hrm.component').then((m) => m.HrmComponent),
 },
-// {
-//   path: 'superadmin',
-//   loadComponent: () =>
-//     import('./superadmin/superadmin.component').then((m) => m.SuperadminComponent),
-// },
+{
+  path: 'superadmin',
+  loadComponent: () =>
+    import('./superadmin/superadmin.component').then((m) => m.SuperadminComponent),
+},
 {
   path: 'nft',
   loadComponent: () =>
@@ -118,6 +118,11 @@ export const admin: Routes = [
     import('./enterprise/enterprise.component').then((m) => m.EnterpriseComponent),
 },
 {
+  path: 'optimizer',
+  loadComponent: () =>
+    import('./optimizer/optimizer.component').then((m) => m.OptimizerComponent),
+},
+{
   path: 'bom',
   loadComponent: () =>
     import('./bom/bom.component').then((m) => m.BomComponent),
@@ -141,6 +146,17 @@ export const admin: Routes = [
     path: 'leads',
     loadComponent: () =>
     import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
+  },
+  // {
+  //   path: 'contacts',
+  //   loadComponent: () =>
+  //   import('../pages/contacts/contacts.component').then((m) => m.ContactsComponent),
+  // },
+  
+  {
+    path: 'deals',
+    loadComponent: () =>
+    import('../apps/crm/deals/deals.component').then((m) => m.DealsComponent),
   },
 {
   path: 'personal',

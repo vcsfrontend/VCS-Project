@@ -97,3 +97,184 @@
   color: #000000;
   text-align: center;
 }
+
+.filter-field {
+  margin-top: -3px !important;
+  margin-bottom: -45px !important;
+  width: 35%; /* Adjust width if needed */
+  max-height: 72px !important;
+  margin-left: 6% !important;
+  
+}
+
+.scroll-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  max-width: 1080px;
+  overflow: hidden;
+}
+
+.scroll-content {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  white-space: nowrap;
+  width: 1350px;
+  margin-left: 40px;
+}
+
+.scroll-content::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari */
+}
+
+.scroll-item {
+  padding: 0 15px ;
+  text-align: center;
+  cursor: pointer;
+}
+
+.scroll-btn {
+  color: rgb(13, 0, 0);
+  border: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.left {
+  left: 0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.right {
+  right: 0;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.scroll-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (max-width: 1200px) {
+  
+  .scroll-container {
+    max-width: 500px;
+  }
+
+  .scroll-content {
+    margin-left: 20px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  
+  .scroll-container {
+    max-width: 400px;
+  }
+
+  .scroll-content {
+    margin-left: 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  
+  .scroll-container {
+    max-width: 500px;
+    overflow-x: auto; /* Allow horizontal scrolling */
+  }
+
+  .scroll-content {
+    width: 800px; /* Set a fixed width to allow scrolling */
+  }
+
+  .scroll-item {
+    padding: 10px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  
+  .scroll-container {
+    max-width: 100%;
+  }
+
+  .scroll-content {
+    width: 700px; /* Ensures scrolling space */
+  }
+
+  .scroll-item {
+    padding: 8px;
+  }
+
+  .scroll-btn {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+ 
+  .scroll-content {
+    width: 600px;
+  }
+
+  .scroll-item {
+    padding: 6px;
+  }
+
+  .scroll-btn {
+    font-size: 12px;
+  }
+}
+
+.opp {
+  margin-top: 115px;
+  margin-bottom: 120px;
+
+}
+.custom-img {
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+}
+
+.example-card {
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  font-weight: bold;
+}
+
+.mat-elevation-z8 {
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.spinner-overlay {
+  position: fixed; /* Ensures it covers the full viewport */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensures it's above other elements */
+}
+
+.spinner {
+  width: 80px !important;
+  height: 80px !important;
+}

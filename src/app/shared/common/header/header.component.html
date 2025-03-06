@@ -22,9 +22,9 @@
 
       <!-- Start::header-element -->
       <div class="header-element mx-lg-0 mx-2">
-        <a aria-label="Hide Sidebar" (click)="toggleSidebar()"
+        <!-- <a aria-label="Hide Sidebar" (click)="toggleSidebar()"
           class="sidemenu-toggle header-link animated-arrow hor-toggle horizontal-navtoggle"
-           data-bs-toggle="sidebar" ><span ></span></a>
+           data-bs-toggle="sidebar" ><span ></span></a> -->
         </div>
         <!-- End::header-element -->
 
@@ -386,16 +386,16 @@
       <!-- End::header-element -->
 
       <!-- Start::header-element  notifications-->
-      <!-- <li ngbDropdown class="header-element notifications-dropdown d-xl-block d-none" [autoClose]="'outside'"> -->
-        <!-- Start::header-link|dropdown-toggle -->
-        <!-- <a ngbDropdownToggle href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-toggle="dropdown"
+      <li ngbDropdown class="header-element notifications-dropdown d-xl-block d-none" [autoClose]="'outside'">
+         <!-- Start::header-link|dropdown-toggle  -->
+        <a ngbDropdownToggle href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-toggle="dropdown"
           data-bs-auto-close="outside" id="messageDropdown" aria-expanded="false">
           <i class="bi bi-bell header-link-icon"></i>
           <span class="header-icon-pulse bg-secondary rounded pulse pulse-secondary"></span>
-        </a> -->
-        <!-- End::header-link|dropdown-toggle -->
-        <!-- Start::main-header-dropdown -->
-        <!-- <div ngbDropdownMenu   class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
+        </a> 
+         <!-- End::header-link|dropdown-toggle  -->
+         <!-- Start::main-header-dropdown  -->
+        <div ngbDropdownMenu   class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none">
           <div  class="p-3">
             <div class="d-flex align-items-center justify-content-between">
               <p class="mb-0 fs-16">Notifications</p>
@@ -405,106 +405,19 @@
           <div class="dropdown-divider"></div>
           <overlay-scrollbars [defer]>
             <ul class="list-unstyled mb-0" id="header-notification-scroll" (click)="handleCardClick($event)">
-              <li ngbDropdownItem class="dropdown-item" id="not1">
-                <div class="d-flex align-items-center">
-                  <div class="pe-2 lh-1">
-                    <span class="avatar avatar-rounded">
-                      <img src="./assets/images/faces/11.jpg" alt="">
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 d-flex align-items-center justify-content-between">
-                    <div>
-                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">John Doe</a></p>
-                      <span class="text-muted fw-normal fs-12 header-notification-text">Hey there!
-                      What's up?</span>
-                    </div>
-                    <div>
-                      <a href="javascript:void(0);"(click)="removeNotify('not1')"
-                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
-                      class="ti ti-x fs-16"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li ngbDropdownItem class="dropdown-item" id="not2">
-                <div class="d-flex align-items-center">
-                  <div class="pe-2 lh-1">
-                    <span class="avatar bg-secondary-transparent avatar-rounded">
-                      <img src="./assets/images/faces/21.jpg" alt="">
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 d-flex align-items-center justify-content-between">
-                    <div>
-                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Customer Support</a></p>
-                      <span class="text-muted fw-normal fs-12 header-notification-text">Great job on
-                      resolving the issue! Thank you!</span>
-                    </div>
-                    <div>
-                      <a href="javascript:void(0);" (click)="removeNotify('not2')"
-                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
-                      class="ti ti-x"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li ngbDropdownItem class="dropdown-item" id="not3">
-                <div class="d-flex align-items-center">
-                  <div class="pe-2 lh-1">
-                    <span class="avatar bg-pink-transparent avatar-rounded">
-                      <img src="./assets/images/faces/20.jpg" alt="">
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 d-flex align-items-center justify-content-between">
-                    <div>
-                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Digital Marketing
-                      Trends</a></p>
-                      <span class="text-muted fw-normal fs-12 header-notification-text">Next Thursday
-                      at 2:30 PM</span>
-                    </div>
-                    <div>
-                      <a href="javascript:void(0);" (click)="removeNotify('not3')"
-                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
-                      class="ti ti-x"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </li>
               <li ngbDropdownItem class="dropdown-item" id="not4">
                 <div class="d-flex align-items-center">
                   <div class="pe-2 lh-1">
-                    <span class="avatar bg-danger-transparent avatar-rounded"><i
-                    class="ti ti-circle-check fs-18"></i></span>
+                    <span class="avatar bg-danger-transparent avatar-rounded">40</span>
                   </div>
                   <div class="flex-grow-1 d-flex align-items-center justify-content-between">
                     <div>
-                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Amount: $50.00 paid for
-                      the order</a></p>
+                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Leads Follow-Ups</a></p>
                       <span class="text-muted fw-normal fs-12 header-notification-text">Transaction
                       ID: 123456789</span>
                     </div>
                     <div>
                       <a href="javascript:void(0);" (click)="removeNotify('not4')"
-                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
-                      class="ti ti-x"></i></a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li ngbDropdownItem class="dropdown-item" id="not5">
-                <div class="d-flex align-items-center">
-                  <div class="pe-2 lh-1">
-                    <span class="avatar bg-success-transparent avatar-rounded">
-                      <img src="./assets/images/faces/6.jpg" alt="">
-                    </span>
-                  </div>
-                  <div class="flex-grow-1 d-flex align-items-center justify-content-between">
-                    <div>
-                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Samantha</a></p>
-                      <span class="text-muted fw-normal fs-12 header-notification-text">Would you like
-                      to connect?</span>
-                    </div>
-                    <div>
-                      <a href="javascript:void(0);" (click)="removeNotify('not5')"
                         class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
                       class="ti ti-x"></i></a>
                     </div>
@@ -529,7 +442,7 @@
               <h6 class="fw-medium mt-3">No New Notifications</h6>
             </div>
           </div>
-        </div> -->
+        </div> 
         <!-- End::main-header-dropdown -->
       <!-- </li> -->
       <!-- End::header-element -->
@@ -574,8 +487,10 @@
         class="bi bi-gear fs-16 me-2 op-7"></i>Settings</a></li>
         <li><a ngbDropdownItem class="dropdown-item d-flex align-items-center" routerLink="/pages/chat"><i
         class="bi bi-headset fs-18 me-2 op-7"></i>Support</a></li> -->
+        <!-- <li><a ngbDropdownItem class="dropdown-item d-flex align-items-center" routerLink="/pages/contacts/">
+          <i class="bi bi-microsoft-teams fs-18 me-2 op-7"></i>Team</a></li>  -->
         <li><a ngbDropdownItem class="dropdown-item d-flex align-items-center" routerLink="/pages/profile">
-          <i class="bi bi-gear fs-18 me-2 op-7"></i>Profile</a></li> 
+          <i class="bi bi-person fs-18 me-2 op-7"></i>Profile</a></li>
         <li><a ngbDropdownItem class="dropdown-item d-flex align-items-center" routerLink="/dashboard/settings">
           <i class="bi bi-gear fs-18 me-2 op-7"></i>Settings</a></li> 
           

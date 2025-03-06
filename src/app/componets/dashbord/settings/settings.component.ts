@@ -18,7 +18,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { Tools } from '../../../shared/common/Enums/Tools';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
-import { FlatpickrModule,FlatpickrDefaults  } from 'angularx-flatpickr';
+import { FlatpickrModule, FlatpickrDefaults } from 'angularx-flatpickr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { MatIconModule } from '@angular/material/icon';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
@@ -27,55 +27,55 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [RouterModule,NgbModule,FormsModule,ReactiveFormsModule, AngularFireModule,
-    AngularFireDatabaseModule, CommonModule,  MatFormFieldModule, MatSelectModule, FlatpickrModule,
+  imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
+    AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
     OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule],
-  providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
+  providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
-export class SettingsComponent extends BaseComponent implements OnInit{
+export class SettingsComponent extends BaseComponent implements OnInit {
   displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'email', 'dateOfBirth'];
-  dataSource = new MatTableDataSource<any>(); mailId:any = '';
+  dataSource = new MatTableDataSource<any>(); mailId: any = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  isAddEdt = false; aeTyp='a'; playersList: any; editData: any; 
-  adonai= false; crm = false; userLst:any; 
-  submitted = false; userData: any;
+  isAddEdt = false; aeTyp = 'a'; playersList: any; editData: any;
+  adonai = false; crm = false; userLst: any;
+  submitted = false; userData: any; roleid: any;
   // userForm!: FormGroup;
-   cnfmPaswrd: any = ''; paswrd:any = '';
-  adoanAiRole :any; todayDt = new Date(); 
-  crmRole :any; toolsList = [Tools.Adonai];
+  cnfmPaswrd: any = ''; paswrd: any = '';
+  adoanAiRole: any; todayDt = new Date();
+  crmRole: any; toolsList = [Tools.Adonai];
   passwordStrengthMessage: string = '';
   passwordStrengthColor: string = ''; // Control message color
   confirmPasswordStrengthMessage: string = '';
   confirmPasswordStrengthColor: string = '';
-  isPasswordValid: boolean = false; isPasswrd:boolean = false; isPassValid:boolean = false; 
-  isCnfmPwd:boolean = false;btnDisable:boolean = false; isBtnDsbl:boolean = false; isResend:boolean = false;
-  isEmailDisabled = false; isOtpDisabled = false; isCompany : string = 'col-xl-6';
-  isShowUsers = false; pload:any[] = [];isOkBtn = false; showCity:boolean = true;
+  isPasswordValid: boolean = false; isPasswrd: boolean = false; isPassValid: boolean = false;
+  isCnfmPwd: boolean = false; btnDisable: boolean = false; isBtnDsbl: boolean = false; isResend: boolean = false;
+  isEmailDisabled = false; isOtpDisabled = false; isCompany: string = 'col-xl-6';
+  isShowUsers = false; pload: any[] = []; isOkBtn = false; showCity: boolean = true;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
-  private modalRef: any; noUsers:any=''; users:any = ''; city:any = ''; selectedCountry:any = 'India'; 
+  private modalRef: any; noUsers: any = ''; users: any = ''; city: any = ''; selectedCountry: any = 'India';
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
-  isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst:any;
+  isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any;
   userForm: FormGroup = this.fb.group({
-    type : [2],
+    type: [2],
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     country: ['India'],
     dob: [new Date().toISOString().split('T')[0], Validators.required],
-    crm:false,
-    adonai:false,
+    crm: false,
+    adonai: false,
     phoneNumber: ['', Validators.required],
     username: [''],
     password: ['', [Validators.required, this.passwordValidator]],
     confirmPassword: ['', Validators.required],
-    tools : [[],Validators.required],
-    userFlag: ['settings'], 
+    tools: [[], Validators.required],
+    userFlag: ['settings'],
     updatedBy: [localStorage.getItem('username')],
-    companyCode: [''], 
+    companyCode: [''],
     city: ['', Validators.required]
   })
   productForm: FormGroup;
@@ -83,7 +83,10 @@ export class SettingsComponent extends BaseComponent implements OnInit{
   items: { label: string; checked: boolean }[] = [];
 
   addMoreVisible: boolean = false; // Flag to toggle visibility
-  addMorePmntVisible: boolean = false; 
+  addMorePmntVisible: boolean = false;
+  searchUser: string = '';
+  userDetails: any = {};
+
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible; // Toggle visibility
   }
@@ -132,22 +135,23 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     this.paymentDetails.splice(index, 1);
   }
 
-  saveData:any; savePmntData: any;
-  
+  saveData: any; savePmntData: any;
+
   planDetails = [
-    { name: 'WALL AND DEMOLITION PLAN', checked: false, isDefault: true },
-    { name: 'PROPOSED FURNITURE PLAN', checked: false, isDefault: true },
-    { name: 'FLOORING PLAN', checked: false, isDefault: true },
-    { name: 'ELECTRICAL PLAN', checked: false, isDefault: true },
-    { name: 'MOODBOARD AND RENDERS', checked: false, isDefault: true },
-    { name: 'SWITCH BOARD ELEVATIONS + LEGEND', checked: false, isDefault: true },
-    { name: 'FURNITURE DETAILS', checked: false, isDefault: true },
-    { name: 'REALISTIC 3D RENDERS', checked: false, isDefault: true },
-    { name: 'MATERIAL LIST', checked: false, isDefault: true },
-    { name: 'SECTION WALL ELEVATIONS', checked: false, isDefault: true },
-    { name: 'RCP - REFLECTED CEILING PLAN', checked: false, isDefault: true },
-    { name: 'BOQ-BILL OF QUANTITY ESTIMATE', checked: false, isDefault: true },
+    { name: 'Wall and Demolition Plan', checked: false, isDefault: true },
+    { name: 'Proposed Furniture Plan', checked: false, isDefault: true },
+    { name: 'Flooring Plan', checked: false, isDefault: true },
+    { name: 'Electrical plan', checked: false, isDefault: true },
+    { name: 'Moodboard and Renders', checked: false, isDefault: true },
+    { name: 'Switch Board Elevations + Legend', checked: false, isDefault: true },
+    { name: 'Furniture Details', checked: false, isDefault: true },
+    { name: 'Realistic 3D Renders', checked: false, isDefault: true },
+    { name: 'Material List', checked: false, isDefault: true },
+    { name: 'Section Wall Elevations', checked: false, isDefault: true },
+    { name: 'RCP- Reflected Ceiling Plan', checked: false, isDefault: true },
+    { name: 'BOQ- Bill of Quantity Estimate', checked: false, isDefault: true },
   ];
+
 
   paymentDetails = [
     { name: 'Advance', checked: false, isDefault: true },
@@ -156,21 +160,21 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     { name: 'Snags', checked: false, isDefault: true },
     { name: 'Project Handover', checked: false, isDefault: true }
   ]
-  
-  constructor(public fb: FormBuilder, public switchService: SwitherService, 
-    private toastr: ToastrService,private router: Router, private dp: DatePipe,
+
+  constructor(public fb: FormBuilder, public switchService: SwitherService,
+    private toastr: ToastrService, private router: Router, private dp: DatePipe,
     private offcanvasService: NgbOffcanvas,
-    private modalService: NgbModal,  private viewContainerRef: ViewContainerRef ){
-      super();
-      this.userData = localStorage.getItem('userDetails');
-      this.userType = JSON.parse(this.userData).type;
-      this.formInit();
-      this.productForm = this.fb.group({  
-        name: '',  
-        quantities: this.fb.array([]) ,  
-      });  
+    private modalService: NgbModal, private viewContainerRef: ViewContainerRef) {
+    super();
+    this.userData = localStorage.getItem('userDetails');
+    this.userType = JSON.parse(this.userData).type;
+    this.formInit();
+    this.productForm = this.fb.group({
+      name: '',
+      quantities: this.fb.array([]),
+    });
   }
-  
+
   onCheckboxChange() {
     const selectedPlans = this.planDetails.filter((plan) => plan.checked);
     // Update f1 to f30 fields dynamically based on selected items
@@ -186,7 +190,7 @@ export class SettingsComponent extends BaseComponent implements OnInit{
 
   onPmntCheckboxChange() {
     const selectedPlans = this.paymentDetails.filter((plan) => plan.checked);
-    
+
     // Update f1 to f30 fields dynamically based on selected items
     selectedPlans.forEach((plan, index) => {
       if (index < 30) {
@@ -198,7 +202,8 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     }
   }
 
-  ngOnInit(){
+  ngOnInit() {
+    this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.saveData = {
       id: 0,
@@ -281,9 +286,9 @@ export class SettingsComponent extends BaseComponent implements OnInit{
       stageActivity: "YES",
       type: JSON.parse(this.userData).type
     };
-    
+
     // setTimeout(() => {
-      
+
     // }, 500);
     this.userForm?.get('password')?.valueChanges.subscribe((value) => {
       this.checkPasswordStrength(value);
@@ -293,11 +298,30 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     });
 
     this.onTodayDt();
-    this.onMinDate(); 
+    this.onMinDate();
     this.getProjectLst();
   }
 
-  getProjectLst(){
+  onClkDesign(key: string = '') {
+    this.userData = localStorage.getItem('userDetails');
+    this.switchService.onAdonai(JSON.parse(this.userData)?.email).subscribe({
+      next: (res: any) => {
+        if (res.status == false) {
+          alert(res.message)
+          return;
+        } else {
+          if (key == 'i') {           
+            this.roleid = res.roleId; 
+          } else {
+            window.open(res.newDesign, '_blank');
+            this.toastr.success(res.message);
+          }
+        }
+      }
+    })
+  }
+
+  getProjectLst() {
     let payload = {
       email: JSON.parse(this.userData)?.email,
       type: JSON.parse(this.userData)?.type,
@@ -305,13 +329,14 @@ export class SettingsComponent extends BaseComponent implements OnInit{
       companycode: JSON.parse(this.userData)?.companyCode,
       projectId: '', projectname: '', filter: 'All',
     }
-    this.switchService.projectLst(payload).subscribe({ next: (res:any) => {
-      if(res){
-        this.projectLst = res.projList;
-        this.projPmntLst = res.paymentLastList;
-        this.projectLst.length > 0 ? this.isStageDel = true : this.isStageDel = false;
-        this.projPmntLst.length > 0 ? this.isPmntStageDel = true : this.isPmntStageDel = false;
-      } else {
+    this.switchService.projectLst(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.projectLst = res.projList;
+          this.projPmntLst = res.paymentLastList;
+          this.projectLst.length > 0 ? this.isStageDel = true : this.isStageDel = false;
+          this.projPmntLst.length > 0 ? this.isPmntStageDel = true : this.isPmntStageDel = false;
+        } else {
           this.toastr.error(res.message);
         }
       }
@@ -363,21 +388,21 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     event.preventDefault();
   }
 
-  formInit(){
+  formInit() {
     // this.userForm = this.fb.group({
-      // type : [2],
-      // firstName: ['', Validators.required],
-      // lastName: ['', Validators.required],
-      // email: ['', [Validators.required, Validators.email]],
-      // country: ['', Validators.required],
-      // dob: [new Date().toISOString().split('T')[0], Validators.required],
-      // crm:false,
-      // adonai:false,
-      // phoneNumber: ['', Validators.required],
-      // username: [''],
-      // password: ['', [Validators.required, this.passwordValidator]],
-      // confirmPassword: ['', Validators.required],
-      // tools : [[],Validators.required],
+    // type : [2],
+    // firstName: ['', Validators.required],
+    // lastName: ['', Validators.required],
+    // email: ['', [Validators.required, Validators.email]],
+    // country: ['', Validators.required],
+    // dob: [new Date().toISOString().split('T')[0], Validators.required],
+    // crm:false,
+    // adonai:false,
+    // phoneNumber: ['', Validators.required],
+    // username: [''],
+    // password: ['', [Validators.required, this.passwordValidator]],
+    // confirmPassword: ['', Validators.required],
+    // tools : [[],Validators.required],
     // })
   }
 
@@ -387,75 +412,19 @@ export class SettingsComponent extends BaseComponent implements OnInit{
 
   getSNo(index: number): number {
     if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
-        return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
 
-  saveInitialStage(){
-    this.switchService.stageSave(this.saveData).subscribe({ next: (res:any) => {
-    if(res){
-      this.toastr.success('Stages saved successfully');
-      this.offcanvasService.dismiss();
-      this.getAllStages();
-      } else{
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-      },
-    })
-  }
-
-  getAllStages(){
-    let payload = {
-      "email": JSON.parse(this.userData).email,
-      "companyname": JSON.parse(this.userData).companyName,
-      "companycode": JSON.parse(this.userData).companyCode,
-      "type": JSON.parse(this.userData).type
-    }
-    this.switchService.getStages(payload).subscribe({ next: (res:any) => {
-    if(res){
-      this.stageLst = res;
-      this.initializeDynamicFields();
-      this.dynamicFields.length !=0 ? this.showStages = true : this.showStages = false;
-      } else{
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
-    })
-  }
-
-  saveLastStages() {
-    let totalPercent = 0;
-
-  // Check for zero or empty percent values
-  for (const field of this.dynamicFields) {
-    const percent = +field.percent; // Convert string to number safely
-    if (percent === 0) {
-      this.toastr.error('Percent values cannot be zero or empty.', 'Validation Error');
-      return;
-    }
-    totalPercent += percent;
-  }
-  if (totalPercent === 100) {
-    this.dynamicFields.forEach((field, index) => {
-      this.stageLst[`f${index + 1}`] = field.value;
-      this.stageLst[`f${index + 1}Percent`] = field.percent;
-    });
-    for (let i = this.dynamicFields.length + 1; i <= 30; i++) {
-      this.stageLst[`f${i}`] = '';
-      this.stageLst[`f${i}Percent`] = 0;
-    }
-    this.switchService.stageSave(this.stageLst).subscribe({ next: (res:any) => {
-      if(res){
-        this.toastr.success('Stages saved successfully');
-        // this.getAllStages();
-        } else{
+  saveInitialStage() {
+    this.switchService.stageSave(this.saveData).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Stages saved successfully');
+          this.offcanvasService.dismiss();
+          this.getAllStages();
+        } else {
           this.toastr.error(res.message)
         }
       },
@@ -463,6 +432,65 @@ export class SettingsComponent extends BaseComponent implements OnInit{
         this.toastr.error(error.statusText);
       },
     })
+  }
+
+  getAllStages() {
+    let payload = {
+      "email": JSON.parse(this.userData).email,
+      "companyname": JSON.parse(this.userData).companyName,
+      "companycode": JSON.parse(this.userData).companyCode,
+      "type": JSON.parse(this.userData).type
+    }
+    this.switchService.getStages(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.stageLst = res;
+          this.initializeDynamicFields();
+          this.dynamicFields.length != 0 ? this.showStages = true : this.showStages = false;
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
+  }
+
+  saveLastStages() {
+    let totalPercent = 0;
+
+    // Check for zero or empty percent values
+    for (const field of this.dynamicFields) {
+      const percent = +field.percent; // Convert string to number safely
+      if (percent === 0) {
+        this.toastr.error('Percent values cannot be zero or empty.', 'Validation Error');
+        return;
+      }
+      totalPercent += percent;
+    }
+    if (totalPercent === 100) {
+      this.dynamicFields.forEach((field, index) => {
+        this.stageLst[`f${index + 1}`] = field.value;
+        this.stageLst[`f${index + 1}Percent`] = field.percent;
+      });
+      for (let i = this.dynamicFields.length + 1; i <= 30; i++) {
+        this.stageLst[`f${i}`] = '';
+        this.stageLst[`f${i}Percent`] = 0;
+      }
+      this.switchService.stageSave(this.stageLst).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.toastr.success('Stages saved successfully');
+            // this.getAllStages();
+          } else {
+            this.toastr.error(res.message)
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
     } else if (totalPercent < 100) {
       this.toastr.error('Total percent is less than 100. Please adjust the values.', 'Validation Error');
     } else {
@@ -470,71 +498,74 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     }
   }
 
-  onDeleteStages(){
+  onDeleteStages() {
     let payload = {
       "email": JSON.parse(this.userData).email,
       "companyname": JSON.parse(this.userData).companyName,
       "companycode": JSON.parse(this.userData).companyCode,
       "type": JSON.parse(this.userData).type
     }
-    this.switchService.deleteStage(payload).subscribe({ next: (res:any) => {
-    if(res.status == true){
-      this.toastr.success('stage removed successfully')
-      // this.stageLst = [];
-      // this.getAllStages();
-      this.showStages = false, this.isStage = false;
-      } else{
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
-    })
-  }
-
-  savePmntInitialStage(){
-    this.switchService.pmntStageSave(this.savePmntData).subscribe({ next: (res:any) => {
-    if(res){
-      this.toastr.success('Stages saved successfully');
-      this.offcanvasService.dismiss();
-      this.getAllPmntStages();
-      } else{
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
+    this.switchService.deleteStage(payload).subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          this.toastr.success('stage removed successfully')
+          // this.stageLst = [];
+          // this.getAllStages();
+          this.showStages = false, this.isStage = false;
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
       },
     })
   }
 
-  getAllPmntStages(){
+  savePmntInitialStage() {
+    this.switchService.pmntStageSave(this.savePmntData).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Stages saved successfully');
+          this.offcanvasService.dismiss();
+          this.getAllPmntStages();
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
+  }
+
+  getAllPmntStages() {
     let payload = {
       "email": JSON.parse(this.userData).email,
       "companyname": JSON.parse(this.userData).companyName,
       "companycode": JSON.parse(this.userData).companyCode,
       "type": JSON.parse(this.userData).type
     }
-    this.switchService.getPmntStages(payload).subscribe({ next: (res:any) => {
-    if(res){
-      this.pmntStageLst = res;
-      this.initializeDynamicPmntFields();
-      this.dynamicPmntFields.length !=0 ? this.showPmntStages = true : this.showPmntStages = false;
-      } else{
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
+    this.switchService.getPmntStages(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.pmntStageLst = res;
+          this.initializeDynamicPmntFields();
+          this.dynamicPmntFields.length != 0 ? this.showPmntStages = true : this.showPmntStages = false;
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
     })
   }
 
   savePmntLastStages() {
     let totalPercent = 0;
     for (const field of this.dynamicPmntFields) {
-      const percent = +field.percent; 
+      const percent = +field.percent;
       if (percent === 0) {
         this.toastr.error('Percent values cannot be zero or empty.', 'Validation Error');
         return;
@@ -544,25 +575,26 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     // Check if total equals 100
     if (totalPercent === 100) {
       this.dynamicPmntFields.forEach((field, index) => {
-      this.pmntStageLst[`f${index + 1}`] = field.value;
-      this.pmntStageLst[`f${index + 1}Percent`] = field.percent;
-    });
-    for (let i = this.dynamicPmntFields.length + 1; i <= 30; i++) {
-      this.pmntStageLst[`f${i}`] = '';
-      this.pmntStageLst[`f${i}Percent`] = 0;
-    }
-    this.switchService.pmntStageSave(this.pmntStageLst).subscribe({ next: (res:any) => {
-      if(res){
-        this.toastr.success('Stages saved successfully');
-        // this.getAllStages();
-        } else{
-          this.toastr.error(res.message)
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    })
+        this.pmntStageLst[`f${index + 1}`] = field.value;
+        this.pmntStageLst[`f${index + 1}Percent`] = field.percent;
+      });
+      for (let i = this.dynamicPmntFields.length + 1; i <= 30; i++) {
+        this.pmntStageLst[`f${i}`] = '';
+        this.pmntStageLst[`f${i}Percent`] = 0;
+      }
+      this.switchService.pmntStageSave(this.pmntStageLst).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.toastr.success('Stages saved successfully');
+            // this.getAllStages();
+          } else {
+            this.toastr.error(res.message)
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
     } else if (totalPercent < 100) {
       this.toastr.error('Total percent is less than 100. Please adjust the values.', 'Validation Error');
     } else {
@@ -570,41 +602,43 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     }
   }
 
-  onDeletePmntStages(){
+  onDeletePmntStages() {
     let payload = {
       "email": JSON.parse(this.userData).email,
       "companyname": JSON.parse(this.userData).companyName,
       "companycode": JSON.parse(this.userData).companyCode,
       "type": JSON.parse(this.userData).type
     }
-    this.switchService.deletePmntStage(payload).subscribe({ next: (res:any) => {
-    if(res.status == true){
-      this.toastr.success('Stages removed successfully')
-      // this.stageLst = [];
-      // this.getAllStages();
-      this.showPmntStages = false, this.isPmntStage = false;
-      } else{
-        this.toastr.error(res.message)
-      }
-    },
-    error: (error) => {
-      this.toastr.error(error.statusText);
-    },
+    this.switchService.deletePmntStage(payload).subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          this.toastr.success('Stages removed successfully')
+          // this.stageLst = [];
+          // this.getAllStages();
+          this.showPmntStages = false, this.isPmntStage = false;
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
     })
   }
 
-  getUsers(){
-    if(JSON.parse(this.userData).type == 2){
+  getUsers() {
+    if (JSON.parse(this.userData).type == 2) {
       // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
-        let cn = JSON.parse(this.userData).companyName;
-        let cc = JSON.parse(this.userData).companyCode ;
-        this.switchService.cmpnyUsers(cn, cc).subscribe({ next: (res:any) => {
-        if(res){
-          this.userLst = res
-          // this.dataSource = new MatTableDataSource<any>(res);
-          this.dataSource.data = res;
-          } else{
-            this.toastr.error(res.message,'signup', {
+      let cn = JSON.parse(this.userData).companyName;
+      let cc = JSON.parse(this.userData).companyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.userLst = res;
+            // this.dataSource = new MatTableDataSource<any>(res);
+            this.dataSource.data = res;
+          } else {
+            this.toastr.error(res.message, 'signup', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
             });
@@ -643,7 +677,7 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     if (hasNumber) strength++;
     if (hasSpecialChar) strength++;
     if (lengthCriteria) strength++;
-    if(strength == 0){
+    if (strength == 0) {
       this.passwordStrengthMessage = '';
       this.isPasswordValid = false;
     }
@@ -664,23 +698,23 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     } else if (strength === 5) {
       this.passwordStrengthMessage = 'Password is Good';
       this.passwordStrengthColor = 'green';
-      this.isPasswordValid = true; 
+      this.isPasswordValid = true;
     }
   }
 
   checkPasswordMatch(password: string): void {
-    if(this.paswrd != ''){
+    if (this.paswrd != '') {
       // this.toastr.warning("please enter password first")
-    // } else {
-      if(this.paswrd != password && password != ''){
+      // } else {
+      if (this.paswrd != password && password != '') {
         this.isCnfmPwd = false;
         this.confirmPasswordStrengthMessage = 'Passwords not matched';
         this.confirmPasswordStrengthColor = 'red'
-      } else if(this.paswrd == password){
+      } else if (this.paswrd == password) {
         this.isCnfmPwd = true;
         this.confirmPasswordStrengthColor = 'green'
         this.confirmPasswordStrengthMessage = 'Passwords matched';
-      } else if(password == ''){
+      } else if (password == '') {
         this.confirmPasswordStrengthMessage = '';
       }
     }
@@ -722,45 +756,45 @@ export class SettingsComponent extends BaseComponent implements OnInit{
   //   }
   // }
 
-  onCountryChange(data:any) {
-    data == 'India' ? (this.showCity = true) : (this.showCity = false , this.city = '');
-    this.userForm.patchValue({ country: data});
+  onCountryChange(data: any) {
+    data == 'India' ? (this.showCity = true) : (this.showCity = false, this.city = '');
+    this.userForm.patchValue({ country: data });
     const cityFieldControl = this.userForm.get('city');
     if (data == 'India') {
       cityFieldControl?.setValidators([Validators.required])
     } else {
       cityFieldControl?.clearValidators()
     }
-    cityFieldControl?.updateValueAndValidity(); 
+    cityFieldControl?.updateValueAndValidity();
   }
 
-  onSubmit(){
+  onSubmit() {
     this.submitted = true; this.isPasswrd = true; this.isPassValid = false;
     const crm = this.userForm.get('tools')?.value.includes('CRM');
     const adonai = this.userForm.get('tools')?.value.includes('Adonai');
     let payload = this.userForm.getRawValue();
     payload.username = payload.firstName + ' ' + payload.lastName,
-    payload.type = 2,
-    payload.crm = crm,
-    payload.adonai = adonai,
-    payload.companyCode = JSON.parse(this.userData).companyCode,
-    payload.phoneNumber = +payload.phoneNumber, delete payload.tools, delete payload.confirmPassword,
-    payload.dob = this.dp.transform(payload.dob, 'dd-MM-yyyy'),
-    payload.companyName = JSON.parse(this.userData).companyName,
-    this.pload = payload
+      payload.type = 1,
+      payload.crm = crm,
+      payload.adonai = adonai,
+      payload.companyCode = JSON.parse(this.userData).companyCode,
+      payload.phoneNumber = +payload.phoneNumber, delete payload.tools, delete payload.confirmPassword,
+      payload.dob = this.dp.transform(payload.dob, 'dd-MM-yyyy'),
+      payload.companyName = JSON.parse(this.userData).companyName,
+      this.pload = payload
     if (this.userForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
       this.btnDisable = false;
-        return;
+      return;
     }
-    else if(this.paswrd != this.cnfmPaswrd){
-      this.toastr.error('password and confirm password not matched','signup', {
+    else if (this.paswrd != this.cnfmPaswrd) {
+      this.toastr.error('password and confirm password not matched', 'signup', {
         timeOut: 3000,
         positionClass: 'toast-top-right',
       });
       return;
     }
-    else{
+    else {
       this.btnDisable = true;
       this.onMailCheck();
       // this.switchService.signupApi(payload).subscribe({ next: (res:any) => {
@@ -778,13 +812,14 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     }
   }
 
-  onSignupApi(){
-    this.switchService.signupApi(this.pload).subscribe({ next: (res:any) => {
-      if(res.status == true){
-        this.closeModal();
-        this.isAddEdt = !this.isAddEdt;
-        this.getUsers();
-        this.toastr.success(res.message);
+  onSignupApi() {
+    this.switchService.signupApi(this.pload).subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          this.closeModal();
+          this.isAddEdt = !this.isAddEdt;
+          this.getUsers();
+          this.toastr.success(res.message);
         } else {
           this.btnDisable = false;
           this.toastr.error(res.message);
@@ -793,24 +828,28 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     })
   }
 
-  onMailCheck(){
-    if(this.mailId == ''){
-      this.toastr.warning('Please Enter email','signup', {
-        timeOut: 3000, positionClass: 'toast-top-right' });
+  onMailCheck() {
+    if (this.mailId == '') {
+      this.toastr.warning('Please Enter email', 'signup', {
+        timeOut: 3000, positionClass: 'toast-top-right'
+      });
     } else {
-      this.switchService.onMailValidSignup(this.mailId).subscribe({ next: (res:any) => {
-        if(res.status == true){
-          if(this.isResend == false){
-            this.openModal();
-          } 
-          this.btnDisable = true,
-          this.userForm.get('email')?.disable();
-          this.toastr.success(res.message,'signup', {
-            timeOut: 3000, positionClass: 'toast-top-right' });
+      this.switchService.onMailValidSignup(this.mailId).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            if (this.isResend == false) {
+              this.openModal();
+            }
+            this.btnDisable = true,
+              this.userForm.get('email')?.disable();
+            this.toastr.success(res.message, 'signup', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
           } else {
             this.btnDisable = false;
-            this.toastr.error(res.message,'signup', {
-              timeOut: 3000, positionClass: 'toast-top-right' });
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
           }
         }
       })
@@ -818,7 +857,7 @@ export class SettingsComponent extends BaseComponent implements OnInit{
   }
 
   onClickButton() {
-      this.openModal();  // Open the modal on successful response
+    this.openModal();  // Open the modal on successful response
   }
 
   openModal() {
@@ -834,7 +873,7 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     }
   }
 
-  onOtpCheck(){
+  onOtpCheck() {
     // this.isOtpDisabled = true;
     // this.btnDisable = false;
     // if(this.otp == ''){
@@ -850,30 +889,33 @@ export class SettingsComponent extends BaseComponent implements OnInit{
       return;
     }
     else {
-      this.switchService.onOtpSignup(this.mailId, enteredOtp).subscribe({ next: (res:any) => {
-        if(res.status == true){
-        // this.btnDisable = false, this.isOtpDisabled = true, 
-        this.isOkBtn = true; 
-        this.onSignupApi();
-          this.toastr.success(res.message,'signup', {
-            timeOut: 3000, positionClass: 'toast-top-right' });
+      this.switchService.onOtpSignup(this.mailId, enteredOtp).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            // this.btnDisable = false, this.isOtpDisabled = true, 
+            this.isOkBtn = true;
+            this.onSignupApi();
+            this.toastr.success(res.message, 'signup', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
           } else {
             this.isOkBtn = false;
-            this.toastr.error(res.message,'signup', {
-              timeOut: 3000, positionClass: 'toast-top-right' });
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
           }
         }
       })
     }
   }
 
-    otpArray = Array(6).fill(null);
-    otp: string[] = Array(this.otpArray.length).fill('');
-    isOtpValid = true;
-    errorMessage = ''; 
+  otpArray = Array(6).fill(null);
+  otp: string[] = Array(this.otpArray.length).fill('');
+  isOtpValid = true;
+  errorMessage = '';
   onInputChange(event: Event, index: number): void {
-  const input = event.target as HTMLInputElement;
-  this.otp[index] = input.value;
+    const input = event.target as HTMLInputElement;
+    this.otp[index] = input.value;
 
     if (input.value && index < this.otpArray.length - 1) {
       (document.querySelectorAll('.otp-container input')[index + 1] as HTMLInputElement)?.focus();
@@ -887,12 +929,12 @@ export class SettingsComponent extends BaseComponent implements OnInit{
   }
 
   open() {
-    this.modalService.open( {
+    this.modalService.open({
       backdrop: 'static', // Disable close on clicking outside
-      keyboard: false , centered: true 
+      keyboard: false, centered: true
     });
   }
-  
+
   showPassword = false;
   showPassword1 = false;
   toggleClass = "off-line";
@@ -914,14 +956,14 @@ export class SettingsComponent extends BaseComponent implements OnInit{
     }
   }
 
-  toolId(tool:string) {
+  toolId(tool: string) {
     // console.log("51",tool,this.adonai,this.crm);
   }
 
-  onRst(){
+  onRst() {
     this.formInit(); this.getUsers(); this.submitted = false;
-    this.userForm.patchValue({ 
-      type : [2],
+    this.userForm.patchValue({
+      type: [2],
       firstName: '',
       lastName: '',
       email: '',
@@ -931,35 +973,35 @@ export class SettingsComponent extends BaseComponent implements OnInit{
       username: '',
       password: '',
       confirmPassword: '',
-      tools : [],
-      })
+      tools: [],
+    })
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  quantities() : FormArray {  
-    return this.productForm.get("quantities") as FormArray  
-  }  
-     
-  newQuantity(): FormGroup {  
-    return this.fb.group({  
-      qty: '',  
-      price: '',  
-    })  
-  }  
-     
-  addQuantity() {  
-    this.quantities().push(this.newQuantity());  
-  }  
-     
-  removeQuantity(i:number) {  
+  quantities(): FormArray {
+    return this.productForm.get("quantities") as FormArray
+  }
+
+  newQuantity(): FormGroup {
+    return this.fb.group({
+      qty: '',
+      price: '',
+    })
+  }
+
+  addQuantity() {
+    this.quantities().push(this.newQuantity());
+  }
+
+  removeQuantity(i: number) {
     this.quantities().removeAt(i);
-  } 
+  }
   openRight(content: any) {
     this.resetForm();
     this.offcanvasService.open(content, { position: 'end' });
-  } 
+  }
 
   // Resets the input and unselects the checkboxes
   resetForm() {
@@ -969,11 +1011,24 @@ export class SettingsComponent extends BaseComponent implements OnInit{
       plan.checked = false; // Unselect all checkboxes
     });
   }
-  
+
   openRights(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
-  } 
-     
+  }
+
   selectedOption: string = '';
-  
+
+
+  filterUserData() {
+    return this.userLst.filter((item: { firstName: string; lastName: string; email: string; }) =>
+      item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+      item.lastName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+      item.email.toLowerCase().includes(this.searchUser.toLowerCase())
+    );
+  }
+
+  ViewUserDetails(data: any) {
+    this.userDetails = data;
+  }
+
 }

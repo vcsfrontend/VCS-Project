@@ -1,6 +1,113 @@
-.dropdown {
-    width: 300px;
-}
+// .dropdown {
+//     width: 300px;
+// }
 ::ng-deep .offcanvas {
   max-width: 40% !important;
+}
+
+.scrollable-content {
+  max-height: 300px; /* You can set a height limit here */
+  overflow-y: auto; /* Enables scrolling for content inside */
+}
+.demo.position-relative.d-flex.gap-2 {
+  margin-top: 200px;
+}
+
+table {
+  width: 100%;
+}
+th.mat-mdc-header-cell {
+  position: sticky !important;
+  top: 0;
+  background-color: #006699 !important;
+  z-index: 2 !important;
+  color: #ffffff !important;
+}
+.mat-mdc-header-row {
+  background: #006699;
+}
+.mat-elevation-z8 {
+  max-height: 400px; /* Adjust as necessary */  
+  overflow-y: auto;
+}
+
+.scrollable-content{
+  max-height: 400px;
+  overflow: hidden; 
+}
+
+.action-option:hover{
+  background-color: #10007626 !important;
+  line-height: 1.375;
+  width: calc(100% - 1rem);
+  margin: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  min-width: 10rem;
+}
+.dropdown-toggle::after {
+  display: none !important;
+}
+.bt-icon {
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
+}
+.overflowSendMailForm{
+  overflow: auto;
+}
+
+.filter-field {
+  margin-top: -13px !important;
+  margin-bottom: -35px !important;
+  width: 15%; /* Adjust width if needed */
+  max-height: 72px !important;
+  margin-left: 6% !important;
+}
+
+.title {
+  position: relative;
+  margin-block-end: 0;
+  font-size: 1.15rem;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.custom-checkbox .mat-checkbox-label {
+  font-size: 2px;
+}
+.mdc-checkbox__background
+{
+  width: 11px !important;
+  height: 11px !important;  
+}
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate="true"]:enabled ~ .mdc-checkbox__background
+{
+  background-color: #069  !important;
+  border-color: #069  !important;
+}
+.mdc-checkbox__ripple{
+  background: none !important;
+}
+
+.custom-editor .angular-editor-textarea {
+  font-size: 14px !important;
+}
+
+.ng-selt {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 200px;
+}
+
+.marge{
+  margin-top: -40px !important;
+}
+
+.uploadSpinner{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
 }

@@ -302,4 +302,164 @@ export class BaseComponent {
     {"country":"Yemen","code":"967","iso":"YE"},
     {"country":"Zambia","code":"260","iso":"ZM"},
     {"country":"Zimbabwe","code":"263","iso":"ZW"}]
+
+    stageList = [{"name":"Spoke"},
+      {"name":"Engaged"},
+      {"name":"Proposal"},
+    ]
+
+    leadStatus = [{"name":"Unattend"},
+      {"name":"Active"},
+      {"name":"Spoke"},
+      {"name":"Proposal sent"},
+      {"name":"Meeting Fixed"},
+      {"name":"Met"},
+      {"name":"Closed"},
+      {"name":"Lost"},
+      {"name":"Conerted to Deal/ opportunity"}
+    ]
+    leadSource = [{"name":"Sales"},
+      {"name":"Facebook"},
+      {"name":"Website"},
+      {"name":"Others"}    
+    ]
+
+    pipeLine = [{"name":"Sales"},
+      {"name":"Direct mail"},
+      {"name":"Adwords"},
+      {"name":"Leadform"},
+      {"name":"Referral"},
+      {"name":"SEO"},
+      {"name":"Others"}    
+    ]
+
+    panelList = [{"name":"Colour Example Board"},
+      {"name":"Glass Example Material"},
+      {"name":"Grain Example Board"},
+      {"name":"White Example Board"},  
+      {"name":"Add New Material"},  
+      
+    ]
+
+    stockType = [{"name":"sheet"},
+      {"name":"linear"},
+      {"name":"roll"},
+    ]
+
+    cutType = [{"name":"guillotine"},
+      {"name":"efficiency"},
+      {"name":"beam"},
+    ]
+
+    cutPreference = [{"name":"l"},
+      {"name":"flex"},
+      {"name":"w"},
+    ]
+
+    strategy = [{"name":"efficiency"},
+      {"name":"time efficiency"}
+    ]
+
+    StockSelection = [{"name":"efficiency"},
+      {"name":"smallest"}
+    ]
+
+    stackingMode = [{"name":"Part dimensions"},
+      {"name":"identical Parts"}
+    ]
+    Grain = [{"name":"nill"},
+      {"name":"l"},
+      {"name":"w"}
+    ]
+    Xtype = [{"name":"Sheet"},
+      {"name":"Linear"},
+      {"name":"Roll"}
+    ]
+    orientationLock = [{"name":"null"},
+      {"name":"l"},
+      {"name":"w"}
+    ]
+    autoAdd = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    allowExactFitShapes = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    X1 = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    X2 = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    Y1 = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    Y2 = [{"name":"true"},
+      {"name":"false"},
+      
+    ]
+    primaryCompression = [{"name":"1"},
+      {"name":"1.5"},
+      {"name":"0.8"},
+      {"name":"2.0"},
+
+    ]
+    material= [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    BasePanel = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    Pressing = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    Thickness = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+    Make = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+    
+    Grade = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    Grains = [{"name":"Plywood"},
+      {"name":"HDHMR"},
+      {"name":"Mdf Board"},
+      {"name":"Partical Board"},
+    ]
+
+    type = [{"name":"pdf"},
+      {"name":"csv"},
+      {"name":"ptx"},
+      {"name":"dxf"},
+      {"name":"svg"},
+    ]
+    units = [{"name":"mm"},
+      {"name":"inch"},
+      {"name":"cm"},
+      {"name":"m"},
+      {"name":"foot"},
+    ]
 }

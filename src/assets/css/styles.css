@@ -73,6 +73,7 @@ typography
   --info-rgb: 52, 152, 219;
   --success-rgb: 46, 204, 113;
   --danger-rgb: 231, 76, 60;
+  --black-rgb: 	0,0,0;
   --light-rgb: 245, 247, 250;
   --dark-rgb: 44, 62, 80;
   --orange-rgb: 255, 116, 23;
@@ -24177,6 +24178,17 @@ hr {
 
 .order-status.cancel:before {
   background-color: rgb(var(--danger-rgb));
+}
+
+.order-status.live:before {
+  background-color: rgb(var(--primary-rgb));
+}
+
+.order-status.going:before {
+  background-color: rgb(var(--black-rgb));
+}
+.order-status.spoke:before {
+  background-color: rgb(var(--purple-rgb));
 }
 
 .crm-table-th1 {
