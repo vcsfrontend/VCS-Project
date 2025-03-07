@@ -1503,9 +1503,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.elitePaginator.length=this.projectList.length;          
           console.log("Updated DataSource:", this.eliteDataSource);
           console.log("Updated DataSource:", this.elitePaginator);
-        } else {
-          this.toastr.error(res?.message || "Invalid response format.");
-        }
+        } 
         this.stopLoading();
       },
       error: (error) => {
