@@ -23,6 +23,7 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { MatIconModule } from '@angular/material/icon';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { ShowCodeContentDirective } from '../../../shared/directives/show-code-content.directive';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-settings',
@@ -30,7 +31,7 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
-    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule],
+    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule,NgSelectModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
@@ -86,6 +87,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   addMorePmntVisible: boolean = false;
   searchUser: string = '';
   userDetails: any = {};
+  public optimizeFormSample!: FormGroup;
+  public stepIndex = 1;
 
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible; // Toggle visibility
@@ -203,6 +206,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.strategy);
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.saveData = {
@@ -287,6 +291,33 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       type: JSON.parse(this.userData).type
     };
 
+
+    this.optimizeFormSample = this.fb.group({
+      saw: this.fb.group({
+        bladeWidth: [0, Validators.required],
+        stockType: [''],
+        cutType: [''],
+        cutPreference: [''],
+        guillotineOptions: this.fb.group({
+          strategy: [''],
+          maxPhase: [0]
+        }),
+        efficiencyOptions: this.fb.group({
+          primaryCompression: ['']
+        }),
+        stackHeight: [0],
+        options: this.fb.group({
+          stockSelection: [''],
+          minSpacing: [0],
+          stackingMode: ['']
+        })
+      }),
+      stock: this.fb.array([this.createStockGroup()]),
+      parts: this.fb.array([this.createPartGroup()]),
+      groups: this.fb.array([]),
+      webhook: ['https://example.com/webhook']
+    });
+
     // setTimeout(() => {
 
     // }, 500);
@@ -300,6 +331,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
+
+
   }
 
   onClkDesign(key: string = '') {
@@ -1029,6 +1062,89 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   ViewUserDetails(data: any) {
     this.userDetails = data;
+  }
+
+
+  createStockGroup(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      l: [0],
+      w: [0],
+      t: [0],
+      material: [''],
+      q: [0],
+      autoAdd: [''],
+      grain: [''],
+      trim: this.fb.group({
+        x1: [0],
+        x2: [0],
+        y1: [0],
+        y2: [0]
+      }),
+      allowExactFitShapes: [true],
+      cost: [0],
+      notes: ['']
+    });
+  }
+
+  nextStep(id: any): void {
+    this.stepIndex = id;
+
+  }
+  prevStep(id: any): void {
+    this.stepIndex = id;
+  }
+
+  // Getter for stock FormArray
+  get stock() {
+    return this.optimizeFormSample.get('stock') as FormArray;
+  }
+
+  // Getter for parts FormArray
+  get parts() {
+    return this.optimizeFormSample.get('parts') as FormArray;
+  }
+
+  // Getter for groups FormArray
+  get groups() {
+    return (this.optimizeFormSample.get('groups') as FormArray);
+  }
+
+  addStock(): void {
+    this.stock.push(this.createStockGroup());
+  }
+
+  createPartGroup(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      l: [0],
+      w: [0],
+      t: [0],
+      material: [''],
+      q: [0],
+      banding: this.fb.group({
+        x1: [true],
+        x2: [true],
+        y1: [true],
+        y2: [true]
+      }),
+      trim: this.fb.group({
+        x1: [0],
+        x2: [0],
+        y1: [0],
+        y2: [0]
+      }),
+      finish: this.fb.group({
+        a: [''],
+        b: ['']
+      }),
+      orientationLock: [''],
+      notes: ['']
+    });
+  }
+
+  addParts(): void {
+    this.parts.push(this.createPartGroup());
   }
 
 }
