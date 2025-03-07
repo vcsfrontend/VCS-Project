@@ -213,3 +213,37 @@ input.invalid {
   margin-left: 66% !important;
   
 }
+
+
+.back{
+  cursor: pointer;
+  margin-top: 5px;
+}
+.back:hover{
+  background-color: var(--primary02);
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.multi-step-form {
+  width: 100%;
+  margin: auto;
+  padding: 20px;
+  // border: 1px solid #ccc;
+  border-radius: 10px;
+  // background-color: #f9f9f9;
+}
+button {
+  margin-top: 20px;
+  padding: 8px 15px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #aaa;
+}
