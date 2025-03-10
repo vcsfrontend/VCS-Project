@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgbNavModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbDropdownModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -39,10 +39,11 @@ export class OptimizerComponent extends BaseComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
-  
+
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
 
@@ -53,6 +54,8 @@ export class OptimizerComponent extends BaseComponent {
   public generatedrFormSubmitted = false;
   public optimizeId: any = '';
   public optimizeFormSample!: FormGroup;
+  public uploadParts!: FormGroup;
+  public uploadPartsSubmitted = false;
   public stepIndex = 1;
   Selection = [
     { value: 1, label: 'English' },
@@ -65,8 +68,10 @@ export class OptimizerComponent extends BaseComponent {
   metaData: any;
   public layoutUrl: string = '';
   public lableUrl: string = '';
+  public imagePartsFileSrcData: any;
+  uploadSpinner: boolean = false;
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
+  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService,private offcanvasService: NgbOffcanvas) {
     super();
   }
 
@@ -86,11 +91,11 @@ export class OptimizerComponent extends BaseComponent {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.stockDataSource.paginator = this.stockPaginator; 
-    this.sawDataSource.paginator = this.sawPaginator; 
+    this.stockDataSource.paginator = this.stockPaginator;
+    this.sawDataSource.paginator = this.sawPaginator;
   }
 
-  
+
   stockApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -205,6 +210,11 @@ export class OptimizerComponent extends BaseComponent {
       parts: this.fb.array([this.createPartGroup()]),
       groups: this.fb.array([]),
       webhook: ['https://example.com/webhook']
+    });
+
+    //Upload Lead Validatoin
+    this.uploadParts = this.fb.group({
+      file: ['', [Validators.required]]
     });
 
   }
@@ -455,13 +465,13 @@ export class OptimizerComponent extends BaseComponent {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
-    };    
+    };
     this.switchService.StockData(payload).subscribe({
       next: (res: any) => {
         if (res && res.length > 0) {
-          this.stockDataSource.data = res; 
+          this.stockDataSource.data = res;
           console.log("Stock Data:", this.stockDataSource.data);
-          this.stockDataSource.paginator = this.paginator; 
+          this.stockDataSource.paginator = this.paginator;
         } else {
           this.toastr.error("No data received from server");
           this.stockDataSource.data = [];
@@ -480,13 +490,13 @@ export class OptimizerComponent extends BaseComponent {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
-    }; 
+    };
     this.switchService.SawData(payload).subscribe({
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
           console.log("Saw Data:", this.sawDataSource.data);
-  
+
           // Ensure paginator is set only if it exists
           if (this.paginator) {
             this.sawDataSource.paginator = this.paginator;
@@ -505,6 +515,72 @@ export class OptimizerComponent extends BaseComponent {
         this.sawDataSource.data = [];
       },
     });
+  }
+
+
+  openRight(content: any) {
+    this.offcanvasService.open(content, { position: 'end' });
+  }
+
+  get p() {
+    return this.uploadParts.controls;
+  }
+
+  onFileChange(event: any): void {
+    this.imagePartsFileSrcData = '';
+    const files = event.target.files[0];
+    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+    if (allExcel.indexOf(event.target.files[0].type) === -1) {
+      this.uploadPartsSubmitted = false;
+      this.uploadParts.reset();
+      this.toastr.error('Please choose Valid file', 'lead', {
+        timeOut: 3000, positionClass: 'toast-top-right'
+      });
+    } else {
+      this.imagePartsFileSrcData = files;
+    }
+
+  }
+
+  uploadPartsSubmit(modal: any) {
+    this.uploadPartsSubmitted = true;
+    if (this.uploadParts?.valid) {
+      this.uploadSpinner = true;
+      const formData = new FormData();
+      formData.append('file', this.imagePartsFileSrcData);
+      formData.append('uploadedBy', this.userName);
+      formData.append('email', this.userEmail);
+      formData.append('companyCode', this.userCompanyCode);
+      formData.append('type', this.userType);
+      formData.append('contentType', 'parts');
+      formData.append('sheetName', 'Parts Bulk Upload');
+      formData.append('sheetUrl', '');
+      this.switchService.bulkUploadParts(formData).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.uploadPartsSubmitted = false;
+            this.uploadSpinner = false;
+            this.uploadParts.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.uploadSpinner = false;
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        },
+        error: (err: any) => {
+          this.uploadSpinner = false;
+          this.toastr.error("Error fetching CRM Bulkupload leads", 'lead', {
+            timeOut: 3000, positionClass: 'toast-top-right'
+          });
+        },
+      })
+    }
   }
 
 }
