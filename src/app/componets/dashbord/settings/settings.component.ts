@@ -31,7 +31,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
-    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule,NgSelectModule],
+    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgSelectModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
@@ -40,8 +40,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
   sawDisplayedColumn: string[] = ['slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
 
-  mainHeader: string[] = ['trim']; 
-  subHeader: string[] = ['x1', 'x2', 'y1', 'y2']; 
+  mainHeader: string[] = ['trim'];
+  subHeader: string[] = ['x1', 'x2', 'y1', 'y2'];
   dataSource = new MatTableDataSource<any>(); mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
@@ -49,7 +49,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   isAddEdt = false; aeTyp = 'a'; playersList: any; editData: any;
-  adonai = false; crm = false; userLst: any;
+  adonai = false; crm = false; userLst: any = [];
   submitted = false; userData: any; roleid: any;
   // userForm!: FormGroup;
   cnfmPaswrd: any = ''; paswrd: any = '';
@@ -95,8 +95,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   addMorePmntVisible: boolean = false;
   searchUser: string = '';
   userDetails: any = {};
-  public optimizeFormSample!: FormGroup;
-  public stepIndex = 1;
+  public sawForm!: FormGroup;
+  public sawSubmitted = false;
+  public stockForm!: FormGroup;
   StData: any;
 
   toggleAddMore() {
@@ -302,30 +303,19 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     };
 
 
-    this.optimizeFormSample = this.fb.group({
-      saw: this.fb.group({
-        bladeWidth: [0, Validators.required],
-        stockType: [''],
-        cutType: [''],
-        cutPreference: [''],
-        guillotineOptions: this.fb.group({
-          strategy: [''],
-          maxPhase: [0]
-        }),
-        efficiencyOptions: this.fb.group({
-          primaryCompression: ['']
-        }),
-        stackHeight: [0],
-        options: this.fb.group({
-          stockSelection: [''],
-          minSpacing: [0],
-          stackingMode: ['']
-        })
-      }),
-      stock: this.fb.array([this.createStockGroup()]),
-      parts: this.fb.array([this.createPartGroup()]),
-      groups: this.fb.array([]),
-      webhook: ['https://example.com/webhook']
+    this.sawForm = this.fb.group({
+      sawList: this.fb.array([this.createSawGroup()]),
+      companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
+      email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
+      type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
+
+    });
+
+    this.stockForm = this.fb.group({
+      stockList: this.fb.array([this.createStockGroup()]),
+      companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
+      email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
+      type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
     });
 
     // setTimeout(() => {
@@ -353,8 +343,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
           alert(res.message)
           return;
         } else {
-          if (key == 'i') {           
-            this.roleid = res.roleId; 
+          if (key == 'i') {
+            this.roleid = res.roleId;
           } else {
             window.open(res.newDesign, '_blank');
             this.toastr.success(res.message);
@@ -421,8 +411,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    this.stockDataSource.paginator = this.stockPaginator; 
-    this.sawDataSource.paginator = this.sawPaginator; 
+    this.stockDataSource.paginator = this.stockPaginator;
+    this.sawDataSource.paginator = this.sawPaginator;
   }
 
   get f() {
@@ -1072,17 +1062,41 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
 
   filterUserData() {
-    return this.userLst.filter((item: { firstName: string; lastName: string; email: string; }) =>
-      item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
-      item.email.toLowerCase().includes(this.searchUser.toLowerCase())
-    );
+    if (this.userLst.length > 0) {
+      return this.userLst.filter((item: { firstName: string; lastName: string; email: string; }) =>
+        item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+        item.lastName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+        item.email.toLowerCase().includes(this.searchUser.toLowerCase())
+      );
+    }
   }
 
   ViewUserDetails(data: any) {
     this.userDetails = data;
   }
 
+
+  createSawGroup(): FormGroup {
+    return this.fb.group({
+      bladeWidth: [0, Validators.required],
+      stockType: [''],
+      cutType: [''],
+      cutPreference: [''],
+      guillotineOptions: this.fb.group({
+        strategy: [''],
+        maxPhase: [0]
+      }),
+      efficiencyOptions: this.fb.group({
+        primaryCompression: ['']
+      }),
+      stackHeight: [0],
+      options: this.fb.group({
+        stockSelection: [''],
+        minSpacing: [0],
+        stackingMode: ['']
+      })
+    });
+  }
 
   createStockGroup(): FormGroup {
     return this.fb.group({
@@ -1106,65 +1120,33 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
   }
 
-  nextStep(id: any): void {
-    this.stepIndex = id;
+  // Getter for saw FormArray
 
+  get sawList() {
+    return this.sawForm.get('sawList') as FormArray;
   }
-  prevStep(id: any): void {
-    this.stepIndex = id;
-  }
+
 
   // Getter for stock FormArray
-  get stock() {
-    return this.optimizeFormSample.get('stock') as FormArray;
+  get stockList() {
+    return this.stockForm.get('stockList') as FormArray;
   }
 
-  // Getter for parts FormArray
-  get parts() {
-    return this.optimizeFormSample.get('parts') as FormArray;
-  }
 
-  // Getter for groups FormArray
-  get groups() {
-    return (this.optimizeFormSample.get('groups') as FormArray);
+  addSaw(): void {
+    this.sawList.push(this.createSawGroup());
   }
 
   addStock(): void {
-    this.stock.push(this.createStockGroup());
+    this.stockList.push(this.createStockGroup());
   }
 
-  createPartGroup(): FormGroup {
-    return this.fb.group({
-      name: [''],
-      l: [0],
-      w: [0],
-      t: [0],
-      material: [''],
-      q: [0],
-      banding: this.fb.group({
-        x1: [true],
-        x2: [true],
-        y1: [true],
-        y2: [true]
-      }),
-      trim: this.fb.group({
-        x1: [0],
-        x2: [0],
-        y1: [0],
-        y2: [0]
-      }),
-      finish: this.fb.group({
-        a: [''],
-        b: ['']
-      }),
-      orientationLock: [''],
-      notes: ['']
-    });
+
+
+  openLg1(content4: any) {
+    this.modalService.open(content4, { size: 'lg', scrollable: true, centered: true, });
   }
 
-  addParts(): void {
-    this.parts.push(this.createPartGroup());
-  }
 
   getStockData() {
     let payload = {
@@ -1175,9 +1157,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.StockData(payload).subscribe({
       next: (res: any) => {
         if (res && res.length > 0) {
-          this.stockDataSource.data = res; 
+          this.stockDataSource.data = res;
           console.log("Stock Data:", this.stockDataSource.data);
-          this.stockDataSource.paginator = this.paginator; 
+          this.stockDataSource.paginator = this.paginator;
         } else {
           this.toastr.error("No data received from server");
           this.stockDataSource.data = [];
@@ -1197,13 +1179,41 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type
     };
-  
+
     this.switchService.SawData(payload).subscribe({
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
           console.log("Saw Data:", this.sawDataSource.data);
-  
+
+
+
+          /*const sawArray = this.sawForm.get('sawList') as FormArray;
+          sawArray.clear(); // Clear old values before adding new ones
+
+          res.forEach((saw) => {
+            sawArray.push(this.fb.group({
+              bladeWidth: [saw.bladeWidth, Validators.required],
+              stockType: [saw.stockType],
+              cutType: [saw.cutType],
+              cutPreference: [saw.cutPreference],
+              guillotineOptions: this.fb.group({
+                strategy: [saw.guillotineOptions?.strategy ?? ''],
+                maxPhase: [saw.guillotineOptions?.maxPhase ?? 0]
+              }),
+              efficiencyOptions: this.fb.group({
+                primaryCompression: [saw.efficiencyOptions?.primaryCompression ?? '']
+              }),
+              stackHeight: [saw.stackHeight],
+              options: this.fb.group({
+                stockSelection: [saw.options?.stockSelection ?? ''],
+                minSpacing: [saw.options?.minSpacing ?? 0],
+                stackingMode: [saw.options?.stackingMode ?? '']
+              })
+            }));
+          });*/
+
+
           // Ensure paginator is set only if it exists
           if (this.paginator) {
             this.sawDataSource.paginator = this.paginator;
@@ -1223,7 +1233,32 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       },
     });
   }
-  
-  
-  
+
+
+  submitSawForm(modal: any): void {
+    this.sawSubmitted = true;
+    if (this.sawForm.valid) {
+      this.switchService.saveSawData(this.sawForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.getSawData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.sawSubmitted = false;
+    }
+
+  }
+
+
+
 }
