@@ -269,3 +269,12 @@ button:disabled {
   border: 1px solid black;
   padding: 8px;
 }
+
+.modal-dialog {
+  max-width: 90vw !important; /* Increase modal width */
+  height: 90vh  !important; /* Set modal height */
+}
+
+.overflowImportant {  
+  overflow-y: scroll !important;
+}
