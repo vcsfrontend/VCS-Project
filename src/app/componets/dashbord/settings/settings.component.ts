@@ -37,9 +37,17 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent extends BaseComponent implements OnInit {
-  displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'email', 'dateOfBirth'];
+  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
+  sawDisplayedColumn: string[] = ['slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+
+  mainHeader: string[] = ['trim']; 
+  subHeader: string[] = ['x1', 'x2', 'y1', 'y2']; 
   dataSource = new MatTableDataSource<any>(); mailId: any = '';
+  stockDataSource = new MatTableDataSource<any>();
+  sawDataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
+  @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   isAddEdt = false; aeTyp = 'a'; playersList: any; editData: any;
   adonai = false; crm = false; userLst: any;
   submitted = false; userData: any; roleid: any;
@@ -89,6 +97,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   userDetails: any = {};
   public optimizeFormSample!: FormGroup;
   public stepIndex = 1;
+  StData: any;
 
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible; // Toggle visibility
@@ -207,6 +216,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.strategy);
+    this.getStockData(); this.getSawData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.saveData = {
@@ -411,6 +421,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.stockDataSource.paginator = this.stockPaginator; 
+    this.sawDataSource.paginator = this.sawPaginator; 
   }
 
   get f() {
@@ -444,8 +456,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   // }
 
   getSNo(index: number): number {
-    if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
-      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    if (this.stockPaginator && this.stockPaginator.pageIndex !== undefined && this.stockPaginator.pageSize !== undefined) {
+      return this.stockPaginator.pageIndex * this.stockPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+  sawGetSNo(index: number): number {
+    if (this.sawPaginator && this.sawPaginator.pageIndex !== undefined && this.sawPaginator.pageSize !== undefined) {
+      return this.sawPaginator.pageIndex * this.sawPaginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
@@ -1009,7 +1028,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       tools: [],
     })
   }
-  applyFilter(event: Event) {
+  stockApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -1147,4 +1166,64 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.parts.push(this.createPartGroup());
   }
 
+  getStockData() {
+    let payload = {
+      "email": JSON.parse(this.userData)?.email,
+      "companyCode": JSON.parse(this.userData)?.companyCode,
+      "type": JSON.parse(this.userData)?.type
+    };
+    this.switchService.StockData(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          this.stockDataSource.data = res; 
+          console.log("Stock Data:", this.stockDataSource.data);
+          this.stockDataSource.paginator = this.paginator; 
+        } else {
+          this.toastr.error("No data received from server");
+          this.stockDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error("API Error:", error);
+        this.toastr.error("Error fetching stock data");
+        this.stockDataSource.data = [];
+      },
+    });
+  }
+
+  getSawData() {
+    let payload = {
+      email: JSON.parse(this.userData)?.email,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    };
+  
+    this.switchService.SawData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.sawDataSource.data = res;
+          console.log("Saw Data:", this.sawDataSource.data);
+  
+          // Ensure paginator is set only if it exists
+          if (this.paginator) {
+            this.sawDataSource.paginator = this.paginator;
+          } else {
+            console.warn("Paginator not found!");
+          }
+        } else {
+          console.warn("No data received from server.");
+          this.toastr.error("No data available.");
+          this.sawDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error("API Error:", error);
+        this.toastr.error("Failed to fetch saw data.");
+        this.sawDataSource.data = [];
+      },
+    });
+  }
+  
+  
+  
 }

@@ -228,12 +228,11 @@ input.invalid {
 .multi-step-form {
   width: 100%;
   margin: auto;
-  padding: 20px;
   // border: 1px solid #ccc;
   border-radius: 10px;
   // background-color: #f9f9f9;
 }
-button {
+.cus-button {
   margin-top: 20px;
   padding: 8px 15px;
   margin-left: 10px;
@@ -246,4 +245,27 @@ button {
 
 button:disabled {
   background-color: #aaa;
+}
+
+.custom-header {
+  border: 1px solid black;
+  padding: 8px;
+  font-size: 14px;
+  font-family: 'Times New Roman', Times, serif;
+  text-align: center;
+}
+
+.trim-header {
+  background: #ddd;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid black;
+  padding: 8px;
+}
+
+.sub-header {
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid black;
+  padding: 8px;
 }
