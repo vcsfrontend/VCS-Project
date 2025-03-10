@@ -32,13 +32,16 @@ import { MatTableModule } from '@angular/material/table';
 export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
   sawDisplayedColumn: string[] = ['slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+  historyDisplayedColumn: string[] = ['slNo', 'sheetId', 'sheetName', 'contentType', 'uploadedBy', 'uploadedTime', 'email', 'recordsCount'];
 
   dataSource = new MatTableDataSource<any>(); mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
+  historyDataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
+  @ViewChild('partshistoryPaginator') partshistoryPaginator!: MatPaginator;
 
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -94,6 +97,13 @@ export class OptimizerComponent extends BaseComponent {
     return index + 1; // Default return if paginator is not yet defined
   }
 
+  historyGetSNo(index: number): number {
+    if (this.partshistoryPaginator && this.partshistoryPaginator.pageIndex !== undefined && this.partshistoryPaginator.pageSize !== undefined) {
+      return this.partshistoryPaginator.pageIndex * this.partshistoryPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.stockDataSource.paginator = this.stockPaginator;
@@ -108,7 +118,7 @@ export class OptimizerComponent extends BaseComponent {
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
-    this.getStockData(); this.getSawData();
+    this.getStockData(); this.getSawData(); this.getPartshistory();
     this.getGeneratedOutputJson(value);
 
     this.generatedForm = this.fb.group({
@@ -652,6 +662,31 @@ export class OptimizerComponent extends BaseComponent {
         },
       })
     }
+  }
+
+  getPartshistory() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.HistoryUploadParts(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          this.historyDataSource.data = res;
+          console.log("Stock Data:", this.historyDataSource.data);
+          this.historyDataSource.paginator = this.partshistoryPaginator;
+        } else {
+          this.toastr.error("No data received from server");
+          this.historyDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error("API Error:", error);
+        this.toastr.error("Error fetching stock data");
+        this.historyDataSource.data = [];
+      },
+    });
   }
 
 }
