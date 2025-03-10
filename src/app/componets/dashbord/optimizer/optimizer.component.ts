@@ -30,6 +30,23 @@ import { MatTableModule } from '@angular/material/table';
 
 
 export class OptimizerComponent extends BaseComponent {
+  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
+  sawDisplayedColumn: string[] = ['slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+
+  dataSource = new MatTableDataSource<any>(); mailId: any = '';
+  stockDataSource = new MatTableDataSource<any>();
+  sawDataSource = new MatTableDataSource<any>();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
+  @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
+  
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userType: string = this.userData ? this.userData.type : '';
+
+
   public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
   public generatedForm!: FormGroup;
@@ -43,34 +60,45 @@ export class OptimizerComponent extends BaseComponent {
     { value: 3, label: 'Arabic' },
     { value: 4, label: 'Hindi' },
   ];
-  displayedColumns: string[] = ['slNo', 'guillotine', 'isTrim', 'x1', 'x2', 'y1', 'y2', 'order', 'id', 'notes'];
-  dataSource = new MatTableDataSource<any>([]);
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   responce: any; cutData: any[] = [];
   offCut: any;
   metaData: any;
   public layoutUrl: string = '';
   public lableUrl: string = '';
 
-
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService) {
     super();
   }
 
   getSNo(index: number): number {
-    if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
-      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    if (this.stockPaginator && this.stockPaginator.pageIndex !== undefined && this.stockPaginator.pageSize !== undefined) {
+      return this.stockPaginator.pageIndex * this.stockPaginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
 
-  applyFilter(event: Event) {
+  sawGetSNo(index: number): number {
+    if (this.sawPaginator && this.sawPaginator.pageIndex !== undefined && this.sawPaginator.pageSize !== undefined) {
+      return this.sawPaginator.pageIndex * this.sawPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.stockDataSource.paginator = this.stockPaginator; 
+    this.sawDataSource.paginator = this.sawPaginator; 
+  }
+
+  
+  stockApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
+    this.getStockData(); this.getSawData();
     this.getGeneratedOutputJson(value);
 
     this.generatedForm = this.fb.group({
@@ -420,6 +448,63 @@ export class OptimizerComponent extends BaseComponent {
       this.generatedForm.reset();
       this.generatedrFormSubmitted = false;
     }
+  }
+
+  getStockData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };    
+    this.switchService.StockData(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          this.stockDataSource.data = res; 
+          console.log("Stock Data:", this.stockDataSource.data);
+          this.stockDataSource.paginator = this.paginator; 
+        } else {
+          this.toastr.error("No data received from server");
+          this.stockDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error("API Error:", error);
+        this.toastr.error("Error fetching stock data");
+        this.stockDataSource.data = [];
+      },
+    });
+  }
+
+  getSawData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    }; 
+    this.switchService.SawData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.sawDataSource.data = res;
+          console.log("Saw Data:", this.sawDataSource.data);
+  
+          // Ensure paginator is set only if it exists
+          if (this.paginator) {
+            this.sawDataSource.paginator = this.paginator;
+          } else {
+            console.warn("Paginator not found!");
+          }
+        } else {
+          console.warn("No data received from server.");
+          this.toastr.error("No data available.");
+          this.sawDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error("API Error:", error);
+        this.toastr.error("Failed to fetch saw data.");
+        this.sawDataSource.data = [];
+      },
+    });
   }
 
 }
