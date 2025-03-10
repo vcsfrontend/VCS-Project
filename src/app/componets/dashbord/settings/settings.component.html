@@ -365,14 +365,13 @@
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content overflow-y">
             <ng-template #content4 let-modal>               
-
                 <div class="row">
-                    <div class="col-xl-12 pt-3">
+                    <div class="col-xl-12">
                         <div class="card custom-card">
                             <div class="card-header justify-content-between">
-                                <h4>Saw Form</h4>
+                                <h5>Saw Form</h5>
                                 <div class="text-center">
-                                    <button type="button" class="btn btn-primary" (click)="addSaw()">Add
+                                    <button type="button" class="btn btn-primary me-2" (click)="addSaw()">Add
                                         Saw</button>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
@@ -385,7 +384,7 @@
                 <form [formGroup]="sawForm" class="overflowImportant mb-5" (ngSubmit)="submitSawForm(modal)"> 
                     <div formArrayName="sawList">
                         <div *ngFor="let sawGroup of sawList.controls; let i = index" [formGroupName]="i"
-                            class="row mt-5">
+                            class="row m-2 border-bottom mt-2">
                             <div class="col-xl-3 col-auto">
                                 <label for="BladeWidth" class="form-label my-2">Blade Width</label>
                                 <input type="number" class="form-control" id="bladeWidth" formControlName="bladeWidth"
@@ -445,19 +444,19 @@
                                 <div class="card-title my-2">
                                     Options
                                 </div>
-                                <div class="col-xl-3">
+                                <div class="col-xl-3 mb-3">
                                     <label class="form-label my-2">StockSelection</label>
                                     <ng-select [items]="StockSelection" bindLabel="name" bindValue="name"
                                         placeholder="Choose the most efficient stock," formControlName="stockSelection">
                                     </ng-select>
                                 </div>
-                                <div class="col-xl-3">
+                                <div class="col-xl-3 mb-3">
                                     <label class="form-label my-2">minSpacing</label>
                                     <input type="number" class="form-control" id="minSpacing"
                                         placeholder="Set the minimum gap between parts & edges"
                                         formControlName="minSpacing">
                                 </div>
-                                <div class="col-xl-3">
+                                <div class="col-xl-3 mb-3">
                                     <label class="form-label my-2">stackingMode</label>
                                     <ng-select [items]="stackingMode" bindLabel="name" bindValue="name"
                                         placeholder="Set the stock stacking mode." formControlName="stackingMode">
@@ -466,7 +465,11 @@
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div>
+                        <button type="submit" class="btn btn-primary m-4">Submit</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
+                    </div>
                 </form>
 
             </ng-template>
@@ -474,6 +477,122 @@
     </div>
 </div>
 
+<div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
+    data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content overflow-y">
+            <ng-template #content5 let-modal>               
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card custom-card">
+                            <div class="card-header justify-content-between">
+                                <h5>Saw Form</h5>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-primary" (click)="addStock()">Add
+                                        Stock</button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form [formGroup]="sawForm" class="overflowImportant mb-5" (ngSubmit)="submitSawForm(modal)"> 
+                    <div formArrayName="sawList">
+                        <div *ngFor="let sawGroup of sawList.controls; let i = index" [formGroupName]="i"
+                            class="row m-2 border-bottom mt-2">
+                            <div class="col-xl-3 col-auto">
+                                <label for="BladeWidth" class="form-label my-2">Blade Width</label>
+                                <input type="number" class="form-control" id="bladeWidth" formControlName="bladeWidth"
+                                    placeholder="kerf of the blade">
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">StockType</label>
+                                <ng-select formControlName="stockType" [items]="stockType" bindLabel="name"
+                                    bindValue="name" placeholder="The type of stock">
+                                </ng-select>
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">CutType</label>
+                                <ng-select formControlName="cutType" [items]="cutType" bindLabel="name" bindValue="name"
+                                    placeholder="The cut type">
+                                </ng-select>
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">CutPreference</label>
+                                <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name"
+                                    bindValue="name" placeholder="Required for guillotine & beam cutType">
+                                </ng-select>
+                            </div>
+                            <div formGroupName="guillotineOptions" class="row">
+                                <div class="card-title my-2">
+                                    guillotineOptions
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label class="form-label my-2">Cutting Strategy</label>
+                                    <ng-select [items]="strategy" bindLabel="name" bindValue="name"
+                                        placeholder="The guillotine cutting strategy" formControlName="strategy">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">MaxPhase</label>
+                                    <input type="number" class="form-control" id="maxPhase"
+                                        placeholder="guillotine or beam cutType" formControlName="maxPhase">
+                                </div>
+                            </div>
+                            <div formGroupName="efficiencyOptions" class="row">
+                                <div class="card-title my-2">
+                                    EfficiencyOptions
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">primary Compression</label>
+                                    <input type="text" class="form-control" id="primarycompression"
+                                        placeholder="The stacking preference for the parts"
+                                        formControlName="primaryCompression">
+                                </div>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label my-2">stackHeight</label>
+                                <input type="number" class="form-control" id="stackHeight"
+                                    placeholder="the max stack height for your saw" formControlName="stackHeight">
+                            </div>
+                            <div formGroupName="options" class="row">
+                                <div class="card-title my-2">
+                                    Options
+                                </div>
+                                <div class="col-xl-3 mb-3">
+                                    <label class="form-label my-2">StockSelection</label>
+                                    <ng-select [items]="StockSelection" bindLabel="name" bindValue="name"
+                                        placeholder="Choose the most efficient stock," formControlName="stockSelection">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3 mb-3">
+                                    <label class="form-label my-2">minSpacing</label>
+                                    <input type="number" class="form-control" id="minSpacing"
+                                        placeholder="Set the minimum gap between parts & edges"
+                                        formControlName="minSpacing">
+                                </div>
+                                <div class="col-xl-3 mb-3">
+                                    <label class="form-label my-2">stackingMode</label>
+                                    <ng-select [items]="stackingMode" bindLabel="name" bindValue="name"
+                                        placeholder="Set the stock stacking mode." formControlName="stackingMode">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary m-4">Submit</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
+                    </div>
+                </form>
+
+            </ng-template>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-xl-12 pt-3">
         <div class="card custom-card">
@@ -490,7 +609,7 @@
 
 <form [formGroup]="stockForm">
     <div formArrayName="stockList">
-        <div *ngFor="let stockGroup of stockList.controls; let i = index" [formGroupName]="i" class="row mt-5">
+        <div *ngFor="let stockGroup of stockList.controls; let i = index" [formGroupName]="i" class="row m-2">
             <div class="col-xl-3 col-auto">
                 <label for="name" class="form-label my-2">Stock Name</label>
                 <input type="text" class="form-control" placeholder="stock name" formControlName="name">

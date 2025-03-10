@@ -1144,7 +1144,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
 
   openLg1(content4: any) {
-    this.modalService.open(content4, { size: 'lg', scrollable: true, centered: true, });
+    this.modalService.open(content4, { size: 'xl', scrollable: true, centered: true, });
+  }
+  openLg2(content5: any) {
+    this.modalService.open(content5, { size: 'xl', scrollable: true, centered: true, });
   }
 
 
@@ -1258,7 +1261,5 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
 
   }
-
-
-
+ 
 }
