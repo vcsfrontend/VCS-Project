@@ -56,6 +56,9 @@ export class OptimizerComponent extends BaseComponent {
   public optimizeFormSample!: FormGroup;
   public uploadParts!: FormGroup;
   public uploadPartsSubmitted = false;
+
+  public uploadStocks!: FormGroup;
+  uploadStocksSubmitted: boolean = false;
   public stepIndex = 1;
   Selection = [
     { value: 1, label: 'English' },
@@ -70,8 +73,10 @@ export class OptimizerComponent extends BaseComponent {
   public lableUrl: string = '';
   public imagePartsFileSrcData: any;
   uploadSpinner: boolean = false;
+  imageStocksFileSrcData: any;
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService,private offcanvasService: NgbOffcanvas) {
+
+  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
     super();
   }
 
@@ -214,6 +219,11 @@ export class OptimizerComponent extends BaseComponent {
 
     //Upload Lead Validatoin
     this.uploadParts = this.fb.group({
+      file: ['', [Validators.required]]
+    });
+
+    //Upload Lead Validatoin
+    this.uploadStocks = this.fb.group({
       file: ['', [Validators.required]]
     });
 
@@ -563,6 +573,67 @@ export class OptimizerComponent extends BaseComponent {
             this.uploadPartsSubmitted = false;
             this.uploadSpinner = false;
             this.uploadParts.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          } else {
+            this.uploadSpinner = false;
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        },
+        error: (err: any) => {
+          this.uploadSpinner = false;
+          this.toastr.error("Error fetching CRM Bulkupload leads", 'lead', {
+            timeOut: 3000, positionClass: 'toast-top-right'
+          });
+        },
+      })
+    }
+  }
+
+  get s() {
+    return this.uploadStocks.controls;
+  }
+
+  onStockFileChange(event: any): void {
+    this.imageStocksFileSrcData = '';
+    const files = event.target.files[0];
+    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+    if (allExcel.indexOf(event.target.files[0].type) === -1) {
+      this.uploadStocksSubmitted = false;
+      this.uploadParts.reset();
+      this.toastr.error('Please choose Valid file', 'lead', {
+        timeOut: 3000, positionClass: 'toast-top-right'
+      });
+    } else {
+      this.imageStocksFileSrcData = files;
+    }
+
+  }
+
+  uploadStocksSubmit(modal: any) {
+    this.uploadStocksSubmitted = true;
+    if (this.uploadStocks?.valid) {
+      this.uploadSpinner = true;
+      const formData = new FormData();
+      formData.append('file', this.imageStocksFileSrcData);
+      formData.append('uploadedBy', this.userName);
+      formData.append('email', this.userEmail);
+      formData.append('companyCode', this.userCompanyCode);
+      formData.append('type', this.userType);
+      formData.append('contentType', 'stock');
+      formData.append('sheetName', 'Stocks Bulk Upload');
+      formData.append('sheetUrl', '');
+      this.switchService.bulkUploadStock(formData).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.uploadStocksSubmitted = false;
+            this.uploadSpinner = false;
+            this.uploadStocks.reset();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
