@@ -91,6 +91,7 @@ export class SwitherService {
   StockData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getStackData`, data); }
   SawData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getSawData`, data); }
   saveSawData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_saw_data`, data); }
+  bulkUploadParts(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/bulk_upload_parts`, data); }
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
   CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  
