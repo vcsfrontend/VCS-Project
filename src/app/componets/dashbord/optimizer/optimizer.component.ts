@@ -32,13 +32,13 @@ import { MatTableModule } from '@angular/material/table';
 export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
   sawDisplayedColumn: string[] = ['select','slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
-  historyDisplayedColumn: string[] = ['slNo', 'sheetId', 'sheetName', 'contentType', 'uploadedBy', 'uploadedTime', 'email', 'recordsCount'];
+  historyDisplayedColumn: string[] = ['select','slNo', 'sheetId', 'sheetName', 'contentType', 'uploadedBy', 'uploadedTime', 'email', 'recordsCount'];
 
-  dataSource = new MatTableDataSource<any>(); mailId: any = '';
+  //dataSource = new MatTableDataSource<any>(); 
+  mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
-  historyDataSource = new MatTableDataSource<any>();
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  historyDataSource = new MatTableDataSource<any>();  
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   @ViewChild('partshistoryPaginator') partshistoryPaginator!: MatPaginator;
@@ -77,7 +77,8 @@ export class OptimizerComponent extends BaseComponent {
   public imagePartsFileSrcData: any;
   uploadSpinner: boolean = false;
   imageStocksFileSrcData: any;
-  selectedSawIdList: Set<any>= new Set<number>();
+  selectedSawIdList: Set<any>= new Set<any>();
+  selectedHistoryIdList: Set<any>= new Set<any>();
 
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
@@ -106,16 +107,12 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
+    
     this.stockDataSource.paginator = this.stockPaginator;
     this.sawDataSource.paginator = this.sawPaginator;
   }
 
-
-  stockApplyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+  
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
@@ -492,7 +489,7 @@ export class OptimizerComponent extends BaseComponent {
         if (res && res.length > 0) {
           this.stockDataSource.data = res;
           console.log("Stock Data:", this.stockDataSource.data);
-          this.stockDataSource.paginator = this.paginator;
+          this.stockDataSource.paginator = this.stockPaginator;
         } else {
           this.toastr.error("No data received from server");
           this.stockDataSource.data = [];
@@ -519,8 +516,8 @@ export class OptimizerComponent extends BaseComponent {
           console.log("Saw Data:", this.sawDataSource.data);
 
           // Ensure paginator is set only if it exists
-          if (this.paginator) {
-            this.sawDataSource.paginator = this.paginator;
+          if (this.sawPaginator) {
+            this.sawDataSource.paginator = this.sawPaginator;
           } else {
             console.warn("Paginator not found!");
           }
@@ -693,24 +690,24 @@ export class OptimizerComponent extends BaseComponent {
 
 
   // Handle single row selection
-  onSawRowCheckboxChange(sawId: number, event: any) {
+  onSawRowCheckboxChange(data: any, event: any) {    
     if (event.checked) {
-      this.selectedSawIdList.add(sawId);
+      this.selectedSawIdList.add(data);
     } else {
-      this.selectedSawIdList.delete(sawId);
+      this.selectedSawIdList.delete(data);
     }
   }
 
   // Handle "select all" checkbox
-  onSawSelectAllChange(event: any) {
+  onSawSelectAllChange(event: any) {    
     if (event.checked) {
-      this.selectedSawIdList = new Set(this.sawDataSource.data.map((row: { sawId: any }) => row.sawId));
+      this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
     } else {
       this.selectedSawIdList.clear();
     }
   }
 
-  isSawAllSelected() {
+  isSawAllSelected() {    
     return this.selectedSawIdList.size === this.sawDataSource.data.length;
   }
 
@@ -718,8 +715,39 @@ export class OptimizerComponent extends BaseComponent {
     return this.selectedSawIdList.size > 0 && this.selectedSawIdList.size < this.sawDataSource.data.length;
   }
 
-  isSawSelected(sawId: number) {
-    return this.selectedSawIdList.has(sawId);
+  isSawSelected(data: any) {
+    return this.selectedSawIdList.has(data);
+  }
+
+
+  // Handle History selection
+  onHistoryRowCheckboxChange(data: any, event: any) {    
+    if (event.checked) {
+      this.selectedHistoryIdList.add(data);
+    } else {
+      this.selectedHistoryIdList.delete(data);
+    }
+  }
+
+  // Handle "select all" checkbox
+  onHistorySelectAllChange(event: any) {    
+    if (event.checked) {
+      this.selectedHistoryIdList = new Set(this.historyDataSource.data.map((row) => row));
+    } else {
+      this.selectedHistoryIdList.clear();
+    }
+  }
+
+  isHistoryAllSelected() {    
+    return this.selectedHistoryIdList.size === this.historyDataSource.data.length;
+  }
+
+  isHistoryIndeterminate() {
+    return this.selectedHistoryIdList.size > 0 && this.selectedHistoryIdList.size < this.historyDataSource.data.length;
+  }
+
+  isHistorySelected(data: any) {
+    return this.selectedHistoryIdList.has(data);
   }
 
 }
