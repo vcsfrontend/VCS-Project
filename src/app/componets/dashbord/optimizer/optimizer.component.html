@@ -599,6 +599,17 @@
             <div class="mat-elevation-z8">
                 <div class="table-responsive">
                     <table mat-table [dataSource]="sawDataSource" class="mat-table">
+                        <!-- Checkbox -->
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox [checked]="isSawAllSelected()" [indeterminate]="isSawIndeterminate()"
+                                    (change)="onSawSelectAllChange($event)"></mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-checkbox (change)="onSawRowCheckboxChange(element.bladeWidth, $event)"
+                                    [checked]="isSawSelected(element.bladeWidth)" class="custom-checkbox"></mat-checkbox>
+                            </td>
+                        </ng-container>
 
                         <!-- S.No Column -->
                         <ng-container matColumnDef="slNo">

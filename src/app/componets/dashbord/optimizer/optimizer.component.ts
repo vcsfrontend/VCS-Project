@@ -31,7 +31,7 @@ import { MatTableModule } from '@angular/material/table';
 
 export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
-  sawDisplayedColumn: string[] = ['slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+  sawDisplayedColumn: string[] = ['select','slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   historyDisplayedColumn: string[] = ['slNo', 'sheetId', 'sheetName', 'contentType', 'uploadedBy', 'uploadedTime', 'email', 'recordsCount'];
 
   dataSource = new MatTableDataSource<any>(); mailId: any = '';
@@ -77,6 +77,7 @@ export class OptimizerComponent extends BaseComponent {
   public imagePartsFileSrcData: any;
   uploadSpinner: boolean = false;
   imageStocksFileSrcData: any;
+  selectedSawIdList: Set<any>= new Set<number>();
 
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
@@ -687,6 +688,38 @@ export class OptimizerComponent extends BaseComponent {
         this.historyDataSource.data = [];
       },
     });
+  }
+
+
+
+  // Handle single row selection
+  onSawRowCheckboxChange(sawId: number, event: any) {
+    if (event.checked) {
+      this.selectedSawIdList.add(sawId);
+    } else {
+      this.selectedSawIdList.delete(sawId);
+    }
+  }
+
+  // Handle "select all" checkbox
+  onSawSelectAllChange(event: any) {
+    if (event.checked) {
+      this.selectedSawIdList = new Set(this.sawDataSource.data.map((row: { sawId: any }) => row.sawId));
+    } else {
+      this.selectedSawIdList.clear();
+    }
+  }
+
+  isSawAllSelected() {
+    return this.selectedSawIdList.size === this.sawDataSource.data.length;
+  }
+
+  isSawIndeterminate() {
+    return this.selectedSawIdList.size > 0 && this.selectedSawIdList.size < this.sawDataSource.data.length;
+  }
+
+  isSawSelected(sawId: number) {
+    return this.selectedSawIdList.has(sawId);
   }
 
 }
