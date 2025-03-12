@@ -30,9 +30,9 @@ import { MatTableModule } from '@angular/material/table';
 
 
 export class OptimizerComponent extends BaseComponent {
-  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
+  stockDisplayedColumn: string[] = ['select','slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
   sawDisplayedColumn: string[] = ['select','slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
-  historyDisplayedColumn: string[] = ['select','slNo', 'sheetId', 'sheetName', 'contentType', 'uploadedBy', 'uploadedTime', 'email', 'recordsCount'];
+  historyDisplayedColumn: string[] = ['slNo', 'sheetId', 'sheetName', 'contentType', 'uploadedBy', 'uploadedTime', 'email', 'recordsCount'];
 
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
@@ -79,6 +79,7 @@ export class OptimizerComponent extends BaseComponent {
   imageStocksFileSrcData: any;
   selectedSawIdList: Set<any>= new Set<any>();
   selectedHistoryIdList: Set<any>= new Set<any>();
+  selectedStockIdList: Set<any>= new Set<any>();
 
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
@@ -717,6 +718,37 @@ export class OptimizerComponent extends BaseComponent {
 
   isSawSelected(data: any) {
     return this.selectedSawIdList.has(data);
+  }
+
+
+  // Handle Stock selection
+  onStockRowCheckboxChange(data: any, event: any) {    
+    if (event.checked) {
+      this.selectedStockIdList.add(data);
+    } else {
+      this.selectedStockIdList.delete(data);
+    }
+  }
+
+  // Handle "select all" checkbox
+  onStockSelectAllChange(event: any) {    
+    if (event.checked) {
+      this.selectedStockIdList = new Set(this.stockDataSource.data.map((row) => row));
+    } else {
+      this.selectedStockIdList.clear();
+    }
+  }
+
+  isStockAllSelected() {    
+    return this.selectedStockIdList.size === this.stockDataSource.data.length;
+  }
+
+  isStockIndeterminate() {
+    return this.selectedStockIdList.size > 0 && this.selectedStockIdList.size < this.stockDataSource.data.length;
+  }
+
+  isStockSelected(data: any) {
+    return this.selectedStockIdList.has(data);
   }
 
 
