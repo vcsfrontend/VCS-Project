@@ -546,9 +546,10 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   onFileChange(event: any): void {
+    console.log(event.target.files[0].type);
     this.imagePartsFileSrcData = '';
     const files = event.target.files[0];
-    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
 
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadPartsSubmitted = false;
@@ -607,9 +608,10 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   onStockFileChange(event: any): void {
+    console.log(event.target.files[0].type);
     this.imageStocksFileSrcData = '';
     const files = event.target.files[0];
-    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
 
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadStocksSubmitted = false;
