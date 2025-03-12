@@ -1245,7 +1245,34 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         next: (res: any) => {
           if (res.status == true) {
             modal.close();
+            this.sawForm.reset();
             this.getSawData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.sawSubmitted = false;
+    }
+
+  }
+
+
+  submitStockForm(modal: any): void {
+    this.sawSubmitted = true;
+    if (this.stockForm.valid) {
+      this.switchService.saveStockData(this.stockForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.stockForm.reset();
+            this.getStockData();
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
