@@ -4,9 +4,10 @@
             <div class="row">
                 <div class="card-body col-xxl-12 col-xl-12 col-md-12 col-lg-12 col-sm-12 ">
                     <form [formGroup]="optimizeFormSample" (ngSubmit)="submitForm()">
-                        <!-- Step 1 -->
                         <div *ngIf="stepIndex === 1">
-                            <h4 class="border-bottom pb-3">Step 1: Saw</h4>
+                            <div class="card-title border-bottom pb-3">
+                                Step 1: Saw
+                            </div>
                             <div formGroupName="saw" class="row border-bottom mt-2">
                                 <div class="col-xl-3 col-auto">
                                     <label for="BladeWidth" class="form-label my-2">Blade Width</label>
@@ -90,18 +91,14 @@
                             </div>
                             <button type="button" class="btn btn-primary mt-2" (click)="nextStep(2)">Next</button>
                         </div>
-
-                        <!-- Step 2 -->
                         <div *ngIf="stepIndex === 2">
-                            <div class="row">
-                                <div class="col-xl-12 pt-3">
-                                    <div class="card custom-card">
-                                        <div class="card-header justify-content-between">
-                                            <h4>Step 2: Stock</h4>
-                                            <div class="text-center">
-                                                <button type="button" class="btn btn-primary" (click)="addStock()">Add
-                                                    Stock</button>
-                                            </div>
+                            <div class="col-xl-12 pt-3">
+                                <div class="card custom-card">
+                                    <div class="card-title border-bottom pb-3 justify-content-between">
+                                            Step 2: Stock
+                                        <div class="d-flex flex-wrap gap-3">
+                                            <button type="button" class="btn btn-primary" (click)="addStock()">Add
+                                                Stock</button>
                                         </div>
                                     </div>
                                 </div>
@@ -523,8 +520,6 @@
                 <button type="button" class="btn btn-primary"><i
                         class="ri-add-line align-middle me-1 fw-medium"></i>Create
                     Saw</button>
-
-                
             </div>
         </div>
         <div class="card-body p-0">
@@ -608,66 +603,99 @@
     </div>
 </div>
 
-<div class="col-xl-12 mt-2">
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="card-title">
-                History
-            </div>
-            <div class="d-flex flex-wrap gap-3">
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                    (click)="openRight(content1)" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight">Stock Bulk Upload</button>
-                
-                <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                (click)="openRight(content)" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">Parts Bulk Upload</button>
+<div class="row">
+    <div class="col-xl-7 mt-2">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    History
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                        (click)="openRight(content1)" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Stock Bulk Upload</button>
+                    
+                    <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
+                    (click)="openRight(content)" data-bs-target="#offcanvasRight"
+                    aria-controls="offcanvasRight">Parts Bulk Upload</button>
 
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="historyDataSource" class="mat-table">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{historyGetSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="sheetId">
+                                <th mat-header-cell *matHeaderCellDef> SheetId </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.sheetId }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="sheetName">
+                                <th mat-header-cell *matHeaderCellDef> SheetName </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.sheetName }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="contentType">
+                                <th mat-header-cell *matHeaderCellDef> ContentType </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.contentType }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="uploadedBy">
+                                <th mat-header-cell *matHeaderCellDef> UploadedBy </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.uploadedBy }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="uploadedTime">
+                                <th mat-header-cell *matHeaderCellDef> UploadedTime </th>
+                                <td mat-cell *matCellDef="let element">{{ '2025-03-10T11:07:33.618389109' | date:'yyyy/MM/dd hh:mm a':'Asia/Kolkata' }}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef> Email </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.email }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="recordsCount">
+                                <th mat-header-cell *matHeaderCellDef> Records </th>
+                                <td mat-cell *matCellDef="let element"> {{ element.recordsCount }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="historyDisplayedColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: historyDisplayedColumn;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator #historyPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="historyDataSource" class="mat-table">
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                            <td mat-cell *matCellDef="let element; let i = index"> {{historyGetSNo(i)}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="sheetId">
-                            <th mat-header-cell *matHeaderCellDef> SheetId </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.sheetId }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="sheetName">
-                            <th mat-header-cell *matHeaderCellDef> SheetName </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.sheetName }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="contentType">
-                            <th mat-header-cell *matHeaderCellDef> ContentType </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.contentType }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="uploadedBy">
-                            <th mat-header-cell *matHeaderCellDef> UploadedBy </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.uploadedBy }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="uploadedTime">
-                            <th mat-header-cell *matHeaderCellDef> UploadedTime </th>
-                            <td mat-cell *matCellDef="let element">{{ '2025-03-10T11:07:33.618389109' | date:'yyyy/MM/dd hh:mm a':'Asia/Kolkata' }}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="email">
-                            <th mat-header-cell *matHeaderCellDef> Email </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.email }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="recordsCount">
-                            <th mat-header-cell *matHeaderCellDef> RecordsCount </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.recordsCount }} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="historyDisplayedColumn"></tr>
-                        <tr mat-row *matRowDef="let row; columns: historyDisplayedColumn;"></tr>
-                    </table>
+    </div>
+
+    <div class="col-xl-5 mt-2">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    BulkPartsStock
                 </div>
-                <mat-paginator #partshistoryPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                </mat-paginator>
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="bulkPartsStockDataSource" class="mat-table">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{bulkPartsStockGetSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="icon">
+                                <th mat-header-cell *matHeaderCellDef> icon </th>
+                                <td mat-cell *matCellDef="let element"><i class="fe fe-eye text-muted" (click)="openRight(content2);"
+                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i></td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="bulkPartsStockDisplayedColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: bulkPartsStockDisplayedColumn;"></tr>
+                        </table>
+                    </div>
+                    <mat-paginator #bulkPartsStockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
             </div>
         </div>
     </div>
@@ -808,3 +836,26 @@
     </div>
 </ng-template>
 
+<ng-template #content2 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>BulkPartsStock</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="card custom-card border">
+            <div class="card-body">
+                <div class="p-3 text-dark" id="pill-flex-home" role="tabpanel">
+                    <ul>
+                        <li>test</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>

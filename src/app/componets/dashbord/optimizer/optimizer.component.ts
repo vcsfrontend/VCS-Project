@@ -32,16 +32,18 @@ import { MatTableModule } from '@angular/material/table';
 export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['select','slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
   sawDisplayedColumn: string[] = ['select','slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
-  historyDisplayedColumn: string[] = ['slNo', 'sheetId', 'sheetName', 'contentType', 'uploadedBy', 'uploadedTime', 'email', 'recordsCount'];
-
+  historyDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
+  bulkPartsStockDisplayedColumn: string[] = ['slNo', 'icon'];
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
   historyDataSource = new MatTableDataSource<any>();  
+  bulkPartsStockDataSource = new MatTableDataSource<any>(); 
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
-  @ViewChild('partshistoryPaginator') partshistoryPaginator!: MatPaginator;
+  @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
+  @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
 
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -101,19 +103,26 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   historyGetSNo(index: number): number {
-    if (this.partshistoryPaginator && this.partshistoryPaginator.pageIndex !== undefined && this.partshistoryPaginator.pageSize !== undefined) {
-      return this.partshistoryPaginator.pageIndex * this.partshistoryPaginator.pageSize + index + 1;
+    if (this.historyPaginator && this.historyPaginator.pageIndex !== undefined && this.historyPaginator.pageSize !== undefined) {
+      return this.historyPaginator.pageIndex * this.historyPaginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
 
-  ngAfterViewInit() {
-    
-    this.stockDataSource.paginator = this.stockPaginator;
-    this.sawDataSource.paginator = this.sawPaginator;
+  bulkPartsStockGetSNo(index: number): number {
+    if (this.bulkPartsStockPaginator && this.bulkPartsStockPaginator.pageIndex !== undefined && this.bulkPartsStockPaginator.pageSize !== undefined) {
+      return this.bulkPartsStockPaginator.pageIndex * this.bulkPartsStockPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
   }
 
-  
+
+  ngAfterViewInit() {
+    this.stockDataSource.paginator = this.stockPaginator;
+    this.sawDataSource.paginator = this.sawPaginator;
+    this.historyDataSource.paginator = this.historyPaginator;
+    this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
+  }
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
@@ -676,7 +685,7 @@ export class OptimizerComponent extends BaseComponent {
         if (res && res.length > 0) {
           this.historyDataSource.data = res;
           console.log("Stock Data:", this.historyDataSource.data);
-          this.historyDataSource.paginator = this.partshistoryPaginator;
+          this.historyDataSource.paginator = this.historyPaginator;
         } else {
           this.toastr.error("No data received from server");
           this.historyDataSource.data = [];
