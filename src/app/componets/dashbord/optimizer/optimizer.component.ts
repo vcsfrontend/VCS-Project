@@ -31,16 +31,16 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 
 export class OptimizerComponent extends BaseComponent {
-  stockDisplayedColumn: string[] = ['select','slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
-  sawDisplayedColumn: string[] = ['select','slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
-  historyDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
-  bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime','icon'];
+  stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
+  sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+  historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
+  bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'icon'];
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
-  historyDataSource = new MatTableDataSource<any>();  
-  bulkPartsStockDataSource = new MatTableDataSource<any>(); 
+  historyDataSource = new MatTableDataSource<any>();
+  bulkPartsStockDataSource = new MatTableDataSource<any>();
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
@@ -51,8 +51,8 @@ export class OptimizerComponent extends BaseComponent {
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
-  userType: string = this.userData ? this.userData.type : ''; 
-  partList : any; stokList : any;
+  userType: string = this.userData ? this.userData.type : '';
+  partList: any; stokList: any;
 
 
   public optimizerForm!: FormGroup;
@@ -84,11 +84,11 @@ export class OptimizerComponent extends BaseComponent {
   public imagePartsFileSrcData: any;
   uploadSpinner: boolean = false;
   imageStocksFileSrcData: any;
-  selectedSawIdList: Set<any>= new Set<any>();
-  selectedHistoryIdList: Set<any>= new Set<any>();
-  selectedStockIdList: Set<any>= new Set<any>();
-  partsSheetId: number | undefined;
-  stockSheetId: number | undefined;
+  selectedSawIdList: Set<any> = new Set<any>();
+  selectedHistoryIdList: Set<any> = new Set<any>();
+  selectedStockIdList: Set<any> = new Set<any>();
+  partsSheetId: number = 0;
+  stockSheetId: number = 0;
 
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
@@ -133,8 +133,8 @@ export class OptimizerComponent extends BaseComponent {
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
-    this.getStockData(); this.getSawData(); 
-    this.getPartshistory(); this.getBulkPartsStock();
+    this.getStockData(); this.getSawData();
+    this.getPartshistory();
     this.getGeneratedOutputJson(value);
 
     this.generatedForm = this.fb.group({
@@ -426,13 +426,13 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   VerticallyScrol(content: any) {
-    this.modalService.open(content, {size: 'xl', scrollable: true, centered: true, });
+    this.modalService.open(content, { size: 'xl', scrollable: true, centered: true, });
   }
   openLg1(content4: any) {
     this.modalService.open(content4, { size: 'xl', scrollable: true, centered: true, });
   }
   openLg2(content5: any) {
-    this.modalService.open(content5, {size: 'xl', scrollable: true, centered: true, });
+    this.modalService.open(content5, { size: 'xl', scrollable: true, centered: true, });
   }
   openLg3(content6: any) {
     this.modalService.open(content6, { size: 'xl', scrollable: true, centered: true, });
@@ -620,7 +620,7 @@ export class OptimizerComponent extends BaseComponent {
     console.log(event.target.files[0].type);
     this.imagePartsFileSrcData = '';
     const files = event.target.files[0];
-    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
+    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
 
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadPartsSubmitted = false;
@@ -682,7 +682,7 @@ export class OptimizerComponent extends BaseComponent {
     console.log(event.target.files[0].type);
     this.imageStocksFileSrcData = '';
     const files = event.target.files[0];
-    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
+    const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
 
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadStocksSubmitted = false;
@@ -764,7 +764,7 @@ export class OptimizerComponent extends BaseComponent {
 
 
   // Handle single row selection
-  onSawRowCheckboxChange(data: any, event: any) {    
+  onSawRowCheckboxChange(data: any, event: any) {
     if (event.checked) {
       this.selectedSawIdList.add(data);
     } else {
@@ -773,7 +773,7 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   // Handle "select all" checkbox
-  onSawSelectAllChange(event: any) {    
+  onSawSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
     } else {
@@ -781,7 +781,7 @@ export class OptimizerComponent extends BaseComponent {
     }
   }
 
-  isSawAllSelected() {    
+  isSawAllSelected() {
     return this.selectedSawIdList.size === this.sawDataSource.data.length;
   }
 
@@ -795,7 +795,7 @@ export class OptimizerComponent extends BaseComponent {
 
 
   // Handle Stock selection
-  onStockRowCheckboxChange(data: any, event: any) {    
+  onStockRowCheckboxChange(data: any, event: any) {
     if (event.checked) {
       this.selectedStockIdList.add(data);
     } else {
@@ -804,7 +804,7 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   // Handle "select all" checkbox
-  onStockSelectAllChange(event: any) {    
+  onStockSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedStockIdList = new Set(this.stockDataSource.data.map((row) => row));
     } else {
@@ -812,7 +812,7 @@ export class OptimizerComponent extends BaseComponent {
     }
   }
 
-  isStockAllSelected() {    
+  isStockAllSelected() {
     return this.selectedStockIdList.size === this.stockDataSource.data.length;
   }
 
@@ -826,7 +826,7 @@ export class OptimizerComponent extends BaseComponent {
 
 
   // Handle History selection
-  onHistoryRowCheckboxChange(data: any, event: any) {    
+  onHistoryRowCheckboxChange(data: any, event: any) {
     if (event.checked) {
       this.selectedHistoryIdList.add(data);
     } else {
@@ -835,7 +835,7 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   // Handle "select all" checkbox
-  onHistorySelectAllChange(event: any) {    
+  onHistorySelectAllChange(event: any) {
     if (event.checked) {
       this.selectedHistoryIdList = new Set(this.historyDataSource.data.map((row) => row));
     } else {
@@ -843,7 +843,7 @@ export class OptimizerComponent extends BaseComponent {
     }
   }
 
-  isHistoryAllSelected() {    
+  isHistoryAllSelected() {
     return this.selectedHistoryIdList.size === this.historyDataSource.data.length;
   }
 
@@ -912,11 +912,11 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.bulkPartsStock(payload).subscribe({
       next: (res: any) => {
         if (res && res.partsList && Array.isArray(res.partsList) && res.stockList && Array.isArray(res.stockList)) {
-          this.bulkPartsStockDataSource.data = res.partsList; 
+          this.bulkPartsStockDataSource.data = res.partsList;
           this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
           this.partList = res.partsList;
           this.stokList = res.stockList;
-        } 
+        }
       },
       error: (error) => {
         this.toastr.error("Error fetching stock data.");
@@ -925,6 +925,32 @@ export class OptimizerComponent extends BaseComponent {
     });
   }
 
-  
+  submitBulkPartsStock() {
+
+    console.log(this.selectedHistoryIdList);
+    if (this.selectedHistoryIdList.size === 2) {
+      for (let item of this.selectedHistoryIdList) {
+        console.log(item.contentType);
+        if (item.contentType == 'parts') {
+          this.partsSheetId = item.sheetId;
+        }
+        else if (item.contentType == 'stock') {
+          this.stockSheetId = item.sheetId;
+        }
+      }
+      if (this.partsSheetId > 0 && this.stockSheetId > 0) {
+        this.getBulkPartsStock();
+
+      } else {
+        this.toastr.error("Please choose one stock and parts option");
+      }  
+
+
+    } else {
+      this.toastr.error("Please choose atleast two option");
+    }
+
+  }
+
 
 }
