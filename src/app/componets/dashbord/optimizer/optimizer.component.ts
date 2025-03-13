@@ -16,13 +16,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
+import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 @Component({
   selector: 'app-optimizer',
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
     CommonModule, MatFormFieldModule, MatSelectModule, MaterialModuleModule,
-    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule
+    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule
   ],
   templateUrl: './optimizer.component.html',
   styleUrl: './optimizer.component.scss'
@@ -33,7 +34,7 @@ export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['select','slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
   sawDisplayedColumn: string[] = ['select','slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   historyDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
-  bulkPartsStockDisplayedColumn: string[] = ['slNo', 'icon'];
+  bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime','icon'];
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
@@ -50,7 +51,8 @@ export class OptimizerComponent extends BaseComponent {
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
-  userType: string = this.userData ? this.userData.type : '';
+  userType: string = this.userData ? this.userData.type : ''; 
+  partList : any; stokList : any;
 
 
   public optimizerForm!: FormGroup;
@@ -61,6 +63,9 @@ export class OptimizerComponent extends BaseComponent {
   public optimizeFormSample!: FormGroup;
   public uploadParts!: FormGroup;
   public uploadPartsSubmitted = false;
+  public sawSubmitted = false;
+  public stockForm!: FormGroup;
+  public sawForm!: FormGroup;
 
   public uploadStocks!: FormGroup;
   uploadStocksSubmitted: boolean = false;
@@ -82,6 +87,8 @@ export class OptimizerComponent extends BaseComponent {
   selectedSawIdList: Set<any>= new Set<any>();
   selectedHistoryIdList: Set<any>= new Set<any>();
   selectedStockIdList: Set<any>= new Set<any>();
+  partsSheetId: number | undefined;
+  stockSheetId: number | undefined;
 
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
@@ -126,7 +133,8 @@ export class OptimizerComponent extends BaseComponent {
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
-    this.getStockData(); this.getSawData(); this.getPartshistory();
+    this.getStockData(); this.getSawData(); 
+    this.getPartshistory(); this.getBulkPartsStock();
     this.getGeneratedOutputJson(value);
 
     this.generatedForm = this.fb.group({
@@ -245,6 +253,20 @@ export class OptimizerComponent extends BaseComponent {
       file: ['', [Validators.required]]
     });
 
+    this.stockForm = this.fb.group({
+      stockList: this.fb.array([this.createStockGroup()]),
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType]
+    });
+
+    this.sawForm = this.fb.group({
+      sawList: this.fb.array([this.createSawGroup()]),
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType]
+
+    });
   }
   value(value: any) {
     throw new Error('Method not implemented.');
@@ -271,9 +293,20 @@ export class OptimizerComponent extends BaseComponent {
       notes: ['']
     });
   }
+  get stockList() {
+    return this.stockForm.get('stockList') as FormArray;
+  }
 
   addStock(): void {
-    this.stock.push(this.createStockGroup());
+    this.stockList.push(this.createStockGroup());
+  }
+
+  addSaw(): void {
+    this.sawList.push(this.createSawGroup());
+  }
+
+  get sawList() {
+    return this.sawForm.get('sawList') as FormArray;
   }
 
   createPartGroup(): FormGroup {
@@ -302,6 +335,28 @@ export class OptimizerComponent extends BaseComponent {
       }),
       orientationLock: [''],
       notes: ['']
+    });
+  }
+
+  createSawGroup(): FormGroup {
+    return this.fb.group({
+      bladeWidth: [0, Validators.required],
+      stockType: [''],
+      cutType: [''],
+      cutPreference: [''],
+      guillotineOptions: this.fb.group({
+        strategy: [''],
+        maxPhase: [0]
+      }),
+      efficiencyOptions: this.fb.group({
+        primaryCompression: ['']
+      }),
+      stackHeight: [0],
+      options: this.fb.group({
+        stockSelection: [''],
+        minSpacing: [0],
+        stackingMode: ['']
+      })
     });
   }
 
@@ -371,11 +426,18 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   VerticallyScrol(content: any) {
-    this.modalService.open(content, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, size: 'xl' });
+    this.modalService.open(content, {size: 'xl', scrollable: true, centered: true, });
   }
   openLg1(content4: any) {
-    this.modalService.open(content4, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, });
+    this.modalService.open(content4, { size: 'xl', scrollable: true, centered: true, });
   }
+  openLg2(content5: any) {
+    this.modalService.open(content5, {size: 'xl', scrollable: true, centered: true, });
+  }
+  openLg3(content6: any) {
+    this.modalService.open(content6, { size: 'xl', scrollable: true, centered: true, });
+  }
+
 
   downloadOptimizerFile() {
     this.switchService.optimizeDownload(this.optimizeId).subscribe({
@@ -792,5 +854,77 @@ export class OptimizerComponent extends BaseComponent {
   isHistorySelected(data: any) {
     return this.selectedHistoryIdList.has(data);
   }
+
+  submitStockForm(modal: any): void {
+    this.sawSubmitted = true;
+    if (this.stockForm.valid) {
+      this.switchService.saveStockData(this.stockForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.stockForm.reset();
+            this.getStockData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.sawSubmitted = false;
+    }
+  }
+
+  submitSawForm(modal: any): void {
+    this.sawSubmitted = true;
+    if (this.sawForm.valid) {
+      this.switchService.saveSawData(this.sawForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.sawForm.reset();
+            this.getSawData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.sawSubmitted = false;
+    }
+  }
+
+  getBulkPartsStock() {
+    let payload = {
+      partsSheetId: this.partsSheetId ?? 22,
+      stockSheetId: this.stockSheetId ?? 24,
+    };
+
+    this.switchService.bulkPartsStock(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.partsList && Array.isArray(res.partsList) && res.stockList && Array.isArray(res.stockList)) {
+          this.bulkPartsStockDataSource.data = res.partsList; 
+          this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
+          this.partList = res.partsList;
+          this.stokList = res.stockList;
+        } 
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching stock data.");
+        this.bulkPartsStockDataSource.data = [];
+      },
+    });
+  }
+
+  
 
 }
