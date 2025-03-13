@@ -90,6 +90,7 @@ export class OptimizerComponent extends BaseComponent {
   partsSheetId: number = 0;
   stockSheetId: number = 0;
 
+  selectedSawRow: any = null;
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
     super();
@@ -213,7 +214,7 @@ export class OptimizerComponent extends BaseComponent {
         })
       ]),
       groups: this.fb.array([]),
-      webhook: ['']
+      webhook: ['https://example.com/webhook']
     });
 
 
@@ -400,7 +401,7 @@ export class OptimizerComponent extends BaseComponent {
     return (this.optimizerForm.get('groups') as FormArray);
   }
 
-  optimizerFormSubmitSubmit() {
+  optimizerFormSubmit() {
     this.optimizerFormSubmitted = true;
     console.log('Form Data:', this.optimizerForm.value);
 
@@ -764,12 +765,16 @@ export class OptimizerComponent extends BaseComponent {
 
 
   // Handle single row selection
-  onSawRowCheckboxChange(data: any, event: any) {
+  onSawRowCheckboxChange(row: any, event: any) {
     if (event.checked) {
-      this.selectedSawIdList.add(data);
+      this.selectedSawRow = row;
     } else {
-      this.selectedSawIdList.delete(data);
+      this.selectedSawRow = null;
     }
+  }
+
+  isCheckboxSawDisabled(row: any): boolean {
+    return this.selectedSawRow && this.selectedSawRow !== row; // Disable others
   }
 
   // Handle "select all" checkbox
@@ -810,6 +815,7 @@ export class OptimizerComponent extends BaseComponent {
     } else {
       this.selectedStockIdList.clear();
     }
+    console.log('selectedstock', this.selectedStockIdList);
   }
 
   isStockAllSelected() {
@@ -903,6 +909,7 @@ export class OptimizerComponent extends BaseComponent {
     }
   }
 
+
   getBulkPartsStock() {
     let payload = {
       partsSheetId: this.partsSheetId ?? 22,
@@ -916,6 +923,80 @@ export class OptimizerComponent extends BaseComponent {
           this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
           this.partList = res.partsList;
           this.stokList = res.stockList;
+
+          if (this.partList.length > 0) {
+            const partsArray = this.optimizerForm.get('parts') as FormArray;
+            partsArray.clear(); // Clear old values before adding new ones
+
+            this.partList.forEach((parts: any) => {
+              partsArray.push(this.fb.group({
+                name: [parts.name],
+                l: [parts.l],
+                w: [parts.w],
+                t: [parts.t],
+                material: [parts.material],
+                q: [parts.q],
+                banding: this.fb.group({
+                  x1: [parts.banding?.x1 ?? true],
+                  x2: [parts.banding?.x2 ?? true],
+                  y1: [parts.banding?.y1 ?? true],
+                  y2: [parts.banding?.y2 ?? true]
+                }),
+                trim: this.fb.group({
+                  x1: [parts.trim?.x1 ?? 0],
+                  x2: [parts.trim?.x2 ?? 0],
+                  y1: [parts.trim?.y1 ?? 0],
+                  y2: [parts.trim?.y2 ?? 0]
+                }),
+                finish: this.fb.group({
+                  a: [parts.finish?.a ?? ''],
+                  b: [parts.finish?.b ?? '']
+                }),
+                orientationLock: [parts.orientationLock],
+                notes: [parts.notes]
+              }));
+            });
+
+          }
+
+          if (this.stokList.length > 0) {
+            const stockArray = this.optimizerForm.get('stock') as FormArray;
+            stockArray.clear(); // Clear old values before adding new ones
+            let selectedStockArray = this.stokList;
+            if (this.selectedStockIdList.size > 0) {
+              selectedStockArray = [...this.selectedStockIdList];
+            }
+
+            selectedStockArray.forEach((stocks: any) => {
+              stockArray.push(this.fb.group({
+                name: [stocks.name],
+                l: [stocks.l],
+                w: [stocks.w],
+                t: [stocks.t],
+                material: [stocks.material],
+                q: [stocks.q],
+                autoAdd: [stocks.autoAdd],
+                grain: [stocks.grain],
+                trim: this.fb.group({
+                  x1: [stocks.trim?.x1 ?? 0],
+                  x2: [stocks.trim?.x2 ?? 0],
+                  y1: [stocks.trim?.y1 ?? 0],
+                  y2: [stocks.trim?.y2 ?? 0]
+                }),
+                allowExactFitShapes: [stocks.allowExactFitShapes],
+                cost: [stocks.cost],
+                notes: [stocks.notes]
+              }));
+            });
+
+          }
+
+          if (this.selectedSawRow) {
+            this.optimizerForm.patchValue({ saw: this.selectedSawRow });
+          }
+
+          this.optimizerFormSubmit();
+
         }
       },
       error: (error) => {
@@ -926,11 +1007,8 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   submitBulkPartsStock() {
-
-    console.log(this.selectedHistoryIdList);
     if (this.selectedHistoryIdList.size === 2) {
       for (let item of this.selectedHistoryIdList) {
-        console.log(item.contentType);
         if (item.contentType == 'parts') {
           this.partsSheetId = item.sheetId;
         }
@@ -943,7 +1021,7 @@ export class OptimizerComponent extends BaseComponent {
 
       } else {
         this.toastr.error("Please choose one stock and parts option");
-      }  
+      }
 
 
     } else {
