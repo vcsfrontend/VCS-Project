@@ -1007,6 +1007,8 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   submitBulkPartsStock() {
+    this.partsSheetId=0;
+    this.stockSheetId=0;
     if (this.selectedHistoryIdList.size === 1 && this.selectedStockIdList.size > 0) {
       for (let item of this.selectedHistoryIdList) {
         if (item.contentType == 'parts') {
