@@ -959,7 +959,7 @@ export class OptimizerComponent extends BaseComponent {
 
           }
 
-          if (this.stokList.length > 0) {
+          if (this.stokList.length > 0 || this.selectedStockIdList.size > 0) {
             const stockArray = this.optimizerForm.get('stock') as FormArray;
             stockArray.clear(); // Clear old values before adding new ones
             let selectedStockArray = this.stokList;
@@ -1007,13 +1007,30 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   submitBulkPartsStock() {
-    if (this.selectedHistoryIdList.size === 2) {
+    if (this.selectedHistoryIdList.size === 1 && this.selectedStockIdList.size > 0) {
       for (let item of this.selectedHistoryIdList) {
         if (item.contentType == 'parts') {
           this.partsSheetId = item.sheetId;
         }
         else if (item.contentType == 'stock') {
           this.stockSheetId = item.sheetId;
+        }
+      }
+      if (this.partsSheetId > 0 || this.stockSheetId > 0) {
+        this.getBulkPartsStock();
+
+      } else {
+        this.toastr.error("Please choose one stock or parts option");
+      }
+    }
+    else if (this.selectedHistoryIdList.size === 2) {
+      for (let item of this.selectedHistoryIdList) {
+        if (item.contentType == 'parts') {
+          this.partsSheetId = item.sheetId;
+        }
+        else if (item.contentType == 'stock') {
+          this.stockSheetId = item.sheetId;
+          this.selectedStockIdList.clear();
         }
       }
       if (this.partsSheetId > 0 && this.stockSheetId > 0) {
@@ -1024,7 +1041,8 @@ export class OptimizerComponent extends BaseComponent {
       }
 
 
-    } else {
+    }
+    else {
       this.toastr.error("Please choose atleast two option");
     }
 
