@@ -45,6 +45,7 @@ export class OptimizerComponent extends BaseComponent {
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
+  @ViewChild('content4') content4: any;
 
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -146,7 +147,7 @@ export class OptimizerComponent extends BaseComponent {
 
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
-        bladeWidth: [0, Validators.required],
+        bladeWidth: [0],
         stockType: [''],
         cutType: [''],
         cutPreference: [''],
@@ -410,6 +411,10 @@ export class OptimizerComponent extends BaseComponent {
         next: (res: any) => {
           if (res.status == true) {
             this.optimizeId = (res.id) ? res.id : '';
+            this.generatedForm.patchValue({ id: this.optimizeId });
+            if (this.optimizeId) {
+              this.modalService.open(this.content4, { centered: true });
+            }
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -1007,8 +1012,8 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   submitBulkPartsStock() {
-    this.partsSheetId=0;
-    this.stockSheetId=0;
+    this.partsSheetId = 0;
+    this.stockSheetId = 0;
     if (this.selectedHistoryIdList.size === 1 && this.selectedStockIdList.size > 0) {
       for (let item of this.selectedHistoryIdList) {
         if (item.contentType == 'parts') {
