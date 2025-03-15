@@ -95,7 +95,7 @@
                             <div class="col-xl-12 pt-3">
                                 <div class="card custom-card">
                                     <div class="card-title border-bottom pb-3 justify-content-between">
-                                            Step 2: Stock
+                                        Step 2: Stock
                                         <div class="d-flex flex-wrap gap-3">
                                             <button type="button" class="btn btn-primary" (click)="addStock()">Add
                                                 Stock</button>
@@ -196,7 +196,7 @@
 
                                 </div>
                             </div>
-                             <button type="button" class="btn btn-primary mt-2 me-2" (click)="prevStep(1)">Back</button>
+                            <button type="button" class="btn btn-primary mt-2 me-2" (click)="prevStep(1)">Back</button>
                             <button type="button" class="btn btn-primary mt-2" (click)="nextStep(3)">Next</button>
                         </div>
 
@@ -340,8 +340,8 @@
                                 </div>
                             </div>
                             <button type="button" class="btn btn-primary mt-2 me-2" (click)="prevStep(2)">Back</button>
-                            <button type="submit" data-bs-toggle="modal" class="btn btn-primary mt-2" data-bs-target="#exampleModalLg"
-                                (click)="openLg1(content4)">Submit</button>
+                            <button type="submit" data-bs-toggle="modal" class="btn btn-primary mt-2"
+                                data-bs-target="#exampleModalLg" (click)="openLg1(content4)">Submit</button>
                             <button type="button" (click)="downloadOutputFile(layoutUrl)" *ngIf="layoutUrl">Layout
                                 PDF</button>
                             <button type="button" (click)="downloadOutputFile(lableUrl)" *ngIf="lableUrl">Label
@@ -404,7 +404,7 @@
         </div>
     </div>
 </div>
-
+<!-- Stock Table-->
 <div class="col-xl-12 mt-2">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
@@ -418,9 +418,8 @@
             </mat-form-field> -->
             </div>
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                (click)="openLg2(content5)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    (click)="openLg2(content5)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
                     Stock</button>
             </div>
         </div>
@@ -505,6 +504,7 @@
     </div>
 </div>
 
+<!-- Saw Table-->
 <div class="col-xl-12 mt-2">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
@@ -519,7 +519,7 @@
             </div>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                    (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
                     Saw</button>
             </div>
         </div>
@@ -533,8 +533,9 @@
                                     (change)="onSawSelectAllChange($event)"></mat-checkbox>
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <mat-checkbox (change)="onSawRowCheckboxChange(element, $event)" [disabled]="isCheckboxSawDisabled(element)"
-                                [checked]="selectedSawRow === element" class="custom-checkbox"></mat-checkbox>
+                                <mat-checkbox (change)="onSawRowCheckboxChange(element, $event)"
+                                    [disabled]="isCheckboxSawDisabled(element)" [checked]="selectedSawRow === element"
+                                    class="custom-checkbox"></mat-checkbox>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="slNo">
@@ -604,6 +605,104 @@
     </div>
 </div>
 
+<!-- Parts Table-->
+<div class="col-xl-12 mt-2">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Parts Data
+            </div>
+            <div class="d-flex flex-wrap gap-3">
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    (click)="openLg2(content7)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                    Parts</button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="partsDataSource" class="mat-table">
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox [checked]="isPartsAllSelected()" [indeterminate]="isPartsIndeterminate()"
+                                    (change)="onPartsSelectAllChange($event)"></mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-checkbox (change)="onPartsRowCheckboxChange(element, $event)"
+                                    [checked]="isPartsSelected(element)" class="custom-checkbox"></mat-checkbox>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="slNo">
+                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                            <td mat-cell *matCellDef="let element; let i = index"> {{getPartsSNo(i)}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.name | slice:0:7}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="l">
+                            <th mat-header-cell *matHeaderCellDef> Length </th>
+                            <td mat-cell *matCellDef="let element"> {{element.l}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="w">
+                            <th mat-header-cell *matHeaderCellDef> Width </th>
+                            <td mat-cell *matCellDef="let element"> {{element.w}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="t">
+                            <th mat-header-cell *matHeaderCellDef> Thickness </th>
+                            <td mat-cell *matCellDef="let element"> {{element.t}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="material">
+                            <th mat-header-cell *matHeaderCellDef> Material </th>
+                            <td mat-cell *matCellDef="let element"> {{element.material}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="q">
+                            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                            <td mat-cell *matCellDef="let element"> {{element.q}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="trim">
+                            <th mat-header-cell *matHeaderCellDef> Trim </th>
+                            <td mat-cell *matCellDef="let element">
+                                X1: {{element.trim.x1}}, X2: {{element.trim.x2}}, Y1: {{element.trim.y1}}, Y2:
+                                {{element.trim.y2}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="banding">
+                            <th mat-header-cell *matHeaderCellDef> Banding </th>
+                            <td mat-cell *matCellDef="let element">
+                                X1: {{element.banding.x1}}, X2: {{element.banding.x2}}, Y1: {{element.banding.y1}}, Y2:
+                                {{element.banding.y2}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="finish">
+                            <th mat-header-cell *matHeaderCellDef> Finish </th>
+                            <td mat-cell *matCellDef="let element">
+                                X1: {{element.finish.x1}}, X2: {{element.finish.x2}}, Y1: {{element.finish.y1}}, Y2:
+                                {{element.finish.y2}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="orientationLock">
+                            <th mat-header-cell *matHeaderCellDef> Orientation Lock </th>
+                            <td mat-cell *matCellDef="let element"> {{element.orientationLock}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="notes">
+                            <th mat-header-cell *matHeaderCellDef> Notes </th>
+                            <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="partsDisplayedColumn"></tr>
+                        <tr mat-row *matRowDef="let row; columns: partsDisplayedColumn;"></tr>
+                    </table>
+                </div>
+                <mat-paginator #partsPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                </mat-paginator>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <div class="row">
     <div class="col-xl-7 mt-2">
         <div class="card custom-card">
@@ -615,10 +714,10 @@
                     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
                         (click)="openRight(content1)" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">Stock Bulk Upload</button>
-                    
+
                     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
-                    (click)="openRight(content)" data-bs-target="#offcanvasRight"
-                    aria-controls="offcanvasRight">Parts Bulk Upload</button>
+                        (click)="openRight(content)" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Parts Bulk Upload</button>
 
                 </div>
             </div>
@@ -627,14 +726,14 @@
                     <div class="table-responsive">
                         <table mat-table [dataSource]="historyDataSource" class="mat-table">
                             <ng-container matColumnDef="select">
-                             <th mat-header-cell *matHeaderCellDef>
-                                Select Stock and Parts
-                             </th>
-                             <td mat-cell *matCellDef="let element">
-                                 <mat-checkbox (change)="onHistoryRowCheckboxChange(element, $event)"
-                                     [checked]="isHistorySelected(element)" class="custom-checkbox"></mat-checkbox>
-                             </td>
-                         </ng-container>
+                                <th mat-header-cell *matHeaderCellDef>
+                                    Select Stock and Parts
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <mat-checkbox (change)="onHistoryRowCheckboxChange(element, $event)"
+                                        [checked]="isHistorySelected(element)" class="custom-checkbox"></mat-checkbox>
+                                </td>
+                            </ng-container>
                             <ng-container matColumnDef="slNo">
                                 <th mat-header-cell *matHeaderCellDef> S.No. </th>
                                 <td mat-cell *matCellDef="let element; let i = index"> {{historyGetSNo(i)}} </td>
@@ -657,7 +756,8 @@
                             </ng-container>
                             <ng-container matColumnDef="uploadedTime">
                                 <th mat-header-cell *matHeaderCellDef> UploadedTime </th>
-                                <td mat-cell *matCellDef="let element">{{ '2025-03-10T11:07:33.618389109' | date:'yyyy/MM/dd hh:mm a':'Asia/Kolkata' }}
+                                <td mat-cell *matCellDef="let element">{{ '2025-03-10T11:07:33.618389109' |
+                                    date:'yyyy/MM/dd hh:mm a':'Asia/Kolkata' }}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="email">
@@ -676,7 +776,13 @@
                     </mat-paginator>
                 </div>
                 <div class="d-flex px-3 mb-2 marge">
-                    <button class="btn btn-primary" (click)="submitBulkPartsStock()">Submit</button>
+                    <button class="btn btn-primary  mt-2 me-2" (click)="submitBulkPartsStock()">Submit</button>
+                    <button type="button" class="btn btn-primary mt-2 me-2" (click)="downloadOutputFile(layoutUrl)"
+                        *ngIf="layoutUrl">Layout
+                        PDF</button>
+                    <button type="button" class="btn btn-primary mt-2 me-2" (click)="downloadOutputFile(lableUrl)"
+                        *ngIf="lableUrl">Label
+                        PDF</button>
                 </div>
             </div>
         </div>
@@ -699,23 +805,24 @@
                             </ng-container>
                             <ng-container matColumnDef="icon">
                                 <th mat-header-cell *matHeaderCellDef> icon </th>
-                                <td mat-cell *matCellDef="let element"><i class="fe fe-eye text-muted" (click)="openRight(content2);"
-                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"></i></td>
+                                <td mat-cell *matCellDef="let element"><i class="fe fe-eye text-muted"
+                                        (click)="openRight(content2);" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight"></i></td>
                             </ng-container>
                             <ng-container matColumnDef="sheetName">
                                 <th mat-header-cell *matHeaderCellDef> Sheet Name </th>
                                 <td mat-cell *matCellDef="let element"> {{ element.bulkHistory?.sheetName }}</td>
-                              </ng-container>
-                              
-                              <ng-container matColumnDef="uploadedBy">
+                            </ng-container>
+
+                            <ng-container matColumnDef="uploadedBy">
                                 <th mat-header-cell *matHeaderCellDef> Uploaded By </th>
                                 <td mat-cell *matCellDef="let element"> {{ element.bulkHistory?.uploadedBy }}</td>
-                              </ng-container>
-                              
-                              <ng-container matColumnDef="uploadedTime">
+                            </ng-container>
+
+                            <ng-container matColumnDef="uploadedTime">
                                 <th mat-header-cell *matHeaderCellDef> Uploaded Time </th>
                                 <td mat-cell *matCellDef="let element"> {{ element.bulkHistory?.uploadedTime }}</td>
-                              </ng-container>                                                       
+                            </ng-container>
                             <tr mat-header-row *matHeaderRowDef="bulkPartsStockDisplayedColumn"></tr>
                             <tr mat-row *matRowDef="let row; columns: bulkPartsStockDisplayedColumn;"></tr>
                         </table>
@@ -732,8 +839,8 @@
 <ng-template #content let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Parts Bulk Upload</strong></h5>
-        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
-            data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0">
         <ul class="list-group list-group-flush mb-0">
@@ -799,8 +906,8 @@
 <ng-template #content1 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Stock Bulk Upload</strong></h5>
-        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
-            data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
     </div>
     <div class="offcanvas-body p-0">
         <ul class="list-group list-group-flush mb-0">
@@ -884,14 +991,15 @@
                             <span class="fw-semibold me-1">Quantity:</span> {{ part.q }} <br />
                             <span class="fw-semibold me-1">Cost:</span> ₹{{ part.cost }} <br />
                             <span class="fw-semibold me-1">Uploaded By:</span> {{ part.bulkHistory.uploadedBy }} <br />
-                            <span class="fw-semibold me-1">Uploaded Time:</span> {{ part.bulkHistory.uploadedTime | date:'short' }} <br />
+                            <span class="fw-semibold me-1">Uploaded Time:</span> {{ part.bulkHistory.uploadedTime |
+                            date:'short' }} <br />
                             <hr />
                         </li>
                     </ul>
-                
+
                     <h5>Stock List</h5>
                     <ul class="list-unstyled">
-                        <li *ngFor="let stock of stokList" class="mb-2">  <!-- Corrected stokList to stockList -->
+                        <li *ngFor="let stock of stokList" class="mb-2"> <!-- Corrected stokList to stockList -->
                             <span class="fw-semibold me-1">Name:</span> {{ stock.name }} <br />
                             <span class="fw-semibold me-1">Length:</span> {{ stock.l }} <br />
                             <span class="fw-semibold me-1">Width:</span> {{ stock.w }} <br />
@@ -905,10 +1013,11 @@
                             <span class="fw-semibold me-1">Y2:</span> {{ stock.y2 }} <br />
                             <span class="fw-semibold me-1">Cost:</span> ₹{{ stock.cost }} <br />
                             <span class="fw-semibold me-1">Uploaded By:</span> {{ stock.bulkHistory.uploadedBy }} <br />
-                            <span class="fw-semibold me-1">Uploaded Time:</span> {{ stock.bulkHistory.uploadedTime | date:'short' }} <br />
+                            <span class="fw-semibold me-1">Uploaded Time:</span> {{ stock.bulkHistory.uploadedTime |
+                            date:'short' }} <br />
                             <hr />
                         </li>
-                    </ul>                      
+                    </ul>
                 </div>
             </div>
         </div>
@@ -920,7 +1029,7 @@
     </div>
 </ng-template>
 
-
+<!-- Stock Popup Form-->
 <div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
     data-bs-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -932,7 +1041,7 @@
                             <div class="card-header justify-content-between">
                                 <h5>Stock Form</h5>
                                 <div class="text-center">
-                                    <button type="button" class="btn btn-primary me-2" (click)="addStock()">Add
+                                    <button type="button" class="btn btn-primary me-2" (click)="addPopupStock()">Add
                                         Stock</button>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
@@ -1046,25 +1155,25 @@
     </div>
 </div>
 
-
+<!-- Saw Popup Form-->
 <div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
     data-bs-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content overflow-y">
             <ng-template #content6 let-modal>
-                    <div class="col-xl-12">
-                        <div class="card custom-card">
-                            <div class="card-header justify-content-between">
-                                <h5>Saw Form</h5>
-                                <div class="text-center">
-                                    <button type="button" class="btn btn-primary me-2" (click)="addSaw()">Add
-                                        Saw</button>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
-                                </div>
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between">
+                            <h5>Saw Form</h5>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-primary me-2" (click)="addSaw()">Add
+                                    Saw</button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
                             </div>
                         </div>
                     </div>
+                </div>
 
                 <form [formGroup]="sawForm" class="overflowImportant mb-5" (ngSubmit)="submitSawForm(modal)">
                     <div formArrayName="sawList">
@@ -1157,6 +1266,164 @@
                     </div>
                 </form>
 
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+
+<!-- Parts Popup Form-->
+<div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
+    data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content overflow-y">
+            <ng-template #content7 let-modal>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card custom-card">
+                            <div class="card-header justify-content-between">
+                                <h5>Parts Form</h5>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-primary me-2" (click)="addPopupParts()">Add
+                                        Parts</button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form [formGroup]="partsForm" class="overflowImportant mb-5" (ngSubmit)="submitPartsForm(modal)">
+                    <div formArrayName="partList">
+                        <div *ngFor="let partGroup of partsList.controls; let i = index" [formGroupName]="i"
+                            class="row  m-2 border-bottom mt-2">
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">Part Name</label>
+                                <input type="text" class="form-control" id="task-name" placeholder="Name of this part"
+                                    formControlName="name">
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">length of this part</label>
+                                <input type="number" class="form-control" id="task-name"
+                                    placeholder="length of this part" formControlName="l">
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">Width of this part</label>
+                                <input type="number" class="form-control" id="task-name"
+                                    placeholder="Width of this part" formControlName="w">
+                            </div>
+
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">Thickness of this part</label>
+                                <input type="number" class="form-control" id="task-name"
+                                    placeholder="Thickness of this part" formControlName="t">
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">material</label>
+                                <input type="text" class="form-control" id="task-name"
+                                    placeholder="Material reference for stock matching" formControlName="material">
+                            </div>
+                            <div class="col-xl-3 col-auto">
+                                <label for="task-name" class="form-label my-2">quantity of this part</label>
+                                <input type="number" class="form-control" id="task-name"
+                                    placeholder="The quantity of this part" formControlName="q">
+                            </div>
+                            <div formGroupName="banding" class="row">
+                                <div class="card-title my-2">
+                                    banding
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">Apply banding to the Right side</label>
+                                    <ng-select [items]="X1" bindLabel="name" bindValue="name"
+                                        placeholder="Apply banding to the Right side" formControlName="x1">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Apply banding to the left
+                                        side</label>
+                                    <ng-select [items]="X2" bindLabel="name" bindValue="name"
+                                        placeholder="Apply banding to the left side" formControlName="x2">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Apply banding to the Top
+                                        side</label>
+                                    <ng-select [items]="Y1" bindLabel="name" bindValue="name"
+                                        placeholder="Apply banding to the Top side" formControlName="y1">
+                                    </ng-select>
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Apply banding to the Bottom
+                                        side</label>
+                                    <ng-select [items]="Y2" bindLabel="name" bindValue="name"
+                                        placeholder="Apply banding to the Bottom side" formControlName="y2">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div formGroupName="trim" class="row">
+                                <div class="card-title my-2">
+                                    trim
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Apply Trim to the Right
+                                        side</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="Apply Trim to the Right side" formControlName="x1">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Apply Trim to the Left
+                                        side</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="Apply Trim to the Left side" formControlName="x2">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Apply Trim to the Top
+                                        side</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="Apply Trim to the Top side" formControlName="y1">
+                                </div>
+                                <div class="col-xl-3 col-auto">
+                                    <label for="task-name" class="form-label my-2">Apply Trim to the Bottom
+                                        side</label>
+                                    <input type="number" class="form-control" id="task-name"
+                                        placeholder="Apply Trim to the Bottom side" formControlName="y2">
+                                </div>
+                            </div>
+                            <div formGroupName="finish" class="row">
+                                <div class="card-title my-2">
+                                    Finish
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">Apply finish to the Top side</label>
+                                    <input type="text" class="form-control" id="task-name"
+                                        placeholder="Apply finish to the A side" formControlName="a">
+                                </div>
+                                <div class="col-xl-3">
+                                    <label class="form-label my-2">Apply finish to the Bottom side</label>
+                                    <input type="text" class="form-control" id="task-name"
+                                        placeholder="Apply finish to the B side" formControlName="b">
+                                </div>
+                            </div>
+                            <div class="col-xl-3">
+                                <label class="form-label my-2">orientationLock</label>
+                                <ng-select [items]="orientationLock" bindLabel="name" bindValue="name"
+                                    placeholder="Select an option" formControlName="orientationLock">
+                                </ng-select>
+                            </div>
+                            <div class="col-xl-3  col-auto">
+                                <label for="contact-address-address" class="form-label">Notes</label>
+                                <textarea class="form-control" id="contact-address-address" rows="1" placeholder="Notes"
+                                    formControlName="notes"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary m-4">Submit</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
+                    </div>
+                </form>
             </ng-template>
         </div>
     </div>
