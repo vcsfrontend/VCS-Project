@@ -35,16 +35,20 @@ export class OptimizerComponent extends BaseComponent {
   sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'icon'];
+  partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
+
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
   historyDataSource = new MatTableDataSource<any>();
   bulkPartsStockDataSource = new MatTableDataSource<any>();
+  partsDataSource = new MatTableDataSource<any>();
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
+  @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
   @ViewChild('content4') content4: any;
 
   userDataStorage = localStorage.getItem('userDetails');
@@ -67,6 +71,9 @@ export class OptimizerComponent extends BaseComponent {
   public sawSubmitted = false;
   public stockForm!: FormGroup;
   public sawForm!: FormGroup;
+  public partsForm!: FormGroup;
+  public stockSubmitted = false;
+  public partsSubmitted = false;
 
   public uploadStocks!: FormGroup;
   uploadStocksSubmitted: boolean = false;
@@ -92,50 +99,18 @@ export class OptimizerComponent extends BaseComponent {
   stockSheetId: number = 0;
 
   selectedSawRow: any = null;
+  selectedPartsIdList: Set<any> = new Set<any>();
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
     super();
   }
 
-  getSNo(index: number): number {
-    if (this.stockPaginator && this.stockPaginator.pageIndex !== undefined && this.stockPaginator.pageSize !== undefined) {
-      return this.stockPaginator.pageIndex * this.stockPaginator.pageSize + index + 1;
-    }
-    return index + 1; // Default return if paginator is not yet defined
-  }
-
-  sawGetSNo(index: number): number {
-    if (this.sawPaginator && this.sawPaginator.pageIndex !== undefined && this.sawPaginator.pageSize !== undefined) {
-      return this.sawPaginator.pageIndex * this.sawPaginator.pageSize + index + 1;
-    }
-    return index + 1; // Default return if paginator is not yet defined
-  }
-
-  historyGetSNo(index: number): number {
-    if (this.historyPaginator && this.historyPaginator.pageIndex !== undefined && this.historyPaginator.pageSize !== undefined) {
-      return this.historyPaginator.pageIndex * this.historyPaginator.pageSize + index + 1;
-    }
-    return index + 1; // Default return if paginator is not yet defined
-  }
-
-  bulkPartsStockGetSNo(index: number): number {
-    if (this.bulkPartsStockPaginator && this.bulkPartsStockPaginator.pageIndex !== undefined && this.bulkPartsStockPaginator.pageSize !== undefined) {
-      return this.bulkPartsStockPaginator.pageIndex * this.bulkPartsStockPaginator.pageSize + index + 1;
-    }
-    return index + 1; // Default return if paginator is not yet defined
-  }
-
-
-  ngAfterViewInit() {
-    this.stockDataSource.paginator = this.stockPaginator;
-    this.sawDataSource.paginator = this.sawPaginator;
-    this.historyDataSource.paginator = this.historyPaginator;
-    this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
-  }
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
-    this.getStockData(); this.getSawData();
+    this.getStockData();
+    this.getSawData();
+    this.getPartsData();
     this.getPartshistory();
     this.getGeneratedOutputJson(value);
 
@@ -269,7 +244,64 @@ export class OptimizerComponent extends BaseComponent {
       type: [this.userType]
 
     });
+
+    //Initialize Parts Form
+    this.partsForm = this.fb.group({
+      partList: this.fb.array([this.createPartGroup()]),
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType]
+    });
+
+    console.log('partsform', this.partsForm.value);
+
   }
+
+  getSNo(index: number): number {
+    if (this.stockPaginator && this.stockPaginator.pageIndex !== undefined && this.stockPaginator.pageSize !== undefined) {
+      return this.stockPaginator.pageIndex * this.stockPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+
+  sawGetSNo(index: number): number {
+    if (this.sawPaginator && this.sawPaginator.pageIndex !== undefined && this.sawPaginator.pageSize !== undefined) {
+      return this.sawPaginator.pageIndex * this.sawPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+  getPartsSNo(index: number): number {
+    if (this.partsPaginator && this.partsPaginator.pageIndex !== undefined && this.partsPaginator.pageSize !== undefined) {
+      return this.partsPaginator.pageIndex * this.partsPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+  historyGetSNo(index: number): number {
+    if (this.historyPaginator && this.historyPaginator.pageIndex !== undefined && this.historyPaginator.pageSize !== undefined) {
+      return this.historyPaginator.pageIndex * this.historyPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+  bulkPartsStockGetSNo(index: number): number {
+    if (this.bulkPartsStockPaginator && this.bulkPartsStockPaginator.pageIndex !== undefined && this.bulkPartsStockPaginator.pageSize !== undefined) {
+      return this.bulkPartsStockPaginator.pageIndex * this.bulkPartsStockPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
+
+  ngAfterViewInit() {
+    this.stockDataSource.paginator = this.stockPaginator;
+    this.sawDataSource.paginator = this.sawPaginator;
+    this.historyDataSource.paginator = this.historyPaginator;
+    this.partsDataSource.paginator = this.partsPaginator;
+    this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
+  }
+
   value(value: any) {
     throw new Error('Method not implemented.');
   }
@@ -300,6 +332,10 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   addStock(): void {
+    this.stock.push(this.createStockGroup());
+  }
+
+  addPopupStock(): void {
     this.stockList.push(this.createStockGroup());
   }
 
@@ -365,6 +401,15 @@ export class OptimizerComponent extends BaseComponent {
   addParts(): void {
     this.parts.push(this.createPartGroup());
   }
+
+  get partsList() {
+    return this.partsForm.get('partList') as FormArray;
+  }
+
+  addPopupParts(): void {
+    this.partsList.push(this.createPartGroup());
+  }
+
 
   onSubmit() {
     this.optimizerFormSubmitted = true; // Mark form as submitted
@@ -613,6 +658,38 @@ export class OptimizerComponent extends BaseComponent {
     });
   }
 
+  getPartsData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.PartsData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.partsDataSource.data = res;
+          console.log("Parts Data:", this.partsDataSource.data);
+
+          // Ensure paginator is set only if it exists
+          if (this.partsPaginator) {
+            this.partsDataSource.paginator = this.partsPaginator;
+          } else {
+            console.warn("Paginator not found!");
+          }
+        } else {
+          console.warn("No data received from server.");
+          this.toastr.error("No data available.");
+          this.sawDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error("API Error:", error);
+        this.toastr.error("Failed to fetch saw data.");
+        this.sawDataSource.data = [];
+      },
+    });
+  }
+
 
   openRight(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
@@ -836,6 +913,38 @@ export class OptimizerComponent extends BaseComponent {
   }
 
 
+  // Handle Parts selection
+  onPartsRowCheckboxChange(data: any, event: any) {
+    if (event.checked) {
+      this.selectedPartsIdList.add(data);
+    } else {
+      this.selectedPartsIdList.delete(data);
+    }
+  }
+
+  // Handle "select all" checkbox
+  onPartsSelectAllChange(event: any) {
+    if (event.checked) {
+      this.selectedPartsIdList = new Set(this.partsDataSource.data.map((row) => row));
+    } else {
+      this.selectedPartsIdList.clear();
+    }
+    console.log('selectedParts', this.selectedPartsIdList);
+  }
+
+  isPartsAllSelected() {
+    return this.selectedPartsIdList.size === this.partsDataSource.data.length;
+  }
+
+  isPartsIndeterminate() {
+    return this.selectedPartsIdList.size > 0 && this.selectedPartsIdList.size < this.partsDataSource.data.length;
+  }
+
+  isPartsSelected(data: any) {
+    return this.selectedPartsIdList.has(data);
+  }
+
+
   // Handle History selection
   onHistoryRowCheckboxChange(data: any, event: any) {
     if (event.checked) {
@@ -866,14 +975,20 @@ export class OptimizerComponent extends BaseComponent {
     return this.selectedHistoryIdList.has(data);
   }
 
+  // Submit Stock Form and reset Form
+
+  resetStockList() {
+    this.stockForm.setControl('stockList', this.fb.array([this.createStockGroup()]));
+  }
+
   submitStockForm(modal: any): void {
-    this.sawSubmitted = true;
+    this.stockSubmitted = true;
     if (this.stockForm.valid) {
       this.switchService.saveStockData(this.stockForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             modal.close();
-            this.stockForm.reset();
+            this.resetStockList();
             this.getStockData();
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -886,8 +1001,14 @@ export class OptimizerComponent extends BaseComponent {
           }
         }
       })
-      this.sawSubmitted = false;
+      this.stockSubmitted = false;
     }
+  }
+
+  //Submit Saw Form and reset Form
+
+  resetSawList() {
+    this.sawForm.setControl('sawList', this.fb.array([this.createSawGroup()]));
   }
 
   submitSawForm(modal: any): void {
@@ -897,7 +1018,7 @@ export class OptimizerComponent extends BaseComponent {
         next: (res: any) => {
           if (res.status == true) {
             modal.close();
-            this.sawForm.reset();
+            this.resetSawList();
             this.getSawData();
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -914,6 +1035,35 @@ export class OptimizerComponent extends BaseComponent {
     }
   }
 
+  //Submit Parts Form and reset Form
+
+  resetPartList() {
+    this.partsForm.setControl('partList', this.fb.array([this.createPartGroup()]));
+  }
+
+  submitPartsForm(modal: any): void {
+    this.partsSubmitted = true;
+    if (this.partsForm.valid) {
+      this.switchService.savePartsData(this.partsForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.resetPartList();
+            this.getPartsData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.partsSubmitted = false;
+    }
+  }
 
   getBulkPartsStock() {
     let payload = {
@@ -929,11 +1079,16 @@ export class OptimizerComponent extends BaseComponent {
           this.partList = res.partsList;
           this.stokList = res.stockList;
 
+          //Parts
           if (this.partList.length > 0) {
             const partsArray = this.optimizerForm.get('parts') as FormArray;
             partsArray.clear(); // Clear old values before adding new ones
+            let selectedPartsArray = this.partList;
+            if (this.selectedPartsIdList.size > 0) {
+              selectedPartsArray = [...this.selectedPartsIdList];
+            }           
 
-            this.partList.forEach((parts: any) => {
+            selectedPartsArray.forEach((parts: any) => {
               partsArray.push(this.fb.group({
                 name: [parts.name],
                 l: [parts.l],
@@ -964,6 +1119,7 @@ export class OptimizerComponent extends BaseComponent {
 
           }
 
+          //Stock
           if (this.stokList.length > 0 || this.selectedStockIdList.size > 0) {
             const stockArray = this.optimizerForm.get('stock') as FormArray;
             stockArray.clear(); // Clear old values before adding new ones
@@ -996,6 +1152,7 @@ export class OptimizerComponent extends BaseComponent {
 
           }
 
+          //Saw
           if (this.selectedSawRow) {
             this.optimizerForm.patchValue({ saw: this.selectedSawRow });
           }
@@ -1015,6 +1172,22 @@ export class OptimizerComponent extends BaseComponent {
     this.partsSheetId = 0;
     this.stockSheetId = 0;
     if (this.selectedHistoryIdList.size === 1 && this.selectedStockIdList.size > 0) {
+      for (let item of this.selectedHistoryIdList) {
+        if (item.contentType == 'parts') {
+          this.partsSheetId = item.sheetId;
+        }
+        else if (item.contentType == 'stock') {
+          this.stockSheetId = item.sheetId;
+        }
+      }
+      if (this.partsSheetId > 0 || this.stockSheetId > 0) {
+        this.getBulkPartsStock();
+
+      } else {
+        this.toastr.error("Please choose one stock or parts option");
+      }
+    }
+    else if (this.selectedHistoryIdList.size === 1 && this.selectedPartsIdList.size > 0) {
       for (let item of this.selectedHistoryIdList) {
         if (item.contentType == 'parts') {
           this.partsSheetId = item.sheetId;
