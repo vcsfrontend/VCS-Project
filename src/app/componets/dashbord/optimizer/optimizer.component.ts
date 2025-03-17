@@ -308,7 +308,7 @@ export class OptimizerComponent extends BaseComponent {
 
   createStockGroup(): FormGroup {
     return this.fb.group({
-      name: [''],
+      name: ['',[Validators.required]],
       l: [0],
       w: [0],
       t: [0],
@@ -992,7 +992,7 @@ export class OptimizerComponent extends BaseComponent {
     this.stockForm.setControl('stockList', this.fb.array([this.createStockGroup()]));
   }
 
-  submitStockForm(modal: any): void {
+  submitStockForm(modal: any): void {    
     this.stockSubmitted = true;
     if (this.stockForm.valid) {
       this.switchService.saveStockData(this.stockForm.value).subscribe({
@@ -1022,7 +1022,7 @@ export class OptimizerComponent extends BaseComponent {
     this.sawForm.setControl('sawList', this.fb.array([this.createSawGroup()]));
   }
 
-  submitSawForm(modal: any): void {
+  submitSawForm(modal: any): void {   
     this.sawSubmitted = true;
     if (this.sawForm.valid) {
       this.switchService.saveSawData(this.sawForm.value).subscribe({
