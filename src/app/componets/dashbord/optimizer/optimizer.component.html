@@ -93,13 +93,13 @@
                         </div>
                         <div *ngIf="stepIndex === 2">
                             <div class="col-xl-12 pt-3">
-                                    <div class="card-title border-bottom pb-3 justify-content-between d-flex">
-                                        Step 2: Stock
-                                        <div class="d-flex flex-wrap gap-3">
-                                            <button type="button" class="btn btn-primary" (click)="addStock()">Add
-                                                Stock</button>
-                                        </div>
+                                <div class="card-title border-bottom pb-3 justify-content-between d-flex">
+                                    Step 2: Stock
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <button type="button" class="btn btn-primary" (click)="addStock()">Add
+                                            Stock</button>
                                     </div>
+                                </div>
                             </div>
                             <div formArrayName="stock">
                                 <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i"
@@ -1060,8 +1060,12 @@
                         <div *ngFor="let stockGroup of stockList.controls; let i = index" [formGroupName]="i"
                             class="row mt-2 m-2 border-bottom">
                             <div class="col-xl-3 col-auto">
-                                <label for="name" class="form-label my-2">Stock Name</label>
-                                <input type="text" class="form-control" placeholder="stock name" formControlName="name">
+                                <label for="name" class="form-label my-2">Stock Name {{stockGroup.get('name')?.invalid}}</label>
+                                <input type="text" class="form-control" placeholder="stock name" formControlName="name"
+                                    [ngClass]="{ 'is-invalid': stockSubmitted && stockGroup.get('name')?.invalid }">
+                                <div *ngIf="stockSubmitted && stockGroup.get('name')?.invalid" class="invalid-feedback">
+                                    <span *ngIf="stockGroup.get('name')?.errors?.['required']">Name is required.</span>
+                                </div>
                             </div>
                             <div class="col-xl-3 col-auto">
                                 <label for="task-name" class="form-label my-2">Length</label>
@@ -1146,7 +1150,8 @@
                                     formControlName="notes">
                             </div>
                             <div class="col-xl-3 mt-4">
-                                <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeStock(i)">Remove</button>
+                                <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0"
+                                    (click)="removeStock(i)">Remove</button>
                             </div>
                         </div>
                     </div>
@@ -1263,7 +1268,8 @@
                                     </ng-select>
                                 </div>
                                 <div class="col-xl-3 mt-4">
-                                    <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeSaw(i)">Remove</button>
+                                    <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0"
+                                        (click)="removeSaw(i)">Remove</button>
                                 </div>
                             </div>
                         </div>
@@ -1426,7 +1432,8 @@
                                     formControlName="notes"></textarea>
                             </div>
                             <div class="col-xl-3 mt-4">
-                                <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeParts(i)">Remove</button>
+                                <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0"
+                                    (click)="removeParts(i)">Remove</button>
                             </div>
                         </div>
                     </div>
