@@ -93,19 +93,17 @@
                         </div>
                         <div *ngIf="stepIndex === 2">
                             <div class="col-xl-12 pt-3">
-                                <div class="card custom-card">
-                                    <div class="card-title border-bottom pb-3 justify-content-between">
+                                    <div class="card-title border-bottom pb-3 justify-content-between d-flex">
                                         Step 2: Stock
                                         <div class="d-flex flex-wrap gap-3">
                                             <button type="button" class="btn btn-primary" (click)="addStock()">Add
                                                 Stock</button>
                                         </div>
                                     </div>
-                                </div>
                             </div>
                             <div formArrayName="stock">
                                 <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i"
-                                    class="row mt-5 border-bottom">
+                                    class="row mt-3 border-bottom">
                                     <div class="col-xl-3 col-auto">
                                         <label for="name" class="form-label my-2">Stock Name</label>
                                         <input type="text" class="form-control" placeholder="stock name"
@@ -204,20 +202,18 @@
                         <div *ngIf="stepIndex === 3">
                             <div class="row">
                                 <div class="col-xl-12 pt-3">
-                                    <div class="card custom-card">
-                                        <div class="card-header justify-content-between">
-                                            <h4>Step 3: Parts</h4>
-                                            <div class="text-center">
-                                                <button type="button" class="btn btn-primary" (click)="addParts()">Add
-                                                    Part</button>
-                                            </div>
+                                    <div class="card-title border-bottom pb-3 justify-content-between d-flex">
+                                        Step 3: Parts
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-primary" (click)="addParts()">Add
+                                                Part</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div formArrayName="parts">
                                 <div *ngFor="let partGroup of parts.controls; let i = index" [formGroupName]="i"
-                                    class="row mt-5">
+                                    class="row mt-3  border-bottom pb-3">
                                     <div class="col-xl-3 col-auto">
                                         <label for="task-name" class="form-label my-2">Part Name</label>
                                         <input type="text" class="form-control" id="task-name"
@@ -411,16 +407,18 @@
             <div class="card-title">
                 Stock Data
             </div>
-            <div class="d-flex flex-wrap gap-3">
-                <!-- <mat-form-field class="filter-field">
-                <mat-label>Fliter</mat-label>
-                <input matInput (keyup)="stockApplyFilter($event)" #input>
-            </mat-form-field> -->
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                    (click)="openLg2(content5)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                    Stock</button>
+            <div class="d-flex">
+                <div class="d-flex flex-wrap gap-3">
+                    <mat-form-field class="filters-field">
+                        <mat-label>Fliter</mat-label>
+                        <input matInput (keyup)="stockApplyFilter($event)" #input>
+                    </mat-form-field>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                        (click)="openLg2(content5)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                        Stock</button>
+                </div>
             </div>
         </div>
         <div class="card-body p-0">
@@ -511,16 +509,18 @@
             <div class="card-title">
                 Saw Data
             </div>
-            <div class="d-flex flex-wrap gap-3">
-                <!-- <mat-form-field class="filter-field">
-                <mat-label>Fliter</mat-label>
-                <input matInput (keyup)="stockApplyFilter($event)" #input>
-            </mat-form-field> -->
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                    (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                    Saw</button>
+            <div class="d-flex">
+                <div class="d-flex flex-wrap gap-3">
+                    <mat-form-field class="filters-field">
+                        <mat-label>Fliter</mat-label>
+                        <input matInput (keyup)="sawApplyFilter($event)" #input>
+                    </mat-form-field>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                        (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                        Saw</button>
+                </div>
             </div>
         </div>
         <div class="card-body p-0">
@@ -612,12 +612,18 @@
             <div class="card-title">
                 Parts Data
             </div>
-            <div class="d-flex flex-wrap gap-3">
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                    (click)="openLg2(content7)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                    Parts</button>
+            <div class="d-flex">
+                <div class="d-flex flex-wrap gap-3">
+                    <mat-form-field class="filters-field">
+                        <mat-label>Fliter</mat-label>
+                        <input matInput (keyup)="partsApplyFilter($event)" #input>
+                    </mat-form-field>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                        (click)="openLg4(content7)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                        Parts</button>
+                </div>
             </div>
         </div>
         <div class="card-body p-0">
@@ -710,7 +716,11 @@
                 <div class="card-title">
                     History
                 </div>
-                <div class="d-flex flex-wrap gap-3">
+                <div class="col-xl-9 d-flex flex-wrap gap-2">
+                    <mat-form-field class="filter-field">
+                        <mat-label>Fliter</mat-label>
+                        <input matInput (keyup)="historyApplyFilter($event)" #input>
+                    </mat-form-field>
                     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
                         (click)="openRight(content1)" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">Stock Bulk Upload</button>
@@ -1141,7 +1151,9 @@
                                 <input type="text" class="form-control" id="notes" placeholder="notes"
                                     formControlName="notes">
                             </div>
-
+                            <div class="col-xl-3 mt-4">
+                                <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeStock(i)">Remove</button>
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -1255,6 +1267,9 @@
                                     <ng-select [items]="stackingMode" bindLabel="name" bindValue="name"
                                         placeholder="Set the stock stacking mode." formControlName="stackingMode">
                                     </ng-select>
+                                </div>
+                                <div class="col-xl-3 mt-4">
+                                    <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeSaw(i)">Remove</button>
                                 </div>
                             </div>
                         </div>
@@ -1415,6 +1430,9 @@
                                 <label for="contact-address-address" class="form-label">Notes</label>
                                 <textarea class="form-control" id="contact-address-address" rows="1" placeholder="Notes"
                                     formControlName="notes"></textarea>
+                            </div>
+                            <div class="col-xl-3 mt-4">
+                                <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeParts(i)">Remove</button>
                             </div>
                         </div>
                     </div>
