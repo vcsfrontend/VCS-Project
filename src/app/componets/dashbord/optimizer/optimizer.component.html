@@ -469,13 +469,6 @@
                             <th mat-header-cell *matHeaderCellDef> Grain </th>
                             <td mat-cell *matCellDef="let element"> {{element.grain}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="trim">
-                            <th mat-header-cell *matHeaderCellDef> Trim </th>
-                            <td mat-cell *matCellDef="let element">
-                                X1: {{element.trim.x1}}, X2: {{element.trim.x2}}, Y1: {{element.trim.y1}}, Y2:
-                                {{element.trim.y2}}
-                            </td>
-                        </ng-container>
                         <ng-container matColumnDef="allowExactFitShapes">
                             <th mat-header-cell *matHeaderCellDef> Exact Fit Shapes </th>
                             <td mat-cell *matCellDef="let element"> {{element.allowExactFitShapes}} </td>
@@ -488,8 +481,35 @@
                             <th mat-header-cell *matHeaderCellDef> Notes </th>
                             <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
                         </ng-container>
+                        <ng-container matColumnDef="trim">
+                            <th mat-header-cell *matHeaderCellDef colspan="5" class="center-align"> Trim </th>
+                            <td mat-cell *matCellDef="let element"></td>
+                        </ng-container>
+                        <!-- X1, X2, Y1, Y2 inside Trim -->
+                        <ng-container matColumnDef="x1">
+                            <th mat-header-cell *matHeaderCellDef colspan="15" class="tex-right"> X1 </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.trim.x1 }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="x2">
+                            <th mat-header-cell *matHeaderCellDef> X2 </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.trim.x2 }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="y1">
+                            <th mat-header-cell *matHeaderCellDef> Y1 </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.trim.y1 }} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="y2">
+                            <th mat-header-cell *matHeaderCellDef> Y2 </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.trim.y2 }} </td>
+                        </ng-container>
                         <tr mat-header-row *matHeaderRowDef="stockDisplayedColumn"></tr>
-                        <tr mat-row *matRowDef="let row; columns: stockDisplayedColumn;"></tr>
+                        <tr mat-header-row *matHeaderRowDef="nestedStockDisplayedColumns"></tr>
+                        <tr mat-row
+                            *matRowDef="let row; columns: stockDisplayedColumn.concat(nestedStockDisplayedColumns);">
+                        </tr>
                     </table>
                 </div>
                 <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
@@ -1060,7 +1080,8 @@
                         <div *ngFor="let stockGroup of stockList.controls; let i = index" [formGroupName]="i"
                             class="row mt-2 m-2 border-bottom">
                             <div class="col-xl-3 col-auto">
-                                <label for="name" class="form-label my-2">Stock Name {{stockGroup.get('name')?.invalid}}</label>
+                                <label for="name" class="form-label my-2">Stock Name
+                                    {{stockGroup.get('name')?.invalid}}</label>
                                 <input type="text" class="form-control" placeholder="stock name" formControlName="name"
                                     [ngClass]="{ 'is-invalid': stockSubmitted && stockGroup.get('name')?.invalid }">
                                 <div *ngIf="stockSubmitted && stockGroup.get('name')?.invalid" class="invalid-feedback">

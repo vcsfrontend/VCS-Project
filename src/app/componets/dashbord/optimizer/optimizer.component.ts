@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgbNavModule, NgbDropdownModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedModule } from '../../../shared/common/sharedmodule';
@@ -26,12 +26,14 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
     MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule
   ],
   templateUrl: './optimizer.component.html',
-  styleUrl: './optimizer.component.scss'
+  styleUrl: './optimizer.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 
-
+ 
 export class OptimizerComponent extends BaseComponent {
-  stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
+  stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes','trim'];
+  nestedStockDisplayedColumns: string[] = ['x1', 'x2', 'y1', 'y2']; // Nested columns under "Trim"
   sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'icon'];
@@ -253,8 +255,6 @@ export class OptimizerComponent extends BaseComponent {
       type: [this.userType]
     });
 
-    console.log('partsform', this.partsForm.value);
-
   }
 
   getSNo(index: number): number {
@@ -308,7 +308,7 @@ export class OptimizerComponent extends BaseComponent {
 
   createStockGroup(): FormGroup {
     return this.fb.group({
-      name: ['',[Validators.required]],
+      name: ['', [Validators.required]],
       l: [0],
       w: [0],
       t: [0],
@@ -423,14 +423,14 @@ export class OptimizerComponent extends BaseComponent {
     this.optimizerFormSubmitted = true; // Mark form as submitted
 
     if (this.optimizerForm.valid) {
-      console.log('Form Data:', this.optimizerForm.value);
+
 
       // Send form data to API or process the data
       // Example: this.apiService.submitOptimizerData(this.optimizerForm.value).subscribe(...)
 
       alert('Form submitted successfully!'); // Replace with actual API call
     } else {
-      console.log('Form is invalid! Please check the errors.');
+
     }
   }
 
@@ -541,7 +541,7 @@ export class OptimizerComponent extends BaseComponent {
           this.cutData = res.cuts || [];
           this.offCut = res.offcuts || [];
           this.metaData = res.metadata || [];
-          console.log("Offcuts Data:", this.offCut);
+
         } else {
           console.error("No data found.");
         }
@@ -585,7 +585,6 @@ export class OptimizerComponent extends BaseComponent {
 
   onGeneratedSubmit(modal: any) {
     this.generatedrFormSubmitted = true;
-    console.log('Form Data:', this.generatedForm.value);
 
     if (this.generatedForm.valid) {
       this.switchService.optimizeGeneratedOutputData(this.generatedForm.value).subscribe({
@@ -622,7 +621,6 @@ export class OptimizerComponent extends BaseComponent {
       next: (res: any) => {
         if (res && res.length > 0) {
           this.stockDataSource.data = res;
-          console.log("Stock Data:", this.stockDataSource.data);
           this.stockDataSource.paginator = this.stockPaginator;
         } else {
           this.toastr.error("No data received from server");
@@ -630,7 +628,6 @@ export class OptimizerComponent extends BaseComponent {
         }
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error("Error fetching stock data");
         this.stockDataSource.data = [];
       },
@@ -647,7 +644,7 @@ export class OptimizerComponent extends BaseComponent {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
-          console.log("Saw Data:", this.sawDataSource.data);
+
 
           // Ensure paginator is set only if it exists
           if (this.sawPaginator) {
@@ -679,7 +676,6 @@ export class OptimizerComponent extends BaseComponent {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.partsDataSource.data = res;
-          console.log("Parts Data:", this.partsDataSource.data);
 
           // Ensure paginator is set only if it exists
           if (this.partsPaginator) {
@@ -711,7 +707,6 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   onFileChange(event: any): void {
-    console.log(event.target.files[0].type);
     this.imagePartsFileSrcData = '';
     const files = event.target.files[0];
     const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
@@ -773,7 +768,6 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   onStockFileChange(event: any): void {
-    console.log(event.target.files[0].type);
     this.imageStocksFileSrcData = '';
     const files = event.target.files[0];
     const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'];
@@ -840,7 +834,6 @@ export class OptimizerComponent extends BaseComponent {
       next: (res: any) => {
         if (res && res.length > 0) {
           this.historyDataSource.data = res;
-          console.log("Stock Data:", this.historyDataSource.data);
           this.historyDataSource.paginator = this.historyPaginator;
         } else {
           this.toastr.error("No data received from server");
@@ -848,7 +841,6 @@ export class OptimizerComponent extends BaseComponent {
         }
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error("Error fetching stock data");
         this.historyDataSource.data = [];
       },
@@ -874,6 +866,7 @@ export class OptimizerComponent extends BaseComponent {
   onSawSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
+      console.log('selected all', this.selectedSawIdList);
     } else {
       this.selectedSawIdList.clear();
     }
@@ -908,7 +901,6 @@ export class OptimizerComponent extends BaseComponent {
     } else {
       this.selectedStockIdList.clear();
     }
-    console.log('selectedstock', this.selectedStockIdList);
   }
 
   isStockAllSelected() {
@@ -940,7 +932,6 @@ export class OptimizerComponent extends BaseComponent {
     } else {
       this.selectedPartsIdList.clear();
     }
-    console.log('selectedParts', this.selectedPartsIdList);
   }
 
   isPartsAllSelected() {
@@ -992,7 +983,7 @@ export class OptimizerComponent extends BaseComponent {
     this.stockForm.setControl('stockList', this.fb.array([this.createStockGroup()]));
   }
 
-  submitStockForm(modal: any): void {    
+  submitStockForm(modal: any): void {
     this.stockSubmitted = true;
     if (this.stockForm.valid) {
       this.switchService.saveStockData(this.stockForm.value).subscribe({
@@ -1022,7 +1013,7 @@ export class OptimizerComponent extends BaseComponent {
     this.sawForm.setControl('sawList', this.fb.array([this.createSawGroup()]));
   }
 
-  submitSawForm(modal: any): void {   
+  submitSawForm(modal: any): void {
     this.sawSubmitted = true;
     if (this.sawForm.valid) {
       this.switchService.saveSawData(this.sawForm.value).subscribe({
@@ -1090,14 +1081,14 @@ export class OptimizerComponent extends BaseComponent {
           this.partList = res.partsList;
           this.stokList = res.stockList;
 
-          //Parts
-          if (this.partList.length > 0) {
+          //Parts   
+          if (this.partList.length > 0 || this.selectedPartsIdList.size > 0) {
             const partsArray = this.optimizerForm.get('parts') as FormArray;
             partsArray.clear(); // Clear old values before adding new ones
             let selectedPartsArray = this.partList;
             if (this.selectedPartsIdList.size > 0) {
-              selectedPartsArray = [...this.selectedPartsIdList];
-            }           
+              selectedPartsArray = [...this.partList, ...this.selectedPartsIdList];
+            }
 
             selectedPartsArray.forEach((parts: any) => {
               partsArray.push(this.fb.group({
@@ -1127,8 +1118,8 @@ export class OptimizerComponent extends BaseComponent {
                 notes: [parts.notes]
               }));
             });
-
           }
+
 
           //Stock
           if (this.stokList.length > 0 || this.selectedStockIdList.size > 0) {
@@ -1136,7 +1127,7 @@ export class OptimizerComponent extends BaseComponent {
             stockArray.clear(); // Clear old values before adding new ones
             let selectedStockArray = this.stokList;
             if (this.selectedStockIdList.size > 0) {
-              selectedStockArray = [...this.selectedStockIdList];
+              selectedStockArray = [...this.stokList, ...this.selectedStockIdList];
             }
 
             selectedStockArray.forEach((stocks: any) => {
@@ -1182,7 +1173,55 @@ export class OptimizerComponent extends BaseComponent {
   submitBulkPartsStock() {
     this.partsSheetId = 0;
     this.stockSheetId = 0;
-    if (this.selectedHistoryIdList.size === 1 && this.selectedStockIdList.size > 0) {
+    console.log(this.selectedSawRow);
+    if (this.selectedStockIdList.size > 0 && this.selectedSawRow !== null && this.selectedPartsIdList) {
+      if (this.selectedHistoryIdList.size === 2) {
+        for (let item of this.selectedHistoryIdList) {
+          if (item.contentType == 'parts') {
+            this.partsSheetId = item.sheetId;
+          }
+          else if (item.contentType == 'stock') {
+            this.stockSheetId = item.sheetId;
+            this.selectedStockIdList.clear();
+          }
+        }
+        if (this.partsSheetId > 0 && this.stockSheetId > 0) {
+          this.getBulkPartsStock();
+
+        } else {
+          this.toastr.error("Please choose one stock and parts option");
+        }
+      }
+      else if (this.selectedHistoryIdList.size === 1) {
+        for (let item of this.selectedHistoryIdList) {
+          if (item.contentType == 'parts') {
+            this.partsSheetId = item.sheetId;
+          }
+          else if (item.contentType == 'stock') {
+            this.stockSheetId = item.sheetId;
+          }
+        }
+        if (this.partsSheetId > 0 || this.stockSheetId > 0) {
+          this.getBulkPartsStock();
+
+        } else {
+          this.toastr.error("Please choose one stock or parts option");
+        }
+      }
+      else {
+        this.getBulkPartsStock();
+      }
+    }
+    else if (this.selectedSawRow === null) {
+      this.toastr.error("Please choose one saw option");
+    }
+    else if (this.selectedHistoryIdList.size === 0 && this.selectedPartsIdList.size === 0) {
+      this.toastr.error("Please choose one parts option");
+    }
+    else if (this.selectedHistoryIdList.size === 0 && this.selectedStockIdList.size === 0) {
+      this.toastr.error("Please choose one stock option");
+    }
+    else if (this.selectedHistoryIdList.size === 1 && this.selectedStockIdList.size > 0) {
       for (let item of this.selectedHistoryIdList) {
         if (item.contentType == 'parts') {
           this.partsSheetId = item.sheetId;
