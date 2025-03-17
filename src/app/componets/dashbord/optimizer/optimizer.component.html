@@ -407,18 +407,16 @@
             <div class="card-title">
                 Stock Data
             </div>
-            <div class="d-flex">
-                <div class="d-flex flex-wrap gap-3">
-                    <mat-form-field class="filters-field">
-                        <mat-label>Fliter</mat-label>
-                        <input matInput (keyup)="stockApplyFilter($event)" #input>
-                    </mat-form-field>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                        (click)="openLg2(content5)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                        Stock</button>
-                </div>
+            <!-- <div class="d-flex flex-wrap gap-3">
+                <mat-form-field class="filters-field">
+                    <mat-label>Fliter</mat-label>
+                    <input matInput (keyup)="stockApplyFilter($event)" #input>
+                </mat-form-field>
+            </div> -->
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    (click)="openLg2(content5)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                    Stock</button>
             </div>
         </div>
         <div class="card-body p-0">
@@ -509,18 +507,16 @@
             <div class="card-title">
                 Saw Data
             </div>
-            <div class="d-flex">
-                <div class="d-flex flex-wrap gap-3">
-                    <mat-form-field class="filters-field">
-                        <mat-label>Fliter</mat-label>
-                        <input matInput (keyup)="sawApplyFilter($event)" #input>
-                    </mat-form-field>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                        (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                        Saw</button>
-                </div>
+            <!-- <div class="d-flex flex-wrap gap-3">
+                <mat-form-field class="filters-field">
+                    <mat-label>Fliter</mat-label>
+                    <input matInput (keyup)="sawApplyFilter($event)" #input>
+                </mat-form-field>
+            </div> -->
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                    Saw</button>
             </div>
         </div>
         <div class="card-body p-0">
@@ -612,18 +608,16 @@
             <div class="card-title">
                 Parts Data
             </div>
-            <div class="d-flex">
-                <div class="d-flex flex-wrap gap-3">
-                    <mat-form-field class="filters-field">
-                        <mat-label>Fliter</mat-label>
-                        <input matInput (keyup)="partsApplyFilter($event)" #input>
-                    </mat-form-field>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                        (click)="openLg4(content7)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                        Parts</button>
-                </div>
+            <!-- <div class="d-flex flex-wrap gap-3">
+                <mat-form-field class="filters-field">
+                    <mat-label>Fliter</mat-label>
+                    <input matInput (keyup)="partsApplyFilter($event)" #input>
+                </mat-form-field>
+            </div> -->
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    (click)="openLg4(content7)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                    Parts</button>
             </div>
         </div>
         <div class="card-body p-0">
@@ -716,11 +710,11 @@
                 <div class="card-title">
                     History
                 </div>
-                <div class="col-xl-9 d-flex flex-wrap gap-2">
-                    <mat-form-field class="filter-field">
+                <div class="d-flex flex-wrap gap-2">
+                    <!-- <mat-form-field class="filter-field">
                         <mat-label>Fliter</mat-label>
                         <input matInput (keyup)="historyApplyFilter($event)" #input>
-                    </mat-form-field>
+                    </mat-form-field> -->
                     <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas"
                         (click)="openRight(content1)" data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight">Stock Bulk Upload</button>
