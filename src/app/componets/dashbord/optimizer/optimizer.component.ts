@@ -334,6 +334,9 @@ export class OptimizerComponent extends BaseComponent {
   addStock(): void {
     this.stock.push(this.createStockGroup());
   }
+  removeStock(index: number): void {
+    this.stockList.removeAt(index);
+  }
 
   addPopupStock(): void {
     this.stockList.push(this.createStockGroup());
@@ -341,6 +344,9 @@ export class OptimizerComponent extends BaseComponent {
 
   addSaw(): void {
     this.sawList.push(this.createSawGroup());
+  }
+  removeSaw(index: number): void {
+    this.sawList.removeAt(index);
   }
 
   get sawList() {
@@ -405,7 +411,9 @@ export class OptimizerComponent extends BaseComponent {
   get partsList() {
     return this.partsForm.get('partList') as FormArray;
   }
-
+  removeParts(index: number): void {
+    this.partsList.removeAt(index);
+  }
   addPopupParts(): void {
     this.partsList.push(this.createPartGroup());
   }
@@ -487,6 +495,9 @@ export class OptimizerComponent extends BaseComponent {
   }
   openLg3(content6: any) {
     this.modalService.open(content6, { size: 'xl', scrollable: true, centered: true, });
+  }
+  openLg4(content7: any) {
+    this.modalService.open(content7, { size: 'xl', scrollable: true, centered: true, });
   }
 
 
@@ -1227,6 +1238,21 @@ export class OptimizerComponent extends BaseComponent {
     }
 
   }
-
+  stockApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.stockDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  sawApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.sawDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  partsApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.partsDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  historyApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.historyDataSource.filter = filterValue.trim().toLowerCase();
+  }
 
 }

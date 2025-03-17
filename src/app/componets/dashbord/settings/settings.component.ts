@@ -39,15 +39,18 @@ import { NgSelectModule } from '@ng-select/ng-select';
 export class SettingsComponent extends BaseComponent implements OnInit {
   stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
   sawDisplayedColumn: string[] = ['slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+  partsDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
 
   mainHeader: string[] = ['trim'];
   subHeader: string[] = ['x1', 'x2', 'y1', 'y2'];
   dataSource = new MatTableDataSource<any>(); mailId: any = '';
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
+  partsDataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
+  @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
   isAddEdt = false; aeTyp = 'a'; playersList: any; editData: any;
   adonai = false; crm = false; userLst: any = [];
   submitted = false; userData: any; roleid: any;
@@ -97,7 +100,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   userDetails: any = {};
   public sawForm!: FormGroup;
   public sawSubmitted = false;
+  public partsSubmitted = false;
   public stockForm!: FormGroup;
+  public partsForm!: FormGroup;
   StData: any;
 
   toggleAddMore() {
@@ -217,7 +222,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.strategy);
-    this.getStockData(); this.getSawData();
+    this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.saveData = {
@@ -313,6 +318,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
     this.stockForm = this.fb.group({
       stockList: this.fb.array([this.createStockGroup()]),
+      companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
+      email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
+      type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
+    });
+    this.partsForm = this.fb.group({
+      partList: this.fb.array([this.createPartGroup()]),
       companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
       email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
       type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
@@ -458,7 +469,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
     return index + 1; // Default return if paginator is not yet defined
   }
-
+  getPartsSNo(index: number): number {
+    if (this.partsPaginator && this.partsPaginator.pageIndex !== undefined && this.partsPaginator.pageSize !== undefined) {
+      return this.partsPaginator.pageIndex * this.partsPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
   saveInitialStage() {
     this.switchService.stageSave(this.saveData).subscribe({
       next: (res: any) => {
@@ -1020,7 +1036,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   stockApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.stockDataSource.filter = filterValue.trim().toLowerCase();
   }
   quantities(): FormArray {
     return this.productForm.get("quantities") as FormArray
@@ -1119,6 +1135,35 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       notes: ['']
     });
   }
+  createPartGroup(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      l: [0],
+      w: [0],
+      t: [0],
+      material: [''],
+      q: [0],
+      banding: this.fb.group({
+        x1: [true],
+        x2: [true],
+        y1: [true],
+        y2: [true]
+      }),
+      trim: this.fb.group({
+        x1: [0],
+        x2: [0],
+        y1: [0],
+        y2: [0]
+      }),
+      finish: this.fb.group({
+        a: [''],
+        b: ['']
+      }),
+      orientationLock: [''],
+      notes: ['']
+    });
+  }
+
 
   // Getter for saw FormArray
 
@@ -1131,14 +1176,32 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   get stockList() {
     return this.stockForm.get('stockList') as FormArray;
   }
+  addParts(): void {
+    this.partsList.push(this.createPartGroup());
+  }
+  removeParts(index: number): void {
+    this.partsList.removeAt(index);
+  }
+  get partsList() {
+    return this.partsForm.get('partList') as FormArray;
+  }
+  // addPopupParts(): void {
+  //   this.partsList.push(this.createPartGroup());
+  // }
 
 
   addSaw(): void {
     this.sawList.push(this.createSawGroup());
   }
+  removeSaw(index: number): void {
+    this.sawList.removeAt(index);
+  }
 
   addStock(): void {
     this.stockList.push(this.createStockGroup());
+  }
+  removeStock(index: number): void {
+    this.stockList.removeAt(index);
   }
 
 
@@ -1148,6 +1211,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   openLg2(content5: any) {
     this.modalService.open(content5, { size: 'xl', scrollable: true, centered: true, });
+  }
+  openLg3(content6: any) {
+    this.modalService.open(content6, { size: 'xl', scrollable: true, centered: true, });
   }
 
 
@@ -1162,7 +1228,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         if (res && res.length > 0) {
           this.stockDataSource.data = res;
           console.log("Stock Data:", this.stockDataSource.data);
-          this.stockDataSource.paginator = this.paginator;
+
+          if (this.stockPaginator) {
+            this.stockDataSource.paginator = this.stockPaginator;
+          } else {
+            console.warn("Paginator not found!");
+          }
+
         } else {
           this.toastr.error("No data received from server");
           this.stockDataSource.data = [];
@@ -1218,8 +1290,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
 
           // Ensure paginator is set only if it exists
-          if (this.paginator) {
-            this.sawDataSource.paginator = this.paginator;
+          if (this.sawPaginator) {
+            this.sawDataSource.paginator = this.sawPaginator;
           } else {
             console.warn("Paginator not found!");
           }
@@ -1237,6 +1309,37 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
   }
 
+  getPartsData() {
+    let payload = {
+      email: JSON.parse(this.userData)?.email,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    };
+    this.switchService.PartsData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.partsDataSource.data = res;
+          console.log("Parts Data:", this.partsDataSource.data);
+
+          // Ensure paginator is set only if it exists
+          if (this.partsPaginator) {
+            this.partsDataSource.paginator = this.partsPaginator;
+          } else {
+            console.warn("Paginator not found!");
+          }
+        } else {
+          console.warn("No data received from server.");
+          this.toastr.error("No data available.");
+          this.sawDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        console.error("API Error:", error);
+        this.toastr.error("Failed to fetch saw data.");
+        this.sawDataSource.data = [];
+      },
+    });
+  }
 
   submitSawForm(modal: any): void {
     this.sawSubmitted = true;
@@ -1260,10 +1363,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       })
       this.sawSubmitted = false;
     }
-
   }
-
-
+  
   submitStockForm(modal: any): void {
     this.sawSubmitted = true;
     if (this.stockForm.valid) {
@@ -1288,5 +1389,33 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
 
   }
+
+  resetPartList() {
+    this.partsForm.setControl('partList', this.fb.array([this.createPartGroup()]));
+  }
+  submitPartsForm(modal: any): void {
+    this.partsSubmitted = true;
+    if (this.partsForm.valid) {
+      this.switchService.savePartsData(this.partsForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.resetPartList();
+            this.getPartsData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.partsSubmitted = false;
+    }
+  }
+
  
 }
