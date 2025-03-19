@@ -33,10 +33,9 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
  
 export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes','trim'];
-  nestedStockDisplayedColumns: string[] = ['x1', 'x2', 'y1', 'y2']; // Nested columns under "Trim"
   sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
-  bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'icon'];
+  bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
 
   //dataSource = new MatTableDataSource<any>(); 
@@ -195,7 +194,6 @@ export class OptimizerComponent extends BaseComponent {
       webhook: ['https://example.com/webhook']
     });
 
-
     this.optimizeFormSample = this.fb.group({
       saw: this.fb.group({
         bladeWidth: [0, Validators.required],
@@ -244,7 +242,6 @@ export class OptimizerComponent extends BaseComponent {
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType]
-
     });
 
     //Initialize Parts Form
@@ -254,7 +251,6 @@ export class OptimizerComponent extends BaseComponent {
       email: [this.userEmail],
       type: [this.userType]
     });
-
   }
 
   getSNo(index: number): number {
@@ -263,7 +259,6 @@ export class OptimizerComponent extends BaseComponent {
     }
     return index + 1; // Default return if paginator is not yet defined
   }
-
 
   sawGetSNo(index: number): number {
     if (this.sawPaginator && this.sawPaginator.pageIndex !== undefined && this.sawPaginator.pageSize !== undefined) {
@@ -293,7 +288,6 @@ export class OptimizerComponent extends BaseComponent {
     return index + 1; // Default return if paginator is not yet defined
   }
 
-
   ngAfterViewInit() {
     this.stockDataSource.paginator = this.stockPaginator;
     this.sawDataSource.paginator = this.sawPaginator;
@@ -306,27 +300,6 @@ export class OptimizerComponent extends BaseComponent {
     throw new Error('Method not implemented.');
   }
 
-  createStockGroup(): FormGroup {
-    return this.fb.group({
-      name: ['', [Validators.required]],
-      l: [0],
-      w: [0],
-      t: [0],
-      material: [''],
-      q: [0],
-      autoAdd: [''],
-      grain: [''],
-      trim: this.fb.group({
-        x1: [0],
-        x2: [0],
-        y1: [0],
-        y2: [0]
-      }),
-      allowExactFitShapes: [true],
-      cost: [0],
-      notes: ['']
-    });
-  }
   get stockList() {
     return this.stockForm.get('stockList') as FormArray;
   }
@@ -353,53 +326,74 @@ export class OptimizerComponent extends BaseComponent {
     return this.sawForm.get('sawList') as FormArray;
   }
 
-  createPartGroup(): FormGroup {
+  createStockGroup(): FormGroup {
     return this.fb.group({
-      name: [''],
-      l: [0],
-      w: [0],
-      t: [0],
-      material: [''],
-      q: [0],
+      name: ['',[Validators.required]],
+      l: [0,[Validators.required]],
+      w: [0,[Validators.required]],
+      t: [0,[Validators.required]],
+      material: ['',[Validators.required]],
+      q: [0,[Validators.required]],
+      autoAdd: ['',[Validators.required]],
+      grain: ['',[Validators.required]],
+      trim: this.fb.group({
+        x1: [0,[Validators.required]],
+        x2: [0,[Validators.required]],
+        y1: [0,[Validators.required]],
+        y2: [0,[Validators.required]]
+      }),
+      allowExactFitShapes: ['',Validators.required],
+      cost: [0,[Validators.required]],
+      notes: ['',[Validators.required]]
+    });
+  }
+ createPartGroup(): FormGroup {
+    return this.fb.group({
+      name: ['',[Validators.required]],
+      l: [0,[Validators.required]],
+      w: [0,[Validators.required]],
+      t: [0,[Validators.required]],
+      material: ['',[Validators.required]],
+      q: [0,[Validators.required]],
       banding: this.fb.group({
-        x1: [true],
-        x2: [true],
-        y1: [true],
-        y2: [true]
+        x1: [true,[Validators.required]],
+        x2: [true,[Validators.required]],
+        y1: [true,[Validators.required]],
+        y2: [true,[Validators.required]]
       }),
       trim: this.fb.group({
-        x1: [0],
-        x2: [0],
-        y1: [0],
-        y2: [0]
+        x1: [0,[Validators.required]],
+        x2: [0,[Validators.required]],
+        y1: [0,[Validators.required]],
+        y2: [0,[Validators.required]]
       }),
       finish: this.fb.group({
-        a: [''],
-        b: ['']
+        a: ['',[Validators.required]],
+        b: ['',[Validators.required]]
       }),
-      orientationLock: [''],
-      notes: ['']
+      orientationLock: ['',[Validators.required]],
+      notes: ['',[Validators.required]]
     });
   }
 
   createSawGroup(): FormGroup {
     return this.fb.group({
-      bladeWidth: [0, Validators.required],
-      stockType: [''],
-      cutType: [''],
-      cutPreference: [''],
+      bladeWidth: [0,[Validators.required]],
+      stockType: ['',[Validators.required]],
+      cutType: ['',[Validators.required]],
+      cutPreference: ['',[Validators.required]],
       guillotineOptions: this.fb.group({
-        strategy: [''],
-        maxPhase: [0]
+        strategy: ['',[Validators.required]],
+        maxPhase: [0,[Validators.required]]
       }),
       efficiencyOptions: this.fb.group({
-        primaryCompression: ['']
+        primaryCompression: ['',[Validators.required]]
       }),
-      stackHeight: [0],
+      stackHeight: [0,[Validators.required]],
       options: this.fb.group({
-        stockSelection: [''],
-        minSpacing: [0],
-        stackingMode: ['']
+        stockSelection: ['',[Validators.required]],
+        minSpacing: [0,[Validators.required]],
+        stackingMode: ['',[Validators.required]]
       })
     });
   }
