@@ -37,8 +37,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent extends BaseComponent implements OnInit {
-  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'trim', 'allowExactFitShapes', 'cost', 'notes'];
-  sawDisplayedColumn: string[] = ['slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain',  'allowExactFitShapes', 'cost', 'notes','trim'];
+  sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   partsDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
 
   mainHeader: string[] = ['trim'];
@@ -47,6 +47,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   stockDataSource = new MatTableDataSource<any>();
   sawDataSource = new MatTableDataSource<any>();
   partsDataSource = new MatTableDataSource<any>();
+  selectedSawIdList: Set<any> = new Set<any>();
+  selectedSawRow: any = null;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
@@ -1094,22 +1097,22 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   createSawGroup(): FormGroup {
     return this.fb.group({
-      bladeWidth: [0, Validators.required],
-      stockType: [''],
-      cutType: [''],
-      cutPreference: [''],
+      bladeWidth: [0,[Validators.required]],
+      stockType: ['',[Validators.required]],
+      cutType: ['',[Validators.required]],
+      cutPreference: ['',[Validators.required]],
       guillotineOptions: this.fb.group({
-        strategy: [''],
-        maxPhase: [0]
+        strategy: ['',[Validators.required]],
+        maxPhase: [0,[Validators.required]]
       }),
       efficiencyOptions: this.fb.group({
-        primaryCompression: ['']
+        primaryCompression: ['',[Validators.required]]
       }),
-      stackHeight: [0],
+      stackHeight: [0,[Validators.required]],
       options: this.fb.group({
-        stockSelection: [''],
-        minSpacing: [0],
-        stackingMode: ['']
+        stockSelection: ['',[Validators.required]],
+        minSpacing: [0,[Validators.required]],
+        stackingMode: ['',[Validators.required]]
       })
     });
   }
@@ -1307,6 +1310,40 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       },
     });
   }
+  onSawRowCheckboxChange(row: any, event: any) {
+    if (event.checked) {
+      this.selectedSawRow = row;
+    } else {
+      this.selectedSawRow = null;
+    }
+  }
+
+  isCheckboxSawDisabled(row: any): boolean {
+    return this.selectedSawRow && this.selectedSawRow !== row; // Disable others
+  }
+
+  // Handle "select all" checkbox
+  onSawSelectAllChange(event: any) {
+    if (event.checked) {
+      this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
+      console.log('selected all', this.selectedSawIdList);
+    } else {
+      this.selectedSawIdList.clear();
+    }
+  }
+
+  isSawAllSelected() {
+    return this.selectedSawIdList.size === this.sawDataSource.data.length;
+  }
+
+  isSawIndeterminate() {
+    return this.selectedSawIdList.size > 0 && this.selectedSawIdList.size < this.sawDataSource.data.length;
+  }
+
+  isSawSelected(data: any) {
+    return this.selectedSawIdList.has(data);
+  }
+
 
   getPartsData() {
     let payload = {

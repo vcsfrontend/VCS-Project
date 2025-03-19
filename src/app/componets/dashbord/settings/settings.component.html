@@ -274,125 +274,141 @@
     </div>
 </ng-template>
 <!-- Saw Form Popup-->
-<div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
-    data-bs-keyboard="false" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content overflow-y">
-            <ng-template #content4 let-modal>
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card custom-card">
-                            <div class="card-header justify-content-between">
-                                <h5>Saw Form</h5>
-                                <div class="text-center">
-                                    <button type="button" class="btn btn-primary me-2" (click)="addSaw()">Add
-                                        Saw</button>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
-                                </div>
+<ng-template #content6 let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Saw Form</h6>
+            <div class="d-flex flex-wrap gap-2">
+                <button type="button" class="btn btn-primary" (click)="addSaw()">Add Saw</button>
+                <button type="button" class="btn-close mt-1" data-bs-dismiss="modal"
+                    (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            </div>
+        </div>
+        <form [formGroup]="sawForm" class="overflowImportant mb-5" (ngSubmit)="submitSawForm(modal)">
+            <div formArrayName="sawList">
+                <div *ngFor="let sawGroup of sawList.controls; let i = index" [formGroupName]="i"
+                    class="row m-2 border-bottom mt-2">
+                    <div class="col-xl-3 col-auto">
+                        <label for="BladeWidth" class="form-label my-2">Blade Width</label>
+                        <input type="number" class="form-control" id="bladeWidth" formControlName="bladeWidth"
+                            placeholder="kerf of the blade"
+                            [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('bladeWidth')?.invalid }">
+                        <div *ngIf="sawSubmitted && sawGroup.get('bladeWidth')?.invalid" class="invalid-feedback">
+                            <span *ngIf="sawGroup.get('bladeWidth')?.errors?.['required']">BladeWidth is required.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">StockType</label>
+                        <ng-select formControlName="stockType" [items]="stockType" bindLabel="name" bindValue="name" placeholder="The type of stock" 
+                        [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('stockType')?.invalid }">
+                        </ng-select>
+                        <div *ngIf="sawSubmitted && sawGroup.get('stockType')?.invalid" class="invalid-feedback">
+                            <span *ngIf="sawGroup.get('stockType')?.errors?.['required']">StockType is required.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">CutType</label>
+                        <ng-select formControlName="cutType" [items]="cutType" bindLabel="name" bindValue="name"
+                            placeholder="The cut type" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('cutType')?.invalid }">
+                        </ng-select>
+                        <div *ngIf="sawSubmitted && sawGroup.get('cutType')?.invalid" class="invalid-feedback">
+                            <span *ngIf="sawGroup.get('cutType')?.errors?.['required']">CutType is required.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-auto">
+                        <label for="task-name" class="form-label my-2">CutPreference</label>
+                        <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name" bindValue="name" 
+                        placeholder="Required for guillotine & beam CutPreference" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('cutPreference')?.invalid }">
+                        </ng-select>
+                        <div *ngIf="sawSubmitted && sawGroup.get('cutPreference')?.invalid" class="invalid-feedback">
+                            <span *ngIf="sawGroup.get('cutPreference')?.errors?.['required']">CutPreference is required.</span>
+                        </div>
+                    </div>
+                    <div formGroupName="guillotineOptions" class="row">
+                        <div class="card-title my-2">
+                            guillotineOptions
+                        </div>
+                        <div class="col-xl-3 col-auto">
+                            <label class="form-label my-2">Cutting Strategy</label>
+                            <ng-select [items]="strategy" bindLabel="name" bindValue="name"
+                                placeholder="The guillotine cutting strategy" formControlName="strategy" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('guillotineOptions.strategy')?.invalid }">
+                            </ng-select>
+                            <div *ngIf="sawSubmitted && sawGroup.get('guillotineOptions.strategy')?.invalid" class="invalid-feedback">
+                                <span *ngIf="sawGroup.get('guillotineOptions.strategy')?.errors?.['required']">Strategy is required.</span>
                             </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <label class="form-label my-2">MaxPhase</label>
+                            <input type="number" class="form-control" id="maxPhase" formControlName="maxPhase" 
+                                [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('guillotineOptions.maxPhase')?.invalid }">
+                            <div *ngIf="sawSubmitted && sawGroup.get('guillotineOptions.maxPhase')?.invalid" class="invalid-feedback">
+                                <span *ngIf="sawGroup.get('guillotineOptions.maxPhase')?.errors?.['required']">MaxPhase is required.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div formGroupName="efficiencyOptions" class="row">
+                        <div class="card-title my-2">
+                            EfficiencyOptions
+                        </div>
+                        <div class="col-xl-3">
+                            <label class="form-label my-2">primary Compression</label>
+                            <input type="text" class="form-control" id="primarycompression" placeholder="The stacking preference for the parts"
+                                formControlName="primaryCompression" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('efficiencyOptions.primaryCompression')?.invalid }">
+                            <div *ngIf="sawSubmitted && sawGroup.get('efficiencyOptions.primaryCompression')?.invalid" class="invalid-feedback">
+                                <span *ngIf="sawGroup.get('efficiencyOptions.primaryCompression')?.errors?.['required']">Compression is required.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3">
+                        <label class="form-label my-2">stackHeight</label>
+                        <input type="number" class="form-control" id="stackHeight" placeholder="the max stack height for your saw" 
+                        formControlName="stackHeight" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('stackHeight')?.invalid }">
+                        <div *ngIf="sawSubmitted && sawGroup.get('stackHeight')?.invalid" class="invalid-feedback">
+                            <span *ngIf="sawGroup.get('stackHeight')?.errors?.['required']">StackHeight is required.</span>
+                        </div>
+                    </div>
+                    <div formGroupName="options" class="row">
+                        <div class="card-title my-2"> Options</div>
+                        <div class="col-xl-3 mb-3">
+                            <label class="form-label my-2">StockSelection</label>
+                            <ng-select [items]="StockSelection" bindLabel="name" bindValue="name" placeholder="Choose the most efficient stock," 
+                            formControlName="stockSelection" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('options.stockSelection')?.invalid }">
+                            </ng-select>
+                            <div *ngIf="sawSubmitted && sawGroup.get('options.stockSelection')?.invalid" class="invalid-feedback">
+                                <span *ngIf="sawGroup.get('options.stockSelection')?.errors?.['required']">StockSelection is required.</span>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 mb-3">
+                            <label class="form-label my-2">minSpacing</label>
+                            <input type="number" class="form-control" id="minSpacing" placeholder="Set the minimum gap between parts & edges"
+                                formControlName="minSpacing" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('options.minSpacing')?.invalid }">
+                            <div *ngIf="sawSubmitted && sawGroup.get('options.minSpacing')?.invalid" class="invalid-feedback">
+                                <span *ngIf="sawGroup.get('options.minSpacing')?.errors?.['required']">MinSpacing is required.</span>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 mb-3">
+                            <label class="form-label my-2">stackingMode</label>
+                            <ng-select [items]="stackingMode" bindLabel="name" bindValue="name" placeholder="Set the stock stacking mode." 
+                            formControlName="stackingMode" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('options.stackingMode')?.invalid }">
+                            </ng-select>
+                            <div *ngIf="sawSubmitted && sawGroup.get('options.stackingMode')?.invalid" class="invalid-feedback">
+                                <span *ngIf="sawGroup.get('options.stackingMode')?.errors?.['required']">StackingMode is required.</span>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 mt-4">
+                            <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeSaw(i)">Remove</button>
                         </div>
                     </div>
                 </div>
-
-                <form [formGroup]="sawForm" class="overflowImportant mb-5" (ngSubmit)="submitSawForm(modal)">
-                    <div formArrayName="sawList">
-                        <div *ngFor="let sawGroup of sawList.controls; let i = index" [formGroupName]="i"
-                            class="row m-2 border-bottom mt-2">
-                            <div class="col-xl-3 col-auto">
-                                <label for="BladeWidth" class="form-label my-2">Blade Width</label>
-                                <input type="number" class="form-control" id="bladeWidth" formControlName="bladeWidth"
-                                    placeholder="kerf of the blade">
-                            </div>
-                            <div class="col-xl-3 col-auto">
-                                <label for="task-name" class="form-label my-2">StockType</label>
-                                <ng-select formControlName="stockType" [items]="stockType" bindLabel="name"
-                                    bindValue="name" placeholder="The type of stock">
-                                </ng-select>
-                            </div>
-                            <div class="col-xl-3 col-auto">
-                                <label for="task-name" class="form-label my-2">CutType</label>
-                                <ng-select formControlName="cutType" [items]="cutType" bindLabel="name" bindValue="name"
-                                    placeholder="The cut type">
-                                </ng-select>
-                            </div>
-                            <div class="col-xl-3 col-auto">
-                                <label for="task-name" class="form-label my-2">CutPreference</label>
-                                <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name"
-                                    bindValue="name" placeholder="Required for guillotine & beam cutType">
-                                </ng-select>
-                            </div>
-                            <div formGroupName="guillotineOptions" class="row">
-                                <div class="card-title my-2">
-                                    guillotineOptions
-                                </div>
-                                <div class="col-xl-3 col-auto">
-                                    <label class="form-label my-2">Cutting Strategy</label>
-                                    <ng-select [items]="strategy" bindLabel="name" bindValue="name"
-                                        placeholder="The guillotine cutting strategy" formControlName="strategy">
-                                    </ng-select>
-                                </div>
-                                <div class="col-xl-3">
-                                    <label class="form-label my-2">MaxPhase</label>
-                                    <input type="number" class="form-control" id="maxPhase"
-                                        placeholder="guillotine or beam cutType" formControlName="maxPhase">
-                                </div>
-                            </div>
-                            <div formGroupName="efficiencyOptions" class="row">
-                                <div class="card-title my-2">
-                                    EfficiencyOptions
-                                </div>
-                                <div class="col-xl-3">
-                                    <label class="form-label my-2">primary Compression</label>
-                                    <input type="text" class="form-control" id="primarycompression"
-                                        placeholder="The stacking preference for the parts"
-                                        formControlName="primaryCompression">
-                                </div>
-                            </div>
-                            <div class="col-xl-3">
-                                <label class="form-label my-2">stackHeight</label>
-                                <input type="number" class="form-control" id="stackHeight"
-                                    placeholder="the max stack height for your saw" formControlName="stackHeight">
-                            </div>
-                            <div formGroupName="options" class="row">
-                                <div class="card-title my-2">
-                                    Options
-                                </div>
-                                <div class="col-xl-3 mb-3">
-                                    <label class="form-label my-2">StockSelection</label>
-                                    <ng-select [items]="StockSelection" bindLabel="name" bindValue="name"
-                                        placeholder="Choose the most efficient stock," formControlName="stockSelection">
-                                    </ng-select>
-                                </div>
-                                <div class="col-xl-3 mb-3">
-                                    <label class="form-label my-2">minSpacing</label>
-                                    <input type="number" class="form-control" id="minSpacing"
-                                        placeholder="Set the minimum gap between parts & edges"
-                                        formControlName="minSpacing">
-                                </div>
-                                <div class="col-xl-3 mb-3">
-                                    <label class="form-label my-2">stackingMode</label>
-                                    <ng-select [items]="stackingMode" bindLabel="name" bindValue="name"
-                                        placeholder="Set the stock stacking mode." formControlName="stackingMode">
-                                    </ng-select>
-                                </div>
-                                <div class="col-xl-3 mt-4">
-                                    <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeSaw(i)">Remove</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary m-4">Submit</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
-                    </div>
-                </form>
-
-            </ng-template>
+            </div>
+        </form>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" (click)="submitSawForm(modal)">Submit</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
         </div>
     </div>
-</div>
+</ng-template>
 
 <!-- Stock Popup Form-->
 <ng-template #content5 let-modal>
@@ -893,184 +909,93 @@
         </div>
     </div>
 </ng-template>
-
-<div class="col-xl-12 mt-2">
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="card-title">
-                Stock Data
-            </div>
-            <div class="d-flex flex-wrap gap-3">
-                <!-- <mat-form-field class="filter-field">
-                    <mat-label>Fliter</mat-label>
-                    <input matInput (keyup)="stockApplyFilter($event)" #input>
-                </mat-form-field> -->
-                <div>
-                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                    (click)="openLg1(content5)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                        Stock</a>
-                </div>
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="stockDataSource" class="mat-table">
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef> Name </th>
-                            <td mat-cell *matCellDef="let element"> {{element.name | slice:0:7}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="l">
-                            <th mat-header-cell *matHeaderCellDef> Length </th>
-                            <td mat-cell *matCellDef="let element"> {{element.l}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="w">
-                            <th mat-header-cell *matHeaderCellDef> Width </th>
-                            <td mat-cell *matCellDef="let element"> {{element.w}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="t">
-                            <th mat-header-cell *matHeaderCellDef> Thickness </th>
-                            <td mat-cell *matCellDef="let element"> {{element.t}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="material">
-                            <th mat-header-cell *matHeaderCellDef> Material </th>
-                            <td mat-cell *matCellDef="let element"> {{element.material}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="q">
-                            <th mat-header-cell *matHeaderCellDef> Quantity </th>
-                            <td mat-cell *matCellDef="let element"> {{element.q}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="autoAdd">
-                            <th mat-header-cell *matHeaderCellDef> Auto Add </th>
-                            <td mat-cell *matCellDef="let element"> {{element.autoAdd}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="grain">
-                            <th mat-header-cell *matHeaderCellDef> Grain </th>
-                            <td mat-cell *matCellDef="let element"> {{element.grain}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="trim">
-                            <th mat-header-cell *matHeaderCellDef> Trim </th>
-                            <td mat-cell *matCellDef="let element">
-                                X1: {{element.trim.x1}}, X2: {{element.trim.x2}}, Y1: {{element.trim.y1}}, Y2:
-                                {{element.trim.y2}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="allowExactFitShapes">
-                            <th mat-header-cell *matHeaderCellDef> Exact Fit Shapes </th>
-                            <td mat-cell *matCellDef="let element"> {{element.allowExactFitShapes}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="cost">
-                            <th mat-header-cell *matHeaderCellDef> Cost </th>
-                            <td mat-cell *matCellDef="let element"> {{element.cost}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="notes">
-                            <th mat-header-cell *matHeaderCellDef> Notes </th>
-                            <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="stockDisplayedColumn"></tr>
-                        <tr mat-row *matRowDef="let row; columns: stockDisplayedColumn;"></tr>
-                    </table>
-                </div>
-                <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                </mat-paginator>
-            </div>
-        </div>
-
-    </div>
-</div>
-
 <div class="col-xl-12 mt-2">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
             <div class="card-title">
                 Saw Data
             </div>
-            <div class="d-flex flex-wrap gap-3">
-                <!-- <mat-form-field class="filter-field">
+            <!-- <div class="d-flex flex-wrap gap-3">
+                <mat-form-field class="filters-field">
                     <mat-label>Fliter</mat-label>
-                    <input matInput (keyup)="stockApplyFilter($event)" #input>
-                </mat-form-field> -->
-            </div>
-            <div>
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                    (click)="openLg1(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create Saw</a>
+                    <input matInput (keyup)="sawApplyFilter($event)" #input>
+                </mat-form-field>
+            </div> -->
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
+                    Saw</button>
             </div>
         </div>
         <div class="card-body p-0">
             <div class="mat-elevation-z8">
                 <div class="table-responsive">
                     <table mat-table [dataSource]="sawDataSource" class="mat-table">
+                        <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                                <mat-checkbox [checked]="isSawAllSelected()" [indeterminate]="isSawIndeterminate()"
+                                    (change)="onSawSelectAllChange($event)"></mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <mat-checkbox (change)="onSawRowCheckboxChange(element, $event)"
+                                    [disabled]="isCheckboxSawDisabled(element)" [checked]="selectedSawRow === element"
+                                    class="custom-checkbox"></mat-checkbox>
+                            </td>
+                        </ng-container>
                         <ng-container matColumnDef="slNo">
                             <th mat-header-cell *matHeaderCellDef> S.No. </th>
                             <td mat-cell *matCellDef="let element; let i = index"> {{sawGetSNo(i)}} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="bladeWidth">
                             <th mat-header-cell *matHeaderCellDef> Blade Width </th>
                             <td mat-cell *matCellDef="let element"> {{ element.bladeWidth }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="stockType">
                             <th mat-header-cell *matHeaderCellDef> Stock Type </th>
                             <td mat-cell *matCellDef="let element"> {{ element.stockType }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="cutType">
                             <th mat-header-cell *matHeaderCellDef> Cut Type </th>
                             <td mat-cell *matCellDef="let element"> {{ element.cutType }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="cutPreference">
                             <th mat-header-cell *matHeaderCellDef> Cut Preference </th>
                             <td mat-cell *matCellDef="let element"> {{ element.cutPreference }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="strategy">
                             <th mat-header-cell *matHeaderCellDef> Strategy </th>
                             <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.strategy }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="maxPhase">
                             <th mat-header-cell *matHeaderCellDef> Max Phase </th>
                             <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.maxPhase }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="headCuts">
                             <th mat-header-cell *matHeaderCellDef> Head Cuts </th>
                             <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.headCuts ? 'Yes' :
                                 'No' }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="primaryCompression">
                             <th mat-header-cell *matHeaderCellDef> Primary Compression </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.efficiencyOptions?.primaryCompression }}
-                            </td>
+                            <td mat-cell *matCellDef="let element"> {{ element.efficiencyOptions?.primaryCompression
+                                }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="stackHeight">
                             <th mat-header-cell *matHeaderCellDef> Stack Height </th>
                             <td mat-cell *matCellDef="let element"> {{ element.stackHeight }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="stockSelection">
                             <th mat-header-cell *matHeaderCellDef> Stock Selection </th>
                             <td mat-cell *matCellDef="let element"> {{ element.options?.stockSelection }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="minSpacing">
                             <th mat-header-cell *matHeaderCellDef> Min Spacing </th>
                             <td mat-cell *matCellDef="let element"> {{ element.options?.minSpacing }} </td>
                         </ng-container>
-
                         <ng-container matColumnDef="stackingMode">
                             <th mat-header-cell *matHeaderCellDef> Stacking Mode </th>
                             <td mat-cell *matCellDef="let element"> {{ element.options?.stackingMode }} </td>
                         </ng-container>
-
                         <tr mat-header-row *matHeaderRowDef="sawDisplayedColumn"></tr>
                         <tr mat-row *matRowDef="let row; columns: sawDisplayedColumn;"></tr>
 
@@ -1083,92 +1008,7 @@
         </div>
     </div>
 </div>
-<div class="col-xl-12 mt-2">
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="card-title">
-                Parts Data
-            </div>
-            <div class="d-flex flex-wrap gap-3">
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                    (click)="openLg3(content7)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                    Parts</button>
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="partsDataSource" class="mat-table">
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                            <td mat-cell *matCellDef="let element; let i = index"> {{getPartsSNo(i)}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef> Name </th>
-                            <td mat-cell *matCellDef="let element"> {{element.name | slice:0:7}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="l">
-                            <th mat-header-cell *matHeaderCellDef> Length </th>
-                            <td mat-cell *matCellDef="let element"> {{element.l}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="w">
-                            <th mat-header-cell *matHeaderCellDef> Width </th>
-                            <td mat-cell *matCellDef="let element"> {{element.w}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="t">
-                            <th mat-header-cell *matHeaderCellDef> Thickness </th>
-                            <td mat-cell *matCellDef="let element"> {{element.t}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="material">
-                            <th mat-header-cell *matHeaderCellDef> Material </th>
-                            <td mat-cell *matCellDef="let element"> {{element.material}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="q">
-                            <th mat-header-cell *matHeaderCellDef> Quantity </th>
-                            <td mat-cell *matCellDef="let element"> {{element.q}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="trim">
-                            <th mat-header-cell *matHeaderCellDef> Trim </th>
-                            <td mat-cell *matCellDef="let element">
-                                X1: {{element.trim.x1}}, X2: {{element.trim.x2}}, Y1: {{element.trim.y1}}, Y2:
-                                {{element.trim.y2}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="banding">
-                            <th mat-header-cell *matHeaderCellDef> Banding </th>
-                            <td mat-cell *matCellDef="let element">
-                                X1: {{element.banding.x1}}, X2: {{element.banding.x2}}, Y1: {{element.banding.y1}}, Y2:
-                                {{element.banding.y2}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="finish">
-                            <th mat-header-cell *matHeaderCellDef> Finish </th>
-                            <td mat-cell *matCellDef="let element">
-                                X1: {{element.finish.x1}}, X2: {{element.finish.x2}}, Y1: {{element.finish.y1}}, Y2:
-                                {{element.finish.y2}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="orientationLock">
-                            <th mat-header-cell *matHeaderCellDef> Orientation Lock </th>
-                            <td mat-cell *matCellDef="let element"> {{element.orientationLock}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="notes">
-                            <th mat-header-cell *matHeaderCellDef> Notes </th>
-                            <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="partsDisplayedColumn"></tr>
-                        <tr mat-row *matRowDef="let row; columns: partsDisplayedColumn;"></tr>
-                    </table>
-                </div>
-                <mat-paginator #partsPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                </mat-paginator>
-            </div>
-        </div>
 
-    </div>
-</div>
 <!-- stages -->
 <div *ngIf="roleid==7 || roleid==12 || roleid==3">
     <div class="row">
