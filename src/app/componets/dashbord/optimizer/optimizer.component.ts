@@ -30,9 +30,9 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
   encapsulation: ViewEncapsulation.None
 })
 
- 
+
 export class OptimizerComponent extends BaseComponent {
-  stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes','trim'];
+  stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes', 'trim'];
   sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
@@ -104,6 +104,8 @@ export class OptimizerComponent extends BaseComponent {
 
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
     super();
+    const selectedSawRow = localStorage.getItem('selectedSawRow');
+    this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
   }
 
 
@@ -328,72 +330,72 @@ export class OptimizerComponent extends BaseComponent {
 
   createStockGroup(): FormGroup {
     return this.fb.group({
-      name: ['',[Validators.required]],
-      l: [0,[Validators.required]],
-      w: [0,[Validators.required]],
-      t: [0,[Validators.required]],
-      material: ['',[Validators.required]],
-      q: [0,[Validators.required]],
-      autoAdd: ['',[Validators.required]],
-      grain: ['',[Validators.required]],
+      name: ['', [Validators.required]],
+      l: [0, [Validators.required]],
+      w: [0, [Validators.required]],
+      t: [0, [Validators.required]],
+      material: ['', [Validators.required]],
+      q: [0, [Validators.required]],
+      autoAdd: ['', [Validators.required]],
+      grain: ['', [Validators.required]],
       trim: this.fb.group({
-        x1: [0,[Validators.required]],
-        x2: [0,[Validators.required]],
-        y1: [0,[Validators.required]],
-        y2: [0,[Validators.required]]
+        x1: [0, [Validators.required]],
+        x2: [0, [Validators.required]],
+        y1: [0, [Validators.required]],
+        y2: [0, [Validators.required]]
       }),
-      allowExactFitShapes: ['',Validators.required],
-      cost: [0,[Validators.required]],
-      notes: ['',[Validators.required]]
+      allowExactFitShapes: ['', Validators.required],
+      cost: [0, [Validators.required]],
+      notes: ['', [Validators.required]]
     });
   }
- createPartGroup(): FormGroup {
+  createPartGroup(): FormGroup {
     return this.fb.group({
-      name: ['',[Validators.required]],
-      l: [0,[Validators.required]],
-      w: [0,[Validators.required]],
-      t: [0,[Validators.required]],
-      material: ['',[Validators.required]],
-      q: [0,[Validators.required]],
+      name: ['', [Validators.required]],
+      l: [0, [Validators.required]],
+      w: [0, [Validators.required]],
+      t: [0, [Validators.required]],
+      material: ['', [Validators.required]],
+      q: [0, [Validators.required]],
       banding: this.fb.group({
-        x1: [true,[Validators.required]],
-        x2: [true,[Validators.required]],
-        y1: [true,[Validators.required]],
-        y2: [true,[Validators.required]]
+        x1: [true, [Validators.required]],
+        x2: [true, [Validators.required]],
+        y1: [true, [Validators.required]],
+        y2: [true, [Validators.required]]
       }),
       trim: this.fb.group({
-        x1: [0,[Validators.required]],
-        x2: [0,[Validators.required]],
-        y1: [0,[Validators.required]],
-        y2: [0,[Validators.required]]
+        x1: [0, [Validators.required]],
+        x2: [0, [Validators.required]],
+        y1: [0, [Validators.required]],
+        y2: [0, [Validators.required]]
       }),
       finish: this.fb.group({
-        a: ['',[Validators.required]],
-        b: ['',[Validators.required]]
+        a: ['', [Validators.required]],
+        b: ['', [Validators.required]]
       }),
-      orientationLock: ['',[Validators.required]],
-      notes: ['',[Validators.required]]
+      orientationLock: ['', [Validators.required]],
+      notes: ['', [Validators.required]]
     });
   }
 
   createSawGroup(): FormGroup {
     return this.fb.group({
-      bladeWidth: [0,[Validators.required]],
-      stockType: ['',[Validators.required]],
-      cutType: ['',[Validators.required]],
-      cutPreference: ['',[Validators.required]],
+      bladeWidth: [0, [Validators.required]],
+      stockType: ['', [Validators.required]],
+      cutType: ['', [Validators.required]],
+      cutPreference: ['', [Validators.required]],
       guillotineOptions: this.fb.group({
-        strategy: ['',[Validators.required]],
-        maxPhase: [0,[Validators.required]]
+        strategy: ['', [Validators.required]],
+        maxPhase: [0, [Validators.required]]
       }),
       efficiencyOptions: this.fb.group({
-        primaryCompression: ['',[Validators.required]]
+        primaryCompression: ['', [Validators.required]]
       }),
-      stackHeight: [0,[Validators.required]],
+      stackHeight: [0, [Validators.required]],
       options: this.fb.group({
-        stockSelection: ['',[Validators.required]],
-        minSpacing: [0,[Validators.required]],
-        stackingMode: ['',[Validators.required]]
+        stockSelection: ['', [Validators.required]],
+        minSpacing: [0, [Validators.required]],
+        stackingMode: ['', [Validators.required]]
       })
     });
   }
