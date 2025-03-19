@@ -1185,10 +1185,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   get partsList() {
     return this.partsForm.get('partList') as FormArray;
   }
-  // addPopupParts(): void {
-  //   this.partsList.push(this.createPartGroup());
-  // }
-
+  addPopupParts(): void {
+    this.partsList.push(this.createPartGroup());
+  }
+  addPopupStock(): void {
+    this.stockList.push(this.createStockGroup());
+  }
 
   addSaw(): void {
     this.sawList.push(this.createSawGroup());
@@ -1206,14 +1208,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
 
 
-  openLg1(content4: any) {
-    this.modalService.open(content4, { size: 'xl', scrollable: true, centered: true, });
+  openLg1(content6: any) {
+    this.modalService.open(content6, { size: 'xl', scrollable: true, centered: true, });
   }
   openLg2(content5: any) {
     this.modalService.open(content5, { size: 'xl', scrollable: true, centered: true, });
   }
-  openLg3(content6: any) {
-    this.modalService.open(content6, { size: 'xl', scrollable: true, centered: true, });
+  openLg3(content7: any) {
+    this.modalService.open(content7, { size: 'xl', scrollable: true, centered: true, });
   }
 
 
@@ -1236,7 +1238,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
           }
 
         } else {
-          this.toastr.error("No data received from server");
           this.stockDataSource.data = [];
         }
       },
@@ -1296,8 +1297,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             console.warn("Paginator not found!");
           }
         } else {
-          console.warn("No data received from server.");
-          this.toastr.error("No data available.");
           this.sawDataSource.data = [];
         }
       },
@@ -1328,8 +1327,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             console.warn("Paginator not found!");
           }
         } else {
-          console.warn("No data received from server.");
-          this.toastr.error("No data available.");
           this.sawDataSource.data = [];
         }
       },
