@@ -37,7 +37,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent extends BaseComponent implements OnInit {
-  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain',  'allowExactFitShapes', 'cost', 'notes','trim'];
+  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes', 'trim'];
   sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
   partsDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
 
@@ -194,6 +194,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       name: '',
       quantities: this.fb.array([]),
     });
+
   }
 
   onCheckboxChange() {
@@ -1097,22 +1098,22 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   createSawGroup(): FormGroup {
     return this.fb.group({
-      bladeWidth: [0,[Validators.required]],
-      stockType: ['',[Validators.required]],
-      cutType: ['',[Validators.required]],
-      cutPreference: ['',[Validators.required]],
+      bladeWidth: [0, [Validators.required]],
+      stockType: ['', [Validators.required]],
+      cutType: ['', [Validators.required]],
+      cutPreference: ['', [Validators.required]],
       guillotineOptions: this.fb.group({
-        strategy: ['',[Validators.required]],
-        maxPhase: [0,[Validators.required]]
+        strategy: ['', [Validators.required]],
+        maxPhase: [0, [Validators.required]]
       }),
       efficiencyOptions: this.fb.group({
-        primaryCompression: ['',[Validators.required]]
+        primaryCompression: ['', [Validators.required]]
       }),
-      stackHeight: [0,[Validators.required]],
+      stackHeight: [0, [Validators.required]],
       options: this.fb.group({
-        stockSelection: ['',[Validators.required]],
-        minSpacing: [0,[Validators.required]],
-        stackingMode: ['',[Validators.required]]
+        stockSelection: ['', [Validators.required]],
+        minSpacing: [0, [Validators.required]],
+        stackingMode: ['', [Validators.required]]
       })
     });
   }
@@ -1263,8 +1264,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
-          console.log("Saw Data:", this.sawDataSource.data);
-
+          //const selectedSawRow = localStorage.getItem('selectedSawRow');
+          //this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
+          
 
 
           /*const sawArray = this.sawForm.get('sawList') as FormArray;
@@ -1313,8 +1315,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   onSawRowCheckboxChange(row: any, event: any) {
     if (event.checked) {
       this.selectedSawRow = row;
+      console.log('selectedrow',this.selectedSawRow);
+      localStorage.setItem('selectedSawRow', JSON.stringify(this.selectedSawRow));
     } else {
       this.selectedSawRow = null;
+      localStorage.removeItem('selectedSawRow');
     }
   }
 
@@ -1325,7 +1330,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   // Handle "select all" checkbox
   onSawSelectAllChange(event: any) {
     if (event.checked) {
-      this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
+      //this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
       console.log('selected all', this.selectedSawIdList);
     } else {
       this.selectedSawIdList.clear();
@@ -1398,7 +1403,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.sawSubmitted = false;
     }
   }
-  
+
   submitStockForm(modal: any): void {
     this.sawSubmitted = true;
     if (this.stockForm.valid) {
@@ -1451,5 +1456,5 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
   }
 
- 
+
 }
