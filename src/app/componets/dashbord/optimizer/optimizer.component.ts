@@ -737,6 +737,7 @@ export class OptimizerComponent extends BaseComponent {
             this.uploadPartsSubmitted = false;
             this.uploadSpinner = false;
             this.uploadParts.reset();
+            this.getPartshistory();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -798,6 +799,7 @@ export class OptimizerComponent extends BaseComponent {
             this.uploadStocksSubmitted = false;
             this.uploadSpinner = false;
             this.uploadStocks.reset();
+            this.getPartshistory();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
