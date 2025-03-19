@@ -410,15 +410,6 @@
                                 <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
                                     ({{calculateDateDifference(element.projectEndDate)}}) </td>
                             </ng-container>
-                            <!-- <ng-container  matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef>Action</th>
-                                <td mat-cell *matCellDef="let element">
-                                    <button class="btn button btn-wave"
-                                    style="background-color: #006699; color: white;" type="button" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModalLg" (click)="openLg1(content4)"> <i
-                                    class="fe fe-eye text-muted"></i></button>
-                                </td>
-                            </ng-container> -->
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
@@ -452,7 +443,6 @@
                     <div class="card custom-card">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <div class="me-2 align-items-center">
-                                <!-- <img src="assets/images/brand-logos/responce.jpg" alt="" style="width: 240px; height: 200px; border-radius: 4px; align-items: center;"> -->
                             </div>
                             <div class=" mb-3">
                                 <button href="javascript:void(0);" class="btn btn-primary btn-wave me-3 opp"
@@ -552,16 +542,6 @@
                                 {{ element.specName | slice: 0: 12 }}
                             </td>
                         </ng-container>
-                        <!-- <ng-container matColumnDef="city">
-                            <th mat-header-cell *matHeaderCellDef> city name</th>
-                            <td
-                            mat-cell *matCellDef="let element"
-                            ngbTooltip="{{element.city}}"
-                            [container]="'body'"
-                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            {{element.city | slice: 0: 12 }}
-                            </td>
-                        </ng-container> -->
                         <ng-container matColumnDef="modifiedTime">
                             <th mat-header-cell *matHeaderCellDef> modifiedTime</th>
                             <td mat-cell *matCellDef="let element" ngbTooltip="{{element.modifiedTime}}"
@@ -662,14 +642,6 @@
                                                 is
                                                 required</div>
                                         </div>
-                                        <!-- <input type="text" class="form-control" id="businessCategory"
-                                            formControlName="businessCategory" placeholder="Business Category"
-                                            [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['businessCategory'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['businessCategory'].errors['required']">Business Category is
-                                                required</div>
-                                        </div> -->
                                     </div>
                                     <div class="col-xl-4">
                                         <label for="projectAddress" class="form-label">Project Address:</label>
@@ -700,17 +672,6 @@
                                             <div *ngIf="f['city'].errors['required']">City is required</div>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-xl-4">
-                                        <label for="projectState" class="form-label">Project Stage:</label>
-                                        <input type="text" class="form-control" id="projectState"
-                                            formControlName="projectState" placeholder="Enter Project State"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectState'].errors }" maxlength="50"
-                                            onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                                        <div *ngIf="submitted && f['projectState'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectState'].errors['required']">Project State is required
-                                            </div>
-                                        </div>
-                                    </div> -->
                                     <div class="col-xl-4">
                                         <label for="projectEstimation" class="form-label">Project
                                             Estimation:</label>
@@ -735,12 +696,6 @@
                                                 required</div>
                                         </div>
                                     </div>
-                                    <!-- <mat-form-field appearance="fill">
-                                    <mat-label>Start Date</mat-label>
-                                    <input matInput [matDatepicker]="startPicker" formControlName="projectStartDate" placeholder="Choose Start Date">
-                                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                                    <mat-datepicker #startPicker></mat-datepicker>
-                                    </mat-form-field> -->
                                     <div class="col-xl-4">
                                         <label for="startDate" class="form-label">Start Date:</label>
                                         <input type="date" class="form-control" id='startDate'
@@ -764,12 +719,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <mat-form-field appearance="fill">
-                                <mat-label>End Date</mat-label>
-                                <input matInput [matDatepicker]="endPicker" formControlName="projectEndDate" placeholder="Choose End Date">
-                                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                                <mat-datepicker #endPicker></mat-datepicker>
-                                </mat-form-field> -->
                                 </div>
                             </div>
                         </div>
@@ -783,7 +732,6 @@
                 Create Project</button>
             <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                 (click)="modal.close('Cross click')">Cancel</button>
-            <!-- <button type="button" class="btn btn-primary">Create</button> -->
         </div>
     </div>
 </ng-template>
@@ -800,9 +748,6 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card custom-card">
-                        <!-- <div class="card-header">
-                    <div class="card-title">Create Project</div>
-                    </div> -->
                         <div class="card-body">
                             <div class="row gy-3">
                                 <div class="col-xl-4">
@@ -817,11 +762,6 @@
                                 </div>
                                 <div class="col-xl-4">
                                     <label for="businessCategory" class="form-label">Business Category:</label>
-                                    <!-- <ng-select class="ti-form-select !rounded-s-none" [(ngModel)]='businessCategory'
-                                        name="choices-multiple-remove-button" id="businessCategory" [multiple]="true">
-                                        <ng-option value="Choice 1" selected>Commercial</ng-option>
-                                        <ng-option value="Choice 2">Residential</ng-option>
-                                    </ng-select> -->
                                     <select class="form-select" aria-label="Default select example"
                                         [(ngModel)]='businessCategory' [disabled]="true">
                                         <option value="">select type</option>
@@ -829,7 +769,6 @@
                                         <option value="Residential">Residential</option>
                                     </select>
 
-                                    <!-- <input type="text" class="form-control" id="businessCategory" formControlName="businessCategory" placeholder=""> -->
                                 </div>
                                 <div class="col-xl-4">
                                     <label for="projectAddress" class="form-label">Project Address:</label>
@@ -901,8 +840,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.paymentStage" 
-                      placeholder="Enter Stage" [disabled]="!payment.isNew" (ngModelChange)="validateField(i, 'paymentStage')"> -->
                     <tr *ngFor="let payment of paymentStages; let i=index">
                         <td style="width:15%">
                             <select class="form-select form-select-sm" [(ngModel)]="payment.paymentStage"
@@ -1066,354 +1003,3 @@
         </div>
     </div>
 </div>
-
-<!-- <div class="container mt-4">
-    <h2>Product Details</h2>
-    
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Model Type ID</th>
-                <th>Brand Good ID</th>
-                <th>Category ID</th>
-                <th>Model Name</th>
-                <th>Brand Good Name</th>
-                <th>Product Number</th>
-                <th>Model Account ID</th>
-                <th>Available</th>
-                <th>Need Quotation</th>
-                <th>Display in Cost List</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.type }}</td>
-                <td>{{ product.modelTypeId }}</td>
-                <td>{{ product.obsBrandGoodId }}</td>
-                <td>{{ product.prodCatId }}</td>
-                <td>{{ product.modelName }}</td>
-                <td>{{ product.modelBrandGoodName }}</td>
-                <td>{{ product.modelProductNumber }}</td>
-                <td>{{ product.obsModelAccountId }}</td>
-                <td>{{ product.modelAvailable ? 'Yes' : 'No' }}</td>
-                <td>{{ product.needQuotation ? 'Yes' : 'No' }}</td>
-                <td>{{ product.displayInCostList ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>Product Parameters</h2>
-    
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Quotation Value</th>
-                <th>Value Display Names</th>
-                <th>Recommends</th>
-                <th>Recommend Values</th>
-                <th>Formula Display Name</th>
-                <th>Simple Name</th>
-                <th>Step</th>
-                <th>Ignored</th>
-                <th>Overridable</th>
-                <th>Instance Group Type ID</th>
-                <th>Formula</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let product of products">
-                <ng-container *ngFor="let param of product.parameters">
-                    <tr>
-                        <td>{{ param.quotationValue || 'N/A' }}</td>
-                        <td>{{ param.valueDisplayNames?.length ? param.valueDisplayNames.join(', ') : 'N/A' }}</td>
-                        <td>{{ param.recommends?.length ? param.recommends.join(', ') : 'N/A' }}</td>
-                        <td>{{ param.recommendValues?.length ? param.recommendValues.join(', ') : 'N/A' }}</td>
-                        <td>{{ param.formulaDisplayName || 'N/A' }}</td>
-                        <td>{{ param.simpleName || 'N/A' }}</td>
-                        <td>{{ param.step !== null ? param.step : 'N/A' }}</td>
-                        <td>{{ param.ignored ? 'Yes' : 'No' }}</td>
-                        <td>{{ param.overridable ? 'Yes' : 'No' }}</td>
-                        <td>{{ param.instanceGroupTypeId || 'N/A' }}</td>
-                        <td>{{ param.formula || 'N/A' }}</td>
-                    </tr>
-                </ng-container>
-            </ng-container>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>Position</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let product of products">
-                <tr>
-                    <td>{{ product.position?.x || 'N/A' }}</td>
-                    <td>{{ product.position?.y || 'N/A' }}</td>
-                    <td>{{ product.position?.z || 'N/A' }}</td>
-                </tr>
-            </ng-container>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>Center</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.center?.x || 'N/A' }}</td>
-                <td>{{ product.center?.y || 'N/A' }}</td>
-                <td>{{ product.center?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>rotate</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.rotate?.x || 'N/A' }}</td>
-                <td>{{ product.rotate?.y || 'N/A' }}</td>
-                <td>{{ product.rotate?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>rotateDegree</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.rotateDegree?.x || 'N/A' }}</td>
-                <td>{{ product.rotateDegree?.y || 'N/A' }}</td>
-                <td>{{ product.rotateDegree?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>scale</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.scale?.x || 'N/A' }}</td>
-                <td>{{ product.scale?.y || 'N/A' }}</td>
-                <td>{{ product.scale?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>size</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.size?.x || 'N/A' }}</td>
-                <td>{{ product.size?.y || 'N/A' }}</td>
-                <td>{{ product.size?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>boxSize</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.boxSize?.x || 'N/A' }}</td>
-                <td>{{ product.boxSize?.y || 'N/A' }}</td>
-                <td>{{ product.boxSize?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="container mt-4">
-    <h2>subModels</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>type</th>
-                <th>modelTypeId</th>
-                <th>obsBrandGoodId</th>
-                <th>prodCatId</th>
-                <th>modelName</th>
-                <th>modelBrandGoodName</th>
-                <th>modelAvailable</th>
-                <th>obsModelAccountId</th>
-                <th>needQuotation</th>
-                <th>displayInCostList</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let product of products">
-                <tr *ngFor="let subModel of product.subModels">
-                    <td>{{ subModel.type }}</td>
-                    <td>{{ subModel.modelTypeId || 'N/A' }}</td>
-                    <td>{{ subModel.obsBrandGoodId || 'N/A' }}</td>
-                    <td>{{ subModel.prodCatId || 'N/A' }}</td>
-                    <td>{{ subModel.modelName || 'N/A' }}</td>
-                    <td>{{ subModel.modelBrandGoodName || 'N/A' }}</td>
-                    <td>{{ subModel.modelAvailable ? 'Yes' : 'No' }}</td>
-                    <td>{{ subModel.obsModelAccountId || 'N/A' }}</td>
-                    <td>{{ subModel.needQuotation ? 'Yes' : 'No' }}</td>
-                    <td>{{ subModel.displayInCostList ? 'Yes' : 'No' }}</td>
-                </tr>
-            </ng-container>
-        </tbody>        
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>Product Details</h2>
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Room ID</th>
-                <th>Accessory Model</th>
-                <th>Deleted</th>
-                <th>Ignore</th>
-                <th>Bill Output</th>
-                <th>Supplement Model</th>
-                <th>Non-Review Component</th>
-                <th>Channel</th>
-                <th>Version ID</th>
-                <th>Product ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.roomId }}</td>
-                <td>{{ product.accessoryModel ? 'Yes' : 'No' }}</td>
-                <td>{{ product.deleted ? 'Yes' : 'No' }}</td>
-                <td>{{ product.ignore ? 'Yes' : 'No' }}</td>
-                <td>{{ product.billOutput ? 'Yes' : 'No' }}</td>
-                <td>{{ product.supplementModel ? 'Yes' : 'No' }}</td>
-                <td>{{ product.nonReviewComponent ? 'Yes' : 'No' }}</td>
-                <td>{{ product.channel }}</td>
-                <td>{{ product.versionId }}</td>
-                <td>{{ product.id }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3>Model Cost Info</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Quotation Rate</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Quotation Unit</th>
-                <th>Unit Price</th>
-                <th>Non-Standard Coef</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.modelCostInfo?.quotationRate }}</td>
-                <td>{{ product.modelCostInfo?.quantity }}</td>
-                <td>{{ product.modelCostInfo?.price | currency:'USD' }}</td>
-                <td>{{ product.modelCostInfo?.quotationUnit }}</td>
-                <td>{{ product.modelCostInfo?.unitPrice }}</td>
-                <td>{{ product.modelCostInfo?.nonStandardCoef }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3>Absolute Position</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.absPosition?.x }}</td>
-                <td>{{ product.absPosition?.y }}</td>
-                <td>{{ product.absPosition?.z }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3>Custom Size</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Width (X)</th>
-                <th>Height (Y)</th>
-                <th>Depth (Z)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.customSize?.x }} mm</td>
-                <td>{{ product.customSize?.y }} mm</td>
-                <td>{{ product.customSize?.z }} mm</td>
-            </tr>
-        </tbody>
-    </table>
-
-</div> -->

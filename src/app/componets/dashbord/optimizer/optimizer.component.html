@@ -1,355 +1,3 @@
-<div class=" multi-step-form mt-2 col-xl-12 col-xxl-12 col-md-12 col-lg-12 col-sm-12">
-    <div class="card custom-card ">
-        <div class="card-header justify-content-between">
-            <div class="row">
-                <div class="card-body col-xxl-12 col-xl-12 col-md-12 col-lg-12 col-sm-12 ">
-                    <form [formGroup]="optimizeFormSample" (ngSubmit)="submitForm()">
-                        <div *ngIf="stepIndex === 1">
-                            <div class="card-title border-bottom pb-3">
-                                Step 1: Saw
-                            </div>
-                            <div formGroupName="saw" class="row border-bottom mt-2">
-                                <div class="col-xl-3 col-auto">
-                                    <label for="BladeWidth" class="form-label my-2">Blade Width</label>
-                                    <input type="number" class="form-control" id="bladeWidth"
-                                        formControlName="bladeWidth" placeholder="kerf of the blade">
-                                </div>
-                                <div class="col-xl-3 col-auto">
-                                    <label for="task-name" class="form-label my-2">StockType</label>
-                                    <ng-select formControlName="stockType" [items]="stockType" bindLabel="name"
-                                        bindValue="name" placeholder="The type of stock">
-                                    </ng-select>
-                                </div>
-                                <div class="col-xl-3 col-auto">
-                                    <label for="task-name" class="form-label my-2">CutType</label>
-                                    <ng-select formControlName="cutType" [items]="cutType" bindLabel="name"
-                                        bindValue="name" placeholder="The cut type">
-                                    </ng-select>
-                                </div>
-                                <div class="col-xl-3 col-auto">
-                                    <label for="task-name" class="form-label my-2">CutPreference</label>
-                                    <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name"
-                                        bindValue="name" placeholder="Required for guillotine & beam cutType">
-                                    </ng-select>
-                                </div>
-                                <div formGroupName="guillotineOptions" class="row">
-                                    <div class="card-title my-2">
-                                        guillotineOptions
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label class="form-label my-2">Cutting Strategy</label>
-                                        <ng-select [items]="strategy" bindLabel="name" bindValue="name"
-                                            placeholder="The guillotine cutting strategy" formControlName="strategy">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">MaxPhase</label>
-                                        <input type="number" class="form-control" id="maxPhase"
-                                            placeholder="guillotine or beam cutType" formControlName="maxPhase">
-                                    </div>
-                                </div>
-                                <div formGroupName="efficiencyOptions" class="row">
-                                    <div class="card-title my-2">
-                                        EfficiencyOptions
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">primary Compression</label>
-                                        <input type="text" class="form-control" id="primarycompression"
-                                            placeholder="The stacking preference for the parts"
-                                            formControlName="primaryCompression">
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <label class="form-label my-2">stackHeight</label>
-                                    <input type="number" class="form-control" id="stackHeight"
-                                        placeholder="the max stack height for your saw" formControlName="stackHeight">
-                                </div>
-                                <div formGroupName="options" class="row">
-                                    <div class="card-title my-2">
-                                        Options
-                                    </div>
-                                    <div class="col-xl-3 mb-5">
-                                        <label class="form-label my-2">StockSelection</label>
-                                        <ng-select [items]="StockSelection" bindLabel="name" bindValue="name"
-                                            placeholder="Choose the most efficient stock,"
-                                            formControlName="stockSelection">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3 mb-5">
-                                        <label class="form-label my-2">minSpacing</label>
-                                        <input type="number" class="form-control" id="minSpacing"
-                                            placeholder="Set the minimum gap between parts & edges"
-                                            formControlName="minSpacing">
-                                    </div>
-                                    <div class="col-xl-3 mb-5">
-                                        <label class="form-label my-2">stackingMode</label>
-                                        <ng-select [items]="stackingMode" bindLabel="name" bindValue="name"
-                                            placeholder="Set the stock stacking mode." formControlName="stackingMode">
-                                        </ng-select>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary mt-2" (click)="nextStep(2)">Next</button>
-                        </div>
-                        <div *ngIf="stepIndex === 2">
-                            <div class="col-xl-12 pt-3">
-                                <div class="card-title border-bottom pb-3 justify-content-between d-flex">
-                                    Step 2: Stock
-                                    <div class="d-flex flex-wrap gap-3">
-                                        <button type="button" class="btn btn-primary" (click)="addStock()">Add
-                                            Stock</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div formArrayName="stock">
-                                <div *ngFor="let stockGroup of stock.controls; let i = index" [formGroupName]="i"
-                                    class="row mt-3 border-bottom">
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="name" class="form-label my-2">Stock Name</label>
-                                        <input type="text" class="form-control" placeholder="stock name"
-                                            formControlName="name">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Length</label>
-                                        <input type="number" class="form-control"
-                                            placeholder="enter the length of the stock" formControlName="l">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="w" class="form-label my-2">Width</label>
-                                        <input type="number" class="form-control"
-                                            placeholder="enter the width of the stock" formControlName="w">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="t" class="form-label my-2">Thickness</label>
-                                        <input type="number" class="form-control"
-                                            placeholder="enter the Thickness of the stock" formControlName="t">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="material" class="form-label my-2">Material</label>
-                                        <input type="text" class="form-control"
-                                            placeholder="A material reference, used for stock matching"
-                                            formControlName="material">
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label for="q" class="form-label my-2">Quantity</label>
-                                        <input type="number" class="form-control"
-                                            placeholder="The quantity of this stock" formControlName="q">
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">autoAdd</label>
-                                        <ng-select [items]="autoAdd" bindLabel="name" bindValue="name"
-                                            placeholder="Whether to automatically add or not" formControlName="autoAdd">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">Grain</label>
-                                        <ng-select [items]="Grain" bindLabel="name" bindValue="name"
-                                            placeholder="select" formControlName="grain">
-                                        </ng-select>
-                                    </div>
-                                    <div formGroupName="trim" class="row">
-                                        <div class="card-title my-2">
-                                            Trim
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the Right side</label>
-                                            <input type="number" class="form-control"
-                                                placeholder="Apply trim to the X1 side" formControlName="x1">
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the left side</label>
-                                            <input type="number" class="form-control"
-                                                placeholder="Apply trim to the X2 side" formControlName="x2">
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the Top side</label>
-                                            <input type="number" class="form-control"
-                                                placeholder="Apply trim to the Y1 side" formControlName="y1">
-
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply trim to the Bottom side</label>
-                                            <input type="number" class="form-control"
-                                                placeholder="Apply trim to the Y2 side" formControlName="y2">
-
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 mb-5">
-                                        <label class="form-label my-2">allowExactFitShapes</label>
-                                        <ng-select [items]="allowExactFitShapes" bindLabel="name" bindValue="name"
-                                            placeholder="should exact fit shapes be allowed on this stock"
-                                            formControlName="allowExactFitShapes">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-4 mb-5">
-                                        <label class="form-label my-2">material cost</label>
-                                        <input type="number" class="form-control" placeholder="The raw material cost"
-                                            formControlName="cost">
-                                    </div>
-                                    <div class="col-xl-4 mb-5">
-                                        <label class="form-label my-2">notes</label>
-                                        <input type="text" class="form-control" id="notes" placeholder="notes"
-                                            formControlName="notes">
-                                    </div>
-
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary mt-2 me-2" (click)="prevStep(1)">Back</button>
-                            <button type="button" class="btn btn-primary mt-2" (click)="nextStep(3)">Next</button>
-                        </div>
-
-                        <!-- Step 3 -->
-                        <div *ngIf="stepIndex === 3">
-                            <div class="row">
-                                <div class="col-xl-12 pt-3">
-                                    <div class="card-title border-bottom pb-3 justify-content-between d-flex">
-                                        Step 3: Parts
-                                        <div class="text-center">
-                                            <button type="button" class="btn btn-primary" (click)="addParts()">Add
-                                                Part</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div formArrayName="parts">
-                                <div *ngFor="let partGroup of parts.controls; let i = index" [formGroupName]="i"
-                                    class="row mt-3  border-bottom pb-3">
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Part Name</label>
-                                        <input type="text" class="form-control" id="task-name"
-                                            placeholder="Name of this part" formControlName="name">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">length of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="length of this part" formControlName="l">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Width of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="Width of this part" formControlName="w">
-                                    </div>
-
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">Thickness of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="Thickness of this part" formControlName="t">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">material</label>
-                                        <input type="text" class="form-control" id="task-name"
-                                            placeholder="Material reference for stock matching"
-                                            formControlName="material">
-                                    </div>
-                                    <div class="col-xl-3 col-auto">
-                                        <label for="task-name" class="form-label my-2">quantity of this part</label>
-                                        <input type="number" class="form-control" id="task-name"
-                                            placeholder="The quantity of this part" formControlName="q">
-                                    </div>
-                                    <div formGroupName="banding" class="row">
-                                        <div class="card-title my-2">
-                                            banding
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply banding to the Right side</label>
-                                            <ng-select [items]="X1" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the Right side" formControlName="x1">
-                                            </ng-select>
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply banding to the left
-                                                side</label>
-                                            <ng-select [items]="X2" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the left side" formControlName="x2">
-                                            </ng-select>
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply banding to the Top
-                                                side</label>
-                                            <ng-select [items]="Y1" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the Top side" formControlName="y1">
-                                            </ng-select>
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply banding to the Bottom
-                                                side</label>
-                                            <ng-select [items]="Y2" bindLabel="name" bindValue="name"
-                                                placeholder="Apply banding to the Bottom side" formControlName="y2">
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                    <div formGroupName="trim" class="row">
-                                        <div class="card-title my-2">
-                                            trim
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Right
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Right side" formControlName="x1">
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Left
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Left side" formControlName="x2">
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Top
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Top side" formControlName="y1">
-                                        </div>
-                                        <div class="col-xl-3 col-auto">
-                                            <label for="task-name" class="form-label my-2">Apply Trim to the Bottom
-                                                side</label>
-                                            <input type="number" class="form-control" id="task-name"
-                                                placeholder="Apply Trim to the Bottom side" formControlName="y2">
-                                        </div>
-                                    </div>
-                                    <div formGroupName="finish" class="row">
-                                        <div class="card-title my-2">
-                                            Finish
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply finish to the Top side</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Apply finish to the A side" formControlName="a">
-                                        </div>
-                                        <div class="col-xl-3">
-                                            <label class="form-label my-2">Apply finish to the Bottom side</label>
-                                            <input type="text" class="form-control" id="task-name"
-                                                placeholder="Apply finish to the B side" formControlName="b">
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-3">
-                                        <label class="form-label my-2">orientationLock</label>
-                                        <ng-select [items]="orientationLock" bindLabel="name" bindValue="name"
-                                            placeholder="Select an option" formControlName="orientationLock">
-                                        </ng-select>
-                                    </div>
-                                    <div class="col-xl-3  col-auto">
-                                        <label for="contact-address-address" class="form-label">Notes</label>
-                                        <textarea class="form-control" id="contact-address-address" rows="1"
-                                            placeholder="Notes" formControlName="notes"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-primary mt-2 me-2" (click)="prevStep(2)">Back</button>
-                            <button type="submit" data-bs-toggle="modal" class="btn btn-primary mt-2"
-                                data-bs-target="#exampleModalLg" (click)="openLg1(content4)">Submit</button>
-                            <button type="button" (click)="downloadOutputFile(layoutUrl)" *ngIf="layoutUrl">Layout
-                                PDF</button>
-                            <button type="button" (click)="downloadOutputFile(lableUrl)" *ngIf="lableUrl">Label
-                                PDF</button>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="exampleModalScrollable345" tabindex="-1" aria-labelledby="exampleModalScrollable345"
     data-bs-keyboard="false" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -486,10 +134,11 @@
                                     <th colspan="3" style="padding-left: 0px;  font-size: 14px; font-family: 'poppins, sans-serif'; text-align: center;">Trim</th>
                                 </tr>
                                 <tr>
-                                    <th style="padding-left: 0px;  font-size: 14px; font-family: 'Times New Roman', Times, serif;">X1</th>
-                                    <th style="padding-left: 10px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">X2</th>
-                                    <th style="padding-left: 10px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">Y1</th>
-                                    <th style="padding-left: 10px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">Y2</th>
+                                    <th style="padding-left: 0px;  font-size: 14px; font-weight: 500; font-family:  Roboto, sans-serif;">X1</th>
+                                    <th style="padding-left: 10px; font-size: 14px; font-weight: 500; font-family:  Roboto, sans-serif;">X2</th>
+                                    <th style="padding-left: 10px; font-size: 14px; font-weight: 500; font-family:  Roboto, sans-serif;">Y1</th>
+                                    <th style="padding-left: 10px; font-size: 14px; font-weight: 500; font-family:  Roboto, sans-serif;">Y2</th>
+                                </tr>
                             </th>
                             <td mat-cell *matCellDef="let element">{{ element.trim.x1 }} &nbsp; {{ element.trim.x2 }} &nbsp; {{ element.trim.y1 }} &nbsp; {{ element.trim.y2 }} </td>
                         </ng-container>
@@ -503,107 +152,6 @@
             </div>
         </div>
 
-    </div>
-</div>
-
-<!-- Saw Table-->
-<div class="col-xl-12 mt-2">
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="card-title">
-                Saw Data
-            </div>
-            <!-- <div class="d-flex flex-wrap gap-3">
-                <mat-form-field class="filters-field">
-                    <mat-label>Fliter</mat-label>
-                    <input matInput (keyup)="sawApplyFilter($event)" #input>
-                </mat-form-field>
-            </div> -->
-            <div class="btn-group" role="group">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                    (click)="openLg3(content6)"><i class="ri-add-line align-middle me-1 fw-medium"></i>Create
-                    Saw</button>
-            </div>
-        </div>
-        <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="sawDataSource" class="mat-table">
-                        <ng-container matColumnDef="select">
-                            <th mat-header-cell *matHeaderCellDef>
-                                <mat-checkbox [checked]="isSawAllSelected()" [indeterminate]="isSawIndeterminate()"
-                                    (change)="onSawSelectAllChange($event)"></mat-checkbox>
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <mat-checkbox (change)="onSawRowCheckboxChange(element, $event)"
-                                    [disabled]="isCheckboxSawDisabled(element)" [checked]="selectedSawRow === element"
-                                    class="custom-checkbox"></mat-checkbox>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                            <td mat-cell *matCellDef="let element; let i = index"> {{sawGetSNo(i)}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="bladeWidth">
-                            <th mat-header-cell *matHeaderCellDef> Blade Width </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.bladeWidth }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stockType">
-                            <th mat-header-cell *matHeaderCellDef> Stock Type </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.stockType }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="cutType">
-                            <th mat-header-cell *matHeaderCellDef> Cut Type </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.cutType }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="cutPreference">
-                            <th mat-header-cell *matHeaderCellDef> Cut Preference </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.cutPreference }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="strategy">
-                            <th mat-header-cell *matHeaderCellDef> Strategy </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.strategy }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="maxPhase">
-                            <th mat-header-cell *matHeaderCellDef> Max Phase </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.maxPhase }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="headCuts">
-                            <th mat-header-cell *matHeaderCellDef> Head Cuts </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.headCuts ? 'Yes' :
-                                'No' }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="primaryCompression">
-                            <th mat-header-cell *matHeaderCellDef> Primary Compression </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.efficiencyOptions?.primaryCompression
-                                }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stackHeight">
-                            <th mat-header-cell *matHeaderCellDef> Stack Height </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.stackHeight }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stockSelection">
-                            <th mat-header-cell *matHeaderCellDef> Stock Selection </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.options?.stockSelection }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="minSpacing">
-                            <th mat-header-cell *matHeaderCellDef> Min Spacing </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.options?.minSpacing }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stackingMode">
-                            <th mat-header-cell *matHeaderCellDef> Stacking Mode </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.options?.stackingMode }} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="sawDisplayedColumn"></tr>
-                        <tr mat-row *matRowDef="let row; columns: sawDisplayedColumn;"></tr>
-
-                    </table>
-
-                </div>
-                <mat-paginator #sawPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                </mat-paginator>
-            </div>
-        </div>
     </div>
 </div>
 
@@ -671,13 +219,13 @@
                         <ng-container matColumnDef="trim">
                             <th mat-header-cell *matHeaderCellDef>
                                 <tr>
-                                    <th colspan="3" style="padding-left: 0px;  font-size: 14px; font-family: 'poppins, sans-serif'; text-align: center;">Trim</th>
+                                    <th colspan="3" style="padding-left: 0px;  font-size: 14px; text-align: center; font-family:  Roboto, sans-serif; font-weight: 500;">Trim</th>
                                 </tr>
                                 <tr>
-                                    <th style="padding-left: 0px;  font-size: 14px; font-family: 'poppins, sans-serif'; text-align: center;">X1</th>
-                                    <th style="padding-left: 10px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">X2</th>
-                                    <th style="padding-left: 10px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">Y1</th>
-                                    <th style="padding-left: 10px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">Y2</th>
+                                    <th style="padding-left: 0px; text-align: center; font-weight: 500; font-family:  Roboto, sans-serif;">X1</th>
+                                    <th style="padding-left: 10px; font-size: 14px; font-weight: 500; font-family:  Roboto, sans-serif;">X2</th>
+                                    <th style="padding-left: 10px; font-size: 14px; font-weight: 500; font-family:  Roboto, sans-serif;">Y1</th>
+                                    <th style="padding-left: 10px; font-size: 14px; font-weight: 500; font-family:  Roboto, sans-serif;">Y2</th>
                                 </th>
                             <td mat-cell *matCellDef="let element">
                                {{element.trim.x1}} &nbsp; {{element.trim.x2}} &nbsp; {{element.trim.y1}} &nbsp;
@@ -687,13 +235,13 @@
                         <ng-container matColumnDef="banding">
                             <th mat-header-cell *matHeaderCellDef>  
                             <tr>
-                                <th colspan="3" style="padding-left: 0px;  font-size: 14px; font-family: 'poppins, sans-serif'; text-align: center;">Banding</th>
+                                <th colspan="3" style="padding-left: 0px;  font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500; text-align: center;">Banding</th>
                             </tr>
                             <tr>
-                                <th style="padding-left: 0px;  font-size: 14px; font-family: 'poppins, sans-serif'; text-align: center;">X1</th>
-                                <th style="padding-left: 20px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">X2</th>
-                                <th style="padding-left: 20px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">Y1</th>
-                                <th style="padding-left: 20px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">Y2</th>
+                                <th style="padding-left: 0px;  font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500; text-align: center;">X1</th>
+                                <th style="padding-left: 20px; font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500;">X2</th>
+                                <th style="padding-left: 20px; font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500;">Y1</th>
+                                <th style="padding-left: 20px; font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500;">Y2</th>
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element.banding.x1}} &nbsp; {{element.banding.x2}} &nbsp; {{element.banding.y1}} &nbsp;
@@ -703,11 +251,11 @@
                         <ng-container matColumnDef="finish">
                             <th mat-header-cell *matHeaderCellDef>
                                 <tr>
-                                    <th colspan="3" style="padding-left: 0px;  font-size: 14px; font-family: 'poppins, sans-serif'; text-align: center;">Finish</th>
+                                    <th colspan="3" style="padding-left: 0px;  font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500; text-align: center;">Finish</th>
                                 </tr>
                                 <tr>
-                                    <th style="padding-left: 0px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">A</th>
-                                    <th style="padding-left: 40px; font-size: 14px; font-family: 'Times New Roman', Times, serif;">B</th>
+                                    <th style="padding-left: 0px; font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500;">A</th>
+                                    <th style="padding-left: 40px; font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500;">B</th>
                                 </th>
                             <td mat-cell *matCellDef="let element">
                                {{element.finish.a}} &nbsp; {{element.finish.b}}
@@ -1208,143 +756,6 @@
         </form>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" (click)="submitStockForm(modal)">Submit</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
-        </div>
-    </div>
-</ng-template>
-        
-<!-- Saw Popup Form-->
-<ng-template #content6 let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Saw Form</h6>
-            <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-primary" (click)="addSaw()">Add Saw</button>
-                <button type="button" class="btn-close mt-1" data-bs-dismiss="modal"
-                    (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
-            </div>
-        </div>
-        <form [formGroup]="sawForm" class="overflowImportant mb-5" (ngSubmit)="submitSawForm(modal)">
-            <div formArrayName="sawList">
-                <div *ngFor="let sawGroup of sawList.controls; let i = index" [formGroupName]="i"
-                    class="row m-2 border-bottom mt-2">
-                    <div class="col-xl-3 col-auto">
-                        <label for="BladeWidth" class="form-label my-2">Blade Width</label>
-                        <input type="number" class="form-control" id="bladeWidth" formControlName="bladeWidth"
-                            placeholder="kerf of the blade"
-                            [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('bladeWidth')?.invalid }">
-                        <div *ngIf="sawSubmitted && sawGroup.get('bladeWidth')?.invalid" class="invalid-feedback">
-                            <span *ngIf="sawGroup.get('bladeWidth')?.errors?.['required']">BladeWidth is required.</span>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">StockType</label>
-                        <ng-select formControlName="stockType" [items]="stockType" bindLabel="name" bindValue="name" placeholder="The type of stock" 
-                        [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('stockType')?.invalid }">
-                        </ng-select>
-                        <div *ngIf="sawSubmitted && sawGroup.get('stockType')?.invalid" class="invalid-feedback">
-                            <span *ngIf="sawGroup.get('stockType')?.errors?.['required']">StockType is required.</span>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">CutType</label>
-                        <ng-select formControlName="cutType" [items]="cutType" bindLabel="name" bindValue="name"
-                            placeholder="The cut type" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('cutType')?.invalid }">
-                        </ng-select>
-                        <div *ngIf="sawSubmitted && sawGroup.get('cutType')?.invalid" class="invalid-feedback">
-                            <span *ngIf="sawGroup.get('cutType')?.errors?.['required']">CutType is required.</span>
-                        </div>
-                    </div>
-                    <div class="col-xl-3 col-auto">
-                        <label for="task-name" class="form-label my-2">CutPreference</label>
-                        <ng-select formControlName="cutPreference" [items]="cutPreference" bindLabel="name" bindValue="name" 
-                        placeholder="Required for guillotine & beam CutPreference" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('cutPreference')?.invalid }">
-                        </ng-select>
-                        <div *ngIf="sawSubmitted && sawGroup.get('cutPreference')?.invalid" class="invalid-feedback">
-                            <span *ngIf="sawGroup.get('cutPreference')?.errors?.['required']">CutPreference is required.</span>
-                        </div>
-                    </div>
-                    <div formGroupName="guillotineOptions" class="row">
-                        <div class="card-title my-2">
-                            guillotineOptions
-                        </div>
-                        <div class="col-xl-3 col-auto">
-                            <label class="form-label my-2">Cutting Strategy</label>
-                            <ng-select [items]="strategy" bindLabel="name" bindValue="name"
-                                placeholder="The guillotine cutting strategy" formControlName="strategy" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('guillotineOptions.strategy')?.invalid }">
-                            </ng-select>
-                            <div *ngIf="sawSubmitted && sawGroup.get('guillotineOptions.strategy')?.invalid" class="invalid-feedback">
-                                <span *ngIf="sawGroup.get('guillotineOptions.strategy')?.errors?.['required']">Strategy is required.</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3">
-                            <label class="form-label my-2">MaxPhase</label>
-                            <input type="number" class="form-control" id="maxPhase" formControlName="maxPhase" 
-                                [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('guillotineOptions.maxPhase')?.invalid }">
-                            <div *ngIf="sawSubmitted && sawGroup.get('guillotineOptions.maxPhase')?.invalid" class="invalid-feedback">
-                                <span *ngIf="sawGroup.get('guillotineOptions.maxPhase')?.errors?.['required']">MaxPhase is required.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div formGroupName="efficiencyOptions" class="row">
-                        <div class="card-title my-2">
-                            EfficiencyOptions
-                        </div>
-                        <div class="col-xl-3">
-                            <label class="form-label my-2">primary Compression</label>
-                            <input type="text" class="form-control" id="primarycompression" placeholder="The stacking preference for the parts"
-                                formControlName="primaryCompression" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('efficiencyOptions.primaryCompression')?.invalid }">
-                            <div *ngIf="sawSubmitted && sawGroup.get('efficiencyOptions.primaryCompression')?.invalid" class="invalid-feedback">
-                                <span *ngIf="sawGroup.get('efficiencyOptions.primaryCompression')?.errors?.['required']">Compression is required.</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label class="form-label my-2">stackHeight</label>
-                        <input type="number" class="form-control" id="stackHeight" placeholder="the max stack height for your saw" 
-                        formControlName="stackHeight" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('stackHeight')?.invalid }">
-                        <div *ngIf="sawSubmitted && sawGroup.get('stackHeight')?.invalid" class="invalid-feedback">
-                            <span *ngIf="sawGroup.get('stackHeight')?.errors?.['required']">StackHeight is required.</span>
-                        </div>
-                    </div>
-                    <div formGroupName="options" class="row">
-                        <div class="card-title my-2"> Options</div>
-                        <div class="col-xl-3 mb-3">
-                            <label class="form-label my-2">StockSelection</label>
-                            <ng-select [items]="StockSelection" bindLabel="name" bindValue="name" placeholder="Choose the most efficient stock," 
-                            formControlName="stockSelection" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('options.stockSelection')?.invalid }">
-                            </ng-select>
-                            <div *ngIf="sawSubmitted && sawGroup.get('options.stockSelection')?.invalid" class="invalid-feedback">
-                                <span *ngIf="sawGroup.get('options.stockSelection')?.errors?.['required']">StockSelection is required.</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 mb-3">
-                            <label class="form-label my-2">minSpacing</label>
-                            <input type="number" class="form-control" id="minSpacing" placeholder="Set the minimum gap between parts & edges"
-                                formControlName="minSpacing" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('options.minSpacing')?.invalid }">
-                            <div *ngIf="sawSubmitted && sawGroup.get('options.minSpacing')?.invalid" class="invalid-feedback">
-                                <span *ngIf="sawGroup.get('options.minSpacing')?.errors?.['required']">MinSpacing is required.</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 mb-3">
-                            <label class="form-label my-2">stackingMode</label>
-                            <ng-select [items]="stackingMode" bindLabel="name" bindValue="name" placeholder="Set the stock stacking mode." 
-                            formControlName="stackingMode" [ngClass]="{ 'is-invalid': sawSubmitted && sawGroup.get('options.stackingMode')?.invalid }">
-                            </ng-select>
-                            <div *ngIf="sawSubmitted && sawGroup.get('options.stackingMode')?.invalid" class="invalid-feedback">
-                                <span *ngIf="sawGroup.get('options.stackingMode')?.errors?.['required']">StackingMode is required.</span>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 mt-4">
-                            <button type="button" class="btn btn-danger ms-2" *ngIf="i > 0" (click)="removeSaw(i)">Remove</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="submitSawForm(modal)">Submit</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
                 (click)="modal.dismiss('Cross click')" aria-label="Close">Cancel</button>
         </div>
