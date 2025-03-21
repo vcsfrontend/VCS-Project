@@ -462,4 +462,23 @@ export class BaseComponent {
       {"name":"m"},
       {"name":"foot"},
     ]
+    dealStatus = [{"name":"1st Discussion"},
+      {"name":"2nd Discussion"},
+      {"name":"Proposal Sent"},
+      {"name":"Final Discussion"},
+      {"name":"Closed"},
+      {"name":"Lost"},
+      {"name":"Convert to Client"},
+    ]
+    dealFor = [{"name":"Lead"},
+      {"name":"Client"},
+    ]
+    dealStages = [{"name":"Meeting Fixed"},
+      {"name":"Meeting Completed"},
+      {"name":"Agreement Shared"},
+      {"name":"Agreement Approved"},
+      {"name":"Proposal Sent"},
+      {"name":"Payment Processed"},
+      {"name":"Converted to Client"},
+    ]
 }
