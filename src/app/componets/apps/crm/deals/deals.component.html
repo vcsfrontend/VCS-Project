@@ -166,7 +166,7 @@
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
             </div>
-            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+            <mat-paginator #paginator [pageSizeOptions]="[5,10, 20]" showFirstLastButtons></mat-paginator>
         </div>
         <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
@@ -200,30 +200,27 @@
 
 <ng-template #Content12 let-modal>
     <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLgLabel"><b *ngIf="leadForm">
-                {{ (leadForm.get('leadId')?.value || 0) > 0 ? 'Edit' : 'Add' }}
-            </b>
+        <h6 class="modal-title" id="exampleModalLgLabel">
+            Add Deal
         </h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
     </div>
-    <form [formGroup]="leadForm" (ngSubmit)="onSubmit(modal)">
+    <form [formGroup]="dealForm" (ngSubmit)="onSubmit(modal)">
         <div class="modal-body">
-
             <div class="row gy-3 scrollable-content">
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name"
-                        [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
-                    <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
-                        <span *ngIf="f['name'].errors['required']">Name is required.</span>
-                        <span *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters long.</span>
-                    </div>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-mail" class="form-label">Company Name</label>
-                    <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
-                        formControlName="companyName">
+                    <label for="contact" class="form-label">Contact</label>
+                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number"
+                        formControlName="contact">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="text" class="form-control" formControlName="email" id="email" placeholder="Enter your email"> 
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="contact-phone" class="form-label">Executive</label>
@@ -231,53 +228,29 @@
                         placeholder="Select an Executive">
                     </ng-select>
                 </div>
-                <!--<div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">Products</label>
-                    <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
-                </div>-->
-                <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">Country</label>
-                    <ng-select name="choices-multiple-remove-button3" placeholder="Select"
-                        id="choices-multiple-remove-button3" formControlName="country"
-                        (change)="onCountryChange($any($event.target).value)"
-                        [ngClass]="{ 'is-invalid': submitted && f['country'].errors }" class="border rounded">
-                        <ng-option *ngFor="let c of countryLst" [value]="c.country">{{ c.country }}</ng-option>
-                    </ng-select>
-                </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label" for="stage"> Stage</label>
-                    <ng-select formControlName="stage" [items]="stageList" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
-                    </ng-select>
-                    <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
-                        <div *ngIf="f['stage'].errors['required']">Stage is required</div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label class="form-label"> Status</label>
-                    <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
-                    </ng-select>
-                    <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
-                        <div *ngIf="f['status'].errors['required']">Status is required</div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label class="form-label">Lead Source</label>
-                    <ng-select formControlName="leadSource" [items]="leadSource" bindLabel="name" bindValue="name"
+                    <ng-select formControlName="dealstage" [items]="dealStages" bindLabel="name" bindValue="name"
                         placeholder="Select an option">
                     </ng-select>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="zipCode" class="form-label">Zip Code</label>
-                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
-                        formControlName="zipCode" [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }"
-                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                    <div *ngIf="submitted && f['zipCode'].errors" class="invalid-feedback">
-                        <span *ngIf="f['zipCode'].errors['required']">Zip Code is required.</span>
-                        <span *ngIf="f['zipCode'].errors['minlength']">Zip Code must be at least 6 characters
-                            long.</span>
-                    </div>
+                    <label class="form-label"> Status</label>
+                    <ng-select formControlName="dealstatus" [items]="dealStatus" bindLabel="name" bindValue="name"
+                        placeholder="Select an option">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label"> Deal For</label>
+                    <ng-select formControlName="dealfor" [items]="dealFor" bindLabel="name" bindValue="name"
+                        placeholder="Select an option">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label">Deal Source</label>
+                    <ng-select formControlName="dealSource" [items]="leadSource" bindLabel="name" bindValue="name"
+                        placeholder="Select an option">
+                    </ng-select>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="followUpDate" class="form-label">Follow up date</label>
@@ -285,54 +258,38 @@
                         formControlName="followUpDate">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="state" class="form-label">State</label>
-                    <input type="text" class="form-control" id="state" placeholder="Enter Your State"
-                        formControlName="state">
+                    <label for="followUpDate" class="form-label">Expected Closure Date</label>
+                    <input type="date" class="form-control" id="closuredate" placeholder=""
+                        formControlName="closuredate">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="city" class="form-label">City</label>
-                    <input type="text" class="form-control" id="city" placeholder="Enter City Name"
-                        formControlName="city" [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
-                    <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
-                        <div *ngIf="f['city'].errors['required']">City is required</div>
-                    </div>
+                    <label for="state" class="form-label">Deal Value</label>
+                    <input type="number" class="form-control" id="dealvalue" placeholder="Enter Your State"
+                        formControlName="dealvalue">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="Enter Your Address"
-                        formControlName="address" [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
-                    <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
-                        <span *ngIf="f['address'].errors['required']">Address is required.</span>
-                    </div>
+                    <label for="state" class="form-label">Probability</label>
+                    <input type="number" class="form-control" id="probability" placeholder="Enter Your State"
+                        formControlName="Probability">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact" class="form-label">Contact</label>
-                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number"
-                        formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
-                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                        (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)" maxlength="10"
-                        (paste)="preventCopyPaste($event)">
-                    <div *ngIf="submitted && f['contact'].errors" class="invalid-feedback">
-                        <span *ngIf="f['contact'].errors['required']">Contact is required.</span>
-                        <span *ngIf="f['contact'].errors['maxlength']">Contact must be 10 characters.</span>
-                    </div>
+                    <label for="state" class="form-label">FollowUp Time</label>
+                    <input type="text" class="form-control" id="inlinetime" placeholder="Choose time" formControlName="followuptime">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="email" class="form-label">E-mail</label>
-                    <input type="text" class="form-control  " id="email" placeholder="Enter your email"
-                        onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
-                                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
-                                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email"
-                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
-                    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                        <span *ngIf="f['email'].errors['required']">Email is required.</span>
-                        <span *ngIf="f['email'].errors['email']">Invalid email address.</span>
-                    </div>
+                    <label for="state" class="form-label">GST No</label>
+                    <input type="text" class="form-control" id="gstno" placeholder="Enter Your Gst"
+                        formControlName="gstno">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="state" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="desc" placeholder="Enter Your State"
+                        formControlName="description">
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-secondary">save lead</button>
+            <button type="submit" class="btn btn-secondary">save Deal/Opportinity</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
@@ -683,3 +640,4 @@
         </div>
     </form>
 </ng-template>
+    

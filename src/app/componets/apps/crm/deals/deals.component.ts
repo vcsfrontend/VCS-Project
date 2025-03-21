@@ -27,6 +27,7 @@ import { FilePondComponent, FilePondModule } from 'ngx-filepond';
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
+import flatpickr from 'flatpickr';
 
 @Component({
   selector: 'app-deals',
@@ -44,14 +45,21 @@ import { ChartOptions } from 'chart.js';
 export class DealsComponent extends BaseComponent {
   displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
   dataSource = new MatTableDataSource<any>();
-  pageSize = 10;
+  pageSize = 5;
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
-
+  inlineDatePicker: boolean = false;
+  weekNumbers!: true
+  // selectedDate: Date | null = null; 
+  flatpickrOptions: any = {
+    inline: true,
+   
+  };
   public leadForm!: FormGroup;
+  public dealForm!: FormGroup;
   public submitted = false;
   selectedCountry: string = 'India';
   public leadDetails: any = {};
@@ -157,16 +165,10 @@ export class DealsComponent extends BaseComponent {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   VerticallyScrol(content12: any) {
-    this.leadId = 0;
-    this.submitted = false;
-    this.leadForm.reset();
-    this.modalService.open(content12, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, size: 'xl' });
+    
+    this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
   }
-  // openLg(content10:any) {
-  //   this.modalService.open(content10, { size: 'lg' },);
-  // }
-
-
+  
   options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
 
   // FormControl for search and selection
@@ -175,23 +177,39 @@ export class DealsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
+     this.flatpickrOptions = {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: 'H:i',
+        };
+    
+        flatpickr('#inlinetime', this.flatpickrOptions);
+    
+          this.flatpickrOptions = {
+            enableTime: true,
+            dateFormat: 'Y-m-d H:i', 
+            defaultDate: '2023-11-07 14:30', 
+          };
+    
+          flatpickr('#pretime', this.flatpickrOptions);
     //Lead Form Validatoin
-    this.leadForm = this.fb.group({
+    this.dealForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      companyName: [''],
-      executive: [''],
-      //products: [''],
-      country: [''],
-      // stage: ['', [Validators.required]],
-      status: ['', [Validators.required]],
-      leadSource: [''],
-      zipCode: ['', [Validators.required, Validators.minLength(6)]],
-      followUpDate: [''],
-      state: [''],
-      city: ['', [Validators.required]],
-      address: ['', [Validators.required]],
       contact: ['', [Validators.required, Validators.maxLength(10)]],
       email: ['', [Validators.required, Validators.email]],
+      executive: [''],
+      country: [''],
+      dealstage: ['', [Validators.required]],
+      dealstatus: ['', [Validators.required]],
+      dealSource: [''],
+      followUpDate: [''],
+      closuredate:[''],
+      dealfor:[''],
+      dealvalue:[0],
+      Probability:[0],
+      followuptime:[''],
+      gstno:[''],
+      description:[''],
       leadId: [''],
     });
 
