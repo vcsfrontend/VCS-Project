@@ -17,6 +17,9 @@ import { MaterialModuleModule } from '../../../material-module/material-module.m
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
+import { PartsviewComponent } from '../partsview/partsview.component';
+import { MatDialog } from '@angular/material/dialog';
+import { StockviewComponent } from '../stockview/stockview.component';
 
 @Component({
   selector: 'app-optimizer',
@@ -34,9 +37,10 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes', 'trim'];
   sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
-  historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount'];
+  historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount', 'action'];
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
+
 
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
@@ -51,6 +55,9 @@ export class OptimizerComponent extends BaseComponent {
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
   @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
   @ViewChild('content4') content4: any;
+
+
+  partsViewDataSource = new MatTableDataSource<any>();
 
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -102,7 +109,7 @@ export class OptimizerComponent extends BaseComponent {
   selectedSawRow: any = null;
   selectedPartsIdList: Set<any> = new Set<any>();
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas) {
+  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas, private dialog: MatDialog) {
     super();
     const selectedSawRow = localStorage.getItem('selectedSawRow');
     this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
@@ -275,6 +282,8 @@ export class OptimizerComponent extends BaseComponent {
     }
     return index + 1; // Default return if paginator is not yet defined
   }
+
+
 
   historyGetSNo(index: number): number {
     if (this.historyPaginator && this.historyPaginator.pageIndex !== undefined && this.historyPaginator.pageSize !== undefined) {
@@ -1290,6 +1299,37 @@ export class OptimizerComponent extends BaseComponent {
   historyApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.historyDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  getViewBulkPartsStock(data: any) {
+    let payload = {
+      partsSheetId: (data.contentType === 'parts') ? data.sheetId : 0,
+      stockSheetId: (data.contentType === 'stock') ? data.sheetId : 0,
+    };
+
+    this.switchService.bulkPartsStock(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.partsList && Array.isArray(res.partsList) && res.stockList && Array.isArray(res.stockList)) {
+          if (data.contentType === 'parts') {
+            this.dialog.open(PartsviewComponent, {
+              width: '1000px',
+              data: res.partsList
+            });
+          }
+          if (data.contentType === 'stock') {
+            this.dialog.open(StockviewComponent, {
+              width: '1000px',
+              data: res.stockList
+            });
+          }
+
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching stock data.");
+        this.bulkPartsStockDataSource.data = [];
+      },
+    });
   }
 
 }
