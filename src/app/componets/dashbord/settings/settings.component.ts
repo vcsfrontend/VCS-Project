@@ -189,6 +189,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     super();
     this.userData = localStorage.getItem('userDetails');
     this.userType = JSON.parse(this.userData).type;
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
     this.formInit();
     this.productForm = this.fb.group({
       name: '',

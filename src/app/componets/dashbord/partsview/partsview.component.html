@@ -1,5 +1,9 @@
-<h2 mat-dialog-title>Parts Data</h2>
-<mat-dialog-content>
+<div class="d-flex justify-content-between border-bottom">
+    <h2 mat-dialog-title>Parts Data</h2>
+    <button type="button" class="btn-close m-4" data-bs-dismiss="modal"
+    (click)="closeDialog()" aria-label="Close"></button>
+</div>
+<mat-dialog-content class="border-bottom">
     <div class="table-container">
         <table mat-table [dataSource]="partsViewDataSource" class="mat-table">
             <ng-container matColumnDef="slNo">
@@ -63,5 +67,5 @@
 </mat-dialog-content>
 
 <div mat-dialog-actions align="end">
-    <button mat-button (click)="closeDialog()">Close</button>
+    <button mat-button class="btn btn-primary" (click)="closeDialog()">Close</button>
 </div>
