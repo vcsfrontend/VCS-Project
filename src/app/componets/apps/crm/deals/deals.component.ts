@@ -28,6 +28,7 @@ import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import flatpickr from 'flatpickr';
+import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 @Component({
   selector: 'app-deals',
@@ -35,7 +36,7 @@ import flatpickr from 'flatpickr';
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
     AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
-    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule],
+    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule,OverlayscrollbarsModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './deals.component.html',

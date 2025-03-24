@@ -51,6 +51,7 @@ export class ClientsComponent extends BaseComponent {
  
   public clientsCount = 0;
   public clientsId = 0;
+  public clientForm!: FormGroup;
 
   public userData: any;
   public userList: any;
@@ -125,6 +126,26 @@ export class ClientsComponent extends BaseComponent {
       } else {
         this.filteredOptions.next(this.options); // Reset to all options if searchText is null
       }
+    });
+    this.clientForm = this.fb.group({
+      date:[''],
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      companyname: [''],
+      contact: ['', [Validators.required, Validators.maxLength(10)]],
+      email: ['', [Validators.required, Validators.email]],
+      executive: [''],
+      clientStages: ['', [Validators.required]],
+      dealstatus: ['', [Validators.required]],
+      dealSource: [''],
+      followUpDate: [''],
+      closuredate:[''],
+      dealfor:[''],
+      dealvalue:[0],
+      Probability:[0],
+      followuptime:[''],
+      gstno:[''],
+      description:[''],
+      leadId: [''],
     });
   }
 
@@ -208,5 +229,6 @@ export class ClientsComponent extends BaseComponent {
       })
     }
   }
+  
   
 }
