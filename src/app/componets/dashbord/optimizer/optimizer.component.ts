@@ -54,7 +54,7 @@ export class OptimizerComponent extends BaseComponent {
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
   @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
-  @ViewChild('content4') content4: any;
+  @ViewChild('content4') content4: any; btnDisable: boolean = true; 
 
 
   partsViewDataSource = new MatTableDataSource<any>();
@@ -125,7 +125,7 @@ export class OptimizerComponent extends BaseComponent {
     this.getGeneratedOutputJson(value);
 
     this.generatedForm = this.fb.group({
-      id: [''],
+      id: [{ value: '', disabled: this.btnDisable }],
       type: ['', [Validators.required]],
       units: ['', [Validators.required]]
     });

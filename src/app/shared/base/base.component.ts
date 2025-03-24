@@ -481,4 +481,16 @@ export class BaseComponent {
       {"name":"Payment Processed"},
       {"name":"Converted to Client"},
     ]
+    // clients dashboard
+    clientStatus = [{"name":"Happy with Product"},
+      {"name":"Installation Scheduled"},
+      {"name":"Installation Done"},
+      {"name":"Shipped"},
+      {"name":"Company Closed"},
+      {"name":"Dissatisfied Client"},
+    ]
+    clientStages = [{"name" : "Fresh"},
+      {"name" :"existing"},
+      {"name":"Expired"}
+    ]
 }
