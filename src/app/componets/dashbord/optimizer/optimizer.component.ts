@@ -54,8 +54,9 @@ export class OptimizerComponent extends BaseComponent {
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
   @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
-  @ViewChild('content4') content4: any; btnDisable: boolean = true; 
-
+  @ViewChild('content4') content4: any; 
+  @ViewChild('content8') content8: any; 
+  @ViewChild('content9') content9: any; 
 
   partsViewDataSource = new MatTableDataSource<any>();
 
@@ -65,7 +66,7 @@ export class OptimizerComponent extends BaseComponent {
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
-  partList: any; stokList: any;
+  partList: any; stokList: any; parList: any[] = []; btnDisable: boolean = true;  stList: any[] = [];
 
 
   public optimizerForm!: FormGroup;
@@ -503,6 +504,9 @@ export class OptimizerComponent extends BaseComponent {
   }
   openLg4(content7: any) {
     this.modalService.open(content7, { size: 'xl', scrollable: true, centered: true, });
+  }
+  openLg5(content8: any) {
+    this.modalService.open(content8, { size: 'xl', scrollable: true, centered: true, });
   }
 
 
@@ -1311,16 +1315,12 @@ export class OptimizerComponent extends BaseComponent {
       next: (res: any) => {
         if (res && res.partsList && Array.isArray(res.partsList) && res.stockList && Array.isArray(res.stockList)) {
           if (data.contentType === 'parts') {
-            this.dialog.open(PartsviewComponent, {
-              width: '1000px',
-              data: res.partsList
-            });
+            this.parList = res.partsList; 
+            this.modalService.open(this.content8, { size: 'xl', scrollable: true, centered: true, })
           }
           if (data.contentType === 'stock') {
-            this.dialog.open(StockviewComponent, {
-              width: '1000px',
-              data: res.stockList
-            });
+            this.stList = res.stockList;
+            this.modalService.open(this.content9, { size: 'xl', scrollable: true, centered: true, });
           }
 
         }

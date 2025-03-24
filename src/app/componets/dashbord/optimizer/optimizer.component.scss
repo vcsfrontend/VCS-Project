@@ -56,3 +56,22 @@
 .tex-right{
   text-align: right !important;
 }
+
+.table-responsive {
+  max-height: 400px; 
+  overflow-x: auto; 
+  overflow-y: auto; 
+  white-space: nowrap; 
+}
+
+.table th{
+  padding: 2px;
+  vertical-align: middle;
+  line-height: 1.462;
+  font-size: 0.813rem;
+  font-weight: 400;
+}
+
+span.prr {
+  margin-left: -12px;
+}
