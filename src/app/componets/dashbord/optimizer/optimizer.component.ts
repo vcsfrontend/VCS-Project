@@ -100,6 +100,9 @@ export class OptimizerComponent extends BaseComponent {
   public lableUrl: string = '';
   public imagePartsFileSrcData: any;
   uploadSpinner: boolean = false;
+  stockSpinner: boolean = false;
+  sawSpinner: boolean = false;
+  partSpinner:boolean = false;
   imageStocksFileSrcData: any;
   selectedSawIdList: Set<any> = new Set<any>();
   selectedHistoryIdList: Set<any> = new Set<any>();
@@ -997,9 +1000,11 @@ export class OptimizerComponent extends BaseComponent {
   submitStockForm(modal: any): void {
     this.stockSubmitted = true;
     if (this.stockForm.valid) {
+      this.stockSpinner=true;
       this.switchService.saveStockData(this.stockForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
+            this.stockSpinner=false;
             modal.close();
             this.resetStockList();
             this.getStockData();
@@ -1008,6 +1013,7 @@ export class OptimizerComponent extends BaseComponent {
             });
 
           } else {
+            this.stockSpinner=false;
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -1027,9 +1033,11 @@ export class OptimizerComponent extends BaseComponent {
   submitSawForm(modal: any): void {
     this.sawSubmitted = true;
     if (this.sawForm.valid) {
+      this.sawSpinner=true;
       this.switchService.saveSawData(this.sawForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
+            this.sawSpinner=false;
             modal.close();
             this.resetSawList();
             this.getSawData();
@@ -1038,6 +1046,7 @@ export class OptimizerComponent extends BaseComponent {
             });
 
           } else {
+            this.sawSpinner=false;
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
@@ -1057,9 +1066,11 @@ export class OptimizerComponent extends BaseComponent {
   submitPartsForm(modal: any): void {
     this.partsSubmitted = true;
     if (this.partsForm.valid) {
+      this.partSpinner=true;
       this.switchService.savePartsData(this.partsForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
+            this.partSpinner=false;
             modal.close();
             this.resetPartList();
             this.getPartsData();
@@ -1068,6 +1079,7 @@ export class OptimizerComponent extends BaseComponent {
             });
 
           } else {
+            this.partSpinner=false;
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
