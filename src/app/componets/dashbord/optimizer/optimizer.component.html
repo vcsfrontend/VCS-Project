@@ -920,8 +920,13 @@
                 </div>
             </div>
         </form>
+        <div class="text-center uploadSpinner" *ngIf="stockSpinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="submitStockForm(modal)">Submit</button>
+            <button type="submit" class="btn btn-primary" (click)="submitStockForm(modal)" [disabled]="stockSpinner">Submit</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close">Cancel</button>
         </div>
@@ -1153,8 +1158,13 @@
                 </div>
             </div>
         </form>
+        <div class="text-center uploadSpinner" *ngIf="partSpinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="submitPartsForm(modal)">Submit</button>
+            <button type="submit" class="btn btn-primary" (click)="submitPartsForm(modal)" [disabled]="partSpinner">Submit</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close">Cancel</button>
         </div>
@@ -1316,8 +1326,13 @@
                 </div>
             </div>
         </form>
+        <div class="text-center uploadSpinner" *ngIf="sawSpinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="submitSawForm(modal)">Submit</button>
+            <button type="submit" class="btn btn-primary" (click)="submitSawForm(modal)" [disabled]="sawSpinner">Submit</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close">Cancel</button>
         </div>
