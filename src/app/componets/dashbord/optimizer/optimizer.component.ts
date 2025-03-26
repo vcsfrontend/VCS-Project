@@ -135,6 +135,7 @@ export class OptimizerComponent extends BaseComponent {
     this.optimizerForm = this.fb.group({
       saw: this.fb.group({
         bladeWidth: [0],
+        sawId: [''],
         stockType: [''],
         cutType: [''],
         cutPreference: [''],

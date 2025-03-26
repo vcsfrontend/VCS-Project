@@ -938,7 +938,7 @@
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 <mat-checkbox (change)="onSawRowCheckboxChange(element, $event)"
-                                    [disabled]="isCheckboxSawDisabled(element)" [checked]="selectedSawRow === element"
+                                    [disabled]="isCheckboxSawDisabled(element)" [checked]="selectedSawRow?.sawId == element.sawId"
                                     class="custom-checkbox"></mat-checkbox>
                             </td>
                         </ng-container>
