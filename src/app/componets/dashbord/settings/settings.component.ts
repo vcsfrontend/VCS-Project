@@ -190,6 +190,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.userData = localStorage.getItem('userDetails');
     this.userType = JSON.parse(this.userData).type;
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+    const selectedSawRow = localStorage.getItem('selectedSawRow');
+    this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
+   
     this.formInit();
     this.productForm = this.fb.group({
       name: '',
@@ -226,7 +229,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.strategy);
+    
     this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
@@ -1234,12 +1237,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (res && res.length > 0) {
           this.stockDataSource.data = res;
-          console.log("Stock Data:", this.stockDataSource.data);
+          
 
           if (this.stockPaginator) {
             this.stockDataSource.paginator = this.stockPaginator;
-          } else {
-            console.warn("Paginator not found!");
           }
 
         } else {
@@ -1247,7 +1248,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error("API Error:", error);
+        
         this.toastr.error("Error fetching stock data");
         this.stockDataSource.data = [];
       },
@@ -1265,9 +1266,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
-          //const selectedSawRow = localStorage.getItem('selectedSawRow');
-          //this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
-          
+
+
 
 
           /*const sawArray = this.sawForm.get('sawList') as FormArray;
@@ -1299,15 +1299,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
           // Ensure paginator is set only if it exists
           if (this.sawPaginator) {
             this.sawDataSource.paginator = this.sawPaginator;
-          } else {
-            console.warn("Paginator not found!");
-          }
+          } 
         } else {
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        console.error("API Error:", error);
+        
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
@@ -1315,8 +1313,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   onSawRowCheckboxChange(row: any, event: any) {
     if (event.checked) {
-      this.selectedSawRow = row;
-      console.log('selectedrow',this.selectedSawRow);
+      this.selectedSawRow = row;     
       localStorage.setItem('selectedSawRow', JSON.stringify(this.selectedSawRow));
     } else {
       this.selectedSawRow = null;
@@ -1325,14 +1322,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   isCheckboxSawDisabled(row: any): boolean {
-    return this.selectedSawRow && this.selectedSawRow !== row; // Disable others
+    return this.selectedSawRow && this.selectedSawRow.sawId !== row.sawId; // Disable others
   }
 
   // Handle "select all" checkbox
   onSawSelectAllChange(event: any) {
     if (event.checked) {
       //this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
-      console.log('selected all', this.selectedSawIdList);
+      
     } else {
       this.selectedSawIdList.clear();
     }
@@ -1361,20 +1358,18 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.partsDataSource.data = res;
-          console.log("Parts Data:", this.partsDataSource.data);
+          
 
           // Ensure paginator is set only if it exists
           if (this.partsPaginator) {
             this.partsDataSource.paginator = this.partsPaginator;
-          } else {
-            console.warn("Paginator not found!");
-          }
+          } 
         } else {
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        console.error("API Error:", error);
+        
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
