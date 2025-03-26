@@ -31,21 +31,45 @@
 .mdc-checkbox__ripple{
   background: none !important;
 }
-// .filter-field {
-//   margin-top: -5px !important;
-//   margin-bottom: -45px !important;
-//   width: 35%; /* Adjust width if needed */
-//   max-height: 72px !important;
-//   margin-left: 6% !important;
-  
-// }
-.filters-field {
+
+.filter-field {
+  margin-top: -3px !important;
+  margin-bottom: -45px !important;
+  width: 45%; 
+  max-height: 72px !important;
+  margin-left: -5% !important;
+}
+
+.filters-field-1 {
   margin-top: -5px !important;
   margin-bottom: -45px !important;
-  width: 35%; /* Adjust width if needed */
+  width: 49%; 
   max-height: 72px !important;
   margin-left: 9% !important;
-  
+}
+
+.filters-fiel-3{
+  margin-top: -5px !important;
+  margin-bottom: -45px !important;
+  width: 49%; 
+  max-height: 72px !important;
+  margin-left: 9% !important;
+}
+
+.filters-fiel-2{
+  margin-top: -5px !important;
+  margin-bottom: -45px !important;
+  width: 49%; 
+  max-height: 72px !important;
+  margin-left: 9% !important;
+}
+
+mat-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  letter-spacing: 0.5px;
+  margin-right: 10px;
 }
 
 .center-align {

@@ -17,9 +17,7 @@ import { MaterialModuleModule } from '../../../material-module/material-module.m
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
-import { PartsviewComponent } from '../partsview/partsview.component';
 import { MatDialog } from '@angular/material/dialog';
-import { StockviewComponent } from '../stockview/stockview.component';
 
 @Component({
   selector: 'app-optimizer',
@@ -37,7 +35,7 @@ import { StockviewComponent } from '../stockview/stockview.component';
 export class OptimizerComponent extends BaseComponent {
   stockDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes', 'trim'];
   sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
-  historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount', 'action'];
+  historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount', 'email', 'action'];
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
 
