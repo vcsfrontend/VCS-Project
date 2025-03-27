@@ -133,6 +133,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.modalService.open(content4, { size: 'sm', centered: true },);
   }
 
+  openLg2(content13: any) {
+    this.modalService.open(content13, { size: 'lg', centered: true },);
+  }
+
+  openLg3(content14: any) {
+    this.modalService.open(content14, { size: 'lg',centered: true },);
+  }
+
   openRights(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
   }

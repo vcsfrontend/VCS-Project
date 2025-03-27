@@ -107,6 +107,16 @@
   
 }
 
+.filter-field-1 {
+  margin-top: -5px !important;
+  margin-bottom: -45px !important;
+  width: 55%; /* Adjust width if needed */
+  max-height: 72px !important;
+  margin-left: 6% !important;
+  
+}
+
+
 .scroll-container {
   display: flex;
   align-items: center;
@@ -277,4 +287,12 @@ th {
 .spinner {
   width: 80px !important;
   height: 80px !important;
+}
+
+mat-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  letter-spacing: 0.5px;
+  margin-right: 10px;
 }

@@ -435,7 +435,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-12 "
+        <div class="col-xxl-12"
             [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
             <div class="row">
                 <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"
@@ -490,16 +490,14 @@
                     Projects
                 </div>
                 <div class="d-flex flex-wrap gap-3">
-                    <mat-form-field class="filter-field">
-                        <mat-label>Fliter</mat-label>
+                    <mat-form-field class="filter-field-1">
+                        <mat-label>Seach Here</mat-label>
                         <input matInput (keyup)="EliteApplyFilter($event)" #input>
                     </mat-form-field>
-                    <div ngbDropdown class="dropdown">
-                        <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                            aria-expanded="false" (click)="onClkDesign()" type="button">
-                            New Design
-                        </button>
-                    </div>
+                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                        aria-expanded="false" (click)="onClkDesign()" type="button">
+                        New Design
+                    </button>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -575,9 +573,11 @@
                             <td mat-cell *matCellDef="let element"> {{element.status}} </td>
                         </ng-container>
                         <ng-container matColumnDef="quotation">
-                            <th mat-header-cell *matHeaderCellDef>Actions</th>
-                            <td mat-cell *matCellDef="let element"><button type="button"
-                                    class="btn btn-primary-gradient btn-wave">Download</button>
+                            <th mat-header-cell *matHeaderCellDef>Actions </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button type="button" class="btn btn-primary-gradient btn-wave" 
+                                    (click)="openLg2(content14)">Download
+                                </button>
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="EliteDisplayedColumn"></tr>
@@ -1003,3 +1003,200 @@
         </div>
     </div>
 </div>
+
+
+<ng-template #content13 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-lg">
+                        Optmizer Proces
+                    </label>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-sm">
+                        Panels List
+                    </label>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-sm">
+                        Shutters List
+                    </label>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-sm">
+                        Hardware List
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-secondary"
+                data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                (click)="openLg3(content14)">  Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+</ng-template>
+
+
+<ng-template #content14 let-modal>
+    <form [formGroup]="inventoryForm" (ngSubmit)="onInventorySubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-3">
+                        <label for="projectName" class="form-label">Client Name</label>
+                        <input type="text" class="form-control" id="projectName"
+                            formControlName="clientName" placeholder="Enter Client Name">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Client Address</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="clientAddress" placeholder="Enter Client Address">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Discount</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="discount" placeholder="Enter Discount">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Flat_No</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="Flat_No" placeholder="Enter Flat_No">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Others</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="Others" placeholder="Enter Others">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Project_Config</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="Project_Config" placeholder="Enter Project_Config">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Quotation_Number</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="Quotation_Number" placeholder="Enter Quotation_Number">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">G_MC</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="G_MC" placeholder="Enter G_MC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">G_PA</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="G_PA" placeholder="Enter G_PA">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">G_SC</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="G_SC" placeholder="Enter G_SC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">TD_MC</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="TD_MC" placeholder="Enter TD_MC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">TD_PA</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="TD_PA" placeholder="Enter TD_PA">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">TD_SC</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="TD_SC" placeholder="Enter TD_SC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">DED_Email</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="DED_Email" placeholder="Enter DED_Email">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">DED_Mobile</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="DED_Mobile" placeholder="Enter DED_Mobile">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">DED_Name</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="DED_Name" placeholder="Enter DED_Name">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">RMD_Email</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="RMD_Email" placeholder="Enter RMD_Email">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">RMD_Mobile</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="RMD_Mobile" placeholder="Enter RMD_Mobile">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">RMD_Name</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="RMD_Name" placeholder="Enter RMD_Name">
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Optimizer Proces
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Functioal parts and shutter list
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Hardware list
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Main items list
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
