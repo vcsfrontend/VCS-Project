@@ -1565,10 +1565,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     // Fix format if it's in DD/MM/YYYY format
     let fixedDateString = dateString;
     if (dateString.includes('/')) {
-      let parts = dateString.split(/[\s/:]+/); // Split by `/`, `:`, or space
-      if (parts.length >= 3) {
-        fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
-      }
+        let parts = dateString.split(/[\s/:]+/); // Split by `/`, `:`, or space
+        if (parts.length >= 3) {
+            fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
+        }
     }
   
     let modifiedDate = new Date(fixedDateString); // Convert to Date object
@@ -1576,12 +1576,18 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   
     let now = new Date();
     let differenceInMs = now.getTime() - modifiedDate.getTime();
-    let differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+    let differenceInMinutes = Math.floor(differenceInMs / (1000 * 60));
+    let differenceInHours = Math.floor(differenceInMinutes / 60);
+    let differenceInDays = Math.floor(differenceInHours / 24);
   
-    if (differenceInDays === 0) return 'Today';
+    if (differenceInMinutes < 1) return 'Just now';
+    if (differenceInMinutes < 60) return `${differenceInMinutes} min ago`;
+    if (differenceInHours < 24) return `${differenceInHours} hours ago`;
     if (differenceInDays === 1) return 'Yesterday';
+  
     return `${differenceInDays} days ago`;
   }
+
   
   
   
