@@ -12,7 +12,6 @@
     <div class="card custom-card ">
         <div class="card-header justify-content-between" *ngIf="roleid==7">
             <marquee behavior="scroll" direction="left" class="fs-18 font-weight-bold" style="color: #006699;">
-                <!-- <p *ngIf="dateDiff=='12'" ><strong> Welcome to adonai, Explore Endless Designs </strong></p> -->
                 <p *ngIf="dateDiff==0"><strong> Upgrade Your Plan</strong></p>
                 <p *ngIf="dateDiff!=0"><strong> Enjoy Your {{dateDiff}} Days Free Trail </strong></p>
             </marquee>
@@ -20,8 +19,6 @@
         <div class="card-header justify-content-between" *ngIf="roleid!=7">
             <marquee behavior="scroll" direction="left" class="fs-18 font-weight-bold" style="color: #006699;">
                 <p><strong> Welcome to adonai, Explore Endless Designs </strong></p>
-                <!-- <p *ngIf="dateDiff=='0'" ><strong> Upgrade Your Plan</strong></p>
-                <p *ngIf="dateDiff!='0'" ><strong> Enjoy Your {{dateDiff}} Days Free Trail </strong></p> -->
             </marquee>
         </div>
         <div class="row">
@@ -35,10 +32,6 @@
                     style="background-color: #006699; color: white;" aria-expanded="false" (click)="onClkDesign()"
                     type="button" [disabled]="(roleid == 7 && dateDiff == '0') || (roleid == 12 && actstatus == false)">
                     Click to Explore Endless Designs </button>
-                <!-- <button *ngIf="roleid == 5" class="btn button btn-wave btn-w-lg font-weight-bold"
-                    style="background-color: #006699; color: white;" type="button" data-bs-toggle="modal"
-                    data-bs-target="#exampleModalLg" (click)="openLg1(content4)">
-                    Quotation </button> -->
             </div>
         </div>
     </div>
@@ -142,111 +135,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-xl-12 col-sm-12">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        <div class="card-title">Projects Revenue</div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="text-muted">Year - </span>
-                            <div ngbDropdown class="dropdown">
-                                <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-light btn-sm border"
-                                    data-bs-toggle="dropdown">
-                                    2024
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="row g-0">
-                            <div class="col-xl-8 border-end border-inline-end-dashed">
-                                <div class="p-3">
-                                    <div class="card-body">
-                                        <div id="mixed-multiple-y">
-
-                                            <apx-chart [series]="chartOptions7.series" [chart]="chartOptions7.chart"
-                                                [yaxis]="chartOptions7.yaxis" [xaxis]="chartOptions7.xaxis"
-                                                [labels]="chartOptions7.labels" [stroke]="chartOptions7.stroke"
-                                                [markers]="chartOptions7.markers" [fill]="chartOptions7.fill"
-                                                [tooltip]="chartOptions7.tooltip"
-                                                [colors]="chartOptions7.colors"></apx-chart>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 ps-0">
-                                <div class="p-3">
-                                    <div class="border rounded p-3 mb-4 position-relative overflow-hidden">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                                <div>
-                                                    <h6 class="text-warning mb-3">Total Revenue</h6>
-                                                    <span
-                                                        class="fs-25 d-flex align-items-center">{{pjData.totalRevenue}}
-                                                        <span
-                                                            class="fs-12 text-warning op-7 ms-2">{{pjData.totalRevenuePecent
-                                                            | number:'1.2-2' }}<i
-                                                                class="ti ti-arrow-big-up-line ms-1 d-inline-flex"></i></span></span>
-                                                </div>
-                                            </div>
-                                            <div id="projects-ongoing" class="mt-1 w-100">
-                                                <apx-chart [series]="chartOptions5.series" [chart]="chartOptions5.chart"
-                                                    [xaxis]="chartOptions5.xaxis" [colors]="chartOptions5.colors"
-                                                    [stroke]="chartOptions5.stroke" [tooltip]="chartOptions5.tooltip"
-                                                    [dataLabels]="chartOptions5.dataLabels" [grid]="chartOptions5.grid"
-                                                    [yaxis]="chartOptions5.yaxis"></apx-chart>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="border rounded p-3 mb-4">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <span class="d-block fs-16 mb-3">Pending income</span>
-                                                <h3 class="mb-3">{{pjData.pendingIncome}}</h3>
-                                                <span class="d-block text-muted">Increased by <span
-                                                        class="text-green ms-1">{{pjData.pendingIncomePercent |
-                                                        number:'1.2-2' }}<i
-                                                            class="ti ti-arrow-narrow-up"></i></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="border rounded p-3 mb-4 position-relative overflow-hidden">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                                <div>
-                                                    <h6 class="text-warning mb-3">Received income</h6>
-                                                    <span
-                                                        class="fs-25 d-flex align-items-center">{{pjData.pendingIncome}}
-                                                        <span
-                                                            class="fs-12 text-warning op-7 ms-2">{{pjData.pendingIncomePercent
-                                                            | number:'1.2-2' }}<i
-                                                                class="ti ti-arrow-big-up-line ms-1 d-inline-flex"></i></span></span>
-                                                </div>
-                                            </div>
-                                            <div id="projects-ongoing" class="mt-1 w-100">
-                                                <apx-chart [series]="chartOptions5.series" [chart]="chartOptions5.chart"
-                                                    [xaxis]="chartOptions5.xaxis" [colors]="chartOptions5.colors"
-                                                    [stroke]="chartOptions5.stroke" [tooltip]="chartOptions5.tooltip"
-                                                    [dataLabels]="chartOptions5.dataLabels" [grid]="chartOptions5.grid"
-                                                    [yaxis]="chartOptions5.yaxis"></apx-chart>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-grid">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 pt-3">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        
-                    </div>
-                </div>
-            </div> -->
-
         </div>
     </div>
 </div>
@@ -256,9 +144,6 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">top Projects</div>
-                <!-- <button type="button" class="btn btn-sm btn-primary-light btn-wave waves-effect waves-light">View
-                        All</button> -->
-                <!-- <label for="signup-phone" class="form-label text-default"><strong>Phone Number</strong><span class="text-danger"> *</span></label> -->
                 <div class="col-md-4 col-xl-4 col-xxl-4 col-lg-4 col-sm-6 d-flex">
                     <div class="input-group custom-input-group">
                         <select class="form-select" [(ngModel)]="addFilter"
@@ -435,47 +320,32 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-12"
-            [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
-            <div class="row">
-                <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"
-                    style="width: 100%; max-width: 18rem; height: 22rem;">
-                    <div class="card custom-card">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <div class="me-2 align-items-center">
-                            </div>
-                            <div class=" mb-3">
-                                <button href="javascript:void(0);" class="btn btn-primary btn-wave me-3 opp"
-                                    aria-expanded="false" (click)="onClkDesign()" type="button">
-                                    <i class="ri-add-line align-middle me-1 fw-medium"></i>Create New Project &nbsp;
-                                    &nbsp; &nbsp; &nbsp;
-                                </button>
-                            </div>
-                        </div>
+        <div class="row" [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-3">
+                <div class="card custom-card">
+                    <div class="card-header d-flex align-items-center justify-content-center">
+                        <button href="javascript:void(0);" class="btn btn-primary btn-wave me-3 opp"
+                            aria-expanded="false" (click)="onClkDesign()" type="button">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Create New Project 
+                        </button>
                     </div>
                 </div>
-                <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"
-                    *ngFor="let item of (showMore ? projectList : projectList.slice(0, 3))">
-                    <div class="card custom-card" style="width: 18rem;">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <div class="me-2 align-items-center">
-                                <img class="custom-img-size" [src]="item.planPic" alt="Project Image"
-                                    *ngIf="item.planPic; else noImage"
-                                    style="width: 240px; height: 200px; border-radius: 4px; align-items: center;" />
-                                <ng-template #noImage>
-                                    <span>No image available</span>
-                                </ng-template>
-                            </div>
-                            <p class="pj-name" ngbTooltip="{{item.name }}" [container]="'body'"
-                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{item.name | slice:0:10 }}</p>
-                            <p class="pj-name">{{item.modifiedTime}} </p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <a class="btn btn-sm btn-primary btn-wave me-3"><i
-                                        class="bi bi-calendar-date align-middle me-1 fw-medium"></i>{{item.designId}}</a>
-                                <a class="btn btn-sm btn-primary btn-wave ms-5 d-flex"><i
-                                        class="ri-add-line align-middle me-1 fw-medium"></i> </a>
-                            </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let item of (showMore ? projectList : projectList.slice(0, 3))">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <img class="img-thumbnail" 
+                            [src]="item.planPic" 
+                            alt="Project Image"
+                            *ngIf="item.planPic; else noImage"/>
+                        <ng-template #noImage>
+                            <span>No image available</span>
+                        </ng-template>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <a class="btn btn-sm btn-primary btn-wave"ngbTooltip="{{item.name }}" [container]="'body'"
+                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{item.name| slice:0:15 }}</a>
+                            <a class="btn btn-sm btn-primary btn-wave"><i
+                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>{{ getTimeAgo(item.modifiedTime) }}</a>
                         </div>
                     </div>
                 </div>
@@ -483,7 +353,7 @@
         </div>
     </div>
 
-    <div class="col-lg-12 col-xxl-12 pt-2">
+    <div class="col-lg-12 col-xxl-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">

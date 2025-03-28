@@ -11,7 +11,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe, } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
 import { FirebaseService } from '../../../shared/services/firebase.service';
@@ -1558,6 +1558,33 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     console.log(data);
     this.inventoryForm.patchValue({ designId: data.designId });
   }
+
+  getTimeAgo(dateString: string): string {
+    if (!dateString) return 'Invalid date'; // Check for empty values
+  
+    // Fix format if it's in DD/MM/YYYY format
+    let fixedDateString = dateString;
+    if (dateString.includes('/')) {
+      let parts = dateString.split(/[\s/:]+/); // Split by `/`, `:`, or space
+      if (parts.length >= 3) {
+        fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
+      }
+    }
+  
+    let modifiedDate = new Date(fixedDateString); // Convert to Date object
+    if (isNaN(modifiedDate.getTime())) return 'Invalid date'; // Final check
+  
+    let now = new Date();
+    let differenceInMs = now.getTime() - modifiedDate.getTime();
+    let differenceInDays = Math.floor(differenceInMs / (1000 * 60 * 60 * 24));
+  
+    if (differenceInDays === 0) return 'Today';
+    if (differenceInDays === 1) return 'Yesterday';
+    return `${differenceInDays} days ago`;
+  }
+  
+  
+  
 
 
 }
