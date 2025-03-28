@@ -2446,6 +2446,8 @@ progress {
   border-radius: var(--bs-border-radius);
   max-width: 100%;
   height: auto;
+  cursor: pointer;
+  
 }
 
 .figure {
