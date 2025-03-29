@@ -71,7 +71,7 @@ export type ChartOptions = {
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate'];
-  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName', 'modifiedTime','designId', 'planId', 'status', 'quotation' ]; 
+  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName', 'modifiedTime','designId', 'planId', 'status', 'quotation', 'view' ]; 
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
@@ -79,6 +79,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false;topDisplayedCards: any;
+  des: string = "3FO3LL66G60B"; 
   
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
@@ -95,6 +96,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   pondOptions: FilePondOptions; lastField: any; ProDataList: any;
   spinnerLoading = false;
   pendingRequests = 0;
+  adonaiURL: any;
 
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
@@ -139,6 +141,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   openLg3(content14: any) {
     this.modalService.open(content14, { size: 'lg',centered: true },);
+  }
+  openLg4(content15: any) {
+    this.modalService.open(content15, { size: 'xl',centered: true },);
   }
 
   openRights(content: any) {
@@ -314,31 +319,83 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     })
   }
 
-  onClkDesign(key: string = '') {
+  onClkDesign(key: string = '', type: 'newDesign' | 'projectList' = 'newDesign') {
     this.userData = localStorage.getItem('userDetails');
     this.switchService.onAdonai(JSON.parse(this.userData)?.email).subscribe({
       next: (res: any) => {
-        if (res.status == false) {
-          alert(res.message)
+        if (!res.status) {
+          alert(res.message);
           return;
-        } else {
-          if (key == 'i') {
-            this.dateDiff = res.datediff;
-            this.roleid = res.roleId;
-            this.actstatus = res.activityStatus;
-
-            // if (this.roleid === 7 || this.roleid === 5) {
-            //   this.displayedColumns.push('actions');
-            // }
-
-          } else {
-            window.open(res.newDesign, '_blank');
-            this.toastr.success(res.message);
-          }
         }
+        if (key === 'i') {
+          this.dateDiff = res.datediff;
+          this.roleid = res.roleId;
+          this.actstatus = res.activityStatus;
+        } else {
+          const url = type === 'newDesign' ? res.newDesign : res.projectList;
+          window.open(url, '_blank');
+          this.toastr.success(res.message);
+        }
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        this.toastr.error('Something went wrong');
       }
-    })
+    });
+  }  
+  
+  viewDesign() {
+    let email = JSON.parse(this.userDetails)?.email;
+  
+    this.switchService.specificUrl(email, this.designId).subscribe({
+      next: (res: any) => {
+        console.log("ProjectDataList API Response:", res);
+  
+        if (res?.data?.length > 0) {
+          let designId = res.data[0]?.designId;
+  
+          console.log("Extracted Design ID:", designId);
+  
+          if (!designId) {
+            this.toastr.error("No design ID found.");
+            return;
+          }
+  
+          // Fetch the design details using the extracted designId
+          this.fetchDesignDetails(email, designId);
+        } else {
+          this.toastr.error("No design ID found for this email.");
+        }
+      },
+      error: (error) => {
+        console.error("Error fetching project data:", error);
+        this.toastr.error("Failed to fetch design ID.");
+      }
+    });
   }
+
+  fetchDesignDetails(email: string, designId: string) {
+    this.switchService.specificUrl(email, designId).subscribe({
+      next: (response: any) => {
+        console.log("specificUrl API Response:", response);
+        if (response?.message) {
+          this.pjData = response;
+        } else {
+          this.toastr.error("No message received from server", '', {
+            timeOut: 3000,
+            positionClass: 'toast-top-right',
+          });
+        }
+      },
+      error: (error) => {
+        console.error("Error fetching design details:", error);
+        this.toastr.error(error?.statusText || "Something went wrong");
+      }
+    });
+  }
+  
+  
+  
 
   onSubmit(): void {
     this.submitted = true;
