@@ -339,7 +339,7 @@
                             [src]="item.planPic" 
                             alt="Project Image" 
                             *ngIf="item.planPic; else noImage" 
-                            (click)="viewDesign()"
+                            (click)="viewSpecificUrl()"
                             style="cursor: pointer;" />
 
                             <ng-template #noImage>
@@ -946,7 +946,7 @@
 
 
 <ng-template #content14 let-modal>
-    <form [formGroup]="inventoryForm" (ngSubmit)="onInventorySubmit(modal)">
+    <form [formGroup]="quotationForm" (ngSubmit)="onQuotationSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -966,6 +966,11 @@
                             formControlName="clientAddress" placeholder="Enter Client Address">
                     </div>
                     <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Project Name</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="projectName" placeholder="Enter Client Address">
+                    </div>
+                    <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Discount</label>
                         <input type="text" class="form-control" id="projectAddress"
                             formControlName="discount" placeholder="Enter Discount">
@@ -973,87 +978,88 @@
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Flat_No</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="Flat_No" placeholder="Enter Flat_No">
+                            formControlName="flatNo" placeholder="Enter Flat_No">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Others</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="Others" placeholder="Enter Others">
+                            formControlName="others" placeholder="Enter Others">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Project_Config</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="Project_Config" placeholder="Enter Project_Config">
+                            formControlName="projectConfig" placeholder="Enter Project_Config">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Quotation_Number</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="Quotation_Number" placeholder="Enter Quotation_Number">
+                            formControlName="quotationNumber" placeholder="Enter Quotation_Number">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_MC</label>
                         <input type="text" class="form-control" id="clientName"
-                            formControlName="G_MC" placeholder="Enter G_MC">
+                            formControlName="gMC" placeholder="Enter G_MC">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_PA</label>
                         <input type="text" class="form-control" id="clientName"
-                            formControlName="G_PA" placeholder="Enter G_PA">
+                            formControlName="gPA" placeholder="Enter G_PA">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_SC</label>
                         <input type="text" class="form-control" id="clientName"
-                            formControlName="G_SC" placeholder="Enter G_SC">
+                            formControlName="gSC" placeholder="Enter G_SC">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">TD_MC</label>
                         <input type="text" class="form-control" id="clientName"
-                            formControlName="TD_MC" placeholder="Enter TD_MC">
+                            formControlName="tDMC" placeholder="Enter TD_MC">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">TD_PA</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="TD_PA" placeholder="Enter TD_PA">
+                            formControlName="tDPA" placeholder="Enter TD_PA">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">TD_SC</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="TD_SC" placeholder="Enter TD_SC">
+                            formControlName="tDSC" placeholder="Enter TD_SC">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Email</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="DED_Email" placeholder="Enter DED_Email">
+                            formControlName="dedEmail" placeholder="Enter DED_Email">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Mobile</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="DED_Mobile" placeholder="Enter DED_Mobile">
+                            formControlName="dedMobile" placeholder="Enter DED_Mobile">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Name</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="DED_Name" placeholder="Enter DED_Name">
+                            formControlName="dedName" placeholder="Enter DED_Name">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Email</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="RMD_Email" placeholder="Enter RMD_Email">
+                            formControlName="rmdEmail" placeholder="Enter RMD_Email">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Mobile</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="RMD_Mobile" placeholder="Enter RMD_Mobile">
+                            formControlName="rmdMobile" placeholder="Enter RMD_Mobile">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Name</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="RMD_Name" placeholder="Enter RMD_Name">
+                            formControlName="rmdName" placeholder="Enter RMD_Name">
                     </div>
                     <div class="row pt-2">
                         <div class="col-xl-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="Optimizerprocess">
                                 <label class="form-check-label" for="checkebox-sm">
                                     Optimizer Proces
                                 </label>
@@ -1061,7 +1067,8 @@
                         </div>
                         <div class="col-xl-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="functionalList">
                                 <label class="form-check-label" for="checkebox-sm">
                                     Functioal parts and shutter list
                                 </label>
@@ -1069,7 +1076,8 @@
                         </div>
                         <div class="col-xl-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="hardwareList">
                                 <label class="form-check-label" for="checkebox-sm">
                                     Hardware list
                                 </label>
@@ -1077,9 +1085,10 @@
                         </div>
                         <div class="col-xl-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked="">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="shutterList">
                                 <label class="form-check-label" for="checkebox-sm">
-                                    Main items list
+                                    Shutter List
                                 </label>
                             </div>
                         </div>

@@ -32,6 +32,7 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormControl, FormArray, } from '@angular/forms';
+import { OptimizerComponent } from '../optimizer/optimizer.component';
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -97,6 +98,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   spinnerLoading = false;
   pendingRequests = 0;
   adonaiURL: any;
+  quotationForm!: FormGroup;
 
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
@@ -208,13 +210,35 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     });
 
 
-    // this.getProjectList();
-
-    // this.inventoryForm = this.fb.group({
-    //   email: [JSON.parse(this.userDetails)?.email],
-    //   type: [JSON.parse(this.userDetails)?.type],
-    //   designId: ['', Validators.required]
-    // });
+    this.quotationForm = this.fb.group({
+      clientName: ['', Validators.required],
+      clientAddress: ['', Validators.required],
+      projectName: ['', Validators.required],
+      designId: ['', Validators.required],
+      discount:['',Validators.required],
+      flatNo:['',Validators.required],
+      others:['',Validators.required],
+      projectConfig:['',Validators.required],
+      quotationNumber:['',Validators.required],
+      gMC:['',Validators.required],
+      gPA:['',Validators.required],
+      gSC:['',Validators.required],
+      tDMC:['',Validators.required],
+      tDPA:['',Validators.required],
+      tDSC:['',Validators.required],
+      dedEmail:['',Validators.required],
+      dedMobile:['',Validators.required],
+      dedName:['',Validators.required],
+      rmdEmail:['',Validators.required],
+      rmdMobile:['',Validators.required],
+      rmdName:['',Validators.required],
+      Optimizerprocess:['',Validators.required],
+      shutterList:['',Validators.required],
+      functionalList:['',Validators.required],
+      hardwareList:['',Validators.required],
+      email:['',Validators.required],
+      type:['',Validators.required],
+    });
 
 
   }
@@ -222,7 +246,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   get f() {
     return this.createProjectForm.controls;
   }
-
   
 
   minEndDate: string = '';
@@ -344,59 +367,21 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     });
   }  
   
-  viewDesign() {
-    let email = JSON.parse(this.userDetails)?.email;
   
-    this.switchService.specificUrl(email, this.designId).subscribe({
+  viewSpecificUrl() {
+    const userDetails = JSON.parse(this.userDetails);
+    const userEmail = userDetails?.email;
+    this.switchService.specificUrl(userEmail, this.designId).subscribe({
       next: (res: any) => {
-        console.log("ProjectDataList API Response:", res);
-  
-        if (res?.data?.length > 0) {
-          let designId = res.data[0]?.designId;
-  
-          console.log("Extracted Design ID:", designId);
-  
-          if (!designId) {
-            this.toastr.error("No design ID found.");
-            return;
-          }
-  
-          // Fetch the design details using the extracted designId
-          this.fetchDesignDetails(email, designId);
-        } else {
-          this.toastr.error("No design ID found for this email.");
-        }
+        this.toastr.success("User available with this email!");
       },
       error: (error) => {
-        console.error("Error fetching project data:", error);
-        this.toastr.error("Failed to fetch design ID.");
-      }
-    });
-  }
-
-  fetchDesignDetails(email: string, designId: string) {
-    this.switchService.specificUrl(email, designId).subscribe({
-      next: (response: any) => {
-        console.log("specificUrl API Response:", response);
-        if (response?.message) {
-          this.pjData = response;
-        } else {
-          this.toastr.error("No message received from server", '', {
-            timeOut: 3000,
-            positionClass: 'toast-top-right',
-          });
-        }
+        console.error("API Error:", error);
+        this.toastr.error(error.statusText || "An error occurred while fetching design details.");
       },
-      error: (error) => {
-        console.error("Error fetching design details:", error);
-        this.toastr.error(error?.statusText || "Something went wrong");
-      }
     });
   }
   
-  
-  
-
   onSubmit(): void {
     this.submitted = true;
     if (this.createProjectForm.invalid) {
@@ -1563,11 +1548,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             designPanoUrl: project.designPanoUrl || "N/A",
           }));
           
-          // Assign data to Angular Material Table data source
           this.eliteDataSource.data = this.projectList;
-          this.elitePaginator.length=this.projectList.length;          
-          console.log("Updated DataSource:", this.eliteDataSource);
-          console.log("Updated DataSource:", this.elitePaginator);
+          this.elitePaginator.length=this.projectList.length; 
         } 
         this.stopLoading();
       },
@@ -1580,7 +1562,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
   
   
-
   get i() {
     return this.inventoryForm.controls;
   }
@@ -1617,19 +1598,17 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   getTimeAgo(dateString: string): string {
-    if (!dateString) return 'Invalid date'; // Check for empty values
-  
-    // Fix format if it's in DD/MM/YYYY format
+    if (!dateString) return 'Invalid date'; 
     let fixedDateString = dateString;
     if (dateString.includes('/')) {
-        let parts = dateString.split(/[\s/:]+/); // Split by `/`, `:`, or space
+        let parts = dateString.split(/[\s/:]+/); 
         if (parts.length >= 3) {
             fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
         }
     }
   
-    let modifiedDate = new Date(fixedDateString); // Convert to Date object
-    if (isNaN(modifiedDate.getTime())) return 'Invalid date'; // Final check
+    let modifiedDate = new Date(fixedDateString); 
+    if (isNaN(modifiedDate.getTime())) return 'Invalid date'; 
   
     let now = new Date();
     let differenceInMs = now.getTime() - modifiedDate.getTime();
@@ -1645,6 +1624,32 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     return `${differenceInDays} days ago`;
   }
 
+  onQuotationSubmit(modal: any) {
+    this.submitted = true;
+  
+    if (this.quotationForm?.valid) {
+      setTimeout(() => {
+        const mockResponse = { status: true, message: 'Quotation successfully created!' };
+  
+        if (mockResponse.status) {
+          modal.close(); // Close modal
+          this.submitted = false;
+          this.quotationForm.reset();
+          this.toastr.success(mockResponse.message, 'Quotation', {
+            timeOut: 3000, positionClass: 'toast-top-right'
+          });
+        } else {
+          this.toastr.error(mockResponse.message, 'Quotation', {
+            timeOut: 3000, positionClass: 'toast-top-right'
+          });
+        }
+      }, 1000);
+    } if (this.quotationForm.invalid) {
+      this.toastr.error('Please fill mandatory fields');
+      return;
+    }
+    
+  }
   
   
   

@@ -19633,6 +19633,8 @@ input[type=range]::-webkit-slider-runnable-track {
   border: 0;
 }
 .nav-tabs.nav-style-5 .nav-link:hover, .nav-tabs.nav-style-5 .nav-link:focus {
+  background-color: var(--primary-color);
+  color: #fff;
   border: 0;
 }
 
