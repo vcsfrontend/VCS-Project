@@ -38,7 +38,8 @@ export class OptimizerComponent extends BaseComponent {
   historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount', 'email', 'action'];
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
-
+  productDisplayedColumn: string[] = [ 'slNo', 'code', 'name', 'description', 'status', 'edit', 'delete'];
+  active1='Product'
 
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
@@ -47,16 +48,17 @@ export class OptimizerComponent extends BaseComponent {
   historyDataSource = new MatTableDataSource<any>();
   bulkPartsStockDataSource = new MatTableDataSource<any>();
   partsDataSource = new MatTableDataSource<any>();
+  partsViewDataSource = new MatTableDataSource<any>();
+  productDataSource = new MatTableDataSource<any>();
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
   @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
+  @ViewChild('productPaginator') ProductPaginator!: MatPaginator;
   @ViewChild('content4') content4: any; 
   @ViewChild('content8') content8: any; 
   @ViewChild('content9') content9: any; 
-
-  partsViewDataSource = new MatTableDataSource<any>();
 
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -286,8 +288,6 @@ export class OptimizerComponent extends BaseComponent {
     return index + 1; // Default return if paginator is not yet defined
   }
 
-
-
   historyGetSNo(index: number): number {
     if (this.historyPaginator && this.historyPaginator.pageIndex !== undefined && this.historyPaginator.pageSize !== undefined) {
       return this.historyPaginator.pageIndex * this.historyPaginator.pageSize + index + 1;
@@ -302,12 +302,20 @@ export class OptimizerComponent extends BaseComponent {
     return index + 1; // Default return if paginator is not yet defined
   }
 
+  productGetSNo(index: number): number {
+    if (this.ProductPaginator && this.ProductPaginator.pageIndex !== undefined && this.ProductPaginator.pageSize !== undefined) {
+      return this.ProductPaginator.pageIndex * this.ProductPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+
   ngAfterViewInit() {
     this.stockDataSource.paginator = this.stockPaginator;
     this.sawDataSource.paginator = this.sawPaginator;
     this.historyDataSource.paginator = this.historyPaginator;
     this.partsDataSource.paginator = this.partsPaginator;
     this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
+    this.productDataSource.paginator = this.ProductPaginator;
   }
 
   value(value: any) {
@@ -510,7 +518,12 @@ export class OptimizerComponent extends BaseComponent {
   openLg5(content8: any) {
     this.modalService.open(content8, { size: 'xl', scrollable: true, centered: true, });
   }
-
+  openLg6(content10: any) {
+    this.modalService.open(content10, { scrollable: true, centered: true, });
+  }
+  openLg7(content11: any) {
+    this.modalService.open(content11, { scrollable: true, centered: true, });
+  }
 
   downloadOptimizerFile() {
     this.switchService.optimizeDownload(this.optimizeId).subscribe({
