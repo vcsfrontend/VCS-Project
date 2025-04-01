@@ -490,7 +490,19 @@ export class BaseComponent {
       {"name":"Dissatisfied Client"},
     ]
     clientStages = [{"name" : "Fresh"},
-      {"name" :"existing"},
+      {"name" :"Existing"},
       {"name":"Expired"}
     ]
+
+    // tables 
+    PanelGrains= [{"name" : "Vertical"},
+      {"name" :"Horizontal"},
+      {"name":"N/A"}
+    ]
+
+    PanelPressing= [{"name" : "0"},
+      {"name" :"1"},
+      {"name":"2"}
+    ]
+
 }
