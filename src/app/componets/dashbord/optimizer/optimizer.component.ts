@@ -39,7 +39,8 @@ export class OptimizerComponent extends BaseComponent {
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
   productDisplayedColumn: string[] = [ 'slNo', 'code', 'name', 'description', 'status', 'edit', 'delete'];
-  active1='Product'
+  panelDisplayedColumn: string[] = [ 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'status', 'edit', 'copy', 'image', 'delete'];
+  skinDisplayedColumn: string[] = [ 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'status', 'edit', 'copy', 'image', 'delete' ];
 
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
@@ -50,12 +51,16 @@ export class OptimizerComponent extends BaseComponent {
   partsDataSource = new MatTableDataSource<any>();
   partsViewDataSource = new MatTableDataSource<any>();
   productDataSource = new MatTableDataSource<any>();
+  panelDataSource = new MatTableDataSource<any>();
+  skinDataSource = new MatTableDataSource<any>();
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
   @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
   @ViewChild('productPaginator') ProductPaginator!: MatPaginator;
+  @ViewChild('panelPaginator') PanelPaginator!: MatPaginator;
+  @ViewChild('skinPaginator') skinPaginator!: MatPaginator;
   @ViewChild('content4') content4: any; 
   @ViewChild('content8') content8: any; 
   @ViewChild('content9') content9: any; 
@@ -66,7 +71,7 @@ export class OptimizerComponent extends BaseComponent {
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
-  partList: any; stokList: any; parList: any[] = []; btnDisable: boolean = true;  stList: any[] = [];
+  partList: any; stokList: any; parList: any[] = []; btnDisable: boolean = true;  stList: any[] = []; active1='Product'
 
 
   public optimizerForm!: FormGroup;
@@ -316,6 +321,8 @@ export class OptimizerComponent extends BaseComponent {
     this.partsDataSource.paginator = this.partsPaginator;
     this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
     this.productDataSource.paginator = this.ProductPaginator;
+    this.panelDataSource.paginator = this.PanelPaginator;
+    this.skinDataSource.paginator = this.skinPaginator;
   }
 
   value(value: any) {
@@ -523,6 +530,30 @@ export class OptimizerComponent extends BaseComponent {
   }
   openLg7(content11: any) {
     this.modalService.open(content11, { scrollable: true, centered: true, });
+  }
+  openLg8(content12: any) {
+    this.modalService.open(content12, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg9(content13: any) {
+    this.modalService.open(content13, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg10(content14: any) {
+    this.modalService.open(content14, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg11(content15: any) {
+    this.modalService.open(content15, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg12(content16: any) {
+    this.modalService.open(content16, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg13(content17: any) {
+    this.modalService.open(content17, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg14(content18: any) {
+    this.modalService.open(content18, {scrollable: true, centered: true, });
+  }
+  openLg15(content19: any) {
+    this.modalService.open(content19, {size: 'sm', scrollable: true, centered: true, });
   }
 
   downloadOptimizerFile() {
@@ -1327,6 +1358,18 @@ export class OptimizerComponent extends BaseComponent {
   historyApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.historyDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  productApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.productDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  panelApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.panelDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  skinApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.skinDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   getViewBulkPartsStock(data: any) {
