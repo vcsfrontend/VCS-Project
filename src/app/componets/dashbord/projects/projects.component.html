@@ -339,7 +339,7 @@
                             [src]="item.planPic" 
                             alt="Project Image" 
                             *ngIf="item.planPic; else noImage" 
-                            (click)="viewSpecificUrl()"
+                            (click)="viewSpecificUrl(item)" 
                             style="cursor: pointer;" />
 
                             <ng-template #noImage>
