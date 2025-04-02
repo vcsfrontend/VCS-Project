@@ -211,7 +211,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
 
     this.quotationForm = this.fb.group({
-      clientName: ['', Validators.required],
+      clientName: ['', Validators.required ,  Validators.minLength(3)],
       clientAddress: ['', Validators.required],
       projectName: ['', Validators.required],
       designId: ['', Validators.required],
@@ -245,6 +245,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   get f() {
     return this.createProjectForm.controls;
+
+  }
+  get qf(){
+    return this.quotationForm.controls;
   }
   
 
@@ -1623,15 +1627,16 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   
     return `${differenceInDays} days ago`;
   }
-
+  
   onQuotationSubmit(modal: any) {
     this.submitted = true;
   
     if (this.quotationForm?.valid) {
       setTimeout(() => {
         const mockResponse = { status: true, message: 'Quotation successfully created!' };
-  
         if (mockResponse.status) {
+          const formData = this.quotationForm.value; 
+          localStorage.setItem('quotationFormData', JSON.stringify(formData));
           modal.close(); // Close modal
           this.submitted = false;
           this.quotationForm.reset();
@@ -1650,9 +1655,4 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     }
     
   }
-  
-  
-  
-
-
 }
