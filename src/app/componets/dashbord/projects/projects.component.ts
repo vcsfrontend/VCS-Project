@@ -372,12 +372,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
 
-  viewSpecificUrl(data: any) {    
+  viewSpecificUrl(data: any) {
     const userDetails = JSON.parse(this.userDetails);
     const userEmail = userDetails?.email;
-    this.designId = data?.designId ? data.designId : ''; 
+    this.designId = data?.designId ? data.designId : '';
     this.switchService.specificUrl(userEmail, this.designId).subscribe({
       next: (res: any) => {
+        if (res.url) {
+          window.open(res.url, '_blank');
+        }
         this.toastr.success("User available with this email!");
       },
       error: (error) => {
