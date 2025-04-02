@@ -73,7 +73,8 @@ export class OptimizerComponent extends BaseComponent {
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
-  partList: any; stokList: any; parList: any[] = []; btnDisable: boolean = true;  stList: any[] = []; active1='Product'
+  partList: any; stokList: any; parList: any[] = []; btnDisable: boolean = true; 
+  stList: any[] = []; active1='Product'; productForm! : FormGroup;
 
 
   public optimizerForm!: FormGroup;
@@ -90,6 +91,7 @@ export class OptimizerComponent extends BaseComponent {
   public partsForm!: FormGroup;
   public stockSubmitted = false;
   public partsSubmitted = false;
+  public ProductSubmitted = false;
 
   public uploadStocks!: FormGroup;
   uploadStocksSubmitted: boolean = false;
@@ -272,7 +274,24 @@ export class OptimizerComponent extends BaseComponent {
       email: [this.userEmail],
       type: [this.userType]
     });
+
+     //product form
+     this.productForm = this.fb.group({
+      prodId:[{ value: this.generateProductId(), disabled: true }],
+      code:['',Validators.required],
+      name:['',Validators.required],
+      description:['',Validators.required],
+      isActive:[true],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType]
+    });
   }
+
+  generateProductId(): number {
+    return Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+  }
+  
 
   getSNo(index: number): number {
     if (this.stockPaginator && this.stockPaginator.pageIndex !== undefined && this.stockPaginator.pageSize !== undefined) {
@@ -667,6 +686,10 @@ export class OptimizerComponent extends BaseComponent {
 
   get g() {
     return this.generatedForm.controls;
+  }
+
+  get q() {
+    return this.productForm.controls;
   }
 
   onGeneratedSubmit(modal: any) {
@@ -1434,4 +1457,42 @@ export class OptimizerComponent extends BaseComponent {
     });
   }
 
+  onProductSubmit(modal: any) {
+    this.ProductSubmitted = true;
+    if (this.productForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+  
+    let payload = {
+      ...this.productForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+  
+    this.switchService.savePoduct(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+  
+          this.productForm.reset();
+          this.ProductSubmitted = false;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        console.error("Error saving product:", error);
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+  
+  
+  
 }
