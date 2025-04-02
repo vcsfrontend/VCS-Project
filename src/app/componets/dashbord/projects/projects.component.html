@@ -322,7 +322,7 @@
         </div>
         <div class="row" [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
             <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-3">
-                <div class="card custom-card heigh">
+                <div class="card custom-card">
                     <div class="card-header d-flex align-items-center justify-content-center">
                         <button href="javascript:void(0);" class="btn btn-primary btn-wave me-3 opp"
                             aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
@@ -958,47 +958,27 @@
                     <div class="col-xl-3">
                         <label for="projectName" class="form-label">Client Name</label>
                         <input type="text" class="form-control" id="projectName"
-                            formControlName="clientName" placeholder="Enter Client Name"
-                            [ngClass]="{ 'is-invalid': submitted && qf['clientName'].errors }" maxlength="50">
-                        <div *ngIf="submitted && qf['clientName'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['clientName'].errors['required']">Client Name is required.</div>
-                        </div>
-                    </div>                    
+                            formControlName="clientName" placeholder="Enter Client Name">
+                    </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Client Address</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="clientAddress" placeholder="Enter Client Address"
-                            [ngClass]="{ 'is-invalid': submitted && qf['clientAddress'].errors }">
-                        <div *ngIf="submitted && qf['clientAddress'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['clientAddress'].errors['required']">Client Address is required.</div>
-                        </div>
+                            formControlName="clientAddress" placeholder="Enter Client Address">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Project Name</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="projectName" placeholder="Enter project name"
-                        [ngClass]="{ 'is-invalid': submitted && qf['projectName'].errors }">
-                        <div *ngIf="submitted && qf['projectName'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['projectName'].errors['required']">projectName is required.</div>
-                        </div>
+                            formControlName="projectName" placeholder="Enter Client Address">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Discount</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="discount" placeholder="Enter Discount"
-                        [ngClass]="{ 'is-invalid': submitted && qf['discount'].errors }">
-                        <div *ngIf="submitted && qf['discount'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['discount'].errors['required']">Discount is required.</div>
-                        </div>
+                            formControlName="discount" placeholder="Enter Discount">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Flat_No</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="flatNo" placeholder="Enter Flat_No"
-                        [ngClass]="{ 'is-invalid': submitted && qf['flatNo'].errors }">
-                        <div *ngIf="submitted && qf['flatNo'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['flatNo'].errors['required']">flatNo is required.</div>
-                        </div>
+                            formControlName="flatNo" placeholder="Enter Flat_No">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Others</label>
@@ -1006,134 +986,74 @@
                             formControlName="others" placeholder="Enter Others">
                     </div>
                     <div class="col-xl-3">
-                        <label for="projectConfig" class="form-label">Project_Config</label>
-                        <input type="text" class="form-control" id="projectConfig"
-                            formControlName="projectConfig" placeholder="Enter Project_Config" 
-                            [ngClass]="{ 'is-invalid': submitted && qf['projectConfig'].errors }">
-                            <div *ngIf="submitted && qf['projectConfig'].errors" class="invalid-feedback">
-                                <div *ngIf="qf['projectConfig'].errors['required']">Project Config is required.</div>
-                            </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="quotationNumber" class="form-label">Quotation_Number</label>
+                        <label for="projectAddress" class="form-label">Project_Config</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="quotationNumber" placeholder="Enter Quotation_Number"
-                            [ngClass]="{ 'is-invalid': submitted && qf['quotationNumber'].errors }">
-                            <div *ngIf="submitted && qf['quotationNumber'].errors" class="invalid-feedback">
-                                <div *ngIf="qf['quotationNumber'].errors['required']">Quotation Number is required.</div>
-                            </div>
+                            formControlName="projectConfig" placeholder="Enter Project_Config">
                     </div>
                     <div class="col-xl-3">
-                        <label for="G_MC" class="form-label">G_MC</label>
-                        <input type="text" class="form-control" id="G_MC"
-                            formControlName="gMC" placeholder="Enter G_MC"
-                        [ngClass]="{ 'is-invalid': submitted && qf['gMC'].errors }">
-                        <div *ngIf="submitted && qf['gMC'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['gMC'].errors['required']">gMC is required.</div>
-                        </div>
+                        <label for="projectAddress" class="form-label">Quotation_Number</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="quotationNumber" placeholder="Enter Quotation_Number">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">G_MC</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="gMC" placeholder="Enter G_MC">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_PA</label>
                         <input type="text" class="form-control" id="clientName"
-                            formControlName="gPA" placeholder="Enter G_PA"
-                        [ngClass]="{ 'is-invalid': submitted && qf['gPA'].errors }">
-                        <div *ngIf="submitted && qf['gPA'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['gPA'].errors['required']">gPA is required.</div>
-                        </div>
+                            formControlName="gPA" placeholder="Enter G_PA">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_SC</label>
                         <input type="text" class="form-control" id="clientName"
-                            formControlName="gSC" placeholder="Enter G_SC"
-                        [ngClass]="{ 'is-invalid': submitted && qf['gSC'].errors }">
-                        <div *ngIf="submitted && qf['gSC'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['gSC'].errors['required']">G_SC is required.</div>
-                        </div>
+                            formControlName="gSC" placeholder="Enter G_SC">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">TD_MC</label>
                         <input type="text" class="form-control" id="clientName"
-                            formControlName="tDMC" placeholder="Enter TD_MC"
-                        [ngClass]="{ 'is-invalid': submitted && qf['tDMC'].errors }">
-                        <div *ngIf="submitted && qf['tDMC'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['tDMC'].errors['required']">TD_MC is required.</div>
-                        </div>
+                            formControlName="tDMC" placeholder="Enter TD_MC">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">TD_PA</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="tDPA" placeholder="Enter TD_PA"
-                        [ngClass]="{ 'is-invalid': submitted && qf['tDPA'].errors }">
-                        <div *ngIf="submitted && qf['tDPA'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['tDPA'].errors['required']">TD_PA is required.</div>
-                        </div>
+                            formControlName="tDPA" placeholder="Enter TD_PA">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">TD_SC</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="tDSC" placeholder="Enter TD_SC"
-                        [ngClass]="{ 'is-invalid': submitted && qf['tDSC'].errors }">
-                        <div *ngIf="submitted && qf['tDSC'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['tDSC'].errors['required']">TD_SC is required.</div>
-                        </div>
+                            formControlName="tDSC" placeholder="Enter TD_SC">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Email</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="dedEmail" placeholder="Enter DED_Email"
-                        [ngClass]="{ 'is-invalid': submitted && qf['dedEmail'].errors }">
-                        <div *ngIf="submitted && qf['dedEmail'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['dedEmail'].errors['required']">DED_Email is required.</div>
-                        </div>
+                            formControlName="dedEmail" placeholder="Enter DED_Email">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Mobile</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="dedMobile" placeholder="Enter DED_Mobile"
-                            maxlength="10"
-                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                        [ngClass]="{ 'is-invalid': submitted && qf['dedMobile'].errors }">
-                        <div *ngIf="submitted && qf['dedMobile'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['dedMobile'].errors['required']">DED_Mobile is required.</div>
-                        </div>
+                            formControlName="dedMobile" placeholder="Enter DED_Mobile">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Name</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="dedName" placeholder="Enter DED_Name"
-                        [ngClass]="{ 'is-invalid': submitted && qf['dedName'].errors }">
-                        <div *ngIf="submitted && qf['dedName'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['dedName'].errors['required']">DED_Mobile is required.</div>
-                        </div>
+                            formControlName="dedName" placeholder="Enter DED_Name">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Email</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="rmdEmail" placeholder="Enter RMD_Email"
-                        [ngClass]="{ 'is-invalid': submitted && qf['rmdEmail'].errors }">
-                        <div *ngIf="submitted && qf['rmdEmail'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['rmdEmail'].errors['required']">RMD_Email is required.</div>
-                        </div>
+                            formControlName="rmdEmail" placeholder="Enter RMD_Email">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Mobile</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="rmdMobile" placeholder="Enter RMD_Mobile"
-                        maxlength="10"
-                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                        [ngClass]="{ 'is-invalid': submitted && qf['rmdMobile'].errors }">
-                        <div *ngIf="submitted && qf['rmdMobile'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['rmdMobile'].errors['required']">RMD_Mobile is required.</div>
-                        </div>
+                            formControlName="rmdMobile" placeholder="Enter RMD_Mobile">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Name</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="rmdName" placeholder="Enter RMD_Name"
-                        [ngClass]="{ 'is-invalid': submitted && qf['rmdName'].errors }">
-                        <div *ngIf="submitted && qf['rmdName'].errors" class="invalid-feedback">
-                            <div *ngIf="qf['rmdName'].errors['required']">RMD_Name is required.</div>
-                        </div>
+                            formControlName="rmdName" placeholder="Enter RMD_Name">
                     </div>
                     <div class="row pt-2">
                         <div class="col-xl-3">
