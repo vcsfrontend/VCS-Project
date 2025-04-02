@@ -643,7 +643,7 @@
                                                     <mat-label>Search Here</mat-label>
                                                     <input matInput (keyup)="panelApplyFilter($event)" #input>
                                                 </mat-form-field>
-                                                <button type="button" class="btn btn-primary"  (click)="openLg7(content11)">
+                                                <button type="button" class="btn btn-primary"  >
                                                     <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Panel</button>
                                             </div>
                                         </div>
@@ -742,7 +742,7 @@
                                                     <mat-label>Search Here</mat-label>
                                                     <input matInput (keyup)="skinApplyFilter($event)" #input>
                                                 </mat-form-field>
-                                                <button type="button" class="btn btn-primary" (click)="openLg14(content18)">
+                                                <button type="button" class="btn btn-primary">
                                                     <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Skin</button>
                                             </div>
                                         </div>
@@ -841,7 +841,7 @@
                                                         <mat-label>Search Here</mat-label>
                                                         <input matInput (keyup)="skinApplyFilter($event)" #input>
                                                     </mat-form-field>
-                                                    <button type="button" class="btn btn-primary" (click)="openLg16(content20)">
+                                                    <button type="button" class="btn btn-primary">
                                                         <i class="ri-add-line align-middle me-1 fw-medium"></i>Add</button>
                                                 </div>
                                             </div>
@@ -1871,6 +1871,7 @@
 </ng-template>
 
 <ng-template #content10 let-modal>
+    <form [formGroup]="productForm" (ngSubmit)="onProductSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Product</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -1882,7 +1883,8 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Code</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="code" placeholder="Enter Code">
+                            formControlName="code" placeholder="Enter Code" >
+                            
                     </div>
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Name</label>
@@ -1892,7 +1894,7 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Description</label>
                         <input type="text" class="form-control" id="projectAddress"
-                            formControlName="Description" placeholder="Enter Description">
+                            formControlName="description" placeholder="Enter Description">
                     </div>
                     <div class="row pt-2">
                         <div class="col-xl-">
@@ -1913,8 +1915,9 @@
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">Close</button>
         </div>
+    </form>
 </ng-template>
-
+<!-- 
 <ng-template #content11 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Panel</h6>
@@ -2650,4 +2653,4 @@
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
     </div> 
-</ng-template>
+</ng-template> -->
