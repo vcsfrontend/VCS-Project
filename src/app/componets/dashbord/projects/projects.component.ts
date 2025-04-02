@@ -368,7 +368,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }  
   
   
-  viewSpecificUrl() {
+  viewSpecificUrl(data:any) {
     const userDetails = JSON.parse(this.userDetails);
     const userEmail = userDetails?.email;
     this.designId = data?.designId ? data.designId : ''; 
