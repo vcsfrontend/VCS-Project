@@ -41,6 +41,7 @@ export class OptimizerComponent extends BaseComponent {
   productDisplayedColumn: string[] = [ 'slNo', 'code', 'name', 'description', 'status', 'edit', 'delete'];
   panelDisplayedColumn: string[] = [ 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'status', 'edit', 'copy', 'image', 'delete'];
   skinDisplayedColumn: string[] = [ 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'status', 'edit', 'copy', 'image', 'delete' ];
+  edgeBandDisplayedColumn: string[] = [ 'designcode','designNo', 'name', 'width', 'thickness', 'uom','type', 'make', 'finish', 'material', 'status', 'edit', 'copy', 'image', 'delete' ];
 
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
@@ -53,6 +54,7 @@ export class OptimizerComponent extends BaseComponent {
   productDataSource = new MatTableDataSource<any>();
   panelDataSource = new MatTableDataSource<any>();
   skinDataSource = new MatTableDataSource<any>();
+  edgeBandDataSource = new MatTableDataSource<any>();
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
   @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
@@ -323,6 +325,8 @@ export class OptimizerComponent extends BaseComponent {
     this.productDataSource.paginator = this.ProductPaginator;
     this.panelDataSource.paginator = this.PanelPaginator;
     this.skinDataSource.paginator = this.skinPaginator;
+    this.edgeBandDataSource.paginator = this.skinPaginator;
+
   }
 
   value(value: any) {
@@ -554,6 +558,33 @@ export class OptimizerComponent extends BaseComponent {
   }
   openLg15(content19: any) {
     this.modalService.open(content19, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg16(content20: any) {
+    this.modalService.open(content20, {size: 'lg',scrollable: true, centered: true, });
+  }
+  openLg17(content21: any) {
+    this.modalService.open(content21, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg18(content22: any) {
+    this.modalService.open(content22, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg19(content23: any) {
+    this.modalService.open(content23, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg20(content24: any) {
+    this.modalService.open(content24, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg21(content25: any) {
+    this.modalService.open(content25, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg22(content26: any) {
+    this.modalService.open(content26, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg23(content27: any) {
+    this.modalService.open(content27, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg24(content28: any) {
+    this.modalService.open(content28, {size: 'sm', scrollable: true, centered: true, });
   }
 
   downloadOptimizerFile() {
@@ -1370,6 +1401,10 @@ export class OptimizerComponent extends BaseComponent {
   skinApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.skinDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  edgeBandApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.edgeBandDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   getViewBulkPartsStock(data: any) {
