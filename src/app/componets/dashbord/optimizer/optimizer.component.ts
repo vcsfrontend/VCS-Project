@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { NgbNavModule, NgbDropdownModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedModule } from '../../../shared/common/sharedmodule';
@@ -18,6 +18,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-optimizer',
@@ -60,12 +61,14 @@ export class OptimizerComponent extends BaseComponent {
   @ViewChild('historyPaginator') historyPaginator!: MatPaginator;
   @ViewChild('bulkPartsStockPaginator') bulkPartsStockPaginator!: MatPaginator;
   @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
-  @ViewChild('productPaginator') ProductPaginator!: MatPaginator;
-  @ViewChild('panelPaginator') PanelPaginator!: MatPaginator;
+  @ViewChild('productPaginator') productPaginator!: MatPaginator;
+  @ViewChild('panelPaginator') panelPaginator!: MatPaginator;
   @ViewChild('skinPaginator') skinPaginator!: MatPaginator;
   @ViewChild('content4') content4: any; 
   @ViewChild('content8') content8: any; 
   @ViewChild('content9') content9: any; 
+
+  isProductTabActive = true;
 
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -128,7 +131,7 @@ export class OptimizerComponent extends BaseComponent {
   selectedSawRow: any = null;
   selectedPartsIdList: Set<any> = new Set<any>();
 
-  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas, private dialog: MatDialog) {
+  constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas, private dialog: MatDialog,private cdRef: ChangeDetectorRef) {
     super();
     const selectedSawRow = localStorage.getItem('selectedSawRow');
     this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
@@ -394,8 +397,8 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   productGetSNo(index: number): number {
-    if (this.ProductPaginator && this.ProductPaginator.pageIndex !== undefined && this.ProductPaginator.pageSize !== undefined) {
-      return this.ProductPaginator.pageIndex * this.ProductPaginator.pageSize + index + 1;
+    if (this.productPaginator && this.productPaginator.pageIndex !== undefined && this.productPaginator.pageSize !== undefined) {
+      return this.productPaginator.pageIndex * this.productPaginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
@@ -406,11 +409,20 @@ export class OptimizerComponent extends BaseComponent {
     this.historyDataSource.paginator = this.historyPaginator;
     this.partsDataSource.paginator = this.partsPaginator;
     this.bulkPartsStockDataSource.paginator = this.bulkPartsStockPaginator;
-    this.productDataSource.paginator = this.ProductPaginator;
-    this.panelDataSource.paginator = this.PanelPaginator;
+    this.productDataSource.paginator = this.productPaginator;
+    this.panelDataSource.paginator = this.panelPaginator;
     this.skinDataSource.paginator = this.skinPaginator;
     this.edgeBandDataSource.paginator = this.skinPaginator;
+    this.cdRef.detectChanges();
 
+  }
+
+  onTabChange(event: MatTabChangeEvent) {
+    console.log(event.index);
+    this.isProductTabActive = event.index === 0;
+    setTimeout(() => {
+      this.productDataSource.paginator = this.productPaginator;     
+    });
   }
 
   value(value: any) {
@@ -1680,8 +1692,8 @@ export class OptimizerComponent extends BaseComponent {
         if (!res?.length) {
           this.toastr.warning("No products found.");
         }
-        if (this.ProductPaginator) {
-          this.productDataSource.paginator = this.ProductPaginator;
+        if (this.productPaginator) {
+          this.productDataSource.paginator = this.productPaginator;
         }
       },
       error: (error) => {
@@ -1703,8 +1715,8 @@ export class OptimizerComponent extends BaseComponent {
         if (!res?.length) {
           this.toastr.warning("No products found.");
         }
-        if (this.PanelPaginator) {
-          this.panelDataSource.paginator = this.PanelPaginator;
+        if (this.panelPaginator) {
+          this.panelDataSource.paginator = this.panelPaginator;
         }
       },
       error: (error) => {

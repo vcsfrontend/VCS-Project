@@ -553,407 +553,7 @@
     </div> -->
 </div>
 
-<div class="col-xl-12">
-    <div class="card custom-card">
-        <div class="card-header">
-            <div class="card-title">
-                Materials
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-xl-2 border-end">
-                    <nav ngbNav #nav6="ngbNav" [activeId]="active1" orientation="vertical" class="nav nav-tabs flex-column nav-style-5" role="tablist">
-                        <ng-container ngbNavItem="Product">
-                            <a ngbNavLink class="nav-link m-1" data-bs-toggle="tab" role="tab"
-                            aria-current="page"  aria-selected="false"><i
-                                class="ri-home-smile-line align-middle me-2 d-inline-block"></i>Product</a>
-                                <ng-template ngbNavContent class="tab-content mt-xl-0">
-                                    <div class="card custom-card bg-light">
-                                        <div class="card-header justify-content-between">
-                                            <div class="card-title">
-                                                Product Data
-                                            </div>
-                                            <div class="d-flex flex-wrap gap-3">
-                                                <mat-form-field class="filters-field-1">
-                                                    <mat-label>Search Here</mat-label>
-                                                    <input matInput (keyup)="productApplyFilter($event)" #input>
-                                                </mat-form-field>
-                                                <button type="button" class="btn btn-primary"  (click)="openLg6(content10)">
-                                                    <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Product</button>
-                                            </div>
-                                
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <div class="mat-elevation-z8">
-                                                <div class="table-responsive">
-                                                    <table mat-table [dataSource]="productDataSource" class="mat-table">
-                                                        <ng-container matColumnDef="slNo">
-                                                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                            <td mat-cell *matCellDef="let element; let i = index"> {{productGetSNo(i)}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="code">
-                                                            <th mat-header-cell *matHeaderCellDef> code </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.code}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="name">
-                                                            <th mat-header-cell *matHeaderCellDef> name </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="description">
-                                                            <th mat-header-cell *matHeaderCellDef> description </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="isActive">
-                                                            <th mat-header-cell *matHeaderCellDef> Status </th>
-                                                            <td mat-cell *matCellDef="let element">
-                                                              <span [ngClass]="getStatusClass(element.isActive)">
-                                                                {{ getStatusText(element.isActive) }}
-                                                              </span>
-                                                            </td>
-                                                        </ng-container>                                                                                                                                                                           
-                                                        <ng-container matColumnDef="edit">
-                                                            <th mat-header-cell *matHeaderCellDef> edit </th>
-                                                            <td mat-cell *matCellDef="let element"> <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i class="ri-edit-line"></i></a> </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="delete">
-                                                            <th mat-header-cell *matHeaderCellDef> delete </th>
-                                                            <td mat-cell *matCellDef="let element">
-                                                                <a aria-label="anchor" href="javascript:void(0);" 
-                                                                    class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
-                                                                    (click)="deleteProduct(element)">
-                                                                    <i class="ri-delete-bin-line"></i>
-                                                                </a>
-                                                            </td>
-                                                        </ng-container>
-                                                        <tr mat-header-row *matHeaderRowDef="productDisplayedColumn"></tr>
-                                                        <tr mat-row *matRowDef="let row; columns: productDisplayedColumn">
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                                <mat-paginator #ProductPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                                                </mat-paginator>
-                                            </div>
-                                        </div>
-                                    </div>                   
-                                 </ng-template>
-                        </ng-container>
-                        <ng-container ngbNavItem="Panel">
-                            <a ngbNavLink class="nav-link m-1" data-bs-toggle="tab" role="tab"
-                            aria-current="page"  aria-selected="false"><i
-                                class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>Panel</a>
-                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                    <div class="card custom-card bg-light">
-                                        <div class="card-header justify-content-between">
-                                            <div class="card-title">
-                                                Panel Data
-                                            </div>
-                                            <div class="d-flex flex-wrap gap-3">
-                                                <mat-form-field class="filters-field-1">
-                                                    <mat-label>Search Here</mat-label>
-                                                    <input matInput (keyup)="panelApplyFilter($event)" #input>
-                                                </mat-form-field>
-                                                <button type="button" class="btn btn-primary" (click)="openLg6(content11)">
-                                                    <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Panel</button>
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <div class="mat-elevation-z8">
-                                                <div class="table-responsive">
-                                                    <table mat-table [dataSource]="panelDataSource" class="mat-table">
-                                                        <ng-container matColumnDef="slNo">
-                                                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="designNo">
-                                                            <th mat-header-cell *matHeaderCellDef> designNo </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="name">
-                                                            <th mat-header-cell *matHeaderCellDef> name </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="length">
-                                                            <th mat-header-cell *matHeaderCellDef> length </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.length}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="width">
-                                                            <th mat-header-cell *matHeaderCellDef> width </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.width}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="thickness">
-                                                            <th mat-header-cell *matHeaderCellDef> thickness </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="uom">
-                                                            <th mat-header-cell *matHeaderCellDef> uom </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="basePanel">
-                                                            <th mat-header-cell *matHeaderCellDef> basePanel </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.basePanel}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="make">
-                                                            <th mat-header-cell *matHeaderCellDef> make </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.make}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="grade">
-                                                            <th mat-header-cell *matHeaderCellDef> grade </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="hotpress">
-                                                            <th mat-header-cell *matHeaderCellDef> hotpress </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.hotpress}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="grains">
-                                                            <th mat-header-cell *matHeaderCellDef> grains </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="isActive">
-                                                            <th mat-header-cell *matHeaderCellDef> Status </th>
-                                                            <td mat-cell *matCellDef="let element">
-                                                              <span [ngClass]="getStatusClass(element.isActive)">
-                                                                {{ getStatusText(element.isActive) }}
-                                                              </span>
-                                                            </td>
-                                                        </ng-container>  
-                                                        <ng-container matColumnDef="edit">
-                                                            <th mat-header-cell *matHeaderCellDef> edit </th>
-                                                            <td mat-cell *matCellDef="let element"> <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"
-                                                                ><i class="ri-edit-line"></i></a> </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="copy">
-                                                            <th mat-header-cell *matHeaderCellDef> copy </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="image">
-                                                            <th mat-header-cell *matHeaderCellDef> image </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.image}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="delete">
-                                                            <th mat-header-cell *matHeaderCellDef> delete </th>
-                                                            <td mat-cell *matCellDef="let element">  <a aria-label="anchor" href="javascript:void(0);" 
-                                                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
-                                                                (click)="deletePannel(element)">
-                                                                <i class="ri-delete-bin-line"></i>
-                                                            </a> </td>
-                                                        </ng-container>
-                                                        <tr mat-header-row *matHeaderRowDef="panelDisplayedColumn"></tr>
-                                                        <tr mat-row *matRowDef="let row; columns: panelDisplayedColumn">
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                                <mat-paginator #PanelPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                                                </mat-paginator>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 </ng-template>
-                        </ng-container>
-                        <ng-container ngbNavItem="Skin">
-                            <a ngbNavLink class="nav-link m-1" data-bs-toggle="tab" role="tab"
-                            aria-current="page"  aria-selected="true"><i
-                                class="ri-bank-line me-2 align-middle d-inline-block"></i>Skin</a>
-                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0"> 
-                                    <div class="card custom-card bg-light">
-                                        <div class="card-header justify-content-between">
-                                            <div class="card-title">
-                                                Skin Data
-                                            </div>
-                                            <div class="d-flex flex-wrap gap-3">
-                                                <mat-form-field class="filters-field-1">
-                                                    <mat-label>Search Here</mat-label>
-                                                    <input matInput (keyup)="skinApplyFilter($event)" #input>
-                                                </mat-form-field>
-                                                <button type="button" class="btn btn-primary">
-                                                    <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Skin</button>
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-0">
-                                            <div class="mat-elevation-z8">
-                                                <div class="table-responsive">
-                                                    <table mat-table [dataSource]="skinDataSource" class="mat-table">
-                                                        <ng-container matColumnDef="designNo">
-                                                            <th mat-header-cell *matHeaderCellDef> designNo </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="name">
-                                                            <th mat-header-cell *matHeaderCellDef> name </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="length">
-                                                            <th mat-header-cell *matHeaderCellDef> length </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.length}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="width">
-                                                            <th mat-header-cell *matHeaderCellDef> width </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.width}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="thickness">
-                                                            <th mat-header-cell *matHeaderCellDef> thickness </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="uom">
-                                                            <th mat-header-cell *matHeaderCellDef> uom </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="basePanel">
-                                                            <th mat-header-cell *matHeaderCellDef> basePanel </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.basePanel}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="make">
-                                                            <th mat-header-cell *matHeaderCellDef> make </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.make}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="grade">
-                                                            <th mat-header-cell *matHeaderCellDef> grade </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="hotpress">
-                                                            <th mat-header-cell *matHeaderCellDef> hotpress </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.hotpress}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="grains">
-                                                            <th mat-header-cell *matHeaderCellDef> grains </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="status">
-                                                            <th mat-header-cell *matHeaderCellDef> status </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="edit">
-                                                            <th mat-header-cell *matHeaderCellDef> edit </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="copy">
-                                                            <th mat-header-cell *matHeaderCellDef> copy </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="image">
-                                                            <th mat-header-cell *matHeaderCellDef> image </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.image}} </td>
-                                                        </ng-container>
-                                                        <ng-container matColumnDef="delete">
-                                                            <th mat-header-cell *matHeaderCellDef> delete </th>
-                                                            <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
-                                                        </ng-container>
-                                                        <tr mat-header-row *matHeaderRowDef="skinDisplayedColumn"></tr>
-                                                        <tr mat-row *matRowDef="let row; columns: skinDisplayedColumn">
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                                <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                                                </mat-paginator>
-                                            </div>
-                                        </div>
-                                    </div>
-                                 </ng-template>
-                        </ng-container>
-                        <ng-container ngbNavItem="Edgeband">
-                            <a ngbNavLink class="nav-link m-1" data-bs-toggle="tab" role="tab"
-                            aria-current="page"  aria-selected="false"><i
-                                    class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Edgeband</a>
-                                    <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0"> 
-                                        <div class="card custom-card bg-light">
-                                            <div class="card-header justify-content-between d-flex">
-                                                <div class="card-title">
-                                                    Edgeband Data
-                                                </div>
-                                                <div class="d-flex flex-wrap gap-2">
-                                                    <mat-form-field class="filters-field-1">
-                                                        <mat-label>Search Here</mat-label>
-                                                        <input matInput (keyup)="skinApplyFilter($event)" #input>
-                                                    </mat-form-field>
-                                                    <button type="button" class="btn btn-primary">
-                                                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body p-0">
-                                                <div class="mat-elevation-z8">
-                                                    <div class="table-responsive">
-                                                        <table mat-table [dataSource]="edgeBandDataSource" class="mat-table">
-                                                            <ng-container matColumnDef="designcode">
-                                                                <th mat-header-cell *matHeaderCellDef> designcode </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.designcode}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="designNo">
-                                                                <th mat-header-cell *matHeaderCellDef> designNo </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="name">
-                                                                <th mat-header-cell *matHeaderCellDef> name </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="width">
-                                                                <th mat-header-cell *matHeaderCellDef> width </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.width}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="thickness">
-                                                                <th mat-header-cell *matHeaderCellDef> thickness </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="uom">
-                                                                <th mat-header-cell *matHeaderCellDef> uom </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="type">
-                                                                <th mat-header-cell *matHeaderCellDef> type </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="make">
-                                                                <th mat-header-cell *matHeaderCellDef> make </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.make}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="finish">
-                                                                <th mat-header-cell *matHeaderCellDef> finish </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.finish}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="material">
-                                                                <th mat-header-cell *matHeaderCellDef> material </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.material}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="status">
-                                                                <th mat-header-cell *matHeaderCellDef> status </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="edit">
-                                                                <th mat-header-cell *matHeaderCellDef> edit </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="copy">
-                                                                <th mat-header-cell *matHeaderCellDef> copy </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="image">
-                                                                <th mat-header-cell *matHeaderCellDef> image </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.image}} </td>
-                                                            </ng-container>
-                                                            <ng-container matColumnDef="delete">
-                                                                <th mat-header-cell *matHeaderCellDef> delete </th>
-                                                                <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
-                                                            </ng-container>
-                                                            <tr mat-header-row *matHeaderRowDef="edgeBandDisplayedColumn"></tr>
-                                                            <tr mat-row *matRowDef="let row; columns: edgeBandDisplayedColumn">
-                                                            </tr>
-                                                        </table>
-                                                    </div>
-                                                    <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                                                    </mat-paginator>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </ng-template>
-                        </ng-container>
-                    </nav>
-                </div>
-                <div class="col-xl-10 ">
-                    <div [ngbNavOutlet]="nav6" class=""> 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 <ng-template #content let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Parts Bulk Upload</strong></h5>
@@ -1322,7 +922,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="submitStockForm(modal)" [disabled]="stockSpinner">Submit</button>
+            <button type="submit" class="btn btn-primary" (click)="submitStockForm(modal)"
+                [disabled]="stockSpinner">Submit</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close">Cancel</button>
         </div>
@@ -1560,7 +1161,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="submitPartsForm(modal)" [disabled]="partSpinner">Submit</button>
+            <button type="submit" class="btn btn-primary" (click)="submitPartsForm(modal)"
+                [disabled]="partSpinner">Submit</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close">Cancel</button>
         </div>
@@ -1728,7 +1330,8 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" (click)="submitSawForm(modal)" [disabled]="sawSpinner">Submit</button>
+            <button type="submit" class="btn btn-primary" (click)="submitSawForm(modal)"
+                [disabled]="sawSpinner">Submit</button>
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close">Cancel</button>
         </div>
@@ -1763,25 +1366,29 @@
                                     <th class="crm-table-th2">OrientationLock</th>
                                     <th class="crm-table-th2">Cost</th>
                                     <th class="crm-table-th2">
-                                    <tr>
-                                        <th colspan="3"
-                                            style="padding-left: 0px;  font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500; text-align: center;">
-                                            Trim</th>
-                                    </tr>
-                                    <tr>
-                                        <th style="padding-left: 0px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500; text-align: center;">
-                                            X1
-                                        </th>
-                                        <th style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
-                                            X2
-                                        </th>
-                                        <th style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
-                                            Y1
-                                        </th>
-                                        <th style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
-                                            Y2
-                                        </th>
-                                    </tr>
+                                <tr>
+                                    <th colspan="3"
+                                        style="padding-left: 0px;  font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500; text-align: center;">
+                                        Trim</th>
+                                </tr>
+                                <tr>
+                                    <th
+                                        style="padding-left: 0px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500; text-align: center;">
+                                        X1
+                                    </th>
+                                    <th
+                                        style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
+                                        X2
+                                    </th>
+                                    <th
+                                        style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
+                                        Y1
+                                    </th>
+                                    <th
+                                        style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
+                                        Y2
+                                    </th>
+                                </tr>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1796,12 +1403,12 @@
                                     <td>{{ part.orientationLock }}</td>
                                     <td>{{ part.cost }}</td>
                                     <td>
-                                      <span class="px-2">{{ part.x1 }}</span>
-                                      <span class="px-2">{{ part.x2 }}</span>
-                                      <span class="px-2">{{ part.y1 }}</span>
-                                      <span class="px-2">{{ part.y2 }}</span>
+                                        <span class="px-2">{{ part.x1 }}</span>
+                                        <span class="px-2">{{ part.x2 }}</span>
+                                        <span class="px-2">{{ part.y1 }}</span>
+                                        <span class="px-2">{{ part.y2 }}</span>
                                     </td>
-                                  </tr>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -1841,25 +1448,29 @@
                                     <th class="crm-table-th2">Grain</th>
                                     <th class="crm-table-th2">Cost</th>
                                     <th class="crm-table-th2">
-                                    <tr>
-                                        <th colspan="3"
-                                            style="padding-left: 0px;  font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500; text-align: center;">
-                                            Trim</th>
-                                    </tr>
-                                    <tr>
-                                        <th style="padding-left: 0px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500; text-align: center;">
-                                            X1
-                                        </th>
-                                        <th style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
-                                            X2
-                                        </th>
-                                        <th style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
-                                            Y1
-                                        </th>
-                                        <th style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
-                                            Y2
-                                        </th>
-                                    </tr>
+                                <tr>
+                                    <th colspan="3"
+                                        style="padding-left: 0px;  font-size: 14px; font-family:  Roboto, sans-serif; font-weight: 500; text-align: center;">
+                                        Trim</th>
+                                </tr>
+                                <tr>
+                                    <th
+                                        style="padding-left: 0px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500; text-align: center;">
+                                        X1
+                                    </th>
+                                    <th
+                                        style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
+                                        X2
+                                    </th>
+                                    <th
+                                        style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
+                                        Y1
+                                    </th>
+                                    <th
+                                        style="padding-left: 20px; font-size: 14px; font-family: Roboto, sans-serif; font-weight: 500;">
+                                        Y2
+                                    </th>
+                                </tr>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1874,12 +1485,12 @@
                                     <td>{{ start.grain }}</td>
                                     <td>{{ start.cost }}</td>
                                     <td>
-                                      <span class="px-2">{{ start.x1 }}</span>
-                                      <span class="px-2">{{ start.x2 }}</span>
-                                      <span class="px-2">{{ start.y1 }}</span>
-                                      <span class="px-2">{{ start.y2 }}</span>
+                                        <span class="px-2">{{ start.x1 }}</span>
+                                        <span class="px-2">{{ start.x2 }}</span>
+                                        <span class="px-2">{{ start.y1 }}</span>
+                                        <span class="px-2">{{ start.y2 }}</span>
                                     </td>
-                                  </tr>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -1897,33 +1508,33 @@
     <form [formGroup]="productForm" (ngSubmit)="onProductSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Product</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="col-xl-12">
                 <div class="row gy-2">
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Code</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="code" placeholder="Enter Code" >
-                            
+                        <input type="text" class="form-control" id="projectAddress" formControlName="code"
+                            placeholder="Enter Code">
+
                     </div>
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="name" placeholder="Enter Discount">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="name"
+                            placeholder="Enter Discount">
                     </div>
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Description</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="description" placeholder="Enter Description">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="description"
+                            placeholder="Enter Description">
                     </div>
                     <div class="row pt-2">
                         <div class="col-xl-">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                                formControlName="isActive">
+                                    formControlName="isActive">
                                 <label class="form-check-label" for="checkebox-sm">
                                     is Active
                                 </label>
@@ -1944,116 +1555,122 @@
 
 <ng-template #content11 let-modal>
     <form [formGroup]="panelForm" (ngSubmit)="onPanelSubmit(modal)">
-    <div class="modal-header justify-content-center">
-        <h6 class="modal-title" id="staticBackdropLabel3">Panel</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
-        <div class="col-xl-12">
-            <div class="row gy-2">
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Design No</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="designNo" placeholder="Enter Design No">
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="name" placeholder="Enter Discount">
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Pressing</label>
-                    <ng-select formControlName="pressing" [items]="PanelPressing" bindLabel="name" bindValue="name"
-                    placeholder="Select Grains">
-                </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress">Base Panel <span class="badge bg-info-transparent cu" (click)="openLg9(content13)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                            <i class="ri-delete-bin-line" (click)="openLg8(content12)"></i></a></label>
-                        <ng-select formControlName="basePanel" [items]="basePanel" 
-                            bindLabel="name" bindValue="name" placeholder="Select Panel">
-                        </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Make <span class="badge bg-info-transparent cu" (click)="openLg10(content14)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                            <i class="ri-delete-bin-line" (click)="openLg11(content15)"></i></a></label>
-                            <ng-select formControlName="make" [items]="makePanel" 
-                            bindLabel="name" bindValue="name" placeholder="Select Panel">
-                            </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Grade <span class="badge bg-info-transparent cu" (click)="openLg12(content16)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                            <i class="ri-delete-bin-line" (click)="openLg13(content17)"></i></a></label>
-                            <ng-select formControlName="grade" [items]="gradePanel" 
-                            bindLabel="name" bindValue="name" placeholder="Select Panel">
-                        </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Length(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="length" placeholder="Enter Length(mm)">
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Width(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="width" placeholder="Enter Width(mm)">
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Thickness(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="thickness" placeholder="Enter *Thickness(mm)">
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Grains</label>
-                    <ng-select formControlName="grains" [items]="PanelGrains" bindLabel="name" bindValue="name"
-                        placeholder="Select Grains">
-                    </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Image</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="image" placeholder="Enter *Thickness(mm)">
-                </div>
-                <div class="row pt-2">
-                    <div class="col-xl-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                            formControlName="isActive">
-                            <label class="form-check-label" for="checkebox-sm">
-                                Is Active
-                            </label>
-                        </div>
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Panel</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Design No</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="designNo"
+                            placeholder="Enter Design No">
                     </div>
-                    <div class="col-xl-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                            formControlName="isColdPress">
-                            <label class="form-check-label" for="checkebox-sm">
-                                Is Coldpress
-                            </label>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="name"
+                            placeholder="Enter Discount">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Pressing</label>
+                        <ng-select formControlName="pressing" [items]="PanelPressing" bindLabel="name" bindValue="name"
+                            placeholder="Select Grains">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress">Base Panel <span class="badge bg-info-transparent cu"
+                                (click)="openLg9(content13)">Add</span>
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                                <i class="ri-delete-bin-line" (click)="openLg8(content12)"></i></a></label>
+                        <ng-select formControlName="basePanel" [items]="basePanel" bindLabel="name" bindValue="name"
+                            placeholder="Select Panel">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Make <span class="badge bg-info-transparent cu"
+                                (click)="openLg10(content14)">Add</span>
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                                <i class="ri-delete-bin-line" (click)="openLg11(content15)"></i></a></label>
+                        <ng-select formControlName="make" [items]="makePanel" bindLabel="name" bindValue="name"
+                            placeholder="Select Panel">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Grade <span class="badge bg-info-transparent cu"
+                                (click)="openLg12(content16)">Add</span>
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                                <i class="ri-delete-bin-line" (click)="openLg13(content17)"></i></a></label>
+                        <ng-select formControlName="grade" [items]="gradePanel" bindLabel="name" bindValue="name"
+                            placeholder="Select Panel">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Length(mm)</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="length"
+                            placeholder="Enter Length(mm)">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Width(mm)</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="width"
+                            placeholder="Enter Width(mm)">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Thickness(mm)</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="thickness"
+                            placeholder="Enter *Thickness(mm)">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Grains</label>
+                        <ng-select formControlName="grains" [items]="PanelGrains" bindLabel="name" bindValue="name"
+                            placeholder="Select Grains">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Image</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="image"
+                            placeholder="Enter *Thickness(mm)">
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                    formControlName="isActive">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Is Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                    formControlName="isColdPress">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Is Coldpress
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary"> Submit</button>
-        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-            data-bs-dismiss="modal">Close</button>
-    </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
     </form>
 </ng-template>
 
 <ng-template #content12 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Delete Base Panel</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="card custom-card">
@@ -2072,10 +1689,10 @@
                                 <td class="text-center">{{ i + 1 }}</td>
                                 <td>{{ element.name }}</td>
                                 <td><a aria-label="anchor" href="javascript:void(0);"
-                                    class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
-                                    (click)="deleteBasePanel(element, modal)">
-                                    <i class="ri-delete-bin-line"></i>
-                                  </a></td>
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                        (click)="deleteBasePanel(element, modal)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -2087,28 +1704,28 @@
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
     </div>
-    
+
 </ng-template>
 
 <ng-template #content13 let-modal>
     <form [formGroup]="basePanelForm" (ngSubmit)="onBasePanelSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Add Base Panel</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="col-xl-12">
                 <div class="row gy-2">
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Base Panel Name</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="basePanleName" placeholder="Enter Base Panel Name">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="basePanleName"
+                            placeholder="Enter Base Panel Name">
                     </div>
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Base Panel Abbreviation</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="abbr" placeholder="Enter base Panel Abbreviation">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="abbr"
+                            placeholder="Enter base Panel Abbreviation">
                     </div>
                 </div>
             </div>
@@ -2125,21 +1742,21 @@
     <form [formGroup]="makeForm" (ngSubmit)="onMakeSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Add Make</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="col-xl-12">
                 <div class="row gy-2">
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Make Panel Name</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="makeName" placeholder="Enter Make Panel Name">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="makeName"
+                            placeholder="Enter Make Panel Name">
                     </div>
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Make Panel Abbreviation</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="abbr" placeholder="Enter Make Panel Abbreviation">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="abbr"
+                            placeholder="Enter Make Panel Abbreviation">
                     </div>
                 </div>
             </div>
@@ -2156,8 +1773,8 @@
 <ng-template #content15 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Delete Make</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="card custom-card">
@@ -2176,10 +1793,10 @@
                                 <td class="text-center">{{ i + 1 }}</td>
                                 <td>{{ element.name }}</td>
                                 <td><a aria-label="anchor" href="javascript:void(0);"
-                                    class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
-                                    (click)="deleteMake(element, modal)">
-                                    <i class="ri-delete-bin-line"></i>
-                                  </a></td>
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                        (click)="deleteMake(element, modal)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -2194,24 +1811,24 @@
 </ng-template>
 
 <ng-template #content16 let-modal>
-    <form [formGroup]="gradeForm" (ngSubmit)="onGradeSubmit(modal)">  
+    <form [formGroup]="gradeForm" (ngSubmit)="onGradeSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Add Grade</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="col-xl-12">
                 <div class="row gy-2">
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Grade Panel Name</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="gradeName" placeholder="Enter Grade Panel Name">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="gradeName"
+                            placeholder="Enter Grade Panel Name">
                     </div>
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Grade Panel Abbreviation</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="abbr" placeholder="Enter Grade Panel Abbreviation">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="abbr"
+                            placeholder="Enter Grade Panel Abbreviation">
                     </div>
                 </div>
             </div>
@@ -2228,8 +1845,8 @@
 <ng-template #content17 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Delete Grade</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="card custom-card">
@@ -2248,10 +1865,10 @@
                                 <td class="text-center">{{ i + 1 }}</td>
                                 <td>{{ element.name }}</td>
                                 <td><a aria-label="anchor" href="javascript:void(0);"
-                                    class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
-                                    (click)="deletePannelGrade(element, modal)">
-                                    <i class="ri-delete-bin-line"></i>
-                                  </a></td>
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                        (click)="deletePannelGrade(element, modal)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a></td>
                             </tr>
                         </tbody>
 
@@ -2270,57 +1887,63 @@
 <ng-template #content18 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Skin</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Design No</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="designNo" placeholder="Enter Design No">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="designNo"
+                        placeholder="Enter Design No">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="name" placeholder="Enter Discount">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="name"
+                        placeholder="Enter Discount">
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress">Brand<span class="badge bg-info-transparent cu" (click)="openLg9(content13)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                    <label for="projectAddress">Brand<span class="badge bg-info-transparent cu"
+                            (click)="openLg9(content13)">Add</span>
+                        <a aria-label="anchor" href="javascript:void(0);"
+                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg8(content12)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="Brand" placeholder="Enter Brand">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="Brand"
+                        placeholder="Enter Brand">
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Skin Type <span class="badge bg-info-transparent cu" (click)="openLg10(content14)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                    <label for="projectAddress" class="form-label">Skin Type <span class="badge bg-info-transparent cu"
+                            (click)="openLg10(content14)">Add</span>
+                        <a aria-label="anchor" href="javascript:void(0);"
+                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg11(content15)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="skinType" placeholder="Enter Skin Type">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="skinType"
+                        placeholder="Enter Skin Type">
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Grade<span class="badge bg-info-transparent cu" (click)="openLg12(content16)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                    <label for="projectAddress" class="form-label">Grade<span class="badge bg-info-transparent cu"
+                            (click)="openLg12(content16)">Add</span>
+                        <a aria-label="anchor" href="javascript:void(0);"
+                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg13(content17)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="grade" placeholder="Enter Grade">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="grade"
+                        placeholder="Enter Grade">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Length(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="length" placeholder="Enter Length(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="length"
+                        placeholder="Enter Length(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Width(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="width" placeholder="Enter Width(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="width"
+                        placeholder="Enter Width(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Thickness(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="thickness" placeholder="Enter *Thickness(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="thickness"
+                        placeholder="Enter *Thickness(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Grains</label>
@@ -2332,7 +1955,7 @@
                     <div class="col-xl-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                            formControlName="isActive">
+                                formControlName="isActive">
                             <label class="form-check-label" for="checkebox-sm">
                                 Is Active
                             </label>
@@ -2341,7 +1964,7 @@
                     <div class="col-xl-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                            formControlName="isColdpress">
+                                formControlName="isColdpress">
                             <label class="form-check-label" for="checkebox-sm">
                                 Is Coldpress
                             </label>
@@ -2361,79 +1984,87 @@
 <ng-template #content20 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Add Edgeband</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Design No</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="designNo" placeholder="Enter Design No">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="designNo"
+                        placeholder="Enter Design No">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Design Code</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="designCode" placeholder="Enter Design No">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="designCode"
+                        placeholder="Enter Design No">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="name" placeholder="Enter Discount">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="name"
+                        placeholder="Enter Discount">
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress">Make<span class="badge bg-info-transparent cu" (click)="openLg17(content21)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                    <label for="projectAddress">Make<span class="badge bg-info-transparent cu"
+                            (click)="openLg17(content21)">Add</span>
+                        <a aria-label="anchor" href="javascript:void(0);"
+                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg18(content22)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="make" placeholder="Enter Brand">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="make"
+                        placeholder="Enter Brand">
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Material <span class="badge bg-info-transparent cu" (click)="openLg19(content23)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                    <label for="projectAddress" class="form-label">Material <span class="badge bg-info-transparent cu"
+                            (click)="openLg19(content23)">Add</span>
+                        <a aria-label="anchor" href="javascript:void(0);"
+                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg20(content24)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="material" placeholder="Enter Skin Type">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="material"
+                        placeholder="Enter Skin Type">
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Type<span class="badge bg-info-transparent cu" (click)="openLg21(content25)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                    <label for="projectAddress" class="form-label">Type<span class="badge bg-info-transparent cu"
+                            (click)="openLg21(content25)">Add</span>
+                        <a aria-label="anchor" href="javascript:void(0);"
+                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg22(content26)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="type" placeholder="Enter Grade">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="type"
+                        placeholder="Enter Grade">
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Finish<span class="badge bg-info-transparent cu" (click)="openLg23(content27)">Add</span>
-                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                    <label for="projectAddress" class="form-label">Finish<span class="badge bg-info-transparent cu"
+                            (click)="openLg23(content27)">Add</span>
+                        <a aria-label="anchor" href="javascript:void(0);"
+                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg24(content28)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="Finish" placeholder="Enter Grade">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="Finish"
+                        placeholder="Enter Grade">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Width(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="width" placeholder="Enter Width(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="width"
+                        placeholder="Enter Width(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Thickness(mm)</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="thickness" placeholder="Enter *Thickness(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="thickness"
+                        placeholder="Enter *Thickness(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">HSN Code</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="hsnCode" placeholder="Enter *Thickness(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="hsnCode"
+                        placeholder="Enter *Thickness(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Internal Code</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="internalCode" placeholder="Enter *Thickness(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="internalCode"
+                        placeholder="Enter *Thickness(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Premilling</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="premilling" placeholder="Enter *Thickness(mm)">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="premilling"
+                        placeholder="Enter *Thickness(mm)">
                 </div>
                 <div class="col-xl-6">
                     <label for="fileUpload" class="form-label">Upload File</label>
@@ -2443,7 +2074,7 @@
                     <div class="col-xl-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                            formControlName="isActive">
+                                formControlName="isActive">
                             <label class="form-check-label" for="checkebox-sm">
                                 Is Active
                             </label>
@@ -2462,16 +2093,16 @@
 <ng-template #content21 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Make</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
                 <div class="col-xl-12">
                     <label for="projectAddress" class="form-label">Make Name</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="maeName" placeholder="Enter Base Panel Name">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="maeName"
+                        placeholder="Enter Base Panel Name">
                 </div>
             </div>
         </div>
@@ -2480,13 +2111,13 @@
         <button type="submit" class="btn btn-primary"> Save</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
-    </div> 
+    </div>
 </ng-template>
 <ng-template #content22 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Delete Finish</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="card custom-card">
@@ -2504,9 +2135,10 @@
                             <tr>
                                 <td class="text-center">1</td>
                                 <td>07MM</td>
-                                <td><a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                    <i class="ri-delete-bin-line"></i></a></td>
-                              </tr>
+                                <td><a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                                        <i class="ri-delete-bin-line"></i></a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -2522,16 +2154,16 @@
 <ng-template #content23 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Material</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
                 <div class="col-xl-12">
                     <label for="projectAddress" class="form-label">Material Name</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="materialName" placeholder="Enter Base Panel Name">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="materialName"
+                        placeholder="Enter Base Panel Name">
                 </div>
             </div>
         </div>
@@ -2540,13 +2172,13 @@
         <button type="submit" class="btn btn-primary"> Save</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
-    </div> 
+    </div>
 </ng-template>
 <ng-template #content24 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Delete Brand</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="card custom-card">
@@ -2564,9 +2196,10 @@
                             <tr>
                                 <td class="text-center">1</td>
                                 <td>07MM</td>
-                                <td><a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                    <i class="ri-delete-bin-line"></i></a></td>
-                              </tr>
+                                <td><a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                                        <i class="ri-delete-bin-line"></i></a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -2582,16 +2215,16 @@
 <ng-template #content25 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Type</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
                 <div class="col-xl-12">
                     <label for="projectAddress" class="form-label">Type Name</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="typename" placeholder="Enter Base Panel Name">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="typename"
+                        placeholder="Enter Base Panel Name">
                 </div>
             </div>
         </div>
@@ -2600,13 +2233,13 @@
         <button type="submit" class="btn btn-primary"> Save</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
-    </div> 
+    </div>
 </ng-template>
 <ng-template #content26 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Delete Skin Type</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="card custom-card">
@@ -2624,9 +2257,10 @@
                             <tr>
                                 <td class="text-center">1</td>
                                 <td>07MM</td>
-                                <td><a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                    <i class="ri-delete-bin-line"></i></a></td>
-                              </tr>
+                                <td><a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                                        <i class="ri-delete-bin-line"></i></a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -2642,8 +2276,8 @@
 <ng-template #content28 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Delete Skin Type</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="card custom-card">
@@ -2661,9 +2295,10 @@
                             <tr>
                                 <td class="text-center">1</td>
                                 <td>07MM</td>
-                                <td><a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                    <i class="ri-delete-bin-line"></i></a></td>
-                              </tr>
+                                <td><a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
+                                        <i class="ri-delete-bin-line"></i></a></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -2679,16 +2314,16 @@
 <ng-template #content27 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Finish</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
                 <div class="col-xl-12">
                     <label for="projectAddress" class="form-label">Finish Name</label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="typename" placeholder="Enter Base Panel Name">
+                    <input type="text" class="form-control" id="projectAddress" formControlName="typename"
+                        placeholder="Enter Base Panel Name">
                 </div>
             </div>
         </div>
@@ -2697,5 +2332,399 @@
         <button type="submit" class="btn btn-primary"> Save</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
-    </div> 
-</ng-template> 
+    </div>
+</ng-template>
+
+<mat-tab-group (selectedTabChange)="onTabChange($event)">
+    <!-- Product Tab -->
+    <mat-tab label="Products">
+        <div *ngIf="isProductTabActive">
+
+            <div class="card custom-card bg-light">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                        Product Data
+                    </div>
+                    <div class="d-flex flex-wrap gap-3">
+                        <mat-form-field class="filters-field-1">
+                            <mat-label>Search Here</mat-label>
+                            <input matInput (keyup)="productApplyFilter($event)" #input>
+                        </mat-form-field>
+                        <button type="button" class="btn btn-primary" (click)="openLg6(content10)">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Add
+                            Product</button>
+                    </div>
+
+                </div>
+                <div class="card-body p-0">
+                    <div class="mat-elevation-z8">
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="productDataSource" class="mat-table">
+                                <ng-container matColumnDef="slNo">
+                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                    <td mat-cell *matCellDef="let element; let i = index">
+                                        {{productGetSNo(i)}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="code">
+                                    <th mat-header-cell *matHeaderCellDef> code </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="description">
+                                    <th mat-header-cell *matHeaderCellDef> description </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.description}}
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="isActive">
+                                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <span [ngClass]="getStatusClass(element.isActive)">
+                                            {{ getStatusText(element.isActive) }}
+                                        </span>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="edit">
+                                    <th mat-header-cell *matHeaderCellDef> edit </th>
+                                    <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                            href="javascript:void(0);"
+                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                                class="ri-edit-line"></i></a> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef> delete </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <a aria-label="anchor" href="javascript:void(0);"
+                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
+                                            (click)="deleteProduct(element)">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="productDisplayedColumn"></tr>
+                                <tr mat-row *matRowDef="let row; columns: productDisplayedColumn">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #productPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </mat-tab>
+    <!-- Panel Tab -->
+    <mat-tab label="Panel">
+        <div class="card custom-card bg-light">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    Panel Data
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <mat-form-field class="filters-field-1">
+                        <mat-label>Search Here</mat-label>
+                        <input matInput (keyup)="panelApplyFilter($event)" #input>
+                    </mat-form-field>
+                    <button type="button" class="btn btn-primary" (click)="openLg6(content11)">
+                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Panel</button>
+                </div>
+
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="panelDataSource" class="mat-table">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="designNo">
+                                <th mat-header-cell *matHeaderCellDef> designNo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="length">
+                                <th mat-header-cell *matHeaderCellDef> length </th>
+                                <td mat-cell *matCellDef="let element"> {{element.length}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="width">
+                                <th mat-header-cell *matHeaderCellDef> width </th>
+                                <td mat-cell *matCellDef="let element"> {{element.width}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="thickness">
+                                <th mat-header-cell *matHeaderCellDef> thickness </th>
+                                <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="uom">
+                                <th mat-header-cell *matHeaderCellDef> uom </th>
+                                <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="basePanel">
+                                <th mat-header-cell *matHeaderCellDef> basePanel </th>
+                                <td mat-cell *matCellDef="let element"> {{element.basePanel}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="make">
+                                <th mat-header-cell *matHeaderCellDef> make </th>
+                                <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="grade">
+                                <th mat-header-cell *matHeaderCellDef> grade </th>
+                                <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="hotpress">
+                                <th mat-header-cell *matHeaderCellDef> hotpress </th>
+                                <td mat-cell *matCellDef="let element"> {{element.hotpress}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="grains">
+                                <th mat-header-cell *matHeaderCellDef> grains </th>
+                                <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="isActive">
+                                <th mat-header-cell *matHeaderCellDef> Status </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <span [ngClass]="getStatusClass(element.isActive)">
+                                        {{ getStatusText(element.isActive) }}
+                                    </span>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> edit </th>
+                                <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                        href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                            class="ri-edit-line"></i></a> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="copy">
+                                <th mat-header-cell *matHeaderCellDef> copy </th>
+                                <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="image">
+                                <th mat-header-cell *matHeaderCellDef> image </th>
+                                <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="delete">
+                                <th mat-header-cell *matHeaderCellDef> delete </th>
+                                <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                        href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
+                                        (click)="deletePannel(element)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a> </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="panelDisplayedColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: panelDisplayedColumn">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #panelPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+
+
+    </mat-tab>
+
+    <!-- Skin Tab -->
+    <mat-tab label="Skin">
+        <div class="card custom-card bg-light">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    Skin Data
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <mat-form-field class="filters-field-1">
+                        <mat-label>Search Here</mat-label>
+                        <input matInput (keyup)="skinApplyFilter($event)" #input>
+                    </mat-form-field>
+                    <button type="button" class="btn btn-primary">
+                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Skin</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="skinDataSource" class="mat-table">
+                            <ng-container matColumnDef="designNo">
+                                <th mat-header-cell *matHeaderCellDef> designNo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.designNo}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="length">
+                                <th mat-header-cell *matHeaderCellDef> length </th>
+                                <td mat-cell *matCellDef="let element"> {{element.length}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="width">
+                                <th mat-header-cell *matHeaderCellDef> width </th>
+                                <td mat-cell *matCellDef="let element"> {{element.width}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="thickness">
+                                <th mat-header-cell *matHeaderCellDef> thickness </th>
+                                <td mat-cell *matCellDef="let element"> {{element.thickness}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="uom">
+                                <th mat-header-cell *matHeaderCellDef> uom </th>
+                                <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="basePanel">
+                                <th mat-header-cell *matHeaderCellDef> basePanel </th>
+                                <td mat-cell *matCellDef="let element"> {{element.basePanel}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="make">
+                                <th mat-header-cell *matHeaderCellDef> make </th>
+                                <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="grade">
+                                <th mat-header-cell *matHeaderCellDef> grade </th>
+                                <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="hotpress">
+                                <th mat-header-cell *matHeaderCellDef> hotpress </th>
+                                <td mat-cell *matCellDef="let element"> {{element.hotpress}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="grains">
+                                <th mat-header-cell *matHeaderCellDef> grains </th>
+                                <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef> status </th>
+                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> edit </th>
+                                <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="copy">
+                                <th mat-header-cell *matHeaderCellDef> copy </th>
+                                <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="image">
+                                <th mat-header-cell *matHeaderCellDef> image </th>
+                                <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="delete">
+                                <th mat-header-cell *matHeaderCellDef> delete </th>
+                                <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="skinDisplayedColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: skinDisplayedColumn">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <!-- Edgeband Tab -->
+    <mat-tab label="Edgeband">
+        <div class="card custom-card bg-light">
+            <div class="card-header justify-content-between d-flex">
+                <div class="card-title">
+                    Edgeband Data
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <mat-form-field class="filters-field-1">
+                        <mat-label>Search Here</mat-label>
+                        <input matInput (keyup)="skinApplyFilter($event)" #input>
+                    </mat-form-field>
+                    <button type="button" class="btn btn-primary">
+                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="edgeBandDataSource" class="mat-table">
+                            <ng-container matColumnDef="designcode">
+                                <th mat-header-cell *matHeaderCellDef> designcode </th>
+                                <td mat-cell *matCellDef="let element"> {{element.designcode}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="designNo">
+                                <th mat-header-cell *matHeaderCellDef> designNo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.designNo}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef> name </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="width">
+                                <th mat-header-cell *matHeaderCellDef> width </th>
+                                <td mat-cell *matCellDef="let element"> {{element.width}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="thickness">
+                                <th mat-header-cell *matHeaderCellDef> thickness </th>
+                                <td mat-cell *matCellDef="let element"> {{element.thickness}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="uom">
+                                <th mat-header-cell *matHeaderCellDef> uom </th>
+                                <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef> type </th>
+                                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="make">
+                                <th mat-header-cell *matHeaderCellDef> make </th>
+                                <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="finish">
+                                <th mat-header-cell *matHeaderCellDef> finish </th>
+                                <td mat-cell *matCellDef="let element"> {{element.finish}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="material">
+                                <th mat-header-cell *matHeaderCellDef> material </th>
+                                <td mat-cell *matCellDef="let element"> {{element.material}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef> status </th>
+                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> edit </th>
+                                <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="copy">
+                                <th mat-header-cell *matHeaderCellDef> copy </th>
+                                <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="image">
+                                <th mat-header-cell *matHeaderCellDef> image </th>
+                                <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="delete">
+                                <th mat-header-cell *matHeaderCellDef> delete </th>
+                                <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="edgeBandDisplayedColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: edgeBandDisplayedColumn">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
