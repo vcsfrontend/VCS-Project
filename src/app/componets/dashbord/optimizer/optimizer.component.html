@@ -1980,14 +1980,15 @@
                             <i class="ri-delete-bin-line" (click)="openLg11(content15)"></i></a></label>
                             <ng-select formControlName="make" [items]="makePanel" 
                             bindLabel="name" bindValue="name" placeholder="Select Panel">
-                        </ng-select>
+                            </ng-select>
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Grade <span class="badge bg-info-transparent cu" (click)="openLg12(content16)">Add</span>
                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                             <i class="ri-delete-bin-line" (click)="openLg13(content17)"></i></a></label>
-                    <input type="text" class="form-control" id="projectAddress"
-                        formControlName="grade" placeholder="Enter Grade">
+                            <ng-select formControlName="grade" [items]="gradePanel" 
+                            bindLabel="name" bindValue="name" placeholder="Select Panel">
+                        </ng-select>
                 </div>
                 <div class="col-xl-6">
                     <label for="projectAddress" class="form-label">Length(mm)</label>
