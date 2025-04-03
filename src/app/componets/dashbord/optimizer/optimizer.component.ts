@@ -567,8 +567,6 @@ export class OptimizerComponent extends BaseComponent {
 
   optimizerFormSubmit() {
     this.optimizerFormSubmitted = true;
-    console.log('Form Data:', this.optimizerForm.value);
-
     if (this.optimizerForm.valid) {
       this.switchService.optimizeImportData(this.optimizerForm.value).subscribe({
         next: (res: any) => {
@@ -587,7 +585,6 @@ export class OptimizerComponent extends BaseComponent {
           }
         }
       })
-      // console.log('Form Submitted:', this.optimizerForm.value);
       // Reset form after submission (optional)
       this.optimizerForm.reset();
       this.optimizerFormSubmitted = false;
@@ -712,11 +709,9 @@ export class OptimizerComponent extends BaseComponent {
           this.metaData = res.metadata || [];
 
         } else {
-          console.error("No data found.");
         }
       },
       error: (err: any) => {
-        console.error("Error fetching data:", err);
       }
     });
   }
@@ -817,22 +812,16 @@ export class OptimizerComponent extends BaseComponent {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
-
-
-          // Ensure paginator is set only if it exists
           if (this.sawPaginator) {
             this.sawDataSource.paginator = this.sawPaginator;
           } else {
-            console.warn("Paginator not found!");
           }
         } else {
-          console.warn("No data received from server.");
           this.toastr.error("No data available.");
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
@@ -854,16 +843,13 @@ export class OptimizerComponent extends BaseComponent {
           if (this.partsPaginator) {
             this.partsDataSource.paginator = this.partsPaginator;
           } else {
-            console.warn("Paginator not found!");
           }
         } else {
-          console.warn("No data received from server.");
           this.toastr.error("No data available.");
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
@@ -1357,7 +1343,6 @@ export class OptimizerComponent extends BaseComponent {
   submitBulkPartsStock() {
     this.partsSheetId = 0;
     this.stockSheetId = 0;
-    console.log(this.selectedSawRow);
     if (this.selectedStockIdList.size > 0 && this.selectedSawRow !== null && this.selectedPartsIdList) {
       if (this.selectedHistoryIdList.size === 2) {
         for (let item of this.selectedHistoryIdList) {
@@ -1671,7 +1656,7 @@ export class OptimizerComponent extends BaseComponent {
           }
           this.gradeForm.reset();
           this.gradeSubmitted = false;
-          // this.getMakeData(); 
+          this.getGradeData(); 
         } else {
           this.toastr.error(res.message);
         }
@@ -1764,10 +1749,9 @@ export class OptimizerComponent extends BaseComponent {
           this.toastr.warning("No make data found.");
         } else {
           this.makePanel = res.map(make => ({
-            name: make.makeName,  // Use 'panel' instead of 'make'
-            id: make.makeId       // Use 'panel' instead of 'make'
+            name: make.makeName, 
+            id: make.makeId      
           }));
-          console.log("Updated makePanel:", this.makePanel);
         }
       },
       error: (error) => {
@@ -1789,10 +1773,9 @@ export class OptimizerComponent extends BaseComponent {
           this.toastr.warning("No make data found.");
         } else {
           this.gradePanel = res.map(grade => ({
-            name: grade.gradeName,  // Use 'panel' instead of 'make'
-            id: grade.gradePanelId       // Use 'panel' instead of 'make'
+            name: grade.gradeName,  
+            id: grade.gradePanelId     
           }));
-          console.log("Updated gradePanel:", this.gradePanel);
         }
       },
       error: (error) => {
@@ -1806,17 +1789,14 @@ export class OptimizerComponent extends BaseComponent {
  
   deleteProduct(data:any) {
     const prodId = data.prodId;
-    console.log(data);
     if (!prodId) {
       alert('Error: Product ID is missing!');
-
       return;
     }
   
     if (confirm('Are you sure you want to delete this product?')) {
       this.switchService.deleteProductData(prodId).subscribe({
         next: (response) => {
-          console.log('Product deleted successfully', response);
           this.toastr.success(response.message);
           this.getProductData();
         },
