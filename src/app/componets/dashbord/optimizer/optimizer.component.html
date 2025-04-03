@@ -1505,7 +1505,7 @@
 </ng-template>
 
 <ng-template #content10 let-modal>
-    <form [formGroup]="productForm" (ngSubmit)="onProductSubmit(modal)">
+    <form [formGroup]="productForm" (ngSubmit)="onProductSubmit(modal)" class="overflowImportant">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Product</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
@@ -1554,7 +1554,7 @@
 
 
 <ng-template #content11 let-modal>
-    <form [formGroup]="panelForm" (ngSubmit)="onPanelSubmit(modal)">
+    <form [formGroup]="panelForm" (ngSubmit)="onPanelSubmit(modal)" class="overflowImportant">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Panel</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
