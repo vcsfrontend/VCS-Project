@@ -141,6 +141,7 @@ export class OptimizerComponent extends BaseComponent {
     this.getPanelData();
     this.getBasePanelData();
     this.getMakeData();
+    this.getGradeData();
     this.getStockData();
     this.getSawData();
     this.getPartsData();
@@ -1746,7 +1747,7 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.displayMakeData(payload).subscribe({
       next: (res: any) => {
         if (!Array.isArray(res) || res.length === 0) {
-          this.toastr.warning("No make data found.");
+          // this.toastr.warning("No make data found.");
         } else {
           this.makePanel = res.map(make => ({
             name: make.makeName, 
@@ -1793,7 +1794,6 @@ export class OptimizerComponent extends BaseComponent {
       alert('Error: Product ID is missing!');
       return;
     }
-  
     if (confirm('Are you sure you want to delete this product?')) {
       this.switchService.deleteProductData(prodId).subscribe({
         next: (response) => {
@@ -1806,7 +1806,91 @@ export class OptimizerComponent extends BaseComponent {
       });
     }
   }
-  
+
+  deletePannel(data: any) {
+    const panelId = data.panelId; 
+    if (!panelId) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deletePannelData(panelId).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getPanelData();
+        },
+        error: (error) => {
+          this.toastr.error("Failed to delete product.");
+        }
+      });
+    }
+  }
+
+  deleteBasePanel(data:any, modal:any) {
+    const base_pannel_id = data.id;
+    if (!base_pannel_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteBasePanelData(base_pannel_id).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getBasePanelData();
+          if (modal) {
+            modal.close();  
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+
+  deleteMake(data:any, modal:any) {
+    const make_id = data.id;
+    if (!make_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteMakeData(make_id).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getMakeData();
+          if (modal) {
+            modal.close();  
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+
+  deletePannelGrade(data:any, modal:any) {
+    const pannel_grade_id = data.id;
+    if (!pannel_grade_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteMakeData(pannel_grade_id).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getGradeData();
+          if (modal) {
+            modal.close();  
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
 
   getStatusClass(isActive: boolean): string {
     return isActive ? "badge bg-success-transparent ps-3 fs-11 order-status complete " : "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
