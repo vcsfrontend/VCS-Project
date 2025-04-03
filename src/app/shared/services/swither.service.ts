@@ -115,6 +115,10 @@ export class SwitherService {
   displayMakeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getMakeData`, data); }
   displayGradeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_pannel_grade_data`, data); }
   deleteProductData(prod_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_product_data/${prod_id}`);}
+  deletePannelData(pannel_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_pannel_data/${pannel_id}`);}
+  deleteBasePanelData(base_pannel_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_base_pannel_data/${base_pannel_id}`);}
+  deleteMakeData(make_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_make_data/${make_id}`);}
+  deletePannelGradeData(pannel_grade_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}delete_pannel_grade_data/${pannel_grade_id}`);}
   
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
