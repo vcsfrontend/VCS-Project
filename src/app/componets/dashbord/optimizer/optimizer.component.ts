@@ -38,8 +38,8 @@ export class OptimizerComponent extends BaseComponent {
   historyDisplayedColumn: string[] = ['select', 'slNo', 'sheetName', 'uploadedBy', 'uploadedTime', 'recordsCount', 'email', 'action'];
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
-  productDisplayedColumn: string[] = [ 'slNo', 'code', 'name', 'description', 'status', 'edit', 'delete'];
-  panelDisplayedColumn: string[] = [ 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'status', 'edit', 'copy', 'image', 'delete'];
+  productDisplayedColumn: string[] = [ 'slNo', 'code', 'name', 'description', 'isActive', 'edit', 'delete'];
+  panelDisplayedColumn: string[] = [ 'slNo','designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'isActive', 'edit', 'copy', 'image', 'delete'];
   skinDisplayedColumn: string[] = [ 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'status', 'edit', 'copy', 'image', 'delete' ];
   edgeBandDisplayedColumn: string[] = [ 'designcode','designNo', 'name', 'width', 'thickness', 'uom','type', 'make', 'finish', 'material', 'status', 'edit', 'copy', 'image', 'delete' ];
 
@@ -74,7 +74,9 @@ export class OptimizerComponent extends BaseComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
   partList: any; stokList: any; parList: any[] = []; btnDisable: boolean = true; 
-  stList: any[] = []; active1='Product'; productForm! : FormGroup;
+  stList: any[] = []; active1='Product'; productForm! : FormGroup; panelForm! : FormGroup;
+  basePanelForm! : FormGroup;  makeForm! : FormGroup; gradeForm! : FormGroup;
+  basePanel: any[] = []; makePanel: any[] = []; gradePanel: any[] = [];
 
 
   public optimizerForm!: FormGroup;
@@ -91,7 +93,11 @@ export class OptimizerComponent extends BaseComponent {
   public partsForm!: FormGroup;
   public stockSubmitted = false;
   public partsSubmitted = false;
-  public ProductSubmitted = false;
+  public productSubmitted = false;
+  public panelSubmitted = false;
+  public basePanelSubmitted = false;
+  public makeSubmitted = false;
+  public gradeSubmitted = false;
 
   public uploadStocks!: FormGroup;
   uploadStocksSubmitted: boolean = false;
@@ -131,6 +137,10 @@ export class OptimizerComponent extends BaseComponent {
 
   ngOnInit(): void {
     let value = 701883;  // Declare value inside ngOnInit
+    this.getProductData();
+    this.getPanelData();
+    this.getBasePanelData();
+    this.getMakeData();
     this.getStockData();
     this.getSawData();
     this.getPartsData();
@@ -275,17 +285,71 @@ export class OptimizerComponent extends BaseComponent {
       type: [this.userType]
     });
 
-     //product form
-     this.productForm = this.fb.group({
-      prodId:[{ value: this.generateProductId(), disabled: true }],
-      code:['',Validators.required],
+    //product form
+    this.productForm = this.fb.group({
+    prodId:[{ value: this.generateProductId(), disabled: true }],
+    code:['',Validators.required],
+    name:['',Validators.required],
+    description:['',Validators.required],
+    isActive:[true],
+    companyCode:[this.userCompanyCode],
+    email:[this.userEmail],
+    type: [this.userType]
+    });
+
+    //panel form
+    this.panelForm = this.fb.group({
+      panelId:[{ value: this.generateProductId(), disabled: true }],
+      designNo:['',Validators.required],
       name:['',Validators.required],
-      description:['',Validators.required],
+      pressing:['',Validators.required],
+      basePanel:['',Validators.required],
+      make:['',Validators.required],
+      grade:['',Validators.required],
+      length:[0,Validators.required],
+      width:[0,Validators.required],
+      thickness:[0,Validators.required],
       isActive:[true],
+      isColdPress:['',Validators.required],
+      grains:['',Validators.required],
+      image:['',Validators.required],
       companyCode:[this.userCompanyCode],
       email:[this.userEmail],
-      type: [this.userType]
+      type: [this.userType],
+      hotpress: [0]
+      });
+
+    //base panel form
+    this.basePanelForm = this.fb.group({
+      basePanelId:[{ value: this.generateProductId(), disabled: true }],
+      basePanleName:['',Validators.required],
+      abbr:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
     });
+
+    //make form
+    this.makeForm = this.fb.group({
+      makeId:[{ value: this.generateProductId(), disabled: true }],
+      makeName:['',Validators.required],
+      abbr:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+    });
+
+    //base panel grade form
+    this.gradeForm = this.fb.group({
+      gradePanelId:[{ value: this.generateProductId(), disabled: true }],
+      gradeName:['',Validators.required],
+      abbr:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+    });
+
+    
   }
 
   generateProductId(): number {
@@ -1458,40 +1522,320 @@ export class OptimizerComponent extends BaseComponent {
   }
 
   onProductSubmit(modal: any) {
-    this.ProductSubmitted = true;
+    this.productSubmitted = true;
     if (this.productForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-  
     let payload = {
       ...this.productForm.value,  
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-  
-    this.switchService.savePoduct(payload).subscribe({
+    this.switchService.saveProductData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
           this.toastr.success(res.message);
-          
           if (modal) {
             this.modalService.dismissAll(modal);
           }
-  
           this.productForm.reset();
-          this.ProductSubmitted = false;
+          this.productSubmitted = false;
+          this.getProductData();
         } else {
           this.toastr.error(res.message);
         }
       },
       error: (error) => {
-        console.error("Error saving product:", error);
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
+
+  onPanelSubmit(modal: any) {
+    this.panelSubmitted = true;
+    if (this.panelForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.panelForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.savePanelData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.panelForm.reset();
+          this.panelSubmitted = false;
+          this.getPanelData();
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  
+  onBasePanelSubmit(modal: any) {
+    this.basePanelSubmitted = true;
+    if (this.basePanelForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.basePanelForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveBasePanelData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.basePanelForm.reset();
+          this.basePanelSubmitted = false;
+          this.getBasePanelData(); 
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onMakeSubmit(modal: any) {
+    this.makeSubmitted = true;
+    if (this.makeForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.makeForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveMakeData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.makeForm.reset();
+          this.makeSubmitted = false;
+          this.getMakeData(); 
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onGradeSubmit(modal: any) {
+    this.gradeSubmitted = true;
+    if (this.gradeForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.gradeForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveGradeData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.gradeForm.reset();
+          this.gradeSubmitted = false;
+          // this.getMakeData(); 
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+  
+  getProductData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayProductData(payload).subscribe({
+      next: (res: any) => {
+        this.productDataSource.data = res || []; 
+        if (!res?.length) {
+          this.toastr.warning("No products found.");
+        }
+        if (this.ProductPaginator) {
+          this.productDataSource.paginator = this.ProductPaginator;
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching product data");
+        this.productDataSource.data = [];
+      }
+    });
+  }
+
+  getPanelData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayPanelData(payload).subscribe({
+      next: (res: any) => {
+        this.panelDataSource.data = [...res]; 
+        if (!res?.length) {
+          this.toastr.warning("No products found.");
+        }
+        if (this.PanelPaginator) {
+          this.panelDataSource.paginator = this.PanelPaginator;
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching product data");
+        this.panelDataSource.data = [];
+      }
+    });
+  }
+
+  getBasePanelData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayBasePanelData(payload).subscribe({
+      next: (res: any) => {
+        if (!Array.isArray(res) || res.length === 0) {
+          this.toastr.warning("No base panels found.");
+        } else {
+          this.basePanel = res.map(panel => ({
+            name: panel.basePanleName, 
+            id: panel.basePanelId       
+          }));
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching base panel data");
+        this.basePanel = [];
+      }
+    });
+  }
+
+  getMakeData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayMakeData(payload).subscribe({
+      next: (res: any) => {
+        if (!Array.isArray(res) || res.length === 0) {
+          this.toastr.warning("No make data found.");
+        } else {
+          this.makePanel = res.map(make => ({
+            name: make.makeName,  // Use 'panel' instead of 'make'
+            id: make.makeId       // Use 'panel' instead of 'make'
+          }));
+          console.log("Updated makePanel:", this.makePanel);
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching make data");
+        this.makePanel = [];
+      }
+    });
+  }
+
+  getGradeData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayGradeData(payload).subscribe({
+      next: (res: any) => {
+        if (!Array.isArray(res) || res.length === 0) {
+          this.toastr.warning("No make data found.");
+        } else {
+          this.gradePanel = res.map(grade => ({
+            name: grade.gradeName,  // Use 'panel' instead of 'make'
+            id: grade.gradePanelId       // Use 'panel' instead of 'make'
+          }));
+          console.log("Updated gradePanel:", this.gradePanel);
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching make data");
+        this.makePanel = [];
+      }
+    });
+  }
+  
+  
+ 
+  deleteProduct(data:any) {
+    const prodId = data.prodId;
+    console.log(data);
+    if (!prodId) {
+      alert('Error: Product ID is missing!');
+
+      return;
+    }
+  
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteProductData(prodId).subscribe({
+        next: (response) => {
+          console.log('Product deleted successfully', response);
+          this.toastr.success(response.message);
+          this.getProductData();
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+  
+
+  getStatusClass(isActive: boolean): string {
+    return isActive ? "badge bg-success-transparent ps-3 fs-11 order-status complete " : "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
+  }
+  
+  getStatusText(isActive: boolean): string {
+    return isActive ? "Active" : "Inactive"; 
+  }  
+
   
   
   
