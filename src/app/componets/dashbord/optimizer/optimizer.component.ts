@@ -131,10 +131,16 @@ export class OptimizerComponent extends BaseComponent {
   selectedSawRow: any = null;
   selectedPartsIdList: Set<any> = new Set<any>();
 
+  activeTab: string = 'product';
+
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService, private offcanvasService: NgbOffcanvas, private dialog: MatDialog,private cdRef: ChangeDetectorRef) {
     super();
     const selectedSawRow = localStorage.getItem('selectedSawRow');
     this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
+  }
+
+  showTab(tab: string) {
+    this.activeTab = tab;
   }
 
 

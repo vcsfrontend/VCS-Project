@@ -553,6 +553,407 @@
     </div> -->
 </div>
 
+<div class="container p-5 d-flex align-items-start">
+    <!-- Vertical Tabs -->
+    <ul class="nav nav-pills flex-column nav-pills border-end border-3 me-3 align-items-end">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-primary fw-semibold position-relative" [class.active]="activeTab === 'product'"
+                (click)="showTab('product')">
+                Product
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-primary fw-semibold position-relative" [class.active]="activeTab === 'panel'"
+                (click)="showTab('panel')">
+                Panel
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-primary fw-semibold position-relative" [class.active]="activeTab === 'skin'"
+                (click)="showTab('skin')">
+                Skin
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link text-primary fw-semibold position-relative"
+                [class.active]="activeTab === 'edgeband'" (click)="showTab('edgeband')">
+                Edgeband
+            </button>
+        </li>
+    </ul>
+
+    <!-- Product Tab Content -->
+    <div class="tab-content w-100">
+        <div class="tab-pane fade" [class.show]="activeTab === 'product'" [class.active]="activeTab === 'product'">
+            <div class="card custom-card bg-light">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                        Product Data
+                    </div>
+                    <div class="d-flex flex-wrap gap-3">
+                        <mat-form-field class="filters-field-1">
+                            <mat-label>Search Here</mat-label>
+                            <input matInput (keyup)="productApplyFilter($event)" #input>
+                        </mat-form-field>
+                        <button type="button" class="btn btn-primary" (click)="openLg6(content10)">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Product</button>
+                    </div>
+
+                </div>
+                <div class="card-body p-0">
+                    <div class="mat-elevation-z8">
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="productDataSource" class="mat-table">
+                                <ng-container matColumnDef="slNo">
+                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                    <td mat-cell *matCellDef="let element; let i = index"> {{productGetSNo(i)}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="code">
+                                    <th mat-header-cell *matHeaderCellDef> code </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="description">
+                                    <th mat-header-cell *matHeaderCellDef> description </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="isActive">
+                                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <span [ngClass]="getStatusClass(element.isActive)">
+                                            {{ getStatusText(element.isActive) }}
+                                        </span>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="edit">
+                                    <th mat-header-cell *matHeaderCellDef> edit </th>
+                                    <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                            href="javascript:void(0);"
+                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                                class="ri-edit-line"></i></a> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef> delete </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <a aria-label="anchor" href="javascript:void(0);"
+                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
+                                            (click)="deleteProduct(element)">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="productDisplayedColumn"></tr>
+                                <tr mat-row *matRowDef="let row; columns: productDisplayedColumn">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #productPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" [class.show]="activeTab === 'panel'" [class.active]="activeTab === 'panel'">
+            <div class="card custom-card bg-light">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                        Panel Data
+                    </div>
+                    <div class="d-flex flex-wrap gap-3">
+                        <mat-form-field class="filters-field-1">
+                            <mat-label>Search Here</mat-label>
+                            <input matInput (keyup)="panelApplyFilter($event)" #input>
+                        </mat-form-field>
+                        <button type="button" class="btn btn-primary" (click)="openLg6(content11)">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Panel</button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="mat-elevation-z8">
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="panelDataSource" class="mat-table">
+                                <ng-container matColumnDef="slNo">
+                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                    <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="designNo">
+                                    <th mat-header-cell *matHeaderCellDef> designNo </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="length">
+                                    <th mat-header-cell *matHeaderCellDef> length </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.length}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="width">
+                                    <th mat-header-cell *matHeaderCellDef> width </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.width}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="thickness">
+                                    <th mat-header-cell *matHeaderCellDef> thickness </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="uom">
+                                    <th mat-header-cell *matHeaderCellDef> uom </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="basePanel">
+                                    <th mat-header-cell *matHeaderCellDef> basePanel </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.basePanel}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="make">
+                                    <th mat-header-cell *matHeaderCellDef> make </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="grade">
+                                    <th mat-header-cell *matHeaderCellDef> grade </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="hotpress">
+                                    <th mat-header-cell *matHeaderCellDef> hotpress </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.hotpress}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="grains">
+                                    <th mat-header-cell *matHeaderCellDef> grains </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="isActive">
+                                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <span [ngClass]="getStatusClass(element.isActive)">
+                                            {{ getStatusText(element.isActive) }}
+                                        </span>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="edit">
+                                    <th mat-header-cell *matHeaderCellDef> edit </th>
+                                    <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                            href="javascript:void(0);"
+                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                                class="ri-edit-line"></i></a> </td>
+                                </ng-container>
+                                <ng-container matColumnDef="copy">
+                                    <th mat-header-cell *matHeaderCellDef> copy </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="image">
+                                    <th mat-header-cell *matHeaderCellDef> image </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef> delete </th>
+                                    <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                            href="javascript:void(0);"
+                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
+                                            (click)="deletePannel(element)">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a> </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="panelDisplayedColumn"></tr>
+                                <tr mat-row *matRowDef="let row; columns: panelDisplayedColumn">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #panelPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" [class.show]="activeTab === 'skin'" [class.active]="activeTab === 'skin'">
+            <div class="card custom-card bg-light">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                        Skin Data
+                    </div>
+                    <div class="d-flex flex-wrap gap-3">
+                        <mat-form-field class="filters-field-1">
+                            <mat-label>Search Here</mat-label>
+                            <input matInput (keyup)="skinApplyFilter($event)" #input>
+                        </mat-form-field>
+                        <button type="button" class="btn btn-primary">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Skin</button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="mat-elevation-z8">
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="skinDataSource" class="mat-table">
+                                <ng-container matColumnDef="designNo">
+                                    <th mat-header-cell *matHeaderCellDef> designNo </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="length">
+                                    <th mat-header-cell *matHeaderCellDef> length </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.length}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="width">
+                                    <th mat-header-cell *matHeaderCellDef> width </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.width}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="thickness">
+                                    <th mat-header-cell *matHeaderCellDef> thickness </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="uom">
+                                    <th mat-header-cell *matHeaderCellDef> uom </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="basePanel">
+                                    <th mat-header-cell *matHeaderCellDef> basePanel </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.basePanel}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="make">
+                                    <th mat-header-cell *matHeaderCellDef> make </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="grade">
+                                    <th mat-header-cell *matHeaderCellDef> grade </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="hotpress">
+                                    <th mat-header-cell *matHeaderCellDef> hotpress </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.hotpress}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="grains">
+                                    <th mat-header-cell *matHeaderCellDef> grains </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="status">
+                                    <th mat-header-cell *matHeaderCellDef> status </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="edit">
+                                    <th mat-header-cell *matHeaderCellDef> edit </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="copy">
+                                    <th mat-header-cell *matHeaderCellDef> copy </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="image">
+                                    <th mat-header-cell *matHeaderCellDef> image </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef> delete </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="skinDisplayedColumn"></tr>
+                                <tr mat-row *matRowDef="let row; columns: skinDisplayedColumn">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" [class.show]="activeTab === 'edgeband'" [class.active]="activeTab === 'edgeband'">
+            <div class="card custom-card bg-light">
+                <div class="card-header justify-content-between d-flex">
+                    <div class="card-title">
+                        Edgeband Data
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <mat-form-field class="filters-field-1">
+                            <mat-label>Search Here</mat-label>
+                            <input matInput (keyup)="skinApplyFilter($event)" #input>
+                        </mat-form-field>
+                        <button type="button" class="btn btn-primary">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Add</button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="mat-elevation-z8">
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="edgeBandDataSource" class="mat-table">
+                                <ng-container matColumnDef="designcode">
+                                    <th mat-header-cell *matHeaderCellDef> designcode </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.designcode}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="designNo">
+                                    <th mat-header-cell *matHeaderCellDef> designNo </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> name </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="width">
+                                    <th mat-header-cell *matHeaderCellDef> width </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.width}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="thickness">
+                                    <th mat-header-cell *matHeaderCellDef> thickness </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="uom">
+                                    <th mat-header-cell *matHeaderCellDef> uom </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="type">
+                                    <th mat-header-cell *matHeaderCellDef> type </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="make">
+                                    <th mat-header-cell *matHeaderCellDef> make </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.make}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="finish">
+                                    <th mat-header-cell *matHeaderCellDef> finish </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.finish}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="material">
+                                    <th mat-header-cell *matHeaderCellDef> material </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.material}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="status">
+                                    <th mat-header-cell *matHeaderCellDef> status </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="edit">
+                                    <th mat-header-cell *matHeaderCellDef> edit </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="copy">
+                                    <th mat-header-cell *matHeaderCellDef> copy </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="image">
+                                    <th mat-header-cell *matHeaderCellDef> image </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="delete">
+                                    <th mat-header-cell *matHeaderCellDef> delete </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="edgeBandDisplayedColumn"></tr>
+                                <tr mat-row *matRowDef="let row; columns: edgeBandDisplayedColumn">
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                        </mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <ng-template #content let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
@@ -1505,7 +1906,7 @@
 </ng-template>
 
 <ng-template #content10 let-modal>
-    <form [formGroup]="productForm" (ngSubmit)="onProductSubmit(modal)" class="overflowImportant">
+    <form [formGroup]="productForm" (ngSubmit)="onProductSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Product</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
@@ -1554,7 +1955,7 @@
 
 
 <ng-template #content11 let-modal>
-    <form [formGroup]="panelForm" (ngSubmit)="onPanelSubmit(modal)" class="overflowImportant">
+    <form [formGroup]="panelForm" (ngSubmit)="onPanelSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Panel</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
@@ -2334,397 +2735,3 @@
             data-bs-dismiss="modal">Close</button>
     </div>
 </ng-template>
-
-<mat-tab-group (selectedTabChange)="onTabChange($event)">
-    <!-- Product Tab -->
-    <mat-tab label="Products">
-        <div *ngIf="isProductTabActive">
-
-            <div class="card custom-card bg-light">
-                <div class="card-header justify-content-between">
-                    <div class="card-title">
-                        Product Data
-                    </div>
-                    <div class="d-flex flex-wrap gap-3">
-                        <mat-form-field class="filters-field-1">
-                            <mat-label>Search Here</mat-label>
-                            <input matInput (keyup)="productApplyFilter($event)" #input>
-                        </mat-form-field>
-                        <button type="button" class="btn btn-primary" (click)="openLg6(content10)">
-                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Add
-                            Product</button>
-                    </div>
-
-                </div>
-                <div class="card-body p-0">
-                    <div class="mat-elevation-z8">
-                        <div class="table-responsive">
-                            <table mat-table [dataSource]="productDataSource" class="mat-table">
-                                <ng-container matColumnDef="slNo">
-                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                    <td mat-cell *matCellDef="let element; let i = index">
-                                        {{productGetSNo(i)}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="code">
-                                    <th mat-header-cell *matHeaderCellDef> code </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.code}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="name">
-                                    <th mat-header-cell *matHeaderCellDef> name </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="description">
-                                    <th mat-header-cell *matHeaderCellDef> description </th>
-                                    <td mat-cell *matCellDef="let element"> {{element.description}}
-                                    </td>
-                                </ng-container>
-                                <ng-container matColumnDef="isActive">
-                                    <th mat-header-cell *matHeaderCellDef> Status </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <span [ngClass]="getStatusClass(element.isActive)">
-                                            {{ getStatusText(element.isActive) }}
-                                        </span>
-                                    </td>
-                                </ng-container>
-                                <ng-container matColumnDef="edit">
-                                    <th mat-header-cell *matHeaderCellDef> edit </th>
-                                    <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
-                                            href="javascript:void(0);"
-                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
-                                                class="ri-edit-line"></i></a> </td>
-                                </ng-container>
-                                <ng-container matColumnDef="delete">
-                                    <th mat-header-cell *matHeaderCellDef> delete </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <a aria-label="anchor" href="javascript:void(0);"
-                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
-                                            (click)="deleteProduct(element)">
-                                            <i class="ri-delete-bin-line"></i>
-                                        </a>
-                                    </td>
-                                </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="productDisplayedColumn"></tr>
-                                <tr mat-row *matRowDef="let row; columns: productDisplayedColumn">
-                                </tr>
-                            </table>
-                        </div>
-                        <mat-paginator #productPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                        </mat-paginator>
-                    </div>
-                </div>
-            </div>
-
-
-        </div>
-    </mat-tab>
-    <!-- Panel Tab -->
-    <mat-tab label="Panel">
-        <div class="card custom-card bg-light">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    Panel Data
-                </div>
-                <div class="d-flex flex-wrap gap-3">
-                    <mat-form-field class="filters-field-1">
-                        <mat-label>Search Here</mat-label>
-                        <input matInput (keyup)="panelApplyFilter($event)" #input>
-                    </mat-form-field>
-                    <button type="button" class="btn btn-primary" (click)="openLg6(content11)">
-                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Panel</button>
-                </div>
-
-            </div>
-            <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="panelDataSource" class="mat-table">
-                            <ng-container matColumnDef="slNo">
-                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="designNo">
-                                <th mat-header-cell *matHeaderCellDef> designNo </th>
-                                <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="length">
-                                <th mat-header-cell *matHeaderCellDef> length </th>
-                                <td mat-cell *matCellDef="let element"> {{element.length}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="width">
-                                <th mat-header-cell *matHeaderCellDef> width </th>
-                                <td mat-cell *matCellDef="let element"> {{element.width}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="thickness">
-                                <th mat-header-cell *matHeaderCellDef> thickness </th>
-                                <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="uom">
-                                <th mat-header-cell *matHeaderCellDef> uom </th>
-                                <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="basePanel">
-                                <th mat-header-cell *matHeaderCellDef> basePanel </th>
-                                <td mat-cell *matCellDef="let element"> {{element.basePanel}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="make">
-                                <th mat-header-cell *matHeaderCellDef> make </th>
-                                <td mat-cell *matCellDef="let element"> {{element.make}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="grade">
-                                <th mat-header-cell *matHeaderCellDef> grade </th>
-                                <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="hotpress">
-                                <th mat-header-cell *matHeaderCellDef> hotpress </th>
-                                <td mat-cell *matCellDef="let element"> {{element.hotpress}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="grains">
-                                <th mat-header-cell *matHeaderCellDef> grains </th>
-                                <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="isActive">
-                                <th mat-header-cell *matHeaderCellDef> Status </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <span [ngClass]="getStatusClass(element.isActive)">
-                                        {{ getStatusText(element.isActive) }}
-                                    </span>
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="edit">
-                                <th mat-header-cell *matHeaderCellDef> edit </th>
-                                <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
-                                        href="javascript:void(0);"
-                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
-                                            class="ri-edit-line"></i></a> </td>
-                            </ng-container>
-                            <ng-container matColumnDef="copy">
-                                <th mat-header-cell *matHeaderCellDef> copy </th>
-                                <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="image">
-                                <th mat-header-cell *matHeaderCellDef> image </th>
-                                <td mat-cell *matCellDef="let element"> {{element.image}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="delete">
-                                <th mat-header-cell *matHeaderCellDef> delete </th>
-                                <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
-                                        href="javascript:void(0);"
-                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
-                                        (click)="deletePannel(element)">
-                                        <i class="ri-delete-bin-line"></i>
-                                    </a> </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="panelDisplayedColumn"></tr>
-                            <tr mat-row *matRowDef="let row; columns: panelDisplayedColumn">
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator #panelPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                    </mat-paginator>
-                </div>
-            </div>
-        </div>
-
-
-    </mat-tab>
-
-    <!-- Skin Tab -->
-    <mat-tab label="Skin">
-        <div class="card custom-card bg-light">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    Skin Data
-                </div>
-                <div class="d-flex flex-wrap gap-3">
-                    <mat-form-field class="filters-field-1">
-                        <mat-label>Search Here</mat-label>
-                        <input matInput (keyup)="skinApplyFilter($event)" #input>
-                    </mat-form-field>
-                    <button type="button" class="btn btn-primary">
-                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Skin</button>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="skinDataSource" class="mat-table">
-                            <ng-container matColumnDef="designNo">
-                                <th mat-header-cell *matHeaderCellDef> designNo </th>
-                                <td mat-cell *matCellDef="let element"> {{element.designNo}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="length">
-                                <th mat-header-cell *matHeaderCellDef> length </th>
-                                <td mat-cell *matCellDef="let element"> {{element.length}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="width">
-                                <th mat-header-cell *matHeaderCellDef> width </th>
-                                <td mat-cell *matCellDef="let element"> {{element.width}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="thickness">
-                                <th mat-header-cell *matHeaderCellDef> thickness </th>
-                                <td mat-cell *matCellDef="let element"> {{element.thickness}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="uom">
-                                <th mat-header-cell *matHeaderCellDef> uom </th>
-                                <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="basePanel">
-                                <th mat-header-cell *matHeaderCellDef> basePanel </th>
-                                <td mat-cell *matCellDef="let element"> {{element.basePanel}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="make">
-                                <th mat-header-cell *matHeaderCellDef> make </th>
-                                <td mat-cell *matCellDef="let element"> {{element.make}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="grade">
-                                <th mat-header-cell *matHeaderCellDef> grade </th>
-                                <td mat-cell *matCellDef="let element"> {{element.grade}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="hotpress">
-                                <th mat-header-cell *matHeaderCellDef> hotpress </th>
-                                <td mat-cell *matCellDef="let element"> {{element.hotpress}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="grains">
-                                <th mat-header-cell *matHeaderCellDef> grains </th>
-                                <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="status">
-                                <th mat-header-cell *matHeaderCellDef> status </th>
-                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="edit">
-                                <th mat-header-cell *matHeaderCellDef> edit </th>
-                                <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="copy">
-                                <th mat-header-cell *matHeaderCellDef> copy </th>
-                                <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="image">
-                                <th mat-header-cell *matHeaderCellDef> image </th>
-                                <td mat-cell *matCellDef="let element"> {{element.image}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="delete">
-                                <th mat-header-cell *matHeaderCellDef> delete </th>
-                                <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="skinDisplayedColumn"></tr>
-                            <tr mat-row *matRowDef="let row; columns: skinDisplayedColumn">
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                    </mat-paginator>
-                </div>
-            </div>
-        </div>
-    </mat-tab>
-
-    <!-- Edgeband Tab -->
-    <mat-tab label="Edgeband">
-        <div class="card custom-card bg-light">
-            <div class="card-header justify-content-between d-flex">
-                <div class="card-title">
-                    Edgeband Data
-                </div>
-                <div class="d-flex flex-wrap gap-2">
-                    <mat-form-field class="filters-field-1">
-                        <mat-label>Search Here</mat-label>
-                        <input matInput (keyup)="skinApplyFilter($event)" #input>
-                    </mat-form-field>
-                    <button type="button" class="btn btn-primary">
-                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add</button>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="edgeBandDataSource" class="mat-table">
-                            <ng-container matColumnDef="designcode">
-                                <th mat-header-cell *matHeaderCellDef> designcode </th>
-                                <td mat-cell *matCellDef="let element"> {{element.designcode}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="designNo">
-                                <th mat-header-cell *matHeaderCellDef> designNo </th>
-                                <td mat-cell *matCellDef="let element"> {{element.designNo}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="width">
-                                <th mat-header-cell *matHeaderCellDef> width </th>
-                                <td mat-cell *matCellDef="let element"> {{element.width}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="thickness">
-                                <th mat-header-cell *matHeaderCellDef> thickness </th>
-                                <td mat-cell *matCellDef="let element"> {{element.thickness}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="uom">
-                                <th mat-header-cell *matHeaderCellDef> uom </th>
-                                <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="type">
-                                <th mat-header-cell *matHeaderCellDef> type </th>
-                                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="make">
-                                <th mat-header-cell *matHeaderCellDef> make </th>
-                                <td mat-cell *matCellDef="let element"> {{element.make}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="finish">
-                                <th mat-header-cell *matHeaderCellDef> finish </th>
-                                <td mat-cell *matCellDef="let element"> {{element.finish}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="material">
-                                <th mat-header-cell *matHeaderCellDef> material </th>
-                                <td mat-cell *matCellDef="let element"> {{element.material}}
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="status">
-                                <th mat-header-cell *matHeaderCellDef> status </th>
-                                <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="edit">
-                                <th mat-header-cell *matHeaderCellDef> edit </th>
-                                <td mat-cell *matCellDef="let element"> {{element.edit}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="copy">
-                                <th mat-header-cell *matHeaderCellDef> copy </th>
-                                <td mat-cell *matCellDef="let element"> {{element.copy}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="image">
-                                <th mat-header-cell *matHeaderCellDef> image </th>
-                                <td mat-cell *matCellDef="let element"> {{element.image}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="delete">
-                                <th mat-header-cell *matHeaderCellDef> delete </th>
-                                <td mat-cell *matCellDef="let element"> {{element.delete}} </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="edgeBandDisplayedColumn"></tr>
-                            <tr mat-row *matRowDef="let row; columns: edgeBandDisplayedColumn">
-                            </tr>
-                        </table>
-                    </div>
-                    <mat-paginator #stockPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                    </mat-paginator>
-                </div>
-            </div>
-        </div>
-    </mat-tab>
-</mat-tab-group>
