@@ -12,8 +12,11 @@
 .marge{
   margin-top: -50px !important ;
 }
-.overflowImportant {  
-    overflow-y: scroll !important;
+.overflowImportant {
+  max-height: 70vh; 
+  overflow-y: auto !important; 
+  overflow-x: hidden; 
+  padding: 15px; 
 }
 .custom-checkbox .mat-checkbox-label {
     font-size: 2px;
@@ -106,4 +109,12 @@ span.prr {
 
 .nav-link.active {  
   color: white !important;
+}
+.nav-link:hover{  
+  background-color: #069;
+  color: white;
+}
+
+.ck{
+  margin-left: -10px;
 }
