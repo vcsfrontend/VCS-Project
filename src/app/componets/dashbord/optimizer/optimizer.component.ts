@@ -2503,6 +2503,26 @@ export class OptimizerComponent extends BaseComponent {
   }
 
 
+  deleteProcessPanel(data: any) {
+    const prodId = data.processedPanelId;
+    if (!prodId) {
+      alert('Error: Process Panel ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this process panel?')) {
+      this.switchService.deleteProcessPanelData(prodId).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getProcessPanelData();
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+
+
   getStatusClass(isActive: boolean): string {
     return isActive ? "badge bg-success-transparent ps-3 fs-11 order-status complete " : "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
   }

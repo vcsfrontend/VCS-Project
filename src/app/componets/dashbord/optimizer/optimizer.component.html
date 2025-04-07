@@ -1050,7 +1050,7 @@
                                 <ng-container matColumnDef="delete">
                                     <th mat-header-cell *matHeaderCellDef> delete </th>
                                     <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
-                                            href="javascript:void(0);"
+                                            href="javascript:void(0);" (click)="deleteProcessPanel(element)"
                                             class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                                             <i class="ri-delete-bin-line"></i></a> </td>
                                 </ng-container>
