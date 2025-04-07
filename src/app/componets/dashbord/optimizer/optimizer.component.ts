@@ -41,8 +41,8 @@ export class OptimizerComponent extends BaseComponent {
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
   productDisplayedColumn: string[] = [ 'slNo', 'code', 'name', 'description', 'isActive', 'edit', 'delete'];
   panelDisplayedColumn: string[] = [ 'slNo','designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'isActive', 'edit', 'copy', 'image', 'delete'];
-  skinDisplayedColumn: string[] = [ 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'status', 'edit', 'copy', 'image', 'delete' ];
-  edgeBandDisplayedColumn: string[] = [ 'designcode','designNo', 'name', 'width', 'thickness', 'uom','type', 'make', 'finish', 'material', 'status', 'edit', 'copy', 'image', 'delete' ];
+  skinDisplayedColumn: string[] = [ 'designNo', 'name', 'brand', 'skinType','length', 'width', 'thickness', 'operation', 'grains', 'uom', 'skinFinish', 'edgeBands', 'isActive', 'isColdPress','edit', 'copy', 'image', 'delete' ];
+  edgeBandDisplayedColumn: string[] = [ 'designcode','designName', 'name', 'make', 'material', 'finish','width', 'thickness','hsnCode', 'premiling', 'isActive', 'image','uom', 'internalCode', 'edit', 'copy', 'image', 'delete' ];
 
   //dataSource = new MatTableDataSource<any>(); 
   mailId: any = '';
@@ -64,6 +64,7 @@ export class OptimizerComponent extends BaseComponent {
   @ViewChild('productPaginator') productPaginator!: MatPaginator;
   @ViewChild('panelPaginator') panelPaginator!: MatPaginator;
   @ViewChild('skinPaginator') skinPaginator!: MatPaginator;
+  @ViewChild('edgebandPaginator') edgebandPaginator!: MatPaginator;
   @ViewChild('content4') content4: any; 
   @ViewChild('content8') content8: any; 
   @ViewChild('content9') content9: any; 
@@ -79,8 +80,11 @@ export class OptimizerComponent extends BaseComponent {
   partList: any; stokList: any; parList: any[] = []; btnDisable: boolean = true; 
   stList: any[] = []; active1='Product'; productForm! : FormGroup; panelForm! : FormGroup;
   basePanelForm! : FormGroup;  makeForm! : FormGroup; gradeForm! : FormGroup;
-  basePanel: any[] = []; makePanel: any[] = []; gradePanel: any[] = [];
-
+  skinForm! : FormGroup; skinTypeForm! : FormGroup; skinFinishForm! : FormGroup; skinBrandForm! : FormGroup;
+  edgeBandForm! : FormGroup; edgeContentForm! : FormGroup;
+  basePanel: any[] = []; makePanel: any[] = []; gradePanel: any[] = [];  skinType: any[] = [];
+  skinFinish: any[] = []; skinBrand: any[] = []; 
+  isEditingProduct: boolean = false;
 
   public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
@@ -101,6 +105,11 @@ export class OptimizerComponent extends BaseComponent {
   public basePanelSubmitted = false;
   public makeSubmitted = false;
   public gradeSubmitted = false;
+  public skinSubmitted = false;
+  public skinTypeSubmitted = false;
+  public skinFinishSubmitted = false;
+  public skinBrandSubmitted = false;
+  public EdgebandSubmitted = false;
 
   public uploadStocks!: FormGroup;
   uploadStocksSubmitted: boolean = false;
@@ -148,10 +157,15 @@ export class OptimizerComponent extends BaseComponent {
     let value = 701883;  // Declare value inside ngOnInit
     this.getProductData();
     this.getPanelData();
+    this.getEdgebandData();
+    this.getSkinData();
     this.getBasePanelData();
     this.getMakeData();
     this.getGradeData();
     this.getStockData();
+    this.getSkinBrandData();
+    this.getSkinTypeData();
+    this.getSkinFinishData();
     this.getSawData();
     this.getPartsData();
     this.getPartshistory();
@@ -320,7 +334,7 @@ export class OptimizerComponent extends BaseComponent {
       width:[0,Validators.required],
       thickness:[0,Validators.required],
       isActive:[true],
-      isColdPress:['',Validators.required],
+      isColdPress:[true],
       grains:['',Validators.required],
       image:['',Validators.required],
       companyCode:[this.userCompanyCode],
@@ -359,14 +373,94 @@ export class OptimizerComponent extends BaseComponent {
       type: [this.userType],
     });
 
+    //skin form
+    this.skinForm = this.fb.group({
+      skinId:[{ value: this.generateProductId(), disabled: true }],
+      designNo:['',Validators.required],
+      name:['',Validators.required],
+      brand:['',Validators.required],
+      skinType:['',Validators.required],
+      length:[0,Validators.required],
+      width:[0,Validators.required],
+      thickness:[0,Validators.required],
+      operation:['',Validators.required],
+      grains:['',Validators.required],
+      uom:['nos',Validators.required],
+      skinFinish:['',Validators.required],
+      isActive:[true],
+      isColdPress:[true],
+      edgeBands:['',Validators.required],
+      image:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+    });
+
+    //skin type form
+    this.skinTypeForm = this.fb.group({
+      skinTypeId:[{ value: this.generateProductId(), disabled: true }],
+      skinTypeName:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+    });
+
+    //skin finish form
+    this.skinFinishForm = this.fb.group({
+      skinFinishId:[{ value: this.generateProductId(), disabled: true }],
+      skinFinshName:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+    });
+
+    //skin brand form
+    this.skinBrandForm = this.fb.group({
+      skinBrandId:[{ value: this.generateProductId(), disabled: true }],
+      skinBrandName:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+    });
     
+    //edgebrand form
+    this.edgeBandForm = this.fb.group({
+      edgeBandId:[{ value: this.generateProductId(), disabled: true }],
+      designCode:['',Validators.required],
+      designName:['',Validators.required],
+      name:['',Validators.required],
+      make:['',Validators.required],
+      material:['',Validators.required],
+      typeName:['',Validators.required],
+      finish:['',Validators.required],
+      width:[0,Validators.required],
+      thickness:[0,Validators.required],
+      isActive:[true],
+      hsnCode:['',Validators.required],
+      premiling:['',Validators.required],
+      image:['',Validators.required],
+      uom:['nos',Validators.required],
+      internalCode:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+      });
+
+      //make form
+    this.edgeContentForm = this.fb.group({
+      content: [''],
+      name:['',Validators.required],
+      companyCode:[this.userCompanyCode],
+      email:[this.userEmail],
+      type: [this.userType],
+    });
+
   }
 
   generateProductId(): number {
     return Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
   }
   
-
   getSNo(index: number): number {
     if (this.stockPaginator && this.stockPaginator.pageIndex !== undefined && this.stockPaginator.pageSize !== undefined) {
       return this.stockPaginator.pageIndex * this.stockPaginator.pageSize + index + 1;
@@ -684,6 +778,9 @@ export class OptimizerComponent extends BaseComponent {
   }
   openLg24(content28: any) {
     this.modalService.open(content28, {size: 'sm', scrollable: true, centered: true, });
+  }
+  openLg25(content29: any) {
+    this.modalService.open(content29, {size: 'sm', scrollable: true, centered: true, });
   }
 
   downloadOptimizerFile() {
@@ -1532,30 +1629,40 @@ export class OptimizerComponent extends BaseComponent {
       return;
     }
     let payload = {
-      ...this.productForm.value,  
+      ...this.productForm.getRawValue(),
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-    this.switchService.saveProductData(payload).subscribe({
+    const request = this.switchService.saveOrUpdateProduct(payload);
+    request.subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
-          if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+          const message = this.isEditingProduct
+            ? "Product updated successfully."
+            : "Product saved successfully.";
+          this.toastr.success(message);
+          this.modalService.dismissAll(modal);
           this.productForm.reset();
           this.productSubmitted = false;
+          this.isEditingProduct = false;
           this.getProductData();
         } else {
           this.toastr.error(res.message);
         }
-      },
+      },      
       error: (error) => {
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
+
+  onEditProduct(product: any, modal: any) {
+    this.productForm.patchValue(product);
+    this.isEditingProduct = true;
+    this.modalService.open(modal);
+  }
+  
 
   onPanelSubmit(modal: any) {
     this.panelSubmitted = true;
@@ -1685,7 +1792,215 @@ export class OptimizerComponent extends BaseComponent {
       }
     });
   }
+
+  onSkinSubmit(modal: any) {
+    this.skinSubmitted = true;
+    if (this.skinForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.skinForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveSkinData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.skinForm.reset();
+          this.skinSubmitted = false;
+          this.getSkinData();
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onSkinTypeSubmit(modal: any) {
+    this.skinTypeSubmitted = true;
+    if (this.skinTypeForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.skinTypeForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveSkinTypeData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.skinTypeForm.reset();
+          this.skinTypeSubmitted = false;
+          this.getSkinTypeData(); 
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onSkinFinishSubmit(modal: any) {
+    this.skinFinishSubmitted = true;
+    if (this.skinFinishForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.skinFinishForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveSkinFinishData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.skinFinishForm.reset();
+          this.skinFinishSubmitted = false;
+          this.getSkinFinishData(); 
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onSkinBrandSubmit(modal: any) {
+    this.skinBrandSubmitted = true;
+    if (this.skinBrandForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.skinBrandForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveSkinBrandData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.skinBrandForm.reset();
+          this.skinBrandSubmitted = false;
+          this.getSkinBrandData(); 
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onEdgebandSubmit(modal: any) {
+    this.EdgebandSubmitted = true;
+    if (this.edgeBandForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.edgeBandForm.value,  
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.saveEdgebandData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            this.modalService.dismissAll(modal);
+          }
+          this.edgeBandForm.reset();
+          this.EdgebandSubmitted = false;
+          this.getEdgebandData();
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onEdgeContentSubmit(
+    edgeType: 'edge_make' | 'edge_finish' | 'edge_type' | 'edge_material',
+    modal: any
+  ) {
+    // Set content and type based on the form type
+    this.edgeContentForm.patchValue({
+      content: edgeType,
+      type: this.userType
+    });
   
+    // Validate the form
+    if (this.edgeContentForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+  
+    // Get the payload to send
+    const payload = this.edgeContentForm.getRawValue();
+    console.log("Sending payload:", payload); // for debugging
+  
+    // Submit to backend
+    this.switchService.saveEdgeContentData(payload).subscribe({
+      next: (res: any) => {
+        if (res.status) {
+          this.toastr.success(`Edge ${edgeType.replace('edge_', '')} saved successfully.`);
+          this.edgeContentForm.reset();
+  
+          // Reset required values again after form reset
+          this.edgeContentForm.patchValue({
+            companyCode: this.userCompanyCode,
+            email: this.userEmail
+          });
+  
+          // Close modal
+          modal.close();
+        } else {
+          this.toastr.error(res.message || "Something went wrong.");
+        }
+      },
+      error: (err) => {
+        console.error('Backend error:', err);
+        this.toastr.error(err.error?.message || err.statusText || "Error saving edge content.");
+      }
+    });
+  }
+  
+  
+
   getProductData() {
     let payload = {
       email: this.userEmail,
@@ -1695,9 +2010,6 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.displayProductData(payload).subscribe({
       next: (res: any) => {
         this.productDataSource.data = res || []; 
-        if (!res?.length) {
-          this.toastr.warning("No products found.");
-        }
         if (this.productPaginator) {
           this.productDataSource.paginator = this.productPaginator;
         }
@@ -1708,7 +2020,7 @@ export class OptimizerComponent extends BaseComponent {
       }
     });
   }
-
+  
   getPanelData() {
     let payload = {
       email: this.userEmail,
@@ -1717,10 +2029,7 @@ export class OptimizerComponent extends BaseComponent {
     };
     this.switchService.displayPanelData(payload).subscribe({
       next: (res: any) => {
-        this.panelDataSource.data = [...res]; 
-        if (!res?.length) {
-          this.toastr.warning("No products found.");
-        }
+        this.panelDataSource.data = [...res];
         if (this.panelPaginator) {
           this.panelDataSource.paginator = this.panelPaginator;
         }
@@ -1728,6 +2037,26 @@ export class OptimizerComponent extends BaseComponent {
       error: (error) => {
         this.toastr.error("Error fetching product data");
         this.panelDataSource.data = [];
+      }
+    });
+  }
+
+  getEdgebandData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayEdgebandData(payload).subscribe({
+      next: (res: any) => {
+        this.edgeBandDataSource.data = res || []; 
+        if (this.edgebandPaginator) {
+          this.edgeBandDataSource.paginator = this.edgebandPaginator;
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching product data");
+        this.edgeBandDataSource.data = [];
       }
     });
   }
@@ -1740,13 +2069,13 @@ export class OptimizerComponent extends BaseComponent {
     };
     this.switchService.displayBasePanelData(payload).subscribe({
       next: (res: any) => {
-        if (!Array.isArray(res) || res.length === 0) {
-          this.toastr.warning("No base panels found.");
-        } else {
+        if (Array.isArray(res) && res.length > 0) {
           this.basePanel = res.map(panel => ({
             name: panel.basePanleName, 
             id: panel.basePanelId       
           }));
+        } else {
+          this.basePanel = []; 
         }
       },
       error: (error) => {
@@ -1755,6 +2084,7 @@ export class OptimizerComponent extends BaseComponent {
       }
     });
   }
+  
 
   getMakeData() {
     let payload = {
@@ -1764,13 +2094,13 @@ export class OptimizerComponent extends BaseComponent {
     };
     this.switchService.displayMakeData(payload).subscribe({
       next: (res: any) => {
-        if (!Array.isArray(res) || res.length === 0) {
-          // this.toastr.warning("No make data found.");
-        } else {
+        if (Array.isArray(res) && res.length > 0) {
           this.makePanel = res.map(make => ({
             name: make.makeName, 
             id: make.makeId      
           }));
+        } else {
+          this.makePanel = []; 
         }
       },
       error: (error) => {
@@ -1779,7 +2109,7 @@ export class OptimizerComponent extends BaseComponent {
       }
     });
   }
-
+  
   getGradeData() {
     let payload = {
       email: this.userEmail,
@@ -1788,24 +2118,116 @@ export class OptimizerComponent extends BaseComponent {
     };
     this.switchService.displayGradeData(payload).subscribe({
       next: (res: any) => {
-        if (!Array.isArray(res) || res.length === 0) {
-          this.toastr.warning("No make data found.");
-        } else {
+        if (Array.isArray(res) && res.length > 0) {
           this.gradePanel = res.map(grade => ({
             name: grade.gradeName,  
             id: grade.gradePanelId     
+          }));
+        } else {
+          this.gradePanel = []; 
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching grade data");
+        this.gradePanel = [];
+      }
+    });
+  }
+  
+  getSkinData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displaySkinData(payload).subscribe({
+      next: (res: any) => {
+        this.skinDataSource.data = res || [];
+        if (this.skinPaginator) {
+          this.skinDataSource.paginator = this.skinPaginator;
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching skin data");
+        this.skinDataSource.data = [];
+      }
+    });
+  }
+  
+  getSkinTypeData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displaySkinTypeData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.skinType = res.map(skin => ({
+            name: skin.skinTypeName, 
+            id: skin.skinTypeId      
+          }));
+        } else {
+          this.skinType = []; 
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching skin type data");
+        this.skinType = [];
+      }
+    });
+  }
+  
+  getSkinFinishData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displaySkinFinishData(payload).subscribe({
+      next: (res: any) => {
+        if (!Array.isArray(res) || res.length === 0) {
+          // this.toastr.warning("No make data found.");
+        } else {
+          this.skinFinish = res.map(skin => ({
+            name: skin.skinFinshName, 
+            id: skin.skinFinishId      
           }));
         }
       },
       error: (error) => {
         this.toastr.error("Error fetching make data");
-        this.makePanel = [];
+        this.skinFinish = [];
+      }
+    });
+  }
+
+  getSkinBrandData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displaySkinBrandData(payload).subscribe({
+      next: (res: any) => {
+        if (!Array.isArray(res) || res.length === 0) {
+          // this.toastr.warning("No make data found.");
+        } else {
+          this.skinBrand = res.map(brand => ({
+            name: brand.skinBrandName, 
+            id: brand.skinBrandId      
+          }));
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching make data");
+        this.skinBrand = [];
       }
     });
   }
   
+
   
- 
   deleteProduct(data:any) {
     const prodId = data.prodId;
     if (!prodId) {
@@ -1895,7 +2317,7 @@ export class OptimizerComponent extends BaseComponent {
       return;
     }
     if (confirm('Are you sure you want to delete this product?')) {
-      this.switchService.deleteMakeData(pannel_grade_id).subscribe({
+      this.switchService.deletePannelGradeData(pannel_grade_id).subscribe({
         next: (response) => {
           this.toastr.success(response.message);
           this.getGradeData();
@@ -1910,6 +2332,94 @@ export class OptimizerComponent extends BaseComponent {
     }
   }
 
+
+  deleteSkin(data: any) {
+    const skinId = data.skinId; 
+    if (!skinId) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteSkinData(skinId).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getSkinData();
+        },
+        error: (error) => {
+          this.toastr.error("Failed to delete product.");
+        }
+      });
+    }
+  }
+
+
+  deleteSkinBrand(data:any, modal:any) {
+    const skin_brand_id = data.id;
+    if (!skin_brand_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteSkinBrandData(skin_brand_id).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getSkinBrandData();
+          if (modal) {
+            modal.close();  
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+
+  deleteSkinType(data:any, modal:any) {
+    const skin_type_id = data.id;
+    if (!skin_type_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteSkinTypeData(skin_type_id).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getSkinTypeData();
+          if (modal) {
+            modal.close();  
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+  
+  deleteSkinFinishType(data:any, modal:any) {
+    const skin_finish_id = data.id;
+    if (!skin_finish_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteSkinFinishData(skin_finish_id).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getSkinFinishData();
+          if (modal) {
+            modal.close();  
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+
+
   getStatusClass(isActive: boolean): string {
     return isActive ? "badge bg-success-transparent ps-3 fs-11 order-status complete " : "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
   }
@@ -1917,7 +2427,16 @@ export class OptimizerComponent extends BaseComponent {
   getStatusText(isActive: boolean): string {
     return isActive ? "Active" : "Inactive"; 
   }  
-
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (
+      (charCode >= 48 && charCode <= 57) || 
+      charCode === 46                      
+    ) {
+      return;
+    }
+    event.preventDefault(); 
+  }
   
   
   

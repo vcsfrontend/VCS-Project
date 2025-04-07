@@ -500,9 +500,22 @@ export class BaseComponent {
       {"name":"N/A"}
     ]
 
-    PanelPressing= [{"name" : "0"},
+    PanelPressing = [{"name" : "0"},
       {"name" :"1"},
       {"name":"2"}
     ]
+
+    Operation = [{"name" : "Hot press"},
+      {"name" :"Paint"},
+      {"name":"Vaccume Press"}
+    ]
+
+    SkinGrains= [{"name" : "Vertical"},
+      {"name" :"Horizontal"},
+      {"name":"N/A"}
+    ]
+
+    // SkinFinish = [{"name" : "test"},
+    // ]
 
 }
