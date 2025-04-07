@@ -2507,7 +2507,7 @@ export class OptimizerComponent extends BaseComponent {
     const prodId = data.processedPanelId;
     if (!prodId) {
       alert('Error: Process Panel ID is missing!');
-      return;
+      return; 
     }
     if (confirm('Are you sure you want to delete this process panel?')) {
       this.switchService.deleteProcessPanelData(prodId).subscribe({
