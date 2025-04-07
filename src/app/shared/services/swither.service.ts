@@ -136,6 +136,8 @@ export class SwitherService {
   deleteSkinFinishData(skin_finish_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_skin_finish_data/${skin_finish_id}`);}
   displayProcessPanelData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_processed_pannel`, data); }
   saveProcessPanelData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_processed_pannel`, data); }
+  deleteProcessPanelData(pannel_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_processed_pannel/${pannel_id}`);}
+ 
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
   CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  
