@@ -86,7 +86,7 @@ export class OptimizerComponent extends BaseComponent {
   skinForm!: FormGroup; skinTypeForm!: FormGroup; skinFinishForm!: FormGroup; skinBrandForm!: FormGroup;
   edgeBandForm!: FormGroup; edgeContentForm!: FormGroup; processPanelForm!: FormGroup;
   basePanel: any[] = []; makePanel: any[] = []; gradePanel: any[] = []; skinType: any[] = [];
-  skinFinish: any[] = []; skinBrand: any[] = [];
+  skinFinish: any[] = []; skinBrand: any[] = []; makeEdge: any[] = [];
   isEditingProduct: boolean = false;
 
   public optimizerForm!: FormGroup;
@@ -177,6 +177,7 @@ export class OptimizerComponent extends BaseComponent {
     this.getPartsData();
     this.getPartshistory();
     this.getGeneratedOutputJson(value);
+    this.getMakeEdgeData();
 
     this.generatedForm = this.fb.group({
       id: [{ value: '', disabled: this.btnDisable }],
@@ -1869,12 +1870,10 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.saveSkinTypeData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
-          if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+          this.toastr.success(res.message);          
           this.skinTypeForm.reset();
           this.skinTypeSubmitted = false;
+          modal.close();
           this.getSkinTypeData();
         } else {
           this.toastr.error(res.message);
@@ -1901,12 +1900,10 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.saveSkinFinishData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
-          if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+          this.toastr.success(res.message);          
           this.skinFinishForm.reset();
           this.skinFinishSubmitted = false;
+          modal.close();
           this.getSkinFinishData();
         } else {
           this.toastr.error(res.message);
@@ -1933,12 +1930,10 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.saveSkinBrandData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
-          if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+          this.toastr.success(res.message);          
           this.skinBrandForm.reset();
           this.skinBrandSubmitted = false;
+          modal.close();
           this.getSkinBrandData();
         } else {
           this.toastr.error(res.message);
@@ -2014,7 +2009,7 @@ export class OptimizerComponent extends BaseComponent {
             companyCode: this.userCompanyCode,
             email: this.userEmail
           });
-
+          this.getMakeEdgeData();
           // Close modal
           modal.close();
         } else {
@@ -2295,6 +2290,7 @@ export class OptimizerComponent extends BaseComponent {
       next: (res: any) => {
         if (!Array.isArray(res) || res.length === 0) {
           // this.toastr.warning("No make data found.");
+          this.skinBrand = [];
         } else {
           this.skinBrand = res.map(brand => ({
             name: brand.skinBrandName,
@@ -2305,6 +2301,31 @@ export class OptimizerComponent extends BaseComponent {
       error: (error) => {
         this.toastr.error("Error fetching make data");
         this.skinBrand = [];
+      }
+    });
+  }
+
+  getMakeEdgeData() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+      content:'edge_make'
+    };
+    this.switchService.getEdgeContentData(payload).subscribe({
+      next: (res: any) => {
+        if (!Array.isArray(res) || res.length === 0) {
+          // this.toastr.warning("No make data found.");
+        } else {
+          this.makeEdge = res.map(edge => ({
+            name: edge.name,
+            id: edge.id
+          }));
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching make data");
+        this.makeEdge = [];
       }
     });
   }
@@ -2491,6 +2512,32 @@ export class OptimizerComponent extends BaseComponent {
         next: (response) => {
           this.toastr.success(response.message);
           this.getSkinFinishData();
+          if (modal) {
+            modal.close();
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+
+  deleteMakeEdge(data: any, modal: any) {
+    const make_id = data.id;
+    if (!make_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    let payload = {
+      id: make_id,      
+      content:'edge_make'
+    };
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteEdgeContentData(payload).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getMakeEdgeData();
           if (modal) {
             modal.close();
           }
