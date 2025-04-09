@@ -40,7 +40,7 @@ export class OptimizerComponent extends BaseComponent {
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
   productDisplayedColumn: string[] = ['slNo', 'code', 'name', 'description', 'isActive', 'edit', 'delete'];
-  panelDisplayedColumn: string[] = ['slNo', 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'isActive', 'edit',  'image', 'delete'];
+  panelDisplayedColumn: string[] = ['slNo', 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'isActive', 'edit', 'image', 'delete'];
   skinDisplayedColumn: string[] = ['designNo', 'name', 'brand', 'skinType', 'length', 'width', 'thickness', 'operation', 'grains', 'uom', 'skinFinish', 'edgeBands', 'isActive', 'isColdPress', 'edit', 'image', 'delete'];
   edgeBandDisplayedColumn: string[] = ['designCode', 'designNo', 'designName', 'name', 'make', 'material', 'finish', 'width', 'thickness', 'hsnCode', 'premiling', 'isActive', 'image', 'uom', 'internalCode', 'edit', 'image', 'delete'];
   processPanelDisplayedColumn: string[] = ['code', 'name', 'panel', 'skin1', 'skin2', 'isActive', 'edit', 'delete'];
@@ -86,8 +86,11 @@ export class OptimizerComponent extends BaseComponent {
   skinForm!: FormGroup; skinTypeForm!: FormGroup; skinFinishForm!: FormGroup; skinBrandForm!: FormGroup;
   edgeBandForm!: FormGroup; edgeContentForm!: FormGroup; processPanelForm!: FormGroup;
   basePanel: any[] = []; makePanel: any[] = []; gradePanel: any[] = []; skinType: any[] = [];
-  skinFinish: any[] = []; skinBrand: any[] = []; makeEdge: any[] = [];
+  skinFinish: any[] = []; skinBrand: any[] = []; makeEdge: any[] = []; edgeBrandMaterial: any[] = []; edgeBrandType: any[] = []; edgeBrandData: any[] = [];
+  edgeBrandFinish: any[] = [];
   isEditingProduct: boolean = false;
+  edgePopupTitle = '';
+  edgeContent = '';
 
   public optimizerForm!: FormGroup;
   public optimizerFormSubmitted = false;
@@ -177,7 +180,10 @@ export class OptimizerComponent extends BaseComponent {
     this.getPartsData();
     this.getPartshistory();
     this.getGeneratedOutputJson(value);
-    this.getMakeEdgeData();
+    this.getMakeEdgeData('edge_make');
+    this.getMakeEdgeData('edge_material');
+    this.getMakeEdgeData('edge_type');
+    this.getMakeEdgeData('edge_finish');
 
     this.generatedForm = this.fb.group({
       id: [{ value: '', disabled: this.btnDisable }],
@@ -709,13 +715,13 @@ export class OptimizerComponent extends BaseComponent {
     return this.panelForm.controls;
   }
 
-  
+
 
   // Getter for stock FormArray
   get stock() {
     return this.optimizeFormSample.get('stock') as FormArray;
   }
-  
+
 
   // Getter for parts FormArray
   get parts() {
@@ -1891,7 +1897,7 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.saveSkinTypeData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);          
+          this.toastr.success(res.message);
           this.skinTypeForm.reset();
           this.skinTypeSubmitted = false;
           modal.close();
@@ -1921,7 +1927,7 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.saveSkinFinishData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);          
+          this.toastr.success(res.message);
           this.skinFinishForm.reset();
           this.skinFinishSubmitted = false;
           modal.close();
@@ -1951,7 +1957,7 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.saveSkinBrandData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);          
+          this.toastr.success(res.message);
           this.skinBrandForm.reset();
           this.skinBrandSubmitted = false;
           modal.close();
@@ -1998,13 +2004,70 @@ export class OptimizerComponent extends BaseComponent {
     });
   }
 
-  onEdgeContentSubmit(
-    edgeType: 'edge_make' | 'edge_finish' | 'edge_type' | 'edge_material',
-    modal: any
+  openEdgeGetPopup(content22: any, edgeType: any, edgeTitle: any) {
+    this.modalService.open(content22, { size: 'sm', scrollable: true, centered: true, });
+    this.edgePopupTitle = edgeTitle;
+    this.edgeContent = edgeType;
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+      content: edgeType
+    };
+    this.switchService.getEdgeContentData(payload).subscribe({
+      next: (res: any) => {
+        this.edgeBrandData = [];
+        if (!Array.isArray(res) || res.length === 0) {
+          // this.toastr.warning("No make data found.");
+        } else {
+          this.edgeBrandData = res;
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching make data");
+        this.edgeBrandData = [];
+      }
+    });
+  }
+
+  openEdgePopup(content21: any, edgeType: any, edgeTitle: any) {
+    this.modalService.open(content21, { size: 'sm', scrollable: true, centered: true, });
+    this.edgePopupTitle = edgeTitle;
+    this.edgeContent = edgeType;
+    
+  }
+
+  deleteEdgeContent(data: any, modal: any) {
+    const make_id = data.id;
+    if (!make_id) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    let payload = {
+      id: make_id,
+      content: this.edgeContent
+    };
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteEdgeData(payload).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getMakeEdgeData(this.edgeContent);
+          if (modal) {
+            modal.close();
+          }
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
+        }
+      });
+    }
+  }
+
+  onEdgeContentSubmit(modal: any
   ) {
     // Set content and type based on the form type
     this.edgeContentForm.patchValue({
-      content: edgeType,
+      content: this.edgeContent,
       type: this.userType
     });
 
@@ -2022,7 +2085,7 @@ export class OptimizerComponent extends BaseComponent {
     this.switchService.saveEdgeContentData(payload).subscribe({
       next: (res: any) => {
         if (res.status) {
-          this.toastr.success(`Edge ${edgeType.replace('edge_', '')} saved successfully.`);
+          this.toastr.success(`Edge ${this.edgeContent.replace('edge_', '')} saved successfully.`);
           this.edgeContentForm.reset();
 
           // Reset required values again after form reset
@@ -2030,7 +2093,7 @@ export class OptimizerComponent extends BaseComponent {
             companyCode: this.userCompanyCode,
             email: this.userEmail
           });
-          this.getMakeEdgeData();
+          this.getMakeEdgeData(this.edgeContent);
           // Close modal
           modal.close();
         } else {
@@ -2240,7 +2303,7 @@ export class OptimizerComponent extends BaseComponent {
     };
     this.switchService.displaySkinData(payload).subscribe({
       next: (res: any) => {
-        this.skinItems=res;
+        this.skinItems = res;
         this.skinDataSource.data = res || [];
         if (this.skinPaginator) {
           this.skinDataSource.paginator = this.skinPaginator;
@@ -2326,32 +2389,59 @@ export class OptimizerComponent extends BaseComponent {
     });
   }
 
-  getMakeEdgeData() {
+  getMakeEdgeData(edgeType: any) {
     let payload = {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType,
-      content:'edge_make'
+      content: edgeType
     };
     this.switchService.getEdgeContentData(payload).subscribe({
-      next: (res: any) => {
+      next: (res: any) => {        
         if (!Array.isArray(res) || res.length === 0) {
           // this.toastr.warning("No make data found.");
         } else {
-          this.makeEdge = res.map(edge => ({
-            name: edge.name,
-            id: edge.id
-          }));
+          if (edgeType === 'edge_make') {
+            this.makeEdge = res.map(edge => ({
+              name: edge.name,
+              id: edge.id
+            }));
+          }
+          else if (edgeType === 'edge_material') {
+            this.edgeBrandMaterial = res.map(edge => ({
+              name: edge.name,
+              id: edge.id
+            }));
+          }
+          else if (edgeType === 'edge_type') {
+            this.edgeBrandType = res.map(edge => ({
+              name: edge.name,
+              id: edge.id
+            }));
+          }
+          else if (edgeType === 'edge_finish') {
+            this.edgeBrandFinish = res.map(edge => ({
+              name: edge.name,
+              id: edge.id
+            }));
+          }
         }
       },
       error: (error) => {
         this.toastr.error("Error fetching make data");
         this.makeEdge = [];
+        this.edgeBrandMaterial = [];
+        this.edgeBrandType = [];
+        this.edgeBrandFinish = [];
       }
     });
   }
 
+  openProductPopup()
+  {   
 
+      this.productForm.patchValue({prodId:this.generateProductId(),code:'',name:'',description:'',isActive:true});
+  }
 
 
   deleteProduct(data: any) {
@@ -2571,14 +2661,14 @@ export class OptimizerComponent extends BaseComponent {
       return;
     }
     let payload = {
-      id: make_id,      
-      content:'edge_make'
+      id: make_id,
+      content: 'edge_make'
     };
     if (confirm('Are you sure you want to delete this product?')) {
       this.switchService.deleteEdgeContentData(payload).subscribe({
         next: (response) => {
           this.toastr.success(response.message);
-          this.getMakeEdgeData();
+          this.getMakeEdgeData('edge_make');
           if (modal) {
             modal.close();
           }
@@ -2595,7 +2685,7 @@ export class OptimizerComponent extends BaseComponent {
     const prodId = data.processedPanelId;
     if (!prodId) {
       alert('Error: Process Panel ID is missing!');
-      return; 
+      return;
     }
     if (confirm('Are you sure you want to delete this process panel?')) {
       this.switchService.deleteProcessPanelData(prodId).subscribe({

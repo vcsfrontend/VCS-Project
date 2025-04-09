@@ -601,7 +601,7 @@
                             <mat-label>Search Here</mat-label>
                             <input matInput (keyup)="productApplyFilter($event)" #input>
                         </mat-form-field>
-                        <button type="button" class="btn btn-primary" (click)="openLg6(content10)">
+                        <button type="button" class="btn btn-primary" (click)="openLg6(content10);openProductPopup()">
                             <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Product</button>
                     </div>
 
@@ -2603,40 +2603,40 @@
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Make<span class="badge bg-info-transparent cu"
-                                (click)="openLg17(content21)">Add</span>
+                                (click)="openEdgePopup(content21,'edge_make','Add Edgeband Make')">Add</span>
                             <a aria-label="anchor" href="javascript:void(0);"
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                <i class="ri-delete-bin-line" (click)="openLg18(content22)"></i></a></label>
+                                <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_make','Delete Edgeband Make')"></i></a></label>
                         <ng-select formControlName="make" [items]="makeEdge" bindLabel="name" bindValue="name"
                             placeholder="Select Edge Make">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Material <span
-                                class="badge bg-info-transparent cu" (click)="openLg19(content29)">Add</span>
+                                class="badge bg-info-transparent cu" (click)="openEdgePopup(content21,'edge_material','Add Edgeband Material')">Add</span>
                             <a aria-label="anchor" href="javascript:void(0);"
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                <i class="ri-delete-bin-line" (click)="openLg20(content24)"></i></a></label>                        
-                            <ng-select formControlName="material" [items]="skinBrand" bindLabel="name" bindValue="name"
+                                <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_material','Delete Edgeband Material')"></i></a></label>                        
+                            <ng-select formControlName="material" [items]="edgeBrandMaterial" bindLabel="name" bindValue="name"
                             placeholder="Select Material">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Type<span class="badge bg-info-transparent cu"
-                                (click)="openLg21(content25)">Add</span>
+                            (click)="openEdgePopup(content21,'edge_type','Add Edgeband Type')">Add</span>
                             <a aria-label="anchor" href="javascript:void(0);"
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                <i class="ri-delete-bin-line" (click)="openLg22(content26)"></i></a></label>
-                        <ng-select formControlName="typeName" [items]="skinType" bindLabel="name" bindValue="name"
+                                <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_type','Delete Edgeband Type')"></i></a></label>
+                        <ng-select formControlName="typeName" [items]="edgeBrandType" bindLabel="name" bindValue="name"
                             placeholder="Select Type"></ng-select>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Finish<span class="badge bg-info-transparent cu"
-                                (click)="openLg23(content27)">Add</span>
+                            (click)="openEdgePopup(content21,'edge_finish','Add Edgeband Finish')">Add</span>
                             <a aria-label="anchor" href="javascript:void(0);"
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
-                                <i class="ri-delete-bin-line" (click)="openLg24(content28)"></i></a></label>
-                        <ng-select formControlName="finish" [items]="skinFinish" bindLabel="name" bindValue="name"
+                                <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_finish','Delete Edgeband Finish')"></i></a></label>
+                        <ng-select formControlName="finish" [items]="edgeBrandFinish" bindLabel="name" bindValue="name"
                             placeholder="Select Finish"></ng-select>
                     </div>
                     <div class="col-xl-6">
@@ -2692,9 +2692,9 @@
 </ng-template>
 
 <ng-template #content21 let-modal>
-    <form [formGroup]="edgeContentForm" (ngSubmit)="onEdgeContentSubmit('edge_make', modal)">
+    <form [formGroup]="edgeContentForm" (ngSubmit)="onEdgeContentSubmit(modal)">
         <div class="modal-header justify-content-center">
-            <h6 class="modal-title" id="staticBackdropLabel3">Add Edgeband Make</h6>
+            <h6 class="modal-title" id="staticBackdropLabel3">{{edgePopupTitle}}</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
@@ -2702,9 +2702,9 @@
             <div class="col-xl-12">
                 <div class="row gy-2">
                     <div class="col-xl-12">
-                        <label for="projectAddress" class="form-label">Make Name</label>
+                        <label for="projectAddress" class="form-label">Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="name"
-                            placeholder="Enter Base Panel Name">
+                            placeholder="Enter Name">
                     </div>
                 </div>
             </div>
@@ -2719,7 +2719,7 @@
 
 <ng-template #content22 let-modal>
     <div class="modal-header justify-content-center">
-        <h6 class="modal-title" id="staticBackdropLabel3">Delete Make</h6>
+        <h6 class="modal-title" id="staticBackdropLabel3">{{edgePopupTitle}}</h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
     </div>
@@ -2736,12 +2736,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let element of makeEdge; let i = index">
+                            <tr *ngFor="let element of edgeBrandData; let i = index">
                                 <td class="text-center">{{ i + 1 }}</td>
                                 <td>{{ element.name }}</td>
                                 <td><a aria-label="anchor" href="javascript:void(0);"
                                         class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
-                                        (click)="deleteMakeEdge(element, modal)">
+                                        (click)="deleteEdgeContent(element, modal)">
                                         <i class="ri-delete-bin-line"></i>
                                     </a></td>
                             </tr>

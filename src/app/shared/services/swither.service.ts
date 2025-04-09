@@ -139,7 +139,7 @@ export class SwitherService {
   deleteProcessPanelData(pannel_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_processed_pannel/${pannel_id}`);}
   getEdgeContentData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_edge_content`, data); }
   deleteEdgeContentData(optimizer_edge_band_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_optimizer_edge_band/${optimizer_edge_band_id}`); }
-  
+  deleteEdgeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/delete_edge_content`, data); }
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
   CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  
