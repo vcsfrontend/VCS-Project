@@ -348,7 +348,7 @@ export class OptimizerComponent extends BaseComponent {
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
-      hotpress: [0]
+      hotpress: [2]
     });
 
     //base panel form
@@ -779,7 +779,7 @@ export class OptimizerComponent extends BaseComponent {
     this.modalService.open(content19, { size: 'sm', scrollable: true, centered: true, });
   }
   openLg16(content20: any) {
-    this.modalService.open(content20, { size: 'lg', scrollable: true, centered: true, });
+    this.modalService.open(content20, { scrollable: true, centered: true, });
   }
   openLg17(content21: any) {
     this.modalService.open(content21, { size: 'sm', scrollable: true, centered: true, });
@@ -2451,6 +2451,25 @@ export class OptimizerComponent extends BaseComponent {
         },
         error: (error) => {
           this.toastr.error("Failed to delete product.");
+        }
+      });
+    }
+  }
+
+  deleteEdgeband(data: any) {
+    const edgeBandId = data.edgeBandId;
+    if (!edgeBandId) {
+      alert('Error: Product ID is missing!');
+      return;
+    }
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.switchService.deleteEdgeContentData(edgeBandId).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getEdgebandData();
+        },
+        error: (error) => {
+          this.toastr.error("id not yed");
         }
       });
     }
