@@ -40,9 +40,9 @@ export class OptimizerComponent extends BaseComponent {
   bulkPartsStockDisplayedColumn: string[] = ['slNo', 'sheetName', 'icon'];
   partsDisplayedColumn: string[] = ['select', 'slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
   productDisplayedColumn: string[] = ['slNo', 'code', 'name', 'description', 'isActive', 'edit', 'delete'];
-  panelDisplayedColumn: string[] = ['slNo', 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'isActive', 'edit', 'copy', 'image', 'delete'];
-  skinDisplayedColumn: string[] = ['designNo', 'name', 'brand', 'skinType', 'length', 'width', 'thickness', 'operation', 'grains', 'uom', 'skinFinish', 'edgeBands', 'isActive', 'isColdPress', 'edit', 'copy', 'image', 'delete'];
-  edgeBandDisplayedColumn: string[] = ['designcode', 'designName', 'name', 'make', 'material', 'finish', 'width', 'thickness', 'hsnCode', 'premiling', 'isActive', 'image', 'uom', 'internalCode', 'edit', 'copy', 'image', 'delete'];
+  panelDisplayedColumn: string[] = ['slNo', 'designNo', 'name', 'length', 'width', 'thickness', 'uom', 'basePanel', 'make', 'grade', 'hotpress', 'grains', 'isActive', 'edit',  'image', 'delete'];
+  skinDisplayedColumn: string[] = ['designNo', 'name', 'brand', 'skinType', 'length', 'width', 'thickness', 'operation', 'grains', 'uom', 'skinFinish', 'edgeBands', 'isActive', 'isColdPress', 'edit', 'image', 'delete'];
+  edgeBandDisplayedColumn: string[] = ['designCode', 'designNo', 'designName', 'name', 'make', 'material', 'finish', 'width', 'thickness', 'hsnCode', 'premiling', 'isActive', 'image', 'uom', 'internalCode', 'edit', 'image', 'delete'];
   processPanelDisplayedColumn: string[] = ['code', 'name', 'panel', 'skin1', 'skin2', 'isActive', 'edit', 'delete'];
 
   //dataSource = new MatTableDataSource<any>(); 
@@ -434,6 +434,7 @@ export class OptimizerComponent extends BaseComponent {
     //edgebrand form
     this.edgeBandForm = this.fb.group({
       edgeBandId: [{ value: this.generateProductId(), disabled: true }],
+      designNo: ['', Validators.required],
       designCode: ['', Validators.required],
       designName: ['', Validators.required],
       name: ['', Validators.required],
@@ -689,10 +690,32 @@ export class OptimizerComponent extends BaseComponent {
     return (this.optimizerForm.get('saw') as FormGroup).controls; // Cast to FormGroup
   }
 
+  get gf() {
+    return this.gradeForm.controls;
+  }
+
+  get f() {
+    return this.productForm.controls;
+  }
+
+  get h() {
+    return this.basePanelForm.controls;
+  }
+
+  get qf() {
+    return this.makeForm.controls;
+  }
+  get q() {
+    return this.panelForm.controls;
+  }
+
+  
+
   // Getter for stock FormArray
   get stock() {
     return this.optimizeFormSample.get('stock') as FormArray;
   }
+  
 
   // Getter for parts FormArray
   get parts() {
@@ -808,7 +831,9 @@ export class OptimizerComponent extends BaseComponent {
   openLg25(content29: any) {
     this.modalService.open(content29, { size: 'sm', scrollable: true, centered: true, });
   }
-
+  openLg26(content30: any) {
+    this.modalService.open(content30, { size: 'sm', scrollable: true, centered: true, });
+  }
   downloadOptimizerFile() {
     this.switchService.optimizeDownload(this.optimizeId).subscribe({
       next: (res: any) => {
@@ -887,10 +912,6 @@ export class OptimizerComponent extends BaseComponent {
 
   get g() {
     return this.generatedForm.controls;
-  }
-
-  get q() {
-    return this.productForm.controls;
   }
 
   onGeneratedSubmit(modal: any) {
@@ -2329,6 +2350,7 @@ export class OptimizerComponent extends BaseComponent {
       }
     });
   }
+
 
 
 
