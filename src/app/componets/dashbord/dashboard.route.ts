@@ -73,6 +73,11 @@ export const admin: Routes = [
     import('./projects/projects.component').then((m) => m.ProjectsComponent),
 },
 {
+  path: 'adonai-users',
+  loadComponent: () =>
+    import('./adonai-users/adonai-users.component').then((m) => m.AdonaiUsersComponent),
+},
+{
   path: 'designers',
   loadComponent: () =>
     import('./Designers/designers.component').then((m) => m.DesignersComponent),
