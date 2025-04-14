@@ -99,15 +99,17 @@ export class SuperadminComponent {
   content3: any; content4: any; content5: any; content6: any; content7: any;
   userLst:any; userData: any; adonaiHstryLst: any; crmHstryLst: any;
   firstNm: any; lastNm: any; companyNm: any; phoneNo: any; dob: any;
-  adonaiData: any; crmData: any; 
+  adonaiData: any; crmData: any;  adonaiSalesPerson: any; adonaiDiscount: any;
   adonaiEmail: any; adonaiRoleId: any; isAdonai: any; adonaiActivitySts:any; 
+  adonaiAccountManager : any; adonaiManager : any;
+  salesPerson : any; discount : any;  accountManager : any; manager : any;
   adonaiSubStartDate: any; adonaiSubEndDate: any; adonaiSubDate: any; adonaiRemarks: any; 
   adonaiAppUid: any; adonaiUsername: any; adonaiCity: any; adonaiUpdatedBy: any; adonaiUpdatedDate: any;
   crmEmail: any; crmRoleId: any; isCrm: any; crmStatus: any; crmSubStartDate: any; crmSubEndDate: any; 
   crmSubDate: any; crmRemarks: any; crmUsername: any; crmCity:any; crmUpdatedBy: any;
   isAdonaiView = false; isCrmView = false; userNm: any;
   isCrmTrue: any; type: any; users: any; email: any; username: any; country: any; isAdonaiTrue: any;
-  dbData: any = {}; isSts:boolean =true;
+  dbData: any = {}; isSts:boolean =true; 
 
   totalUsers = 896; // Replace this with the correct total value if it's dynamic
   newUser: string = '';
@@ -605,6 +607,7 @@ chartOptions6:any= {
     },
   },
 };
+
   
   constructor(config: NgbModalConfig, private modalService: NgbModal, private viewContainerRef: ViewContainerRef,
     public switchService: SwitherService, private toastr: ToastrService, private dp: DatePipe) {
@@ -700,6 +703,10 @@ chartOptions6:any= {
         this.adonaiAppUid = res.appuid;
         this.adonaiUsername = res.username;
         this.adonaiCity = res.city;
+        this.adonaiSalesPerson = res.salesPerson;
+        this.adonaiDiscount = res.discount;
+        this.adonaiAccountManager = res.accountManager;
+        this.adonaiManager = res.manager;
         } else{
           this.toastr.error(res.message);
           return;
@@ -762,7 +769,11 @@ chartOptions6:any= {
       "subStartDate": this.dp.transform(this.adonaiSubStartDate, 'yyyy-MM-dd'),
       "subEndDate": this.dp.transform(this.adonaiSubEndDate, 'yyyy-MM-dd'),
       "remarks": this.adonaiRemarks,
-      "updatedBy": localStorage.getItem('username')
+      "updatedBy": localStorage.getItem('username'),
+      "salesPerson": this.salesPerson,
+      "discount": this.discount,   
+      "accountManager": this.accountManager,
+      "manager": this.manager 
     };
     // payload.type = +payload.type, 
     // payload.dob = this.dp.transform(payload.dob, 'dd-MM-yyyy');
