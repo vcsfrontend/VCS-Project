@@ -1,1 +1,434 @@
-<p>skin works!</p>
+<div class="card custom-card mt-3">
+    <div class="card-header justify-content-between">
+        <div class="card-title">
+            Skin Data
+        </div>
+        <div class="d-flex flex-wrap gap-3">
+            <mat-form-field class="filters-field-1">
+                <mat-label>Search Here</mat-label>
+                <input matInput (keyup)="skinApplyFilter($event)" #input>
+            </mat-form-field>
+            <button type="button" class="btn btn-primary" (click)="openLg14(content18)">
+                <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Skin</button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="mat-elevation-z8">
+            <div class="table-responsive">
+                <table mat-table [dataSource]="skinDataSource" class="mat-table">
+                    <ng-container matColumnDef="designNo">
+                        <th mat-header-cell *matHeaderCellDef> designNo </th>
+                        <td mat-cell *matCellDef="let element"> {{element.designNo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> name </th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="brand">
+                        <th mat-header-cell *matHeaderCellDef> Brand </th>
+                        <td mat-cell *matCellDef="let element"> {{element.brand}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="skinType">
+                        <th mat-header-cell *matHeaderCellDef> SkinType </th>
+                        <td mat-cell *matCellDef="let element"> {{element.skinType}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="length">
+                        <th mat-header-cell *matHeaderCellDef> length </th>
+                        <td mat-cell *matCellDef="let element"> {{element.length}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="width">
+                        <th mat-header-cell *matHeaderCellDef> width </th>
+                        <td mat-cell *matCellDef="let element"> {{element.width}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="thickness">
+                        <th mat-header-cell *matHeaderCellDef> thickness </th>
+                        <td mat-cell *matCellDef="let element"> {{element.thickness}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="operation">
+                        <th mat-header-cell *matHeaderCellDef> operation </th>
+                        <td mat-cell *matCellDef="let element"> {{element.operation}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="grains">
+                        <th mat-header-cell *matHeaderCellDef> grains </th>
+                        <td mat-cell *matCellDef="let element"> {{element.grains}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="uom">
+                        <th mat-header-cell *matHeaderCellDef> uom </th>
+                        <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="skinFinish">
+                        <th mat-header-cell *matHeaderCellDef> skinFinish </th>
+                        <td mat-cell *matCellDef="let element"> {{element.skinFinish}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="edgeBands">
+                        <th mat-header-cell *matHeaderCellDef> edgeBands </th>
+                        <td mat-cell *matCellDef="let element"> {{element.edgeBands}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="isActive">
+                        <th mat-header-cell *matHeaderCellDef> status </th>
+                        <td mat-cell *matCellDef="let element"> {{element.isActive}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="isColdPress">
+                        <th mat-header-cell *matHeaderCellDef> isColdPress </th>
+                        <td mat-cell *matCellDef="let element"> {{element.isColdPress}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="edit">
+                        <th mat-header-cell *matHeaderCellDef> edit </th>
+                        <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                    class="ri-edit-line"></i></a> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="image">
+                        <th mat-header-cell *matHeaderCellDef> image </th>
+                        <td mat-cell *matCellDef="let element"> {{element.image}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="delete">
+                        <th mat-header-cell *matHeaderCellDef> Delete </th>
+                        <td mat-cell *matCellDef="let element">
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
+                                (click)="deleteSkin(element)">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="skinDisplayedColumn"></tr>
+                    <tr mat-row *matRowDef="let row; columns: skinDisplayedColumn">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator #skinPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+<ng-template #content18 let-modal>
+    <form [formGroup]="skinForm" (ngSubmit)="onSkinSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Add Skin</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Design No</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="designNo"
+                            placeholder="Enter Design No">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="name"
+                            placeholder="Enter Discount">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress">Brand<span class="badge bg-info-transparent cu"
+                                (click)="openLg25(content29)">Add</span>
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                (click)="openLg20(content24)"><i class="ri-delete-bin-line"></i></a></label>
+                        <ng-select formControlName="brand" [items]="skinBrand" bindLabel="name" bindValue="name"
+                            placeholder="Select Skin Brand">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress">Skin Type <span class="badge bg-info-transparent cu"
+                                (click)="openLg21(content25)">Add</span>
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                (click)="openLg22(content26)"><i class="ri-delete-bin-line"></i></a></label>
+                        <ng-select formControlName="skinType" [items]="skinType" bindLabel="name" bindValue="name"
+                            placeholder="Enter Skin Type">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Length (mm)</label>
+                        <input type="text" class="form-control" formControlName="length" placeholder="Enter Length(mm)"
+                          (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': skinSubmitted && t['length'].errors }">
+                        <div *ngIf="skinSubmitted && t['length'].errors" class="invalid-feedback">
+                          <div *ngIf="t['length'].errors['required']">Length is required</div>
+                          <div *ngIf="t['length'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
+                    </div>     
+                    <div class="col-xl-6">
+                    <label class="form-label">Width (mm)</label>
+                        <input type="text" class="form-control" formControlName="width" placeholder="Enter Width(mm)"
+                            (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': skinSubmitted && t['width'].errors }">
+                        <div *ngIf="skinSubmitted && t['width'].errors" class="invalid-feedback">
+                            <div *ngIf="t['width'].errors['required']">Width is required</div>
+                            <div *ngIf="t['width'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Thickness (mm)</label>
+                        <input type="text" class="form-control" formControlName="thickness" placeholder="Enter Thickness(mm)"
+                            (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': skinSubmitted && t['thickness'].errors }">
+                        <div *ngIf="skinSubmitted && t['thickness'].errors" class="invalid-feedback">
+                            <div *ngIf="t['thickness'].errors['required']">Thickness is required</div>
+                            <div *ngIf="t['thickness'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Operation</label>
+                        <ng-select formControlName="operation" [items]="Operation" bindLabel="name" bindValue="name"
+                            placeholder="Select Operation">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Grains</label>
+                        <ng-select formControlName="grains" [items]="SkinGrains" bindLabel="name" bindValue="name"
+                            placeholder="Select Grains">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress">Skin Finish <span class="badge bg-info-transparent cu"
+                                (click)="openLg23(content27)">Add</span>
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                (click)="openLg24(content28)"><i class="ri-delete-bin-line"></i></a></label>
+                        <ng-select formControlName="skinFinish" [items]="skinFinish" bindLabel="name" bindValue="name"
+                            placeholder="Select skinFinish">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">EdgeBands</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="edgeBands"
+                            placeholder="Enter EdgeBands">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Image</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="image"
+                            placeholder="Enter image">
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
+                                    formControlName="isActive">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Is Active
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
+                                    formControlName="isColdPress">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Is Coldpress
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content28 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Delete Skin Finish</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="card custom-card">
+            <div class="card-body p-0">
+                <div class="table-responsive overflow-scroll">
+                    <table class="table text-nowrap table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="crm-table-th2">Name</th>
+                                <th class="crm-table-th2">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let element of skinFinish; let i = index">
+                                <td class="text-center">{{ i + 1 }}</td>
+                                <td>{{ element.name }}</td>
+                                <td><a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                        (click)="deleteSkinFinishType(element, modal)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #content27 let-modal>
+    <form [formGroup]="skinFinishForm" (ngSubmit)="onSkinFinishSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Add Skin Finish</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="projectAddress" class="form-label">Skin Finish Name</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="skinFinshName"
+                            placeholder="Enter Skin Finsh Name">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Save</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content26 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Delete Skin Type</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body overflowImportant">
+        <div class="card custom-card">
+            <div class="card-body p-0">
+                <div class="table-responsive overflow-scroll">
+                    <table class="table text-nowrap table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="crm-table-th2">Name</th>
+                                <th class="crm-table-th2">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let element of skinType; let i = index">
+                                <td class="text-center">{{ i + 1 }}</td>
+                                <td>{{ element.name }}</td>
+                                <td><a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                        (click)="deleteSkinType(element, modal)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #content25 let-modal>
+    <form [formGroup]="skinTypeForm" (ngSubmit)="onSkinTypeSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Add Skin Type</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="projectAddress" class="form-label">Skin Type Name</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="skinTypeName"
+                            placeholder="Enter skinTypeName">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Save</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content24 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Delete Skin Brand</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="card custom-card">
+            <div class="card-body p-0">
+                <div class="table-responsive overflow-scroll">
+                    <table class="table text-nowrap table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="crm-table-th2">Name</th>
+                                <th class="crm-table-th2">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let element of skinBrand; let i = index">
+                                <td class="text-center">{{ i + 1 }}</td>
+                                <td>{{ element.name }}</td>
+                                <td><a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                        (click)="deleteSkinBrand(element, modal)">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+</ng-template>
+
+<ng-template #content29 let-modal>
+    <form [formGroup]="skinBrandForm" (ngSubmit)="onSkinBrandSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Add Skin Brand Name</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="projectAddress" class="form-label">Brand Name</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="skinBrandName"
+                            placeholder="Enter Brand Name">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>

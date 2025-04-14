@@ -71,7 +71,7 @@ export class AdonaiUsersComponent {
   adonaiSalesPerson: any;
   adonaiDiscount: any;
   adonaiAccountManager: any;
-  adonaiManager: any;   combinedUserList: any[] = [];
+  adonaiManager: any;   combinedUserList: any[] = []; dbData: any = {};
 
   
   constructor(public switchService: SwitherService, private modalService: NgbModal,) {
@@ -114,17 +114,20 @@ export class AdonaiUsersComponent {
     };
     return roleMap[roleId] || 'Unknown';
   }
+
+  
+  
   
   getRoleBadgeClass(roleId: number): string {
     switch (roleId) {
       case 7: 
-        return 'badge bg-secondary-transparent ps-3 fs-11 order-status';
+        return 'badge bg-danger-transparent ps-3 fs-11 order-status cancel';
       case 12: 
-        return 'badge bg-info-transparent ps-3 fs-11 order-status';
+        return 'badge bg-warning-transparent ps-3 fs-11 order-status pending';
       case 5: 
         return 'badge bg-success-transparent ps-3 fs-11 order-status complete';
       case 3: 
-        return 'badge bg-warning-transparent ps-3 fs-11 order-status';
+        return 'badge bg-primary-transparent ps-3 fs-11 order-status live';
       default:
         return 'badge bg-danger-transparent ps-3 fs-11 order-status cancel';
     }
@@ -138,20 +141,19 @@ export class AdonaiUsersComponent {
           const adonaiRequests = users.map(user =>
             this.switchService.onAdonaiView(user.email).pipe(
               map(adonaiData => {
+                const cityCount = users.filter(u => u.city === user.city).length; // Assuming user.city is what you want
                 return {
                   ...user,
                   adonaiRoleId: adonaiData?.subData?.roleId,
-                  adonaiActivitySts: adonaiData?.subData?.activityStatus,
                   adonaiSubStartDate: adonaiData?.subData?.subStartDate || '',
                   adonaiSubEndDate: adonaiData?.subData?.subEndDate || '',
-                  adonaiRemarks: adonaiData?.subData?.remarks,
-                  adonaiAppUid: adonaiData?.appuid,
-                  adonaiUsername: adonaiData?.username,
                   adonaiCity: adonaiData?.city,
                   adonaiSalesPerson: adonaiData?.salesPerson,
                   adonaiDiscount: adonaiData?.discount,
                   adonaiAccountManager: adonaiData?.accountManager,
                   adonaiManager: adonaiData?.manager,
+                  adonaiDaysLeft: this.calculateDateDifference(adonaiData?.subData?.subEndDate),
+                  count: cityCount 
                 };
               }),
               catchError(error => {
@@ -160,9 +162,10 @@ export class AdonaiUsersComponent {
               })
             )
           );
+  
           forkJoin(adonaiRequests).subscribe((finalList: any[]) => {
-            this.combinedUserList = finalList;
-            this.adonaiUsersDataSource.data = this.combinedUserList;
+            this.dbData = { adonaiData: finalList };
+            this.adonaiUsersDataSource.data = this.dbData.adonaiData;
           });
         }
       },
@@ -172,13 +175,43 @@ export class AdonaiUsersComponent {
     });
   }
 
+  get uniqueAdonaiData() {
+    const uniqueMap = new Map();
+    this.dbData?.adonaiData?.forEach((item: { city: any; }) => {
+      if (!uniqueMap.has(item.city)) {
+        uniqueMap.set(item.city, item);
+      }
+    });
+    return Array.from(uniqueMap.values());
+  }
+  
+  
+  
+
+  calculateDateDifference(endDate: string | Date): string {
+    const today = new Date();
+    const end = new Date(endDate);
+    if (isNaN(end.getTime())) return 'Invalid date';
+  
+    const diffTime = end.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  
+    if (diffDays < 0) return 'Expired';
+    if (diffDays === 0) return 'Last day';
+  
+    return `${diffDays} days left`;
+  }
+
+  showAdonaiFullDetails:boolean = false;
+
+  toggleAdonaiFullDetails(): void {
+    this.showAdonaiFullDetails = !this.showAdonaiFullDetails;
+  }
 
   onRowButtonClick(user: any) {
     console.log('User clicked:', user);
     this.selectedUser = user;
   }
-  
-  
   
 
   getAdonaiClass(adonai: boolean): string {
@@ -188,6 +221,7 @@ export class AdonaiUsersComponent {
   getAdonaiText(adonai: boolean): string {
     return adonai ? 'Active' : 'Inactive';
   }
+  
   
 
   chartOptions2:any = {
