@@ -328,7 +328,7 @@ export class OptimizerComponent extends BaseComponent {
       prodId: [{ value: this.generateProductId(), disabled: true }],
       code: ['', Validators.required],
       name: ['', Validators.required],
-      description: ['', Validators.required],
+      description: [''],
       isActive: [true],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
@@ -344,9 +344,9 @@ export class OptimizerComponent extends BaseComponent {
       basePanel: ['', Validators.required],
       make: ['', Validators.required],
       grade: ['', Validators.required],
-      length: [0, Validators.required],
-      width: [0, Validators.required],
-      thickness: [0, Validators.required],
+      length: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      width: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      thickness: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
       isActive: [true],
       isColdPress: [true],
       grains: ['', Validators.required],
@@ -361,7 +361,7 @@ export class OptimizerComponent extends BaseComponent {
     this.basePanelForm = this.fb.group({
       basePanelId: [{ value: this.generateProductId(), disabled: true }],
       basePanleName: ['', Validators.required],
-      abbr: ['', Validators.required],
+      abbr: [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
@@ -371,7 +371,7 @@ export class OptimizerComponent extends BaseComponent {
     this.makeForm = this.fb.group({
       makeId: [{ value: this.generateProductId(), disabled: true }],
       makeName: ['', Validators.required],
-      abbr: ['', Validators.required],
+      abbr: [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
@@ -381,7 +381,7 @@ export class OptimizerComponent extends BaseComponent {
     this.gradeForm = this.fb.group({
       gradePanelId: [{ value: this.generateProductId(), disabled: true }],
       gradeName: ['', Validators.required],
-      abbr: ['', Validators.required],
+      abbr: [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
@@ -394,9 +394,9 @@ export class OptimizerComponent extends BaseComponent {
       name: ['', Validators.required],
       brand: ['', Validators.required],
       skinType: ['', Validators.required],
-      length: [0, Validators.required],
-      width: [0, Validators.required],
-      thickness: [0, Validators.required],
+      length: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      width: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      thickness: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
       operation: ['', Validators.required],
       grains: ['', Validators.required],
       uom: ['nos', Validators.required],
@@ -713,6 +713,9 @@ export class OptimizerComponent extends BaseComponent {
   }
   get q() {
     return this.panelForm.controls;
+  }
+  get t() {
+    return this.skinForm.controls;
   }
 
 
@@ -1771,8 +1774,8 @@ export class OptimizerComponent extends BaseComponent {
         if (res.status === true) {
           this.toastr.success(res.message);
           if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+            modal.close();
+          }          
           this.basePanelForm.reset();
           this.basePanelSubmitted = false;
           this.getBasePanelData();
@@ -1803,8 +1806,8 @@ export class OptimizerComponent extends BaseComponent {
         if (res.status === true) {
           this.toastr.success(res.message);
           if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+            modal.close();
+          }  
           this.makeForm.reset();
           this.makeSubmitted = false;
           this.getMakeData();
@@ -1835,8 +1838,8 @@ export class OptimizerComponent extends BaseComponent {
         if (res.status === true) {
           this.toastr.success(res.message);
           if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+            modal.close();
+          }  
           this.gradeForm.reset();
           this.gradeSubmitted = false;
           this.getGradeData();
@@ -1867,8 +1870,8 @@ export class OptimizerComponent extends BaseComponent {
         if (res.status === true) {
           this.toastr.success(res.message);
           if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+            modal.close();
+          }  
           this.skinForm.reset();
           this.skinSubmitted = false;
           this.getSkinData();

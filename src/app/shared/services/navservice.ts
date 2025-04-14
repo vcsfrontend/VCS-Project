@@ -126,6 +126,16 @@ export class NavService implements OnDestroy {
       path: '/dashboard/projects',
     },
     {
+      title: 'Products',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: ' bi-layers side-menu__icon',
+      active: false,
+      selected: false,
+      path: '/dashboard/products',
+    },
+    {
       title: 'enterprise',
       dirchange: false,
       type: 'link',
@@ -426,7 +436,11 @@ export class NavService implements OnDestroy {
     //   path: '/dashboard/orgSettings',
     // },
 
+    
+
   ];
+  
+
 
 
   

@@ -2042,11 +2042,7 @@
                 <div class="col-xl-12">
                   <label for="description" class="form-label">Description</label>
                   <input type="text" class="form-control" id="description" formControlName="description"
-                         placeholder="Enter Description"
-                         [ngClass]="{ 'is-invalid': productSubmitted && f['description'].errors }">
-                  <div *ngIf="productSubmitted && f['description'].errors" class="invalid-feedback">
-                    <div *ngIf="f['description'].errors['required']">Description is required</div>
-                  </div>
+                         placeholder="Enter Description">
                 </div>
           
                 <div class="row pt-2">
@@ -2154,7 +2150,7 @@
                           <div *ngIf="q['length'].errors['required']">Length is required</div>
                           <div *ngIf="q['length'].errors['pattern']">Only numbers are allowed</div>
                         </div>
-                    </div>
+                      </div>                      
                 
                     <div class="col-xl-6">
                     <label class="form-label">Width (mm)</label>
@@ -2281,10 +2277,7 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Base Panel Abbreviation</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="abbr"
-                            placeholder="Enter base Panel Abbreviation" [ngClass]="{ 'is-invalid': basePanelSubmitted && h['abbr'].errors }">
-                        <div *ngIf="basePanelSubmitted && h['abbr'].errors" class="invalid-feedback">
-                            <div *ngIf="h['abbr'].errors['required']">Basepanel abbr is required</div>
-                        </div>
+                            placeholder="Enter base Panel Abbreviation">
                     </div>
                 </div>
             </div>
@@ -2490,19 +2483,31 @@
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <label for="projectAddress" class="form-label">Length(mm)</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="length"
-                            placeholder="Enter Length(mm)" (keypress)="allowOnlyNumbers($event)">
+                        <label class="form-label">Length (mm)</label>
+                        <input type="text" class="form-control" formControlName="length" placeholder="Enter Length(mm)"
+                          (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': skinSubmitted && t['length'].errors }">
+                        <div *ngIf="skinSubmitted && t['length'].errors" class="invalid-feedback">
+                          <div *ngIf="t['length'].errors['required']">Length is required</div>
+                          <div *ngIf="t['length'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
+                    </div>     
+                    <div class="col-xl-6">
+                    <label class="form-label">Width (mm)</label>
+                        <input type="text" class="form-control" formControlName="width" placeholder="Enter Width(mm)"
+                            (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': skinSubmitted && t['width'].errors }">
+                        <div *ngIf="skinSubmitted && t['width'].errors" class="invalid-feedback">
+                            <div *ngIf="t['width'].errors['required']">Width is required</div>
+                            <div *ngIf="t['width'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
-                        <label for="projectAddress" class="form-label">Width(mm)</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="width"
-                            placeholder="Enter Width(mm)" (keypress)="allowOnlyNumbers($event)">
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="projectAddress" class="form-label">Thickness(mm)</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="thickness"
-                            placeholder="Enter *Thickness(mm)" (keypress)="allowOnlyNumbers($event)">
+                        <label class="form-label">Thickness (mm)</label>
+                        <input type="text" class="form-control" formControlName="thickness" placeholder="Enter Thickness(mm)"
+                            (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': skinSubmitted && t['thickness'].errors }">
+                        <div *ngIf="skinSubmitted && t['thickness'].errors" class="invalid-feedback">
+                            <div *ngIf="t['thickness'].errors['required']">Thickness is required</div>
+                            <div *ngIf="t['thickness'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Operation</label>

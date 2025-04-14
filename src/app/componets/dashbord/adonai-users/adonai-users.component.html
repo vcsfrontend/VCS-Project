@@ -1,1 +1,416 @@
-<p>adonai-users works!</p>
+<div class="row pt-4">
+      <div class="col-md-12 col-xl-12">
+        <div class="row">
+            <div class="col-md-6 col-lg-3 col-xl-3">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="mb-2 p-3 pb-0">
+                            <div class="flex-fill fs-15">Total Basic</div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3">
+                            <div class="flex-fill">
+                                <div class="fs-25 fw-normal mb-2">$170k+</div>
+                                <p class="mb-0">
+                                    <i class="ri-arrow-up-line text-primary fs-15 align-middle"></i>
+                                    <span  class="text-primary fs-12"> 26.35% last month</span>
+                                </p>
+                            </div>
+                            <div id="sales-card" class="crm-card-chart">
+                                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
+                                [xaxis]="chartOptions.xaxis" [colors]="chartOptions.colors" [fill]="chartOptions.fill"
+                                [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+                                [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid"
+                                [yaxis]="chartOptions.yaxis">
+                            </apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 col-xl-3">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="mb-2 p-3 pb-0">
+                            <div class="flex-fill fs-15">Total Pro</div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3">
+                            <div class="flex-fill">
+                                <div class="fs-25 fw-normal mb-2">$115k</div>
+                                <p class="mb-0">
+                                    <i class="ri-arrow-down-line text-danger fs-15 align-middle"></i>
+                                    <span  class="text-danger fs-12"> 11.35% last month</span>
+                                </p>
+                            </div>
+                            <div id="revenue-card" class="crm-card-chart">
+                                <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart"
+                                [xaxis]="chartOptions1.xaxis" [colors]="chartOptions1.colors" [fill]="chartOptions1.fill"
+                                [stroke]="chartOptions1.stroke" [tooltip]="chartOptions1.tooltip"
+                                [dataLabels]="chartOptions1.dataLabels" [grid]="chartOptions1.grid"
+                                [yaxis]="chartOptions1.yaxis">
+                            </apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3 col-xl-3">
+            <div class="card custom-card overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="mb-2 p-3 pb-0">
+                        <div class="flex-fill fs-15">Total Elite</div>
+                    </div>
+                    <div class="d-flex align-items-center ps-3">
+                        <div class="flex-fill">
+                            <div class="fs-25 fw-normal mb-2">30k+</div>
+                            <p class="mb-0">
+                                <i class="ri-arrow-up-line text-info fs-15 align-middle"></i>
+                                <span  class="text-info fs-12"> 16.35% last month</span>
+                            </p>
+                        </div>
+                        <div id="orders-card" class="crm-card-chart">
+                            <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
+                            [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors" [fill]="chartOptions3.fill"
+                            [stroke]="chartOptions3.stroke" [tooltip]="chartOptions3.tooltip"
+                            [dataLabels]="chartOptions3.dataLabels" [grid]="chartOptions3.grid"
+                            [yaxis]="chartOptions3.yaxis">
+                        </apx-chart>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-6 col-lg-3 col-xl-3">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="mb-2 p-3 pb-0">
+                            <div class="flex-fill fs-15">Total Sales</div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3">
+                            <div class="flex-fill">
+                                <div class="fs-25 fw-normal mb-2">30k+</div>
+                                <p class="mb-0">
+                                    <i class="ri-arrow-up-line text-info fs-15 align-middle"></i>
+                                    <span  class="text-info fs-12"> 16.35% last month</span>
+                                </p>
+                            </div>
+                            <div id="orders-card" class="crm-card-chart">
+                                <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
+                                [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors" [fill]="chartOptions3.fill"
+                                [stroke]="chartOptions3.stroke" [tooltip]="chartOptions3.tooltip"
+                                [dataLabels]="chartOptions3.dataLabels" [grid]="chartOptions3.grid"
+                                [yaxis]="chartOptions3.yaxis">
+                            </apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+</div> 
+
+<div class="col-xl-12 mt-2">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title">
+                Adonai Users
+            </div>
+            <!-- <div class="d-flex flex-wrap gap-3">
+                <mat-form-field class="filters-field-1">
+                    <mat-label>Search Here</mat-label>
+                    <input matInput (keyup)="stockApplyFilter($event)" #input>
+                </mat-form-field>
+            </div> -->
+        </div>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="adonaiUsersDataSource">
+                        <ng-container matColumnDef="slNo">
+                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef> Email </th>
+                            <td mat-cell *matCellDef="let element" (click)="onRowButtonClick(element); openLg1(content1)"> {{element.email}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="phoneNumber">
+                            <th mat-header-cell *matHeaderCellDef> Number </th>
+                            <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="adonai">
+                            <th mat-header-cell *matHeaderCellDef> Adonai </th>
+                            <td mat-cell *matCellDef="let element" (click)="openLg2(content2)">
+                              <span [ngClass]="getAdonaiClass(element.adonai)">
+                                {{ getAdonaiText(element.adonai) }}
+                              </span>
+                            </td>
+                        </ng-container>                          
+                        <ng-container matColumnDef="adonaiSubStartDate">
+                            <th mat-header-cell *matHeaderCellDef> SubStartDate </th>
+                            <td mat-cell *matCellDef="let element"> {{ element.adonaiSubStartDate | date:'yyyy MMM dd' }} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="adonaiSubEndDate">
+                            <th mat-header-cell *matHeaderCellDef> SubEndDate </th>
+                            <td mat-cell *matCellDef="let element"> {{element.adonaiSubEndDate | date:'yyyy-MM-dd '}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="roleId">
+                            <th mat-header-cell *matHeaderCellDef> plan </th>
+                            <td mat-cell *matCellDef="let element">
+                                <span [ngClass]="getRoleBadgeClass(element.adonaiRoleId)">
+                                {{ getRoleName(element.adonaiRoleId) }}
+                              </span> 
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="manager">
+                            <th mat-header-cell *matHeaderCellDef> Manager </th>
+                            <td mat-cell *matCellDef="let element"> {{element.manager}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="salesPerson">
+                            <th mat-header-cell *matHeaderCellDef> Sales </th>
+                            <td mat-cell *matCellDef="let element"> {{element.salesPerson}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="accountManager">
+                            <th mat-header-cell *matHeaderCellDef> account manager </th>
+                            <td mat-cell *matCellDef="let element"> {{element.accountManager}} </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="adonaiUsersDisplayedColumn"></tr>
+                        <tr mat-row *matRowDef="let row; columns: adonaiUsersDisplayedColumn">
+                        </tr>
+                    </table>
+                </div>
+                <mat-paginator #adonaiUsersPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                </mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 col-xxl-4">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Total Basic</div>
+            </div>
+            <div class="card-body pb-2">
+                <div id="total-employees" class="pt-4 pb-3">
+                    <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
+                    [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors" [legend]="chartOptions2.legend"  [plotOptions]="chartOptions2.plotOptions"
+                    [stroke]="chartOptions2.stroke" [tooltip]="chartOptions2.tooltip"
+                    [dataLabels]="chartOptions2.dataLabels" [grid]="chartOptions2.grid" [labels]="chartOptions2.labels"
+                    [yaxis]="chartOptions2.yaxis"></apx-chart>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="text-center p-3 my-2 border border-dashed rounded">
+                            <span class="fs-14 total-employees male">Basic</span>
+                            <div class="mt-1">
+                                <span class="fs-18">1,654</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="text-center p-3 my-2 border border-dashed rounded">
+                            <span class="fs-14 total-employees female">Pro</span>
+                            <div class="mt-1">
+                                <span class="fs-18">1,234</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="text-center p-3 my-2 border border-dashed rounded">
+                            <span class="fs-14 total-employees male">Elite</span>
+                            <div class="mt-1">
+                                <span class="fs-18">1,654</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4 col-xxl-4">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Visitors By Country</div>
+                <div ngbDropdown  class="dropdown no-caret">
+                    <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
+                        <i class="ri-more-fill fs-18 text-muted"></i>
+                    </a>
+                    <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled visitors-country">
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">U.S.A</span>
+                                    <span class="d-block fs-12 text-muted">559/896</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-primary" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">Germany</span>
+                                    <span class="d-block fs-12 text-muted">358/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-secondary" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">Russia</span>
+                                    <span class="d-block fs-12 text-muted">296/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-warning" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">Brazil</span>
+                                    <span class="d-block fs-12 text-muted">185/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-info" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">France</span>
+                                    <span class="d-block fs-12 text-muted">095/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-danger" style="width: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">China</span>
+                                    <span class="d-block fs-12 text-muted">068/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-success" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <div class="text-center">
+                    <a href="javascript:void(0);" class="text-secondary">Full Details <i class="ri-share-box-line align-middle"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #content1 let-modal>
+    <div class="modal-header justify-content-center">
+      <h6 class="modal-title" id="staticBackdropLabel3">User Information</h6>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body overflowImportant">
+      <div class="col-xl-12">
+        <div class="row gy-2">
+          <div class="col-xl-6">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-control" [value]="selectedUser?.firstName" disabled>
+          </div>
+          <div class="col-xl-6">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-control" [value]="selectedUser?.lastName" disabled>
+          </div>
+          <div class="col-xl-6">
+            <label class="form-label">City</label>
+            <input type="text" class="form-control" [value]="selectedUser?.city" disabled>
+          </div>
+          <div class="col-xl-6">
+            <label class="form-label">Country</label>
+            <input type="text" class="form-control" [value]="selectedUser?.country" disabled>
+          </div>
+          <div class="col-xl-6">
+            <label class="form-label">Coupon</label>
+            <input type="text" class="form-control"  disabled>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>
+  
+
+<ng-template #content2 let-modal>
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Plan History</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="card custom-card">
+                <div class="card-body p-0">
+                    <div class="table-responsive overflow-scroll">
+                        <table class="table text-nowrap table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">S.No</th>
+                                    <th class="crm-table-th2">Name</th>
+                                    <th class="crm-table-th2">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr *ngFor="let element of skinBrand; let i = index">
+                                    <td class="text-center">{{ i + 1 }}</td>
+                                    <td>{{ element.name }}</td>
+                                    <td><a aria-label="anchor" href="javascript:void(0);"
+                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
+                                            >
+                                        </a></td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+</ng-template>
+
