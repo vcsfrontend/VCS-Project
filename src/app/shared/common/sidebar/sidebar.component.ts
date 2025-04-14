@@ -86,9 +86,6 @@ export class SidebarComponent implements AfterViewInit {
           case 'Adonai Users':
             item.isVisible = true;
             break;
-          case 'Products':
-            item.isVisible = true;
-            break;
           // case 'bom':
           //   item.isVisible = true;
           //   break;

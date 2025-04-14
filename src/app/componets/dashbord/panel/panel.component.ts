@@ -75,6 +75,7 @@ export class PanelComponent extends BaseComponent {
       isColdPress: [true],
       grains: ['', Validators.required],
       image: ['', Validators.required],
+      origin : [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],

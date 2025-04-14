@@ -55,9 +55,11 @@ export class ProductsComponent {
       name: ['', Validators.required],
       description: [''],
       isActive: [true],
+      origin: [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType]
+      
     });
     
   }
@@ -76,6 +78,9 @@ export class ProductsComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    this.productForm.patchValue({
+      origin: this.isEditingProduct ? 'edit' : 'save'
+    });
     let payload = {
       ...this.productForm.getRawValue(),
       email: this.userEmail,
@@ -104,6 +109,19 @@ export class ProductsComponent {
       }
     });
   }
+  
+
+  onEditProduct(product: any, modal: any) {
+    this.productForm.get('prodId')?.enable();
+    this.productForm.patchValue({
+      ...product,
+      origin: 'edit' 
+    });
+    this.productForm.get('prodId')?.disable();
+    this.isEditingProduct = true;
+    this.modalService.open(modal);
+  }
+  
 
   getProductData() {
     let payload = {
@@ -124,13 +142,6 @@ export class ProductsComponent {
       }
     });
   }
-
-  onEditProduct(product: any, modal: any) {
-    this.productForm.patchValue(product);
-    this.isEditingProduct = true;
-    this.modalService.open(modal);
-  }
-  
 
   deleteProduct(data: any) {
     const prodId = data.prodId;
