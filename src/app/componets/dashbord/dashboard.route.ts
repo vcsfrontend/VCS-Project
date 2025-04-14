@@ -83,6 +83,26 @@ export const admin: Routes = [
     import('./products/products.component').then((m) => m.ProductsComponent),
 },
 {
+  path: 'panel',
+  loadComponent: () =>
+    import('./panel/panel.component').then((m) => m.PanelComponent),
+},
+{
+  path: 'edgeband',
+  loadComponent: () =>
+    import('./edgeband/edgeband.component').then((m) => m.EdgebandComponent),
+},
+{
+  path: 'skin',
+  loadComponent: () =>
+    import('./skin/skin.component').then((m) => m.SkinComponent),
+},
+{
+  path: 'processPanel',
+  loadComponent: () =>
+    import('./process-panel/process-panel.component').then((m) => m.ProcessPanelComponent),
+},
+{
   path: 'designers',
   loadComponent: () =>
     import('./Designers/designers.component').then((m) => m.DesignersComponent),

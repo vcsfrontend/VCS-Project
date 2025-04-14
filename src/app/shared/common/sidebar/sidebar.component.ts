@@ -107,6 +107,9 @@ export class SidebarComponent implements AfterViewInit {
           case 'optimizer':
             item.isVisible = true;
             break;
+          case 'Optimization':
+            item.isVisible=true;
+            break;
           case 'proposal':
             item.isVisible = true;
             break;
