@@ -387,7 +387,10 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Make Panel Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="makeName"
-                            placeholder="Enter Make Panel Name">
+                            placeholder="Enter Make Panel Name" [ngClass]="{ 'is-invalid': makeSubmitted && f['makeName'].errors }">
+                        <div *ngIf="makeSubmitted && f['makeName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['makeName'].errors['required']">Make Name is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Make Panel Abbreviation</label>

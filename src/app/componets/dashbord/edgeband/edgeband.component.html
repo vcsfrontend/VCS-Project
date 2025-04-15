@@ -1,4 +1,4 @@
-<div class="card custom-card">
+<div class="card custom-card mt-3">
     <div class="card-header justify-content-between d-flex">
         <div class="card-title">
             Edgeband Data
@@ -114,23 +114,36 @@
                 <div class="row gy-2">
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Design No</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="designNo"
-                            placeholder="Enter Design No">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" id="projectAddress" formControlName="designNo"
+                            placeholder="Enter Design No" (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['designNo'].errors }" />
+                        <div *ngIf="EdgebandSubmitted && f['designNo'].errors" class="invalid-feedback">
+                            <div *ngIf="f['designNo'].errors['required']">designNo is required</div>
+                            <div *ngIf="f['designNo'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Design Code</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="designCode"
-                            placeholder="Enter Design No">
+                            placeholder="Enter Design No" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['designCode'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['designCode'].errors" class="invalid-feedback">
+                            <div *ngIf="f['designCode'].errors['required']">designCode is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Design Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="designName"
-                            placeholder="Enter Design Name">
+                            placeholder="Enter Design Name" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['designName'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['designName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['designName'].errors['required']">designName is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="name"
-                            placeholder="Enter name">
+                            placeholder="Enter name" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['name'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['name'].errors" class="invalid-feedback">
+                            <div *ngIf="f['name'].errors['required']">name is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Make<span class="badge bg-info-transparent cu"
@@ -139,8 +152,11 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                                 <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_make','Delete Edgeband Make')"></i></a></label>
                         <ng-select formControlName="make" [items]="makeEdge" bindLabel="name" bindValue="name"
-                            placeholder="Select Edge Make">
+                            placeholder="Select Edge Make" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['make'].errors }">
                         </ng-select>
+                        <div *ngIf="EdgebandSubmitted && f['make'].errors" class="invalid-feedback">
+                            <div *ngIf="f['make'].errors['required']">make is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Material <span
@@ -149,8 +165,11 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                                 <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_material','Delete Edgeband Material')"></i></a></label>                        
                             <ng-select formControlName="material" [items]="edgeBrandMaterial" bindLabel="name" bindValue="name"
-                            placeholder="Select Material">
+                            placeholder="Select Material" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['material'].errors }">
                         </ng-select>
+                        <div *ngIf="EdgebandSubmitted && f['material'].errors" class="invalid-feedback">
+                            <div *ngIf="f['material'].errors['required']">Material is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Type<span class="badge bg-info-transparent cu"
@@ -159,7 +178,10 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                                 <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_type','Delete Edgeband Type')"></i></a></label>
                         <ng-select formControlName="typeName" [items]="edgeBrandType" bindLabel="name" bindValue="name"
-                            placeholder="Select Type"></ng-select>
+                            placeholder="Select Type" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['typeName'].errors }"></ng-select>
+                        <div *ngIf="EdgebandSubmitted && f['typeName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['typeName'].errors['required']">Type is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Finish<span class="badge bg-info-transparent cu"
@@ -168,37 +190,58 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                                 <i class="ri-delete-bin-line" (click)="openEdgeGetPopup(content22,'edge_finish','Delete Edgeband Finish')"></i></a></label>
                         <ng-select formControlName="finish" [items]="edgeBrandFinish" bindLabel="name" bindValue="name"
-                            placeholder="Select Finish"></ng-select>
+                            placeholder="Select Finish" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['finish'].errors }"></ng-select>
+                        <div *ngIf="EdgebandSubmitted && f['finish'].errors" class="invalid-feedback">
+                            <div *ngIf="f['finish'].errors['required']">Finish is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Width(mm)</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="width"
-                            placeholder="Enter Width(mm)" (keypress)="allowOnlyNumbers($event)">
+                            placeholder="Enter Width(mm)" (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['width'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['width'].errors" class="invalid-feedback">
+                            <div *ngIf="f['width'].errors['required']">Width is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Thickness(mm)</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="thickness"
-                            placeholder="Enter *Thickness(mm)" (keypress)="allowOnlyNumbers($event)">
+                            placeholder="Enter *Thickness(mm)" (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['thickness'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['thickness'].errors" class="invalid-feedback">
+                            <div *ngIf="f['thickness'].errors['required']">Thickness is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">HSN Code</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="hsnCode"
-                            placeholder="Enter *Thickness(mm)">
+                            placeholder="Enter HSN Code" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['hsnCode'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['hsnCode'].errors" class="invalid-feedback">
+                            <div *ngIf="f['hsnCode'].errors['required']">hsnCode is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Premilling</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="premiling"
-                            placeholder="Enter *Thickness(mm)">
+                            placeholder="Enter *Thickness(mm)" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['premiling'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['premiling'].errors" class="invalid-feedback">
+                            <div *ngIf="f['premiling'].errors['required']">premiling is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Internal Code</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="internalCode"
-                            placeholder="Enter *Thickness(mm)">
+                            placeholder="Enter internalCode" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['internalCode'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['internalCode'].errors" class="invalid-feedback">
+                            <div *ngIf="f['internalCode'].errors['required']">internalCode is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Upload File</label>
                         <input type="text" class="form-control" formControlName="image"
-                            placeholder="Enter *Thickness(mm)">
+                            placeholder="Enter *Thickness(mm)" [ngClass]="{ 'is-invalid': EdgebandSubmitted && f['image'].errors }">
+                        <div *ngIf="EdgebandSubmitted && f['image'].errors" class="invalid-feedback">
+                            <div *ngIf="f['image'].errors['required']">image is required</div>
+                        </div>
                     </div>
                     <div class="row pt-2">
                         <div class="col-xl-3">
@@ -276,7 +319,10 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="name"
-                            placeholder="Enter Name">
+                            placeholder="Enter Name" [ngClass]="{ 'is-invalid': edgeContentSubmitted && f['name'].errors }">
+                        <div *ngIf="edgeContentSubmitted && f['name'].errors" class="invalid-feedback">
+                            <div *ngIf="f['name'].errors['required']">name is required</div>
+                        </div>
                     </div>
                 </div>
             </div>

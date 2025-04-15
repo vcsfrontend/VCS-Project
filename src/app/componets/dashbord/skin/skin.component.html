@@ -118,12 +118,19 @@
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Design No</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="designNo"
-                            placeholder="Enter Design No">
+                            placeholder="Enter Design No" [ngClass]="{ 'is-invalid': skinSubmitted && t['designNo'].errors }">
+                        <div *ngIf="skinSubmitted && t['designNo'].errors" class="invalid-feedback">
+                            <div *ngIf="t['designNo'].errors['required']">designNo is required</div>
+                            <div *ngIf="t['designNo'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="name"
-                            placeholder="Enter Discount">
+                            placeholder="Enter Discount" [ngClass]="{ 'is-invalid': skinSubmitted && t['name'].errors }">
+                        <div *ngIf="skinSubmitted && t['name'].errors" class="invalid-feedback">
+                            <div *ngIf="t['name'].errors['required']">designName is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Brand<span class="badge bg-info-transparent cu"
@@ -132,8 +139,11 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
                                 (click)="openLg20(content24)"><i class="ri-delete-bin-line"></i></a></label>
                         <ng-select formControlName="brand" [items]="skinBrand" bindLabel="name" bindValue="name"
-                            placeholder="Select Skin Brand">
+                            placeholder="Select Skin Brand" [ngClass]="{ 'is-invalid': skinSubmitted && t['brand'].errors }">
                         </ng-select>
+                        <div *ngIf="skinSubmitted && t['brand'].errors" class="invalid-feedback">
+                            <div *ngIf="t['brand'].errors['required']">brand is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Skin Type <span class="badge bg-info-transparent cu"
@@ -142,8 +152,11 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
                                 (click)="openLg22(content26)"><i class="ri-delete-bin-line"></i></a></label>
                         <ng-select formControlName="skinType" [items]="skinType" bindLabel="name" bindValue="name"
-                            placeholder="Enter Skin Type">
+                            placeholder="Enter Skin Type" [ngClass]="{ 'is-invalid': skinSubmitted && t['skinType'].errors }">
                         </ng-select>
+                        <div *ngIf="skinSubmitted && t['skinType'].errors" class="invalid-feedback">
+                            <div *ngIf="t['skinType'].errors['required']">skinType is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Length (mm)</label>
@@ -175,14 +188,20 @@
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Operation</label>
                         <ng-select formControlName="operation" [items]="Operation" bindLabel="name" bindValue="name"
-                            placeholder="Select Operation">
+                            placeholder="Select Operation" [ngClass]="{ 'is-invalid': skinSubmitted && t['operation'].errors }">
                         </ng-select>
+                        <div *ngIf="skinSubmitted && t['operation'].errors" class="invalid-feedback">
+                            <div *ngIf="t['operation'].errors['required']">operation is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Grains</label>
                         <ng-select formControlName="grains" [items]="SkinGrains" bindLabel="name" bindValue="name"
-                            placeholder="Select Grains">
+                            placeholder="Select Grains" [ngClass]="{ 'is-invalid': skinSubmitted && t['grains'].errors }">
                         </ng-select>
+                        <div *ngIf="skinSubmitted && t['grains'].errors" class="invalid-feedback">
+                            <div *ngIf="t['grains'].errors['required']">grains is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress">Skin Finish <span class="badge bg-info-transparent cu"
@@ -191,18 +210,27 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
                                 (click)="openLg24(content28)"><i class="ri-delete-bin-line"></i></a></label>
                         <ng-select formControlName="skinFinish" [items]="skinFinish" bindLabel="name" bindValue="name"
-                            placeholder="Select skinFinish">
+                            placeholder="Select skinFinish" [ngClass]="{ 'is-invalid': skinSubmitted && t['skinFinish'].errors }">
                         </ng-select>
+                        <div *ngIf="skinSubmitted && t['skinFinish'].errors" class="invalid-feedback">
+                            <div *ngIf="t['skinFinish'].errors['required']">skinFinish is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">EdgeBands</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="edgeBands"
-                            placeholder="Enter EdgeBands">
+                            placeholder="Enter EdgeBands" [ngClass]="{ 'is-invalid': skinSubmitted && t['skinFinish'].errors }">
+                        <div *ngIf="skinSubmitted && t['edgeBands'].errors" class="invalid-feedback">
+                            <div *ngIf="t['edgeBands'].errors['required']">EdgeBands is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Image</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="image"
-                            placeholder="Enter image">
+                            placeholder="Enter image" [ngClass]="{ 'is-invalid': skinSubmitted && t['image'].errors }">
+                        <div *ngIf="skinSubmitted && t['image'].errors" class="invalid-feedback">
+                            <div *ngIf="t['image'].errors['required']">Image is required</div>
+                        </div>
                     </div>
                     <div class="row pt-2">
                         <div class="col-xl-3">
@@ -288,7 +316,10 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Skin Finish Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="skinFinshName"
-                            placeholder="Enter Skin Finsh Name">
+                            placeholder="Enter Skin Finsh Name" [ngClass]="{ 'is-invalid': skinFinishSubmitted && g['skinFinshName'].errors }">
+                            <div *ngIf="skinFinishSubmitted && g['skinFinshName'].errors" class="invalid-feedback">
+                                <div *ngIf="g['skinFinshName'].errors['required']">skinFinshName is required</div>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -355,7 +386,10 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Skin Type Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="skinTypeName"
-                            placeholder="Enter skinTypeName">
+                            placeholder="Enter skinTypeName" [ngClass]="{ 'is-invalid': skinTypeSubmitted && gf['skinTypeName'].errors }">
+                        <div *ngIf="skinTypeSubmitted && gf['skinTypeName'].errors" class="invalid-feedback">
+                            <div *ngIf="gf['skinTypeName'].errors['required']">skinType is required</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -421,7 +455,10 @@
                     <div class="col-xl-12">
                         <label for="projectAddress" class="form-label">Brand Name</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="skinBrandName"
-                            placeholder="Enter Brand Name">
+                            placeholder="Enter Brand Name" [ngClass]="{ 'is-invalid': skinBrandSubmitted && f['skinBrandName'].errors }">
+                        <div *ngIf="skinBrandSubmitted && f['skinBrandName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['skinBrandName'].errors['required']">skinBrandName is required</div>
+                        </div>
                     </div>
                 </div>
             </div>

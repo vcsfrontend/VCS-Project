@@ -481,6 +481,9 @@ export class PanelComponent extends BaseComponent {
   get gf() {
     return this.gradeForm.controls;
   }
+  get f() {
+    return this.makeForm.controls;
+  }
 
   get h() {
     return this.basePanelForm.controls;

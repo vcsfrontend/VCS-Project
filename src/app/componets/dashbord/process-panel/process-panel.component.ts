@@ -62,9 +62,10 @@ export class ProcessPanelComponent extends BaseComponent{
       panel: ['', Validators.required],
       skin1: ['', Validators.required],
       skin2: ['', Validators.required],
-      pricePerFt: [0, Validators.required],
-      gst: [0, Validators.required],
-      finalAmount: [0, Validators.required],
+      pricePerFt: [null, [Validators.required, Validators.pattern('^[0-9]*$')]],
+      gst: [null, [Validators.required , Validators.pattern('^[0-9]*$')]],
+      finalAmount: [null, [Validators.required ,Validators.pattern('^[0-9]*$')]],
+      notes : ['', Validators.required],
       isActive: [true],
       origin : [''],
       companyCode: [this.userCompanyCode],
@@ -251,6 +252,9 @@ export class ProcessPanelComponent extends BaseComponent{
   processPanelApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.processPanelDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  get f() {
+    return this.processPanelForm.controls;
   }
   
 }

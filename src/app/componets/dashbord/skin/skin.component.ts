@@ -465,6 +465,15 @@ export class SkinComponent extends BaseComponent {
   get t() {
     return this.skinForm.controls;
   }
+  get f() {
+    return this.skinBrandForm.controls;
+  }
+  get gf() {
+    return this.skinTypeForm.controls;
+  }
+  get g() {
+    return this.skinFinishForm.controls;
+  }
   
   openLg14(content18: any) {
     this.modalService.open(content18, { scrollable: true, centered: true, });
