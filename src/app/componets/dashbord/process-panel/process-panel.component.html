@@ -1,4 +1,4 @@
-<div class="card custom-card">
+<div class="card custom-card mt-3">
     <div class="card-header justify-content-between d-flex">
         <div class="card-title">
             Process Panel Data
@@ -81,29 +81,44 @@
                 <div class="row gy-2">
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Code</label>
-                        <input type="text" class="form-control" formControlName="code" placeholder="Enter Code No">
+                        <input type="text" class="form-control" formControlName="code" placeholder="Enter Code No" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['code'].errors }">
+                        <div *ngIf="processPanelSubmitted && f['code'].errors" class="invalid-feedback">
+                            <div *ngIf="f['code'].errors['required']">code is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Name</label>
-                        <input type="text" class="form-control" formControlName="name" placeholder="Enter Name">
+                        <input type="text" class="form-control" formControlName="name" placeholder="Enter Name" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['name'].errors }">
+                        <div *ngIf="processPanelSubmitted && f['name'].errors" class="invalid-feedback">
+                            <div *ngIf="f['name'].errors['required']">name is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Panel</label>
                         <ng-select formControlName="panel" [items]="panelItems" bindLabel="name" bindValue="panelId"
-                            placeholder="Select Panel">
+                            placeholder="Select Panel" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['panel'].errors }">
                         </ng-select>
+                        <div *ngIf="processPanelSubmitted && f['panel'].errors" class="invalid-feedback">
+                            <div *ngIf="f['panel'].errors['required']">panel is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Skin1</label>
                         <ng-select formControlName="skin1" [items]="skinItems" bindLabel="name" bindValue="skinId"
-                            placeholder="Select Skin1">
+                            placeholder="Select Skin1" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['skin1'].errors }">
                         </ng-select>
+                        <div *ngIf="processPanelSubmitted && f['skin1'].errors" class="invalid-feedback">
+                            <div *ngIf="f['skin1'].errors['required']">Skin1 is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Skin2</label>
                         <ng-select formControlName="skin2" [items]="skinItems" bindLabel="name" bindValue="skinId"
-                            placeholder="Select Skin2">
+                            placeholder="Select Skin2" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['skin2'].errors }"> 
                         </ng-select>
+                        <div *ngIf="processPanelSubmitted && f['skin2'].errors" class="invalid-feedback">
+                            <div *ngIf="f['skin2'].errors['required']">skin2 is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Notes</label>
@@ -111,17 +126,30 @@
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Price Per sft</label>
-                        <input type="text" class="form-control" formControlName="pricePerFt"
-                            placeholder="Enter Price Per Sft">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" formControlName="pricePerFt"
+                            placeholder="Enter Price Per Sft" (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['pricePerFt'].errors }">
+                        <div *ngIf="processPanelSubmitted && f['pricePerFt'].errors" class="invalid-feedback">
+                            <div *ngIf="f['pricePerFt'].errors['required']">pricePerFt is required</div>
+                            <div *ngIf="f['pricePerFt'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">GST</label>
-                        <input type="text" class="form-control" formControlName="gst" placeholder="Enter GST">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" formControlName="gst" placeholder="Enter GST" 
+                        (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['gst'].errors }">
+                        <div *ngIf="processPanelSubmitted && f['gst'].errors" class="invalid-feedback">
+                            <div *ngIf="f['gst'].errors['required']">gst is required</div>
+                            <div *ngIf="f['gst'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Final Amount</label>
-                        <input type="text" class="form-control" formControlName="finalAmount"
-                            placeholder="Enter Final Amount">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" class="form-control" formControlName="finalAmount"
+                            placeholder="Enter Final Amount" (keypress)="allowOnlyNumbers($event)" [ngClass]="{ 'is-invalid': processPanelSubmitted && f['finalAmount'].errors }">
+                        <div *ngIf="processPanelSubmitted && f['finalAmount'].errors" class="invalid-feedback">
+                            <div *ngIf="f['finalAmount'].errors['required']">finalAmount is required</div>
+                            <div *ngIf="f['finalAmount'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
                     </div>
 
                     <div class="row pt-2">

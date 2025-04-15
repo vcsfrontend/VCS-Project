@@ -46,7 +46,7 @@ export class EdgebandComponent  extends BaseComponent{
   edgePopupTitle = ''; isEditingEdgeband : boolean = false;
 
   public EdgebandSubmitted = false;
-
+  public edgeContentSubmitted = false;
   constructor(private modalService: NgbModal, private fb: FormBuilder, public switchService: SwitherService, private toastr: ToastrService,
   ) {
     super();
@@ -62,8 +62,9 @@ export class EdgebandComponent  extends BaseComponent{
     //edgebrand form
     this.edgeBandForm = this.fb.group({
       edgeBandId: [{ value: this.generateProductId(), disabled: true }],
-      designNo: ['', Validators.required],
+      designNo: ['', [Validators.required , Validators.pattern('^[0-9]*$')]],
       designCode: ['', Validators.required],
+      designName: ['', Validators.required],
       name: ['', Validators.required],
       make: ['', Validators.required],
       material: ['', Validators.required],
@@ -101,7 +102,7 @@ export class EdgebandComponent  extends BaseComponent{
       content: this.edgeContent,
       type: this.userType
     });
-
+    this.edgeContentSubmitted = true;
     // Validate the form
     if (this.edgeContentForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
@@ -366,6 +367,12 @@ export class EdgebandComponent  extends BaseComponent{
 
   generateProductId(): number {
     return Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+  }
+  get f() {
+    return this.edgeBandForm.controls;
+  }
+  get gf() {
+    return this.edgeContentForm.controls;
   }
 
 }
