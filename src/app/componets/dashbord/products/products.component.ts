@@ -87,8 +87,7 @@ export class ProductsComponent {
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-    const request = this.switchService.saveOrUpdateProduct(payload);
-    request.subscribe({
+    this.switchService.saveOrUpdateProduct(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
           const message = this.isEditingProduct

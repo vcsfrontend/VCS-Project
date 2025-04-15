@@ -43,7 +43,7 @@ export class EdgebandComponent  extends BaseComponent{
   edgeBrandMaterial: any[] = []; edgeBrandType: any[] = []; edgeBrandData: any[] = [];
   edgeBrandFinish: any[] = []; makeEdge: any[] = []; 
   edgeContent = '';
-  edgePopupTitle = '';
+  edgePopupTitle = ''; isEditingEdgeband : boolean = false;
 
   public EdgebandSubmitted = false;
 
@@ -64,7 +64,6 @@ export class EdgebandComponent  extends BaseComponent{
       edgeBandId: [{ value: this.generateProductId(), disabled: true }],
       designNo: ['', Validators.required],
       designCode: ['', Validators.required],
-      designName: ['', Validators.required],
       name: ['', Validators.required],
       make: ['', Validators.required],
       material: ['', Validators.required],
@@ -78,6 +77,7 @@ export class EdgebandComponent  extends BaseComponent{
       image: ['', Validators.required],
       uom: ['nos', Validators.required],
       internalCode: ['', Validators.required],
+      origin:  [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
@@ -144,8 +144,11 @@ export class EdgebandComponent  extends BaseComponent{
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-    let payload = {
-      ...this.edgeBandForm.value,
+    this.edgeBandForm.patchValue({
+      origin: this.isEditingEdgeband ? 'edit' : 'save'
+    });
+    const payload = {
+      ...this.edgeBandForm.getRawValue(),
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
@@ -153,22 +156,39 @@ export class EdgebandComponent  extends BaseComponent{
     this.switchService.saveEdgebandData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
+          const message = this.isEditingEdgeband
+            ? "Edge band updated successfully."
+            : "Edge band saved successfully.";
+          this.toastr.success(message);
           if (modal) {
             this.modalService.dismissAll(modal);
           }
           this.edgeBandForm.reset();
           this.EdgebandSubmitted = false;
+          this.isEditingEdgeband = false;
           this.getEdgebandData();
         } else {
           this.toastr.error(res.message);
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        this.toastr.error(error.statusText || "An error occurred while saving the edge band.");
       }
     });
   }
+
+  onEditEdgeband(edgeband: any, modal: any) {
+    this.edgeBandForm.get('edgeId')?.enable(); // If `edgeId` is disabled
+    this.edgeBandForm.patchValue({
+      ...edgeband,
+      origin: 'edit'
+    });
+    this.edgeBandForm.get('edgeId')?.disable(); // If needed
+    this.isEditingEdgeband = true;
+    this.modalService.open(modal);
+  }
+  
+  
 
   getEdgebandData() {
     let payload = {

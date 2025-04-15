@@ -1736,7 +1736,7 @@ export class OptimizerComponent extends BaseComponent {
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-    this.switchService.savePanelData(payload).subscribe({
+    this.switchService.saveOrUpdatePanel(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
           this.toastr.success(res.message);
