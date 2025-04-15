@@ -40,6 +40,7 @@ export class ProcessPanelComponent extends BaseComponent{
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
   processPanelForm!: FormGroup; panelItems: any[] = []; skinItems: any[] = [];
+  isEditingProcessPanel : boolean = false;
 
   public processPanelSubmitted = false;
 
@@ -61,47 +62,73 @@ export class ProcessPanelComponent extends BaseComponent{
       panel: ['', Validators.required],
       skin1: ['', Validators.required],
       skin2: ['', Validators.required],
-      pricePerFt: ['', Validators.required],
+      pricePerFt: [0, Validators.required],
       gst: [0, Validators.required],
       finalAmount: [0, Validators.required],
       isActive: [true],
+      origin : [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
     });
   }
   
+ 
   onProcessPanelSubmit(modal: any) {
     this.processPanelSubmitted = true;
+  
     if (this.processPanelForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-    let payload = {
-      ...this.processPanelForm.value,
+  
+    // Set 'origin' to 'edit' or 'save'
+    this.processPanelForm.patchValue({
+      origin: this.isEditingProcessPanel ? 'edit' : 'save'
+    });
+  
+    const payload = {
+      ...this.processPanelForm.getRawValue(),
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
     };
+  
     this.switchService.saveProcessPanelData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
+          const message = this.isEditingProcessPanel
+            ? "Process Panel updated successfully."
+            : "Process Panel saved successfully.";
+          this.toastr.success(message);
           if (modal) {
             this.modalService.dismissAll(modal);
           }
           this.processPanelForm.reset();
           this.processPanelSubmitted = false;
+          this.isEditingProcessPanel = false;
           this.getProcessPanelData();
         } else {
           this.toastr.error(res.message);
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        this.toastr.error(error.statusText || "An error occurred while saving the process panel.");
       }
     });
   }
+  
+  onEditProcessPanel(processPanel: any, modal: any) {
+    this.processPanelForm.get('processPanelId')?.enable(); 
+    this.processPanelForm.patchValue({
+      ...processPanel,
+      origin: 'edit'
+    });
+    this.processPanelForm.get('processPanelId')?.disable(); 
+    this.isEditingProcessPanel = true;
+    this.modalService.open(modal);
+  }
+  
 
   getPanelData() {
     let payload = {

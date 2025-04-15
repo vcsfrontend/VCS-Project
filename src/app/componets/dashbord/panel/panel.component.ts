@@ -41,6 +41,7 @@ export class PanelComponent extends BaseComponent {
   userType: string = this.userData ? this.userData.type : '';
   panelForm!: FormGroup;  panelItems: any[] = []; gradePanel: any[] = []; makePanel: any[] = [];
   gradeForm!: FormGroup; makeForm!: FormGroup;  basePanelForm!: FormGroup; basePanel: any[] = [];
+  isEditingPanel: boolean = false;
 
   public panelSubmitted = false;
   public gradeSubmitted = false;
@@ -76,10 +77,11 @@ export class PanelComponent extends BaseComponent {
       grains: ['', Validators.required],
       image: ['', Validators.required],
       origin : [''],
+      hotpress: [2],
+      uom: ['nos'],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
-      hotpress: [2]
     });
 
     //base panel form
@@ -119,32 +121,51 @@ export class PanelComponent extends BaseComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    this.panelForm.patchValue({
+      origin: this.isEditingPanel ? 'edit' : 'save'
+    });
     let payload = {
-      ...this.panelForm.value,
+      ...this.panelForm.getRawValue(),
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-    this.switchService.savePanelData(payload).subscribe({
+    this.switchService.saveOrUpdatePanel(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
-          if (modal) {
-            this.modalService.dismissAll(modal);
-          }
+          const message = this.isEditingPanel
+            ? "Panel updated successfully."
+            : "Panel saved successfully.";
+          this.toastr.success(message);
+          this.modalService.dismissAll(modal);
           this.panelForm.reset();
           this.panelSubmitted = false;
-          this.getPanelData();
+          this.isEditingPanel = false;
+          this.getPanelData(); 
         } else {
           this.toastr.error(res.message);
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        this.toastr.error(error.statusText || "An error occurred while saving the panel.");
       }
     });
   }
+  
+  
+  
+  onEditPanel(panel: any, modal: any) {
+    this.panelForm.get('panelId')?.enable();
+    this.panelForm.patchValue({
+      ...panel,
+      origin: 'edit'
+    });
+    this.panelForm.get('panelId')?.disable();
+    this.isEditingPanel = true;
+    this.modalService.open(modal);
+  }
 
+  
   onMakeSubmit(modal: any) {
     this.makeSubmitted = true;
     if (this.makeForm.invalid) {
@@ -240,6 +261,9 @@ export class PanelComponent extends BaseComponent {
       }
     });
   }
+  
+  
+  
 
   getPanelData() {
     let payload = {

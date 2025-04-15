@@ -41,6 +41,7 @@ export class SkinComponent extends BaseComponent {
   userType: string = this.userData ? this.userData.type : '';
   skinForm!: FormGroup; skinTypeForm!: FormGroup; skinFinishForm!: FormGroup; skinBrandForm!: FormGroup;
   skinItems: any[] = []; skinFinish: any[] = [];  skinType: any[] = [];  skinBrand: any[] = [];
+  isEditingSkin: boolean = false;
 
   public skinSubmitted = false;
   public skinBrandSubmitted = false;
@@ -77,6 +78,7 @@ export class SkinComponent extends BaseComponent {
       isColdPress: [true],
       edgeBands: ['', Validators.required],
       image: ['', Validators.required],
+      origin : [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
@@ -117,8 +119,11 @@ export class SkinComponent extends BaseComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    this.skinForm.patchValue({
+      origin: this.isEditingSkin ? 'edit' : 'save'
+    });
     let payload = {
-      ...this.skinForm.value,
+      ...this.skinForm.getRawValue(),
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
@@ -126,22 +131,39 @@ export class SkinComponent extends BaseComponent {
     this.switchService.saveSkinData(payload).subscribe({
       next: (res: any) => {
         if (res.status === true) {
-          this.toastr.success(res.message);
+          const message = this.isEditingSkin
+            ? "Skin updated successfully."
+            : "Skin saved successfully.";
+          this.toastr.success(message);
           if (modal) {
             modal.close();
-          }  
+          }
           this.skinForm.reset();
           this.skinSubmitted = false;
+          this.isEditingSkin = false;
           this.getSkinData();
         } else {
           this.toastr.error(res.message);
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        this.toastr.error(error.statusText || "An error occurred while saving the skin.");
       }
     });
   }
+
+  onEditSkin(skin: any, modal: any) {
+    this.skinForm.get('skinId')?.enable(); 
+    this.skinForm.patchValue({
+      ...skin,
+      origin: 'edit'
+    });
+    this.skinForm.get('skinId')?.disable(); 
+    this.isEditingSkin = true;
+    this.modalService.open(modal);
+  }
+  
+  
 
   onSkinTypeSubmit(modal: any) {
     this.skinTypeSubmitted = true;
