@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NgbNavModule, NgbDropdownModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbDropdownModule, NgbOffcanvas, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -23,7 +23,7 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
     CommonModule, MatFormFieldModule, MatSelectModule, MaterialModuleModule,
-    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule
+    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule,NgbTooltipModule
   ],
   templateUrl: './panel.component.html',
   styleUrl: './panel.component.scss'
