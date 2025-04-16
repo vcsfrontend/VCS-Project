@@ -17,12 +17,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { MatDialog } from '@angular/material/dialog';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-products',
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
     CommonModule, MatFormFieldModule, MatSelectModule, MaterialModuleModule,
-    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule
+    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule,NgbTooltipModule
   ],
   templateUrl: './products.component.html',
   styleUrl: './products.component.scss'

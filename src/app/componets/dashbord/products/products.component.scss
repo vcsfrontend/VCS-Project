@@ -5,3 +5,14 @@
     max-height: 72px !important;
     margin-left: 9% !important;
 }
+/* Custom tooltip width */
+.tooltip-primary .tooltip-inner {
+    background-color: #007bff; /* Custom background color */
+    color: white; /* Custom text color */
+    font-size: 14px; /* Font size */
+    padding: 8px 12px; /* Padding */
+    border-radius: 5px; /* Rounded corners */
+    max-width: 600px !important; 
+    // width: auto; 
+}
+  
