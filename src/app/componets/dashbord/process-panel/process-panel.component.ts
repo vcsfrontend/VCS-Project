@@ -40,7 +40,7 @@ export class ProcessPanelComponent extends BaseComponent{
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
   processPanelForm!: FormGroup; panelItems: any[] = []; skinItems: any[] = [];
-  isEditingProcessPanel : boolean = false;
+  isEditingProcessPanel : boolean = false;   isSubmitting: boolean = false;
 
   public processPanelSubmitted = false;
 
@@ -62,9 +62,9 @@ export class ProcessPanelComponent extends BaseComponent{
       panel: ['', Validators.required],
       skin1: ['', Validators.required],
       skin2: ['', Validators.required],
-      pricePerFt: [null, [Validators.required, Validators.pattern('^[0-9]*$')]],
-      gst: [null, [Validators.required , Validators.pattern('^[0-9]*$')]],
-      finalAmount: [null, [Validators.required ,Validators.pattern('^[0-9]*$')]],
+      pricePerFt: [0, [Validators.required, Validators.pattern('^[0-9]*$')]],
+      gst: [0, [Validators.required , Validators.pattern('^[0-9]*$')]],
+      finalAmount: [0, [Validators.required ,Validators.pattern('^[0-9]*$')]],
       notes : ['', Validators.required],
       isActive: [true],
       origin : [''],
@@ -74,20 +74,16 @@ export class ProcessPanelComponent extends BaseComponent{
     });
   }
   
- 
   onProcessPanelSubmit(modal: any) {
     this.processPanelSubmitted = true;
-  
     if (this.processPanelForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-  
-    // Set 'origin' to 'edit' or 'save'
+    this.isSubmitting = true; 
     this.processPanelForm.patchValue({
       origin: this.isEditingProcessPanel ? 'edit' : 'save'
     });
-  
     const payload = {
       ...this.processPanelForm.getRawValue(),
       email: this.userEmail,
@@ -97,6 +93,7 @@ export class ProcessPanelComponent extends BaseComponent{
   
     this.switchService.saveProcessPanelData(payload).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false; 
         if (res.status === true) {
           const message = this.isEditingProcessPanel
             ? "Process Panel updated successfully."
@@ -114,6 +111,7 @@ export class ProcessPanelComponent extends BaseComponent{
         }
       },
       error: (error) => {
+        this.isSubmitting = false; 
         this.toastr.error(error.statusText || "An error occurred while saving the process panel.");
       }
     });

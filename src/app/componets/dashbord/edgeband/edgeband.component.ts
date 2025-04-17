@@ -43,7 +43,7 @@ export class EdgebandComponent  extends BaseComponent{
   edgeBrandMaterial: any[] = []; edgeBrandType: any[] = []; edgeBrandData: any[] = [];
   edgeBrandFinish: any[] = []; makeEdge: any[] = []; 
   edgeContent = '';
-  edgePopupTitle = ''; isEditingEdgeband : boolean = false;
+  edgePopupTitle = ''; isEditingEdgeband : boolean = false; isSubmitting: boolean = false;
 
   public EdgebandSubmitted = false;
   public edgeContentSubmitted = false;
@@ -62,21 +62,20 @@ export class EdgebandComponent  extends BaseComponent{
     //edgebrand form
     this.edgeBandForm = this.fb.group({
       edgeBandId: [{ value: this.generateProductId(), disabled: true }],
-      designNo: ['', [Validators.required , Validators.pattern('^[0-9]*$')]],
+      designNo: ['', Validators.required ],
       designCode: ['', Validators.required],
-      designName: ['', Validators.required],
       name: ['', Validators.required],
       make: ['', Validators.required],
       material: ['', Validators.required],
       typeName: ['', Validators.required],
       finish: ['', Validators.required],
-      width: [0, Validators.required],
-      thickness: [0, Validators.required],
+      width: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      thickness: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
       isActive: [true],
       hsnCode: ['', Validators.required],
       premiling: ['', Validators.required],
       image: ['', Validators.required],
-      uom: ['nos', Validators.required],
+      uom: ['Nos', Validators.required],
       internalCode: ['', Validators.required],
       origin:  [''],
       companyCode: [this.userCompanyCode],
@@ -97,36 +96,26 @@ export class EdgebandComponent  extends BaseComponent{
   }
 
   onEdgeContentSubmit(modal: any ) {
-    // Set content and type based on the form type
     this.edgeContentForm.patchValue({
       content: this.edgeContent,
       type: this.userType
     });
     this.edgeContentSubmitted = true;
-    // Validate the form
     if (this.edgeContentForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-
-    // Get the payload to send
     const payload = this.edgeContentForm.getRawValue();
-    console.log("Sending payload:", payload); // for debugging
-
-    // Submit to backend
     this.switchService.saveEdgeContentData(payload).subscribe({
       next: (res: any) => {
         if (res.status) {
           this.toastr.success(`Edge ${this.edgeContent.replace('edge_', '')} saved successfully.`);
           this.edgeContentForm.reset();
-
-          // Reset required values again after form reset
           this.edgeContentForm.patchValue({
             companyCode: this.userCompanyCode,
             email: this.userEmail
           });
           this.getMakeEdgeData(this.edgeContent);
-          // Close modal
           modal.close();
         } else {
           this.toastr.error(res.message || "Something went wrong.");
@@ -145,6 +134,7 @@ export class EdgebandComponent  extends BaseComponent{
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    this.isSubmitting = true;
     this.edgeBandForm.patchValue({
       origin: this.isEditingEdgeband ? 'edit' : 'save'
     });
@@ -156,6 +146,7 @@ export class EdgebandComponent  extends BaseComponent{
     };
     this.switchService.saveEdgebandData(payload).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false;
         if (res.status === true) {
           const message = this.isEditingEdgeband
             ? "Edge band updated successfully."
@@ -173,6 +164,7 @@ export class EdgebandComponent  extends BaseComponent{
         }
       },
       error: (error) => {
+        this.isSubmitting = false;
         this.toastr.error(error.statusText || "An error occurred while saving the edge band.");
       }
     });

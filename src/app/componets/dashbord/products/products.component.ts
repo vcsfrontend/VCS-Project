@@ -40,6 +40,7 @@ export class ProductsComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
   isEditingProduct: boolean = false; productForm!: FormGroup;
+  isSubmitting: boolean = false;
 
   public productSubmitted = false;
 
@@ -79,6 +80,7 @@ export class ProductsComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    this.isSubmitting = true; 
     this.productForm.patchValue({
       origin: this.isEditingProduct ? 'edit' : 'save'
     });
@@ -90,6 +92,7 @@ export class ProductsComponent {
     };
     this.switchService.saveOrUpdateProduct(payload).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false; 
         if (res.status === true) {
           const message = this.isEditingProduct
             ? "Product updated successfully."
@@ -105,6 +108,7 @@ export class ProductsComponent {
         }
       },
       error: (error) => {
+        this.isSubmitting = false;
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
@@ -193,4 +197,8 @@ export class ProductsComponent {
   openLg6(content10: any) {
     this.modalService.open(content10, { scrollable: true, centered: true, });
   }
+
+  tooltipTimeout: any;
+
+
 }

@@ -1,564 +1,772 @@
-<app-page-header title="HRM" title1="Dashboards" activeTitle="HRM" ></app-page-header>
-<!-- Start:: row-1 -->
-<div class="row">
-    <div class="col-xl-6">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">Job Applications Overview</div>
-                <div class="d-flex align-items-center gap-2">
-                    <span class="text-muted">Year - </span>
-                    <div ngbDropdown  class="dropdown">
-                        <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-light btn-sm border" data-bs-toggle="dropdown">
-                            2023
-                        </a>
-                        <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
-                            <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">2022</a></li>
-                            <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">2021</a></li>
-                            <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">2020</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="row">
-                    <div class="col-xl-5">
-                        <div class="row p-3 pb-0 pe-xl-0 gy-4">
-                            <div class="col-xl-12">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div>
-                                        <span class="avatar bg-light text-primary">
-                                            <i class="ri-palette-line fs-5"></i>
-                                        </span>
-                                    </div>
-                                    <div class="flex-fill">
-                                        <span class="d-block mb-1">Software Developer</span>
-                                        <div class="d-flex gap-2 align-items-center justify-content-between">
-                                            <h5 class="mb-0">254</h5>
-                                            <span class="badge bg-success-transparent">+0.12%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-12">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div>
-                                        <span class="avatar bg-light text-secondary">
-                                            <i class="ri-file-cloud-line fs-5"></i>
-                                        </span>
-                                    </div>
-                                    <div class="flex-fill">
-                                        <span class="d-block mb-1">Network Engineer</span>
-                                        <div class="d-flex gap-2 align-items-center justify-content-between">
-                                            <h5 class="mb-0">48</h5>
-                                            <span class="badge bg-success-transparent">+0.74%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-12">
-                                <div class="d-flex align-items-start gap-3">
-                                    <div>
-                                        <span class="avatar bg-light text-info">
-                                            <i class="ri-computer-line fs-5"></i>
-                                        </span>
-                                    </div>
-                                    <div class="flex-fill">
-                                        <span class="d-block mb-1">Systems Admin</span>
-                                        <div class="d-flex gap-2 align-items-center justify-content-between">
-                                            <h5 class="mb-0">83</h5>
-                                            <span class="badge bg-danger-transparent">-0.47%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-12">
-                                <div class="d-flex align-items-start gap-3 mb-2">
-                                    <div>
-                                        <span class="avatar bg-light text-danger">
-                                            <i class="ri-database-2-line fs-5"></i>
-                                        </span>
-                                    </div>
-                                    <div class="flex-fill">
-                                        <span class="d-block mb-1">Database Admin</span>
-                                        <div class="d-flex gap-2 align-items-center justify-content-between">
-                                            <h5 class="mb-0">12</h5>
-                                            <span class="badge bg-success-transparent">+0.05%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-7">
-                        <div id="application-stats" class="p-4 border-start border-inline-start-dashed">
-                            <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                            [xaxis]="chartOptions.xaxis" [colors]="chartOptions.colors" [fill]="chartOptions.fill"
-                            [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip" [legend]="chartOptions.legend"
-                            [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid"
-                            [yaxis]="chartOptions.yaxis"></apx-chart>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+    <div style="max-width: 100%;  padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Company Information</h2>
     </div>
-    <div class="col-xl-6">
-        <div class="row">
-            <div class="col-xl-6">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div class="mb-4 d-flex justify-content-between align-items-start">
-                            <span class="avatar bg-primary-transparent">
-                                <i class="ri-group-line fs-5"></i>
-                            </span>
-                            <div ngbDropdown class="no-caret" >
-                                <a ngbDropdownToggle href="javascript:void(0);" data-bs-toggle="dropdown" class="btn btn-sm btn-icon btn-light"><i class="ti ti-dots-vertical"></i></a>                               
-                                <ul ngbDropdownMenu  class="dropdown-menu">
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Another Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Something Else Here</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="d-block fs-14 mb-3 text-muted">Total Employees</span>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="mb-0">12,384</h4>
-                            <span class="badge bg-success-transparent"><i class="ri-arrow-up-s-line me-1 align-middle"></i>0.25%</span> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-6">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div class="mb-4 d-flex justify-content-between align-items-start">
-                            <span class="avatar bg-secondary-transparent">
-                                <i class="ri-user-follow-line fs-5"></i>
-                            </span>
-                            <div ngbDropdown class="no-caret" >
-                                <a ngbDropdownToggle href="javascript:void(0);" data-bs-toggle="dropdown" class="btn btn-sm btn-icon btn-light"><i class="ti ti-dots-vertical"></i></a>
-                                <ul ngbDropdownMenu  class="dropdown-menu">
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Another Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Something Else Here</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="d-block fs-14 mb-3 text-muted">Active Employees</span>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="mb-0">12,337</h4>
-                            <span class="badge bg-success-transparent"><i class="ri-arrow-up-s-line me-1 align-middle"></i>0.25%</span> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-6">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div class="mb-4 d-flex justify-content-between align-items-start">
-                            <span class="avatar bg-info-transparent">
-                                <i class="ri-user-5-line fs-5"></i>
-                            </span>
-                            <div ngbDropdown class="no-caret" >
-                                <a ngbDropdownToggle href="javascript:void(0);" data-bs-toggle="dropdown" class="btn btn-sm btn-icon btn-light"><i class="ti ti-dots-vertical"></i></a>
-                                <ul ngbDropdownMenu  class="dropdown-menu">
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Another Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Something Else Here</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="d-block fs-14 mb-3 text-muted">Employees On Leave</span>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="mb-0">47</h4>
-                            <span class="badge bg-success-transparent"><i class="ri-arrow-up-s-line me-1 align-middle"></i>1.83%</span> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-6">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div class="mb-4 d-flex justify-content-between align-items-start">
-                            <span class="avatar bg-danger-transparent">
-                                <i class="ri-user-unfollow-line fs-5"></i>
-                            </span>
-                            <div ngbDropdown class="no-caret" >
-                                <a ngbDropdownToggle href="javascript:void(0);" data-bs-toggle="dropdown" class="btn btn-sm btn-icon btn-light"><i class="ti ti-dots-vertical"></i></a>
-                                <ul ngbDropdownMenu  class="dropdown-menu">
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Another Action</a></li>
-                                    <li><a ngbDropdownItem href="javascript:void(0);" class="dropdown-item">Something Else Here</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <span class="d-block fs-14 mb-3 text-muted">Resigned Employees</span>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h4 class="mb-0">174</h4>
-                            <span class="badge bg-danger-transparent"><i class="ri-arrow-down-s-line me-1 align-middle"></i>0.47%</span> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>                        
-    </div>
+    <ul style=" padding: 20px; margin: 0; background-color: white;">
+        <li style="margin-bottom: 5px; margin-left: 20px;">We specialize in high-quality interior solutions for residential and commercial spaces. 
+            Our mission is to deliver top-notch design services with the highest standards of craftsmanship.</li>
+            <li style="margin-bottom: 5px; margin-left: 20px;"><strong>Company Name:</strong> XYZ Interiors Pvt. Ltd.</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;"><strong>Address:</strong> 123, Design Street, New York, NY - 10001</li>
+            <li style="margin-bottom: 5px; margin-left: 20px;"><strong>Email:</strong> info &#64;designadonai.com</li>
+            <li style="margin-bottom: 5px; margin-left: 20px;"><strong>Phone:</strong> +1 123-456-7890</li>
+    </ul>
 </div>
-<!-- End:: row-1 -->
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+    <div style="max-width: 100%;  padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Quotation Details</h2>
+    </div>
+    <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #ddd;margin-top: 0; background-color: white;">
+        <thead style="background-color: #ffffff; color: #000000;">
+            <th style=" padding: 10px;">Client & Project Details</th>
+        </thead>
+        <tbody>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Client Name</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">Shravani</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Project Name</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">Marina Skies</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Project Config</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">N/A</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Built-up Area</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">1520 sq.ft</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Client Address</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">KPHB</td>
+            </tr>
+        </tbody>
+    </table>
 
-<!-- Start:: row-2 -->
-<div class="row">
-    <div class="col-xxl-6 cl-xl-12">
-        <div class="card custom-card">
-            <div class="card-header">
-                <div class="card-title">
-                    Job Application Statistics
-                </div>
-            </div>
-            <div class="card-body">
-                <div id="Application-statistics">
-                    <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart"
-                    [xaxis]="chartOptions1.xaxis" [colors]="chartOptions1.colors" [legend]="chartOptions1.legend"  [plotOptions]="chartOptions1.plotOptions"
-                    [stroke]="chartOptions1.stroke" [tooltip]="chartOptions1.tooltip"
-                    [dataLabels]="chartOptions1.dataLabels" [grid]="chartOptions1.grid"
-                    [yaxis]="chartOptions1.yaxis"></apx-chart>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xxl-3 col-xl-6">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    Leave Requests
-                </div>
-                <div>
-                    <button type="button" class="btn btn-sm btn-primary-light">View All</button>
-                </div>
-            </div>
-            <div class="card-body">
-                <ul class="list-unstyled mb-0 leave-activity">
-                    <li class="leave-activity-content">
-                        <div class="d-flex align-items-top">
-                            <div class="me-3">
-                                <span class="avatar avatar-rounded avatar-sm">
-                                    <img src="./assets/images/faces/1.jpg" alt="">
-                                </span>
-                            </div>
-                            <div class="leave-content">
-                                <span class="d-block">Vacation - 2 days</span>
-                                <span class="d-block fs-12 text-muted">For spending quality time with family and friends</span>
-                            </div>
-                            <div class="flex-fill text-end">
-                                <span class="badge bg-success-transparent">Approved</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="leave-activity-content">
-                        <div class="d-flex align-items-top">
-                            <div class="me-3">
-                                <span class="avatar avatar-rounded avatar-sm bg-success">
-                                    SW
-                                </span>
-                            </div>
-                            <div class="leave-content">
-                               <span class="d-block">Sick Leave - 3 days</span> 
-                               <span class="d-block fs-12 text-muted">Doctor's appointment and need some rest</span>
-                            </div>
-                            <div class="flex-fill text-end">
-                                <span class="badge bg-warning-transparent">pending</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="leave-activity-content">
-                        <div class="d-flex align-items-top">
-                            <div class="me-3">
-                                <span class="avatar avatar-rounded avatar-sm">
-                                    <img src="./assets/images/faces/13.jpg" alt="">
-                                </span>
-                            </div>
-                            <div class="leave-content">
-                                <span class="d-block">Family Emergency - 5 days</span> 
-                                <span class="d-block fs-12 text-muted">Family member's unexpected medical situation</span>
-                            </div>
-                            <div class="flex-fill text-end">
-                                <span class="badge bg-success-transparent">Approved</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="leave-activity-content">
-                        <div class="d-flex align-items-top">
-                            <div class="me-3">
-                                <span class="avatar avatar-rounded avatar-sm">
-                                    <img src="./assets/images/faces/3.jpg" alt="">
-                                </span>
-                            </div>
-                            <div class="leave-content">
-                                <span class="d-block">Educational Leave - 2 days</span> 
-                                <span class="d-block fs-12 text-muted">Attending a professional development program</span>
-                            </div>
-                            <div class="flex-fill text-end">
-                                <span class="badge bg-danger-transparent">Rejected</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="leave-activity-content">
-                        <div class="d-flex align-items-top">
-                            <div class="me-3">
-                                <span class="avatar avatar-rounded avatar-sm">
-                                    <img src="./assets/images/faces/9.jpg" alt="">
-                                </span>
-                            </div>
-                            <div class="leave-content">
-                                <span class="d-block">Personal Time Off - 1 days</span> 
-                                <span class="d-block fs-12 text-muted">Taking care of personal matters and errands.</span>
-                            </div>
-                            <div class="flex-fill text-end">
-                                <span class="badge bg-success-transparent">Approved</span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="col-xxl-3 col-xl-6">
-        <div class="card custom-card">
-            <div class="card-header">
-                <div class="card-title">Total Employees</div>
-            </div>
-            <div class="card-body pb-2">
-                <div id="total-employees" class="pt-4 pb-3">
-                    <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
-                    [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors" [legend]="chartOptions2.legend"  [plotOptions]="chartOptions2.plotOptions"
-                    [stroke]="chartOptions2.stroke" [tooltip]="chartOptions2.tooltip"
-                    [dataLabels]="chartOptions2.dataLabels" [grid]="chartOptions2.grid" [labels]="chartOptions2.labels"
-                    [yaxis]="chartOptions2.yaxis"></apx-chart>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="text-center p-3 my-2 border border-dashed rounded">
-                            <span class="fs-14 total-employees male">Male</span>
-                            <div class="mt-1">
-                                <span class="fs-18">1,654</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="text-center p-3 my-2 border border-dashed rounded">
-                            <span class="fs-14 total-employees female">Female</span>
-                            <div class="mt-1">
-                                <span class="fs-18">1,234</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End:: row-2 -->
+    <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #ddd; background-color: white;">
+       
+        <thead style="background-color: #ffffff; color: #000000;">
+            <th style=" padding: 10px;">Design Expert</th>
+        </thead>
+        <tbody>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Name</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">revathi.balla25</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Phone</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">9704208800</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Email</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">revathi.balla25 &#64;gmail.com</td>
+            </tr>
+        </tbody>
+    </table>
 
-<!-- Start:: row-3 -->
-<div class="row">
-    <div class="col-xl-12">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    Applicant Details
-                </div>
-                <div class="btn-list">
-                    <button class="btn btn-outline-light btn-sm btn-wave"><i class="ri-download-2-line me-1 align-middle"></i>Import</button>
-                    <button class="btn btn-primary btn-wave btn-sm"><i class="ri-add-line me-1 align-middle"></i>Add Applicant</button>
-                </div>
+    <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #ddd;margin-top: 0; background-color: white;">
+        <thead style="background-color: #ffffff; color: #000000;">
+            <th style="padding: 10px;">Relationship Manager</th>
+        </thead>
+        <tbody>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Name</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">seenu</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Phone</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">9966066990</td>
+            </tr>
+            <tr>
+                <th style="padding: 10px; border: 1px solid #ddd;">Email</th>
+                <td style="padding: 10px; border: 1px solid #ddd;">psrinivas &#64;spartacloudsolutions.com</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- ROOM SUMMERY -->
+<table style="width: 100%; border-collapse: collapse; border: 1px solid rgb(125, 121, 121); margin-top: 20px; border-radius: 8px;">
+    <!-- Header row -->
+    <tr style="background-color: #32A192; color: white; text-align: center; font-size: 20px; font-weight: bold; font-family: Roboto,sans-serif;">
+        <td colspan="9" style="width: 100%; padding: 20px;">Room Summary</td>
+    </tr>
+    <!-- Table Head -->
+    <tr>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px;  font-family: Roboto,sans-serif; text-align:center">S.No.</th>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px;  font-family: Roboto,sans-serif; text-align:center">Room Name</th>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px; text-align: center; font-family: Roboto,sans-serif; text-align:center">Modules</th>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Accessories</th>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Appliances</th>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Services</th>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">BOM</th>
+        <th  style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Total</th>
+    </tr>
+    <!-- Data Row -->
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">Living Room</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 1,02,495</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 659</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center"> &#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center;font-weight: bold;">&#8377; 1,03,155</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;text-align:center">2</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">GBR Room</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 3,41,567</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center"> &#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center;font-weight: bold;">&#8377; 3,41,567</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;text-align:center">3</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">MBR</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 5,17,569</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center"> &#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center;font-weight: bold;">&#8377; 5,17,569</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;text-align:center">4</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">Total</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 19,11,967</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 1,06,145</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center"> &#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center;font-weight: bold;">&#8377; 5,75,040</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;text-align:center">5</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center;font-weight: bold;">Discount</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 4,77,992</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 10,707</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center"> &#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 0</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center;font-weight: bold;">&#8377; 4,88,699</td>
+    </tr>
+    
+</table>
+<!-- END ROOM SUMMARY -->
+<!-- Price summary -->
+<table style="width: 100%; border-collapse: collapse; border: 1px solid rgb(125, 121, 121); margin-top: 20px; border-radius: 8px;">
+    <tr style="background-color: #32A192; color: white; text-align: center; font-size: 20px; font-weight: bold; font-family: Roboto,sans-serif;">
+        <td colspan="9" style="width: 100%; padding: 20px;">Price Summary</td>
+    </tr>
+    <tr>
+        <td colspan="8" style="border: 1px solid black; padding: 8px; text-align: start; font-family: Roboto,sans-serif;width: 80%;">Total Quote Value</td>
+        <td colspan="2" style="border: 1px solid black; padding: 8px; text-align: end; font-family: Roboto,sans-serif;">&#8377; 20,19,035</td>
+    </tr>
+    <tr>
+        <td colspan="8" style="border: 1px solid black; padding: 8px; text-align: start; font-family: Roboto,sans-serif;">Total Discount</td>
+        <td colspan="2" style="border: 1px solid black; padding: 8px; text-align: end; font-family: Roboto,sans-serif;">&#8377; 4,88,699</td>
+    </tr>
+    <tr>
+        <td colspan="8" style="border: 1px solid black; padding: 8px; text-align: start; font-family: Roboto,sans-serif;font-weight: bold;">Final Quote Value</td>
+        <td colspan="2" style="border: 1px solid black; padding: 8px; text-align: end; font-family: Roboto,sans-serif;font-weight: bold;">&#8377; 15,30,336</td>
+    </tr>
+</table>
+<!-- END -->
+<table style="width: 100%; border-collapse: collapse; border: 1px solid rgb(125, 121, 121); margin-top: 20px; border-radius: 8px;">
+    <!-- Header row -->
+    <tr style="background-color: #32A192; color: white; text-align: center; font-size: 20px; font-weight: bold; font-family: Roboto,sans-serif;">
+        <td colspan="9" style="width: 100%; padding: 20px;">DETAILED QUOTATION</td>
+    </tr>
+
+    <!-- MBR Row -->
+    <tr style="background-color: #55d7c6;">
+        <td colspan="6" style="border: 1px solid black; padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">Kitchen</td>
+        <td colspan="2" style="border: 1px solid black; padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">Kitchen subtotal</td>
+        <td colspan="2" style="border: 1px solid black; padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">46366.5</td>
+    </tr>
+
+    <tr>
+        <td colspan="9" style="padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">CABINET LIST</td>
+    </tr>
+
+    <!-- Table Head -->
+    <tr>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; width: 5%; font-family: Roboto,sans-serif; text-align:center">S.No.</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; width: 20%; font-family: Roboto,sans-serif; text-align:center">Product Description</th>
+        <th colspan="3" style="border: 1px solid black; padding: 8px; font-size: 14px; text-align: center; font-family: Roboto,sans-serif; text-align:center">Dimension</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Price/Unit</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Units</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Quantity</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif; text-align:center">Total Price</th>
+    </tr>
+
+    <!-- Dimension Labels -->
+    <tr>
+        <th style="border: 1px solid black; padding: 8px; font-family: Roboto,sans-serif; text-align:center">Width</th>
+        <th style="border: 1px solid black; padding: 8px; font-family: Roboto,sans-serif; text-align:center">Depth</th>
+        <th style="border: 1px solid black; padding: 8px; font-family: Roboto,sans-serif; text-align:center">Height</th>
+    </tr>
+
+    <!-- Data Row -->
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/300mm.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table text-nowrap table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="..."></th>
-                                <th scope="col">Application ID</th>
-                                <th scope="col">Applicant Name</th>
-                                <th scope="col">Position Applied</th>
-                                <th scope="col">Date Of Application</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Work Experience</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel2" value="" aria-label="..."></th>
-                                <td>
-                                    #SPT-011
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="avatar avatar-sm me-2 avatar-rounded">
-                                            <img src="./assets/images/faces/4.jpg" alt="img">
-                                        </span>Mayor Kelly
-                                    </div>
-                                </td>
-                                <td>System Administrator</td>
-                                <td>24,Nov 2023</td>
-                                <td>
-                                    mayorkelly2341&#64;gmail.com
-                                </td>
-                                <td>2+ Years</td>
-                                <td>
-                                    <span class="badge bg-primary-transparent">New</span>
-                                </td>
-                                <td>
-                                    <div class="hstack gap-2 fs-15">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-success-light rounded-circle"><i class="ri-phone-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i class="ri-edit-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"><i class="ri-delete-bin-line"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel13" value="" aria-label="..." checked=""></th>
-                                <td>
-                                    #SPT-012
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="avatar avatar-sm me-2 avatar-rounded">
-                                            <img src="./assets/images/faces/15.jpg" alt="img">
-                                        </span>Andrew Garfield
-                                    </div>
-                                </td>
-                                <td>Data and Analytics</td>
-                                <td>13,Dec 2023</td>
-                                <td>andrewgarfield45&#64;gmail.com</td>
-                                <td>
-                                    3+ Years
-                                </td>
-                                <td>
-                                    <span class="badge bg-success-transparent">Interviewed</span>
-                                </td>
-                                <td>
-                                    <div class="hstack gap-2 fs-15">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-success-light rounded-circle"><i class="ri-phone-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i class="ri-edit-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"><i class="ri-delete-bin-line"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel4" value="" aria-label="..."></th>
-                                <td>
-                                    #SPT-013
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="avatar avatar-sm me-2 avatar-rounded">
-                                            <img src="./assets/images/faces/11.jpg" alt="img">
-                                        </span>Simon Cowel
-                                    </div>
-                                </td>
-                                <td>UX/UI Design</td>
-                                <td>10,Nov 2023</td>
-                                <td>simoncowel234&#64;gmail.com</td>
-                                <td>
-                                    Fresher
-                                </td>
-                                <td>
-                                    <span class="badge bg-info-transparent">Hired</span>
-                                </td>
-                                <td>
-                                    <div class="hstack gap-2 fs-15">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-success-light rounded-circle"><i class="ri-phone-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i class="ri-edit-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"><i class="ri-delete-bin-line"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel5" value="" aria-label="..." checked=""></th>
-                                <td>
-                                    #SPT-014
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="avatar avatar-sm me-2 avatar-rounded">
-                                            <img src="./assets/images/faces/8.jpg" alt="img">
-                                        </span>Mirinda Hers
-                                    </div>
-                                </td>
-                                <td>Database Management</td>
-                                <td>16,Dec 2023</td>
-                                <td>mirindahers&#64;gmail.com</td>
-                                <td>1 Year</td>
-                                <td>
-                                    <span class="badge bg-secondary-transparent">Under Review</span>
-                                </td>
-                                <td>
-                                    <div class="hstack gap-2 fs-15">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-success-light rounded-circle"><i class="ri-phone-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i class="ri-edit-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"><i class="ri-delete-bin-line"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel3" value="" aria-label="..." checked=""></th>
-                                <td>
-                                    #SPT-015
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="avatar avatar-sm me-2 avatar-rounded">
-                                            <img src="./assets/images/faces/9.jpg" alt="img">
-                                        </span>Jacob Smith
-                                    </div>
-                                </td>
-                                <td>AI and Machine Learning</td>
-                                <td>22,Dec 2023</td>
-                                <td>jacobsmith&#64;gmail.com</td>
-                                <td>5+ Years</td>
-                                <td>
-                                    <span class="badge bg-danger-transparent"> rejected</span>
-                                </td>
-                                <td>
-                                    <div class="hstack gap-2 fs-15">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-success-light rounded-circle"><i class="ri-phone-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i class="ri-edit-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"><i class="ri-delete-bin-line"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> 1050mm S-Corner Unit-Right<br>
+                    <strong>Carcass Material:</strong> HDHMR<br>
+                    <strong>Shutter Code:</strong> 5101-SF<br>
+                    <strong>Panel Code:</strong> 5101-SF<br>
+                    <strong>Handle Code:</strong> 108-SI-N
+                </p>
             </div>
-            <div class="card-footer border-top-0">
-                <div class="d-flex align-items-center">
-                    <div>
-                        Showing 5 Entries <i class="bi bi-arrow-right ms-2"></i>
-                    </div>
-                    <div class="ms-auto">
-                        <nav aria-label="Page navigation" class="pagination-style-4">
-                            <ul class="pagination mb-0">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="javascript:void(0);">
-                                        Prev
-                                    </a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                <li class="page-item">
-                                    <a class="page-link text-primary" href="javascript:void(0);">
-                                        next
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex; align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/Adonai logo.png" alt="Product Image" style="max-width: 100px; height: auto;">
             </div>
-        </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> 1050mm S-Corner Unit-Right<br>
+                    <strong>Carcass Material:</strong> HDHMR<br>
+                    <strong>Shutter Code:</strong> 5101-SF<br>
+                    <strong>Panel Code:</strong> 5101-SF<br>
+                    <strong>Handle Code:</strong> 108-SI-N
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex; align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/1050mm.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> 1050mm S-Corner Unit-Right<br>
+                    <strong>Carcass Material:</strong> HDHMR<br>
+                    <strong>Shutter Code:</strong> 5101-SF<br>
+                    <strong>Panel Code:</strong> 5101-SF<br>
+                    <strong>Handle Code:</strong> 108-SI-N
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td colspan="9" style="padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">Accessories</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/access.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Wicker basket<br>
+                    <strong>Carcass Material:</strong> MH groove premium (1667)<br>
+                    <strong>Carcass Finish:</strong> wooden finish <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> wooden finish 
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.2</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/access.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> 1050mm S-Corner Unit-Right<br>
+                    <strong>Carcass Material:</strong> HDHMR<br>
+                    <strong>Carcass Finish:</strong> 5101-SF<br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> 108-SI-N
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.3</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/access2.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Pullout name<br>
+                    <strong>Carcass Material:</strong> 1 x Frame Set 2 x Runners Shelf & Baking Tray Holder  <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> <br>
+                    <strong>Shutter Finish:</strong> 3D front adjustment
+                    Full extension runner with soft close
+                    Shelf & baking tray holder                    
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td colspan="9" style="padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">Appliances</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/apply2.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> The Glen Chimney Hood<br>
+                    <strong>Carcass Material:</strong> HDHMR<br>
+                    <strong>Carcass Finish:</strong> 5101-SF<br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> 108-SI-N
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/apply1.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Glen Kitchen Sink<br>
+                    <strong>Carcass Material:</strong> <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> a blend of elegance and functionality designed to meet the demands of modern living. This sink measures a compact 24" x 18" x 8" (608x457x200mm), making it an ideal choice for both small and spacious kitchens alike
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td colspan="9" style="padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">Services</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/fan2.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Glen Kitchen Sink<br>
+                    <strong>Carcass Material:</strong> <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> a blend of elegance and functionality designed to meet the demands of modern living. This sink measures a compact 24" x 18" x 8" (608x457x200mm), making it an ideal choice for both small and spacious kitchens alike
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/fan2.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Glen Kitchen Sink<br>
+                    <strong>Carcass Material:</strong> <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> a blend of elegance and functionality designed to meet the demands of modern living. This sink measures a compact 24" x 18" x 8" (608x457x200mm), making it an ideal choice for both small and spacious kitchens alike
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/fan2.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Glen Kitchen Sink<br>
+                    <strong>Carcass Material:</strong> <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> a blend of elegance and functionality designed to meet the demands of modern living. This sink measures a compact 24" x 18" x 8" (608x457x200mm), making it an ideal choice for both small and spacious kitchens alike
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td colspan="9" style="padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">BOM</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/fan2.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Glen Kitchen Sink<br>
+                    <strong>Carcass Material:</strong> <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> a blend of elegance and functionality designed to meet the demands of modern living. This sink measures a compact 24" x 18" x 8" (608x457x200mm), making it an ideal choice for both small and spacious kitchens alike
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.2</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/fan1.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Glen Kitchen Sink<br>
+                    <strong>Carcass Material:</strong> <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> a blend of elegance and functionality designed to meet the demands of modern living. This sink measures a compact 24" x 18" x 8" (608x457x200mm), making it an ideal choice for both small and spacious kitchens alike
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1.3</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex;  align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/fan3.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6;">
+                    <strong>Name:</strong> Glen Kitchen Sink<br>
+                    <strong>Carcass Material:</strong> <br>
+                    <strong>Carcass Finish:</strong> <br>
+                    <strong>Shutter Material:</strong> 5101-SF<br>
+                    <strong>Shutter Finish:</strong> a blend of elegance and functionality designed to meet the demands of modern living. This sink measures a compact 24" x 18" x 8" (608x457x200mm), making it an ideal choice for both small and spacious kitchens alike
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">450</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">560</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">820</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1700</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">NO.S</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">1</td>
+        <td style="border: 1px solid black; padding: 8px; text-align:center">&#8377; 46366.65</td>
+    </tr>
+    <!-- Subtotal -->
+    <tr>
+        <td colspan="8" style="border: 1px solid black; padding: 8px; text-align: right; font-family: Roboto,sans-serif;">Sub Subtotal</td>
+        <td colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; font-family: Roboto,sans-serif;">&#8377; 46366.65</td>
+    </tr>
+</table>
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+
+    <div style="max-width: 100%;  padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Drawings & Design Document</h2>
+    </div>
+    <ul style=" padding: 20px; margin: 0; background-color: white;">
+        <li style="margin-bottom: 5px; margin-left: 20px;">Project Drawings & Designs</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">The project will include:  
+            <li style="margin-bottom: 5px; margin-left: 20px;">Detailed 2D layouts</li>
+                <li style="margin-bottom: 5px; margin-left: 20px;">3D renders</li>
+                <li style="margin-bottom: 5px; margin-left: 20px;">Material samples for approval before execution</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">All design approvals must be finalized before production begins.</li>
+    </ul>
+</div>
+
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+
+    <div style="max-width: 100%;  padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Payment Terms</h2>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; text-align: left; border: 1px solid #ddd;margin-top: 0; background-color: white;">
+        <thead>
+            <tr style="background-color: #32A192; color: #fff;">
+                <th style="padding: 10px; border: 1px solid #ddd;">Stage</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Description</th>
+                <th style="padding: 10px; border: 1px solid #ddd;">Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Stage 1</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Advance Payment upon signing the agreement</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">50%</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Stage 2</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Payment after completion of major structural work</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">40%</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">Stage 3</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">Final Payment before handover</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">10%</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right; font-weight: bold; padding: 10px; border: 1px solid #ddd;">Total Payment</td>
+                <td style="font-weight: bold; padding: 10px; border: 1px solid #ddd;">100%</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+    <div style="max-width: 100%;  padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Material Specifications</h2>
+    </div>
+    <ul style=" padding: 20px; margin: 0; background-color: white;">
+        <h4 style=" color: #666; background-color: white; font-size:20px; font-weight: 600; font-family: Roboto,sans-serif;font-size: 20px;margin-bottom: 20px;">We use premium materials including:</h4>
+        <li style="margin-bottom: 5px; margin-left: 20px;">Modular Plywood (BWP Grade)</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">High-gloss laminates & veneers</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">Soft-close hinges and fittings</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">Quartz countertops</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">Branded appliances as per client selection</li>
+    </ul>
+</div>
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+    <div style="max-width: 100%;  padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Terms and Conditions</h2>
+    </div>
+    <ul style=" padding: 20px; margin: 0; background-color: white;">
+        <li style="margin-bottom: 5px; margin-left: 20px;">Project timeline is estimated to be 8-12 weeks from the date of advance payment.</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">Any changes requested after final design approval may result in additional costs.</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">XYZ Interiors is not liable for delays due to unforeseen circumstances.</li>
+        <li style="margin-bottom: 5px; margin-left: 20px;">All disputes will be settled under the jurisdiction of New York courts.</li>
+    </ul>
+    
+</div>
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+    <div style="max-width: 100%;  padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Other Information</h2>
+    </div>
+    <div style="border: 1px solid #ddd; background-color: #fff; padding: 20px;">
+        <p style="font-weight: bold; color: #444; margin-bottom: 10px;">Our team ensures on-time project delivery with strict quality control.</p>
+        <p style="color: #555; line-height: 1.6;">Site visits and progress updates will be provided periodically.</p>
     </div>
 </div>
-<!-- End:: row-3 -->
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+    <div style="max-width: 100%;padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Quality Promise & Warranties</h2>
+    </div>
+    <ul style="list-style-type: disc; padding-left: 20px;  background-color: white;">
+        <p style="color: #555; padding-top: 20px;">For Varma Decor and its Association Catalogue Products Ordered through Varma Decor and its Association:</p>
+        <li style="margin-bottom: 5px; margin-left: 20px">
+            <strong>Modular Kitchens & Modular Wardrobes & Storages</strong> purchased through angadi.store are covered under a <strong>7-year limited quality promise</strong>. 
+            It includes cabinets, shutters, drawers, panels, and OEM’s warranty on hardware and accessories.
+        </li>
+        <li style="margin-bottom: 5px; margin-left: 20px">
+            <strong>VARMA DECOR QUALITY PROMISE & WARRANTIES:</strong> As per the 
+            <a href="https://www.varmaandassociates.co.in" target="_blank" style="color: #007bff; text-decoration: none;">Company Policy</a>.
+            <strong style="margin-bottom: 5px; margin-left: 20px">Warranty Offerings by Varma Decor:</strong>
+        </li>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-left: -10px;">
+            <thead>
+                <tr style="background-color: #ffffff; color: #000000; margin-left: 20px">
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Product</th>
+                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Warranty Period</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">Modular Kitchens & Modular Wardrobes; Modular storage (TV unit, vanity & more)</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">7 years</td>
+                </tr>
+                <tr style="background-color: #ffffff;">
+                    <td style="border: 1px solid #ddd; padding: 10px;">Sofas</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">Up to 3 years</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #ddd; padding: 10px;">Furniture</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">Up to 1 year</td>
+                </tr>
+                <tr style="background-color: #ffffff;">
+                    <td style="border: 1px solid #ddd; padding: 10px;">On-site Services</td>
+                    <td style="border: 1px solid #ddd; padding: 10px;">Up to 1 year</td>
+                </tr>
+            </tbody>
+        </table>
+    </ul>
+</div>
+<div style="max-width: 100%; background-color: #32A192; border-radius: 8px; margin-top: 20px;">
+    <div style="max-width: 100%;padding: 20px; ">
+        <h2 style="text-align: center; color: #ffffff;font-size:20px;font-family: Roboto,sans-serif;">Thank You</h2>
+    </div>
+    <div style="background-color: white; text-align: center; padding-bottom: 20px;">
+        <p style="color: #555; line-height: 1.6; padding-top: 20px;">We appreciate the opportunity to work with you on this project. Our team is committed to delivering a design that meets your vision and expectations.</p>
+        <p style="font-weight: bold; margin-top: 15px; color: #444;">For any queries, feel free to contact us at 
+            <a href="mailto:support@designadonai.com" style="color: #007bff; text-decoration: none;">support&#64;designadonai.com</a>
+        </p>
+    </div>   
+</div>
+<table style="width: 100%; border-collapse: collapse; border: 1px solid rgb(125, 121, 121); margin-top: 20px;">
+    <!-- Header row -->
+    <tr style="background-color: #32A192; color: white; text-align: center; font-size: 20px; font-weight: bold; font-family: Roboto,sans-serif;">
+        <td colspan="8" style="width: 100%;">DETAILED QUOTATION</td>
+    </tr>
+
+    <!-- MBR Row -->
+    <tr style="background-color: #55d7c6;">
+        <td colspan="5" style="border: 1px solid black; padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">MBR</td>
+        <td colspan="2" style="border: 1px solid black; padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">MBR subtotal</td>
+        <td colspan="2" style="border: 1px solid black; padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">46366.5</td>
+    </tr>
+
+    <tr>
+        <td colspan="8" style="padding: 2px; font-size: 14px; font-family: Roboto,sans-serif;">CABINET LIST</td>
+    </tr>
+
+    <!-- Table Head -->
+    <tr>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; width: 5%; font-family: Roboto,sans-serif;">S.No.</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; width: 20%; font-family: Roboto,sans-serif;">Product Description</th>
+        <th colspan="3" style="border: 1px solid black; padding: 8px; font-size: 14px; text-align: center; font-family: Roboto,sans-serif;">Dimension</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif;">Price/Unit</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif;">Quantity</th>
+        <th rowspan="2" style="border: 1px solid black; padding: 8px; font-size: 14px; font-family: Roboto,sans-serif;">Total Price</th>
+    </tr>
+
+    <!-- Dimension Labels -->
+    <tr> 
+        <th style="border: 1px solid black; padding: 8px; font-family: Roboto,sans-serif;">Width</th>
+        <th style="border: 1px solid black; padding: 8px; font-family: Roboto,sans-serif;">Depth</th>
+        <th style="border: 1px solid black; padding: 8px; font-family: Roboto,sans-serif;">Height</th>
+    </tr>
+
+    <!-- Data Row -->
+    <tr>
+        <td style="border: 1px solid black; padding: 8px;">1</td>
+        <td style="border: 1px solid black; padding: 8px;">
+            <div style="display: flex; justify-content: center; align-items: center; height: 100px;">
+                <img src="/src/assets/images/brand-logos/300mm.jpg" alt="Product Image" style="max-width: 100px; height: auto;">
+            </div>
+            <div>
+                <p style="font-family: Roboto,sans-serif; font-size: 14px;">1050mm S-Corner Unit-Right,
+                    HDHMR ,
+                    5101-SF ,
+                    5101-SF ,
+                    108-SI-N
+                </p>
+            </div>
+        </td>
+        <td style="border: 1px solid black; padding: 8px;">450</td>
+        <td style="border: 1px solid black; padding: 8px;">560</td>
+        <td style="border: 1px solid black; padding: 8px;">820</td>
+        <td style="border: 1px solid black; padding: 8px;">1700</td>
+        <td style="border: 1px solid black; padding: 8px;">1</td>
+        <td style="border: 1px solid black; padding: 8px;">46366.65</td>
+    </tr>
+
+    <!-- Subtotal -->
+    <tr>
+        <td colspan="7" style="border: 1px solid black; padding: 8px; text-align: right; font-family: Roboto,sans-serif;">Sub Subtotal</td>
+        <td colspan="2" style="border: 1px solid black; padding: 8px; text-align: center; font-family: Roboto,sans-serif;">46366.65</td>
+    </tr>
+</table>

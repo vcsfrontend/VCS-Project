@@ -29,7 +29,7 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
   styleUrl: './skin.component.scss'
 })
 export class SkinComponent extends BaseComponent {
-  skinDisplayedColumn: string[] = ['designNo', 'name', 'brand', 'skinType', 'length', 'width', 'thickness', 'operation', 'grains', 'uom', 'skinFinish', 'edgeBands', 'isActive', 'isColdPress', 'edit', 'image', 'delete'];
+  skinDisplayedColumn: string[] = ['designNo', 'name', 'length', 'width', 'thickness', 'uom', 'skinType', 'brand',  'skinFinish', 'operation', 'grains',  'isActive', 'edit', 'image', 'delete'];
   skinDataSource = new MatTableDataSource<any>();
   @ViewChild('skinPaginator') skinPaginator!: MatPaginator;
 
@@ -41,7 +41,7 @@ export class SkinComponent extends BaseComponent {
   userType: string = this.userData ? this.userData.type : '';
   skinForm!: FormGroup; skinTypeForm!: FormGroup; skinFinishForm!: FormGroup; skinBrandForm!: FormGroup;
   skinItems: any[] = []; skinFinish: any[] = [];  skinType: any[] = [];  skinBrand: any[] = [];
-  isEditingSkin: boolean = false;
+  isEditingSkin: boolean = false;  isSubmitting: boolean = false;
 
   public skinSubmitted = false;
   public skinBrandSubmitted = false;
@@ -67,9 +67,9 @@ export class SkinComponent extends BaseComponent {
       name: ['', Validators.required],
       brand: ['', Validators.required],
       skinType: ['', Validators.required],
-      length: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
-      width: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
-      thickness: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      length: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      width: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
+      thickness: [0, [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
       operation: ['', Validators.required],
       grains: ['', Validators.required],
       uom: ['nos', Validators.required],
@@ -119,6 +119,7 @@ export class SkinComponent extends BaseComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    this.isSubmitting = true;
     this.skinForm.patchValue({
       origin: this.isEditingSkin ? 'edit' : 'save'
     });
@@ -130,6 +131,7 @@ export class SkinComponent extends BaseComponent {
     };
     this.switchService.saveSkinData(payload).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false;
         if (res.status === true) {
           const message = this.isEditingSkin
             ? "Skin updated successfully."
@@ -145,6 +147,7 @@ export class SkinComponent extends BaseComponent {
         }
       },
       error: (error) => {
+        this.isSubmitting = false;
         this.toastr.error(error.statusText || "An error occurred while saving the skin.");
       }
     });
@@ -353,14 +356,14 @@ export class SkinComponent extends BaseComponent {
       alert('Error: Product ID is missing!');
       return;
     }
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm('Are you sure you want to delete this skin?')) {
       this.switchService.deleteSkinData(skinId).subscribe({
         next: (response) => {
           this.toastr.success(response.message);
           this.getSkinData();
         },
         error: (error) => {
-          this.toastr.error("Failed to delete product.");
+          this.toastr.error("Failed to delete skin.");
         }
       });
     }
@@ -372,7 +375,7 @@ export class SkinComponent extends BaseComponent {
       alert('Error: Product ID is missing!');
       return;
     }
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm('Are you sure you want to delete this skin brand?')) {
       this.switchService.deleteSkinBrandData(skin_brand_id).subscribe({
         next: (response) => {
           this.toastr.success(response.message);

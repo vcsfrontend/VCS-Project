@@ -510,9 +510,12 @@ export class BaseComponent {
       {"name":"Vaccume Press"}
     ]
 
-    SkinGrains= [{"name" : "Vertical"},
+    SkinGrains = [{"name" : "Vertical"},
       {"name" :"Horizontal"},
       {"name":"N/A"}
+    ]
+    EdgeBands = [{"name" : "check all"},
+      {"name" :"uncheck all"},
     ]
 
     // SkinFinish = [{"name" : "test"},
