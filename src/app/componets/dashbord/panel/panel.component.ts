@@ -41,7 +41,7 @@ export class PanelComponent extends BaseComponent {
   userType: string = this.userData ? this.userData.type : '';
   panelForm!: FormGroup;  panelItems: any[] = []; gradePanel: any[] = []; makePanel: any[] = [];
   gradeForm!: FormGroup; makeForm!: FormGroup;  basePanelForm!: FormGroup; basePanel: any[] = [];
-  isEditingPanel: boolean = false;
+  isEditingPanel: boolean = false; isSubmitting: boolean = false;
 
   public panelSubmitted = false;
   public gradeSubmitted = false;
@@ -78,7 +78,7 @@ export class PanelComponent extends BaseComponent {
       image: ['', Validators.required],
       origin : [''],
       hotpress: [2],
-      uom: ['nos'],
+      uom: ['Nos'],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
@@ -121,6 +121,7 @@ export class PanelComponent extends BaseComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    this.isSubmitting = true; 
     this.panelForm.patchValue({
       origin: this.isEditingPanel ? 'edit' : 'save'
     });
@@ -132,6 +133,7 @@ export class PanelComponent extends BaseComponent {
     };
     this.switchService.saveOrUpdatePanel(payload).subscribe({
       next: (res: any) => {
+        this.isSubmitting = false; 
         if (res.status === true) {
           const message = this.isEditingPanel
             ? "Panel updated successfully."
@@ -147,6 +149,7 @@ export class PanelComponent extends BaseComponent {
         }
       },
       error: (error) => {
+        this.isSubmitting = false; 
         this.toastr.error(error.statusText || "An error occurred while saving the panel.");
       }
     });
@@ -364,14 +367,14 @@ export class PanelComponent extends BaseComponent {
       alert('Error: Product ID is missing!');
       return;
     }
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm('Are you sure you want to delete this panel?')) {
       this.switchService.deletePannelData(panelId).subscribe({
         next: (response) => {
           this.toastr.success(response.message);
           this.getPanelData();
         },
         error: (error) => {
-          this.toastr.error("Failed to delete product.");
+          this.toastr.error("Failed to delete panel.");
         }
       });
     }
@@ -383,7 +386,7 @@ export class PanelComponent extends BaseComponent {
       alert('Error: Product ID is missing!');
       return;
     }
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm('Are you sure you want to delete this make?')) {
       this.switchService.deleteMakeData(make_id).subscribe({
         next: (response) => {
           this.toastr.success(response.message);
@@ -405,7 +408,7 @@ export class PanelComponent extends BaseComponent {
       alert('Error: Product ID is missing!');
       return;
     }
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm('Are you sure you want to delete this base panel?')) {
       this.switchService.deleteBasePanelData(base_pannel_id).subscribe({
         next: (response) => {
           this.toastr.success(response.message);
@@ -427,7 +430,7 @@ export class PanelComponent extends BaseComponent {
       alert('Error: Product ID is missing!');
       return;
     }
-    if (confirm('Are you sure you want to delete this product?')) {
+    if (confirm('Are you sure you want to delete this pannel grade?')) {
       this.switchService.deletePannelGradeData(pannel_grade_id).subscribe({
         next: (response) => {
           this.toastr.success(response.message);
