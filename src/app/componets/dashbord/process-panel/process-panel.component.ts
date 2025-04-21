@@ -23,12 +23,12 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
   standalone: true,
   imports: [SharedModule, NgbNavModule, NgbDropdownModule, NgSelectModule, ReactiveFormsModule,
     CommonModule, MatFormFieldModule, MatSelectModule, MaterialModuleModule,
-    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule,NgbTooltipModule
+    MatPaginator, MatPaginatorModule, MatCheckboxModule, MatSort, MatSortModule, MatTableModule, OverlayscrollbarsModule, NgbTooltipModule
   ],
   templateUrl: './process-panel.component.html',
   styleUrl: './process-panel.component.scss'
 })
-export class ProcessPanelComponent extends BaseComponent{
+export class ProcessPanelComponent extends BaseComponent {
   processPanelDisplayedColumn: string[] = ['code', 'name', 'panel', 'skin1', 'skin2', 'isActive', 'edit', 'delete'];
   processPanelDataSource = new MatTableDataSource<any>();
   @ViewChild('processPanelPaginator') processPanelPaginator!: MatPaginator;
@@ -40,7 +40,7 @@ export class ProcessPanelComponent extends BaseComponent{
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: string = this.userData ? this.userData.type : '';
   processPanelForm!: FormGroup; panelItems: any[] = []; skinItems: any[] = [];
-  isEditingProcessPanel : boolean = false;   isSubmitting: boolean = false;
+  isEditingProcessPanel: boolean = false; isSubmitting: boolean = false;
   skinIdNameMap: { [key: string]: string } = {};
   panelIdNameMap: { [key: string]: string } = {};
 
@@ -66,24 +66,24 @@ export class ProcessPanelComponent extends BaseComponent{
       skin1: ['', Validators.required],
       skin2: ['', Validators.required],
       pricePerFt: [0, [Validators.required, Validators.pattern('^[0-9]*$')]],
-      gst: [0, [Validators.required , Validators.pattern('^[0-9]*$')]],
-      finalAmount: [0, [Validators.required ,Validators.pattern('^[0-9]*$')]],
-      notes : ['', Validators.required],
+      gst: [0, [Validators.required, Validators.pattern('^[0-9]*$')]],
+      finalAmount: [0, [Validators.required, Validators.pattern('^[0-9]*$')]],
+      notes: ['', Validators.required],
       isActive: [true],
-      origin : [''],
+      origin: [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
     });
   }
-  
+
   onProcessPanelSubmit(modal: any) {
     this.processPanelSubmitted = true;
     if (this.processPanelForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-    this.isSubmitting = true; 
+    this.isSubmitting = true;
     this.processPanelForm.patchValue({
       origin: this.isEditingProcessPanel ? 'edit' : 'save'
     });
@@ -93,10 +93,10 @@ export class ProcessPanelComponent extends BaseComponent{
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-  
+
     this.switchService.saveProcessPanelData(payload).subscribe({
       next: (res: any) => {
-        this.isSubmitting = false; 
+        this.isSubmitting = false;
         if (res.status === true) {
           const message = this.isEditingProcessPanel
             ? "Process Panel updated successfully."
@@ -114,23 +114,23 @@ export class ProcessPanelComponent extends BaseComponent{
         }
       },
       error: (error) => {
-        this.isSubmitting = false; 
+        this.isSubmitting = false;
         this.toastr.error(error.statusText || "An error occurred while saving the process panel.");
       }
     });
   }
-  
+
   onEditProcessPanel(processPanel: any, modal: any) {
-    this.processPanelForm.get('processPanelId')?.enable(); 
+    this.processPanelForm.get('processPanelId')?.enable();
     this.processPanelForm.patchValue({
       ...processPanel,
       origin: 'edit'
     });
-    this.processPanelForm.get('processPanelId')?.disable(); 
+    this.processPanelForm.get('processPanelId')?.disable();
     this.isEditingProcessPanel = true;
     this.modalService.open(modal);
   }
-  
+
 
   getPanelData() {
     let payload = {
@@ -142,9 +142,9 @@ export class ProcessPanelComponent extends BaseComponent{
       next: (res: any) => {
         this.panelItems = res;
         this.panelIdNameMap = {};
-      this.panelItems.forEach((item: any) => {
-        this.panelIdNameMap[String(item.panelId)] = item.name;
-      });
+        this.panelItems.forEach((item: any) => {
+          this.panelIdNameMap[String(item.panelId)] = item.name;
+        });
       },
       error: (error) => {
         this.toastr.error("Error fetching product data");
@@ -162,9 +162,9 @@ export class ProcessPanelComponent extends BaseComponent{
       next: (res: any) => {
         this.skinItems = res;
         this.skinIdNameMap = {};
-      this.skinItems.forEach((item: any) => {
-        this.skinIdNameMap[String(item.skinId)] = item.name;
-      });
+        this.skinItems.forEach((item: any) => {
+          this.skinIdNameMap[String(item.skinId)] = item.name;
+        });
       },
       error: (error) => {
         this.toastr.error("Error fetching skin data");
@@ -213,7 +213,7 @@ export class ProcessPanelComponent extends BaseComponent{
   }
 
   generateProductId(): number {
-    return Math.floor(1000 + Math.random() * 9000); 
+    return Math.floor(1000 + Math.random() * 9000);
   }
 
   ngAfterViewInit() {
@@ -255,8 +255,8 @@ export class ProcessPanelComponent extends BaseComponent{
   }
 
   openLg16(content30: any) {
-    this.isEditingProcessPanel = false;              
-    this.processPanelSubmitted = false;              
+    this.isEditingProcessPanel = false;
+    this.processPanelSubmitted = false;
     this.processPanelForm.patchValue({
       processedPanelId: this.generateProductId(),
       code: '',
@@ -267,14 +267,14 @@ export class ProcessPanelComponent extends BaseComponent{
       pricePerFt: 0,
       gst: 0,
       finalAmount: 0,
-      notes : '',
+      notes: '',
       isActive: true,
-      origin : 'add',
+      origin: 'add',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
-    });                   
-    this.processPanelForm.get('processPanelId')?.enable();  
+    });
+    this.processPanelForm.get('processPanelId')?.enable();
     this.modalService.open(content30, { scrollable: true, centered: true, });
   }
 
@@ -285,6 +285,14 @@ export class ProcessPanelComponent extends BaseComponent{
   get f() {
     return this.processPanelForm.controls;
   }
-  
-  
+  getSkinName(skinId: any): any {    
+    const skin = this.skinItems.find(p => p.skinId == skinId);
+    return skin ? skin.name : '';
+  }
+
+  getPanelName(panelId: any): any {    
+    const panel = this.panelItems.find(p => p.panelId == panelId);
+    return panel ? panel.name : '';
+  }
+
 }
