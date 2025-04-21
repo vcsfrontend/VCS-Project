@@ -447,7 +447,32 @@ export class PanelComponent extends BaseComponent {
   }
 
   openLg6(content11: any) {
-    this.modalService.open(content11, { scrollable: true, centered: true, });
+    this.isEditingPanel = false;              
+    this.panelSubmitted = false;              
+    this.panelForm.patchValue({
+      panelId: this.generateProductId(),
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      name: '',
+      pressing: '',
+      basePanel: '',
+      make: '',
+      grade: '',
+      length: 0,
+      width: 0,
+      thickness: 0,
+      isActive: true,
+      isColdPress: true,
+      grains: '',
+      image: '',
+      origin : 'add',
+      hotpress: 2,
+      uom: 'Nos',
+      designNo:''
+    });                       
+    this.panelForm.get('panelId')?.enable();  
+    this.modalService.open(content11,{ scrollable: true, centered: true, });   
   }
 
   openLg8(content12: any) {
@@ -525,5 +550,5 @@ export class PanelComponent extends BaseComponent {
     }
     event.preventDefault();
   }
-
+  
 }

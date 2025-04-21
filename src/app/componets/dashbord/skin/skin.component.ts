@@ -477,7 +477,32 @@ export class SkinComponent extends BaseComponent {
   }
   
   openLg14(content18: any) {
-    this.modalService.open(content18, { scrollable: true, centered: true, });
+    this.isEditingSkin = false;              
+    this.skinSubmitted = false;             
+    this.skinForm.patchValue({
+      skinId: this.generateProductId(), 
+      designNo: '',
+      name: '',
+      brand: '',
+      skinType: '',
+      length: 0,
+      width: 0,
+      thickness: 0,
+      operation: '',
+      grains: '',
+      uom: 'nos',
+      skinFinish: '',
+      isActive: true,
+      isColdPress: true,
+      edgeBands: '',
+      image: '',
+      origin: 'add',
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
+    });    
+    this.skinForm.get('skinId')?.enable();  
+    this.modalService.open(content18,{ scrollable: true, centered: true, });   
   }
 
   openLg24(content28: any) {
