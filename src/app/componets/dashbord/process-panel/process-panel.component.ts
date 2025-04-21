@@ -120,8 +120,7 @@ export class ProcessPanelComponent extends BaseComponent {
     });
   }
 
-  onEditProcessPanel(processPanel: any, modal: any) {
-    console.log('cc',processPanel);
+  onEditProcessPanel(processPanel: any, modal: any) {   
     this.processPanelForm.get('processPanelId')?.enable();
     this.processPanelForm.patchValue({
       ...processPanel,
@@ -130,9 +129,7 @@ export class ProcessPanelComponent extends BaseComponent {
       skin2:Number(processPanel.skin2),
       panel:Number(processPanel.panel),
     });
-    this.processPanelForm.get('processPanelId')?.disable();
-
-    console.log('cc',this.processPanelForm.value);
+    this.processPanelForm.get('processPanelId')?.disable();    
     this.isEditingProcessPanel = true;
     this.modalService.open(modal);
   }
