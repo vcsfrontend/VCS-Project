@@ -703,10 +703,10 @@ chartOptions6:any= {
         this.adonaiAppUid = res.appuid;
         this.adonaiUsername = res.username;
         this.adonaiCity = res.city;
-        this.adonaiSalesPerson = res.salesPerson;
-        this.adonaiDiscount = res.discount;
-        this.adonaiAccountManager = res.accountManager;
-        this.adonaiManager = res.manager;
+        this.adonaiSalesPerson = res.subData.salesPerson;
+        this.adonaiDiscount = res.subData.discount;
+        this.adonaiAccountManager = res.subData.accountManager;
+        this.adonaiManager = res.subData.manager;
         } else{
           this.toastr.error(res.message);
           return;
@@ -770,10 +770,10 @@ chartOptions6:any= {
       "subEndDate": this.dp.transform(this.adonaiSubEndDate, 'yyyy-MM-dd'),
       "remarks": this.adonaiRemarks,
       "updatedBy": localStorage.getItem('username'),
-      "salesPerson": this.salesPerson,
-      "discount": this.discount,   
-      "accountManager": this.accountManager,
-      "manager": this.manager 
+      "salesPerson": this.adonaiSalesPerson,
+      "discount": this.adonaiDiscount,   
+      "accountManager": this.adonaiAccountManager,
+      "manager": this.adonaiManager 
     };
     // payload.type = +payload.type, 
     // payload.dob = this.dp.transform(payload.dob, 'dd-MM-yyyy');
