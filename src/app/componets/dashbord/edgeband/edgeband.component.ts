@@ -130,6 +130,10 @@ export class EdgebandComponent  extends BaseComponent{
 
   onEdgebandSubmit(modal: any) {
     this.EdgebandSubmitted = true;
+    this.edgeBandForm.markAllAsTouched(); // 👈 Add this
+    console.log('Form Valid:', this.edgeBandForm.valid);
+    console.log('Form Values:', this.edgeBandForm.getRawValue());
+    console.log('Form Errors:', this.edgeBandForm.errors);
     if (this.edgeBandForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
@@ -323,7 +327,31 @@ export class EdgebandComponent  extends BaseComponent{
   }
 
   openLg16(content20: any) {
-    this.modalService.open(content20, { scrollable: true, centered: true, });
+    this.isEditingEdgeband = false;
+    this.EdgebandSubmitted = false;
+    this.edgeBandForm.patchValue({
+      edgeBandId: this.generateProductId(),
+      designNo: '',
+      designCode: '',
+      name: '',
+      make: '',
+      material: '',
+      typeName: '',
+      finish: '',
+      width: 0,
+      thickness: 0,
+      isActive: true,
+      hsnCode: '',
+      premiling: '',
+      image: '',
+      uom: 'Nos',
+      internalCode: '',
+      origin:  'add',
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+    }); 
+    this.modalService.open(content20,{ scrollable: true, centered: true, }); 
   }
 
   openEdgePopup(content21: any, edgeType: any, edgeTitle: any) {
@@ -366,5 +394,19 @@ export class EdgebandComponent  extends BaseComponent{
   get gf() {
     return this.edgeContentForm.controls;
   }
-
+  initializeProcessPanelFormForAdd() {
+    this.edgeBandForm.reset(); 
+    this.edgeBandForm.patchValue({
+      edgeBandId: this.generateProductId?.(), 
+      isActive: true,
+      uom:"nos",
+      origin: 'save',
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
+    });
+  
+    this.edgeBandForm.get('edgeBandId')?.enable();  
+  }
+  
 }

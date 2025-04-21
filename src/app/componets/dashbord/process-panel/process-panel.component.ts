@@ -41,6 +41,9 @@ export class ProcessPanelComponent extends BaseComponent{
   userType: string = this.userData ? this.userData.type : '';
   processPanelForm!: FormGroup; panelItems: any[] = []; skinItems: any[] = [];
   isEditingProcessPanel : boolean = false;   isSubmitting: boolean = false;
+  skinIdNameMap: { [key: string]: string } = {};
+  panelIdNameMap: { [key: string]: string } = {};
+
 
   public processPanelSubmitted = false;
 
@@ -138,6 +141,10 @@ export class ProcessPanelComponent extends BaseComponent{
     this.switchService.displayPanelData(payload).subscribe({
       next: (res: any) => {
         this.panelItems = res;
+        this.panelIdNameMap = {};
+      this.panelItems.forEach((item: any) => {
+        this.panelIdNameMap[String(item.panelId)] = item.name;
+      });
       },
       error: (error) => {
         this.toastr.error("Error fetching product data");
@@ -154,6 +161,10 @@ export class ProcessPanelComponent extends BaseComponent{
     this.switchService.displaySkinData(payload).subscribe({
       next: (res: any) => {
         this.skinItems = res;
+        this.skinIdNameMap = {};
+      this.skinItems.forEach((item: any) => {
+        this.skinIdNameMap[String(item.skinId)] = item.name;
+      });
       },
       error: (error) => {
         this.toastr.error("Error fetching skin data");
@@ -244,6 +255,26 @@ export class ProcessPanelComponent extends BaseComponent{
   }
 
   openLg16(content30: any) {
+    this.isEditingProcessPanel = false;              
+    this.processPanelSubmitted = false;              
+    this.processPanelForm.patchValue({
+      processedPanelId: this.generateProductId(),
+      code: '',
+      name: '',
+      panel: '',
+      skin1: '',
+      skin2: '',
+      pricePerFt: 0,
+      gst: 0,
+      finalAmount: 0,
+      notes : '',
+      isActive: true,
+      origin : 'add',
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+    });                   
+    this.processPanelForm.get('processPanelId')?.enable();  
     this.modalService.open(content30, { scrollable: true, centered: true, });
   }
 
@@ -254,5 +285,6 @@ export class ProcessPanelComponent extends BaseComponent{
   get f() {
     return this.processPanelForm.controls;
   }
+  
   
 }
