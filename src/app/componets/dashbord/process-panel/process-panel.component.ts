@@ -121,12 +121,18 @@ export class ProcessPanelComponent extends BaseComponent {
   }
 
   onEditProcessPanel(processPanel: any, modal: any) {
+    console.log('cc',processPanel);
     this.processPanelForm.get('processPanelId')?.enable();
     this.processPanelForm.patchValue({
       ...processPanel,
-      origin: 'edit'
+      origin: 'edit',
+      skin1:Number(processPanel.skin1),
+      skin2:Number(processPanel.skin2),
+      panel:Number(processPanel.panel),
     });
     this.processPanelForm.get('processPanelId')?.disable();
+
+    console.log('cc',this.processPanelForm.value);
     this.isEditingProcessPanel = true;
     this.modalService.open(modal);
   }
