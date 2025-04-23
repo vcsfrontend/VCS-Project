@@ -12,6 +12,8 @@ import { Subscription, fromEvent } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { checkHoriMenu } from './sidebar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SwitherService } from '../../../shared/services/swither.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +22,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class SidebarComponent implements AfterViewInit {
   //////
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
   eventTriggered: boolean = false;
   screenWidth!: number;
   public windowSubscribe$!: Subscription;
@@ -31,9 +36,10 @@ export class SidebarComponent implements AfterViewInit {
     public router: Router,
     public renderer: Renderer2,
     private elementRef: ElementRef,
-    private cd: ChangeDetectorRef,) {
+    private cd: ChangeDetectorRef,
+    public switchService: SwitherService, private toastr: ToastrService,) {
     let html = this.elementRef.nativeElement.ownerDocument.documentElement;
-
+    
 
   }
 
@@ -84,7 +90,7 @@ export class SidebarComponent implements AfterViewInit {
             item.isVisible = true;
             break;
           case 'Adonai Users':
-            item.isVisible = true;
+            this.getSalesUsers(this.userEmail, item);
             break;
           // case 'bom':
           //   item.isVisible = true;
@@ -101,12 +107,12 @@ export class SidebarComponent implements AfterViewInit {
           case 'users':
             item.isVisible = true;
             break;
-          case 'optimizer':
-            item.isVisible = true;
-            break;
-          case 'Optimization':
-            item.isVisible=true;
-            break;
+          // case 'optimizer':
+          //   item.isVisible = true;
+          //   break;
+          // case 'Optimization':
+          //   item.isVisible=true;
+          //   break;
           case 'proposal':
             item.isVisible = true;
             break;
@@ -139,6 +145,24 @@ export class SidebarComponent implements AfterViewInit {
     if (document.querySelector('html')?.getAttribute('data-nav-layout') == 'horizontal' && window.innerWidth >= 992) { this.clearNavDropdown(); }
 
   }
+
+  getSalesUsers(email: string = this.userEmail, item: any) {
+    this.switchService.SalesUsers(email).subscribe({
+      next: (res: any) => {
+        const user = res;
+        const subrole = Array.isArray(user) ? user[0]?.subRole : user?.subRole;
+        const normalizedRole = subrole?.toLowerCase();
+        item.isVisible = subrole === 'Manager' || subrole === 'Sales Person' || subrole === 'Account Manager';
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching user role");
+        item.isVisible = false;
+      }
+    });
+  }
+  
+  
+  
 
   checkAdminRole(item: any) {
     let adonaiRole;

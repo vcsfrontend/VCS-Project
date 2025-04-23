@@ -14,6 +14,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { forkJoin, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, } from '@angular/forms';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -60,27 +61,33 @@ curve:string
 })
 export class AdonaiUsersComponent {
 
-  adonaiUsersDisplayedColumn: string[] = ['slNo', 'email', 'phoneNumber', 'adonai', 'adonaiSubStartDate', 'adonaiSubEndDate', 'roleId', 'manager', 'salesPerson', 'accountManager', ];
+  adonaiUsersDisplayedColumn: string[] = ['slNo', 'email', 'phoneNumber', 'activityStatus', 'adonaiSubStartDate', 'adonaiSubEndDate', 'roleId', 'manager', 'salesPerson', 'accountManager', ];
 
   adonaiUsersDataSource = new MatTableDataSource<any>();
   @ViewChild('adonaiUsersPaginator') adonaiUsersPaginator!: MatPaginator;
-  toastr: any;  subroleId = 7; userLst:any; selectedUser: any; adonaiData: any;
+  toastr: any;  subroleId = 7; userLst:any; adUser: any; adonaiData: any;
   adonaiEmail: any; adonaiRoleId: any; isAdonai: any; adonaiActivitySts:any; 
   adonaiSubStartDate: any; adonaiSubEndDate: any; adonaiSubDate: any; adonaiRemarks: any; 
   adonaiAppUid: any; adonaiUsername: any; adonaiCity: any; 
   adonaiSalesPerson: any;
   adonaiDiscount: any;
   adonaiAccountManager: any;
-  adonaiManager: any;   combinedUserList: any[] = []; dbData: any = {};
+  adonaiManager: any;   combinedUserList: any[] = []; dbData: any = {}; roleCounts: { [key: string]: number } = {};
+  adonaiHstryLst: any[] = [];  salesDesignationForm! : FormGroup; expiredCount: number = 0; 
+  expiredRoleCounts: { [key: string]: number } = {}; objectKeys = Object.keys;
+
+
 
   
-  constructor(public switchService: SwitherService, private modalService: NgbModal,) {
+  constructor(public switchService: SwitherService, private modalService: NgbModal, private fb: FormBuilder,) {
       
   }
 
   ngOnInit() {
     this.getUsersWithAdonai();
+
   }
+  
 
   ngAfterViewInit() {
     this.adonaiUsersDataSource.paginator = this.adonaiUsersPaginator;
@@ -93,7 +100,7 @@ export class AdonaiUsersComponent {
     return index + 1; 
   }
 
-  stockApplyFilter(event: Event) {
+  adonaiUsersFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.adonaiUsersDataSource.filter = filterValue.trim().toLowerCase();
   }
@@ -101,8 +108,10 @@ export class AdonaiUsersComponent {
   openLg1(content1: any) {
     this.modalService.open(content1, { scrollable: true, centered: true, });
   }
-  openLg2(content2: any) {
-    this.modalService.open(content2, { scrollable: true, centered: true, });
+  openLg2(content: any, email: string): void {
+    this.adonaiEmail = email; // Store the email in the component variable
+    this.modalService.open(content, { size: 'lg' });
+    this.getAdonaiHistory({ email });
   }
 
   getRoleName(roleId: number): string {
@@ -115,7 +124,9 @@ export class AdonaiUsersComponent {
     return roleMap[roleId] || 'Unknown';
   }
 
-  
+  getTotalUsers(): number {
+    return this.roleCounts['Basic'] + this.roleCounts['Pro'] + this.roleCounts['Elite'];
+  }
   
   
   getRoleBadgeClass(roleId: number): string {
@@ -133,6 +144,28 @@ export class AdonaiUsersComponent {
     }
   }
 
+  getAdonaiHistory(data: any): void {
+    this.switchService.adonaiHstry(data.email).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.adonaiHstryLst = res;  // Store the history
+        } else {
+          this.toastr.error(res.message, '', {
+            timeOut: 3000,
+            positionClass: 'toast-top-right',
+          });
+        }
+      },
+      error: (err) => {
+        this.toastr.error('An error occurred', '', {
+          timeOut: 3000,
+          positionClass: 'toast-top-right',
+        });
+      },
+    });
+  }
+  
+  
 
   getUsersWithAdonai() {
     this.switchService.getAllUsers().subscribe({
@@ -141,23 +174,23 @@ export class AdonaiUsersComponent {
           const adonaiRequests = users.map(user =>
             this.switchService.onAdonaiView(user.email).pipe(
               map(adonaiData => {
-                const cityCount = users.filter(u => u.city === user.city).length; // Assuming user.city is what you want
+                const cityCount = users.filter(u => u.city === user.city).length;
                 return {
                   ...user,
                   adonaiRoleId: adonaiData?.subData?.roleId,
+                  adonaiActivitySts: adonaiData?.subData?.activityStatus || '',
                   adonaiSubStartDate: adonaiData?.subData?.subStartDate || '',
                   adonaiSubEndDate: adonaiData?.subData?.subEndDate || '',
                   adonaiCity: adonaiData?.city,
-                  adonaiSalesPerson: adonaiData?.salesPerson,
-                  adonaiDiscount: adonaiData?.discount,
-                  adonaiAccountManager: adonaiData?.accountManager,
-                  adonaiManager: adonaiData?.manager,
+                  adonaiSalesPerson: adonaiData?.subData?.salesPerson || '',
+                  adonaiDiscount: adonaiData?.subData?.discount || '',
+                  adonaiAccountManager: adonaiData?.subData?.accountManager || '',
+                  adonaiManager: adonaiData?.subData?.manager || '',
                   adonaiDaysLeft: this.calculateDateDifference(adonaiData?.subData?.subEndDate),
-                  count: cityCount 
+                  count: cityCount ,
                 };
               }),
               catchError(error => {
-                console.error(`Adonai API failed for ${user.email}`, error);
                 return of(user);
               })
             )
@@ -166,6 +199,8 @@ export class AdonaiUsersComponent {
           forkJoin(adonaiRequests).subscribe((finalList: any[]) => {
             this.dbData = { adonaiData: finalList };
             this.adonaiUsersDataSource.data = this.dbData.adonaiData;
+            this.roleCounts = this.countRoles(finalList);
+            this.countExpiredUsers(finalList);
           });
         }
       },
@@ -175,6 +210,17 @@ export class AdonaiUsersComponent {
     });
   }
 
+  countRoles(users: any[]): { [key: string]: number } {
+    const counts: { [key: string]: number } = {};
+  
+    users.forEach(user => {
+      const roleLabel = this.getRoleName(user.adonaiRoleId);
+      counts[roleLabel] = (counts[roleLabel] || 0) + 1;
+    });
+  
+    return counts;
+  }
+  
   get uniqueAdonaiData() {
     const uniqueMap = new Map();
     this.dbData?.adonaiData?.forEach((item: { city: any; }) => {
@@ -184,6 +230,7 @@ export class AdonaiUsersComponent {
     });
     return Array.from(uniqueMap.values());
   }
+  
   
   
   
@@ -201,6 +248,19 @@ export class AdonaiUsersComponent {
   
     return `${diffDays} days left`;
   }
+  
+  countExpiredUsers(users: any[]) {
+    this.expiredRoleCounts = {};
+  
+    users.forEach(user => {
+      if (user.adonaiDaysLeft === 'Expired') {
+        const roleName = this.getRoleName(user.adonaiRoleId);
+        this.expiredRoleCounts[roleName] = (this.expiredRoleCounts[roleName] || 0) + 1;
+      }
+    });
+  }
+  
+  
 
   showAdonaiFullDetails:boolean = false;
 
@@ -209,18 +269,20 @@ export class AdonaiUsersComponent {
   }
 
   onRowButtonClick(user: any) {
-    console.log('User clicked:', user);
-    this.selectedUser = user;
+    this.adUser = user;
   }
   
 
   getAdonaiClass(adonai: boolean): string {
-    return adonai ? "badge bg-success-transparent ps-3 fs-11 order-status complete " : "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
+    return adonai ? "badge bg-success-transparent ps-3 fs-11 order-status complete" : "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
   }
   
   getAdonaiText(adonai: boolean): string {
     return adonai ? 'Active' : 'Inactive';
   }
+  
+
+  
   
   
 
