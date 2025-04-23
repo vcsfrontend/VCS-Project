@@ -65,11 +65,11 @@ export const admin: Routes = [
       loadComponent: () =>
         import('./ecommerce/orders/orders.component').then((m) => m.OrdersComponent),
     },
-    {
-      path: 'ecommerce/products',
-      loadComponent: () =>
-        import('./ecommerce/products/products.component').then((m) => m.ProductsComponent),
-    },
+    // {
+    //   path: 'ecommerce/products',
+    //   loadComponent: () =>
+    //     import('./ecommerce/products/products.component').then((m) => m.ProductsComponent),
+    // },
     {
       path: 'ecommerce/productdetails',
       loadComponent: () =>

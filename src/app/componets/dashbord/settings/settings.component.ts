@@ -23,6 +23,7 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { MatIconModule } from '@angular/material/icon';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { ShowCodeContentDirective } from '../../../shared/directives/show-code-content.directive';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-settings',
@@ -30,17 +31,31 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
-    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule],
+    OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgSelectModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './settings.component.html',
   styleUrl: './settings.component.scss'
 })
 export class SettingsComponent extends BaseComponent implements OnInit {
-  displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'email', 'dateOfBirth'];
+  stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes', 'trim'];
+  sawDisplayedColumn: string[] = ['select', 'slNo', 'bladeWidth', 'stockType', 'cutType', 'cutPreference', 'strategy', 'maxPhase', 'headCuts', 'primaryCompression', 'stackHeight', 'stockSelection', 'minSpacing', 'stackingMode'];
+  partsDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'trim', 'banding', 'finish', 'orientationLock', 'notes'];
+
+  mainHeader: string[] = ['trim'];
+  subHeader: string[] = ['x1', 'x2', 'y1', 'y2'];
   dataSource = new MatTableDataSource<any>(); mailId: any = '';
+  stockDataSource = new MatTableDataSource<any>();
+  sawDataSource = new MatTableDataSource<any>();
+  partsDataSource = new MatTableDataSource<any>();
+  selectedSawIdList: Set<any> = new Set<any>();
+  selectedSawRow: any = null;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
+  @ViewChild('sawPaginator') sawPaginator!: MatPaginator;
+  @ViewChild('partsPaginator') partsPaginator!: MatPaginator;
   isAddEdt = false; aeTyp = 'a'; playersList: any; editData: any;
-  adonai = false; crm = false; userLst: any;
+  adonai = false; crm = false; userLst: any = [];
   submitted = false; userData: any; roleid: any;
   // userForm!: FormGroup;
   cnfmPaswrd: any = ''; paswrd: any = '';
@@ -86,6 +101,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   addMorePmntVisible: boolean = false;
   searchUser: string = '';
   userDetails: any = {};
+  public sawForm!: FormGroup;
+  public sawSubmitted = false;
+  public partsSubmitted = false;
+  public stockForm!: FormGroup;
+  public partsForm!: FormGroup;
+  StData: any;
 
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible; // Toggle visibility
@@ -168,11 +189,16 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     super();
     this.userData = localStorage.getItem('userDetails');
     this.userType = JSON.parse(this.userData).type;
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+    const selectedSawRow = localStorage.getItem('selectedSawRow');
+    this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
+   
     this.formInit();
     this.productForm = this.fb.group({
       name: '',
       quantities: this.fb.array([]),
     });
+
   }
 
   onCheckboxChange() {
@@ -203,6 +229,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    
+    this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.saveData = {
@@ -287,6 +315,28 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       type: JSON.parse(this.userData).type
     };
 
+
+    this.sawForm = this.fb.group({
+      sawList: this.fb.array([this.createSawGroup()]),
+      companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
+      email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
+      type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
+
+    });
+
+    this.stockForm = this.fb.group({
+      stockList: this.fb.array([this.createStockGroup()]),
+      companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
+      email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
+      type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
+    });
+    this.partsForm = this.fb.group({
+      partList: this.fb.array([this.createPartGroup()]),
+      companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
+      email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
+      type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
+    });
+
     // setTimeout(() => {
 
     // }, 500);
@@ -300,6 +350,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
+
+
   }
 
   onClkDesign(key: string = '') {
@@ -310,8 +362,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
           alert(res.message)
           return;
         } else {
-          if (key == 'i') {           
-            this.roleid = res.roleId; 
+          if (key == 'i') {
+            this.roleid = res.roleId;
           } else {
             window.open(res.newDesign, '_blank');
             this.toastr.success(res.message);
@@ -378,6 +430,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.stockDataSource.paginator = this.stockPaginator;
+    this.sawDataSource.paginator = this.sawPaginator;
   }
 
   get f() {
@@ -411,12 +465,24 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   // }
 
   getSNo(index: number): number {
-    if (this.paginator && this.paginator.pageIndex !== undefined && this.paginator.pageSize !== undefined) {
-      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
+    if (this.stockPaginator && this.stockPaginator.pageIndex !== undefined && this.stockPaginator.pageSize !== undefined) {
+      return this.stockPaginator.pageIndex * this.stockPaginator.pageSize + index + 1;
     }
     return index + 1; // Default return if paginator is not yet defined
   }
 
+  sawGetSNo(index: number): number {
+    if (this.sawPaginator && this.sawPaginator.pageIndex !== undefined && this.sawPaginator.pageSize !== undefined) {
+      return this.sawPaginator.pageIndex * this.sawPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
+  getPartsSNo(index: number): number {
+    if (this.partsPaginator && this.partsPaginator.pageIndex !== undefined && this.partsPaginator.pageSize !== undefined) {
+      return this.partsPaginator.pageIndex * this.partsPaginator.pageSize + index + 1;
+    }
+    return index + 1; // Default return if paginator is not yet defined
+  }
   saveInitialStage() {
     this.switchService.stageSave(this.saveData).subscribe({
       next: (res: any) => {
@@ -976,9 +1042,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       tools: [],
     })
   }
-  applyFilter(event: Event) {
+  stockApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.stockDataSource.filter = filterValue.trim().toLowerCase();
   }
   quantities(): FormArray {
     return this.productForm.get("quantities") as FormArray
@@ -1020,15 +1086,371 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
 
   filterUserData() {
-    return this.userLst.filter((item: { firstName: string; lastName: string; email: string; }) =>
-      item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
-      item.lastName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
-      item.email.toLowerCase().includes(this.searchUser.toLowerCase())
-    );
+    if (this.userLst.length > 0) {
+      return this.userLst.filter((item: { firstName: string; lastName: string; email: string; }) =>
+        item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+        item.lastName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+        item.email.toLowerCase().includes(this.searchUser.toLowerCase())
+      );
+    }
   }
 
   ViewUserDetails(data: any) {
     this.userDetails = data;
   }
+
+
+  createSawGroup(): FormGroup {
+    return this.fb.group({
+      bladeWidth: [0, [Validators.required]],
+      stockType: ['', [Validators.required]],
+      cutType: ['', [Validators.required]],
+      cutPreference: ['', [Validators.required]],
+      guillotineOptions: this.fb.group({
+        strategy: ['', [Validators.required]],
+        maxPhase: [0, [Validators.required]]
+      }),
+      efficiencyOptions: this.fb.group({
+        primaryCompression: ['', [Validators.required]]
+      }),
+      stackHeight: [0, [Validators.required]],
+      options: this.fb.group({
+        stockSelection: ['', [Validators.required]],
+        minSpacing: [0, [Validators.required]],
+        stackingMode: ['', [Validators.required]]
+      })
+    });
+  }
+
+  createStockGroup(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      l: [0],
+      w: [0],
+      t: [0],
+      material: [''],
+      q: [0],
+      autoAdd: [''],
+      grain: [''],
+      trim: this.fb.group({
+        x1: [0],
+        x2: [0],
+        y1: [0],
+        y2: [0]
+      }),
+      allowExactFitShapes: [true],
+      cost: [0],
+      notes: ['']
+    });
+  }
+  createPartGroup(): FormGroup {
+    return this.fb.group({
+      name: [''],
+      l: [0],
+      w: [0],
+      t: [0],
+      material: [''],
+      q: [0],
+      banding: this.fb.group({
+        x1: [true],
+        x2: [true],
+        y1: [true],
+        y2: [true]
+      }),
+      trim: this.fb.group({
+        x1: [0],
+        x2: [0],
+        y1: [0],
+        y2: [0]
+      }),
+      finish: this.fb.group({
+        a: [''],
+        b: ['']
+      }),
+      orientationLock: [''],
+      notes: ['']
+    });
+  }
+
+
+  // Getter for saw FormArray
+
+  get sawList() {
+    return this.sawForm.get('sawList') as FormArray;
+  }
+
+
+  // Getter for stock FormArray
+  get stockList() {
+    return this.stockForm.get('stockList') as FormArray;
+  }
+  addParts(): void {
+    this.partsList.push(this.createPartGroup());
+  }
+  removeParts(index: number): void {
+    this.partsList.removeAt(index);
+  }
+  get partsList() {
+    return this.partsForm.get('partList') as FormArray;
+  }
+  addPopupParts(): void {
+    this.partsList.push(this.createPartGroup());
+  }
+  addPopupStock(): void {
+    this.stockList.push(this.createStockGroup());
+  }
+
+  addSaw(): void {
+    this.sawList.push(this.createSawGroup());
+  }
+  removeSaw(index: number): void {
+    this.sawList.removeAt(index);
+  }
+
+  addStock(): void {
+    this.stockList.push(this.createStockGroup());
+  }
+  removeStock(index: number): void {
+    this.stockList.removeAt(index);
+  }
+
+
+
+  openLg1(content6: any) {
+    this.modalService.open(content6, { size: 'xl', scrollable: true, centered: true, });
+  }
+  openLg2(content5: any) {
+    this.modalService.open(content5, { size: 'xl', scrollable: true, centered: true, });
+  }
+  openLg3(content7: any) {
+    this.modalService.open(content7, { size: 'xl', scrollable: true, centered: true, });
+  }
+
+
+  getStockData() {
+    let payload = {
+      "email": JSON.parse(this.userData)?.email,
+      "companyCode": JSON.parse(this.userData)?.companyCode,
+      "type": JSON.parse(this.userData)?.type
+    };
+    this.switchService.StockData(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.length > 0) {
+          this.stockDataSource.data = res;
+          
+
+          if (this.stockPaginator) {
+            this.stockDataSource.paginator = this.stockPaginator;
+          }
+
+        } else {
+          this.stockDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        
+        this.toastr.error("Error fetching stock data");
+        this.stockDataSource.data = [];
+      },
+    });
+  }
+
+  getSawData() {
+    let payload = {
+      email: JSON.parse(this.userData)?.email,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    };
+
+    this.switchService.SawData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.sawDataSource.data = res;
+
+
+
+
+          /*const sawArray = this.sawForm.get('sawList') as FormArray;
+          sawArray.clear(); // Clear old values before adding new ones
+
+          res.forEach((saw) => {
+            sawArray.push(this.fb.group({
+              bladeWidth: [saw.bladeWidth, Validators.required],
+              stockType: [saw.stockType],
+              cutType: [saw.cutType],
+              cutPreference: [saw.cutPreference],
+              guillotineOptions: this.fb.group({
+                strategy: [saw.guillotineOptions?.strategy ?? ''],
+                maxPhase: [saw.guillotineOptions?.maxPhase ?? 0]
+              }),
+              efficiencyOptions: this.fb.group({
+                primaryCompression: [saw.efficiencyOptions?.primaryCompression ?? '']
+              }),
+              stackHeight: [saw.stackHeight],
+              options: this.fb.group({
+                stockSelection: [saw.options?.stockSelection ?? ''],
+                minSpacing: [saw.options?.minSpacing ?? 0],
+                stackingMode: [saw.options?.stackingMode ?? '']
+              })
+            }));
+          });*/
+
+
+          // Ensure paginator is set only if it exists
+          if (this.sawPaginator) {
+            this.sawDataSource.paginator = this.sawPaginator;
+          } 
+        } else {
+          this.sawDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        
+        this.toastr.error("Failed to fetch saw data.");
+        this.sawDataSource.data = [];
+      },
+    });
+  }
+  onSawRowCheckboxChange(row: any, event: any) {
+    if (event.checked) {
+      this.selectedSawRow = row;     
+      localStorage.setItem('selectedSawRow', JSON.stringify(this.selectedSawRow));
+    } else {
+      this.selectedSawRow = null;
+      localStorage.removeItem('selectedSawRow');
+    }
+  }
+
+  isCheckboxSawDisabled(row: any): boolean {
+    return this.selectedSawRow && this.selectedSawRow.sawId !== row.sawId; // Disable others
+  }
+
+  // Handle "select all" checkbox
+  onSawSelectAllChange(event: any) {
+    if (event.checked) {
+      //this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
+      
+    } else {
+      this.selectedSawIdList.clear();
+    }
+  }
+
+  isSawAllSelected() {
+    return this.selectedSawIdList.size === this.sawDataSource.data.length;
+  }
+
+  isSawIndeterminate() {
+    return this.selectedSawIdList.size > 0 && this.selectedSawIdList.size < this.sawDataSource.data.length;
+  }
+
+  isSawSelected(data: any) {
+    return this.selectedSawIdList.has(data);
+  }
+
+
+  getPartsData() {
+    let payload = {
+      email: JSON.parse(this.userData)?.email,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    };
+    this.switchService.PartsData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res) && res.length > 0) {
+          this.partsDataSource.data = res;
+          
+
+          // Ensure paginator is set only if it exists
+          if (this.partsPaginator) {
+            this.partsDataSource.paginator = this.partsPaginator;
+          } 
+        } else {
+          this.sawDataSource.data = [];
+        }
+      },
+      error: (error) => {
+        
+        this.toastr.error("Failed to fetch saw data.");
+        this.sawDataSource.data = [];
+      },
+    });
+  }
+
+  submitSawForm(modal: any): void {
+    this.sawSubmitted = true;
+    if (this.sawForm.valid) {
+      this.switchService.saveSawData(this.sawForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.sawForm.reset();
+            this.getSawData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.sawSubmitted = false;
+    }
+  }
+
+  submitStockForm(modal: any): void {
+    this.sawSubmitted = true;
+    if (this.stockForm.valid) {
+      this.switchService.saveStockData(this.stockForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.stockForm.reset();
+            this.getStockData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.sawSubmitted = false;
+    }
+
+  }
+
+  resetPartList() {
+    this.partsForm.setControl('partList', this.fb.array([this.createPartGroup()]));
+  }
+  submitPartsForm(modal: any): void {
+    this.partsSubmitted = true;
+    if (this.partsForm.valid) {
+      this.switchService.savePartsData(this.partsForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.resetPartList();
+            this.getPartsData();
+            this.toastr.success(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+
+          } else {
+            this.toastr.error(res.message, 'optimizer', {
+              timeOut: 3000, positionClass: 'toast-top-right'
+            });
+          }
+        }
+      })
+      this.partsSubmitted = false;
+    }
+  }
+
 
 }

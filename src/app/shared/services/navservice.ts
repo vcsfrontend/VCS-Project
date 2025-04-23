@@ -126,6 +126,16 @@ export class NavService implements OnDestroy {
       path: '/dashboard/projects',
     },
     {
+      title: 'Products',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: ' bi-layers side-menu__icon',
+      active: false,
+      selected: false,
+      path: '/dashboard/products',
+    },
+    {
       title: 'enterprise',
       dirchange: false,
       type: 'link',
@@ -134,6 +144,16 @@ export class NavService implements OnDestroy {
       active: false,
       selected: false,
       path: '/dashboard/enterprise',
+    },
+    {
+      title: 'Adonai Users',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: 'bi-file-earmark',
+      active: false,
+      selected: false,
+      path: '/dashboard/adonai-users',
     },
     {
       title: 'bom',
@@ -276,24 +296,25 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/projects',
     // },
-    // {
-    //   title: 'leads',
-    //   icon: 'bi-layout-text-window side-menu__icon',
-    //   dirchange: false,
-    //   type: 'link',
-    //   linkType : 'internal',
-    //   active: false,
-    //   path: '/apps/crm/leads'
-    // },
-    // {
-    //   title: 'deals',
-    //   icon: 'bi-grid side-menu__icon',
-    //   dirchange: false,
-    //   type: 'link',
-    //   linkType : 'internal',
-    //   active: false,
-    //   path: '/apps/crm/deals'
-    // },
+    {
+      title: 'leads',
+      icon: 'bi-layout-text-window side-menu__icon',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path: '/apps/crm/leads'
+    },
+    {
+      title: 'deals',
+      icon: 'bi-grid side-menu__icon',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path: '/apps/crm/deals'
+    },
+    
     // {
     //   title: 'Designers',
     //   dirchange: false,
@@ -322,14 +343,82 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/users',
     // },
+    // {
+    //   title: 'optimizer',
+    //   icon: 'bi-file-earmark',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path : "/dashboard/optimizer"
+    // },
     {
-      title: 'optimizer',
-      icon: 'bi-file-earmark',
+      title: 'Optimization',
+      icon: 'bi-house',
       dirchange: false,
-      type: 'link',
-      linkType : 'internal',
+      type: 'sub',
       active: false,
-      path : "/dashboard/optimizer"
+      children: [
+        {
+          title: 'optimizer',
+          icon: 'bi-file-earmark',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          active: false,
+          path : "/dashboard/optimizer"
+        },        
+        {
+          title: 'Products',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          icon: ' bi-layers side-menu__icon',
+          active: false,
+          selected: false,
+          path: '/dashboard/products',
+        },
+        {
+          title: 'Panel',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          icon: ' bi-layers side-menu__icon',
+          active: false,
+          selected: false,
+          path: '/dashboard/panel',
+        },
+        {
+          title: 'Skin',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          icon: ' bi-layers side-menu__icon',
+          active: false,
+          selected: false,
+          path: '/dashboard/skin',
+        },
+        {
+          title: 'Edgeband',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          icon: ' bi-layers side-menu__icon',
+          active: false,
+          selected: false,
+          path: '/dashboard/edgeband',
+        },
+        {
+          title: 'Process Panel',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          icon: ' bi-layers side-menu__icon',
+          active: false,
+          selected: false,
+          path: '/dashboard/processPanel',
+        },
+      ],
     },
     // {
     //   title: 'proposal',
@@ -416,7 +505,11 @@ export class NavService implements OnDestroy {
     //   path: '/dashboard/orgSettings',
     // },
 
+    
+
   ];
+  
+
 
 
   

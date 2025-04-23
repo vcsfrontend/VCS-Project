@@ -44,7 +44,13 @@ export class SwitherService {
   onMailValidSignup(email:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/generate_otp?email=${email}&action=signup`,''); }
   onMailValidReset(email:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/generate_otp?email=${email}&action=reset`,''); }
   onOtpSignup(email:any, otp:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/validate_otp?email=${email}&otp=${otp}`,''); }
+  specificUrl(email: string, designId: string): Observable<any> {const encodedEmail = encodeURIComponent(email);
+    const apiUrl = `${this.adonaiURL}adonai/getSpecificDesignById?email=${encodedEmail}&designId=${designId}`;
+    return this.http.get(apiUrl);
+  }
   
+    
+
   stageSave(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/save_design_stages`, data); }
   getStages(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/get_design_stages`, data); }
   deleteStage(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/delete_design_stages`, data); }
@@ -75,6 +81,10 @@ export class SwitherService {
   saveProjEstimation(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/project_payment_history`, data); }
   generatedOutputJson(value:any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/generatedOutputJson/${value}`); }
 
+  //sales team
+  saveSalesUsers(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/save_users_designation_sales`, data); }
+  SalesUsers(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/get_user_sales_designation/${email}`); }
+
   ProjectList(): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjectList`,); }
   // ProjectById(): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjectById`,); }
   ProjFurniture(data : any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjFurniture?designId=${data}`); }
@@ -88,6 +98,52 @@ export class SwitherService {
   ProjectDataList(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}elite/getProjectDataList?email=${email}`); }
   inventoryCreateData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}elite/inventory_data_listing`, data); }
   optimizeGeneratedOutputData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/generated_output`, data); }
+  StockData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getStackData`, data); }
+  SawData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getSawData`, data); }
+  saveSawData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_saw_data`, data); }
+  saveStockData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_stock_data`, data); }
+  bulkUploadParts(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/bulk_upload_parts`, data); }
+  bulkUploadStock(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/bulk_upload_stock`, data); }
+  HistoryUploadParts(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getHistoryBulkUpload`, data); }
+  bulkPartsStock(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getBulkPartsStockData`, data); }
+  PartsData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getPartsData`, data); }
+  savePartsData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_parts_data`, data); }
+  saveOrUpdateProduct(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_product_data`, data); }
+  saveOrUpdatePanel(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_pannel_data`, data); }
+  saveBasePanelData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_base_pannel_data`, data); }
+  saveMakeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_make_data`, data); }
+  saveGradeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_pannel_grade_data`, data); }
+  saveSkinData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_optimizer_skin_data`, data); }
+  saveSkinBrandData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_skin_brand_data`, data); }
+  saveSkinTypeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_skin_type_data`, data); }
+  saveSkinFinishData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_skin_finish_data`, data); }
+  saveEdgebandData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_optimizer_edge_band`, data); }
+  saveEdgeContentData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_edge_content`, data); }
+  displayProductData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getProductData`, data); }
+  displayPanelData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_pannel_data`, data); }
+  displayEdgebandData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_optimizer_edge_band`, data); }
+  displayBasePanelData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_base_pannel_data`, data); }
+  displayMakeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/getMakeData`, data); }
+  displayGradeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_pannel_grade_data`, data); }
+  displaySkinData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_optimizer_skin_data`, data); }
+  displaySkinBrandData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_skin_brand_data`, data); }
+  displaySkinTypeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_skin_type_data`, data); }
+  displaySkinFinishData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_skin_finish_data`, data); }
+  deleteProductData(prod_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_product_data/${prod_id}`);}
+  deletePannelData(pannel_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_pannel_data/${pannel_id}`);}
+  deleteBasePanelData(base_pannel_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_base_pannel_data/${base_pannel_id}`);}
+  deleteMakeData(make_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_make_data/${make_id}`);}
+  deletePannelGradeData(pannel_grade_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_pannel_grade_data/${pannel_grade_id}`);}
+  deleteSkinData(optimizer_skin_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_optimizer_skin_data/${optimizer_skin_id}`);}
+  deleteSkinBrandData(skin_brand_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_skin_brand_data/${skin_brand_id}`);}
+  deleteSkinTypeData(skin_type_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_skin_type_data/${skin_type_id}`);}
+  deleteSkinFinishData(skin_finish_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_skin_finish_data/${skin_finish_id}`);}
+  displayProcessPanelData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_processed_pannel`, data); }
+  saveProcessPanelData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_processed_pannel`, data); }
+  deleteProcessPanelData(pannel_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_processed_pannel/${pannel_id}`);}
+  getEdgeContentData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_edge_content`, data); }
+  deleteEdgeContentData(optimizer_edge_band_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_optimizer_edge_band/${optimizer_edge_band_id}`); }
+  deleteEdgeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/delete_edge_content`, data); }
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
   CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  

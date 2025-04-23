@@ -101,11 +101,21 @@
 .filter-field {
   margin-top: -3px !important;
   margin-bottom: -45px !important;
-  width: 35%; /* Adjust width if needed */
+  width: 35%; 
   max-height: 72px !important;
-  margin-left: 6% !important;
+  margin-left: -1% !important;
   
 }
+
+.filter-field-1 {
+  margin-top: -5px !important;
+  margin-bottom: -45px !important;
+  width: 45%; 
+  max-height: 72px !important;
+  margin-left: 0% !important;
+  
+}
+
 
 .scroll-container {
   display: flex;
@@ -235,8 +245,29 @@
 .opp {
   margin-top: 115px;
   margin-bottom: 120px;
-
 }
+
+@media (max-width: 992px) {
+  .opp {
+    margin-top: 80px;
+    margin-bottom: 90px;
+  }
+}
+
+@media (max-width: 768px) {
+  .opp {
+    margin-top: 50px;
+    margin-bottom: 60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .opp {
+    margin-top: 30px;
+    margin-bottom: 40px;
+  }
+}
+
 .custom-img {
   width: 15px;
   height: 15px;
@@ -277,4 +308,12 @@ th {
 .spinner {
   width: 80px !important;
   height: 80px !important;
+}
+
+mat-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  letter-spacing: 0.5px;
+  margin-right: 10px;
 }

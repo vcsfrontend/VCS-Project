@@ -462,4 +462,63 @@ export class BaseComponent {
       {"name":"m"},
       {"name":"foot"},
     ]
+    dealStatus = [{"name":"1st Discussion"},
+      {"name":"2nd Discussion"},
+      {"name":"Proposal Sent"},
+      {"name":"Final Discussion"},
+      {"name":"Closed"},
+      {"name":"Lost"},
+      {"name":"Convert to Client"},
+    ]
+    dealFor = [{"name":"Lead"},
+      {"name":"Client"},
+    ]
+    dealStages = [{"name":"Meeting Fixed"},
+      {"name":"Meeting Completed"},
+      {"name":"Agreement Shared"},
+      {"name":"Agreement Approved"},
+      {"name":"Proposal Sent"},
+      {"name":"Payment Processed"},
+      {"name":"Converted to Client"},
+    ]
+    // clients dashboard
+    clientStatus = [{"name":"Happy with Product"},
+      {"name":"Installation Scheduled"},
+      {"name":"Installation Done"},
+      {"name":"Shipped"},
+      {"name":"Company Closed"},
+      {"name":"Dissatisfied Client"},
+    ]
+    clientStages = [{"name" : "Fresh"},
+      {"name" :"Existing"},
+      {"name":"Expired"}
+    ]
+
+    // tables 
+    PanelGrains= [{"name" : "Vertical"},
+      {"name" :"Horizontal"},
+      {"name":"N/A"}
+    ]
+
+    PanelPressing = [{"name" : "0"},
+      {"name" :"1"},
+      {"name":"2"}
+    ]
+
+    Operation = [{"name" : "Hot press"},
+      {"name" :"Paint"},
+      {"name":"Vaccume Press"}
+    ]
+
+    SkinGrains = [{"name" : "Vertical"},
+      {"name" :"Horizontal"},
+      {"name":"N/A"}
+    ]
+    EdgeBands = [{"name" : "check all"},
+      {"name" :"uncheck all"},
+    ]
+
+    // SkinFinish = [{"name" : "test"},
+    // ]
+
 }

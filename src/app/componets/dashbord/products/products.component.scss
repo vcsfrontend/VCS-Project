@@ -1,0 +1,32 @@
+.filters-field-1 {
+    margin-top: -5px !important;
+    margin-bottom: -45px !important;
+    width: 49%; 
+    max-height: 72px !important;
+    margin-left: 9% !important;
+}
+.table-responsive {
+    overflow-x: auto;
+    cursor: pointer;
+}
+::ng-deep .tooltip-inner {
+    max-width: 400px !important;  
+    white-space: pre-wrap;        
+    text-align: left;        
+    cursor: pointer;      
+}
+
+.tooltip-inner {
+    max-width: 500px !important;   
+    white-space: pre-wrap;   
+    visibility: hidden;            
+    opacity: 0;         
+    cursor: pointer;           
+    transition: opacity 0.3s, visibility 0s linear 0.3s;  
+}
+
+span[ngbTooltip]:hover .tooltip-inner {
+    visibility: visible;         
+    opacity: 1;                   
+    transition-delay: 0s;          
+}

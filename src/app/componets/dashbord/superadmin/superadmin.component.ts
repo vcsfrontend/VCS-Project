@@ -8,7 +8,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -87,6 +87,7 @@ export class SuperadminComponent {
   displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'mobile', 'adonai', 'crm', 'action', 'view', 'edit' ];
   displayAdonaiColumns: string[] = ['slNo', 'email', 'history'];
   displayCrmColumns: string[] = ['slNo', 'email', 'history'];
+  salesDisplayColumns: string[] = ['slNo', 'userName'];
   dataSource = new MatTableDataSource<any>(); 
   adonaiSource = new MatTableDataSource<any>(); 
   crmSource = new MatTableDataSource<any>();
@@ -95,21 +96,28 @@ export class SuperadminComponent {
   @ViewChild('paginator2') paginator2!: MatPaginator;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
   @ViewChild('template', { static: true }) templateRef!: TemplateRef<any>;
+  @ViewChild('salesPaginator') salesPaginator!: MatPaginator;
+  salesDataSource = new MatTableDataSource<any>();
   private modalRef: any;
   content3: any; content4: any; content5: any; content6: any; content7: any;
   userLst:any; userData: any; adonaiHstryLst: any; crmHstryLst: any;
   firstNm: any; lastNm: any; companyNm: any; phoneNo: any; dob: any;
-  adonaiData: any; crmData: any; 
+  adonaiData: any; crmData: any;  adonaiSalesPerson: any; adonaiDiscount: any;
   adonaiEmail: any; adonaiRoleId: any; isAdonai: any; adonaiActivitySts:any; 
+  adonaiAccountManager : any; adonaiManager : any;
+  salesPerson : any; discount : any;  accountManager : any; manager : any;
   adonaiSubStartDate: any; adonaiSubEndDate: any; adonaiSubDate: any; adonaiRemarks: any; 
   adonaiAppUid: any; adonaiUsername: any; adonaiCity: any; adonaiUpdatedBy: any; adonaiUpdatedDate: any;
   crmEmail: any; crmRoleId: any; isCrm: any; crmStatus: any; crmSubStartDate: any; crmSubEndDate: any; 
   crmSubDate: any; crmRemarks: any; crmUsername: any; crmCity:any; crmUpdatedBy: any;
   isAdonaiView = false; isCrmView = false; userNm: any;
   isCrmTrue: any; type: any; users: any; email: any; username: any; country: any; isAdonaiTrue: any;
-  dbData: any = {}; isSts:boolean =true;
-
-  totalUsers = 896; // Replace this with the correct total value if it's dynamic
+  dbData: any = {}; isSts:boolean =true;  salesDesignationForm! : FormGroup;  subRole: any; status:any;
+  userDataStorage = localStorage.getItem('userDetails');
+  salesData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.salesData ? this.salesData.email : '';
+  userName: string = this.salesData ? this.salesData.username : '';
+  totalUsers = 896; 
   newUser: string = '';
   chartOptions:any = {
     series: [{
@@ -605,9 +613,10 @@ chartOptions6:any= {
     },
   },
 };
-  
+
+  public salesSubmitted = false; 
   constructor(config: NgbModalConfig, private modalService: NgbModal, private viewContainerRef: ViewContainerRef,
-    public switchService: SwitherService, private toastr: ToastrService, private dp: DatePipe) {
+    public switchService: SwitherService, private toastr: ToastrService, private dp: DatePipe ,private fb: FormBuilder, ) {
   }
 
    applyFilter(event: Event) {
@@ -626,6 +635,25 @@ chartOptions6:any= {
 
   ngOnInit(){
     this.getUsers(); this.getInfo();
+    this.getSalesUsers(this.adonaiEmail);  
+
+
+
+
+    this.salesDesignationForm = this.fb.group({
+      userId: [{ value: this.generateProductId(), disabled: true }],
+      userName: [''],
+      email: [''],
+      roleId: [0],
+      subRole: [''],
+      status: [''],
+      createdAt: new Date().toISOString()
+    });
+
+  }
+
+  generateProductId(): number {
+    return Math.floor(1000 + Math.random() * 9000);
   }
 
   onRowButtonClick(data: any) {
@@ -648,7 +676,13 @@ chartOptions6:any= {
     this.dataSource.paginator = this.paginator;
     this.adonaiSource.paginator = this.paginator1;
     this.crmSource.paginator = this.paginator2;
+    this.salesDataSource.paginator = this.salesPaginator;
   }  
+
+  salesApplyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.salesDataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   getSnos(index: number): number {
     return this.paginator ? index + 1 + this.paginator.pageIndex * this.paginator.pageSize : index + 1;
@@ -681,7 +715,7 @@ chartOptions6:any= {
       }
     })
   }
-
+  
   getAdonai(data: any, ctrl: string =''){
     // this.userNm = data.username,
     ctrl == 'v' ? (this.isAdonaiView = true) : (this.isAdonaiView = false);
@@ -700,6 +734,10 @@ chartOptions6:any= {
         this.adonaiAppUid = res.appuid;
         this.adonaiUsername = res.username;
         this.adonaiCity = res.city;
+        this.adonaiSalesPerson = res.subData.salesPerson;
+        this.adonaiDiscount = res.subData.discount;
+        this.adonaiAccountManager = res.subData.accountManager;
+        this.adonaiManager = res.subData.manager;
         } else{
           this.toastr.error(res.message);
           return;
@@ -762,7 +800,11 @@ chartOptions6:any= {
       "subStartDate": this.dp.transform(this.adonaiSubStartDate, 'yyyy-MM-dd'),
       "subEndDate": this.dp.transform(this.adonaiSubEndDate, 'yyyy-MM-dd'),
       "remarks": this.adonaiRemarks,
-      "updatedBy": localStorage.getItem('username')
+      "updatedBy": localStorage.getItem('username'),
+      "salesPerson": this.adonaiSalesPerson,
+      "discount": this.adonaiDiscount,   
+      "accountManager": this.adonaiAccountManager,
+      "manager": this.adonaiManager 
     };
     // payload.type = +payload.type, 
     // payload.dob = this.dp.transform(payload.dob, 'dd-MM-yyyy');
@@ -852,8 +894,55 @@ chartOptions6:any= {
     })
   }
 
+  onSalesUserSubmit(modal: any) {
+    if (this.salesDesignationForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    this.salesSubmitted = true;
+    const payload = this.salesDesignationForm.getRawValue();
+    console.log(payload);
+  
+    this.switchService.saveSalesUsers(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success("User saved successfully!");
+          this.modalService.dismissAll(modal);
+          this.salesSubmitted = false;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the user.");
+      }
+    });
+  }
+  
+
+  getSalesUsers(email: string = this.adonaiEmail) {
+    this.switchService.SalesUsers(email).subscribe({
+      next: (res: any) => {
+        this.salesDataSource.data = res || [];
+        if (this.salesPaginator) {
+          this.salesDataSource.paginator = this.salesPaginator;
+        }
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching product data");
+        this.salesDataSource.data = [];
+      }
+    });
+  }
+  
+  
+  
+
   openLg(content10:any) {
 		this.modalService.open(content10, { size: 'lg' },);
+	}
+  openLg2(content2:any) {
+		this.modalService.open(content2, { scrollable: true, centered: true, },);
 	}
 
   openMdl(template: TemplateRef<any>) {
@@ -971,74 +1060,12 @@ chartOptions6:any= {
     this.showAdonaiFullDetails = !this.showAdonaiFullDetails;
   }
 
-  options27:any = {
-    title: {
-      text: 'Adonai Vs CRM',
-      // subtext: 'Fake Data'
-    },
-    tooltip: {
-      trigger: 'axis'
-    },
-    legend: {
-      data: ['Adonai', 'CRM']
-    },
-    toolbox: {
-      show: true,
-      feature: {
-        dataView: { show: true, readOnly: false },
-        magicType: { show: true, type: ['line', 'bar'] },
-        restore: { show: true },
-        saveAsImage: { show: true }
-      }
-    },
-    calculable: true,
-    xAxis: [
-      {
-        type: 'category',
-        // prettier-ignore
-        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-      }
-    ],
-    yAxis: [
-      {
-        type: 'value'
-      }
-    ],
-    series: [
-      {
-        name: 'Adonai',
-        type: 'bar',
-        data: [
-          2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
-        ],
-        markPoint: {
-          data: [
-            { type: 'max', name: 'Max' },
-            { type: 'min', name: 'Min' }
-          ]
-        },
-        markLine: {
-          data: [{ type: 'average', name: 'Avg' }]
-        }
-      },
-      {
-        name: 'CRM',
-        type: 'bar',
-        data: [
-          2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3
-        ],
-        markPoint: {
-          data: [
-            { name: 'Max', value: 182.2, xAxis: 7, yAxis: 183 },
-            { name: 'Min', value: 2.3, xAxis: 11, yAxis: 3 }
-          ]
-        },
-        markLine: {
-          data: [{ type: 'average', name: 'Avg' }]
-        }
-      }
-    ]
-  };
+  productGetSNo(index: number): number {
+    if (this.salesPaginator && this.salesPaginator.pageIndex !== undefined && this.salesPaginator.pageSize !== undefined) {
+      return this.salesPaginator.pageIndex * this.salesPaginator.pageSize + index + 1;
+    }
+    return index + 1;
+  }
 
   options25: EChartsOption = { };
   

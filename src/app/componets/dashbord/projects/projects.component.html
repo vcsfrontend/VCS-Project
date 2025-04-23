@@ -12,16 +12,14 @@
     <div class="card custom-card ">
         <div class="card-header justify-content-between" *ngIf="roleid==7">
             <marquee behavior="scroll" direction="left" class="fs-18 font-weight-bold" style="color: #006699;">
-                <!-- <p *ngIf="dateDiff=='12'" ><strong> Welcome to adonai, Explore Endless Designs </strong></p> -->
                 <p *ngIf="dateDiff==0"><strong> Upgrade Your Plan</strong></p>
                 <p *ngIf="dateDiff!=0"><strong> Enjoy Your {{dateDiff}} Days Free Trail </strong></p>
             </marquee>
         </div>
         <div class="card-header justify-content-between" *ngIf="roleid!=7">
             <marquee behavior="scroll" direction="left" class="fs-18 font-weight-bold" style="color: #006699;">
-                <p><strong> Welcome to adonai, Explore Endless Designs </strong></p>
-                <!-- <p *ngIf="dateDiff=='0'" ><strong> Upgrade Your Plan</strong></p>
-                <p *ngIf="dateDiff!='0'" ><strong> Enjoy Your {{dateDiff}} Days Free Trail </strong></p> -->
+                <p><strong> Welcome to adonai, Explore Endless Designs </strong> <span [ngClass]="'badge bg-danger-transparent fs-11'" *ngIf="adonaiSubEndDate"> ({{ adonaiDaysLeft }})</span> </p> 
+                 
             </marquee>
         </div>
         <div class="row">
@@ -35,10 +33,6 @@
                     style="background-color: #006699; color: white;" aria-expanded="false" (click)="onClkDesign()"
                     type="button" [disabled]="(roleid == 7 && dateDiff == '0') || (roleid == 12 && actstatus == false)">
                     Click to Explore Endless Designs </button>
-                <!-- <button *ngIf="roleid == 5" class="btn button btn-wave btn-w-lg font-weight-bold"
-                    style="background-color: #006699; color: white;" type="button" data-bs-toggle="modal"
-                    data-bs-target="#exampleModalLg" (click)="openLg1(content4)">
-                    Quotation </button> -->
             </div>
         </div>
     </div>
@@ -142,111 +136,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-xl-12 col-sm-12">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        <div class="card-title">Projects Revenue</div>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="text-muted">Year - </span>
-                            <div ngbDropdown class="dropdown">
-                                <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-light btn-sm border"
-                                    data-bs-toggle="dropdown">
-                                    2024
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="row g-0">
-                            <div class="col-xl-8 border-end border-inline-end-dashed">
-                                <div class="p-3">
-                                    <div class="card-body">
-                                        <div id="mixed-multiple-y">
-
-                                            <apx-chart [series]="chartOptions7.series" [chart]="chartOptions7.chart"
-                                                [yaxis]="chartOptions7.yaxis" [xaxis]="chartOptions7.xaxis"
-                                                [labels]="chartOptions7.labels" [stroke]="chartOptions7.stroke"
-                                                [markers]="chartOptions7.markers" [fill]="chartOptions7.fill"
-                                                [tooltip]="chartOptions7.tooltip"
-                                                [colors]="chartOptions7.colors"></apx-chart>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 ps-0">
-                                <div class="p-3">
-                                    <div class="border rounded p-3 mb-4 position-relative overflow-hidden">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                                <div>
-                                                    <h6 class="text-warning mb-3">Total Revenue</h6>
-                                                    <span
-                                                        class="fs-25 d-flex align-items-center">{{pjData.totalRevenue}}
-                                                        <span
-                                                            class="fs-12 text-warning op-7 ms-2">{{pjData.totalRevenuePecent
-                                                            | number:'1.2-2' }}<i
-                                                                class="ti ti-arrow-big-up-line ms-1 d-inline-flex"></i></span></span>
-                                                </div>
-                                            </div>
-                                            <div id="projects-ongoing" class="mt-1 w-100">
-                                                <apx-chart [series]="chartOptions5.series" [chart]="chartOptions5.chart"
-                                                    [xaxis]="chartOptions5.xaxis" [colors]="chartOptions5.colors"
-                                                    [stroke]="chartOptions5.stroke" [tooltip]="chartOptions5.tooltip"
-                                                    [dataLabels]="chartOptions5.dataLabels" [grid]="chartOptions5.grid"
-                                                    [yaxis]="chartOptions5.yaxis"></apx-chart>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="border rounded p-3 mb-4">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <span class="d-block fs-16 mb-3">Pending income</span>
-                                                <h3 class="mb-3">{{pjData.pendingIncome}}</h3>
-                                                <span class="d-block text-muted">Increased by <span
-                                                        class="text-green ms-1">{{pjData.pendingIncomePercent |
-                                                        number:'1.2-2' }}<i
-                                                            class="ti ti-arrow-narrow-up"></i></span></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="border rounded p-3 mb-4 position-relative overflow-hidden">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                                <div>
-                                                    <h6 class="text-warning mb-3">Received income</h6>
-                                                    <span
-                                                        class="fs-25 d-flex align-items-center">{{pjData.pendingIncome}}
-                                                        <span
-                                                            class="fs-12 text-warning op-7 ms-2">{{pjData.pendingIncomePercent
-                                                            | number:'1.2-2' }}<i
-                                                                class="ti ti-arrow-big-up-line ms-1 d-inline-flex"></i></span></span>
-                                                </div>
-                                            </div>
-                                            <div id="projects-ongoing" class="mt-1 w-100">
-                                                <apx-chart [series]="chartOptions5.series" [chart]="chartOptions5.chart"
-                                                    [xaxis]="chartOptions5.xaxis" [colors]="chartOptions5.colors"
-                                                    [stroke]="chartOptions5.stroke" [tooltip]="chartOptions5.tooltip"
-                                                    [dataLabels]="chartOptions5.dataLabels" [grid]="chartOptions5.grid"
-                                                    [yaxis]="chartOptions5.yaxis"></apx-chart>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="d-grid">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 pt-3">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between">
-                        
-                    </div>
-                </div>
-            </div> -->
-
         </div>
     </div>
 </div>
@@ -256,9 +145,6 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">top Projects</div>
-                <!-- <button type="button" class="btn btn-sm btn-primary-light btn-wave waves-effect waves-light">View
-                        All</button> -->
-                <!-- <label for="signup-phone" class="form-label text-default"><strong>Phone Number</strong><span class="text-danger"> *</span></label> -->
                 <div class="col-md-4 col-xl-4 col-xxl-4 col-lg-4 col-sm-6 d-flex">
                     <div class="input-group custom-input-group">
                         <select class="form-select" [(ngModel)]="addFilter"
@@ -353,17 +239,17 @@
                         <mat-label>Fliter</mat-label>
                         <input matInput (keyup)="applyMyProjectFilter($event)" #input>
                     </mat-form-field>
-                    <div ngbDropdown class="dropdown">
                         <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                            aria-expanded="false" (click)="onClkDesign()" type="button">
+                            aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
                             New Design
                         </button>
-                    </div>
-                    <div>
+                        <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                            aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
+                            All Projects
+                        </button>
                         <a class="btn btn-secondary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                            (click)="openLg(Content10);submitted=false"><i
-                                class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
-                    </div>
+                        (click)="openLg(Content10);submitted=false"><i
+                            class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -410,15 +296,6 @@
                                 <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
                                     ({{calculateDateDifference(element.projectEndDate)}}) </td>
                             </ng-container>
-                            <!-- <ng-container  matColumnDef="actions">
-                                <th mat-header-cell *matHeaderCellDef>Action</th>
-                                <td mat-cell *matCellDef="let element">
-                                    <button class="btn button btn-wave"
-                                    style="background-color: #006699; color: white;" type="button" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModalLg" (click)="openLg1(content4)"> <i
-                                    class="fe fe-eye text-muted"></i></button>
-                                </td>
-                            </ng-container> -->
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
@@ -444,48 +321,42 @@
                 </div>
             </div>
         </div>
-        <div class="col-xxl-12 "
-            [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
-            <div class="row">
-                <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"
-                    style="width: 100%; max-width: 18rem; height: 22rem;">
-                    <div class="card custom-card">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <div class="me-2 align-items-center">
-                                <!-- <img src="assets/images/brand-logos/responce.jpg" alt="" style="width: 240px; height: 200px; border-radius: 4px; align-items: center;"> -->
-                            </div>
-                            <div class=" mb-3">
-                                <button href="javascript:void(0);" class="btn btn-primary btn-wave me-3 opp"
-                                    aria-expanded="false" (click)="onClkDesign()" type="button">
-                                    <i class="ri-add-line align-middle me-1 fw-medium"></i>Create New Project &nbsp;
-                                    &nbsp; &nbsp; &nbsp;
-                                </button>
-                            </div>
-                        </div>
+        <div class="row" [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-3">
+                <div class="card custom-card">
+                    <div class="card-header d-flex align-items-center justify-content-center">
+                        <button href="javascript:void(0);" class="btn btn-primary btn-wave me-3 opp"
+                            aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Create New Project 
+                        </button>
                     </div>
                 </div>
-                <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"
-                    *ngFor="let item of (showMore ? projectList : projectList.slice(0, 3))">
-                    <div class="card custom-card" style="width: 18rem;">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <div class="me-2 align-items-center">
-                                <img class="custom-img-size" [src]="item.planPic" alt="Project Image"
-                                    *ngIf="item.planPic; else noImage"
-                                    style="width: 240px; height: 200px; border-radius: 4px; align-items: center;" />
-                                <ng-template #noImage>
-                                    <span>No image available</span>
-                                </ng-template>
-                            </div>
-                            <p class="pj-name" ngbTooltip="{{item.name }}" [container]="'body'"
-                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{item.name | slice:0:10 }}</p>
-                            <p class="pj-name">{{item.modifiedTime}} </p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <a class="btn btn-sm btn-primary btn-wave me-3"><i
-                                        class="bi bi-calendar-date align-middle me-1 fw-medium"></i>{{item.designId}}</a>
-                                <a class="btn btn-sm btn-primary btn-wave ms-5 d-flex"><i
-                                        class="ri-add-line align-middle me-1 fw-medium"></i> </a>
-                            </div>
+            </div>
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let item of (showMore ? projectList : projectList.slice(0, 3))">
+                <div class="card custom-card">
+                    <div class="card-body align-items-center">
+                        <img 
+                            class="img-thumbnail" 
+                            [src]="item.planPic" 
+                            alt="Project Image" 
+                            *ngIf="item.planPic; else noImage" 
+                            (click)="viewSpecificUrl(item)" 
+                            style="cursor: pointer;" />
+
+                            <ng-template #noImage>
+                            <span>No image available</span>
+                            </ng-template>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <a class="btn btn-sm btn-primary btn-wave" 
+                            *ngIf="item.name.length > 13"[ngbTooltip]="item.name" [container]="'body'"
+                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ item.name | slice:0:13}}...</a>
+                            <a class="btn btn-sm btn-primary btn-wave" 
+                            *ngIf="item.name.length <= 13"
+                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ item.name }} </a>
+                            <a class="btn btn-sm btn-primary btn-wave"><i
+                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>{{ getTimeAgo(item.modifiedTime) }}</a>
                         </div>
                     </div>
                 </div>
@@ -493,23 +364,25 @@
         </div>
     </div>
 
-    <div class="col-lg-12 col-xxl-12 pt-2">
+    <div class="col-lg-12 col-xxl-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
                     Projects
                 </div>
                 <div class="d-flex flex-wrap gap-3">
-                    <mat-form-field class="filter-field">
-                        <mat-label>Fliter</mat-label>
+                    <mat-form-field class="filter-field-1">
+                        <mat-label>Seach Here</mat-label>
                         <input matInput (keyup)="EliteApplyFilter($event)" #input>
                     </mat-form-field>
-                    <div ngbDropdown class="dropdown">
-                        <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                            aria-expanded="false" (click)="onClkDesign()" type="button">
-                            New Design
-                        </button>
-                    </div>
+                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                        aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
+                        New Design
+                    </button>
+                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                        aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
+                        All Projects
+                    </button>
                 </div>
             </div>
             <div class="card-body p-0">
@@ -552,22 +425,12 @@
                                 {{ element.specName | slice: 0: 12 }}
                             </td>
                         </ng-container>
-                        <!-- <ng-container matColumnDef="city">
-                            <th mat-header-cell *matHeaderCellDef> city name</th>
-                            <td
-                            mat-cell *matCellDef="let element"
-                            ngbTooltip="{{element.city}}"
-                            [container]="'body'"
-                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            {{element.city | slice: 0: 12 }}
-                            </td>
-                        </ng-container> -->
                         <ng-container matColumnDef="modifiedTime">
                             <th mat-header-cell *matHeaderCellDef> modifiedTime</th>
                             <td mat-cell *matCellDef="let element" ngbTooltip="{{element.modifiedTime}}"
                                 [container]="'body'"
                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{element.modifiedTime}} </td>
+                                {{ getTimeAgo(element.modifiedTime) }}</td>
                         </ng-container>
                         <ng-container matColumnDef="coverPic">
                             <th mat-header-cell *matHeaderCellDef> coverPic </th>
@@ -595,9 +458,21 @@
                             <td mat-cell *matCellDef="let element"> {{element.status}} </td>
                         </ng-container>
                         <ng-container matColumnDef="quotation">
-                            <th mat-header-cell *matHeaderCellDef>Actions</th>
-                            <td mat-cell *matCellDef="let element"><button type="button"
-                                    class="btn btn-primary-gradient btn-wave">Download</button>
+                            <th mat-header-cell *matHeaderCellDef>Quotation </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button type="button" class="btn btn-primary" 
+                                    (click)="openLg2(content14)">Download
+                                </button>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="view">
+                            <th mat-header-cell *matHeaderCellDef>view </th>
+                            <td mat-cell *matCellDef="let element">
+                                <a href="javascript:void(0);"
+                                    class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                    (click)="openLg4(content15)">
+                                    <i class="ri-eye-line"></i>
+                                </a>
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="EliteDisplayedColumn"></tr>
@@ -662,14 +537,6 @@
                                                 is
                                                 required</div>
                                         </div>
-                                        <!-- <input type="text" class="form-control" id="businessCategory"
-                                            formControlName="businessCategory" placeholder="Business Category"
-                                            [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['businessCategory'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['businessCategory'].errors['required']">Business Category is
-                                                required</div>
-                                        </div> -->
                                     </div>
                                     <div class="col-xl-4">
                                         <label for="projectAddress" class="form-label">Project Address:</label>
@@ -700,17 +567,6 @@
                                             <div *ngIf="f['city'].errors['required']">City is required</div>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-xl-4">
-                                        <label for="projectState" class="form-label">Project Stage:</label>
-                                        <input type="text" class="form-control" id="projectState"
-                                            formControlName="projectState" placeholder="Enter Project State"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectState'].errors }" maxlength="50"
-                                            onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                                        <div *ngIf="submitted && f['projectState'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectState'].errors['required']">Project State is required
-                                            </div>
-                                        </div>
-                                    </div> -->
                                     <div class="col-xl-4">
                                         <label for="projectEstimation" class="form-label">Project
                                             Estimation:</label>
@@ -735,12 +591,6 @@
                                                 required</div>
                                         </div>
                                     </div>
-                                    <!-- <mat-form-field appearance="fill">
-                                    <mat-label>Start Date</mat-label>
-                                    <input matInput [matDatepicker]="startPicker" formControlName="projectStartDate" placeholder="Choose Start Date">
-                                    <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                                    <mat-datepicker #startPicker></mat-datepicker>
-                                    </mat-form-field> -->
                                     <div class="col-xl-4">
                                         <label for="startDate" class="form-label">Start Date:</label>
                                         <input type="date" class="form-control" id='startDate'
@@ -764,12 +614,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <mat-form-field appearance="fill">
-                                <mat-label>End Date</mat-label>
-                                <input matInput [matDatepicker]="endPicker" formControlName="projectEndDate" placeholder="Choose End Date">
-                                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                                <mat-datepicker #endPicker></mat-datepicker>
-                                </mat-form-field> -->
                                 </div>
                             </div>
                         </div>
@@ -783,7 +627,6 @@
                 Create Project</button>
             <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                 (click)="modal.close('Cross click')">Cancel</button>
-            <!-- <button type="button" class="btn btn-primary">Create</button> -->
         </div>
     </div>
 </ng-template>
@@ -800,9 +643,6 @@
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card custom-card">
-                        <!-- <div class="card-header">
-                    <div class="card-title">Create Project</div>
-                    </div> -->
                         <div class="card-body">
                             <div class="row gy-3">
                                 <div class="col-xl-4">
@@ -817,11 +657,6 @@
                                 </div>
                                 <div class="col-xl-4">
                                     <label for="businessCategory" class="form-label">Business Category:</label>
-                                    <!-- <ng-select class="ti-form-select !rounded-s-none" [(ngModel)]='businessCategory'
-                                        name="choices-multiple-remove-button" id="businessCategory" [multiple]="true">
-                                        <ng-option value="Choice 1" selected>Commercial</ng-option>
-                                        <ng-option value="Choice 2">Residential</ng-option>
-                                    </ng-select> -->
                                     <select class="form-select" aria-label="Default select example"
                                         [(ngModel)]='businessCategory' [disabled]="true">
                                         <option value="">select type</option>
@@ -829,7 +664,6 @@
                                         <option value="Residential">Residential</option>
                                     </select>
 
-                                    <!-- <input type="text" class="form-control" id="businessCategory" formControlName="businessCategory" placeholder=""> -->
                                 </div>
                                 <div class="col-xl-4">
                                     <label for="projectAddress" class="form-label">Project Address:</label>
@@ -901,8 +735,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- <input type="text" class="form-control form-control-sm" [(ngModel)]="payment.paymentStage" 
-                      placeholder="Enter Stage" [disabled]="!payment.isNew" (ngModelChange)="validateField(i, 'paymentStage')"> -->
                     <tr *ngFor="let payment of paymentStages; let i=index">
                         <td style="width:15%">
                             <select class="form-select form-select-sm" [(ngModel)]="payment.paymentStage"
@@ -1067,353 +899,365 @@
     </div>
 </div>
 
-<!-- <div class="container mt-4">
-    <h2>Product Details</h2>
-    
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Model Type ID</th>
-                <th>Brand Good ID</th>
-                <th>Category ID</th>
-                <th>Model Name</th>
-                <th>Brand Good Name</th>
-                <th>Product Number</th>
-                <th>Model Account ID</th>
-                <th>Available</th>
-                <th>Need Quotation</th>
-                <th>Display in Cost List</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.type }}</td>
-                <td>{{ product.modelTypeId }}</td>
-                <td>{{ product.obsBrandGoodId }}</td>
-                <td>{{ product.prodCatId }}</td>
-                <td>{{ product.modelName }}</td>
-                <td>{{ product.modelBrandGoodName }}</td>
-                <td>{{ product.modelProductNumber }}</td>
-                <td>{{ product.obsModelAccountId }}</td>
-                <td>{{ product.modelAvailable ? 'Yes' : 'No' }}</td>
-                <td>{{ product.needQuotation ? 'Yes' : 'No' }}</td>
-                <td>{{ product.displayInCostList ? 'Yes' : 'No' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<div class="container mt-4">
-    <h2>Product Parameters</h2>
-    
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Quotation Value</th>
-                <th>Value Display Names</th>
-                <th>Recommends</th>
-                <th>Recommend Values</th>
-                <th>Formula Display Name</th>
-                <th>Simple Name</th>
-                <th>Step</th>
-                <th>Ignored</th>
-                <th>Overridable</th>
-                <th>Instance Group Type ID</th>
-                <th>Formula</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let product of products">
-                <ng-container *ngFor="let param of product.parameters">
-                    <tr>
-                        <td>{{ param.quotationValue || 'N/A' }}</td>
-                        <td>{{ param.valueDisplayNames?.length ? param.valueDisplayNames.join(', ') : 'N/A' }}</td>
-                        <td>{{ param.recommends?.length ? param.recommends.join(', ') : 'N/A' }}</td>
-                        <td>{{ param.recommendValues?.length ? param.recommendValues.join(', ') : 'N/A' }}</td>
-                        <td>{{ param.formulaDisplayName || 'N/A' }}</td>
-                        <td>{{ param.simpleName || 'N/A' }}</td>
-                        <td>{{ param.step !== null ? param.step : 'N/A' }}</td>
-                        <td>{{ param.ignored ? 'Yes' : 'No' }}</td>
-                        <td>{{ param.overridable ? 'Yes' : 'No' }}</td>
-                        <td>{{ param.instanceGroupTypeId || 'N/A' }}</td>
-                        <td>{{ param.formula || 'N/A' }}</td>
-                    </tr>
-                </ng-container>
-            </ng-container>
-        </tbody>
-    </table>
-</div>
+<ng-template #content13 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-12 col-lg-12 col-md-12">
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-lg">
+                        Optmizer Proces
+                    </label>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-sm">
+                        Panels List
+                    </label>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-sm">
+                        Shutters List
+                    </label>
+                </div>
+                <div class="form-check form-check-lg d-flex align-items-center">
+                    <input class="form-check-input" type="checkbox" value="" id="checkebox-lg" checked="">
+                    <label class="form-check-label" for="checkebox-sm">
+                        Hardware List
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-secondary"
+                data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                (click)="openLg3(content14)">  Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+</ng-template>
 
-<div class="container mt-4">
-    <h2>Position</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let product of products">
-                <tr>
-                    <td>{{ product.position?.x || 'N/A' }}</td>
-                    <td>{{ product.position?.y || 'N/A' }}</td>
-                    <td>{{ product.position?.z || 'N/A' }}</td>
-                </tr>
-            </ng-container>
-        </tbody>
-    </table>
-</div>
 
-<div class="container mt-4">
-    <h2>Center</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.center?.x || 'N/A' }}</td>
-                <td>{{ product.center?.y || 'N/A' }}</td>
-                <td>{{ product.center?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<ng-template #content14 let-modal>
+    <form [formGroup]="quotationForm" (ngSubmit)="onQuotationSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-3">
+                        <label for="projectName" class="form-label">Client Name</label>
+                        <input type="text" class="form-control" id="projectName"
+                            formControlName="clientName" placeholder="Enter Client Name">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Client Address</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="clientAddress" placeholder="Enter Client Address">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Project Name</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="projectName" placeholder="Enter Client Address">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Discount</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="discount" placeholder="Enter Discount">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Flat_No</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="flatNo" placeholder="Enter Flat_No">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Others</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="others" placeholder="Enter Others">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Project_Config</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="projectConfig" placeholder="Enter Project_Config">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">Quotation_Number</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="quotationNumber" placeholder="Enter Quotation_Number">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">G_MC</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="gMC" placeholder="Enter G_MC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">G_PA</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="gPA" placeholder="Enter G_PA">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">G_SC</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="gSC" placeholder="Enter G_SC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="clientName" class="form-label">TD_MC</label>
+                        <input type="text" class="form-control" id="clientName"
+                            formControlName="tDMC" placeholder="Enter TD_MC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">TD_PA</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="tDPA" placeholder="Enter TD_PA">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">TD_SC</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="tDSC" placeholder="Enter TD_SC">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">DED_Email</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="dedEmail" placeholder="Enter DED_Email">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">DED_Mobile</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="dedMobile" placeholder="Enter DED_Mobile">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">DED_Name</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="dedName" placeholder="Enter DED_Name">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">RMD_Email</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="rmdEmail" placeholder="Enter RMD_Email">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">RMD_Mobile</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="rmdMobile" placeholder="Enter RMD_Mobile">
+                    </div>
+                    <div class="col-xl-3">
+                        <label for="projectAddress" class="form-label">RMD_Name</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            formControlName="rmdName" placeholder="Enter RMD_Name">
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="Optimizerprocess">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Optimizer Proces
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="functionalList">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Functioal parts and shutter list
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="hardwareList">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Hardware list
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
+                                formControlName="shutterList">
+                                <label class="form-check-label" for="checkebox-sm">
+                                    Shutter List
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
 
-<div class="container mt-4">
-    <h2>rotate</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.rotate?.x || 'N/A' }}</td>
-                <td>{{ product.rotate?.y || 'N/A' }}</td>
-                <td>{{ product.rotate?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<ng-template #content15 let-modal>
+    <form [formGroup]="inventoryForm" (ngSubmit)="onInventorySubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Project History</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row" >
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-xl-4">
+                    <div class="card custom-card bg-light">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <div class="me-2  align-items-center">
+                                <span class="avatar avatar-rounded p-1 bg-light">
+                                    <img src="./assets/images/brand-logos/profile1.jpg" alt="">
+                                </span>
+                            </div>
+                            <div class="flex-fill">
+                                <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
+                                    Project: </a>
+                                <span class="text-muted d-block fs-12">Client: </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="text-end">
+                                    <span class="badge">Priority : days to go</span>
+                                </div>
+                            </div>
+                            <div class="mb-1">Project Status :</div>
+                            <div class="mb-3">
+                                <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-primary"></div>
+                                </div>
+                                <div class="mt-1"><span class="text-primary fw-medium">
+                                        %</span> Completed</div>
+                            </div>
+                            <div class="mb-1">Payment Status : </div>
+                            <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-primary"></div>
+                            </div>
+                            <div class="mt-1"><span class="text-primary fw-medium">%</span>
+                                Completed</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <a class="btn btn-sm btn-primary btn-wave ms-3"><i
+                                    class="ri-add-line align-middle me-1 fw-medium"></i>Add</a>
+                            <a class="btn btn-sm btn-primary btn-wave me-3"><i
+                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Cycle</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-xl-4">
+                    <div class="card custom-card bg-light">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <div class="me-2  align-items-center">
+                                <span class="avatar avatar-rounded p-1 bg-light">
+                                    <img src="./assets/images/brand-logos/profile1.jpg" alt="">
+                                </span>
+                            </div>
+                            <div class="flex-fill">
+                                <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
+                                    Project: </a>
+                                <span class="text-muted d-block fs-12">Client: </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="text-end">
+                                    <span class="badge">Priority : days to go</span>
+                                </div>
+                            </div>
+                            <div class="mb-1">Project Status :</div>
+                            <div class="mb-3">
+                                <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-primary"></div>
+                                </div>
+                                <div class="mt-1"><span class="text-primary fw-medium">
+                                        %</span> Completed</div>
+                            </div>
+                            <div class="mb-1">Payment Status : </div>
+                            <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-primary"></div>
+                            </div>
+                            <div class="mt-1"><span class="text-primary fw-medium">%</span>
+                                Completed</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <a class="btn btn-sm btn-primary btn-wave ms-3"><i
+                                    class="ri-add-line align-middle me-1 fw-medium"></i>Add</a>
+                            <a class="btn btn-sm btn-primary btn-wave me-3"><i
+                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Cycle</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-4 col-lg-4 col-md-4 col-xl-4">
+                    <div class="card custom-card bg-light">
+                        <div class="card-header d-flex align-items-center justify-content-between">
+                            <div class="me-2  align-items-center">
+                                <span class="avatar avatar-rounded p-1 bg-light">
+                                    <img src="./assets/images/brand-logos/profile1.jpg" alt="">
+                                </span>
+                            </div>
+                            <div class="flex-fill">
+                                <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
+                                    Project: </a>
+                                <span class="text-muted d-block fs-12">Client: </span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="text-end">
+                                    <span class="badge">Priority : days to go</span>
+                                </div>
+                            </div>
+                            <div class="mb-1">Project Status :</div>
+                            <div class="mb-3">
+                                <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar bg-primary"></div>
+                                </div>
+                                <div class="mt-1"><span class="text-primary fw-medium">
+                                        %</span> Completed</div>
+                            </div>
+                            <div class="mb-1">Payment Status : </div>
+                            <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-primary"></div>
+                            </div>
+                            <div class="mt-1"><span class="text-primary fw-medium">%</span>
+                                Completed</div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <a class="btn btn-sm btn-primary btn-wave ms-3"><i
+                                    class="ri-add-line align-middle me-1 fw-medium"></i>Add</a>
+                            <a class="btn btn-sm btn-primary btn-wave me-3"><i
+                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Cycle</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
 
-<div class="container mt-4">
-    <h2>rotateDegree</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.rotateDegree?.x || 'N/A' }}</td>
-                <td>{{ product.rotateDegree?.y || 'N/A' }}</td>
-                <td>{{ product.rotateDegree?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
 
-<div class="container mt-4">
-    <h2>scale</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.scale?.x || 'N/A' }}</td>
-                <td>{{ product.scale?.y || 'N/A' }}</td>
-                <td>{{ product.scale?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>size</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.size?.x || 'N/A' }}</td>
-                <td>{{ product.size?.y || 'N/A' }}</td>
-                <td>{{ product.size?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>boxSize</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.boxSize?.x || 'N/A' }}</td>
-                <td>{{ product.boxSize?.y || 'N/A' }}</td>
-                <td>{{ product.boxSize?.z || 'N/A' }}</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="container mt-4">
-    <h2>subModels</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>type</th>
-                <th>modelTypeId</th>
-                <th>obsBrandGoodId</th>
-                <th>prodCatId</th>
-                <th>modelName</th>
-                <th>modelBrandGoodName</th>
-                <th>modelAvailable</th>
-                <th>obsModelAccountId</th>
-                <th>needQuotation</th>
-                <th>displayInCostList</th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let product of products">
-                <tr *ngFor="let subModel of product.subModels">
-                    <td>{{ subModel.type }}</td>
-                    <td>{{ subModel.modelTypeId || 'N/A' }}</td>
-                    <td>{{ subModel.obsBrandGoodId || 'N/A' }}</td>
-                    <td>{{ subModel.prodCatId || 'N/A' }}</td>
-                    <td>{{ subModel.modelName || 'N/A' }}</td>
-                    <td>{{ subModel.modelBrandGoodName || 'N/A' }}</td>
-                    <td>{{ subModel.modelAvailable ? 'Yes' : 'No' }}</td>
-                    <td>{{ subModel.obsModelAccountId || 'N/A' }}</td>
-                    <td>{{ subModel.needQuotation ? 'Yes' : 'No' }}</td>
-                    <td>{{ subModel.displayInCostList ? 'Yes' : 'No' }}</td>
-                </tr>
-            </ng-container>
-        </tbody>        
-    </table>
-</div>
-
-<div class="container mt-4">
-    <h2>Product Details</h2>
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Room ID</th>
-                <th>Accessory Model</th>
-                <th>Deleted</th>
-                <th>Ignore</th>
-                <th>Bill Output</th>
-                <th>Supplement Model</th>
-                <th>Non-Review Component</th>
-                <th>Channel</th>
-                <th>Version ID</th>
-                <th>Product ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.roomId }}</td>
-                <td>{{ product.accessoryModel ? 'Yes' : 'No' }}</td>
-                <td>{{ product.deleted ? 'Yes' : 'No' }}</td>
-                <td>{{ product.ignore ? 'Yes' : 'No' }}</td>
-                <td>{{ product.billOutput ? 'Yes' : 'No' }}</td>
-                <td>{{ product.supplementModel ? 'Yes' : 'No' }}</td>
-                <td>{{ product.nonReviewComponent ? 'Yes' : 'No' }}</td>
-                <td>{{ product.channel }}</td>
-                <td>{{ product.versionId }}</td>
-                <td>{{ product.id }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3>Model Cost Info</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Quotation Rate</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Quotation Unit</th>
-                <th>Unit Price</th>
-                <th>Non-Standard Coef</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.modelCostInfo?.quotationRate }}</td>
-                <td>{{ product.modelCostInfo?.quantity }}</td>
-                <td>{{ product.modelCostInfo?.price | currency:'USD' }}</td>
-                <td>{{ product.modelCostInfo?.quotationUnit }}</td>
-                <td>{{ product.modelCostInfo?.unitPrice }}</td>
-                <td>{{ product.modelCostInfo?.nonStandardCoef }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3>Absolute Position</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>X</th>
-                <th>Y</th>
-                <th>Z</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.absPosition?.x }}</td>
-                <td>{{ product.absPosition?.y }}</td>
-                <td>{{ product.absPosition?.z }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <h3>Custom Size</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Width (X)</th>
-                <th>Height (Y)</th>
-                <th>Depth (Z)</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let product of products">
-                <td>{{ product.customSize?.x }} mm</td>
-                <td>{{ product.customSize?.y }} mm</td>
-                <td>{{ product.customSize?.z }} mm</td>
-            </tr>
-        </tbody>
-    </table>
-
-</div> -->
+  
