@@ -1,7 +1,7 @@
 <div class="row pt-4">
       <div class="col-md-12 col-xl-12">
         <div class="row">
-            <div class="col-md-6 col-lg-3 col-xl-3">
+            <div class="col-md-6 col-lg-3 col-xl-3" *ngIf="roleCounts['Basic'] !== undefined">
                 <div class="card custom-card overflow-hidden">
                     <div class="card-body p-0">
                         <div class="mb-2 p-3 pb-0">
@@ -9,7 +9,7 @@
                         </div>
                         <div class="d-flex align-items-center ps-3">
                             <div class="flex-fill">
-                                <div class="fs-25 fw-normal mb-2">$170k+</div>
+                                <div class="fs-25 fw-normal mb-2">{{ roleCounts['Basic'] }}+</div>
                                 <p class="mb-0">
                                     <i class="ri-arrow-up-line text-primary fs-15 align-middle"></i>
                                     <span  class="text-primary fs-12"> 26.35% last month</span>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 col-xl-3">
+            <div class="col-md-6 col-lg-3 col-xl-3" *ngIf="roleCounts['Pro'] !== undefined">
                 <div class="card custom-card overflow-hidden">
                     <div class="card-body p-0">
                         <div class="mb-2 p-3 pb-0">
@@ -35,7 +35,7 @@
                         </div>
                         <div class="d-flex align-items-center ps-3">
                             <div class="flex-fill">
-                                <div class="fs-25 fw-normal mb-2">$115k</div>
+                                <div class="fs-25 fw-normal mb-2">{{ roleCounts['Pro'] }}+</div>
                                 <p class="mb-0">
                                     <i class="ri-arrow-down-line text-danger fs-15 align-middle"></i>
                                     <span  class="text-danger fs-12"> 11.35% last month</span>
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-lg-3 col-xl-3">
+            <div class="col-md-6 col-lg-3 col-xl-3" *ngIf="roleCounts['Elite'] !== undefined">
             <div class="card custom-card overflow-hidden">
                 <div class="card-body p-0">
                     <div class="mb-2 p-3 pb-0">
@@ -61,7 +61,7 @@
                     </div>
                     <div class="d-flex align-items-center ps-3">
                         <div class="flex-fill">
-                            <div class="fs-25 fw-normal mb-2">30k+</div>
+                            <div class="fs-25 fw-normal mb-2">{{ roleCounts['Elite'] }}+</div>
                             <p class="mb-0">
                                 <i class="ri-arrow-up-line text-info fs-15 align-middle"></i>
                                 <span  class="text-info fs-12"> 16.35% last month</span>
@@ -79,15 +79,15 @@
                 </div>
             </div>
             </div>
-            <div class="col-md-6 col-lg-3 col-xl-3">
+            <div class="col-md-6 col-lg-3 col-xl-3" *ngIf="roleCounts['Free Trail'] !== undefined">
                 <div class="card custom-card overflow-hidden">
                     <div class="card-body p-0">
                         <div class="mb-2 p-3 pb-0">
-                            <div class="flex-fill fs-15">Total Sales</div>
+                            <div class="flex-fill fs-15">Total Free Trail</div>
                         </div>
                         <div class="d-flex align-items-center ps-3">
                             <div class="flex-fill">
-                                <div class="fs-25 fw-normal mb-2">30k+</div>
+                                <div class="fs-25 fw-normal mb-2">{{ roleCounts['Free Trail'] }}+</div>
                                 <p class="mb-0">
                                     <i class="ri-arrow-up-line text-info fs-15 align-middle"></i>
                                     <span  class="text-info fs-12"> 16.35% last month</span>
@@ -115,12 +115,12 @@
             <div class="card-title">
                 Adonai Users
             </div>
-            <!-- <div class="d-flex flex-wrap gap-3">
+            <div class="d-flex flex-wrap gap-3">
                 <mat-form-field class="filters-field-1">
                     <mat-label>Search Here</mat-label>
-                    <input matInput (keyup)="stockApplyFilter($event)" #input>
+                    <input matInput (keyup)="adonaiUsersFilter($event)" #input>
                 </mat-form-field>
-            </div> -->
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="mat-elevation-z8">
@@ -138,29 +138,28 @@
                             <th mat-header-cell *matHeaderCellDef> Number </th>
                             <td mat-cell *matCellDef="let element"> {{element.phoneNumber}} </td>
                         </ng-container>
-                        <ng-container matColumnDef="adonai">
-                            <th mat-header-cell *matHeaderCellDef> Adonai </th>
-                            <td mat-cell *matCellDef="let element" (click)="openLg2(content2)">
-                              <span [ngClass]="getAdonaiClass(element.adonai)">
-                                {{ getAdonaiText(element.adonai) }}
-                              </span>
+                        <ng-container matColumnDef="activityStatus">
+                            <th mat-header-cell *matHeaderCellDef> Activity</th>
+                            <td mat-cell *matCellDef="let element">
+                                <span [class]="getAdonaiClass(element.adonaiActivitySts)">
+                                    {{ getAdonaiText(element.adonaiActivitySts) }}
+                                  </span>
                             </td>
-                        </ng-container>                          
+                          </ng-container>                                                                                               
                         <ng-container matColumnDef="adonaiSubStartDate">
                             <th mat-header-cell *matHeaderCellDef> SubStartDate </th>
                             <td mat-cell *matCellDef="let element"> {{ element.adonaiSubStartDate | date:'yyyy MMM dd' }} </td>
                         </ng-container>
                         <ng-container matColumnDef="adonaiSubEndDate">
                             <th mat-header-cell *matHeaderCellDef> SubEndDate </th>
-                            <td mat-cell *matCellDef="let element">
-                                <span [ngClass]="{ 'text-danger': element.adonaiDaysLeft <= 5 && element.adonaiDaysLeft >= 0 }">
-                                    {{ element.adonaiSubEndDate | date:'yyyy-MMM-dd' }} 
+                            <td mat-cell *matCellDef="let element" (click)="openLg2(content2, element.email)"> {{ element.adonaiSubEndDate | date:'yyyy-MMM-dd' }}
+                                <span [ngClass]="'badge bg-danger-transparent fs-11'">
                                     ({{ element.adonaiDaysLeft }})
-                                  </span>                                  
+                                </span>                                                                                                                                 
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="roleId">
-                            <th mat-header-cell *matHeaderCellDef> plan </th>
+                            <th mat-header-cell *matHeaderCellDef> Plan </th>
                             <td mat-cell *matCellDef="let element">
                                 <span [ngClass]="getRoleBadgeClass(element.adonaiRoleId)">
                                 {{ getRoleName(element.adonaiRoleId) }}
@@ -169,15 +168,15 @@
                         </ng-container>
                         <ng-container matColumnDef="manager">
                             <th mat-header-cell *matHeaderCellDef> Manager </th>
-                            <td mat-cell *matCellDef="let element"> {{element.manager}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.adonaiManager}} </td>
                         </ng-container>
                         <ng-container matColumnDef="salesPerson">
                             <th mat-header-cell *matHeaderCellDef> Sales </th>
-                            <td mat-cell *matCellDef="let element"> {{element.salesPerson}} </td>
+                            <td mat-cell *matCellDef="let element"> {{element.adonaiSalesPerson }} </td>
                         </ng-container>
                         <ng-container matColumnDef="accountManager">
-                            <th mat-header-cell *matHeaderCellDef> account manager </th>
-                            <td mat-cell *matCellDef="let element"> {{element.accountManager}} </td>
+                            <th mat-header-cell *matHeaderCellDef> Account Manager </th>
+                            <td mat-cell *matCellDef="let element"> {{element.adonaiAccountManager }} </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="adonaiUsersDisplayedColumn"></tr>
                         <tr mat-row *matRowDef="let row; columns: adonaiUsersDisplayedColumn">
@@ -195,10 +194,10 @@
     <div class="col-lg-4 col-xxl-4">
         <div class="card custom-card">
             <div class="card-header">
-                <div class="card-title">Total Basic</div>
+                <div class="card-title">Total Adonai Users </div>
             </div>
             <div class="card-body pb-2">
-                <div id="total-employees" class="pt-4 pb-3">
+                <div id="total-employees">
                     <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
                     [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors" [legend]="chartOptions2.legend"  [plotOptions]="chartOptions2.plotOptions"
                     [stroke]="chartOptions2.stroke" [tooltip]="chartOptions2.tooltip"
@@ -206,31 +205,43 @@
                     [yaxis]="chartOptions2.yaxis"></apx-chart>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <div class="text-center p-3 my-2 border border-dashed rounded">
-                            <span class="fs-14 total-employees male">Basic</span>
-                            <div class="mt-1">
-                                <span class="fs-18">1,654</span>
-                            </div>
+                    <div class="col" *ngIf="roleCounts['Basic'] !== undefined">
+                      <div class="text-center my-2 border border-dashed rounded">
+                        <span class="fs-14 total-employees male">Basic</span>
+                        <div class="mt-1">
+                          <span class="fs-18">{{ roleCounts['Basic'] }}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="col">
-                        <div class="text-center p-3 my-2 border border-dashed rounded">
-                            <span class="fs-14 total-employees female">Pro</span>
-                            <div class="mt-1">
-                                <span class="fs-18">1,234</span>
-                            </div>
+                    <div class="col" *ngIf="roleCounts['Pro'] !== undefined">
+                      <div class="text-center my-2 border border-dashed rounded">
+                        <span class="fs-14 total-employees female">Pro</span>
+                        <div class="mt-1">
+                          <span class="fs-18">{{ roleCounts['Pro'] }}</span>
                         </div>
+                      </div>
                     </div>
-                    <div class="col">
-                        <div class="text-center p-3 my-2 border border-dashed rounded">
-                            <span class="fs-14 total-employees male">Elite</span>
-                            <div class="mt-1">
-                                <span class="fs-18">1,654</span>
-                            </div>
+                    <div class="col" *ngIf="roleCounts['Elite'] !== undefined">
+                      <div class="text-center my-2 border border-dashed rounded">
+                        <span class="fs-14 total-employees male">Elite</span>
+                        <div class="mt-1">
+                          <span class="fs-18">{{ roleCounts['Elite'] }}</span>
                         </div>
+                      </div>
                     </div>
-                </div>
+                </div>   
+                <div class="row">
+                    <ng-container *ngFor="let role of objectKeys(expiredRoleCounts)">
+                      <div class="col" *ngIf="role !== 'Free Trail' && expiredRoleCounts[role] !== undefined">
+                        <div class="text-center my-2 border border-dashed rounded">
+                          <span class="fs-14 total-employees male">{{ role }}</span>
+                          <div class="mt-1">
+                            <span class="fs-18">{{ expiredRoleCounts[role] }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                </div>                        
             </div>
         </div>
     </div>
@@ -243,7 +254,7 @@
                 <div [ngStyle]="{ 'max-height': showAdonaiFullDetails ? '300px' : 'auto',
                     'overflow-y': showAdonaiFullDetails ? 'auto' : 'visible'}" >
                 <ul class="list-unstyled visitors-country" >
-                    <li *ngFor="let item of uniqueAdonaiData.slice(0, showAdonaiFullDetails ? uniqueAdonaiData.length : 5)">
+                    <li *ngFor="let item of uniqueAdonaiData.slice(0, showAdonaiFullDetails ? uniqueAdonaiData.length : 6)">
                         <div class="d-flex align-items-center">
                             <div class="flex-fill">
                                 <div class="d-flex align-items-center justify-content-between mb-2">
@@ -282,23 +293,23 @@
         <div class="row gy-2">
           <div class="col-xl-6">
             <label class="form-label">First Name</label>
-            <input type="text" class="form-control" [value]="selectedUser?.firstName" disabled>
+            <input type="text" class="form-control" [value]="adUser?.firstName" disabled>
           </div>
           <div class="col-xl-6">
             <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" [value]="selectedUser?.lastName" disabled>
+            <input type="text" class="form-control" [value]="adUser?.lastName" disabled>
           </div>
           <div class="col-xl-6">
             <label class="form-label">City</label>
-            <input type="text" class="form-control" [value]="selectedUser?.city" disabled>
+            <input type="text" class="form-control" [value]="adUser?.city" disabled>
           </div>
           <div class="col-xl-6">
             <label class="form-label">Country</label>
-            <input type="text" class="form-control" [value]="selectedUser?.country" disabled>
+            <input type="text" class="form-control" [value]="adUser?.country" disabled>
           </div>
           <div class="col-xl-6">
             <label class="form-label">Coupon</label>
-            <input type="text" class="form-control"  disabled>
+            <input type="text" class="form-control" [value]="adUser.adonaiDiscount"  disabled >
           </div>
         </div>
       </div>
@@ -319,36 +330,31 @@
             <div class="card custom-card">
                 <div class="card-body p-0">
                     <div class="table-responsive overflow-scroll">
-                        <table class="table text-nowrap table-hover">
+                        <table>
                             <thead>
-                                <tr>
-                                    <th class="text-center">S.No</th>
-                                    <th class="crm-table-th2">Name</th>
-                                    <th class="crm-table-th2">Delete</th>
-                                </tr>
+                              <tr>
+                                <th class="text-center">Email</th>
+                                <th>Subscription History</th>
+                              </tr>
                             </thead>
                             <tbody>
-                                <!-- <tr *ngFor="let element of skinBrand; let i = index">
-                                    <td class="text-center">{{ i + 1 }}</td>
-                                    <td>{{ element.name }}</td>
-                                    <td><a aria-label="anchor" href="javascript:void(0);"
-                                            class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1"
-                                            >
-                                        </a></td>
-                                </tr> -->
+                                <tr *ngFor="let history of adonaiHstryLst">
+                                    <td class="text-center p-3">{{ history.email }}</td>
+                                    <td class="p-3">{{ history.subHistory }}</td>
+                                </tr>                                  
                             </tbody>
-                        </table>
+                        </table>                          
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"> Submit</button>
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">Close</button>
         </div>
 </ng-template>
 
+  
 
   
   

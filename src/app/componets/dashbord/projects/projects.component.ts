@@ -80,7 +80,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false;topDisplayedCards: any;
-  des: string = "3FO3LL66G60B"; 
+  des: string = "3FO3LL66G60B";  adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
   
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
@@ -180,6 +180,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   ngOnInit(): void {
+    this.getAdonai();
     this.getProjectList();
     this.getLst(); this.getMatCardLst();
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
@@ -516,6 +517,37 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     id === '2' ? this.projName = '' : id === '3' ? this.projId = '' :
       (this.projName = '', this.projId = '', this.getMatCardLst());
   }
+
+  getAdonai() {
+    const userEmail = JSON.parse(this.userDetails)?.email;
+    this.switchService.onAdonaiView(userEmail).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.adonaiSubEndDate = res.subData.subEndDate || '';
+          this.adonaiDaysLeft = this.calculateDateDiff(this.adonaiSubEndDate);
+         
+        } else {
+          this.toastr.error(res.message);
+          return;
+        }
+      }
+    });
+  }
+
+  calculateDateDiff(endDate: string | Date): string {
+    const today = new Date();
+    const end = new Date(endDate);
+    if (isNaN(end.getTime())) return 'Invalid date';
+  
+    const diffTime = end.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+  
+    if (diffDays < 0) return 'Expired';
+    if (diffDays === 0) return 'Last day';
+  
+    return `Subscription ends in ${diffDays} days`;
+  }
+  
 
   getMatCardLst() {
     this.startLoading();
