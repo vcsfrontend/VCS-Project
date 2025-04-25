@@ -188,6 +188,11 @@ export const admin: Routes = [
     loadComponent: () =>
     import('../apps/crm/deals/deals.component').then((m) => m.DealsComponent),
   },
+  {
+    path: 'reports',
+    loadComponent: () =>
+    import('../apps/crm//reports/reports.component').then((m) => m.ReportsComponent),
+  },
 {
   path: 'personal',
   loadComponent: () =>

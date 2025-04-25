@@ -118,7 +118,7 @@ export class LeadsComponent extends BaseComponent {
           type: 'pie',
       },
       colors: ["#845adf", "#23b7e5", "#f5b849", "#49b6f5", "#e6533c"],
-      labels: ['Total 250', 'Open 50', 'Inprogress 190', 'Closed 74', 'Team '],
+      labels: ['Hot 250', 'Payment Status 50', 'Call Back Later 190',],
       legend: {
           position: "bottom"
       },
