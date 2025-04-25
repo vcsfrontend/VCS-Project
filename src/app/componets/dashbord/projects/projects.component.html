@@ -28,11 +28,16 @@
                     <img class="rounded mx-auto d-block demo" src="/assets/images/company-logos/adonai_logo.png" alt="">
                 </div>
             </div>
-            <div class="col-xxl-4 col-lg-4 col-md-4 col-xl-4 text-center mx-auto">
-                <button class="btn button btn-wave btn-w-lg font-weight-bold"
+            <div class="col-xxl-6 col-lg-6 col-md-6 col-xl-6 text-center mx-auto pb-3">
+                <button class="btn btn-primary btn-wave waves-effect waves-light"
                     style="background-color: #006699; color: white;" aria-expanded="false" (click)="onClkDesign()"
                     type="button" [disabled]="(roleid == 7 && dateDiff == '0') || (roleid == 12 && actstatus == false)">
-                    Click to Explore Endless Designs </button>
+                    Click to Explore Endless Designs 
+                </button>
+                <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light ms-3"
+                    aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
+                    All Projects
+                </button>
             </div>
         </div>
     </div>

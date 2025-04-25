@@ -1097,3 +1097,81 @@
 </div>
 <!-- PARTS TABLE  -->
 
+<div class="row">
+    <div class="col-xl-4">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Leads Stages
+                </div>
+                <div class="d-flex float-end">
+                    <button class="btn btn-primary" type="button" (click)="openRight4(content4)">Add Stages</button>
+                </div>
+            </div>
+            <div class="container mt-4 mb-4">
+                <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
+                    <div class="col-sm-8">
+                        <input type="text"
+                            class="form-control form-control-sm p-2 font-weight-bold border"
+                            [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text"
+                            class="form-control form-control-sm p-2 font-weight-bold border"
+                            [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
+                            onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                            maxlength="3" placeholder="Percent" [disabled]="isStageDel">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"
+                    (click)="saveLastStages()" [disabled]="isStageDel">Save</button>&nbsp;
+                <button type="button" class="btn btn-danger btn-sm" (click)="onDeleteStages()"
+                    [disabled]="isStageDel">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #content4 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>User Info</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="card custom-card border">
+            <div class="card-body">
+                <div class="p-3 text-dark" id="pill-flex-home" role="tabpanel">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><span class="fw-semibold me-1">Name : </span>{{
+                            userDetails.firstName?userDetails.firstName + ' ' +userDetails.lastName:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Email : </span>{{
+                            userDetails.email?userDetails.email:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">No.of Users : </span>{{
+                            userDetails.noOfUsers?userDetails.noOfUsers:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">City : </span>{{
+                            userDetails.city?userDetails.city:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Country : </span>{{
+                            userDetails.country?userDetails.country:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">DOB : </span>{{
+                            userDetails.dob?userDetails.dob:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Phone : </span>{{
+                            userDetails.phoneNumber?userDetails.phoneNumber:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Username : </span>{{
+                            userDetails.username?userDetails.username:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Company Name : </span>{{
+                            userDetails.companyName?userDetails.companyName:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Created Date : </span>{{
+                            userDetails.createdDate? (userDetails.createdDate | date:'dd-MM-yy'):'' }}</li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>

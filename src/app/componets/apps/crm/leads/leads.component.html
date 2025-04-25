@@ -1,13 +1,10 @@
-<div class="row">    
+<!-- <div class="row">    
     <div class="col-xl-8 pt-3">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">Leads </div>
                 <div class="text-center">
                     <div class="btn-list">
-                        <button type="button" class="btn btn-primary btn-wave" data-bs-toggle="offcanvas"
-                        (click)="open(content7)" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Create Campaign</button>
                         <button type="button" class="btn btn-secondary btn-wave">Active</button>
                         <button type="button" class="btn btn-purple btn-wave">Spoke</button>
                         <button type="button" class="btn btn-danger btn-wave">Closed</button>
@@ -21,12 +18,11 @@
     <div class="col-xl-4 pt-3">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <!--<div class="card-title">Leads </div>-->
                 <div class="text-center">
                     <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
                         [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend" (chartClick)="filterStatusList($event)">
                     </canvas>
-                    <!--<div class="btn-list">
+                    <div class="btn-list">
                         <button type="button" class="btn btn-primary btn-wave">New Leads</button>
                         <button type="button" class="btn btn-secondary btn-wave"
                             (click)="filterStatusList('Active')">Active</button>
@@ -38,7 +34,99 @@
                             (click)="filterStatusList('Proposal sent')">Proposal sent</button>
                         <button type="button" class="btn btn-dark btn-wave text-white"
                             (click)="filterStatusList('Meeting Fixed')">Meeting Fixed</button>
-                    </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">All Campaigns</div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-primary btn-wave" data-bs-toggle="offcanvas"
+                        (click)="open(content7)" data-bs-target="#offcanvasRight"
+                        aria-controls="offcanvasRight">Create Campaign</button>
+                <button class="btn btn-primary" >
+                    Show More
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xxl-12">
+        <div class="row">
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" >
+                <div class="card custom-card">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <div class="me-2  align-items-center">
+                            <span class="avatar avatar-rounded p-1 bg-light">
+                                <img src="./assets/images/brand-logos/profile1.jpg" alt="">
+                            </span>
+                        </div>
+                        <div class="flex-fill">
+                            <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
+                                Campaign Name: Vcs</a>
+                            <span class="text-muted d-block fs-12">Managing Person: Tarun</span>
+                            <div class="avatar-list-stacked">
+                                <span class="avatar avatar-sm avatar-rounded">
+                                    <img src="./assets/images/faces/1.jpg" alt="img">
+                                </span>
+                                <span class="avatar avatar-sm avatar-rounded">
+                                    <img src="./assets/images/faces/2.jpg" alt="img">
+                                </span>
+                                <span class="avatar avatar-sm avatar-rounded">
+                                    <img src="./assets/images/faces/8.jpg" alt="img">
+                                </span>
+                                <span class="avatar avatar-sm avatar-rounded">
+                                    <img src="./assets/images/faces/12.jpg" alt="img">
+                                </span>
+                                <span class="avatar avatar-sm avatar-rounded">
+                                    <img src="./assets/images/faces/10.jpg" alt="img">
+                                </span>
+                                <a class="avatar avatar-sm bg-primary avatar-rounded text-fixed-white"
+                                    href="javascript:void(0);">
+                                    +8
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-1">Total Leads : <span class="badge bg-info-transparent">900 +</span></div>
+                        <div>
+                            <div></div>
+                            <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-primary" style="width: 80%"></div>
+                            </div>
+                            <div class="mt-1"><span class="text-primary fw-medium">80%</span> Completed</div>
+                        </div>
+                        <div class="mb-1 pt-3">Total In Progress : <span class="badge bg-success-transparent">140 +</span></div>
+                        <div>
+                            <div></div>
+                            <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-success" style="width: 80%"></div>
+                            </div>
+                            <div class="mt-1"><span class="text-danger fw-medium">20%</span> Completed</div>
+                        </div>
+                        <div class="mb-1 pt-3">Total Closed : <span class="badge bg-danger-transparent">10 +</span></div>
+                        <div>
+                            <div></div>
+                            <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80"
+                                aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar bg-danger" style="width: 80%"></div>
+                            </div>
+                            <div class="mt-1"><span class="text-primary fw-medium">10%</span> Completed</div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a class="btn btn-sm btn-primary btn-wave ms-3"><i
+                                class="ri-add-line align-middle me-1 fw-medium"></i>Add</a>
+                        <a class="btn btn-sm btn-primary btn-wave me-3"><i
+                                class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Cycle</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -232,7 +320,7 @@
         <div class="card custom-card">
             <div class="card-header border-bottom-0 justify-content-between">
                 <div class="card-title">
-                    Lead Statistics
+                   In-Progress Leads
                 </div>
             </div>
             <div class="card-body border-top">
@@ -248,7 +336,7 @@
         <div class="card custom-card">
             <div class="card-header border-bottom-0 justify-content-between">
                 <div class="card-title">
-                    In Progress Leads
+                    Lost Leads
                 </div>
             </div>
             <div class="card-body border-top">
@@ -264,7 +352,7 @@
         <div class="card custom-card">
             <div class="card-header border-bottom-0 justify-content-between">
                 <div class="card-title">
-                    Closed Leads
+                    Converted Leads
                 </div>
             </div>
             <div class="card-body border-top">

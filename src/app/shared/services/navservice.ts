@@ -315,6 +315,15 @@ export class NavService implements OnDestroy {
       path: '/apps/crm/deals'
     },
     
+    {
+      title: 'reports',
+      icon: 'bi-grid side-menu__icon',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path: '/apps/crm/reports'
+    },
     // {
     //   title: 'Designers',
     //   dirchange: false,
