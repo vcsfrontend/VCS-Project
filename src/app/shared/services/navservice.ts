@@ -317,7 +317,7 @@ export class NavService implements OnDestroy {
     
     {
       title: 'reports',
-      icon: 'bi-grid side-menu__icon',
+      icon: 'bi-layout-text-window side-menu__icon',
       dirchange: false,
       type: 'link',
       linkType : 'internal',

@@ -1071,6 +1071,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   openRight4(content4: any) {
     this.offcanvasService.open(content4, { position: 'end' });
   }
+  openRight12(content12: any) {
+    this.offcanvasService.open(content12, { position: 'end' });
+  }
+
 
 
   // Resets the input and unselects the checkboxes
