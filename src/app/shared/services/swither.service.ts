@@ -84,7 +84,7 @@ export class SwitherService {
   //sales team
   saveSalesUsers(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/save_users_designation_sales`, data); }
   SalesUsers(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/get_user_sales_designation/${email}`); }
-
+  allSalesUsers(): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/get_sales_user_data`,); }
   ProjectList(): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjectList`,); }
   // ProjectById(): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjectById`,); }
   ProjFurniture(data : any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjFurniture?designId=${data}`); }

@@ -44,14 +44,18 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 })
 export class LeadsComponent extends BaseComponent {
   displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
+  usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
+  usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
 
   chartOptions:any
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('sort2') sort2!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
 
   public leadForm!: FormGroup;
@@ -165,6 +169,8 @@ export class LeadsComponent extends BaseComponent {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.usersDataSource.paginator = this.usersPaginator;
+    this.usersDataSource.sort = this.sort2;
   }
 
   getSNo(index: number): number {
@@ -173,9 +179,19 @@ export class LeadsComponent extends BaseComponent {
     }
     return index + 1;
   }
+  usersGetSNo(index: number): number {
+    if (this.usersPaginator && this.usersPaginator.pageIndex !== undefined && this.usersPaginator.pageSize !== undefined) {
+      return this.usersPaginator.pageIndex * this.usersPaginator.pageSize + index + 1;
+    }
+    return index + 1;
+  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  userFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.usersDataSource.filter = filterValue.trim().toLowerCase();
   }
   VerticallyScrol(content12: any) {
     this.leadId = 0;
@@ -357,8 +373,7 @@ export class LeadsComponent extends BaseComponent {
         if (res) {
           this.Crmusers = res;
           this.dataSource.data = res;
-          this.leadCount = res.length;
-          console.log(res);
+          this.leadCount = res.length
         } else {
           this.toastr.error(res.message);
         }
@@ -510,7 +525,6 @@ export class LeadsComponent extends BaseComponent {
       this.switchService.ViewCrmLeads(element.leadId).subscribe({
         next: (res: any) => {
           if (res.leadsEntry) {
-            console.log(res);
             this.leadForm.patchValue(res.leadsEntry);
             this.leadForm.patchValue({ contact: this.formatMobileNumber(res.leadsEntry.contact) });
             this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
@@ -616,7 +630,6 @@ export class LeadsComponent extends BaseComponent {
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
-            console.log(res);
             this.userList = res;
           } else {
             this.toastr.error(res.message, 'signup', {
@@ -760,4 +773,13 @@ export class LeadsComponent extends BaseComponent {
     defaultFontSize: '2',
     toolbarHiddenButtons: [['bold', 'italic']],
   };
+
+  usersData = [
+    { name: 'Alice Johnson', role: 'Manager', email: 'alice.johnson@example.com', date: '2025-04-25', callsAttempted: 25, callsConnected: 18 },
+    { name: 'Bob Smith', role: 'Sales Executive', email: 'bob.smith@example.com', date: '2025-04-24', callsAttempted: 30, callsConnected: 22 },
+    { name: 'Catherine Lee', role: 'Account Manager', email: 'catherine.lee@example.com', date: '2025-04-24', callsAttempted: 20, callsConnected: 15 },
+    { name: 'David Brown', role: 'Sales Executive', email: 'david.brown@example.com', date: '2025-04-23', callsAttempted: 18, callsConnected: 10 },
+    { name: 'Ella Davis', role: 'Manager', email: 'ella.davis@example.com', date: '2025-04-22', callsAttempted: 28, callsConnected: 20 },
+  ];
+  
 }
