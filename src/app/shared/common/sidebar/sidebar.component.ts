@@ -64,9 +64,10 @@ export class SidebarComponent implements AfterViewInit {
             });
             break;
           case 'CRM':
-            this.navServices.isCRMApplicable$.subscribe(val => {
-              item.isVisible = val
-            });
+            // this.navServices.isCRMApplicable$.subscribe(val => {
+            //   item.isVisible = val
+            // });
+            item.isVisible=true;
             break;
           case 'Dashboard':
             item.isVisible = true;
