@@ -315,15 +315,15 @@ export class NavService implements OnDestroy {
       path: '/apps/crm/deals'
     },
     
-    {
-      title: 'reports',
-      icon: 'bi-layout-text-window side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path: '/apps/crm/reports'
-    },
+    // {
+    //   title: 'reports',
+    //   icon: 'bi-layout-text-window side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path: '/apps/crm/reports'
+    // },
     // {
     //   title: 'Designers',
     //   dirchange: false,
@@ -429,6 +429,54 @@ export class NavService implements OnDestroy {
         },
       ],
     },
+    {
+      title: 'CRM',
+      icon: 'bi-house',
+      dirchange: false,
+      type: 'sub',
+      active: false,
+      children: [
+        {
+          title: 'campaigns',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          icon: ' bi-layers side-menu__icon',
+          active: false,
+          selected: false,
+          path: '/dashboard/campaigns',
+        }, 
+        {
+          title: 'reports',
+          icon: 'bi-layout-text-window side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          active: false,
+          path: '/apps/crm/reports'
+        },
+        {
+          title: 'CRM Settings',
+          icon: 'bi-layout-text-window side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType: 'internal',
+          active: false,
+          path: '/dashboard/crm-settings'
+        },
+        {
+          title: 'Support',
+          icon: 'bi-layout-text-window side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType: 'internal',
+          active: false,
+          path: 'pages/chat'
+        },
+              
+      ],
+    },
+    
     // {
     //   title: 'proposal',
     //   icon: 'bi-bag side-menu__icon',

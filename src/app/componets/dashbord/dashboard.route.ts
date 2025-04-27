@@ -173,10 +173,24 @@ export const admin: Routes = [
     import('./org-settings/org-settings.component').then((m) => m.OrgSettingsComponent),
   },
   {
+    path: 'campaigns',
+    loadComponent: () =>
+    import('./campaigns/campaigns.component').then((m) => m.CampaignsComponent),
+  },
+  {
     path: 'leads',
     loadComponent: () =>
     import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
   },
+  
+  {
+    path: 'crm-settings',
+    loadComponent: () =>
+      import('./crm-settings/crm-settings.component').then((m) => m.CrmSettingsComponent),
+  },
+  
+  
+  
   // {
   //   path: 'contacts',
   //   loadComponent: () =>
@@ -204,7 +218,7 @@ export const admin: Routes = [
     import('./users/users.component').then((m) => m.UsersComponent),
 },
 
-]}
+]},
 ];
 @NgModule({
   imports: [RouterModule.forChild(admin)],
