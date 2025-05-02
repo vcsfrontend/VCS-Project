@@ -1,1 +1,192 @@
-<p>crm-settings works!</p>
+<div class="row mt-4">
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Leads Stages
+                </div>
+                <div class="d-flex float-end">
+                    <button class="btn btn-primary" type="button" (click)="openRight4(content4)">Add Stages</button>
+                </div>
+            </div>
+            <div class="container mt-4 mb-4">
+                <div>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border" placeholder="Enter Your Stages">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2"
+                    >Save</button>&nbsp;
+                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Leads Status
+                </div>
+                <div class="d-flex float-end">
+                    <button class="btn btn-primary" type="button" (click)="openRight12(content12)">Add Status</button>
+                </div>
+            </div>
+            <div class="container mt-4 mb-4">
+                <div>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border" placeholder="Enter your Status">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2"
+                    >Save</button>&nbsp;
+                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Key Roles
+                </div>
+                <div class="d-flex float-end">
+                    <button class="btn btn-primary" type="button" (click)="openRight12(content12)">Add Status</button>
+                </div>
+            </div>
+            <div class="container mt-4 mb-4">
+                <div>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border" placeholder="Enter your Status">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2"
+                    >Save</button>&nbsp;
+                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">User Roles
+                </div>
+                <div class="d-flex float-end">
+                    <button class="btn btn-primary" type="button" (click)="openRight12(content12)">Add Status</button>
+                </div>
+            </div>
+            <div class="container mt-4 mb-4">
+                <div>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border" placeholder="Enter your Status">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2"
+                    >Save</button>&nbsp;
+                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #content4 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
+        <div class="mb-3">
+            <button class="btn btn-primary gappp" type="button" (click)="addLeadItem()" >Add</button>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush mb-0">
+            <li class="list-group-item">
+                <div class="container mt-3">
+                    <div class="col-12">
+                        <div *ngFor="let plan of leadStages; let i = index"
+                            class="form-check mb-2 d-flex justify-content-center">
+                            <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="plan.checked" [id]="'plan-' + i">
+                            <label class="form-check-label flex-grow-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <button class="btn btn-danger gapp" type="button" *ngIf="!plan.isDefault" (click)="deleteLeadItem(i)">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngFor="let item of leaditems; let i = index" class="form-check mb-2 d-flex justify-content-center">
+                    <input 
+                        type="text" 
+                        class="form-control flex-grow-1 mt-3 me-2" 
+                        [(ngModel)]="item.label"
+                        [attr.for]="'checkbox-' + i"
+                        placeholder="Enter label text"
+                        name="label-{{i}}"
+                    />
+                    <button 
+                      class="btn btn-danger btn-sm gapp" 
+                      type="button" 
+                      (click)="deleteLeadItem(i)">
+                      Delete
+                    </button>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary btn-wave waves-effect waves-light" type="button">Save Stages</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content12 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Status</strong></h5>
+        <div class="mb-3">
+            <button class="btn btn-primary gappp" type="button">Add</button>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div class="col-lg-6 pt-4 ps-4">
+            <ng-select [(ngModel)]="selectedType" placeholder="single Select" class="js-example-placeholder-multiple js-states"
+                [multiple]="false">
+                <ng-option value="progressleads">In Progress Leads</ng-option>
+                <ng-option value="lostleads">Lost Leads</ng-option>
+                <ng-option value="convertedleads">Converted Leads</ng-option>
+            </ng-select>
+        </div>
+        <div *ngIf="selectedType === 'progressleads'" class="container mt-3">
+            <div class="col-12">
+                <div *ngFor="let plan of leadstatus; let i = index"
+                    class="form-check mb-2 d-flex justify-content-center">
+                    <input class="form-check-input me-2 mt-1" type="checkbox" >
+                    <label class="form-check-label flex-grow-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                    
+                </div>
+            </div>
+        </div>
+        <div *ngIf="selectedType === 'lostleads'" class="container mt-3">
+            <div class="col-12">
+                <div *ngFor="let plan of lostLeads; let i = index"
+                    class="form-check mb-2 d-flex justify-content-center">
+                    <input class="form-check-input me-2 mt-1" type="checkbox" >
+                    <label class="form-check-label flex-grow-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                    
+                </div>
+            </div>
+        </div>
+        <div *ngIf="selectedType === 'convertedleads'" class="container mt-3">
+            <div class="col-12">
+                <div *ngFor="let plan of convertedLeads; let i = index"
+                    class="form-check mb-2 d-flex justify-content-center">
+                    <input class="form-check-input me-2 mt-1" type="checkbox">
+                    <label class="form-check-label flex-grow-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
