@@ -9,9 +9,11 @@
                 </div>
             </div>
             <div class="container mt-4 mb-4">
-                <div>
-                    <div class="col-sm-12">
-                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border" placeholder="Enter Your Stages">
+                <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
+                    <div class="col-sm-8">
+                        <input type="text"
+                            class="form-control form-control-sm p-2 font-weight-bold border"
+                            [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
                     </div>
                 </div>
                 <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2"
@@ -88,7 +90,7 @@
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
         <div class="mb-3">
-            <button class="btn btn-primary gappp" type="button" (click)="addLeadItem()" >Add</button>
+            <button class="btn btn-primary gappp" type="button" (click)="toggleAddMore()" >Add</button>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
         </div>
@@ -98,9 +100,10 @@
             <li class="list-group-item">
                 <div class="container mt-3">
                     <div class="col-12">
-                        <div *ngFor="let plan of leadStages; let i = index"
+                        <div *ngFor="let plan of crmStaticStages; let i = index"
                             class="form-check mb-2 d-flex justify-content-center">
-                            <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="plan.checked" [id]="'plan-' + i">
+                            <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="plan.checked" [id]="'plan-' + i"
+                                (change)="onCheckboxChange()">
                             <label class="form-check-label flex-grow-1" [for]="'plan-' + i">{{ plan.name }}</label>
                             <button class="btn btn-danger gapp" type="button" *ngIf="!plan.isDefault" (click)="deleteLeadItem(i)">
                                 Delete
@@ -108,28 +111,24 @@
                         </div>
                     </div>
                 </div>
-                <div *ngFor="let item of leaditems; let i = index" class="form-check mb-2 d-flex justify-content-center">
-                    <input 
-                        type="text" 
-                        class="form-control flex-grow-1 mt-3 me-2" 
-                        [(ngModel)]="item.label"
-                        [attr.for]="'checkbox-' + i"
-                        placeholder="Enter label text"
-                        name="label-{{i}}"
-                    />
-                    <button 
-                      class="btn btn-danger btn-sm gapp" 
-                      type="button" 
-                      (click)="deleteLeadItem(i)">
-                      Delete
-                    </button>
+                <div class="container mt-3">
+                    <div *ngIf="addMoreVisible" class="col-12">
+                        <div class="row">
+                            <div class="col-xl-4 mb-3">
+                                <input type="text" class="form-control" placeholder="Enter value" [(ngModel)]="newItem">
+                            </div>
+                            <div class="col-xl-4 mb-3">
+                                <button class="btn btn-primary gappp" type="button" (click)="addLeadItem()">Save</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </li>
         </ul>
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary btn-wave waves-effect waves-light" type="button">Save Stages</button>
+            <button class="btn btn-primary btn-wave waves-effect waves-light" type="button" (click)="saveStages()">Save Stages</button>
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
@@ -186,7 +185,9 @@
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-secondary" type="button" (click)="saveStatus()">Save</button>
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
+  
