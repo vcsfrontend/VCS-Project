@@ -156,10 +156,11 @@ export class SwitherService {
   CRMAddFollowupLead(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/add_followup_Lead`, data); }
   CRMAllocateLeadExecutive(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/allocate_leads_to_executive`, data); }
   SaveCrmStatus(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_crm_status`, data); }  
-  GetCrmStatus(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_status`, data); }  
+  CrmStatus(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_status`, data); }  
   SaveCrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_crm_stages`, data); }  
-  GetCrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_stages`, data); }  
-
+  CrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_stages`, data); }  
+  saveDesigCrm(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_desig_crm`, data); }  
+  designationCrmRloes(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_designation_roles`, data); }  
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }

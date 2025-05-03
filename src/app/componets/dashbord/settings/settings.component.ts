@@ -60,7 +60,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   // userForm!: FormGroup;
   cnfmPaswrd: any = ''; paswrd: any = '';
   adoanAiRole: any; todayDt = new Date();
-  crmRole: any; toolsList = [Tools.Adonai];
+  crmRole: any; 
+  toolsList = Object.keys(Tools).map(key => ({
+    label: Tools[key as keyof typeof Tools], 
+    value: key                                    
+  }));
   passwordStrengthMessage: string = '';
   passwordStrengthColor: string = ''; // Control message color
   confirmPasswordStrengthMessage: string = '';

@@ -24,7 +24,7 @@
         </div>
     </div>
     <div *ngIf="isAddEdt">
-        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class=" px-5 text-white bg-white">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class=" p-3 text-white bg-white ">
             <div class="row gy-2 bg-white">
                 <div class="col-xl-4">
                     <label for="signup-firstname" class="form-label text-default"><strong>First
@@ -136,19 +136,15 @@
                     </div>
                 </div>
                 <div class="col-xl-4">
-                    <label for="role-id" class="form-label text-default"><strong>Tool ID</strong><span
+                    <label for="tool" class="form-label text-default"><strong>Tool ID</strong><span
                             class="text-danger"> *</span></label>
-                    <br>
-                    <mat-form-field>
-                        <mat-select formControlName="tools" multiple>
-                            @for (topping of toolsList; track topping) {
-                            <mat-option [value]="topping">{{topping}}</mat-option>
-                            }
-                        </mat-select>
-                        <mat-error *ngIf="f['tools'].errors?.['required']">
-                            Please select at least one tool.
-                        </mat-error>
-                    </mat-form-field>
+                    <ng-select formControlName="tools" [items]="toolsList" bindLabel="label"
+                        bindValue="label" [multiple]="true"
+                        placeholder="Select an option">
+                    </ng-select>
+                    <div *ngIf="submitted && f['tools'].errors?.['required']" class="text-danger">
+                        Please select at least one tool.
+                    </div>                                
                 </div>
                 <div class="col-xl-4">
                     <label for="signup-phone" class="form-label text-default"><strong>Phone
@@ -241,8 +237,8 @@
         </div>
     </div>
 </div>
-<ng-template #modalTemplate>
-    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1">
+<ng-template #modalTemplate let-modal>
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);" tabindex="-1" >
         <div class="modal-dialog p-2 text-white ">
             <div class="modal-content p-2 text-white ">
                 <div class="modal-header justify-content-center">
@@ -1008,42 +1004,42 @@
         </div>
     </div>
 </div>
-
 <!-- stages -->
 <div *ngIf="roleid==7 || roleid==12 || roleid==3">
     <div class="row">
-        <div class="col-xl-6">
+        <!-- <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">Choose a Category for Your Project Stages
                     </div>
                     <div class="d-flex float-end">
-                        <button class="btn btn-primary" type="button" (click)="openRight(content)"
-                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isStage">Add
+                        <button class="btn btn-primary" type="button" >Add
                             Stages</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-6">
+        </div> -->
+        <!-- <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">Choose a Category for Your Project Estimation
                     </div>
                     <div class="d-flex float-end">
-                        <button class="btn btn-primary " type="button" (click)="openRight(content1)"
-                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isPmntStage">Add
+                        <button class="btn btn-primary " type="button" >Add
                             Stages</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-6" *ngIf="showStages">
+        </div> -->
+        <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">Project Stages</div>
+                    <button class="btn btn-primary d-flex" type="button" (click)="openRight(content)"
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isStage">Add
+                    Stages</button>
                 </div>
-                <div class="container mt-4 mb-4">
+                <div class="container mt-4 mb-4" *ngIf="showStages">
                     <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
                         <div class="col-sm-8">
                             <input type="text"
@@ -1065,13 +1061,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6" *ngIf="!showStages"></div>
-        <div class="col-xl-6" *ngIf="showPmntStages">
+        <!-- <div class="col-xl-6" *ngIf="!showStages" ></div> -->
+        <div class="col-xl-6" >
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">Project Estimation Stages</div>
+                    <button class="btn btn-primary d-flex" (click)="openRight(content1)"
+                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" [disabled]="isPmntStage"> Add Stages
+                </button>
                 </div>
-                <div class="container mt-4 mb-4">
+                <div class="container mt-4 mb-4" *ngIf="showPmntStages" >
                     <div *ngFor="let field of dynamicPmntFields; let i = index" class="row mb-3 align-items-center">
                         <div class="col-sm-8">
                             <input type="text"

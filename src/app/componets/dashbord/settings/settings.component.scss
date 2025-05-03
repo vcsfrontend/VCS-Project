@@ -195,6 +195,8 @@ input.invalid {
   cursor: pointer;
 }
 
+
+
 button:disabled {
   background-color: #aaa;
 }
@@ -223,8 +225,8 @@ button:disabled {
 }
 
 .modal-dialog {
-  max-width: 90vw !important; /* Increase modal width */
-  height: 90vh  !important; /* Set modal height */
+  max-width: 40vw !important; 
+  height: 90vh  !important; 
 }
 
 .overflowImportant {  
