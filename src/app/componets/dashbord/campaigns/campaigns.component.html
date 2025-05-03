@@ -12,9 +12,9 @@
             </div>
         </div>
     </div>
-    <div class="col-xxl-12">
+    <div class="col-xxl-12" *ngIf="campaignList.length > 0">
         <div class="row">
-            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" >
+            <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let campaign of campaignList">
                 <div class="card custom-card">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <div class="me-2  align-items-center">
@@ -24,28 +24,27 @@
                         </div>
                         <div class="flex-fill">
                             <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
-                                Campaign Name: Vcs</a>
-                            <span class="text-muted d-block fs-12">Managing Person: Tarun</span>
-                            <div class="avatar-list-stacked">
-                                <span class="avatar avatar-sm avatar-rounded">
-                                    <img src="./assets/images/faces/1.jpg" alt="img">
-                                </span>
-                                <span class="avatar avatar-sm avatar-rounded">
-                                    <img src="./assets/images/faces/2.jpg" alt="img">
-                                </span>
-                                <span class="avatar avatar-sm avatar-rounded">
-                                    <img src="./assets/images/faces/8.jpg" alt="img">
-                                </span>
-                                <span class="avatar avatar-sm avatar-rounded">
-                                    <img src="./assets/images/faces/12.jpg" alt="img">
-                                </span>
-                                <span class="avatar avatar-sm avatar-rounded">
-                                    <img src="./assets/images/faces/10.jpg" alt="img">
-                                </span>
-                                <a class="avatar avatar-sm bg-primary avatar-rounded text-fixed-white"
-                                    href="javascript:void(0);">
-                                    +8
-                                </a>
+                                Campaign Name: {{ campaign.campaignName }}</a>
+                            <span class="text-muted d-block fs-12">Managing Person: {{ campaign.campaignPoc }}</span>
+                            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                                <div class="d-flex align-items-center flex-wrap avatar-list-stacked">
+                                  <ng-container *ngFor="let agent of campaign.agents.split(',')">
+                                    <span class="avatar avatar-sm avatar-rounded me-1 mb-1">
+                                      <img src="./assets/images/faces/1.jpg" alt="{{ agent.trim() }}">
+                                    </span>
+                                  </ng-container>
+                                  <a class="avatar avatar-sm bg-primary avatar-rounded text-fixed-white me-2 mb-1" href="javascript:void(0);">
+                                    +{{ campaign.agents.split(',').length }}
+                                  </a>
+                                </div>
+                                <div class="mb-1">
+                                  Priority:
+                                  <span class="badge" [ngClass]="{
+                                    'bg-danger-transparent': campaign.campaignPriority === 'High',
+                                    'bg-warning-transparent': campaign.campaignPriority === 'Medium',
+                                    'bg-success-transparent': campaign.campaignPriority === 'Low'
+                                  }">{{ campaign.campaignPriority }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -90,58 +89,59 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="create-contact" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <ng-template #content7 let-c="close" let-d="dismiss">
+<ng-template #content7 let-c="close" let-d="dismiss">
+    <form [formGroup]="campaignForm" (ngSubmit)="submitCampaign(modal)">
         <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title">Create New Campaign</h6>
-                <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+          <div class="modal-header">
+            <h6 class="modal-title">Create New Campaign</h6>
+            <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body px-4">
+            <div class="row gy-3">
+              <div class="col-xl-6">
+                <label for="deal-name" class="form-label">Campaign Name</label>
+                <input type="text" class="form-control" id="deal-name" placeholder="Campaign Name" formControlName="campaignName">
+              </div>
+              <div class="col-xl-6">
+                <label for="deal-name" class="form-label">Pipeline</label>
+                <ng-select formControlName="pipeline" [items]="pipeLine" bindLabel="name" bindValue="name" placeholder="Select an option">
+                </ng-select>
+              </div>
+              <div class="col-xl-12">
+                <label for="deal-name" class="form-label">Who will manage this Campaign</label>
+                <ng-select placeholder="Multiple Select" formControlName="campaignPoc">
+                    <ng-option value="Pavan">Pavan</ng-option>
+                </ng-select>
+              </div>
+              <div class="col-xl-12">
+                <label for="deal-name" class="form-label">Select Agents</label>
+                <ng-select placeholder="Multiple Select" class="js-example-placeholder-multiple js-states" [multiple]="true" formControlName="agents">
+                  <ng-option value="Pavan">Pavan</ng-option>
+                  <ng-option value="Charan">Charan</ng-option>
+                  <ng-option value="Bhuvan">Bhuvan</ng-option>
+                  <ng-option value="Ramya">Ramya</ng-option>
+                  <ng-option value="Kiran">Kiran</ng-option>
+                </ng-select>
+              </div>
+              <div class="col-xl-6">
+                <label for="deal-name" class="form-label">Campaign Priority</label>
+                <ng-select placeholder="Select Priority" [items]="campaignPriority" bindLabel="name" bindValue="name" formControlName="campaignPriority">
+                </ng-select>
+              </div>
+              <div class="col-xl-6">
+                <label for="deal-name" class="form-label">Lead Duplicacy</label>
+                <ng-select placeholder="Select Duplicacy" [items]="leadDuplicacy" bindLabel="name" bindValue="name" formControlName="leadDuplicacy">
+                </ng-select>
+              </div>
             </div>
-            <div class="modal-body px-4">
-                <div class="row gy-3">
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Campaign Name</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Pipeline</label>
-                        <ng-select formControlName="pipeLine" [items]="pipeLine" bindLabel="name" bindValue="name"
-                        placeholder="Select an option">
-                    </ng-select>
-                    </div>
-                    <div class="col-xl-12">
-                        <label for="deal-name" class="form-label">Who will managing this Campaign</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                    <div class="col-xl-12">
-                        <label for="deal-name" class="form-label">Select Agents</label>
-                        <ng-select placeholder="Multiple Select" class="js-example-placeholder-multiple js-states"
-                            [multiple]="true">
-                            <ng-option value="fr-1">Appple</ng-option>
-                            <ng-option value="fr-2">Mango</ng-option>
-                            <ng-option value="fr-3">Orange</ng-option>
-                            <ng-option value="fr-4">Guava</ng-option>
-                            <ng-option value="fr-5">Pineapple</ng-option>
-                        </ng-select>
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Campaign Priority</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Lead Duplicacy</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light"
-                    data-bs-dismiss="modal"  (click)="c('Cancel click')">Cancel</button>
-                <button type="button" class="btn btn-primary">Create Campaign</button>
-            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="c('Cancel click')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Campaign</button>
+          </div>
         </div>
-    </ng-template>
-    </div>
-</div>
+      </form>
+      
+</ng-template>
+  
+  

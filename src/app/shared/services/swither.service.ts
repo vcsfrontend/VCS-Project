@@ -161,6 +161,7 @@ export class SwitherService {
   CrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_stages`, data); }  
   saveDesigCrm(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_desig_crm`, data); }  
   designationCrmRloes(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_designation_roles`, data); }  
-
+  saveCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_campaign`, data); } 
+  displayCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/list_campaigns`, data); }
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
