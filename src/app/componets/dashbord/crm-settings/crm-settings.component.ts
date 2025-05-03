@@ -41,7 +41,8 @@ export class CrmSettingsComponent extends BaseComponent{
   public assignRoleSubmitted = false;
   stageLst: any;newItem: string = ''; statusLst :any;
   isStage: boolean = false;showStages: boolean = false;
-  addMoreVisible: boolean = false; 
+  addMoreVisible: boolean = false; selectedStage: string = '';
+
 
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas,public switchService: SwitherService,private toastr: ToastrService,
     private fb: FormBuilder,
@@ -232,44 +233,6 @@ export class CrmSettingsComponent extends BaseComponent{
       console.log('Dynamic Fields:', this.dynamicFields);
     }
   }
-  
-  saveStatus() {
-    this.switchService.SaveCrmStatus(this.saveData).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Stages saved successfully');
-          this.offcanvasService.dismiss();
-          this.getStatus();
-        } else {
-          this.toastr.error(res.message)
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    })
-  }
-  getStatus() {
-    let payload = {
-      email: this.userEmail,
-      companyCode: this.userCompanyCode,
-      CompanyName:this.userCompanyName,
-      type: this.userType
-    }
-    this.switchService.CrmStatus(payload).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.statusLst = res;
-          // this.initializeDynamicFields();
-        } else {
-          this.toastr.error(res.message)
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    })
-  }
   saveStages() {
     console.log(this.saveStageData)
     this.switchService.SaveCrmStages(this.saveStageData).subscribe({
@@ -296,12 +259,20 @@ export class CrmSettingsComponent extends BaseComponent{
   
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
-        if (res && Array.isArray(res)) {
-          this.stageLst = res;
-          console.log('CRM Stages Response:', res);
+        if (res && Array.isArray(res) && res.length > 0) {
+          const stageObj = res[0]; // Only one object as per your example
+          const extractedStages = [];
   
-          this.initializeDynamicFields(); 
-          this.showStages = this.dynamicFields.length > 0;
+          // Loop through f1 to f25
+          for (let i = 1; i <= 25; i++) {
+            const key = `f${i}`;
+            if (stageObj[key] && stageObj[key].trim() !== "") {
+              extractedStages.push({ stageName: stageObj[key].trim() });
+            }
+          }
+  
+          this.stageLst = extractedStages;
+          console.log("Extracted Stage List:", this.stageLst);
         } else {
           this.toastr.error(res?.message || 'Invalid response from server.');
         }
@@ -311,6 +282,45 @@ export class CrmSettingsComponent extends BaseComponent{
         this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
       },
     });
+  }
+  
+  saveStatus() {
+    this.switchService.SaveCrmStatus(this.saveData).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Stages saved successfully');
+          this.offcanvasService.dismiss();
+          this.getStatus();
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
+  }
+  getStatus() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      CompanyName:this.userCompanyName,
+      type: this.userType,
+      stage: this.stageLst
+    }
+    this.switchService.CrmStatus(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.statusLst = res;
+          // this.initializeDynamicFields();
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
   }
   onCheckboxChange() {
     const selectedPlans = this.crmStaticStages.filter((plan) => plan.checked);
@@ -324,6 +334,18 @@ export class CrmSettingsComponent extends BaseComponent{
       this.saveStageData[`f${i + 1}`] = '';
     }
   }
+  onStageSelection(stageName: string) {
+  if (stageName === 'In Progress Leads') {
+    this.selectedType = 'progressleads';
+  } else if (stageName === 'Lost Leads') {
+    this.selectedType = 'lostleads';
+  } else if (stageName === 'Converted Leads') {
+    this.selectedType = 'convertedleads';
+  } else {
+    this.selectedType = ''; // fallback or dynamic
+  }
+}
+
   resetForm() {
     this.newItem = ''; // Reset the input field
     this.addMoreVisible = false; // Hide the 'Add More' section

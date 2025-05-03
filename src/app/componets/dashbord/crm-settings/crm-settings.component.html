@@ -220,16 +220,16 @@
                 </div>
             </div>
             <div class="container mt-4 mb-4">
-                <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
+                <div *ngFor="let stage of stageLst; let i = index" class="row mb-3 align-items-center">
                     <div class="col-sm-8">
                       <input
                         type="text"
                         class="form-control form-control-sm p-2 font-weight-bold border"
-                        [ngModel]="field.value"
+                        [ngModel]="stage.stageName"
                         [ngModelOptions]="{ standalone: true }"
                         readonly>
                     </div>
-                </div>                  
+                </div>                               
                 <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2"
                     >Save</button>&nbsp;
                 <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
@@ -314,19 +314,16 @@
             <li class="list-group-item">
                 <div class="container mt-3">
                     <div class="col-12">
-                        <div *ngIf="showStages">
-                            <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
-                              <div class="col-sm-8">
-                                <input
-                                  type="text"
-                                  class="form-control form-control-sm p-2 font-weight-bold border"
-                                  [ngModel]="field.value"
-                                  [ngModelOptions]="{ standalone: true }"
-                                  readonly>
-                              </div>
+                        <div *ngFor="let stage of stageLst; let i = index" class="row mb-3 align-items-center">
+                            <div class="col-sm-8">
+                              <input
+                                type="text"
+                                class="form-control form-control-sm p-2 font-weight-bold border"
+                                [ngModel]="stage.stageName"
+                                [ngModelOptions]="{ standalone: true }"
+                                readonly>
                             </div>
-                          </div>
-                          
+                        </div>  
                     </div>
                 </div>
                 <div class="container mt-3">
@@ -362,14 +359,17 @@
         </div>
     </div>
     <div class="offcanvas-body p-0">
-        <div class="col-lg-6 pt-4 ps-4">
-            <ng-select [(ngModel)]="selectedType" placeholder="single Select" class="js-example-placeholder-multiple js-states"
-                [multiple]="false">
-                <ng-option value="progressleads">In Progress Leads</ng-option>
-                <ng-option value="lostleads">Lost Leads</ng-option>
-                <ng-option value="convertedleads">Converted Leads</ng-option>
+        <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
+            <ng-select
+              [(ngModel)]="selectedStage"
+              placeholder="Select Stage"
+              [items]="stageLst"
+              bindLabel="stageName"
+              bindValue="stageName"
+              [multiple]="false">
             </ng-select>
         </div>
+        
         <div *ngIf="selectedType === 'progressleads'" class="container mt-3">
             <div class="col-12">
                 <div *ngFor="let plan of leadstatus; let i = index"
