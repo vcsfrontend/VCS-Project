@@ -41,7 +41,7 @@ export class CrmSettingsComponent extends BaseComponent{
   public assignRoleSubmitted = false;
   stageLst: any;newItem: string = ''; statusLst :any;
   isStage: boolean = false;showStages: boolean = false;
-  addMoreVisible: boolean = false; selectedStage:any;
+  addMoreVisible: boolean = false; selectedStage:any;isAddStagesDisabled: boolean = false;
 
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas,public switchService: SwitherService,private toastr: ToastrService,
     private fb: FormBuilder,
@@ -279,6 +279,7 @@ export class CrmSettingsComponent extends BaseComponent{
           this.toastr.success('Stages saved successfully');
           this.offcanvasService.dismiss();
           this.getCrmStages();
+          this.isAddStagesDisabled = true;
         } else {
           this.toastr.error(res.message)
         }
@@ -311,9 +312,8 @@ export class CrmSettingsComponent extends BaseComponent{
   
           this.stageLst = extractedStages;
           console.log("Extracted Stage List:", this.stageLst);
-        } else {
-          this.toastr.error(res?.message || 'Invalid response from server.');
-        }
+          this.isAddStagesDisabled = this.stageLst.length > 0;
+        } 
       },
       error: (error) => {
         console.error('CRM Stages Error:', error);

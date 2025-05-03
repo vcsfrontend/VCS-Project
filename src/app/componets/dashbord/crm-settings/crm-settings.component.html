@@ -216,7 +216,7 @@
                 <div class="card-title">Leads Stages
                 </div>
                 <div class="d-flex float-end">
-                    <button class="btn btn-primary" type="button" (click)="openRight4(content4)">Add Stages</button>
+                    <button class="btn btn-primary" type="button" (click)="openRight4(content4)" [disabled]="isAddStagesDisabled">Add Stages</button>
                 </div>
             </div>
             <div class="container mt-4 mb-4">
@@ -314,16 +314,12 @@
             <li class="list-group-item">
                 <div class="container mt-3">
                     <div class="col-12">
-                        <div *ngFor="let stage of stageLst; let i = index" class="row mb-3 align-items-center">
-                            <div class="col-sm-8">
-                              <input
-                                type="text"
-                                class="form-control form-control-sm p-2 font-weight-bold border"
-                                [ngModel]="stage.stageName"
-                                [ngModelOptions]="{ standalone: true }"
-                                readonly>
-                            </div>
-                        </div>   
+                        <div *ngFor="let plan of crmStaticStages; let i = index"
+                            class="form-check mb-2 d-flex justify-content-center">
+                            <input class="form-check-input me-2 mt-1" type="checkbox" >
+                            <label class="form-check-label flex-grow-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                            
+                        </div>
                     </div>
                 </div>
                 <div class="container mt-3">
@@ -348,7 +344,6 @@
         </div>
     </div>
 </ng-template>
-
 <ng-template #content12 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Status</strong></h5>
