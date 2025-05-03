@@ -41,7 +41,7 @@ export class CrmSettingsComponent extends BaseComponent{
   public assignRoleSubmitted = false;
   stageLst: any;newItem: string = ''; statusLst :any;
   isStage: boolean = false;showStages: boolean = false;
-  addMoreVisible: boolean = false; 
+  addMoreVisible: boolean = false; selectedStage:any;
 
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas,public switchService: SwitherService,private toastr: ToastrService,
     private fb: FormBuilder,
@@ -297,12 +297,20 @@ export class CrmSettingsComponent extends BaseComponent{
   
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
-        if (res && Array.isArray(res)) {
-          this.stageLst = res;
-          console.log('CRM Stages Response:', res);
+        if (res && Array.isArray(res) && res.length > 0) {
+          const stageObj = res[0]; // Only one object as per your example
+          const extractedStages = [];
   
-          this.initializeDynamicFields(); 
-          this.showStages = this.dynamicFields.length > 0;
+          // Loop through f1 to f25
+          for (let i = 1; i <= 25; i++) {
+            const key = `f${i}`;
+            if (stageObj[key] && stageObj[key].trim() !== "") {
+              extractedStages.push({ stageName: stageObj[key].trim() });
+            }
+          }
+  
+          this.stageLst = extractedStages;
+          console.log("Extracted Stage List:", this.stageLst);
         } else {
           this.toastr.error(res?.message || 'Invalid response from server.');
         }
