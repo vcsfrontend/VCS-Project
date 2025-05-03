@@ -113,7 +113,8 @@ export class CrmSettingsComponent extends BaseComponent{
   saveData: any;
   saveStageData:any;
   ngOnInit() {
-    this.getStatus();this.getStages(); 
+    this.getStatus();this.getCrmStages(); 
+    this.getDesignationCrmRloes(); this.getUsers();
     this.saveData = {
       stageId: 0,
       companyName: this.userCompanyName,
@@ -277,7 +278,7 @@ export class CrmSettingsComponent extends BaseComponent{
         if (res) {
           this.toastr.success('Stages saved successfully');
           this.offcanvasService.dismiss();
-          this.getStages();
+          this.getCrmStages();
         } else {
           this.toastr.error(res.message)
         }
@@ -287,7 +288,7 @@ export class CrmSettingsComponent extends BaseComponent{
       },
     })
   }
-  getStages(): void {
+  getCrmStages(): void {
     const payload = {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
