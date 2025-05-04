@@ -48,7 +48,7 @@ export class LeadsComponent extends BaseComponent {
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
-  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
+  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList : any;
 
   chartOptions:any
   
@@ -220,7 +220,7 @@ export class LeadsComponent extends BaseComponent {
       this.campgnId = params['campaignId'] ? params['campaignId'].trim() : '';      
       console.log('Campaign ID from query params:', this.campgnId);
       this.initLeadForm(this.campgnId);
-      this.getCrmUsers(this.campgnId);
+      this.getCrmLeads();
       
     });
 
@@ -254,8 +254,6 @@ export class LeadsComponent extends BaseComponent {
     this.allocateForm = this.fb.group({
       executive: ['', [Validators.required]]
     });
-
-    this.getCrmUsers(this.campgnId);
 
     this.getUsers();
     // Filter options as the user types in the search bar
@@ -374,7 +372,7 @@ export class LeadsComponent extends BaseComponent {
       case "converted to deal/opportunity":
         return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
       default:
-        return "bg-secondary";
+        return "";
     }
   }
 
@@ -397,27 +395,12 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm.patchValue({ country: data });
   }
 
-  // getCrmUsers() {
-  //   this.switchService.CrmLeads().subscribe({
-  //     next: (res: any) => {
-  //       if (res) {
-  //         this.Crmusers = res;
-  //         this.dataSource.data = res;
-  //         this.leadCount = res.length
-  //       } else {
-  //         this.toastr.error(res.message);
-  //       }
-  //     },
-  //     error: (error) => {
-  //       this.toastr.error(error.statusText);
-  //     },
-  //   })
-  // }
-  getCrmUsers(campgnId: string): void {
+  getCrmLeads(): void {
     this.switchService.CrmLeads().subscribe({
       next: (res: any) => {
         if (res) {
-          this.leads = res.filter((lead: any) => lead.campaignId === campgnId);
+          this.crmLeadsList = res;
+          this.dataSource.data = this.crmLeadsList;
         } else {
           this.toastr.error(res.message || 'Failed to load leads.');
         }
