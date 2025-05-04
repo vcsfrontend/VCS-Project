@@ -449,10 +449,10 @@
                         placeholder="Select an Executive">
                     </ng-select>
                 </div>
-                <!--<div class="col-xl-3 col-lg-3 col-md-3">
+                <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Products</label>
                     <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
-                </div>-->
+                </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Country</label>
                     <ng-select name="choices-multiple-remove-button3" placeholder="Select"
@@ -465,20 +465,15 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label" for="stage"> Stage</label>
                     <ng-select formControlName="stage" [items]="stageList" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
+                        placeholder="Select an option">
                     </ng-select>
-                    <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
-                        <div *ngIf="f['stage'].errors['required']">Stage is required</div>
-                    </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label"> Status</label>
                     <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
+                        placeholder="Select an option">
                     </ng-select>
-                    <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
-                        <div *ngIf="f['status'].errors['required']">Status is required</div>
-                    </div>
+                    
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label">Lead Source</label>
@@ -489,13 +484,9 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="zipCode" class="form-label">Zip Code</label>
                     <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
-                        formControlName="zipCode" [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }"
+                        formControlName="zipCode" 
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                    <div *ngIf="submitted && f['zipCode'].errors" class="invalid-feedback">
-                        <span *ngIf="f['zipCode'].errors['required']">Zip Code is required.</span>
-                        <span *ngIf="f['zipCode'].errors['minlength']">Zip Code must be at least 6 characters
-                            long.</span>
-                    </div>
+                    
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="followUpDate" class="form-label">Follow up date</label>
@@ -510,18 +501,12 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="city" class="form-label">City</label>
                     <input type="text" class="form-control" id="city" placeholder="Enter City Name"
-                        formControlName="city" [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
-                    <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
-                        <div *ngIf="f['city'].errors['required']">City is required</div>
-                    </div>
+                        formControlName="city">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="address" class="form-label">Address</label>
                     <input type="text" class="form-control" id="address" placeholder="Enter Your Address"
-                        formControlName="address" [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
-                    <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
-                        <span *ngIf="f['address'].errors['required']">Address is required.</span>
-                    </div>
+                        formControlName="address">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="contact" class="form-label">Contact</label>
@@ -539,13 +524,10 @@
                     <label for="email" class="form-label">E-mail</label>
                     <input type="text" class="form-control  " id="email" placeholder="Enter your email"
                         onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
-                                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
-                                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email"
-                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
-                    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                        <span *ngIf="f['email'].errors['required']">Email is required.</span>
-                        <span *ngIf="f['email'].errors['email']">Invalid email address.</span>
-                    </div>
+                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email"
+                    >
+                    
                 </div>
             </div>
         </div>

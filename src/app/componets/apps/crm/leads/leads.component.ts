@@ -12,7 +12,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 import { FirebaseService } from '../../../../shared/services/firebase.service';
@@ -84,7 +84,8 @@ export class LeadsComponent extends BaseComponent {
 
   public allocateForm!: FormGroup;
   public allocateSubmitted = false;
-
+  campgnId: string = '';
+  leads:any;
   selectedIdList: Set<number> = new Set<number>();
 
   public pieChartOptions: ChartOptions<'pie'> = {
@@ -111,7 +112,8 @@ export class LeadsComponent extends BaseComponent {
   public pieChartPlugins = [];
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
-    private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
+    private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder,
+    private route: ActivatedRoute
   ) {
     super();
     this.userData = localStorage.getItem('userDetails');
@@ -213,23 +215,13 @@ export class LeadsComponent extends BaseComponent {
 
   ngOnInit(): void {
     //Lead Form Validatoin
-    this.leadForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      companyName: [''],
-      executive: [''],
-      //products: [''],
-      country: [''],
-      // stage: ['', [Validators.required]],
-      status: ['', [Validators.required]],
-      leadSource: [''],
-      zipCode: ['', [Validators.required, Validators.minLength(6)]],
-      followUpDate: [''],
-      state: [''],
-      city: ['', [Validators.required]],
-      address: ['', [Validators.required]],
-      contact: ['', [Validators.required, Validators.maxLength(10)]],
-      email: ['', [Validators.required, Validators.email]],
-      leadId: [''],
+    this.route.queryParams.subscribe((params: any) => {
+      console.log('Query Params:', params);
+      this.campgnId = params['campaignId'] ? params['campaignId'].trim() : '';      
+      console.log('Campaign ID from query params:', this.campgnId);
+      this.initLeadForm(this.campgnId);
+      this.getCrmUsers(this.campgnId);
+      
     });
 
     //Upload Lead Validatoin
@@ -263,7 +255,7 @@ export class LeadsComponent extends BaseComponent {
       executive: ['', [Validators.required]]
     });
 
-    this.getCrmUsers();
+    this.getCrmUsers(this.campgnId);
 
     this.getUsers();
     // Filter options as the user types in the search bar
@@ -278,21 +270,52 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
+  initLeadForm(campgnId: string) {
+    console.log('Campaign ID inside initLeadForm:', campgnId);
+    this.leadForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      companyName: [''],
+      executive: [''],
+      products: [''],
+      country: [''],
+      stage: [''],
+      status: [''],
+      leadSource: [''],
+      zipCode: [''],
+      followUpDate: [''],
+      state: [''],
+      city: [''],
+      address: [''],
+      contact: ['', [Validators.required, Validators.maxLength(10)]],
+      email: [''],
+      leadId: [''],
+      currentStage: [''],
+      updatedBy: [JSON.parse(this.userData).username],
+      updatedTime: [''],
+      entryBy: [JSON.parse(this.userData).username],
+      campaignId: [campgnId]
+    });
+    console.log('campaignId in form:', this.leadForm.get('campaignId')?.value);
 
+  }
+ 
 
   get f() {
     return this.leadForm.controls;
   }
 
   onSubmit(modal: any) {
+    const payload = this.leadForm.value;
+    console.log('Add Lead Payload:', payload);
+    console.log('Campaign ID in Payload:', payload.campaignId);  // Check campaignId separately
     this.submitted = true;
     if (this.leadForm?.valid) {  // Optional chaining is a safety check
       this.leadDetails.name = this.f['name'].value;
       this.leadDetails.companyName = this.f['companyName'].value ? this.f['companyName'].value : '';
       this.leadDetails.executive = this.f['executive'].value;
-      //this.leadDetails.products = this.f['products'].value;
+      this.leadDetails.products = this.f['products'].value;
       this.leadDetails.country = this.f['country'].value;
-      // this.leadDetails.stage = this.f['stage'].value;
+      this.leadDetails.stage = this.f['stage'].value;
       this.leadDetails.status = this.f['status'].value;
       this.leadDetails.leadSource = this.f['leadSource'].value;
       this.leadDetails.zipCode = this.f['zipCode'].value;
@@ -303,26 +326,33 @@ export class LeadsComponent extends BaseComponent {
       this.leadDetails.contact = this.f['contact'].value;
       this.leadDetails.email = this.f['email'].value;
       this.leadDetails.leadId = this.f['leadId'].value;
+      this.leadDetails.currentStage = this.f['currentStage'].value;
+      this.leadDetails.updatedBy = JSON.parse(this.userData).username;
+      this.leadDetails.updatedTime = this.f['updatedTime'].value;
+      this.leadDetails.entryBy = JSON.parse(this.userData).username;
+      this.leadDetails.campaignId = this.leadForm.get('campgnId')?.value;
+      console.log('campaignId from form:', this.leadForm.get('campaignId')?.value);
 
-      this.switchService.AddCrmLeads(this.leadDetails).subscribe({
-        next: (res: any) => {
-          if (res.status == true) {
-            modal.close();
-            this.submitted = false;
-            this.leadForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
-      })
+
+      // this.switchService.AddCrmLeads(this.leadDetails).subscribe({
+      //   next: (res: any) => {
+      //     if (res.status == true) {
+      //       modal.close();
+      //       this.submitted = false;
+      //       this.leadForm.reset();
+      //       this.toastr.success(res.message, 'lead', {
+      //         timeOut: 3000, positionClass: 'toast-top-right'
+      //       });
+      //     } else {
+      //       this.toastr.error(res.message, 'lead', {
+      //         timeOut: 3000, positionClass: 'toast-top-right'
+      //       });
+      //     }
+      //   },
+      //   error: (error) => {
+      //     this.toastr.error(error.statusText);
+      //   },
+      // })
 
     }
   }
@@ -367,21 +397,35 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm.patchValue({ country: data });
   }
 
-  getCrmUsers() {
+  // getCrmUsers() {
+  //   this.switchService.CrmLeads().subscribe({
+  //     next: (res: any) => {
+  //       if (res) {
+  //         this.Crmusers = res;
+  //         this.dataSource.data = res;
+  //         this.leadCount = res.length
+  //       } else {
+  //         this.toastr.error(res.message);
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.toastr.error(error.statusText);
+  //     },
+  //   })
+  // }
+  getCrmUsers(campgnId: string): void {
     this.switchService.CrmLeads().subscribe({
       next: (res: any) => {
         if (res) {
-          this.Crmusers = res;
-          this.dataSource.data = res;
-          this.leadCount = res.length
+          this.leads = res.filter((lead: any) => lead.campaignId === campgnId);
         } else {
-          this.toastr.error(res.message);
+          this.toastr.error(res.message || 'Failed to load leads.');
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText);
+        this.toastr.error(error.statusText || 'Server Error');
       },
-    })
+    });
   }
 
   preventCopyPaste(event: ClipboardEvent): void {

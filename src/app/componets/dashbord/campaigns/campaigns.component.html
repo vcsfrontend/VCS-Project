@@ -78,11 +78,15 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <a class="btn btn-sm btn-primary btn-wave ms-3" routerLink="/apps/crm/leads">
-                            <i class="ri-eye-line me-2"></i>View
-                          </a>                          
-                        <a class="btn btn-sm btn-primary btn-wave me-3"><i
-                                class="ri-delete-bin-line me-2"></i>Delete</a>
+                      <!-- View Campaign Button -->
+                      <button class="btn btn-sm btn-primary btn-wave ms-3" (click)="viewCampaignLeads(campaign)">
+                        <i class="ri-eye-line me-2"></i> View
+                      </button>                          
+                    
+                      <!-- Delete Button -->
+                      <button class="btn btn-sm btn-primary btn-wave me-3">
+                        <i class="ri-delete-bin-line me-2"></i> Delete
+                      </button>
                     </div>
                 </div>
             </div>
