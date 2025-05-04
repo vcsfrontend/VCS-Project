@@ -1,7 +1,7 @@
-import { Component,ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgbModal, NgbDropdownModule, NgbModule ,NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule,FormGroup ,FormControl, Validators, FormBuilder, ReactiveFormsModule, } from '@angular/forms';
+import { NgbModal, NgbDropdownModule, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { SwitherService } from '../../../shared/services/swither.service';
@@ -15,13 +15,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 @Component({
   selector: 'app-crm-settings',
   standalone: true,
-  imports: [NgSelectModule,FormsModule,CommonModule,SharedModule,NgbModule,NgbDropdownModule,
+  imports: [NgSelectModule, FormsModule, CommonModule, SharedModule, NgbModule, NgbDropdownModule,
     MatTableModule, MatPaginator, MatPaginatorModule, MatFormFieldModule, ReactiveFormsModule,
   ],
   templateUrl: './crm-settings.component.html',
   styleUrl: './crm-settings.component.scss'
 })
-export class CrmSettingsComponent extends BaseComponent{
+export class CrmSettingsComponent extends BaseComponent {
   crmAllUsersColumn: string[] = ['slNo', 'username', 'phone', 'email', 'Role', 'edit', 'delete'];
   crmUsersColumn: string[] = ['slNo', 'desigRole', 'crmDesigRoleId', 'email', 'edit', 'delete'];
   crmAllDataSource = new MatTableDataSource<any>();
@@ -35,38 +35,37 @@ export class CrmSettingsComponent extends BaseComponent{
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
-  designCrmForm! : FormGroup;  saveCrmUsersForm!: FormGroup; 
+  designCrmForm!: FormGroup; saveCrmUsersForm!: FormGroup;
   isSubmitting: boolean = false; usersList: any[] = [];
   public designCrmSubmitted = false;
   public assignRoleSubmitted = false;
-  stageLst: any;newItem: string = ''; statusLst :any;
-  isStage: boolean = false;showStages: boolean = false;
-  addMoreVisible: boolean = false; selectedStage:any;isAddStagesDisabled: boolean = false;
-
-  constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas,public switchService: SwitherService,private toastr: ToastrService,
-    private fb: FormBuilder,
-  ){
-
-    super();
-  }
-  leaditems: { checked: boolean;label: string }[] = [];
-  leadStatusitems : {checked : boolean; label : string}[] = [];
+  stageLst: any; newItem: string = ''; statusLst: any;
+  isStage: boolean = false; showStages: boolean = false;
+  leaditems: { checked: boolean; label: string }[] = [];
+  leadStatusitems: { checked: boolean; label: string }[] = [];
   selectedProgressLeads: any[] = [];
   selectedLostLeads: any[] = [];
   selectedConvertedLeads: any[] = [];
   selectedType: string = '';
+  addMoreVisible: boolean = false; isAddStagesDisabled: boolean = false; isAddStatusDisabled: boolean = true;
+  crmStageData: any; crmStatusData: any; selectedStage: string = ''; checkboxStageOptions: any[] = [];
+  newOptionName: string = ''; status: string = 'In Progress Leads';
+
+
+  constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
+    private fb: FormBuilder,
+  ) {
+
+    super();
+  }
+
   crmStaticStages = [
     { name: 'In Progress Leads', checked: false, isDefault: true },
     { name: 'Lost Leads', checked: false, isDefault: true },
     { name: 'Converted Leads', checked: false, isDefault: true },
   ];
-  
-  openRight4(content4: any) {
-    this.offcanvasService.open(content4, { position: 'end' });
-  }
-  openRight12(content12: any) {
-    this.offcanvasService.open(content12, { position: 'end' });
-  }
+
+
   addLeadItem() {
     const itemExists = this.crmStaticStages.some(
       (plan) => plan.name.toLowerCase() === this.newItem.trim().toLowerCase()
@@ -81,15 +80,15 @@ export class CrmSettingsComponent extends BaseComponent{
     } else if (itemExists) {
       this.toastr.warning('This item already exists!');
     }
-    this.leaditems.push({ checked: false,label: '' });
+    this.leaditems.push({ checked: false, label: '' });
   }
   deleteLeadItem(index: number) {
     this.crmStaticStages.splice(index, 1);
   }
   addLeadStatusItem() {
-    this.leadStatusitems.push({ checked: false,label: '' });
+    this.leadStatusitems.push({ checked: false, label: '' });
   }
-  leadstatus = [
+  inPorgressLeads = [
     { name: 'Quotataion Shared', checked: false, isDefault: true },
     { name: 'Commercial Discussion', checked: false, isDefault: true },
     { name: 'Office Visit', checked: false, isDefault: true },
@@ -99,7 +98,7 @@ export class CrmSettingsComponent extends BaseComponent{
     { name: 'Call Back', checked: false, isDefault: true },
   ];
   lostLeads = [
-    { name: 'not Interested', checked: false, isDefault: true },
+    { name: 'Not Interested', checked: false, isDefault: true },
     { name: 'Irrelevant', checked: false, isDefault: true },
     { name: 'Given to others', checked: false, isDefault: true },
   ];
@@ -108,28 +107,26 @@ export class CrmSettingsComponent extends BaseComponent{
     { name: '10% advance Done', checked: false, isDefault: true },
   ];
   toggleAddMore() {
-    this.addMoreVisible = !this.addMoreVisible; // Toggle visibility
+    this.addMoreVisible = !this.addMoreVisible;
   }
-  saveData: any;
-  saveStageData:any;
+
   ngOnInit() {
-    this.getStatus();this.getCrmStages(); 
+    this.getCrmStatus(); this.getCrmStages();
     this.getDesignationCrmRloes(); this.getUsers();
-    this.saveData = {
+    this.crmStageData = {
       stageId: 0,
       companyName: this.userCompanyName,
       companyCode: this.userCompanyCode,
       email: this.userEmail,
-      stage: "",
       f1: "",
-      f2: "", 
-      f3: "", 
-      f4: "", 
-      f5: "", 
+      f2: "",
+      f3: "",
+      f4: "",
+      f5: "",
       f6: "",
       f7: "",
       f8: "",
-      f9: "", 
+      f9: "",
       f10: "",
       f11: "",
       f12: "",
@@ -151,21 +148,21 @@ export class CrmSettingsComponent extends BaseComponent{
       stageActivity: "YES",
       type: this.userType
     };
-    this.saveStageData = {
+    this.crmStatusData = {
       stageId: 0,
       companyName: this.userCompanyName,
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       stage: "",
       f1: "",
-      f2: "", 
-      f3: "", 
-      f4: "", 
-      f5: "", 
+      f2: "",
+      f3: "",
+      f4: "",
+      f5: "",
       f6: "",
       f7: "",
       f8: "",
-      f9: "", 
+      f9: "",
       f10: "",
       f11: "",
       f12: "",
@@ -203,8 +200,8 @@ export class CrmSettingsComponent extends BaseComponent{
       designationRole: ['', Validators.required],
       designationRoleId: [0, Validators.required,],
       curentUserEmail: [this.userEmail],
-      targetUserEmail: ['' ],
-      designationId : ['']
+      targetUserEmail: [''],
+      designationId: ['']
     });
 
     this.saveCrmUsersForm = this.fb.group({
@@ -216,64 +213,98 @@ export class CrmSettingsComponent extends BaseComponent{
       type: [this.userType]
     });
   }
-  dynamicFields: { value: string;}[] = [];
+  dynamicFields: { value: string; }[] = [];
   initializeDynamicFields(): void {
     this.dynamicFields = [];
-  
+
     if (this.stageLst && this.stageLst.length > 0) {
       const stage = this.stageLst[0]; // Assuming you want to display only the first stage
-  
+
       for (let i = 1; i <= 25; i++) {
         const value = stage[`f${i}`];
         if (value && value.trim() !== '') {
           this.dynamicFields.push({ value: value.trim() });
         }
       }
-  
+
       console.log('Dynamic Fields:', this.dynamicFields);
     }
   }
-  
-  saveStatus() {
-    this.switchService.SaveCrmStatus(this.saveData).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Stages saved successfully');
-          this.offcanvasService.dismiss();
-          this.getStatus();
-        } else {
-          this.toastr.error(res.message)
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    })
+
+  saveCrmStatus() {
+    this.crmStatusData.stage = this.selectedStage;
+    const allNames = this.checkboxStageOptions.map(option => option.name);
+    const uniqueNames = [...new Set(allNames)];
+    const dynamicFields = uniqueNames.map((name, index) => {
+      return { [`f${index + 1}`]: name };
+    });
+    this.crmStatusData = {
+      ...this.crmStatusData,
+      ...Object.assign({}, ...dynamicFields),
+    };
+    console.log(this.crmStatusData);
+    // this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
+    //   next: (res: any) => {
+    //     if (res) {
+    //       this.toastr.success('Status saved successfully');
+    //       this.offcanvasService.dismiss();
+    //       this.getCrmStatus();
+    //     } else {
+    //       this.toastr.error(res.message);
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.toastr.error(error.statusText);
+    //   },
+    // });
   }
-  getStatus() {
-    let payload = {
+
+  getCrmStatus(): void {
+    const payload = {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
-      CompanyName:this.userCompanyName,
-      type: this.userType
-    }
+      type: this.userType,
+      stage: this.selectedStage || 'In Progress Leads',
+    };
     this.switchService.CrmStatus(payload).subscribe({
       next: (res: any) => {
-        if (res) {
+        if (res && Array.isArray(res) && res.length > 0) {
           this.statusLst = res;
-          // this.initializeDynamicFields();
+          console.log(this.statusLst);
         } else {
-          this.toastr.error(res.message)
+          this.toastr.error('No stages found for this selection.');
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText);
+        const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
+        this.toastr.error(errorMessage);
+        console.error('Error fetching CRM status:', error);
       },
-    })
+    });
   }
-  saveStages() {
-    console.log(this.saveStageData)
-    this.switchService.SaveCrmStages(this.saveStageData).subscribe({
+
+  getDynamicFields(status: any): string[] {
+    const dynamicFields = [];
+    for (let i = 1; i <= 25; i++) {
+      const fieldName = `f${i}`;
+      if (status[fieldName]) {
+        dynamicFields.push(status[fieldName]);
+      }
+    }
+    return dynamicFields;
+  }
+
+
+  isHighlightedStatus(status: string): boolean {
+    const highlighted = ['In Progress Leads', 'Lost Leads', 'Converted Leads', 'Wrong Leads'];
+    return highlighted.includes(status);
+  }
+
+
+  saveCrmStages() {
+    this.prepareCrmStageData();
+    console.log(this.crmStageData);
+    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
       next: (res: any) => {
         if (res) {
           this.toastr.success('Stages saved successfully');
@@ -281,39 +312,68 @@ export class CrmSettingsComponent extends BaseComponent{
           this.getCrmStages();
           this.isAddStagesDisabled = true;
         } else {
-          this.toastr.error(res.message)
+          this.toastr.error(res.message);
         }
       },
       error: (error) => {
         this.toastr.error(error.statusText);
-      },
-    })
+      }
+    });
   }
+  addNewOption() {
+    const newName = this.newOptionName?.trim();
+    if (newName) {
+      const isDuplicate = this.checkboxStageOptions.some(
+        opt => opt.name.toLowerCase() === newName.toLowerCase()
+      );
+
+      if (!isDuplicate) {
+        this.checkboxStageOptions.push({
+          name: newName,
+          checked: false,
+          isCustom: true // Mark as custom
+        });
+      } else {
+        this.toastr.warning(`'${newName}' already exists`);
+      }
+      this.newOptionName = '';
+    }
+  }
+
+
+
+  prepareCrmStageData() {
+    const selectedStages = this.crmStaticStages
+      .filter(stage => stage.checked)
+      .map(stage => stage.name);
+
+    console.log("Selected Stages: ", selectedStages);
+    for (let i = 0; i < 25; i++) {
+      this.crmStageData[`f${i + 1}`] = selectedStages[i] || "";
+    }
+  }
+
   getCrmStages(): void {
     const payload = {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-  
+
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
         if (res && Array.isArray(res) && res.length > 0) {
-          const stageObj = res[0]; // Only one object as per your example
+          const stageObj = res[0];
           const extractedStages = [];
-  
-          // Loop through f1 to f25
           for (let i = 1; i <= 25; i++) {
             const key = `f${i}`;
             if (stageObj[key] && stageObj[key].trim() !== "") {
               extractedStages.push({ stageName: stageObj[key].trim() });
             }
           }
-  
           this.stageLst = extractedStages;
-          console.log("Extracted Stage List:", this.stageLst);
           this.isAddStagesDisabled = this.stageLst.length > 0;
-        } 
+        }
       },
       error: (error) => {
         console.error('CRM Stages Error:', error);
@@ -321,16 +381,36 @@ export class CrmSettingsComponent extends BaseComponent{
       },
     });
   }
+  deleteOption(index: number) {
+    const deleted = this.checkboxStageOptions[index]?.name;
+    this.checkboxStageOptions.splice(index, 1);
+    this.toastr.info(`'${deleted}' has been deleted`);
+  }
+
+
+  onStageChange() {
+    if (this.selectedStage === 'In Progress Leads') {
+      this.checkboxStageOptions = [...this.inPorgressLeads];
+    } else if (this.selectedStage === 'Lost Leads') {
+      this.checkboxStageOptions = [...this.lostLeads];
+    } else if (this.selectedStage === 'Converted Leads') {
+      this.checkboxStageOptions = [...this.convertedLeads];
+    } else {
+      this.checkboxStageOptions = [];
+    }
+  }
+
+
   onCheckboxChange() {
     const selectedPlans = this.crmStaticStages.filter((plan) => plan.checked);
     // Update f1 to f30 fields dynamically based on selected items
     selectedPlans.forEach((plan, index) => {
       if (index < 30) {
-        this.saveStageData[`f${index + 1}`] = plan.name;
+        this.crmStatusData[`f${index + 1}`] = plan.name;
       }
     });
     for (let i = selectedPlans.length; i < 30; i++) {
-      this.saveStageData[`f${i + 1}`] = '';
+      this.crmStatusData[`f${i + 1}`] = '';
     }
   }
   resetForm() {
@@ -352,7 +432,7 @@ export class CrmSettingsComponent extends BaseComponent{
     this.modalService.open(content2, { scrollable: true, centered: true, });
   }
   openLg3(content3: any) {
-    this.modalService.open(content3, { size: 'sm',  scrollable: true, centered: true, });
+    this.modalService.open(content3, { size: 'sm', scrollable: true, centered: true, });
   }
 
   ngAfterViewInit() {
@@ -360,7 +440,7 @@ export class CrmSettingsComponent extends BaseComponent{
     this.crmDataSource.paginator = this.crmPaginator;
   }
 
-  
+
 
   desigCrmSubmit(modal: any) {
     this.designCrmSubmitted = true;
@@ -375,9 +455,9 @@ export class CrmSettingsComponent extends BaseComponent{
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-      this.switchService.saveDesigCrm(payload).subscribe({
+    this.switchService.saveDesigCrm(payload).subscribe({
       next: (res: any) => {
-        this.isSubmitting = false; 
+        this.isSubmitting = false;
         if (res.status === true) {
           this.modalService.dismissAll(modal);
           this.designCrmForm.reset();
@@ -407,9 +487,9 @@ export class CrmSettingsComponent extends BaseComponent{
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-      this.switchService.saveDesigCrm(payload).subscribe({
+    this.switchService.saveDesigCrm(payload).subscribe({
       next: (res: any) => {
-        this.isSubmitting = false; 
+        this.isSubmitting = false;
         if (res.status === true) {
           this.modalService.dismissAll(modal);
           this.designCrmForm.reset();
@@ -459,7 +539,7 @@ export class CrmSettingsComponent extends BaseComponent{
         if (res) {
           this.crmDataSource.data = res;
           this.usersList = res.map((item: any) => ({
-            name: item.desigRole  
+            name: item.desigRole
           }));
         } else {
           this.toastr.error(res.message);
@@ -485,13 +565,20 @@ export class CrmSettingsComponent extends BaseComponent{
     if (this.crmPaginator && this.crmPaginator.pageIndex !== undefined && this.crmPaginator.pageSize !== undefined) {
       return this.crmPaginator.pageIndex * this.crmPaginator.pageSize + index + 1;
     }
-    return index + 1; 
+    return index + 1;
   }
 
   crmUsersgetSNo(index: number): number {
     if (this.crmAllPaginator && this.crmAllPaginator.pageIndex !== undefined && this.crmAllPaginator.pageSize !== undefined) {
       return this.crmAllPaginator.pageIndex * this.crmAllPaginator.pageSize + index + 1;
     }
-    return index + 1; 
+    return index + 1;
+  }
+
+  openRight4(content4: any) {
+    this.offcanvasService.open(content4, { position: 'end' });
+  }
+  openRight12(content12: any) {
+    this.offcanvasService.open(content12, { position: 'end' });
   }
 }
