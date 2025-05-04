@@ -116,14 +116,11 @@ export class CampaignsComponent extends BaseComponent {
       }
     });
   }
-  
-  
-  
-  
-  
-  
-  
-  
+  viewCampaignLeads(campaign: any) {
+    this.router.navigate(['/apps/crm/leads'], {
+      queryParams: { campaignId: campaign.campgnId }
+    });
+  }
   
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
