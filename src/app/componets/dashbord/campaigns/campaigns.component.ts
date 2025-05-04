@@ -86,6 +86,7 @@ export class CampaignsComponent extends BaseComponent {
             type: this.userType,
           });
           this.campaignSubmitted = false;
+          this.getCampaignData();
         } else {
           this.toastr.error(res.message);
         }
