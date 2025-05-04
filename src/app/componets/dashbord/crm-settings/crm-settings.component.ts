@@ -233,16 +233,23 @@ export class CrmSettingsComponent extends BaseComponent {
 
   saveCrmStatus() {
     this.crmStatusData.stage = this.selectedStage;
-    const allNames = this.checkboxStageOptions.map(option => option.name);
+    const selectedOptions = this.checkboxStageOptions.filter(option => option.checked);
+  
+    const allNames = selectedOptions.map(option => option.name);
     const uniqueNames = [...new Set(allNames)];
+  
     const dynamicFields = uniqueNames.map((name, index) => {
       return { [`f${index + 1}`]: name };
     });
+  
     this.crmStatusData = {
       ...this.crmStatusData,
       ...Object.assign({}, ...dynamicFields),
     };
+  
     console.log(this.crmStatusData);
+  
+    // ✅ Optional: call the API
     // this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
     //   next: (res: any) => {
     //     if (res) {
@@ -258,6 +265,8 @@ export class CrmSettingsComponent extends BaseComponent {
     //   },
     // });
   }
+  
+  
 
   getCrmStatus(): void {
     const payload = {
@@ -272,7 +281,7 @@ export class CrmSettingsComponent extends BaseComponent {
           this.statusLst = res;
           console.log(this.statusLst);
         } else {
-          this.toastr.error('No stages found for this selection.');
+          // this.toastr.error('No stages found for this selection.');
         }
       },
       error: (error) => {

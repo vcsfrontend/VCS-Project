@@ -117,6 +117,7 @@ export class CampaignsComponent extends BaseComponent {
       }
     });
   }
+  
   viewCampaignLeads(campaign: any) {
     this.router.navigate(['/apps/crm/leads'], {
       queryParams: { campaignId: campaign.campgnId }

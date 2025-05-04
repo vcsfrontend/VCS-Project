@@ -364,8 +364,8 @@
                 <div *ngFor="let option of checkboxStageOptions; let i = index"
                     class="form-check mb-2 d-flex justify-content-center">
 
-                    <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="option.checked"
-                        [id]="'checkbox-' + i" />
+                    <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="option.checked" [id]="'checkbox-' + i" />
+
 
                     <label class="form-check-label flex-grow-1" [for]="'checkbox-' + i">
                         {{ option.name }}
