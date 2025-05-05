@@ -346,45 +346,53 @@
         </div>
     </div>
     <div class="offcanvas-body p-0">
+        <!-- Stage Selection -->
         <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
-            <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
-                bindValue="stageName" [multiple]="false" (change)="onStageChange()" required
-                #stageModel="ngModel">
-            </ng-select>
+          <ng-select [(ngModel)]="selectedStage"
+                     placeholder="Select Stage"
+                     [items]="stageLst"
+                     bindLabel="stageName"
+                     bindValue="stageName"
+                     [multiple]="false"
+                     (change)="onStageChange()"
+                     required>
+          </ng-select>
         </div>
-        <div *ngIf="checkboxStageOptions.length > 0" class="container mt-3 ms-3">             
-            <div class="col-12">
-                <div *ngFor="let option of checkboxStageOptions; let i = index"
-                    class="form-check mb-2 d-flex">
-
-                    <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="option.checked" [id]="'checkbox-' + i" />
-
-
-                    <label class="form-check-label w-50" [for]="'checkbox-' + i">
-                        {{ option.name }}
-                    </label>
-                    <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
-                        Delete
-                    </button>
-                </div>
+      
+        <!-- Status Options Display + Add -->
+        <div *ngIf="selectedStage && checkboxStageOptions" class="container mt-3 ms-3">
+          <div class="col-12">
+            <div *ngFor="let option of checkboxStageOptions; let i = index"
+                 class="form-check mb-2 d-flex">
+              <input class="form-check-input me-2 mt-1"
+                     type="checkbox"
+                     [(ngModel)]="option.checked"
+                     [id]="'checkbox-' + i" />
+              <label class="form-check-label w-50" [for]="'checkbox-' + i">
+                {{ option.name }}
+              </label>
+              <button class="btn btn-danger btn-sm ms-2"
+                      *ngIf="option.isCustom"
+                      (click)="deleteOption(i)">
+                Delete
+              </button>
             </div>
-
-            <!-- Add new option -->
-            <div class="row mt-3">
-                <div class="col-xl-4 mb-3">
-                    <input [(ngModel)]="newOptionName" type="text" class="form-control"
-                        placeholder="Enter new status name" />
-                    <div class="text-danger mt-1" *ngIf="showNameError">
-                        Please enter the status name.
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary" (click)="addNewOption()">Save</button>
-                </div>
+          </div>
+      
+          <!-- Add New Status Option -->
+          <div class="row mt-3">
+            <div class="col-xl-4 mb-3">
+              <input [(ngModel)]="newOptionName"
+                     type="text"
+                     class="form-control"
+                     placeholder="Enter new status name" />
             </div>
+            <div class="col-md-4 mb-3">
+              <button class="btn btn-primary" (click)="addNewOption()">Save</button>
+            </div>
+          </div>
         </div>
-
-    </div>
+      </div>      
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
             <button class="btn btn-primary" type="button" (click)="saveCrmStatus()">Save Status</button>
