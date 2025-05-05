@@ -221,9 +221,7 @@
                             [ngModel]="stage.stageName" [ngModelOptions]="{ standalone: true }" readonly>
                     </div>
                 </div>
-                <button type="button"
-                    class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2">Save</button>&nbsp;
-                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
             </div>
         </div>
     </div>
@@ -240,16 +238,14 @@
                 <ul>
                     <li *ngFor="let status of statusLst">
                         <strong>{{ status.stage }}</strong>
-                        <ul>
-                            <li *ngFor="let field of getDynamicFields(status)">
+                        <ul class="list-group mt-3">
+                            <li *ngFor="let field of getDynamicFields(status)" class="list-group-item">
                                 {{ field }}
                             </li>
                         </ul>
                     </li>
                 </ul>
-                <button type="button"
-                    class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2">Save</button>&nbsp;
-                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
             </div>
         </div>
     </div>
@@ -269,9 +265,7 @@
                             placeholder="Enter your Status">
                     </div>
                 </div>
-                <button type="button"
-                    class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2">Save</button>&nbsp;
-                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
             </div>
         </div>
     </div>
@@ -291,9 +285,7 @@
                             placeholder="Enter your Status">
                     </div>
                 </div>
-                <button type="button"
-                    class="btn btn-primary btn-sm btn-wave waves-effect waves-light mt-2">Save</button>&nbsp;
-                <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
             </div>
         </div>
     </div>
@@ -356,18 +348,19 @@
     <div class="offcanvas-body p-0">
         <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
             <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
-                bindValue="stageName" [multiple]="false" (change)="onStageChange()">
+                bindValue="stageName" [multiple]="false" (change)="onStageChange()" required
+                #stageModel="ngModel">
             </ng-select>
         </div>
-        <div *ngIf="checkboxStageOptions.length > 0" class="container mt-3 ms-3">
+        <div *ngIf="checkboxStageOptions.length > 0" class="container mt-3 ms-3">             
             <div class="col-12">
                 <div *ngFor="let option of checkboxStageOptions; let i = index"
-                    class="form-check mb-2 d-flex justify-content-center">
+                    class="form-check mb-2 d-flex">
 
                     <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="option.checked" [id]="'checkbox-' + i" />
 
 
-                    <label class="form-check-label flex-grow-1" [for]="'checkbox-' + i">
+                    <label class="form-check-label w-50" [for]="'checkbox-' + i">
                         {{ option.name }}
                     </label>
                     <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
@@ -381,9 +374,12 @@
                 <div class="col-xl-4 mb-3">
                     <input [(ngModel)]="newOptionName" type="text" class="form-control"
                         placeholder="Enter new status name" />
+                    <div class="text-danger mt-1" *ngIf="showNameError">
+                        Please enter the status name.
+                    </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary" (click)="addNewOption()">Add</button>
+                    <button class="btn btn-primary" (click)="addNewOption()">Save</button>
                 </div>
             </div>
         </div>
