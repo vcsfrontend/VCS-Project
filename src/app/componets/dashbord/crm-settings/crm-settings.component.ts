@@ -52,12 +52,18 @@ export class CrmSettingsComponent extends BaseComponent {
   newOptionName: string = ''; status: string = 'In Progress Leads';
   isStagesLoading: boolean = true; showValidationError = false;
   showCheckboxError = false;showNameError = false;
+  statusOptionsByStage: { [stageName: string]: any[] } = {};
 
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
     private fb: FormBuilder,
   ) {
 
     super();
+    this.statusOptionsByStage = {
+      'In Progress Leads': [...this.inPorgressLeads],
+      'Lost Leads': [...this.lostLeads],
+      'Converted Leads': [...this.convertedLeads],
+    };
   }
 
   crmStaticStages = [
@@ -247,6 +253,7 @@ export class CrmSettingsComponent extends BaseComponent {
     }
     this.crmStatusData.stage = this.selectedStage;
     const selectedOptions = this.checkboxStageOptions.filter(option => option.checked);
+    const currentStageOptions = this.statusOptionsByStage[this.selectedStage] || [];
     if (selectedOptions.length === 0) {
       this.showCheckboxError = true;
       this.toastr.error('Please select at least one status.');
@@ -260,9 +267,12 @@ export class CrmSettingsComponent extends BaseComponent {
     const dynamicFields = uniqueNames.map((name, index) => {
       return { [`f${index + 1}`]: name };
     });
-  
+    const customStatuses = currentStageOptions
+  .filter(opt => opt.isCustom)
+  .map(opt => opt.name);
     this.crmStatusData = {
       ...this.crmStatusData,
+      customStatuses, // ✅ send this to backend
       ...Object.assign({}, ...dynamicFields),
     };
   
@@ -285,22 +295,30 @@ export class CrmSettingsComponent extends BaseComponent {
     });
   }
   
-  
-
   getCrmStatus(): void {
     const payload = {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType,
-      stage: this.selectedStage || 'In Progress Leads',
+      stage: this.selectedStage ||'Lost Leads', 
     };
+  console.log(payload)
     this.switchService.CrmStatus(payload).subscribe({
       next: (res: any) => {
         if (res && Array.isArray(res) && res.length > 0) {
           this.statusLst = res;
-          console.log(this.statusLst);
+  
+          const options = this.statusLst.map((item: any) => ({
+            name: item.name,
+            checked: false,
+            isCustom: item.isCustom || false,
+          }));
+  
+          this.checkboxStageOptions = [...options]; // ✅ for display
+          this.statusOptionsByStage[this.selectedStage] = [...options]; // ✅ for future use (add/edit)
         } else {
-          // this.toastr.error('No stages found for this selection.');
+          this.checkboxStageOptions = [];
+          this.statusOptionsByStage[this.selectedStage] = [];
         }
       },
       error: (error) => {
@@ -310,6 +328,7 @@ export class CrmSettingsComponent extends BaseComponent {
       },
     });
   }
+  
 
   getDynamicFields(status: any): string[] {
     const dynamicFields = [];
@@ -355,27 +374,32 @@ export class CrmSettingsComponent extends BaseComponent {
   }
   addNewOption() {
     const newName = this.newOptionName?.trim();
+
     if (!newName) {
       this.toastr.error('Please enter a status name.');
       return;
     }
-    if (newName) {
-      const isDuplicate = this.checkboxStageOptions.some(
-        opt => opt.name.toLowerCase() === newName.toLowerCase()
-      );
-      
 
-      if (!isDuplicate) {
-        this.checkboxStageOptions.push({
-          name: newName,
-          checked: false,
-          isCustom: true // Mark as custom
-        });
-      } else {
-        this.toastr.warning(`'${newName}' already exists`);
-      }
-      this.newOptionName = '';
+    const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
+
+    const isDuplicate = currentStageOptions.some(
+      opt => opt.name.toLowerCase() === newName.toLowerCase()
+    );
+
+    if (!isDuplicate) {
+      currentStageOptions.push({
+        name: newName,
+        checked: false,
+        isCustom: true
+      });
+
+      this.checkboxStageOptions = [...currentStageOptions];
+      this.toastr.success('Status added.');
+    } else {
+      this.toastr.warning(`'${newName}' already exists`);
     }
+
+    this.newOptionName = '';
   }
 
 
@@ -434,15 +458,13 @@ export class CrmSettingsComponent extends BaseComponent {
 
 
   onStageChange() {
-    if (this.selectedStage === 'In Progress Leads') {
-      this.checkboxStageOptions = [...this.inPorgressLeads];
-    } else if (this.selectedStage === 'Lost Leads') {
-      this.checkboxStageOptions = [...this.lostLeads];
-    } else if (this.selectedStage === 'Converted Leads') {
-      this.checkboxStageOptions = [...this.convertedLeads];
-    } else {
-      this.checkboxStageOptions = [];
+    console.log('Selected Stage:', this.selectedStage);
+    if (!this.statusOptionsByStage[this.selectedStage]) {
+      this.statusOptionsByStage[this.selectedStage] = []; 
     }
+
+    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage];
+
   }
 
 
