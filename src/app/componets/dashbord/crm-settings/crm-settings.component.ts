@@ -68,9 +68,9 @@ export class CrmSettingsComponent extends BaseComponent {
   }
 
   crmStaticStages = [
-    { name: 'In Progress Leads', checked: false, isDefault: true },
-    { name: 'Lost Leads', checked: false, isDefault: true },
-    { name: 'Converted Leads', checked: false, isDefault: true },
+    { name: 'In Progress Leads', checked: false, isDefault: true,isCustom:false },
+    { name: 'Lost Leads', checked: false, isDefault: true,isCustom:false },
+    { name: 'Converted Leads', checked: false, isDefault: true,isCustom:false },
   ];
 
 
@@ -88,15 +88,22 @@ export class CrmSettingsComponent extends BaseComponent {
         name: this.newItem.trim(),
         checked: false,
         isDefault: false,
+        isCustom: true,
+
       });
-      this.newItem = '';
+      this.toastr.success('Item added Successfully');
     } else if (itemExists) {
       this.toastr.warning('This item already exists!');
     }
+    this.newItem = '';
+
     this.leaditems.push({ checked: false, label: '' });
   }
   deleteLeadItem(index: number) {
+    const deleted = this.crmStaticStages[index]?.name;
     this.crmStaticStages.splice(index, 1);
+    this.toastr.error(`'${deleted}' has been deleted`);
+
   }
   addLeadStatusItem() {
     this.leadStatusitems.push({ checked: false, label: '' });
@@ -244,7 +251,6 @@ export class CrmSettingsComponent extends BaseComponent {
       console.log('Dynamic Fields:', this.dynamicFields);
     }
   }
-
   saveCrmStatus():void {
     if (!this.selectedStage) {
       this.showValidationError = true;
@@ -299,56 +305,59 @@ export class CrmSettingsComponent extends BaseComponent {
   
   getCrmStatus(): void {
     let completedRequests = 0;
-
+  
     for (let i = 0; i < this.stageLst.length; i++) {
+      const stageName = this.stageLst[i].stageName; // fix: capture value locally
+      console.log('stages are',stageName)
       const payload = {
         email: this.userEmail,
         companyCode: this.userCompanyCode,
         type: this.userType,
-        stage: this.stageLst[i].stageName,
+        stage: stageName,
       };
-
+  
       const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
       this.switchService.CrmStatus(payload).subscribe({
         next: (res: any) => {
-          const options = Array.isArray(res) ?
-            fields
-              .filter(field => res[0][field]) // skip empty values
-              .map(field => ({
-                name: res[0][field],
-                checked: false,
-                isCustom: false
-              }))
+          const options = Array.isArray(res)
+            ? fields
+                .filter(field => res[0][field]) // skip empty values
+                .map(field => ({
+                  name: res[0][field],
+                  checked: false,
+                  isCustom: false
+                }))
             : [];
-
-          this.statusOptionsByStage[this.stageLst[i].stageName] = (options);
+  
+          this.statusOptionsByStage[stageName] = options;  // use local stageName
         },
         error: (error) => {
           const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
           this.toastr.error(errorMessage);
-          this.statusOptionsByStage[this.stageLst[i].stageName] = [];
+          this.statusOptionsByStage[stageName] = [];
           console.error('Error fetching CRM status:', error);
         },
         complete: () => {
           completedRequests++;
           if (completedRequests === this.stageLst.length) {
+            const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
+        
+            // Filter only selected stages from all statusOptionsByStage
             this.statusLst = Object.entries(this.statusOptionsByStage)
-              .filter(([key]) => key.trim() !== "")
+              .filter(([stage]) => selectedStageNames.includes(stage)) // ✅ Only show selected stages
               .map(([stage, fields]) => ({
                 stage,
                 fields
               }));
-
-            console.log(this.statusLst);
-            console.log(this.statusOptionsByStage);
+        
+            console.log("Filtered status list (only selected stages):", this.statusLst);
           }
         }
+          
       });
     }
-
-  }
+  }  
   
-
   getDynamicFields(status: any): string[] {
     const dynamicFields = [];
     for (let i = 1; i <= 25; i++) {
@@ -369,7 +378,7 @@ export class CrmSettingsComponent extends BaseComponent {
 
   saveCrmStages() {
     this.prepareCrmStageData();
-    console.log(this.crmStageData);
+    console.log("saved crmstages",this.crmStageData);
     const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
     if (selectedStages.length === 0) {
       this.toastr.error('Please select at least one stage before saving.');
@@ -393,35 +402,34 @@ export class CrmSettingsComponent extends BaseComponent {
   }
   addNewOption() {
     const newName = this.newOptionName?.trim();
-
+  
     if (!newName) {
       this.toastr.error('Please enter a status name.');
       return;
     }
-
+  
     const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
-
+  
+    // Check if the item already exists in current options
     const isDuplicate = currentStageOptions.some(
       opt => opt.name.toLowerCase() === newName.toLowerCase()
     );
-
-    if (!isDuplicate) {
+  
+    if (this.newOptionName.trim() && !isDuplicate) {
       currentStageOptions.push({
-        name: newName,
+        name: this.newOptionName,
         checked: false,
         isCustom: true
       });
-
+  
       this.checkboxStageOptions = [...currentStageOptions];
       this.toastr.success('Status added.');
     } else {
       this.toastr.warning(`'${newName}' already exists`);
     }
-
+  
     this.newOptionName = '';
   }
-
-
 
   prepareCrmStageData() {
     const selectedStages = this.crmStaticStages
@@ -455,7 +463,7 @@ export class CrmSettingsComponent extends BaseComponent {
             }
           }
           this.stageLst = extractedStages;
-          console.log(extractedStages);
+          console.log("extracted stages are ",extractedStages);
           this.getCrmStatus(); 
           this.isAddStagesDisabled = this.stageLst.length > 0;
         }
@@ -472,9 +480,20 @@ export class CrmSettingsComponent extends BaseComponent {
     });
   }
   deleteOption(index: number) {
-    const deleted = this.checkboxStageOptions[index]?.name;
+    const deletedOption = this.checkboxStageOptions[index];
+
     this.checkboxStageOptions.splice(index, 1);
-    this.toastr.error(`'${deleted}' has been deleted`);
+
+    const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
+    const mainIndex = currentStageOptions.findIndex(
+      opt => opt.name.toLowerCase() === deletedOption.name.toLowerCase()
+    );
+
+    if (mainIndex !== -1) {
+      currentStageOptions.splice(mainIndex, 1);
+    }
+
+    this.toastr.error(`'${deletedOption.name}' has been deleted`);
   }
 
 

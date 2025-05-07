@@ -308,6 +308,9 @@
                             <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="plan.checked"
                                 [id]="'plan-' + i">
                             <label class="form-check-label flex-grow-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom" (click)="deleteLeadItem(i)">
+                                Delete
+                            </button>
                         </div>
                     </div>
                 </div>

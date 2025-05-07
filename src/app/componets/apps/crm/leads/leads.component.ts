@@ -288,7 +288,7 @@ export class LeadsComponent extends BaseComponent {
       address: [''],
       contact: ['', [Validators.required, Validators.maxLength(10)]],
       email: [''],
-      leadId: [''],
+      leadId: [0],
       currentStage: [''],
       updatedBy: [JSON.parse(this.userData).username],
       updatedTime: [''],
