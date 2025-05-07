@@ -11,6 +11,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-crm-settings',
@@ -123,7 +124,8 @@ export class CrmSettingsComponent extends BaseComponent {
   }
 
   ngOnInit() {
-    this.getCrmStatus(); this.getCrmStages();
+    this.getCrmStages();
+    // this.getCrmStatus(); 
     this.getDesignationCrmRloes(); this.getUsers();
     this.crmStageData = {
       stageId: 0,
@@ -272,7 +274,7 @@ export class CrmSettingsComponent extends BaseComponent {
   .map(opt => opt.name);
     this.crmStatusData = {
       ...this.crmStatusData,
-      customStatuses, // ✅ send this to backend
+      customStatuses, 
       ...Object.assign({}, ...dynamicFields),
     };
   
@@ -284,7 +286,7 @@ export class CrmSettingsComponent extends BaseComponent {
         if (res) {
           this.toastr.success('Status saved successfully');
           this.offcanvasService.dismiss();
-          this.getCrmStatus();
+          this.getCrmStages();
         } else {
           this.toastr.error(res.message);
         }
@@ -296,37 +298,54 @@ export class CrmSettingsComponent extends BaseComponent {
   }
   
   getCrmStatus(): void {
-    const payload = {
-      email: this.userEmail,
-      companyCode: this.userCompanyCode,
-      type: this.userType,
-      stage: this.selectedStage ||'Lost Leads', 
-    };
-  console.log(payload)
-    this.switchService.CrmStatus(payload).subscribe({
-      next: (res: any) => {
-        if (res && Array.isArray(res) && res.length > 0) {
-          this.statusLst = res;
-  
-          const options = this.statusLst.map((item: any) => ({
-            name: item.name,
-            checked: false,
-            isCustom: item.isCustom || false,
-          }));
-  
-          this.checkboxStageOptions = [...options]; // ✅ for display
-          this.statusOptionsByStage[this.selectedStage] = [...options]; // ✅ for future use (add/edit)
-        } else {
-          this.checkboxStageOptions = [];
-          this.statusOptionsByStage[this.selectedStage] = [];
+    let completedRequests = 0;
+
+    for (let i = 0; i < this.stageLst.length; i++) {
+      const payload = {
+        email: this.userEmail,
+        companyCode: this.userCompanyCode,
+        type: this.userType,
+        stage: this.stageLst[i].stageName,
+      };
+
+      const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
+      this.switchService.CrmStatus(payload).subscribe({
+        next: (res: any) => {
+          const options = Array.isArray(res) ?
+            fields
+              .filter(field => res[0][field]) // skip empty values
+              .map(field => ({
+                name: res[0][field],
+                checked: false,
+                isCustom: false
+              }))
+            : [];
+
+          this.statusOptionsByStage[this.stageLst[i].stageName] = (options);
+        },
+        error: (error) => {
+          const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
+          this.toastr.error(errorMessage);
+          this.statusOptionsByStage[this.stageLst[i].stageName] = [];
+          console.error('Error fetching CRM status:', error);
+        },
+        complete: () => {
+          completedRequests++;
+          if (completedRequests === this.stageLst.length) {
+            this.statusLst = Object.entries(this.statusOptionsByStage)
+              .filter(([key]) => key.trim() !== "")
+              .map(([stage, fields]) => ({
+                stage,
+                fields
+              }));
+
+            console.log(this.statusLst);
+            console.log(this.statusOptionsByStage);
+          }
         }
-      },
-      error: (error) => {
-        const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
-        this.toastr.error(errorMessage);
-        console.error('Error fetching CRM status:', error);
-      },
-    });
+      });
+    }
+
   }
   
 
@@ -436,6 +455,8 @@ export class CrmSettingsComponent extends BaseComponent {
             }
           }
           this.stageLst = extractedStages;
+          console.log(extractedStages);
+          this.getCrmStatus(); 
           this.isAddStagesDisabled = this.stageLst.length > 0;
         }
         else {

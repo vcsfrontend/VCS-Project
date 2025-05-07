@@ -351,21 +351,21 @@ export class DealsComponent extends BaseComponent {
 
 
   getCrmUsers() {
-    this.switchService.CrmLeads().subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.Crmusers = res;
-          this.dataSource.data = res;
-          this.leadCount = res.length;
-          console.log(res);
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    })
+    // this.switchService.CrmLeads().subscribe({
+    //   next: (res: any) => {
+    //     if (res) {
+    //       this.Crmusers = res;
+    //       this.dataSource.data = res;
+    //       this.leadCount = res.length;
+    //       console.log(res);
+    //     } else {
+    //       this.toastr.error(res.message);
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.toastr.error(error.statusText);
+    //   },
+    // })
   }
 
   preventCopyPaste(event: ClipboardEvent): void {
