@@ -49,7 +49,9 @@ export class LeadsComponent extends BaseComponent {
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList : any;
-  campaignId !: string;
+  campaignId !: string; stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
+  statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any; allStatuses: any;
+  selectedStage: string = ''; checkboxStageOptions: any[] = [];
   chartOptions:any 
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -214,6 +216,7 @@ export class LeadsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
+    this.getCrmStages();
     this.route.queryParams.subscribe((params: any) => {
       this.campaignId = params['campaignId']?.trim() || '';
       console.log(this.campaignId)
@@ -312,22 +315,139 @@ export class LeadsComponent extends BaseComponent {
       console.log('Campaign ID from form:', payload.campaignId);
   
       // Make API call or further processing
-      this.switchService.AddCrmLeads(payload).subscribe({
-        next: (res: any) => {
-          if (res.status) {
-            modal.close();
-            this.submitted = false;
-            this.leadForm.reset();
-            this.getCrmLeads();
-            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-          } else {
-            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      // this.switchService.AddCrmLeads(payload).subscribe({
+      //   next: (res: any) => {
+      //     if (res.status) {
+      //       modal.close();
+      //       this.submitted = false;
+      //       this.leadForm.reset();
+      //       this.getCrmLeads();
+      //       this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      //     } else {
+      //       this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      //     }
+      //   },
+      //   error: (error) => {
+      //     this.toastr.error(error.statusText);
+      //   },
+      // });
+    }
+  }
+
+
+  getCrmStages(): void {
+    this.isStagesLoading = true;
+    this.isAddStagesDisabled = true;
+    const payload = {
+      email: this.userData ? JSON.parse(this.userData).email : '',
+      companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
+      type: this.userData ? JSON.parse(this.userData).type : '',
+    };
+
+    this.switchService.CrmStages(payload).subscribe({
+      next: (res: any) => {
+        if (res && Array.isArray(res) && res.length > 0) {
+          const stageObj = res[0];
+          const extractedStages = [];
+          for (let i = 1; i <= 25; i++) {
+            const key = `f${i}`;
+            if (stageObj[key] && stageObj[key].trim() !== "") {
+              extractedStages.push({ stageName: stageObj[key].trim() });
+            }
           }
+          this.stageLst = extractedStages;
+          console.log(extractedStages);
+          this.getCrmStatus(); 
+          this.isAddStagesDisabled = this.stageLst.length > 0;
+        }
+        else {
+          this.stageLst = [];
+          this.isAddStagesDisabled = false;
+        }
+        this.isStagesLoading = false;
+      },
+      error: (error) => {
+        console.error('CRM Stages Error:', error);
+        this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
+      },
+    });
+  }
+
+  getCrmStatus(): void {
+    let completedRequests = 0;
+    for (let i = 0; i < this.stageLst.length; i++) {
+      const payload = {
+        email: this.userData ? JSON.parse(this.userData).email : '',
+        companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
+        type: this.userData ? JSON.parse(this.userData).type : '',
+        stage: this.stageLst[i].stageName,
+      };
+      const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
+      this.switchService.CrmStatus(payload).subscribe({
+        next: (res: any) => {
+          const options = Array.isArray(res) ?
+            fields
+              .filter(field => res[0][field]) // skip empty values
+              .map(field => ({
+                name: res[0][field],
+                checked: false,
+                isCustom: false
+              }))
+            : [];
+
+          this.statusOptionsByStage[this.stageLst[i].stageName] = (options);
         },
         error: (error) => {
-          this.toastr.error(error.statusText);
+          const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
+          this.toastr.error(errorMessage);
+          this.statusOptionsByStage[this.stageLst[i].stageName] = [];
+          console.error('Error fetching CRM status:', error);
         },
+        complete: () => {
+          completedRequests++;
+          if (completedRequests === this.stageLst.length) {
+            this.statusLst = Object.entries(this.statusOptionsByStage)
+              .filter(([key]) => key.trim() !== "")
+              .map(([stage, fields]) => ({
+                stage,
+                fields
+              }));
+              this.allStatuses = this.statusLst
+                .flatMap((group: { stage: string; fields: { name: string }[] }) =>
+                  group.fields.map((f: { name: string }) => ({
+                    name: f.name,
+                    stage: group.stage
+                  }))
+                );
+            console.log(this.statusLst);
+            console.log(this.statusOptionsByStage);
+          }
+        }
       });
+    }
+
+  }
+  
+  onStageChange(): void {
+    const selectedStage = this.leadForm.get('stage')?.value;
+    console.log('Selected Stage:', selectedStage);
+    this.checkboxStageOptions = this.statusOptionsByStage[selectedStage] || [];
+  
+    if (selectedStage === 'In Progress Leads') {
+      this.setInProgressStatus();
+    }
+    this.leadForm.get('status')?.setValue(null);
+  }
+  
+
+
+  setInProgressStatus(): void {
+    console.log('Setting In Progress Status...');
+    const inProgressStatus = this.checkboxStageOptions.find(option => option.name === 'In Progress');
+
+    if (inProgressStatus) {
+      inProgressStatus.checked = true;
+      console.log('In Progress Status selected:', inProgressStatus);
     }
   }
   
