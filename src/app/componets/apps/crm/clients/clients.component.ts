@@ -173,20 +173,20 @@ export class ClientsComponent extends BaseComponent {
   }
 
   getProposal() {
-    this.switchService.CrmLeads().subscribe({
-      next: (res: any) => {
-        if (res) {          
-          this.dataSource.data = res;
-          this.clientsCount = res.length;
-          console.log(res);
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    })
+    // this.switchService.CrmLeads().subscribe({
+    //   next: (res: any) => {
+    //     if (res) {          
+    //       this.dataSource.data = res;
+    //       this.clientsCount = res.length;
+    //       console.log(res);
+    //     } else {
+    //       this.toastr.error(res.message);
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.toastr.error(error.statusText);
+    //   },
+    // })
   }
 
 

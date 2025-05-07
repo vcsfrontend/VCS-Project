@@ -206,46 +206,45 @@
 <div class="row mt-4">
     <div class="col-xl-3">
         <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">Lead Stages
-                </div>
-                <div class="d-flex float-end">
-                    <button class="btn btn-primary" type="button" (click)="openRight4(content4)"
-                        [disabled]="isAddStagesDisabled">Add Stages</button>
-                </div>
+          <div class="card-header justify-content-between d-flex">
+            <div class="card-title">Lead Stages</div>
+            <button class="btn btn-primary btn-sm ms-auto" type="button" (click)="openRight4(content4)">Add Stages</button>
+          </div>
+          <div class="card-body p-3" style="max-height: 345px; overflow-y: auto;">
+            <div *ngFor="let stage of stageLst; let i = index" class="row mb-3 align-items-center">
+              <div class="col-sm-12">
+                <input type="text" class="form-control form-control-sm p-2 font-weight-bold border"
+                  [ngModel]="stage.stageName" [ngModelOptions]="{ standalone: true }" readonly>
+              </div>
             </div>
-            <div class="container mt-4 mb-4">
-                <div *ngFor="let stage of stageLst; let i = index" class="row mb-3 align-items-center">
-                    <div class="col-sm-12">
-                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border"
-                            [ngModel]="stage.stageName" [ngModelOptions]="{ standalone: true }" readonly>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
-            </div>
+          </div>
+          <div class="card-footer text-end">
+            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+          </div>
         </div>
-    </div>
+      </div>
+      
     <div class="col-xl-3">
         <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">Lead Status
-                </div>
-                <div class="d-flex float-end">
-                    <button class="btn btn-primary" type="button" (click)="openRight12(content12)">Add Status</button>
-                </div>
+            <div class="card-header justify-content-between d-flex">
+                <div class="card-title">Lead Status</div>
+                <button class="btn btn-primary ms-auto" type="button" (click)="openRight12(content12)">Add
+                    Status</button>
             </div>
-            <div class="container mt-4 mb-4" *ngIf="stageLst">
-                <ul>
-                    <li *ngFor="let status of statusLst">
+            <div class="card-body p-3" style="max-height: 340px; overflow-y: auto;" *ngIf="statusLst">
+                <ul class="list-unstyled">
+                    <li *ngFor="let status of statusLst" class="mb-3">
                         <strong>{{ status.stage }}</strong>
-                        <ul class="list-group mt-3">
-                            <li *ngFor="let field of getDynamicFields(status)" class="list-group-item">
-                                {{ field }}
+                        <ul class="list-group mt-2">
+                            <li *ngFor="let field of status.fields" class="list-group-item">
+                                {{ field.name }}
                             </li>
                         </ul>
                     </li>
                 </ul>
-                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
+            </div>
+            <div class="card-footer text-end">
+                <button type="button" class="btn btn-danger btn-sm">Delete</button>
             </div>
         </div>
     </div>
@@ -294,7 +293,7 @@
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
         <div class="mb-3">
-            <button class="btn btn-primary gappp" type="button" (click)="toggleAddMore()">Add</button>
+            <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
                 data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
@@ -315,12 +314,11 @@
                 <div class="container mt-3">
                     <div *ngIf="addMoreVisible" class="col-12">
                         <div class="row">
-                            <div class="col-xl-4 mb-3">
+                            <div class="col-xl-6 mb-3">
                                 <input type="text" class="form-control" placeholder="Enter value" [(ngModel)]="newItem">
                             </div>
-                            <div class="col-xl-4 mb-3">
-                                <button class="btn btn-primary gappp" type="button"
-                                    (click)="addLeadItem()">Save</button>
+                            <div class="col-xl-2 mb-3">
+                                <button class="btn btn-primary " type="button" (click)="addLeadItem()">Save</button>
                             </div>
                         </div>
                     </div>
@@ -348,51 +346,38 @@
     <div class="offcanvas-body p-0">
         <!-- Stage Selection -->
         <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
-          <ng-select [(ngModel)]="selectedStage"
-                     placeholder="Select Stage"
-                     [items]="stageLst"
-                     bindLabel="stageName"
-                     bindValue="stageName"
-                     [multiple]="false"
-                     (change)="onStageChange()"
-                     required>
-          </ng-select>
+            <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
+                bindValue="stageName" [multiple]="false" (change)="onStageChange()" required>
+            </ng-select>
         </div>
-      
+
         <!-- Status Options Display + Add -->
         <div *ngIf="selectedStage && checkboxStageOptions" class="container mt-3 ms-3">
-          <div class="col-12">
-            <div *ngFor="let option of checkboxStageOptions; let i = index"
-                 class="form-check mb-2 d-flex">
-              <input class="form-check-input me-2 mt-1"
-                     type="checkbox"
-                     [(ngModel)]="option.checked"
-                     [id]="'checkbox-' + i" />
-              <label class="form-check-label w-50" [for]="'checkbox-' + i">
-                {{ option.name }}
-              </label>
-              <button class="btn btn-danger btn-sm ms-2"
-                      *ngIf="option.isCustom"
-                      (click)="deleteOption(i)">
-                Delete
-              </button>
+            <div class="col-12">
+                <div *ngFor="let option of checkboxStageOptions; let i = index" class="form-check mb-2 d-flex">
+                    <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="option.checked"
+                        [id]="'checkbox-' + i" />
+                    <label class="form-check-label w-50" [for]="'checkbox-' + i">
+                        {{ option.name }}
+                    </label>
+                    <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
+                        Delete
+                    </button>
+                </div>
             </div>
-          </div>
-      
-          <!-- Add New Status Option -->
-          <div class="row mt-3">
-            <div class="col-xl-4 mb-3">
-              <input [(ngModel)]="newOptionName"
-                     type="text"
-                     class="form-control"
-                     placeholder="Enter new status name" />
+
+            <!-- Add New Status Option -->
+            <div class="row mt-3">
+                <div class="col-xl-4 mb-3">
+                    <input [(ngModel)]="newOptionName" type="text" class="form-control"
+                        placeholder="Enter new status name" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button class="btn btn-primary" (click)="addNewOption()">Save</button>
+                </div>
             </div>
-            <div class="col-md-4 mb-3">
-              <button class="btn btn-primary" (click)="addNewOption()">Save</button>
-            </div>
-          </div>
         </div>
-      </div>      
+    </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
             <button class="btn btn-primary" type="button" (click)="saveCrmStatus()">Save Status</button>

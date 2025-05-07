@@ -49,8 +49,8 @@ export class LeadsComponent extends BaseComponent {
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList : any;
-
-  chartOptions:any
+  campaignId !: string;
+  chartOptions:any 
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
@@ -84,7 +84,7 @@ export class LeadsComponent extends BaseComponent {
 
   public allocateForm!: FormGroup;
   public allocateSubmitted = false;
-  campgnId: string = '';
+  // campgnId: string = '';
   leads:any;
   selectedIdList: Set<number> = new Set<number>();
 
@@ -214,15 +214,14 @@ export class LeadsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
-    //Lead Form Validatoin
     this.route.queryParams.subscribe((params: any) => {
-      console.log('Query Params:', params);
-      this.campgnId = params['campaignId'] ? params['campaignId'].trim() : '';      
-      console.log('Campaign ID from query params:', this.campgnId);
-      this.initLeadForm(this.campgnId);
-      this.getCrmLeads();
-      
+      this.campaignId = params['campaignId']?.trim() || '';
+      console.log(this.campaignId)
+      this.LeadForm(this.campaignId);   
+      this.getCrmLeads();    
     });
+    
+    
 
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
@@ -268,8 +267,8 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
-  initLeadForm(campgnId: string) {
-    console.log('Campaign ID inside initLeadForm:', campgnId);
+  LeadForm(campaignId: string) {
+    console.log('Campaign ID inside initLeadForm:', campaignId);
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       companyName: [''],
@@ -291,7 +290,7 @@ export class LeadsComponent extends BaseComponent {
       updatedBy: [JSON.parse(this.userData).username],
       updatedTime: [''],
       entryBy: [JSON.parse(this.userData).username],
-      campaignId: [campgnId]
+      campaignId: [this.campaignId]
     });
     console.log('campaignId in form:', this.leadForm.get('campaignId')?.value);
 
@@ -303,57 +302,36 @@ export class LeadsComponent extends BaseComponent {
   }
 
   onSubmit(modal: any) {
-    const payload = this.leadForm.value;
+    this.leadForm.get('campaignId')?.setValue(this.campaignId);
+    const payload = this.leadForm.value;  // Get the form values
     console.log('Add Lead Payload:', payload);
-    console.log('Campaign ID in Payload:', payload.campaignId);  // Check campaignId separately
+  
     this.submitted = true;
-    if (this.leadForm?.valid) {  // Optional chaining is a safety check
-      this.leadDetails.name = this.f['name'].value;
-      this.leadDetails.companyName = this.f['companyName'].value ? this.f['companyName'].value : '';
-      this.leadDetails.executive = this.f['executive'].value;
-      this.leadDetails.products = this.f['products'].value;
-      this.leadDetails.country = this.f['country'].value;
-      this.leadDetails.stage = this.f['stage'].value;
-      this.leadDetails.status = this.f['status'].value;
-      this.leadDetails.leadSource = this.f['leadSource'].value;
-      this.leadDetails.zipCode = this.f['zipCode'].value;
-      this.leadDetails.followUpDate = this.f['followUpDate'].value;
-      this.leadDetails.state = this.f['state'].value;
-      this.leadDetails.city = this.f['city'].value;
-      this.leadDetails.address = this.f['address'].value;
-      this.leadDetails.contact = this.f['contact'].value;
-      this.leadDetails.email = this.f['email'].value;
-      this.leadDetails.leadId = this.f['leadId'].value;
-      this.leadDetails.currentStage = this.f['currentStage'].value;
-      this.leadDetails.updatedBy = JSON.parse(this.userData).username;
-      this.leadDetails.updatedTime = this.f['updatedTime'].value;
-      this.leadDetails.entryBy = JSON.parse(this.userData).username;
-      this.leadDetails.campaignId = this.leadForm.get('campgnId')?.value;
-      console.log('campaignId from form:', this.leadForm.get('campaignId')?.value);
-
-
-      // this.switchService.AddCrmLeads(this.leadDetails).subscribe({
-      //   next: (res: any) => {
-      //     if (res.status == true) {
-      //       modal.close();
-      //       this.submitted = false;
-      //       this.leadForm.reset();
-      //       this.toastr.success(res.message, 'lead', {
-      //         timeOut: 3000, positionClass: 'toast-top-right'
-      //       });
-      //     } else {
-      //       this.toastr.error(res.message, 'lead', {
-      //         timeOut: 3000, positionClass: 'toast-top-right'
-      //       });
-      //     }
-      //   },
-      //   error: (error) => {
-      //     this.toastr.error(error.statusText);
-      //   },
-      // })
-
+  
+    if (this.leadForm?.valid) {
+      console.log('Campaign ID from form:', payload.campaignId);
+  
+      // Make API call or further processing
+      this.switchService.AddCrmLeads(payload).subscribe({
+        next: (res: any) => {
+          if (res.status) {
+            modal.close();
+            this.submitted = false;
+            this.leadForm.reset();
+            this.getCrmLeads();
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+          } else {
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      });
     }
   }
+  
+  
 
   getStatusClass(status: string): string {
     switch (status?.toLowerCase()) {
@@ -396,7 +374,8 @@ export class LeadsComponent extends BaseComponent {
   }
 
   getCrmLeads(): void {
-    this.switchService.CrmLeads().subscribe({
+    const campaignId = this.campaignId;
+    this.switchService.CrmLeads(campaignId).subscribe({
       next: (res: any) => {
         if (res) {
           this.crmLeadsList = res;

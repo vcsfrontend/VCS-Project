@@ -427,7 +427,6 @@
     </div>
     <form [formGroup]="leadForm" (ngSubmit)="onSubmit(modal)">
         <div class="modal-body">
-
             <div class="row gy-3 scrollable-content">
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="name" class="form-label">Name</label>
@@ -473,7 +472,6 @@
                     <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
                         placeholder="Select an option">
                     </ng-select>
-                    
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label">Lead Source</label>
@@ -525,9 +523,7 @@
                     <input type="text" class="form-control  " id="email" placeholder="Enter your email"
                         onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
                         (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
-                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email"
-                    >
-                    
+                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email">
                 </div>
             </div>
         </div>
