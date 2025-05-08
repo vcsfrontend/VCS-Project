@@ -366,43 +366,11 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xl-4">
+    <div class="col-xl-4" *ngFor="let stage of stageLst; let i = index">
         <div class="card custom-card">
             <div class="card-header border-bottom-0 justify-content-between">
                 <div class="card-title">
-                   In-Progress Leads
-                </div>
-            </div>
-            <div class="card-body border-top">
-                <div id="pie-basic">
-                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [legend]="chartOptions.legend"
-                            [labels]="chartOptions.labels" [responsive]="chartOptions.responsive" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels">
-                    </apx-chart>
-                </div>
-            </div>
-        </div>
-    </div>    
-    <div class="col-xl-4">
-        <div class="card custom-card">
-            <div class="card-header border-bottom-0 justify-content-between">
-                <div class="card-title">
-                    Lost Leads
-                </div>
-            </div>
-            <div class="card-body border-top">
-                <div id="pie-basic">
-                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [legend]="chartOptions.legend"
-                            [labels]="chartOptions.labels" [responsive]="chartOptions.responsive" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels">
-                    </apx-chart>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4">
-        <div class="card custom-card">
-            <div class="card-header border-bottom-0 justify-content-between">
-                <div class="card-title">
-                    Converted Leads
+                    {{ stage.stageName }}
                 </div>
             </div>
             <div class="card-body border-top">

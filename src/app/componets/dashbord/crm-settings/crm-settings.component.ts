@@ -54,7 +54,7 @@ export class CrmSettingsComponent extends BaseComponent {
   isStagesLoading: boolean = true; showValidationError = false;
   showCheckboxError = false;showNameError = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {};
-
+  statusOptionsByStageforDisplay : any = {};
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
     private fb: FormBuilder,
   ) {
@@ -91,7 +91,7 @@ export class CrmSettingsComponent extends BaseComponent {
         isCustom: true,
 
       });
-      this.toastr.success('Item added Successfully');
+      this.toastr.info('Item added Successfully');
     } else if (itemExists) {
       this.toastr.warning('This item already exists!');
     }
@@ -316,9 +316,12 @@ export class CrmSettingsComponent extends BaseComponent {
         stage: stageName,
       };
   
+      
+      console.log(this.statusOptionsByStageforDisplay)
       const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
       this.switchService.CrmStatus(payload).subscribe({
         next: (res: any) => {
+          if(res.length==1){
           const options = Array.isArray(res)
             ? fields
                 .filter(field => res[0][field]) // skip empty values
@@ -329,12 +332,14 @@ export class CrmSettingsComponent extends BaseComponent {
                 }))
             : [];
   
-          this.statusOptionsByStage[stageName] = options;  // use local stageName
+          this.statusOptionsByStageforDisplay[stageName] = options;  // use local stageName
+          console.log(this.statusOptionsByStageforDisplay)
+          }
         },
         error: (error) => {
           const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
           this.toastr.error(errorMessage);
-          this.statusOptionsByStage[stageName] = [];
+          this.statusOptionsByStageforDisplay[stageName] = [];
           console.error('Error fetching CRM status:', error);
         },
         complete: () => {
@@ -343,7 +348,7 @@ export class CrmSettingsComponent extends BaseComponent {
             const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
         
             // Filter only selected stages from all statusOptionsByStage
-            this.statusLst = Object.entries(this.statusOptionsByStage)
+            this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
               .filter(([stage]) => selectedStageNames.includes(stage)) // ✅ Only show selected stages
               .map(([stage, fields]) => ({
                 stage,
@@ -423,7 +428,7 @@ export class CrmSettingsComponent extends BaseComponent {
       });
   
       this.checkboxStageOptions = [...currentStageOptions];
-      this.toastr.success('Status added.');
+      this.toastr.info('item added.');
     } else {
       this.toastr.warning(`'${newName}' already exists`);
     }
@@ -498,14 +503,37 @@ export class CrmSettingsComponent extends BaseComponent {
 
 
   onStageChange() {
+    this.checkboxStageOptions = [];
+    console.log(this.checkboxStageOptions)
+
     console.log('Selected Stage:', this.selectedStage);
     if (!this.statusOptionsByStage[this.selectedStage]) {
       this.statusOptionsByStage[this.selectedStage] = []; 
     }
-
+    
     this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage];
-
+    console.log(this.checkboxStageOptions)
+    
+    if(this.statusOptionsByStageforDisplay[this.selectedStage]){
+    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage].map(item => {
+      const existsInSelected = this.statusOptionsByStageforDisplay[this.selectedStage].some((selected: { name: any; }) => selected.name === item.name);
+      return { ...item, checked: existsInSelected };
+    });
+    this.anyChecked = true;
   }
+  else{
+    this.anyChecked = false;
+  }
+  
+  // this.anyChecked = this.checkboxStageOptions.some(
+  //   (item) => {console.log(item.checked);return item.checked === true}
+  // );
+  
+    
+  console.log(this.checkboxStageOptions, this.anyChecked);
+  }
+
+  anyChecked:any;
 
 
   onCheckboxChange() {
