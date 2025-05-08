@@ -306,6 +306,10 @@ export class LeadsComponent extends BaseComponent {
 
   onSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
+    this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).username);
+    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
+    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
+    this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;  // Get the form values
     console.log('Add Lead Payload:', payload);
   
@@ -315,22 +319,22 @@ export class LeadsComponent extends BaseComponent {
       console.log('Campaign ID from form:', payload.campaignId);
   
       // Make API call or further processing
-      // this.switchService.AddCrmLeads(payload).subscribe({
-      //   next: (res: any) => {
-      //     if (res.status) {
-      //       modal.close();
-      //       this.submitted = false;
-      //       this.leadForm.reset();
-      //       this.getCrmLeads();
-      //       this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-      //     } else {
-      //       this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-      //     }
-      //   },
-      //   error: (error) => {
-      //     this.toastr.error(error.statusText);
-      //   },
-      // });
+      this.switchService.AddCrmLeads(payload).subscribe({
+        next: (res: any) => {
+          if (res.status) {
+            modal.close();
+            this.submitted = false;
+            this.leadForm.reset();
+            this.getCrmLeads();
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+          } else {
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      });
     }
   }
 
