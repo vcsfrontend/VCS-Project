@@ -28,7 +28,8 @@ export class CampaignsComponent extends BaseComponent {
   campaignForm!: FormGroup; 
   isSubmitting: boolean = false;  modal:any;
   public campaignSubmitted = false; campaignList: any[] = [];
-
+  public userList: any;
+  userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
 
   constructor(private modalService: NgbModal, public switchService: SwitherService,
     private offcanvasService: NgbOffcanvas,  private toastr: ToastrService, private fb: FormBuilder,private router: Router,
@@ -37,6 +38,7 @@ export class CampaignsComponent extends BaseComponent {
   }
 
   ngOnInit(): void {
+    this.getUsers();
     this.getCampaignData();
     this.campaignForm = this.fb.group({
       campaignId: [0],
@@ -73,6 +75,7 @@ export class CampaignsComponent extends BaseComponent {
       type: this.userType,
       agents: agents, 
     };
+    console.log(payload)
     this.switchService.saveCampaignData(payload).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;
@@ -116,6 +119,40 @@ export class CampaignsComponent extends BaseComponent {
         this.toastr.error(err.statusText || "An error occurred while fetching data.");
       }
     });
+  }
+  getUsers() {
+    if (this.userData.type == 2) {
+      let cn = this.userCompanyName;
+      let cc = this.userCompanyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.userList = res;
+          } else {
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+    }
+  }
+
+  getAgentColor(name: string): string {
+    const index = Math.abs(this.hashString(name.trim())) % this.userColors.length;
+    return this.userColors[index];
+  }
+  
+  private hashString(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
   }
   
   viewCampaignLeads(campaign: any) {
