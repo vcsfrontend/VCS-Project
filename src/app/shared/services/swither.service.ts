@@ -162,5 +162,7 @@ export class SwitherService {
   designationCrmRloes(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_designation_roles`, data); }  
   saveCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_campaign`, data); } 
   displayCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/list_campaigns`, data); }
+  StatusCount(campaignId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_count_Status?campaignId=${campaignId}`); }  
+
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
