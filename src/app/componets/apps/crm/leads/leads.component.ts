@@ -51,12 +51,12 @@ export class LeadsComponent extends BaseComponent {
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList: any;
   campaignId !: string; stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any; allStatuses: any;
-  selectedStage: string = ''; checkboxStageOptions: any[] = [];
+  selectedStage: string = ''; checkboxStageOptions: any[] = [];selectedStatusCount: number | null = null;
   chartOptions: any; statusOptionsByStageforDisplay: any = {};
   stageColorMap: Map<string, string> = new Map();
   statusColorMap: Map<string, string> = new Map();
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
-
+  statusClicked= false;statusCounts: { status: string; count: number }[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -223,6 +223,9 @@ export class LeadsComponent extends BaseComponent {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
       this.getCrmLeads();
+      if (this.campaignId) {
+        this.getStatusCount();
+      } 
     });
 
 
@@ -510,6 +513,26 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
+  getStatusCount(): void {
+    this.statusClicked = false;
+    // this.selectedStatus = statusName;
+    this.selectedStatusCount = null;
+    const campaignId = this.campaignId;
+    this.switchService.StatusCount(campaignId).subscribe({
+      next: (res: any[]) => {
+        console.log('Backend response:', res); // Debug here
+        if (Array.isArray(res)) {
+          this.statusCounts = res;
+        } else {
+          this.toastr.error('Unexpected response format.');
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || 'Server error.');
+      }
+    });
+  }
+
 
   preventCopyPaste(event: ClipboardEvent): void {
     event.preventDefault();
@@ -869,6 +892,20 @@ export class LeadsComponent extends BaseComponent {
   pondHandleAddFile(event: any) {
   }
   pondHandleActivateFile(event: any) {
+  }
+  getSeriesData(fields: any[]): number[] {
+    return fields.map((field) => {
+      const foundStatus = this.statusCounts.find(status => status.status === field.name);
+      return foundStatus ? foundStatus.count : 0; 
+    });
+  }
+  
+  getLabelData(fields: any[]): string[] {
+    return fields.map((field) => {
+      const foundStatus = this.statusCounts.find(status => status.status === field.name);
+      const count = foundStatus ? foundStatus.count : 0;
+      return `${field.name} (${count})`; 
+    });
   }
   editorContent: string = '<p>Start writing here...</p>';
 
