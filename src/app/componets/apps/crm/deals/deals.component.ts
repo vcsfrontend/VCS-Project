@@ -12,7 +12,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 import { FirebaseService } from '../../../../shared/services/firebase.service';
@@ -27,16 +27,15 @@ import { FilePondComponent, FilePondModule } from 'ngx-filepond';
 import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
-import flatpickr from 'flatpickr';
-import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @Component({
-  selector: 'app-deals',
+  selector: 'app-leads',
   standalone: true,
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
     AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
-    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule,OverlayscrollbarsModule],
+    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule,NgApexchartsModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './deals.component.html',
@@ -44,23 +43,26 @@ import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
   encapsulation: ViewEncapsulation.None
 })
 export class DealsComponent extends BaseComponent {
-  displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
+  displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email'];
+  usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
-  pageSize = 5;
-  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
-
+  usersDataSource = new MatTableDataSource<any>();
+  pageSize = 10;
+  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList : any;
+  campaignId !: string; stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
+  statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any; allStatuses: any;
+  selectedStage: string = ''; checkboxStageOptions: any[] = [];
+  chartOptions:any ;  statusOptionsByStageforDisplay : any = {};
+  stageColorMap: Map<string, string> = new Map();
+  statusColorMap: Map<string, string> = new Map();
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
-  inlineDatePicker: boolean = false;
-  weekNumbers!: true
-  // selectedDate: Date | null = null; 
-  flatpickrOptions: any = {
-    inline: true,
-   
-  };
+  @ViewChild('sort2') sort2!: MatSort;
+  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  
+
   public leadForm!: FormGroup;
-  public dealForm!: FormGroup;
   public submitted = false;
   selectedCountry: string = 'India';
   public leadDetails: any = {};
@@ -86,7 +88,8 @@ export class DealsComponent extends BaseComponent {
 
   public allocateForm!: FormGroup;
   public allocateSubmitted = false;
-
+  // campgnId: string = '';
+  leads:any;
   selectedIdList: Set<number> = new Set<number>();
 
   public pieChartOptions: ChartOptions<'pie'> = {
@@ -113,13 +116,32 @@ export class DealsComponent extends BaseComponent {
   public pieChartPlugins = [];
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
-    private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder
+    private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder,
+    private route: ActivatedRoute
   ) {
     super();
     this.userData = localStorage.getItem('userDetails');
+    this.chartOptions={
+      series: [44, 55, 13, 43, 22],
+      chart: {
+          height: 300,
+          type: 'pie',
+      },
+      colors: ["#845adf", "#23b7e5", "#f5b849", "#49b6f5", "#e6533c"],
+      labels: ['Hot 250', 'Payment Status 50', 'Call Back Later 190',],
+      legend: {
+          position: "bottom"
+      },
+      dataLabels: {
+          dropShadow: {
+              enabled: false
+          }
+      },
+      }
   }
-
-
+  open(content7: any) {
+    this.modalService.open(content7, { centered: true });
+  }
   openModal(content1: any) {
     this.modalService.open(content1, { centered: true });
   }
@@ -153,6 +175,8 @@ export class DealsComponent extends BaseComponent {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.usersDataSource.paginator = this.usersPaginator;
+    this.usersDataSource.sort = this.sort2;
   }
 
   getSNo(index: number): number {
@@ -161,15 +185,31 @@ export class DealsComponent extends BaseComponent {
     }
     return index + 1;
   }
+  usersGetSNo(index: number): number {
+    if (this.usersPaginator && this.usersPaginator.pageIndex !== undefined && this.usersPaginator.pageSize !== undefined) {
+      return this.usersPaginator.pageIndex * this.usersPaginator.pageSize + index + 1;
+    }
+    return index + 1;
+  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-  VerticallyScrol(content12: any) {
-    
-    this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
+  userFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.usersDataSource.filter = filterValue.trim().toLowerCase();
   }
-  
+  VerticallyScrol(content12: any) {
+    this.leadId = 0;
+    this.submitted = false;
+    this.leadForm.reset();
+    this.modalService.open(content12, { backdrop: 'static', keyboard: false, scrollable: true, centered: true, size: 'xl' });
+  }
+  // openLg(content10:any) {
+  //   this.modalService.open(content10, { size: 'lg' },);
+  // }
+
+
   options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
 
   // FormControl for search and selection
@@ -178,41 +218,15 @@ export class DealsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
-     this.flatpickrOptions = {
-          enableTime: true,
-          noCalendar: true,
-          dateFormat: 'H:i',
-        };
-    
-        flatpickr('#inlinetime', this.flatpickrOptions);
-    
-          this.flatpickrOptions = {
-            enableTime: true,
-            dateFormat: 'Y-m-d H:i', 
-            defaultDate: '2023-11-07 14:30', 
-          };
-    
-          flatpickr('#pretime', this.flatpickrOptions);
-    //Lead Form Validatoin
-    this.dealForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      contact: ['', [Validators.required, Validators.maxLength(10)]],
-      email: ['', [Validators.required, Validators.email]],
-      executive: [''],
-      country: [''],
-      dealstage: ['', [Validators.required]],
-      dealstatus: ['', [Validators.required]],
-      dealSource: [''],
-      followUpDate: [''],
-      closuredate:[''],
-      dealfor:[''],
-      dealvalue:[0],
-      Probability:[0],
-      followuptime:[''],
-      gstno:[''],
-      description:[''],
-      leadId: [''],
+    this.getCrmStages();
+    this.route.queryParams.subscribe((params: any) => {
+      this.campaignId = params['campaignId']?.trim() || '';
+      console.log(this.campaignId)
+      this.LeadForm(this.campaignId);   
+      this.getCrmLeads();    
     });
+    
+    
 
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
@@ -245,8 +259,6 @@ export class DealsComponent extends BaseComponent {
       executive: ['', [Validators.required]]
     });
 
-    this.getCrmUsers();
-
     this.getUsers();
     // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
@@ -260,75 +272,241 @@ export class DealsComponent extends BaseComponent {
       }
     });
   }
+  LeadForm(campaignId: string) {
+    console.log('Campaign ID inside initLeadForm:', campaignId);
+    this.leadForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      companyName: [''],
+      executive: [''],
+      products: [''],
+      country: [''],
+      stage: [''],
+      status: [''],
+      leadSource: [''],
+      zipCode: [''],
+      followUpDate: [''],
+      state: [''],
+      city: [''],
+      address: [''],
+      contact: ['', [Validators.required, Validators.maxLength(10)]],
+      email: [''],
+      leadId: [0],
+      currentStage: [''],
+      updatedBy: [JSON.parse(this.userData).username],
+      updatedTime: [''],
+      entryBy: [JSON.parse(this.userData).username],
+      campaignId: [this.campaignId]
+    });
+    console.log('campaignId in form:', this.leadForm.get('campaignId')?.value);
 
+  }
+ 
 
   get f() {
     return this.leadForm.controls;
   }
 
   onSubmit(modal: any) {
+    this.leadForm.get('campaignId')?.setValue(this.campaignId);
+    this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).username);
+    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
+    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
+    this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
+    const payload = this.leadForm.value;  // Get the form values
+    console.log('Add Lead Payload:', payload);
+  
     this.submitted = true;
-    if (this.leadForm?.valid) {  // Optional chaining is a safety check
-      this.leadDetails.name = this.f['name'].value;
-      this.leadDetails.companyName = this.f['companyName'].value ? this.f['companyName'].value : '';
-      this.leadDetails.executive = this.f['executive'].value;
-      //this.leadDetails.products = this.f['products'].value;
-      this.leadDetails.country = this.f['country'].value;
-      // this.leadDetails.stage = this.f['stage'].value;
-      this.leadDetails.status = this.f['status'].value;
-      this.leadDetails.leadSource = this.f['leadSource'].value;
-      this.leadDetails.zipCode = this.f['zipCode'].value;
-      this.leadDetails.followUpDate = this.f['followUpDate'].value;
-      this.leadDetails.state = this.f['state'].value;
-      this.leadDetails.city = this.f['city'].value;
-      this.leadDetails.address = this.f['address'].value;
-      this.leadDetails.contact = this.f['contact'].value;
-      this.leadDetails.email = this.f['email'].value;
-      this.leadDetails.leadId = this.f['leadId'].value;
-
-      this.switchService.AddCrmLeads(this.leadDetails).subscribe({
+  
+    if (this.leadForm?.valid) {
+      console.log('Campaign ID from form:', payload.campaignId);
+  
+      // Make API call or further processing
+      this.switchService.AddCrmLeads(payload).subscribe({
         next: (res: any) => {
-          if (res.status == true) {
+          if (res.status) {
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
+            this.getCrmLeads();
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           }
         },
         error: (error) => {
           this.toastr.error(error.statusText);
         },
-      })
-
+      });
     }
   }
+
+
+  getCrmStages(): void {
+    this.isStagesLoading = true;
+    this.isAddStagesDisabled = true;
+    const payload = {
+      email: this.userData ? JSON.parse(this.userData).email : '',
+      companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
+      type: this.userData ? JSON.parse(this.userData).type : '',
+    };
+    const stageColorClasses = [
+      'bg-success-transparent',
+      'bg-warning-transparent',
+      'bg-dark-transparent',
+      'bg-primary-transparent',
+      'bg-purple-transparent',
+      'bg-danger-transparent',
+      'bg-info-transparent',
+      'bg-secondary-transparent'
+    ];
+
+    this.switchService.CrmStages(payload).subscribe({
+      next: (res: any) => {
+        if (res && Array.isArray(res) && res.length > 0) {
+          const stageObj = res[0];
+          const extractedStages = [];
+          for (let i = 1; i <= 25; i++) {
+            const key = `f${i}`;
+            if (stageObj[key] && stageObj[key].trim() !== "") {
+              extractedStages.push({
+                stageName: stageObj[key].trim(),
+                colorClass: stageColorClasses[extractedStages.length % stageColorClasses.length]
+              });
+            }
+          }
+          this.stageLst = extractedStages;
+          this.stageColorMap = new Map(
+            extractedStages.map(stage => [
+              stage.stageName.trim().toLowerCase(), 
+              stage.colorClass
+            ])
+          );
+          console.log(this.stageColorMap)         
+          console.log(extractedStages);
+          this.getCrmStatus(); 
+          this.isAddStagesDisabled = this.stageLst.length > 0;
+        }
+        else {
+          this.stageLst = [];
+          this.isAddStagesDisabled = false;
+        }
+        this.isStagesLoading = false;       
+      },
+      error: (error) => {
+        console.error('CRM Stages Error:', error);
+        this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
+      },
+    });
+  }
+  getStageClass(stage: string): string {
+    const baseClass = 'badge ps-3 fs-11';
+    const key = stage?.trim().toLowerCase();  
+    const color = this.stageColorMap.get(key) || 'bg-secondary-transparent'; 
+    return `${baseClass} ${color}`;
+  }
+  
+  
+  
+
+  getCrmStatus(): void {
+    let completedRequests = 0;
+  
+    for (let i = 0; i < this.stageLst.length; i++) {
+      const stageName = this.stageLst[i].stageName; // fix: capture value locally
+      console.log('stages are',stageName)
+      const payload = {
+        email: this.userData ? JSON.parse(this.userData).email : '',
+        companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
+        type: this.userData ? JSON.parse(this.userData).type : '',
+        stage: stageName,
+      };
+  
+      
+      console.log(this.statusOptionsByStageforDisplay)
+      const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
+      this.switchService.CrmStatus(payload).subscribe({
+        next: (res: any) => {
+          if(res.length==1){
+          const options = Array.isArray(res)
+            ? fields
+                .filter(field => res[0][field]) // skip empty values
+                .map(field => ({
+                  name: res[0][field],
+                  checked: false,
+                  isCustom: false
+                }))
+            : [];
+  
+          this.statusOptionsByStageforDisplay[stageName] = options;  // use local stageName
+          console.log(this.statusOptionsByStageforDisplay)
+          }
+        },
+        error: (error) => {
+          const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
+          this.toastr.error(errorMessage);
+          this.statusOptionsByStageforDisplay[stageName] = [];
+          console.error('Error fetching CRM status:', error);
+        },
+        complete: () => {
+          completedRequests++;
+          if (completedRequests === this.stageLst.length) {
+            const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
+        
+            // Filter only selected stages from all statusOptionsByStage
+            this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
+              .filter(([stage]) => selectedStageNames.includes(stage)) // ✅ Only show selected stages
+              .map(([stage, fields]) => ({
+                stage,
+                fields
+              }));
+              this.statusColorMap = new Map(
+                this.allStatuses.map((status: { name: string; colorClass: any; }) => [status.name.toLowerCase(), status.colorClass])
+              );
+        
+            console.log("Filtered status list (only selected stages):", this.statusLst);
+          }
+        }
+          
+      });
+    }
+  }
+  
+  
+  onStageChange(): void {
+    const selectedStage = this.leadForm.get('stage')?.value;
+    console.log('Selected Stage:', selectedStage);
+    this.checkboxStageOptions = this.statusOptionsByStage[selectedStage] || [];
+  
+    if (selectedStage === 'In Progress Leads') {
+      this.setInProgressStatus();
+    }
+    this.leadForm.get('status')?.setValue(null);
+  }
+  
+
+
+  setInProgressStatus(): void {
+    console.log('Setting In Progress Status...');
+    const inProgressStatus = this.checkboxStageOptions.find(option => option.name === 'In Progress');
+
+    if (inProgressStatus) {
+      inProgressStatus.checked = true;
+      console.log('In Progress Status selected:', inProgressStatus);
+    }
+  }
+  
+  
 
   getStatusClass(status: string): string {
-    switch (status?.toLowerCase()) {
-      case "active":
-        return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
-      case "proposal sent":
-        return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
-      case "meeting fixed":
-        return "badge bg-dark-transparent ps-3 fs-11 order-status going";
-      case "met":
-        return "badge bg-primary-transparent ps-3 fs-11 order-status live";
-      case "spoke":
-        return "badge bg-purple-transparent ps-3 fs-11 order-status spoke";
-      case "closed":
-        return "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
-      case "converted to deal/opportunity":
-        return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
-      default:
-        return "bg-secondary";
-    }
+    const baseClass = 'badge ps-3 fs-11 order-status';
+    const color = this.statusColorMap.get(status?.toLowerCase()) || 'bg-secondary-transparent';
+    return `${baseClass} ${color}`;
   }
+  
+
+  
+  
+  
 
   filterStatusList(event: any): void {
     console.log('Chart Clicked:', event);
@@ -349,23 +527,21 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.patchValue({ country: data });
   }
 
-
-  getCrmUsers() {
-    // this.switchService.CrmLeads().subscribe({
-    //   next: (res: any) => {
-    //     if (res) {
-    //       this.Crmusers = res;
-    //       this.dataSource.data = res;
-    //       this.leadCount = res.length;
-    //       console.log(res);
-    //     } else {
-    //       this.toastr.error(res.message);
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.toastr.error(error.statusText);
-    //   },
-    // })
+  getCrmLeads(): void {
+    const campaignId = this.campaignId;
+    this.switchService.CrmLeads(campaignId).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.crmLeadsList = res;
+          this.dataSource.data = this.crmLeadsList;
+        } else {
+          this.toastr.error(res.message || 'Failed to load leads.');
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || 'Server Error');
+      },
+    });
   }
 
   preventCopyPaste(event: ClipboardEvent): void {
@@ -509,7 +685,6 @@ export class DealsComponent extends BaseComponent {
       this.switchService.ViewCrmLeads(element.leadId).subscribe({
         next: (res: any) => {
           if (res.leadsEntry) {
-            console.log(res);
             this.leadForm.patchValue(res.leadsEntry);
             this.leadForm.patchValue({ contact: this.formatMobileNumber(res.leadsEntry.contact) });
             this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
@@ -615,7 +790,6 @@ export class DealsComponent extends BaseComponent {
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
-            console.log(res);
             this.userList = res;
           } else {
             this.toastr.error(res.message, 'signup', {
@@ -759,4 +933,13 @@ export class DealsComponent extends BaseComponent {
     defaultFontSize: '2',
     toolbarHiddenButtons: [['bold', 'italic']],
   };
+
+  usersData = [
+    { name: 'Alice Johnson', role: 'Manager', email: 'alice.johnson@example.com', date: '2025-04-25', callsAttempted: 25, callsConnected: 18 },
+    { name: 'Bob Smith', role: 'Sales Executive', email: 'bob.smith@example.com', date: '2025-04-24', callsAttempted: 30, callsConnected: 22 },
+    { name: 'Catherine Lee', role: 'Account Manager', email: 'catherine.lee@example.com', date: '2025-04-24', callsAttempted: 20, callsConnected: 15 },
+    { name: 'David Brown', role: 'Sales Executive', email: 'david.brown@example.com', date: '2025-04-23', callsAttempted: 18, callsConnected: 10 },
+    { name: 'Ella Davis', role: 'Manager', email: 'ella.davis@example.com', date: '2025-04-22', callsAttempted: 28, callsConnected: 20 },
+  ];
+  
 }

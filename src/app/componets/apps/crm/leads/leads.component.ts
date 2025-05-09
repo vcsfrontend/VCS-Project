@@ -35,7 +35,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule,
     AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule, MatSortModule,
-    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule,NgApexchartsModule],
+    NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule, NgApexchartsModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, DatePipe, NgbModalConfig, NgbModal],
 
   templateUrl: './leads.component.html',
@@ -43,22 +43,25 @@ import { NgApexchartsModule } from 'ng-apexcharts';
   encapsulation: ViewEncapsulation.None
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
+  displayedColumns: string[] = ['select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
-  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList : any;
+  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList: any;
   campaignId !: string; stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any; allStatuses: any;
   selectedStage: string = ''; checkboxStageOptions: any[] = [];
-  chartOptions:any 
-  
+  chartOptions: any; statusOptionsByStageforDisplay: any = {};
+  stageColorMap: Map<string, string> = new Map();
+  statusColorMap: Map<string, string> = new Map();
+  userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('sort2') sort2!: MatSort;
-  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
+  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
 
   public leadForm!: FormGroup;
   public submitted = false;
@@ -87,14 +90,14 @@ export class LeadsComponent extends BaseComponent {
   public allocateForm!: FormGroup;
   public allocateSubmitted = false;
   // campgnId: string = '';
-  leads:any;
+  leads: any;
   selectedIdList: Set<number> = new Set<number>();
 
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom',  // Set the legend position to bottom
+        position: 'bottom',  
       },
     },
   };
@@ -108,7 +111,7 @@ export class LeadsComponent extends BaseComponent {
     'Lost'
   ];
   public pieChartDatasets = [{
-    data: [200, 150, 100,43,23,78],
+    data: [200, 150, 100, 43, 23, 78],
   }];
   public pieChartLegend = true;
   public pieChartPlugins = [];
@@ -119,23 +122,23 @@ export class LeadsComponent extends BaseComponent {
   ) {
     super();
     this.userData = localStorage.getItem('userDetails');
-    this.chartOptions={
+    this.chartOptions = {
       series: [44, 55, 13, 43, 22],
       chart: {
-          height: 300,
-          type: 'pie',
+        height: 300,
+        type: 'pie',
       },
       colors: ["#845adf", "#23b7e5", "#f5b849", "#49b6f5", "#e6533c"],
       labels: ['Hot 250', 'Payment Status 50', 'Call Back Later 190',],
       legend: {
-          position: "bottom"
+        position: "bottom"
       },
       dataLabels: {
-          dropShadow: {
-              enabled: false
-          }
+        dropShadow: {
+          enabled: false
+        }
       },
-      }
+    }
   }
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
@@ -207,7 +210,6 @@ export class LeadsComponent extends BaseComponent {
   //   this.modalService.open(content10, { size: 'lg' },);
   // }
 
-
   options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
 
   // FormControl for search and selection
@@ -216,15 +218,13 @@ export class LeadsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
-    this.getCrmStages();
+    this.getCrmStages(); 
     this.route.queryParams.subscribe((params: any) => {
       this.campaignId = params['campaignId']?.trim() || '';
-      console.log(this.campaignId)
-      this.LeadForm(this.campaignId);   
-      this.getCrmLeads();    
+      this.LeadForm(this.campaignId);
+      this.getCrmLeads();
     });
-    
-    
+
 
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
@@ -271,7 +271,6 @@ export class LeadsComponent extends BaseComponent {
     });
   }
   LeadForm(campaignId: string) {
-    console.log('Campaign ID inside initLeadForm:', campaignId);
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       companyName: [''],
@@ -295,10 +294,7 @@ export class LeadsComponent extends BaseComponent {
       entryBy: [JSON.parse(this.userData).username],
       campaignId: [this.campaignId]
     });
-    console.log('campaignId in form:', this.leadForm.get('campaignId')?.value);
-
   }
- 
 
   get f() {
     return this.leadForm.controls;
@@ -310,15 +306,9 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
-    const payload = this.leadForm.value;  // Get the form values
-    console.log('Add Lead Payload:', payload);
-  
+    const payload = this.leadForm.value;
     this.submitted = true;
-  
     if (this.leadForm?.valid) {
-      console.log('Campaign ID from form:', payload.campaignId);
-  
-      // Make API call or further processing
       this.switchService.AddCrmLeads(payload).subscribe({
         next: (res: any) => {
           if (res.status) {
@@ -338,6 +328,18 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+  getUserColor(user: any): string {
+    const index = Math.abs(this.hashString(user.email)) % this.userColors.length;
+    return this.userColors[index];
+  }
+
+  private hashString(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+  }
 
   getCrmStages(): void {
     this.isStagesLoading = true;
@@ -347,6 +349,16 @@ export class LeadsComponent extends BaseComponent {
       companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
       type: this.userData ? JSON.parse(this.userData).type : '',
     };
+    const stageColorClasses = [
+      'bg-success-transparent',
+      'bg-warning-transparent',
+      'bg-dark-transparent',
+      'bg-primary-transparent',
+      'bg-purple-transparent',
+      'bg-danger-transparent',
+      'bg-info-transparent',
+      'bg-secondary-transparent'
+    ];
 
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
@@ -356,12 +368,20 @@ export class LeadsComponent extends BaseComponent {
           for (let i = 1; i <= 25; i++) {
             const key = `f${i}`;
             if (stageObj[key] && stageObj[key].trim() !== "") {
-              extractedStages.push({ stageName: stageObj[key].trim() });
+              extractedStages.push({
+                stageName: stageObj[key].trim(),
+                colorClass: stageColorClasses[extractedStages.length % stageColorClasses.length]
+              });
             }
           }
           this.stageLst = extractedStages;
-          console.log(extractedStages);
-          this.getCrmStatus(); 
+          this.stageColorMap = new Map(
+            extractedStages.map(stage => [
+              stage.stageName.trim().toLowerCase(),
+              stage.colorClass
+            ])
+          );
+          this.getCrmStatus();
           this.isAddStagesDisabled = this.stageLst.length > 0;
         }
         else {
@@ -371,124 +391,101 @@ export class LeadsComponent extends BaseComponent {
         this.isStagesLoading = false;
       },
       error: (error) => {
-        console.error('CRM Stages Error:', error);
         this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
       },
     });
+  }
+  getStageClass(stage: string): string {
+    const baseClass = 'badge ps-3 fs-11';
+    const key = stage?.trim().toLowerCase();
+    const color = this.stageColorMap.get(key) || 'bg-secondary-transparent';
+    return `${baseClass} ${color}`;
   }
 
   getCrmStatus(): void {
     let completedRequests = 0;
     for (let i = 0; i < this.stageLst.length; i++) {
+      const stageName = this.stageLst[i].stageName;
       const payload = {
         email: this.userData ? JSON.parse(this.userData).email : '',
         companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
         type: this.userData ? JSON.parse(this.userData).type : '',
-        stage: this.stageLst[i].stageName,
+        stage: stageName,
       };
       const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
       this.switchService.CrmStatus(payload).subscribe({
         next: (res: any) => {
-          const options = Array.isArray(res) ?
-            fields
-              .filter(field => res[0][field]) // skip empty values
-              .map(field => ({
-                name: res[0][field],
-                checked: false,
-                isCustom: false
-              }))
-            : [];
-
-          this.statusOptionsByStage[this.stageLst[i].stageName] = (options);
+          if (res.length == 1) {
+            const options = Array.isArray(res)
+              ? fields
+                .filter(field => res[0][field])
+                .map(field => ({
+                  name: res[0][field],
+                  checked: false,
+                  isCustom: false
+                }))
+              : [];
+            this.statusOptionsByStageforDisplay[stageName] = options;
+          }
         },
         error: (error) => {
           const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
           this.toastr.error(errorMessage);
-          this.statusOptionsByStage[this.stageLst[i].stageName] = [];
-          console.error('Error fetching CRM status:', error);
+          this.statusOptionsByStageforDisplay[stageName] = [];
         },
         complete: () => {
           completedRequests++;
           if (completedRequests === this.stageLst.length) {
-            this.statusLst = Object.entries(this.statusOptionsByStage)
-              .filter(([key]) => key.trim() !== "")
+            const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
+            this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
+              .filter(([stage]) => selectedStageNames.includes(stage))
               .map(([stage, fields]) => ({
                 stage,
                 fields
               }));
-              this.allStatuses = this.statusLst
-                .flatMap((group: { stage: string; fields: { name: string }[] }) =>
-                  group.fields.map((f: { name: string }) => ({
-                    name: f.name,
-                    stage: group.stage
-                  }))
-                );
-            console.log(this.statusLst);
-            console.log(this.statusOptionsByStage);
+            this.allStatuses = this.allStatuses || [];
+            this.statusColorMap = new Map(
+              this.allStatuses.map((status: { name: string; colorClass: any }) => [
+                status.name.toLowerCase(),
+                status.colorClass
+              ])
+            );
           }
         }
       });
     }
-
   }
-  
+
   onStageChange(): void {
     const selectedStage = this.leadForm.get('stage')?.value;
-    console.log('Selected Stage:', selectedStage);
     this.checkboxStageOptions = this.statusOptionsByStage[selectedStage] || [];
-  
+
     if (selectedStage === 'In Progress Leads') {
       this.setInProgressStatus();
     }
     this.leadForm.get('status')?.setValue(null);
   }
-  
-
 
   setInProgressStatus(): void {
-    console.log('Setting In Progress Status...');
     const inProgressStatus = this.checkboxStageOptions.find(option => option.name === 'In Progress');
-
     if (inProgressStatus) {
       inProgressStatus.checked = true;
-      console.log('In Progress Status selected:', inProgressStatus);
     }
   }
-  
-  
 
   getStatusClass(status: string): string {
-    switch (status?.toLowerCase()) {
-      case "active":
-        return "badge bg-success-transparent ps-3 fs-11 order-status complete ";
-      case "proposal sent":
-        return "badge bg-warning-transparent ps-3 fs-11 order-status pending";
-      case "meeting fixed":
-        return "badge bg-dark-transparent ps-3 fs-11 order-status going";
-      case "met":
-        return "badge bg-primary-transparent ps-3 fs-11 order-status live";
-      case "spoke":
-        return "badge bg-purple-transparent ps-3 fs-11 order-status spoke";
-      case "closed":
-        return "badge bg-danger-transparent ps-3 fs-11 order-status cancel";
-      case "converted to deal/opportunity":
-        return "badge bg-primar-transparent ps-3 fs-11 order-status  live ";
-      default:
-        return "";
-    }
+    const baseClass = 'badge ps-3 fs-11 order-status';
+    const color = this.statusColorMap.get(status?.toLowerCase()) || 'bg-secondary-transparent';
+    return `${baseClass} ${color}`;
   }
 
   filterStatusList(event: any): void {
-    console.log('Chart Clicked:', event);
-
     const activePoints = event.active;
-
     if (activePoints && activePoints.length > 0) {
-      const chartElement = activePoints[0];      
-      const index = chartElement.index;       
+      const chartElement = activePoints[0];
+      const index = chartElement.index;
       const label = this.pieChartLabels[index];
-      console.log('Label:', label); 
-      this.dataSource.filter = label.trim().toLowerCase();    
+      this.dataSource.filter = label.trim().toLowerCase();
     }
   }
 
@@ -578,34 +575,28 @@ export class LeadsComponent extends BaseComponent {
               currentStage: followup.currentStage || "",
             })) || [],
           };
-
-          // Assign to `element` for template binding
           this.element = this.CrmLeads;
-
-          console.log("Mapped CrmLeads:", this.CrmLeads);
         } else {
-          console.warn("Unexpected API structure:", res);
         }
       },
       error: (err: any) => {
-        console.error("Error fetching CRM leads:", err);
       },
     });
   }
 
   formatMobileNumber(mobile: any): string {
     if (!mobile) return "";
-    return Number(mobile).toFixed(0); // Convert to normal number
+    return Number(mobile).toFixed(0);
   }
 
   formatDateTime(dateTimeString: string): string {
     if (!dateTimeString) return "";
     const date = new Date(dateTimeString);
-    return date.toLocaleString("en-GB", { hour12: false }); // Converts to "11/02/2025, 09:45:18"
+    return date.toLocaleString("en-GB", { hour12: false });
   }
 
   stripHtmlTags(input: string): string {
-    return input.replace(/<\/?[^>]+(>|$)/g, ""); // Removes all HTML tags
+    return input.replace(/<\/?[^>]+(>|$)/g, "");
   }
 
 
@@ -645,13 +636,10 @@ export class LeadsComponent extends BaseComponent {
 
   sendEmail(element: any) {
     this.sendLeadForm.patchValue({ email: element.email });
-    console.log('View clicked for:', element);
   }
 
   editLead(element: any, content12: any) {
-    console.log('View clicked for:', element);
     if (element.leadId) {
-      //this.leadId = element.leadId;
       this.switchService.ViewCrmLeads(element.leadId).subscribe({
         next: (res: any) => {
           if (res.leadsEntry) {
@@ -684,7 +672,6 @@ export class LeadsComponent extends BaseComponent {
   sendMailLeadSubmit(modal: any) {
     this.sendLeadSubmitted = true;
     if (this.sendLeadForm?.valid) {
-      console.log(this.imageFileSrcData);
       const formData = new FormData();
       formData.append('file', this.imageFileSrcData);
       formData.append('email', this.sendLeadForm.get('email')?.value);
@@ -728,7 +715,6 @@ export class LeadsComponent extends BaseComponent {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
       let followUpDetails = this.followupLeadForm.value;
       followUpDetails.leadEntry = { leadId: this.leadId };
-      console.log(followUpDetails);
       this.switchService.CRMAddFollowupLead(this.followupLeadForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -777,16 +763,13 @@ export class LeadsComponent extends BaseComponent {
 
   @ViewChild("followUpPond") followUpPond!: FilePondComponent;
   followUpPondHandleInit() {
-    console.log("FilePond has initialised");
   }
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     this.imageFileSrcData = files;
-    console.log("A file was added", event);
   }
   followUpPondHandleActivateFile(event: any) {
-    console.log("A file was activated", event);
   }
 
   get a() {
@@ -882,13 +865,10 @@ export class LeadsComponent extends BaseComponent {
     },
   ];
   pondHandleInit() {
-    console.log("FilePond has initialised");
   }
   pondHandleAddFile(event: any) {
-    console.log("A file was added", event);
   }
   pondHandleActivateFile(event: any) {
-    console.log("A file was activated", event);
   }
   editorContent: string = '<p>Start writing here...</p>';
 
@@ -899,7 +879,7 @@ export class LeadsComponent extends BaseComponent {
     minHeight: '0',
     placeholder: 'Enter text here...',
     translate: 'no',
-    defaultFontName: 'Arial',    
+    defaultFontName: 'Arial',
     defaultFontSize: '2',
     toolbarHiddenButtons: [['bold', 'italic']],
   };
@@ -911,5 +891,5 @@ export class LeadsComponent extends BaseComponent {
     { name: 'David Brown', role: 'Sales Executive', email: 'david.brown@example.com', date: '2025-04-23', callsAttempted: 18, callsConnected: 10 },
     { name: 'Ella Davis', role: 'Manager', email: 'ella.davis@example.com', date: '2025-04-22', callsAttempted: 28, callsConnected: 20 },
   ];
-  
+
 }

@@ -102,9 +102,9 @@ export class SidebarComponent implements AfterViewInit {
           // case 'leads':
           //   item.isVisible = true;
           //   break;
-          // case 'deals':
-          //   item.isVisible = true;
-          //   break;
+          case 'deals':
+            item.isVisible = true;
+            break;
           case 'users':
             item.isVisible = true;
             break;
