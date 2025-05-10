@@ -93,23 +93,25 @@ export class CampaignsComponent extends BaseComponent {
       agents: agents,
     };
     this.switchService.saveCampaignData(payload).subscribe({
-      next: (res: any) => {
-        this.isSubmitting = false;
-        if (res.status === true) {
-          this.modalService.dismissAll(modal);
-          this.campaignForm.reset();
-          this.campaignForm.patchValue({
-            companyName: this.userCompanyName,
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
-          });
-          this.campaignSubmitted = false;
-          this.getCampaignData();
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
+     next: (res: any) => {
+  this.isSubmitting = false;
+  if (res.status === true || res.campaignId || res.createdDate) {
+    const name = res.campaignName ;
+    this.toastr.success(`${name} created successfully!`);
+    this.modalService.dismissAll(modal);
+    this.campaignForm.reset();
+    this.campaignForm.patchValue({
+      companyName: this.userCompanyName,
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+    });
+    this.campaignSubmitted = false;
+    this.getCampaignData();
+  } else {
+    this.toastr.error(res.message || "Something went wrong while creating the campaign.");
+  }
+},
       error: (error) => {
         this.isSubmitting = false;
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
@@ -351,18 +353,18 @@ export class CampaignsComponent extends BaseComponent {
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
   }
-  step = 1;
+  // step = 1;
 
-  nextStep() {
-    if (this.step < 3) {
-      this.step++;
-    }
-  }
+  // nextStep() {
+  //   if (this.step < 3) {
+  //     this.step++;
+  //   }
+  // }
 
 
-  prevStep() {
-    if (this.step > 1) this.step--;
-  }
+  // prevStep() {
+  //   if (this.step > 1) this.step--;
+  // }
 
 
 
