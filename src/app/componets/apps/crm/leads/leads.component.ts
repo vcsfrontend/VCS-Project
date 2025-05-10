@@ -461,13 +461,15 @@ export class LeadsComponent extends BaseComponent {
 
   onStageChange(): void {
     const selectedStage = this.leadForm.get('stage')?.value;
-    this.checkboxStageOptions = this.statusOptionsByStage[selectedStage] || [];
+    this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
 
     if (selectedStage === 'In Progress Leads') {
       this.setInProgressStatus();
     }
+
     this.leadForm.get('status')?.setValue(null);
   }
+
 
   setInProgressStatus(): void {
     const inProgressStatus = this.checkboxStageOptions.find(option => option.name === 'In Progress');

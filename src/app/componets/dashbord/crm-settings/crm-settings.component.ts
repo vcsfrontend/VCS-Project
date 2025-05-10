@@ -52,9 +52,10 @@ export class CrmSettingsComponent extends BaseComponent {
   crmStageData: any; crmStatusData: any; selectedStage: string = ''; checkboxStageOptions: any[] = [];
   newOptionName: string = ''; status: string = 'In Progress Leads';
   isStagesLoading: boolean = true; showValidationError = false;
-  showCheckboxError = false;showNameError = false;
+  showCheckboxError = false; showNameError = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {};
   statusOptionsByStageforDisplay : any = {};
+  anyChecked:any;
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
     private fb: FormBuilder,
   ) {
@@ -533,7 +534,6 @@ export class CrmSettingsComponent extends BaseComponent {
   console.log(this.checkboxStageOptions, this.anyChecked);
   }
 
-  anyChecked:any;
 
 
   onCheckboxChange() {
