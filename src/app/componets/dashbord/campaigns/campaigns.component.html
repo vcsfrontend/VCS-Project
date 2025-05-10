@@ -90,54 +90,122 @@
     </div>
 </div>
 <ng-template #content7 let-c="close" let-d="dismiss">
-    <form [formGroup]="campaignForm" (ngSubmit)="submitCampaign(modal)">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h6 class="modal-title">Create New Campaign</h6>
-            <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body px-4">
-            <div class="row gy-3">
-              <div class="col-xl-6">
-                <label for="deal-name" class="form-label">Campaign Name</label>
-                <input type="text" class="form-control" id="deal-name" placeholder="Campaign Name" formControlName="campaignName">
-              </div>
-              <div class="col-xl-6">
-                <label for="deal-name" class="form-label">Pipeline</label>
-                <ng-select formControlName="pipeline" [items]="pipeLine" bindLabel="name" bindValue="name" placeholder="Select an option">
-                </ng-select>
-              </div>
-              <div class="col-xl-12">
-                <label for="deal-name" class="form-label">Who will manage this Campaign</label>
-                <ng-select formControlName="campaignPoc" [items]="userList" bindLabel="email" bindValue="email"
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title">Create New Campaign</h6>
+          <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+          <ng-container *ngIf="step === 1">
+            <form [formGroup]="campaignForm" (ngSubmit)="submitCampaign(modal)">
+              <div class="row gy-3">
+                <div class="col-xl-6">
+                  <label for="deal-name" class="form-label">Campaign Name</label>
+                  <input type="text" class="form-control" id="deal-name" placeholder="Campaign Name" formControlName="campaignName">
+                </div>
+                <div class="col-xl-6">
+                  <label for="deal-name" class="form-label">Pipeline</label>
+                  <ng-select formControlName="pipeline" [items]="pipeLine" bindLabel="name" bindValue="name"
+                    placeholder="Select an option">
+                  </ng-select>
+                </div>
+                <div class="col-xl-12">
+                  <label for="deal-name" class="form-label">Who will manage this Campaign</label>
+                  <ng-select formControlName="campaignPoc" [items]="userList" bindLabel="email" bindValue="email"
                     placeholder="Select an Manager">
-                </ng-select>
-              </div>
-              <div class="col-xl-12">
-                <label for="deal-name" class="form-label">Select Agents</label>
-                <ng-select formControlName="agents" [items]="userList" bindLabel="email" bindValue="email"
+                  </ng-select>
+                </div>
+                <div class="col-xl-12">
+                  <label for="deal-name" class="form-label">Select Agents</label>
+                  <ng-select formControlName="agents" [items]="userList" bindLabel="email" bindValue="email"
                     placeholder="Select an agents" [multiple]="true">
-                </ng-select>
+                  </ng-select>
+                </div>
+                <div class="col-xl-6">
+                  <label for="deal-name" class="form-label">Campaign Priority</label>
+                  <ng-select placeholder="Select Priority" [items]="campaignPriority" bindLabel="name" bindValue="name"
+                    formControlName="campaignPriority">
+                  </ng-select>
+                </div>
+                <div class="col-xl-6">
+                  <label for="deal-name" class="form-label">Lead Duplicacy</label>
+                  <ng-select placeholder="Select Duplicacy" [items]="leadDuplicacy" bindLabel="name" bindValue="name"
+                    formControlName="leadDuplicacy">
+                  </ng-select>
+                </div>
               </div>
-              <div class="col-xl-6">
-                <label for="deal-name" class="form-label">Campaign Priority</label>
-                <ng-select placeholder="Select Priority" [items]="campaignPriority" bindLabel="name" bindValue="name" formControlName="campaignPriority">
-                </ng-select>
+          </form>
+          </ng-container>
+          <ng-container *ngIf="step === 2">
+            <ul class="list-group list-group-flush mb-0">
+              <li class="list-group-item">
+                  <div class="container mt-3">
+                      <div class="col-12">
+                          <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
+                          <div *ngFor="let plan of crmStaticStages; let i = index" class="form-check mb-3 d-flex justify-content-start align-items-center">
+                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked" [id]="'plan-' + i">
+                            <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <div *ngIf="plan.color" class="ms-2 lt" [style.background]="plan.color" ></div>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom" (click)="deleteLeadItem(i)">
+                              Delete
+                            </button>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="container mt-3">
+                      <div *ngIf="addMoreVisible" class="col-12">
+                          <div class="row">
+                              <div class="col-xl-6 mb-3">
+                                  <input type="text" class="form-control" placeholder="Enter value" [(ngModel)]="newItem">
+                              </div>
+                              <div class="col-xl-2 mb-3">
+                                <input type="color" class="form-control form-control-color lt" [(ngModel)]="newItemColor" title="Choose color">
+                              </div>
+                              <div class="col-xl-2 mb-3">
+                                  <button class="btn btn-primary " type="button" (click)="addLeadItem()">Save</button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </li>
+          </ul>
+          </ng-container>
+          <ng-container *ngIf="step === 3 && stageLst?.length">
+            <div class="col-lg-6 pt-4 ps-4">
+              <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
+                bindValue="stageName" [multiple]="false" (change)="onStageChange()" required>
+              </ng-select>
+            </div>
+            <div *ngIf="selectedStage && checkboxStageOptions" class="container mt-3 ms-3">
+              <div class="col-12">
+                <div *ngFor="let option of checkboxStageOptions; let i = index" class="form-check mb-2 d-flex">
+                  <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="option.checked" [id]="'checkbox-' + i" />
+                  <label class="form-check-label w-50" [for]="'checkbox-' + i">
+                    {{ option.name }}
+                  </label>
+                  <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
+                    Delete
+                  </button>
+                </div>
               </div>
-              <div class="col-xl-6">
-                <label for="deal-name" class="form-label">Lead Duplicacy</label>
-                <ng-select placeholder="Select Duplicacy" [items]="leadDuplicacy" bindLabel="name" bindValue="name" formControlName="leadDuplicacy">
-                </ng-select>
+              <div class="row mt-3">
+                <div class="col-xl-4 mb-3">
+                  <input [(ngModel)]="newOptionName" type="text" class="form-control" placeholder="Enter new status name" />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <button class="btn btn-primary" (click)="addNewOption()">Save</button>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="c('Cancel click')">Cancel</button>
-            <button type="submit" class="btn btn-primary">Create Campaign</button>
-          </div>
+          </ng-container>
         </div>
-      </form>
-      
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" *ngIf="step > 1" (click)="prevStep()">Previous</button>
+          <button type="button" class="btn btn-primary" *ngIf="step < 3" (click)="nextStep()">Next</button>
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="c('Cancel click')">Cancel</button>
+        </div>
+      </div>
 </ng-template>
   
   
