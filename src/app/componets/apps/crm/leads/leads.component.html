@@ -220,30 +220,55 @@
 
 <div class="col-lg-12">
     <div class="row" >
-        <div class="col-lg-8">
+        <div class="col-lg-8 col-xl-8">
             <div class="row">  
-                <div class="col-xl-6" *ngFor="let statusGroup of statusLst">
+                <div class="col-xl-4 col-lg-4">
                     <div class="card custom-card">
-                      <div class="card-header border-bottom-0 justify-content-between">
-                        <div class="card-title">
-                          {{ statusGroup.stage }}
-                        </div>
-                      </div>
-                      <div class="card-body border-top">
-                        <div id="pie-basic">
-                          <apx-chart
-                            [series]="getSeriesData(statusGroup.fields)"
-                            [chart]="chartOptions.chart"
-                            [legend]="chartOptions.legend"
-                            [labels]="getLabelData(statusGroup.fields)"
-                            [responsive]="chartOptions.responsive"
-                            [colors]="chartOptions.colors"
-                            [dataLabels]="chartOptions.dataLabels">
-                          </apx-chart>
-                        </div>
-                      </div>
+                    <div class="card-header justify-content-between d-flex">
+                        <div class="card-title">Lead Stages</div>
+                        <button class="btn btn-primary ms-auto" type="button" (click)="openRight4(content4)" >Add Stages</button>
                     </div>
-                </div>                        
+                    <div class="card-body p-3" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
+                        <div *ngFor="let stage of stageLst; let i = index" class="row mb-3 align-items-center">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control form-control-sm p-2 font-weight-bold border"
+                            [ngModel]="stage.stageName" [ngModelOptions]="{ standalone: true }" readonly>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                    </div>
+                </div>     
+                <div class="col-xl-4 col-lg-4">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between d-flex">
+                            <div class="card-title">Lead Status</div>
+                            <button class="btn btn-primary ms-auto" type="button" (click)="openRight12(content12)">Add
+                                Status</button>
+                        </div>
+                        <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                            <div class="" *ngIf="statusLst">
+                                <ul class="list-unstyled">
+                                    <li *ngFor="let status of statusLst" class="mb-3">
+                                        <i class="bi bi-arrow-right-circle-fill text-info me-2 "></i>
+                                        <strong>{{ status.stage }}</strong>
+                                        <ul class="list-group mt-2">
+                                            <li *ngFor="let field of status.fields" class="list-group-item">
+                                                <i class="bi bi-check-circle-fill text-info me-2"></i>
+                                                {{ field.name }}
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer text-end">
+                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                </div>                      
             </div>
         </div>
         <div class="col-lg-4">
@@ -769,3 +794,123 @@
     </ng-template>
     </div>
 </div> -->
+<div class="row mt-4">
+    <div class="row">  
+        <div class="col-xl-6" *ngFor="let statusGroup of statusLst">
+            <div class="card custom-card">
+                <div class="card-header border-bottom-0 justify-content-between">
+                <div class="card-title">
+                    {{ statusGroup.stage }}
+                </div>
+                </div>
+                <div class="card-body border-top">
+                <div id="pie-basic">
+                    <apx-chart
+                    [series]="getSeriesData(statusGroup.fields)"
+                    [chart]="chartOptions.chart"
+                    [legend]="chartOptions.legend"
+                    [labels]="getLabelData(statusGroup.fields)"
+                    [responsive]="chartOptions.responsive"
+                    [colors]="chartOptions.colors"
+                    [dataLabels]="chartOptions.dataLabels">
+                    </apx-chart>
+                </div>
+                </div>
+            </div>
+        </div>                        
+    </div>
+</div>
+<ng-template #content4 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
+        <div class="mb-3">
+            <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush mb-0">
+            <li class="list-group-item">
+                <div class="container mt-3">
+                    <div class="col-12">
+                        <div *ngFor="let plan of crmStaticStages; let i = index"
+                            class="form-check mb-3 d-flex justify-content-start">
+                            <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="plan.checked"
+                                [id]="'plan-' + i">
+                            <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom" (click)="deleteLeadItem(i)">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container mt-3">
+                    <div *ngIf="addMoreVisible" class="col-12">
+                        <div class="row">
+                            <div class="col-xl-6 mb-3">
+                                <input type="text" class="form-control" placeholder="Enter value" [(ngModel)]="newItem">
+                            </div>
+                            <div class="col-xl-2 mb-3">
+                                <button class="btn btn-primary " type="button" (click)="addLeadItem()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
+                (click)="saveCrmStages()">Save Stages</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content12 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Status</strong></h5>
+        <div class="mb-3">
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
+            <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
+                bindValue="stageName" [multiple]="false" (change)="onStageChange()" required>
+            </ng-select>
+        </div>
+        <div *ngIf="selectedStage && checkboxStageOptions" class="container mt-3 ms-3">
+            <div class="col-12">
+                <div *ngFor="let option of checkboxStageOptions; let i = index" class="form-check mb-2 d-flex">
+                    <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="option.checked"
+                        [id]="'checkbox-' + i" />
+                    <label class="form-check-label w-50" [for]="'checkbox-' + i">
+                        {{ option.name }}
+                    </label>
+                    <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
+                        Delete
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-xl-4 mb-3">
+                    <input [(ngModel)]="newOptionName" type="text" class="form-control"
+                        placeholder="Enter new status name" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button class="btn btn-primary" (click)="addNewOption()" >Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save Status</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>

@@ -56,7 +56,26 @@ export class LeadsComponent extends BaseComponent {
   stageColorMap: Map<string, string> = new Map();
   statusColorMap: Map<string, string> = new Map();
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  userType: string = this.userData ? this.userData.type : '';
   statusClicked= false;statusCounts: { status: string; count: number }[] = [];
+  crmStageData: any; crmStatusData: any;
+  newOptionName: string = ''; status: string = 'In Progress Leads';
+  showValidationError = false;
+  showCheckboxError = false; showNameError = false;
+  anyChecked:any;addMoreVisible: boolean = false;
+  newItem: string = ''; isStage: boolean = false; showStages: boolean = false;
+  leaditems: { checked: boolean; label: string }[] = [];
+  leadStatusitems: { checked: boolean; label: string }[] = [];
+  selectedProgressLeads: any[] = [];
+  selectedLostLeads: any[] = [];
+  selectedConvertedLeads: any[] = [];
+  selectedType: string = '';   dynamicFields: { value: string; }[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -84,7 +103,7 @@ export class LeadsComponent extends BaseComponent {
   public followupLeadForm!: FormGroup;
   public followupLeadSubmitted = false;
 
-  public userData: any;
+  // public userData: any;
   public userList: any;
 
   public allocateForm!: FormGroup;
@@ -121,6 +140,11 @@ export class LeadsComponent extends BaseComponent {
     private route: ActivatedRoute
   ) {
     super();
+    this.statusOptionsByStage = {
+      'In Progress Leads': [...this.inPorgressLeads],
+      'Lost Leads': [...this.lostLeads],
+      'Converted Leads': [...this.convertedLeads],
+    };
     this.userData = localStorage.getItem('userDetails');
     this.chartOptions = {
       series: [44, 55, 13, 43, 22],
@@ -227,7 +251,77 @@ export class LeadsComponent extends BaseComponent {
         this.getStatusCount();
       } 
     });
-
+    this.crmStageData = {
+      stageId: 0,
+      companyName: this.userCompanyName,
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      f1: "",
+      f2: "",
+      f3: "",
+      f4: "",
+      f5: "",
+      f6: "",
+      f7: "",
+      f8: "",
+      f9: "",
+      f10: "",
+      f11: "",
+      f12: "",
+      f13: "",
+      f14: "",
+      f15: "",
+      f16: "",
+      f17: "",
+      f18: "",
+      f19: "",
+      f20: "",
+      f21: "",
+      f22: "",
+      f23: "",
+      f24: "",
+      f25: "",
+      updatedBy: this.userName,
+      updatedTime: new Date().toISOString(),
+      stageActivity: "YES",
+      type: this.userType
+    };
+    this.crmStatusData = {
+      stageId: 0,
+      companyName: this.userCompanyName,
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      stage: "",
+      f1: "",
+      f2: "",
+      f3: "",
+      f4: "",
+      f5: "",
+      f6: "",
+      f7: "",
+      f8: "",
+      f9: "",
+      f10: "",
+      f11: "",
+      f12: "",
+      f13: "",
+      f14: "",
+      f15: "",
+      f16: "",
+      f17: "",
+      f18: "",
+      f19: "",
+      f20: "",
+      f21: "",
+      f22: "",
+      f23: "",
+      f24: "",
+      f25: "",
+      updatedBy: this.userName,
+      updatedTime: new Date().toISOString(),
+      stageActivity: "YES",
+      type: this.userType
+    };
 
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
@@ -272,6 +366,69 @@ export class LeadsComponent extends BaseComponent {
         this.filteredOptions.next(this.options); // Reset to all options if searchText is null
       }
     });
+  }
+  
+  crmStaticStages = [
+    { name: 'In Progress Leads', checked: false, isDefault: true,isCustom:false },
+    { name: 'Lost Leads', checked: false, isDefault: true,isCustom:false },
+    { name: 'Converted Leads', checked: false, isDefault: true,isCustom:false },
+  ];
+
+
+  addLeadItem() {
+    const newItemName = this.newItem?.trim();
+    if (!newItemName) {
+      this.toastr.error('Please enter a lead Stage.');
+      return;
+    }
+    const itemExists = this.crmStaticStages.some(
+      (plan) => plan.name.toLowerCase() === this.newItem.trim().toLowerCase()
+    );
+    if (this.newItem.trim() && !itemExists) {
+      this.crmStaticStages.push({
+        name: this.newItem.trim(),
+        checked: false,
+        isDefault: false,
+        isCustom: true,
+
+      });
+      this.toastr.info('Item added Successfully');
+    } else if (itemExists) {
+      this.toastr.warning('This item already exists!');
+    }
+    this.newItem = '';
+
+    this.leaditems.push({ checked: false, label: '' });
+  }
+  deleteLeadItem(index: number) {
+    const deleted = this.crmStaticStages[index]?.name;
+    this.crmStaticStages.splice(index, 1);
+    this.toastr.error(`'${deleted}' has been deleted`);
+
+  }
+  addLeadStatusItem() {
+    this.leadStatusitems.push({ checked: false, label: '' });
+  }
+  inPorgressLeads = [
+    { name: 'Quotataion Shared', checked: false, isDefault: true },
+    { name: 'Commercial Discussion', checked: false, isDefault: true },
+    { name: 'Office Visit', checked: false, isDefault: true },
+    { name: 'Hot', checked: false, isDefault: true },
+    { name: 'Cold', checked: false, isDefault: true },
+    { name: 'Warm', checked: false, isDefault: true },
+    { name: 'Call Back', checked: false, isDefault: true },
+  ];
+  lostLeads = [
+    { name: 'Not Interested', checked: false, isDefault: true },
+    { name: 'Irrelevant', checked: false, isDefault: true },
+    { name: 'Given to others', checked: false, isDefault: true },
+  ];
+  convertedLeads = [
+    { name: 'CD done', checked: false, isDefault: true },
+    { name: '10% advance Done', checked: false, isDefault: true },
+  ];
+  toggleAddMore() {
+    this.addMoreVisible = !this.addMoreVisible;
   }
   LeadForm(campaignId: string) {
     this.leadForm = this.fb.group({
@@ -343,7 +500,166 @@ export class LeadsComponent extends BaseComponent {
     }
     return hash;
   }
+  initializeDynamicFields(): void {
+    this.dynamicFields = [];
 
+    if (this.stageLst && this.stageLst.length > 0) {
+      const stage = this.stageLst[0]; // Assuming you want to display only the first stage
+
+      for (let i = 1; i <= 25; i++) {
+        const value = stage[`f${i}`];
+        if (value && value.trim() !== '') {
+          this.dynamicFields.push({ value: value.trim() });
+        }
+      }
+
+      console.log('Dynamic Fields:', this.dynamicFields);
+    }
+  }
+   saveCrmStatus():void {
+    if (!this.selectedStage) {
+      this.showValidationError = true;
+      this.toastr.error('Please select a stage before saving.');
+      return;
+    } else {
+      this.showValidationError = false;
+    }
+    this.crmStatusData.stage = this.selectedStage;
+    const selectedOptions = this.checkboxStageOptions.filter(option => option.checked);
+    const currentStageOptions = this.statusOptionsByStage[this.selectedStage] || [];
+    if (selectedOptions.length === 0) {
+      this.showCheckboxError = true;
+      this.toastr.error('Please select at least one status.');
+      return;
+    } else {
+      this.showCheckboxError = false;
+    }
+    const allNames = selectedOptions.map(option => option.name);
+    const uniqueNames = [...new Set(allNames)];
+  
+    const dynamicFields = uniqueNames.map((name, index) => {
+      return { [`f${index + 1}`]: name };
+    });
+    const customStatuses = currentStageOptions
+  .filter(opt => opt.isCustom)
+  .map(opt => opt.name);
+    this.crmStatusData = {
+      ...this.crmStatusData,
+      customStatuses, 
+      ...Object.assign({}, ...dynamicFields),
+    };
+  
+    console.log(this.crmStatusData);
+  
+    // ✅ Optional: call the API
+    this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Status saved successfully');
+          this.offcanvasService.dismiss();
+          this.getCrmStages();
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    });
+  }
+   getCrmStatus(): void {
+    let completedRequests = 0;
+    for (let i = 0; i < this.stageLst.length; i++) {
+      const stageName = this.stageLst[i].stageName;
+      const payload = {
+        email: this.userData ? JSON.parse(this.userData).email : '',
+        companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
+        type: this.userData ? JSON.parse(this.userData).type : '',
+        stage: stageName,
+      };
+      const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
+      this.switchService.CrmStatus(payload).subscribe({
+        next: (res: any) => {
+          if (res.length == 1) {
+            const options = Array.isArray(res)
+              ? fields
+                .filter(field => res[0][field])
+                .map(field => ({
+                  name: res[0][field],
+                  checked: false,
+                  isCustom: false
+                }))
+              : [];
+            this.statusOptionsByStageforDisplay[stageName] = options;
+          }
+        },
+        error: (error) => {
+          const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
+          this.toastr.error(errorMessage);
+          this.statusOptionsByStageforDisplay[stageName] = [];
+        },
+        complete: () => {
+          completedRequests++;
+          if (completedRequests === this.stageLst.length) {
+            const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
+            this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
+              .filter(([stage]) => selectedStageNames.includes(stage))
+              .map(([stage, fields]) => ({
+                stage,
+                fields
+              }));
+            this.allStatuses = this.allStatuses || [];
+            this.statusColorMap = new Map(
+              this.allStatuses.map((status: { name: string; colorClass: any }) => [
+                status.name.toLowerCase(),
+                status.colorClass
+              ])
+            );
+          }
+        }
+      });
+    }
+  }
+  getDynamicFields(status: any): string[] {
+    const dynamicFields = [];
+    for (let i = 1; i <= 25; i++) {
+      const fieldName = `f${i}`;
+      if (status[fieldName]) {
+        dynamicFields.push(status[fieldName]);
+      }
+    }
+    return dynamicFields;
+  }
+
+
+  isHighlightedStatus(status: string): boolean {
+    const highlighted = ['In Progress Leads', 'Lost Leads', 'Converted Leads', 'Wrong Leads'];
+    return highlighted.includes(status);
+  }
+  saveCrmStages() {
+    this.prepareCrmStageData();
+    console.log("saved crmstages",this.crmStageData);
+    const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
+    if (selectedStages.length === 0) {
+      this.toastr.error('Please select at least one stage before saving.');
+      return;
+    }
+    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Stages saved successfully');
+          this.offcanvasService.dismiss();
+          this.getCrmStages();
+          this.isAddStagesDisabled = true;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      }
+    });
+  }
   getCrmStages(): void {
     this.isStagesLoading = true;
     this.isAddStagesDisabled = true;
@@ -398,78 +714,110 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
+  addNewOption() {
+    const newName = this.newOptionName?.trim();
+  
+    if (!newName) {
+      this.toastr.error('Please enter a status name.');
+      return;
+    }
+  
+    const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
+  
+    // Check if the item already exists in current options
+    const isDuplicate = currentStageOptions.some(
+      opt => opt.name.toLowerCase() === newName.toLowerCase()
+    );
+  
+    if (this.newOptionName.trim() && !isDuplicate) {
+      currentStageOptions.push({
+        name: this.newOptionName,
+        checked: false,
+        isCustom: true
+      });
+  
+      this.checkboxStageOptions = [...currentStageOptions];
+      this.toastr.info('item added.');
+    } else {
+      this.toastr.warning(`'${newName}' already exists`);
+    }
+  
+    this.newOptionName = '';
+  }
+
+  prepareCrmStageData() {
+    const selectedStages = this.crmStaticStages
+      .filter(stage => stage.checked)
+      .map(stage => stage.name);
+
+    console.log("Selected Stages: ", selectedStages);
+    for (let i = 0; i < 25; i++) {
+      this.crmStageData[`f${i + 1}`] = selectedStages[i] || "";
+    }
+  }
   getStageClass(stage: string): string {
     const baseClass = 'badge ps-3 fs-11';
     const key = stage?.trim().toLowerCase();
     const color = this.stageColorMap.get(key) || 'bg-secondary-transparent';
     return `${baseClass} ${color}`;
   }
+  // onStageChange(): void {
+  //   const selectedStage = this.leadForm.get('stage')?.value;
+  //   this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
 
-  getCrmStatus(): void {
-    let completedRequests = 0;
-    for (let i = 0; i < this.stageLst.length; i++) {
-      const stageName = this.stageLst[i].stageName;
-      const payload = {
-        email: this.userData ? JSON.parse(this.userData).email : '',
-        companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
-        type: this.userData ? JSON.parse(this.userData).type : '',
-        stage: stageName,
-      };
-      const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
-      this.switchService.CrmStatus(payload).subscribe({
-        next: (res: any) => {
-          if (res.length == 1) {
-            const options = Array.isArray(res)
-              ? fields
-                .filter(field => res[0][field])
-                .map(field => ({
-                  name: res[0][field],
-                  checked: false,
-                  isCustom: false
-                }))
-              : [];
-            this.statusOptionsByStageforDisplay[stageName] = options;
-          }
-        },
-        error: (error) => {
-          const errorMessage = error.statusText || 'Something went wrong while fetching stages.';
-          this.toastr.error(errorMessage);
-          this.statusOptionsByStageforDisplay[stageName] = [];
-        },
-        complete: () => {
-          completedRequests++;
-          if (completedRequests === this.stageLst.length) {
-            const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
-            this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
-              .filter(([stage]) => selectedStageNames.includes(stage))
-              .map(([stage, fields]) => ({
-                stage,
-                fields
-              }));
-            this.allStatuses = this.allStatuses || [];
-            this.statusColorMap = new Map(
-              this.allStatuses.map((status: { name: string; colorClass: any }) => [
-                status.name.toLowerCase(),
-                status.colorClass
-              ])
-            );
-          }
-        }
-      });
+  //   if (selectedStage === 'In Progress Leads') {
+  //     this.setInProgressStatus();
+  //   }
+
+  //   this.leadForm.get('status')?.setValue(null);
+  // }
+   onStageChange() {
+    this.checkboxStageOptions = [];
+    console.log(this.checkboxStageOptions)
+
+    console.log('Selected Stage:', this.selectedStage);
+    if (!this.statusOptionsByStage[this.selectedStage]) {
+      this.statusOptionsByStage[this.selectedStage] = []; 
     }
+    
+    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage];
+    console.log(this.checkboxStageOptions)
+    
+    if(this.statusOptionsByStageforDisplay[this.selectedStage]){
+    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage].map(item => {
+      const existsInSelected = this.statusOptionsByStageforDisplay[this.selectedStage].some((selected: { name: any; }) => selected.name === item.name);
+      return { ...item, checked: existsInSelected };
+    });
+    this.anyChecked = true;
   }
+  else{
+    this.anyChecked = false;
+  }
+  
+  // this.anyChecked = this.checkboxStageOptions.some(
+  //   (item) => {console.log(item.checked);return item.checked === true}
+  // );
+  
+    
+  console.log(this.checkboxStageOptions, this.anyChecked);
+  }
+  
+deleteOption(index: number) {
+    const deletedOption = this.checkboxStageOptions[index];
 
-  onStageChange(): void {
-    const selectedStage = this.leadForm.get('stage')?.value;
-    this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
+    this.checkboxStageOptions.splice(index, 1);
 
-    if (selectedStage === 'In Progress Leads') {
-      this.setInProgressStatus();
+    const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
+    const mainIndex = currentStageOptions.findIndex(
+      opt => opt.name.toLowerCase() === deletedOption.name.toLowerCase()
+    );
+
+    if (mainIndex !== -1) {
+      currentStageOptions.splice(mainIndex, 1);
     }
 
-    this.leadForm.get('status')?.setValue(null);
+    this.toastr.error(`'${deletedOption.name}' has been deleted`);
   }
-
 
   setInProgressStatus(): void {
     const inProgressStatus = this.checkboxStageOptions.find(option => option.name === 'In Progress');
@@ -534,7 +882,25 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
-
+ onCheckboxChange() {
+    const selectedPlans = this.crmStaticStages.filter((plan) => plan.checked);
+    // Update f1 to f30 fields dynamically based on selected items
+    selectedPlans.forEach((plan, index) => {
+      if (index < 30) {
+        this.crmStatusData[`f${index + 1}`] = plan.name;
+      }
+    });
+    for (let i = selectedPlans.length; i < 30; i++) {
+      this.crmStatusData[`f${i + 1}`] = '';
+    }
+  }
+  resetForm() {
+    this.newItem = ''; // Reset the input field
+    this.addMoreVisible = false; // Hide the 'Add More' section
+    this.crmStaticStages.forEach(plan => {
+      plan.checked = false; // Unselect all checkboxes
+    });
+  }
 
   preventCopyPaste(event: ClipboardEvent): void {
     event.preventDefault();
@@ -930,5 +1296,10 @@ export class LeadsComponent extends BaseComponent {
     { name: 'David Brown', role: 'Sales Executive', email: 'david.brown@example.com', date: '2025-04-23', callsAttempted: 18, callsConnected: 10 },
     { name: 'Ella Davis', role: 'Manager', email: 'ella.davis@example.com', date: '2025-04-22', callsAttempted: 28, callsConnected: 20 },
   ];
-
+  openRight4(content4: any) {
+    this.offcanvasService.open(content4, { position: 'end' });
+  }
+  openRight12(content12: any) {
+    this.offcanvasService.open(content12, { position: 'end' });
+  }
 }
