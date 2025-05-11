@@ -73,13 +73,13 @@ export class LeadsComponent extends BaseComponent {
   leaditems: { checked: boolean; label: string }[] = [];
   leadStatusitems: { checked: boolean; label: string }[] = [];
   selectedProgressLeads: any[] = []; selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
-  newItemColor: string = '#000000'; newOptionColor : any;
+  newItemColor: string = '#000000'; newOptionColor : any;showMore = true; topshowMore = false;
   crmStaticStages = [
       { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' },
       { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
       { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff' }
     ];
-  selectedType: string = '';   dynamicFields: { value: string; }[] = [];
+  selectedType: string = '';   dynamicFields: { value: string; }[] = [];matcardLst: any;topDisplayedCards: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -152,12 +152,25 @@ export class LeadsComponent extends BaseComponent {
     this.userData = localStorage.getItem('userDetails');
     this.chartOptions = {
       series: [44, 55, 13, 43, 22],
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 2000,
+        animateGradually: {
+          enabled: true,
+          delay: 150
+        },
+        dynamicAnimation: {
+          enabled: true,
+          speed: 350
+        }
+      },
       chart: {
         height: 300,
         type: 'pie',
       },
       colors: ["#845adf", "#23b7e5", "#f5b849", "#49b6f5", "#e6533c"],
-      labels: ['Hot 250', 'Payment Status 50', 'Call Back Later 190',],
+      labels: ['Hot 250', 'Payment Status 50', 'Call Back Later 190','cold 150','warm 200'],
       legend: {
         position: "bottom"
       },
@@ -496,8 +509,8 @@ export class LeadsComponent extends BaseComponent {
       executive: [''],
       products: [''],
       country: [''],
-      stage: [''],
-      status: [''],
+      stage: ['',Validators.required],
+      status: ['',Validators.required],
       leadSource: [''],
       zipCode: [''],
       followUpDate: [''],
@@ -816,16 +829,16 @@ export class LeadsComponent extends BaseComponent {
     const color = this.stageColorMap.get(key) || 'bg-secondary-transparent';
     return `${baseClass} ${color}`;
   }
-  // onStageChange(): void {
-  //   const selectedStage = this.leadForm.get('stage')?.value;
-  //   this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
+  onStatusChange(): void {
+    const selectedStage = this.leadForm.get('stage')?.value;
+    this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
 
-  //   if (selectedStage === 'In Progress Leads') {
-  //     this.setInProgressStatus();
-  //   }
+    if (selectedStage === 'In Progress Leads') {
+      this.setInProgressStatus();
+    }
 
-  //   this.leadForm.get('status')?.setValue(null);
-  // }
+    this.leadForm.get('status')?.setValue(null);
+  }
    onStageChange() {
     this.checkboxStageOptions = [];
     if (!this.statusOptionsByStage[this.selectedStage]) {
@@ -1357,5 +1370,22 @@ export class LeadsComponent extends BaseComponent {
   }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
+  }
+  updateTopDisplayedCards(): void {
+    this.topDisplayedCards = this.topshowMore ? this.matcardLst?.slice(0, 2) : this.matcardLst;
+  }
+  toggleTopShowMore() {
+  this.topshowMore = !this.topshowMore;
+  if (this.topshowMore) {
+    setTimeout(() => {
+      const scrollContainer = document.querySelector('.scrollable-container');
+      if (scrollContainer) {
+        scrollContainer.scrollTo({
+          top: 0,
+          behavior: 'smooth'  
+        });
+      }
+    }, 0); 
+  }
   }
 }

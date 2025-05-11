@@ -124,3 +124,6 @@ th.mat-mdc-header-cell {
 .bg-color {
   background-color: var(--color) !important;
 }
+.scrollable-container {
+  scroll-behavior: smooth;  /* This makes all scrolls smooth */
+}
