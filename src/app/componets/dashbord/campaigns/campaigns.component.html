@@ -31,7 +31,9 @@
                                   <ng-container *ngFor="let agent of campaign.agents.split(',')">
                                     <span class="avatar avatar-sm avatar-rounded me-1 mb-1 text-white fw-bold d-flex 
                                     align-items-center justify-content-center cu"
-                                          [ngClass]="getAgentColor(agent)">
+                                          [ngClass]="getAgentColor(agent)" tabindex="0"  role="button" data-bs-toggle="popover" triggers="focus"
+                                            placement="right" popoverTitle="Campaign Users"
+                                            ngbPopover="And here's some amazing content. It's very engaging. Right?">
                                       {{ agent.trim().charAt(0) | uppercase }}
                                     </span>
                                   </ng-container>                                  

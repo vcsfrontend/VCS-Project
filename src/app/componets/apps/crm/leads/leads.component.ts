@@ -246,13 +246,13 @@ export class LeadsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
-    this.getCrmStages(); 
     this.route.queryParams.subscribe((params: any) => {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
       this.getCrmLeads();
       if (this.campaignId) {
         this.getStatusCount();
+        this.getCrmStages(); 
       } 
     });
 
@@ -355,6 +355,7 @@ export class LeadsComponent extends BaseComponent {
       f23Color: "",
       f24Color: "",
       f25Color: "",
+      campaignId:this.campaignId,
       updatedBy: this.userName,
       updatedTime: new Date().toISOString(),
       stageActivity: "YES",
@@ -417,6 +418,7 @@ export class LeadsComponent extends BaseComponent {
       f23Color: "",
       f24Color: "",
       f25Color: "",
+      campaignId:this.campaignId,
       updatedBy: this.userName,
       updatedTime: new Date().toISOString(),
       stageActivity: "YES",
@@ -632,6 +634,7 @@ export class LeadsComponent extends BaseComponent {
         companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
         type: this.userData ? JSON.parse(this.userData).type : '',
         stage: stageName,
+        campaignId : this.campaignId,
       };
 
       const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
@@ -656,7 +659,6 @@ export class LeadsComponent extends BaseComponent {
               })
               .filter(opt => opt !== null);
             this.statusOptionsByStageforDisplay[stageName] = options;
-            console.log(`Status for stage "${stageName}":`, options);  // Log the status options
           }
         },
         error: (error) => {
@@ -674,7 +676,6 @@ export class LeadsComponent extends BaseComponent {
                 stage,
                 fields,
               }));
-            console.log('Final statusLst:', this.statusLst);  // Log the final status list
           }
         },
       });
@@ -699,6 +700,7 @@ export class LeadsComponent extends BaseComponent {
     const highlighted = ['In Progress Leads', 'Lost Leads', 'Converted Leads', 'Wrong Leads'];
     return highlighted.includes(status);
   }
+
   saveCrmStages() {
     const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
     if (selectedStages.length === 0) {
@@ -731,6 +733,7 @@ export class LeadsComponent extends BaseComponent {
       email: this.userData ? JSON.parse(this.userData).email : '',
       companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
       type: this.userData ? JSON.parse(this.userData).type : '',
+      campaignId : this.campaignId,
     };
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
