@@ -74,6 +74,8 @@ export class LeadsComponent extends BaseComponent {
   leadStatusitems: { checked: boolean; label: string }[] = [];
   selectedProgressLeads: any[] = []; selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
   newItemColor: string = '#000000'; newOptionColor : any;showMore = true; topshowMore = false;
+  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any;  selectTemplateForm !: FormGroup;
+  formList : any; tempFormList : any;
   crmStaticStages = [
       { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' },
       { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
@@ -152,19 +154,6 @@ export class LeadsComponent extends BaseComponent {
     this.userData = localStorage.getItem('userDetails');
     this.chartOptions = {
       series: [44, 55, 13, 43, 22],
-      animations: {
-        enabled: true,
-        easing: 'easeinout',
-        speed: 2000,
-        animateGradually: {
-          enabled: true,
-          delay: 150
-        },
-        dynamicAnimation: {
-          enabled: true,
-          speed: 350
-        }
-      },
       chart: {
         height: 300,
         type: 'pie',
@@ -259,14 +248,17 @@ export class LeadsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
+    this.getCampaignData();
+    this.getlistFormTemplate();
+    this.getFormTemplate();
     this.route.queryParams.subscribe((params: any) => {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
       this.getCrmLeads();
       if (this.campaignId) {
         this.getStatusCount();
-        this.getCrmStages(); 
-      } 
+        this.getCrmStages();
+      }
     });
 
     //Upload Lead Validatoin
@@ -282,6 +274,19 @@ export class LeadsComponent extends BaseComponent {
       cc: ['', [Validators.required, Validators.email]],
       bcc: ['', [Validators.required, Validators.email]],
       content: ['', [Validators.required]]
+    });
+
+    //Send Email 
+    this.selectTemplateForm = this.fb.group({
+      campaignId: [0,],
+      templateGenId: ['',],
+      templateName: ['', ],
+      subject: ['',],
+      description: ['', ],
+      createdDate: [new Date().toISOString()],
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
     });
 
     //Send Email 
@@ -439,8 +444,6 @@ export class LeadsComponent extends BaseComponent {
     };
   }
 
-
-
   addLeadItem() {
     const newItemName = this.newItem?.trim();
     if (!newItemName) {
@@ -559,6 +562,53 @@ export class LeadsComponent extends BaseComponent {
       });
     }
   }
+
+  selectFormTemplateSubmit() {
+    if (this.selectTemplateForm.invalid) {
+      this.selectTemplateForm.markAllAsTouched();
+      return;
+    }
+    const payload = this.selectTemplateForm.value;
+    console.log(payload);
+    // this.switchService.selectFormTemplate(payload).subscribe({
+    //   next: (res : any) => {
+    //     this.toastr.success('Template submitted successfully!');
+    //     this.selectTemplateForm.reset();
+    //   },
+    //   error: (err) => {
+    //     this.toastr.error(err.statusText || 'Error submitting the template.');
+    //   }
+    // });
+  }
+
+  getlistFormTemplate(){
+   let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.listFormTemplate(payload).subscribe({
+      next: (res: any) => {
+        this.formList = res;
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching product data");
+      }
+    });
+  }
+
+  getFormTemplate(){
+    let templateGenId = "MEET106D1747044672850";
+    this.switchService.fetchFormTemplate(templateGenId).subscribe({
+      next: (res: any) => {
+        this.tempFormList = res;
+      },
+      error: (error) => {
+        this.toastr.error("Error fetching product data");
+      }
+    });
+  }
+
 
   getUserColor(user: any): string {
     const index = Math.abs(this.hashString(user.email)) % this.userColors.length;
@@ -1186,7 +1236,6 @@ export class LeadsComponent extends BaseComponent {
 
   getUsers() {
     if (JSON.parse(this.userData).type == 2) {
-      // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
       let cn = JSON.parse(this.userData).companyName;
       let cc = JSON.parse(this.userData).companyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({
@@ -1268,6 +1317,63 @@ export class LeadsComponent extends BaseComponent {
     }
     
   }
+
+  getCampaignData() {
+    const payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayCampaignData(payload).subscribe({
+      next: (res: any[]) => {
+        if (Array.isArray(res)) {
+          this.campaignList = res;
+          const campaign = res.find(c => c.campgnId === this.campaignId);
+          if (campaign) {
+            this.selectedCampaign = campaign;
+            console.log('Selected Campaign:', this.selectedCampaign);
+            const agentEmails = campaign.agents
+              ?.split(',')
+              ?.map((email: string) => email.trim())
+              ?.filter((email: string) => email);
+            console.log('Agent Emails:', agentEmails);  // Debug log
+            if (agentEmails?.length) {
+              this.getAgentUsers(agentEmails);
+            }
+          }
+        } else {
+          this.toastr.error("Unexpected response format.");
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || "Error while fetching campaigns.");
+      }
+    });
+  }
+
+
+  getAgentUsers(agentEmails: string[]) {
+    const cn = JSON.parse(this.userData).companyName;
+    const cc = JSON.parse(this.userData).companyCode;
+
+    this.switchService.cmpnyUsers(cn, cc).subscribe({
+      next: (users: any[]) => {
+        // Check if `users` is an array and filter based on agentEmails
+        if (Array.isArray(users)) {
+          this.agentUsers = users.filter(user => agentEmails.includes(user.email));
+          console.log('Filtered Agent Users:', this.agentUsers);  // Debug log
+        } else {
+          this.toastr.error("Unexpected user data format.");
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || "Error while fetching users.");
+      }
+    });
+  }
+
+
+
 
 
 
@@ -1370,6 +1476,9 @@ export class LeadsComponent extends BaseComponent {
   }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
+  }
+  openRight13(content13: any) {
+    this.offcanvasService.open(content13, { position: 'end' });
   }
   updateTopDisplayedCards(): void {
     this.topDisplayedCards = this.topshowMore ? this.matcardLst?.slice(0, 2) : this.matcardLst;

@@ -142,7 +142,7 @@
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
-                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                    <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
                         placeholder="Select an Executive" class="rounded-0 ng-selt">
                     </ng-select>
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
@@ -226,29 +226,25 @@
                     <div class="card custom-card">
                         <div class="card-header justify-content-between d-flex">
                             <div class="card-title">Lead Stages</div>
-                            <button class="btn btn-primary ms-auto" type="button" (click)="openRight4(content4)" >Add Stages</button>
+                            <button class="btn btn-primary ms-auto" type="button" (click)="openRight4(content4)">Add Stages</button>
                         </div>
                         <div class="card-body p-3" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
-                    <div *ngIf="stageLst?.length === 0">No stages found</div>
-                    <ul class="list-group">
-                        <li *ngFor="let stage of stageLst" class="list-group-item d-flex align-items-center">
-                        <!-- Color Circle -->
-                        <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{ 
-                            'width': '15px', 
-                            'height': '15px', 
-                            'background-color': stage.color || '#ccc' 
-                        }"></span>
-                        <!-- Stage Name -->
-                        <span class="font-weight-bold">{{ stage.stageName }}</span>
-                        </li>
-                    </ul>
-                    </div>
-
+                            <div *ngIf="stageLst?.length === 0"></div>
+                            <ul class="list-group">
+                                <li *ngFor="let stage of stageLst" class="list-group-item d-flex align-items-center">
+                                    <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{ 
+                                            'width': '15px', 'height': '15px', 
+                                            'background-color': stage.color || '#ccc' 
+                                        }"></span>
+                                    <span class="font-weight-bold">{{ stage.stageName }}</span>
+                                </li>
+                            </ul>
+                        </div>
                         <div class="card-footer text-end">
                             <button type="button" class="btn btn-danger btn-sm">Delete</button>
                         </div>
                     </div>
-                </div>     
+                </div>
                 <div class="col-lg-6">
                     <div class="card custom-card">
                         <div class="card-header justify-content-between d-flex">
@@ -283,7 +279,33 @@
                             <button type="button" class="btn btn-danger btn-sm">Delete</button>
                         </div>
                     </div>
-                </div>                      
+                </div>       
+                <div class="col-lg-6">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between d-flex">
+                            <div class="card-title">Mail Templates</div>
+                            <button class="btn btn-primary ms-auto" type="button" (click)="openRight13(content13)" 
+                               >Add Mail Template</button>
+                        </div>
+                        <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                            <div *ngIf="tempFormList" class="card mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ tempFormList.templateName }}</h5>
+                                    <p><strong>Subject:</strong> {{ tempFormList.subject }}</p>
+                                    <p><strong>Description:</strong> {{ tempFormList.description }}</p>
+                                    <p><strong>Template ID:</strong> {{ tempFormList.templateGenId }}</p>
+                                    <p><strong>Created Date:</strong> {{ tempFormList.createdDate | date: 'medium' }}</p>
+                                    <p><strong>Company Code:</strong> {{ tempFormList.companyCode }}</p>
+                                    <p><strong>Email:</strong> {{ tempFormList.email }}</p>
+                                    <p><strong>Type:</strong> {{ tempFormList.type }}</p>
+                                </div>
+                                </div>
+                        </div>
+                        <div class="card-footer text-end">
+                            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                        </div>
+                    </div>
+                </div>               
             </div>
         </div>
         <div class="col-lg-4">
@@ -295,25 +317,19 @@
                 </div>
                 <div class="card-body p-0 crm-card-chart">
                     <div>
-                        <ul class="list-group list-group-flush" *ngFor="let user of userList">
-                            <li class="list-group-item">
-                                <a href="javascript:void(0);">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-md online avatar-rounded me-2 border text-white fw-bold"
-                                            [ngClass]="getUserColor(user)">
-                                            <span class="d-flex align-items-center justify-content-center w-100 h-100">
-                                                {{ user.email?.charAt(0) | uppercase }}
-                                            </span>
-                                        </div>
-                                        <div class="flex-fill">
-                                            <span class="fs-14">{{ user.email }}</span>
-                                            <div class="fs-12 text-muted">{{user.username}}</div>
-                                        </div>
-                                        <div>
-                                            <span>5 mins ago</span>
-                                        </div>
+                        <ul class="list-group list-group-flush" *ngIf="agentUsers && agentUsers.length > 0">
+                            <li class="list-group-item" *ngFor="let user of agentUsers">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-md avatar-rounded me-2 border text-white fw-bold" [ngClass]="getUserColor(user)">
+                                        <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                            {{ user.email?.charAt(0) | uppercase }}
+                                        </span>
                                     </div>
-                                </a>
+                                    <div class="flex-fill">
+                                        <span class="fs-14">{{ user.email }}</span>
+                                        <div class="fs-12 text-muted">{{ user.username }}</div>
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -731,6 +747,36 @@
     </form>
 </ng-template>
 
+<ng-template #content13 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Email Template</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="selectTemplateForm" (ngSubmit)="selectFormTemplateSubmit()" class="overflowSendMailForm">
+        <div class="offcanvas-body p-0 m-4 ">
+            <div class="mb-4">
+                <input type="text" class="form-control" id="subject" placeholder="templateName" formControlName="templateName">
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="cc" placeholder="subject" formControlName="subject">
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="bcc" placeholder="description" formControlName="description">
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3 w-100" type="submit">Save Mail Template</button>
+            </div>
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
+                    type="submit">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
 
 <!-- Followup lead-->
 <ng-template #Content4 let-offcanvas>
@@ -905,3 +951,24 @@
         </div>
     </div>
 </ng-template>
+
+<div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+    <table class="table table-bordered mt-3" *ngIf="formList?.length">
+        <thead>
+            <tr>
+                <th>Template Name</th>
+                <th>Subject</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let form of formList">
+                <td>{{ form.templateName }}</td>
+                <td>{{ form.templateGenId }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="formList?.length === 0" class="mt-3">
+        No templates found.
+    </div>
+</div>
+

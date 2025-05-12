@@ -35,7 +35,7 @@ export class CampaignsComponent extends BaseComponent {
   anyChecked: any; stageLst: any; crmStatusData: any; showValidationError = false; showCheckboxError = false; showNameError = false;
   isStagesLoading: boolean = true; statusLst: any;
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
-  newItemColor: string = '#000000';
+  newItemColor: string = '#000000'; listNew: any;
   crmStaticStages = [
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff' },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
@@ -56,6 +56,7 @@ export class CampaignsComponent extends BaseComponent {
     this.getCrmStages();
     this.getUsers();
     this.getCampaignData();
+    this.getCampaignSecific();
     this.campaignForm = this.fb.group({
       campaignId: [0],
       campaignName: ['', Validators.required],
@@ -93,25 +94,25 @@ export class CampaignsComponent extends BaseComponent {
       agents: agents,
     };
     this.switchService.saveCampaignData(payload).subscribe({
-     next: (res: any) => {
-  this.isSubmitting = false;
-  if (res.status === true || res.campaignId || res.createdDate) {
-    const name = res.campaignName ;
-    this.toastr.success(`${name} created successfully!`);
-    this.modalService.dismissAll(modal);
-    this.campaignForm.reset();
-    this.campaignForm.patchValue({
-      companyName: this.userCompanyName,
-      companyCode: this.userCompanyCode,
-      email: this.userEmail,
-      type: this.userType,
-    });
-    this.campaignSubmitted = false;
-    this.getCampaignData();
-  } else {
-    this.toastr.error(res.message || "Something went wrong while creating the campaign.");
-  }
-},
+      next: (res: any) => {
+        this.isSubmitting = false;
+        if (res.status === true || res.campaignId || res.createdDate) {
+          const name = res.campaignName;
+          this.toastr.success(`${name} created successfully!`);
+          this.modalService.dismissAll(modal);
+          this.campaignForm.reset();
+          this.campaignForm.patchValue({
+            companyName: this.userCompanyName,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+          });
+          this.campaignSubmitted = false;
+          this.getCampaignData();
+        } else {
+          this.toastr.error(res.message || "Something went wrong while creating the campaign.");
+        }
+      },
       error: (error) => {
         this.isSubmitting = false;
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
@@ -119,79 +120,6 @@ export class CampaignsComponent extends BaseComponent {
     });
   }
 
-  saveCrmStages() {
-    this.prepareCrmStageData();
-    const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
-    if (selectedStages.length === 0) {
-      this.toastr.error('Please select at least one stage before saving.');
-      return;
-    }
-    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Stages saved successfully');
-          this.offcanvasService.dismiss();
-          this.getCrmStages();
-          this.isAddStagesDisabled = true;
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      }
-    });
-  }
-
-  saveCrmStatus(): void {
-    if (!this.selectedStage) {
-      this.showValidationError = true;
-      this.toastr.error('Please select a stage before saving.');
-      return;
-    } else {
-      this.showValidationError = false;
-    }
-    this.crmStatusData.stage = this.selectedStage;
-    const selectedOptions = this.checkboxStageOptions.filter(option => option.checked);
-    const currentStageOptions = this.statusOptionsByStage[this.selectedStage] || [];
-    if (selectedOptions.length === 0) {
-      this.showCheckboxError = true;
-      this.toastr.error('Please select at least one status.');
-      return;
-    } else {
-      this.showCheckboxError = false;
-    }
-    const allNames = selectedOptions.map(option => option.name);
-    const uniqueNames = [...new Set(allNames)];
-
-    const dynamicFields = uniqueNames.map((name, index) => {
-      return { [`f${index + 1}`]: name };
-    });
-    const customStatuses = currentStageOptions
-      .filter(opt => opt.isCustom)
-      .map(opt => opt.name);
-    this.crmStatusData = {
-      ...this.crmStatusData,
-      customStatuses,
-      ...Object.assign({}, ...dynamicFields),
-    };
-
-    // ✅ Optional: call the API
-    this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Status saved successfully');
-          this.offcanvasService.dismiss();
-          this.getCrmStages();
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    });
-  }
 
   getCrmStages(): void {
     this.isStagesLoading = true;
@@ -201,7 +129,6 @@ export class CampaignsComponent extends BaseComponent {
       companyCode: this.userCompanyCode,
       type: this.userType
     };
-
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
         if (res && Array.isArray(res) && res.length > 0) {
@@ -231,7 +158,6 @@ export class CampaignsComponent extends BaseComponent {
 
   getCrmStatus(): void {
     let completedRequests = 0;
-
     for (let i = 0; i < this.stageLst.length; i++) {
       const stageName = this.stageLst[i].stageName;
       const payload = {
@@ -253,7 +179,6 @@ export class CampaignsComponent extends BaseComponent {
                   isCustom: false
                 }))
               : [];
-
             this.statusOptionsByStageforDisplay[stageName] = options;
           }
         },
@@ -281,14 +206,7 @@ export class CampaignsComponent extends BaseComponent {
     }
   }
 
-  prepareCrmStageData() {
-    const selectedStages = this.crmStaticStages
-      .filter(stage => stage.checked)
-      .map(stage => stage.name);
-    for (let i = 0; i < 25; i++) {
-      this.crmStageData[`f${i + 1}`] = selectedStages[i] || "";
-    }
-  }
+  
 
   getCampaignData() {
     const payload = {
@@ -303,6 +221,21 @@ export class CampaignsComponent extends BaseComponent {
         } else {
           this.toastr.error("Unexpected response format.");
         }
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || "An error occurred while fetching data.");
+      }
+    });
+  }
+  getCampaignSecific() {
+    const payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.sepecificCampaign(payload).subscribe({
+      next: (res: any) => {
+        this.listNew = res;
       },
       error: (err) => {
         this.toastr.error(err.statusText || "An error occurred while fetching data.");
@@ -346,7 +279,10 @@ export class CampaignsComponent extends BaseComponent {
 
   viewCampaignLeads(campaign: any) {
     this.router.navigate(['/apps/crm/leads'], {
-      queryParams: { campaignId: campaign.campgnId }
+      queryParams: { 
+        campaignId: campaign.campgnId ,
+        agents: campaign.agents
+      }
     });
   }
 
