@@ -163,6 +163,10 @@ export class SwitherService {
   saveCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_campaign`, data); } 
   displayCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/list_campaigns`, data); }
   StatusCount(campaignId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_count_Status?campaignId=${campaignId}`); }  
+  sepecificCampaign(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_campaign_specific`,data); }  
+  selectFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/create_crm_email_template`,data); }
+  listFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_template_names`,data); }  
+  fetchFormTemplate(templateGenId :any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getTemplateOnTemplateGenId?templateGenId=${templateGenId }`); }  
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
