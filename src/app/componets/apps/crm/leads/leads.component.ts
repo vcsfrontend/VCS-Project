@@ -28,7 +28,7 @@ import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
-
+import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-leads',
   standalone: true,
@@ -75,7 +75,8 @@ export class LeadsComponent extends BaseComponent {
   selectedProgressLeads: any[] = []; selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
   newItemColor: string = '#000000'; newOptionColor : any;showMore = true; topshowMore = false;
   campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any;  selectTemplateForm !: FormGroup;
-  formList : any; tempFormList : any;
+  formList : any; tempFormList : any;generatedTemplateId:any;currentIndex: number = 0;allTemplateGenIds: string[] = [];
+
   crmStaticStages = [
       { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' },
       { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
@@ -259,6 +260,11 @@ export class LeadsComponent extends BaseComponent {
         this.getStatusCount();
         this.getCrmStages();
       }
+      this.sendLeadForm.get('template')?.valueChanges.subscribe(templateGenId => {
+      if (templateGenId) {
+      this.getFormTemplate();
+      }
+      });
     });
 
     //Upload Lead Validatoin
@@ -272,7 +278,7 @@ export class LeadsComponent extends BaseComponent {
       template: ['', [Validators.required]],
       subject: ['', [Validators.required, Validators.minLength(3)]],
       cc: ['', [Validators.required, Validators.email]],
-      bcc: ['', [Validators.required, Validators.email]],
+      // bcc: ['', [Validators.required, Validators.email]],
       content: ['', [Validators.required]]
     });
 
@@ -445,32 +451,41 @@ export class LeadsComponent extends BaseComponent {
   }
 
   addLeadItem() {
-    const newItemName = this.newItem?.trim();
-    if (!newItemName) {
-      this.toastr.error('Please enter a lead Stage.');
-      return;
-    }
+  const newItemName = this.newItem?.trim();
+  const selectedColor = this.newItemColor?.toLowerCase();
 
-    const itemExists = this.crmStaticStages.some(
-      (plan) => plan.name.toLowerCase() === newItemName.toLowerCase()
-    );
-
-    if (!itemExists) {
-      this.crmStaticStages.push({
-        name: newItemName,
-        checked: false,
-        isDefault: false,
-        isCustom: true,
-        color: this.newItemColor || '#000000'  
-      });
-      this.toastr.info('Item added Successfully');
-    } else {
-      this.toastr.warning('This item already exists!');
-    }
-
-    this.newItem = '';
-    this.newItemColor = '#000000'; // Reset color picker
+  if (!newItemName) {
+    this.toastr.warning('Please enter a lead Stage.');
+    return;
   }
+
+  const itemExists = this.crmStaticStages.some(
+    (plan) => plan.name.toLowerCase() === newItemName.toLowerCase()
+  );
+
+  if (itemExists) {
+    this.toastr.warning('This item already exists!');
+    return;
+  }
+
+  if (!selectedColor || selectedColor === '#000000' || selectedColor === '#000') {
+    this.toastr.warning('Please select a  color');
+    return;
+  }
+
+  this.crmStaticStages.push({
+    name: newItemName,
+    checked: false,
+    isDefault: false,
+    isCustom: true,
+    color: selectedColor
+  });
+
+  this.toastr.info('Item added Successfully');
+  this.newItem = '';
+  this.newItemColor = '#000000'; // Reset color picker
+  }
+
 
   deleteLeadItem(index: number) {
     const deleted = this.crmStaticStages[index]?.name;
@@ -570,15 +585,17 @@ export class LeadsComponent extends BaseComponent {
     }
     const payload = this.selectTemplateForm.value;
     console.log(payload);
-    // this.switchService.selectFormTemplate(payload).subscribe({
-    //   next: (res : any) => {
-    //     this.toastr.success('Template submitted successfully!');
-    //     this.selectTemplateForm.reset();
-    //   },
-    //   error: (err) => {
-    //     this.toastr.error(err.statusText || 'Error submitting the template.');
-    //   }
-    // });
+    this.switchService.selectFormTemplate(payload).subscribe({
+      next: (res : any) => {
+        console.log('response',res);
+        this.toastr.success('Template submitted successfully!');
+        this.getFormTemplate();
+        this.selectTemplateForm.reset();
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || 'Error submitting the template.');
+      }
+    });
   }
 
   getlistFormTemplate(){
@@ -590,6 +607,16 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.listFormTemplate(payload).subscribe({
       next: (res: any) => {
         this.formList = res;
+        console.log('Templates:', res);
+
+      this.allTemplateGenIds = res.map((template: any) => template.templateGenId);
+
+      if (this.allTemplateGenIds.length > 0) {
+        // this.currentIndex = 0;
+        this.getFormTemplate(); // load first one
+        
+      }
+
       },
       error: (error) => {
         this.toastr.error("Error fetching product data");
@@ -597,19 +624,34 @@ export class LeadsComponent extends BaseComponent {
     });
   }
 
-  getFormTemplate(){
-    let templateGenId = "MEET106D1747044672850";
-    this.switchService.fetchFormTemplate(templateGenId).subscribe({
-      next: (res: any) => {
-        this.tempFormList = res;
+  getFormTemplate(): void {
+    const requests = this.allTemplateGenIds.map(id => this.switchService.fetchFormTemplate(id));
+
+    forkJoin(requests).subscribe({
+      next: (responses: any[]) => {
+        this.tempFormList = responses;
+        console.log('✅ All templates fetched', this.tempFormList);
       },
-      error: (error) => {
-        this.toastr.error("Error fetching product data");
+      error: (err) => {
+        this.toastr.error('Error fetching template details');
+        console.error(err);
       }
     });
   }
 
+  onTemplateChange(selectedTemplate: any): void {
+  if (!selectedTemplate || !selectedTemplate.templateGenId) {
+    this.toastr.warning('Invalid template selection');
+    return;
+  }
 
+  console.log('✅ Selected template:', selectedTemplate);
+
+  this.sendLeadForm.patchValue({
+    subject: selectedTemplate.subject || '',
+    content: selectedTemplate.description || ''
+  });
+  }
   getUserColor(user: any): string {
     const index = Math.abs(this.hashString(user.email)) % this.userColors.length;
     return this.userColors[index];
@@ -818,12 +860,12 @@ export class LeadsComponent extends BaseComponent {
     const newColor = this.newOptionColor; 
 
     if (!newName) {
-      this.toastr.error('Please enter a status name.');
+      this.toastr.warning('Please enter a status name.');
       return;
     }
 
     if (!newColor) {
-      this.toastr.error('Please select a color.');
+      this.toastr.warning('Please select a color.');
       return;
     }
 
@@ -1497,4 +1539,7 @@ export class LeadsComponent extends BaseComponent {
     }, 0); 
   }
   }
+  
+
+
 }
