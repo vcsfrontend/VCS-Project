@@ -127,3 +127,15 @@ th.mat-mdc-header-cell {
 .scrollable-container {
   scroll-behavior: smooth;  /* This makes all scrolls smooth */
 }
+@keyframes rotateChart {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-on-load {
+  animation: rotateChart 1s ease-out;
+}

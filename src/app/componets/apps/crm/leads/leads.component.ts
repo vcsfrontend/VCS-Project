@@ -76,7 +76,7 @@ export class LeadsComponent extends BaseComponent {
   newItemColor: string = '#000000'; newOptionColor : any;showMore = true; topshowMore = false;
   campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any;  selectTemplateForm !: FormGroup;
   formList : any; tempFormList : any;generatedTemplateId:any;currentIndex: number = 0;allTemplateGenIds: string[] = [];
-
+  rotateCharts = true;
   crmStaticStages = [
       { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' },
       { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
@@ -323,6 +323,9 @@ export class LeadsComponent extends BaseComponent {
         this.filteredOptions.next(this.options); // Reset to all options if searchText is null
       }
     });
+    setTimeout(() => {
+    this.rotateCharts = false;
+    }, 1000);
 
     this.crmStageData = {
       stageId: 0,

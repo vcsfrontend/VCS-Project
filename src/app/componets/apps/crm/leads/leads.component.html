@@ -377,7 +377,7 @@
           </div>
         </div>
         <div class="card-body border-top">
-          <div id="pie-basic">
+          <div id="pie-basic" [ngClass]="{ 'rotate-on-load': rotateCharts }">
             <apx-chart
               [series]="getSeriesData(statusGroup.fields)"
               [chart]="chartOptions.chart"
