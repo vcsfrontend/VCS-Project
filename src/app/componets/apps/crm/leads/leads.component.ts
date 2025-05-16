@@ -51,7 +51,7 @@ export class LeadsComponent extends BaseComponent {
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList: any;
   campaignId !: string; stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any; allStatuses: any;
-  selectedStage: string = ''; checkboxStageOptions: any[] = [];selectedStatusCount: number | null = null;
+  selectedStage: string = ''; checkboxStageOptions: any[] = []; selectedStatusCount: number | null = null;
   chartOptions: any; statusOptionsByStageforDisplay: any = {};
   stageColorMap: Map<string, string> = new Map();
   statusColorMap: Map<string, string> = new Map();
@@ -63,26 +63,26 @@ export class LeadsComponent extends BaseComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
-  statusClicked= false;statusCounts: { status: string; count: number }[] = [];
+  statusClicked = false; statusCounts: { status: string; count: number }[] = [];
   crmStageData: any; crmStatusData: any;
   newOptionName: string = ''; status: string = 'In Progress Leads';
   showValidationError = false;
   showCheckboxError = false; showNameError = false;
-  anyChecked:any;addMoreVisible: boolean = false;
+  anyChecked: any; addMoreVisible: boolean = false;
   newItem: string = ''; isStage: boolean = false; showStages: boolean = false;
   leaditems: { checked: boolean; label: string }[] = [];
   leadStatusitems: { checked: boolean; label: string }[] = [];
   selectedProgressLeads: any[] = []; selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
-  newItemColor: string = '#000000'; newOptionColor : any;showMore = true; topshowMore = false;
-  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any;  selectTemplateForm !: FormGroup;
-  formList : any; tempFormList : any;generatedTemplateId:any;currentIndex: number = 0;allTemplateGenIds: string[] = [];
+  newItemColor: string = '#000000'; newOptionColor: any; showMore = true; topshowMore = false;
+  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm !: FormGroup;
+  formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true;
   crmStaticStages = [
-      { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' },
-      { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
-      { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff' }
-    ];
-  selectedType: string = '';   dynamicFields: { value: string; }[] = [];matcardLst: any;topDisplayedCards: any;
+    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff' }
+  ];
+  selectedType: string = ''; dynamicFields: { value: string; }[] = []; matcardLst: any; topDisplayedCards: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -123,7 +123,7 @@ export class LeadsComponent extends BaseComponent {
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom',  
+        position: 'bottom',
       },
     },
   };
@@ -141,6 +141,7 @@ export class LeadsComponent extends BaseComponent {
   }];
   public pieChartLegend = true;
   public pieChartPlugins = [];
+  agents: any;
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder,
@@ -160,7 +161,7 @@ export class LeadsComponent extends BaseComponent {
         type: 'pie',
       },
       colors: ["#845adf", "#23b7e5", "#f5b849", "#49b6f5", "#e6533c"],
-      labels: ['Hot 250', 'Payment Status 50', 'Call Back Later 190','cold 150','warm 200'],
+      labels: ['Hot 250', 'Payment Status 50', 'Call Back Later 190', 'cold 150', 'warm 200'],
       legend: {
         position: "bottom"
       },
@@ -177,8 +178,9 @@ export class LeadsComponent extends BaseComponent {
   openModal(content1: any) {
     this.modalService.open(content1, { centered: true });
   }
+  offcanvasRef: any;
   openRight(content: any) {
-    this.offcanvasService.open(content, { position: 'end' });
+    this.offcanvasRef = this.offcanvasService.open(content, { position: 'end' });
   }
   openRight1(content1: any) {
     this.offcanvasService.open(content1, { position: 'end' });
@@ -192,7 +194,7 @@ export class LeadsComponent extends BaseComponent {
     this.offcanvasService.open(content1, { position: 'end' });
   }
 
-  url1: string = ''; // Assuming url1 is a property in your component
+  url1: string = ''; 
 
   handleFileInput(event: any): void {
     const file = event.target.files[0];
@@ -252,7 +254,7 @@ export class LeadsComponent extends BaseComponent {
     this.getCampaignData();
     this.getlistFormTemplate();
     this.getFormTemplate();
-    this.route.queryParams.subscribe((params: any) => {
+    this.route.queryParams.subscribe(params => {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
       this.getCrmLeads();
@@ -260,10 +262,24 @@ export class LeadsComponent extends BaseComponent {
         this.getStatusCount();
         this.getCrmStages();
       }
-      this.sendLeadForm.get('template')?.valueChanges.subscribe(templateGenId => {
-      if (templateGenId) {
-      this.getFormTemplate();
+      const nav = history.state;
+      if (nav?.agents) {
+        this.agents = nav.agents;
       }
+      //Send Email 
+      this.sendLeadForm = this.fb.group({
+        email: ['', [Validators.required]],
+        template: ['', [Validators.required]],
+        subject: ['', [Validators.required, Validators.minLength(3)]],
+        cc: ['', [Validators.minLength(3)]],
+        bcc: ['', [Validators.minLength(3)]],
+        content: ['', [Validators.required]],
+        file: [''],
+      });
+      this.sendLeadForm.get('template')?.valueChanges.subscribe(templateGenId => {
+        if (templateGenId) {
+          this.getFormTemplate();
+        }
       });
     });
 
@@ -273,22 +289,12 @@ export class LeadsComponent extends BaseComponent {
     });
 
     //Send Email 
-    this.sendLeadForm = this.fb.group({
-      email: ['', [Validators.required]],
-      template: ['', [Validators.required]],
-      subject: ['', [Validators.required, Validators.minLength(3)]],
-      cc: ['', [Validators.required, Validators.email]],
-      // bcc: ['', [Validators.required, Validators.email]],
-      content: ['', [Validators.required]]
-    });
-
-    //Send Email 
     this.selectTemplateForm = this.fb.group({
       campaignId: [0,],
       templateGenId: ['',],
-      templateName: ['', ],
+      templateName: ['',],
       subject: ['',],
-      description: ['', ],
+      description: ['',],
       createdDate: [new Date().toISOString()],
       companyCode: this.userCompanyCode,
       email: this.userEmail,
@@ -312,7 +318,6 @@ export class LeadsComponent extends BaseComponent {
     });
 
     this.getUsers();
-    // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
       if (searchText && typeof searchText === 'string') {
         const filtered = this.options.filter((option) =>
@@ -320,11 +325,11 @@ export class LeadsComponent extends BaseComponent {
         );
         this.filteredOptions.next(filtered);
       } else {
-        this.filteredOptions.next(this.options); // Reset to all options if searchText is null
+        this.filteredOptions.next(this.options); 
       }
     });
     setTimeout(() => {
-    this.rotateCharts = false;
+      this.rotateCharts = false;
     }, 1000);
 
     this.crmStageData = {
@@ -382,7 +387,7 @@ export class LeadsComponent extends BaseComponent {
       f23Color: "",
       f24Color: "",
       f25Color: "",
-      campaignId:this.campaignId,
+      campaignId: this.campaignId,
       updatedBy: this.userName,
       updatedTime: new Date().toISOString(),
       stageActivity: "YES",
@@ -445,7 +450,7 @@ export class LeadsComponent extends BaseComponent {
       f23Color: "",
       f24Color: "",
       f25Color: "",
-      campaignId:this.campaignId,
+      campaignId: this.campaignId,
       updatedBy: this.userName,
       updatedTime: new Date().toISOString(),
       stageActivity: "YES",
@@ -454,39 +459,39 @@ export class LeadsComponent extends BaseComponent {
   }
 
   addLeadItem() {
-  const newItemName = this.newItem?.trim();
-  const selectedColor = this.newItemColor?.toLowerCase();
+    const newItemName = this.newItem?.trim();
+    const selectedColor = this.newItemColor?.toLowerCase();
 
-  if (!newItemName) {
-    this.toastr.warning('Please enter a lead Stage.');
-    return;
-  }
+    if (!newItemName) {
+      this.toastr.warning('Please enter a lead Stage.');
+      return;
+    }
 
-  const itemExists = this.crmStaticStages.some(
-    (plan) => plan.name.toLowerCase() === newItemName.toLowerCase()
-  );
+    const itemExists = this.crmStaticStages.some(
+      (plan) => plan.name.toLowerCase() === newItemName.toLowerCase()
+    );
 
-  if (itemExists) {
-    this.toastr.warning('This item already exists!');
-    return;
-  }
+    if (itemExists) {
+      this.toastr.warning('This item already exists!');
+      return;
+    }
 
-  if (!selectedColor || selectedColor === '#000000' || selectedColor === '#000') {
-    this.toastr.warning('Please select a  color');
-    return;
-  }
+    if (!selectedColor || selectedColor === '#000000' || selectedColor === '#000') {
+      this.toastr.warning('Please select a  color');
+      return;
+    }
 
-  this.crmStaticStages.push({
-    name: newItemName,
-    checked: false,
-    isDefault: false,
-    isCustom: true,
-    color: selectedColor
-  });
+    this.crmStaticStages.push({
+      name: newItemName,
+      checked: false,
+      isDefault: false,
+      isCustom: true,
+      color: selectedColor
+    });
 
-  this.toastr.info('Item added Successfully');
-  this.newItem = '';
-  this.newItemColor = '#000000'; // Reset color picker
+    this.toastr.info('Item added Successfully');
+    this.newItem = '';
+    this.newItemColor = '#000000'; // Reset color picker
   }
 
 
@@ -500,23 +505,23 @@ export class LeadsComponent extends BaseComponent {
     this.leadStatusitems.push({ checked: false, label: '' });
   }
   inPorgressLeads = [
-    { name: 'Quotataion Shared', checked: false, isDefault: true, color: '#28a745' }, 
-    { name: 'Commercial Discussion', checked: false, isDefault: true, color: '#007bff' }, 
-    { name: 'Office Visit', checked: false, isDefault: true, color: '#ffc107' }, 
-    { name: 'Hot', checked: false, isDefault: true, color: '#dc3545' }, 
-    { name: 'Cold', checked: false, isDefault: true, color: '#6c757d' }, 
-    { name: 'Warm', checked: false, isDefault: true, color: '#fd7e14' }, 
-    { name: 'Call Back', checked: false, isDefault: true, color: '#17a2b8' }, 
+    { name: 'Quotataion Shared', checked: false, isDefault: true, color: '#28a745' },
+    { name: 'Commercial Discussion', checked: false, isDefault: true, color: '#007bff' },
+    { name: 'Office Visit', checked: false, isDefault: true, color: '#ffc107' },
+    { name: 'Hot', checked: false, isDefault: true, color: '#dc3545' },
+    { name: 'Cold', checked: false, isDefault: true, color: '#6c757d' },
+    { name: 'Warm', checked: false, isDefault: true, color: '#fd7e14' },
+    { name: 'Call Back', checked: false, isDefault: true, color: '#17a2b8' },
   ];
 
   lostLeads = [
-    { name: 'Not Interested', checked: false, isDefault: true, color: '#dc3545' }, 
-    { name: 'Irrelevant', checked: false, isDefault: true, color: '#6c757d' }, 
-    { name: 'Given to others', checked: false, isDefault: true, color: '#fd7e14' }, 
+    { name: 'Not Interested', checked: false, isDefault: true, color: '#dc3545' },
+    { name: 'Irrelevant', checked: false, isDefault: true, color: '#6c757d' },
+    { name: 'Given to others', checked: false, isDefault: true, color: '#fd7e14' },
   ];
 
   convertedLeads = [
-    { name: 'CD done', checked: false, isDefault: true, color: '#28a745' }, 
+    { name: 'CD done', checked: false, isDefault: true, color: '#28a745' },
     { name: '10% advance Done', checked: false, isDefault: true, color: '#007bff' },
   ];
 
@@ -530,8 +535,8 @@ export class LeadsComponent extends BaseComponent {
       executive: [''],
       products: [''],
       country: [''],
-      stage: ['',Validators.required],
-      status: ['',Validators.required],
+      stage: ['', Validators.required],
+      status: ['', Validators.required],
       leadSource: [''],
       zipCode: [''],
       followUpDate: [''],
@@ -587,10 +592,8 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     const payload = this.selectTemplateForm.value;
-    console.log(payload);
     this.switchService.selectFormTemplate(payload).subscribe({
-      next: (res : any) => {
-        console.log('response',res);
+      next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         this.getFormTemplate();
         this.selectTemplateForm.reset();
@@ -601,8 +604,8 @@ export class LeadsComponent extends BaseComponent {
     });
   }
 
-  getlistFormTemplate(){
-   let payload = {
+  getlistFormTemplate() {
+    let payload = {
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType
@@ -610,15 +613,10 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.listFormTemplate(payload).subscribe({
       next: (res: any) => {
         this.formList = res;
-        console.log('Templates:', res);
-
-      this.allTemplateGenIds = res.map((template: any) => template.templateGenId);
-
-      if (this.allTemplateGenIds.length > 0) {
-        // this.currentIndex = 0;
-        this.getFormTemplate(); // load first one
-        
-      }
+        this.allTemplateGenIds = res.map((template: any) => template.templateGenId);
+        if (this.allTemplateGenIds.length > 0) {
+          this.getFormTemplate();
+        }
 
       },
       error: (error) => {
@@ -629,32 +627,27 @@ export class LeadsComponent extends BaseComponent {
 
   getFormTemplate(): void {
     const requests = this.allTemplateGenIds.map(id => this.switchService.fetchFormTemplate(id));
-
     forkJoin(requests).subscribe({
       next: (responses: any[]) => {
         this.tempFormList = responses;
-        console.log('✅ All templates fetched', this.tempFormList);
       },
       error: (err) => {
         this.toastr.error('Error fetching template details');
-        console.error(err);
       }
     });
   }
 
   onTemplateChange(selectedTemplate: any): void {
-  if (!selectedTemplate || !selectedTemplate.templateGenId) {
-    this.toastr.warning('Invalid template selection');
-    return;
+    if (!selectedTemplate || !selectedTemplate.templateGenId) {
+      this.toastr.warning('Please Select Template');
+      return;
+    }
+    this.sendLeadForm.patchValue({
+      subject: selectedTemplate.subject || '',
+      content: selectedTemplate.description || ''
+    });
   }
 
-  console.log('✅ Selected template:', selectedTemplate);
-
-  this.sendLeadForm.patchValue({
-    subject: selectedTemplate.subject || '',
-    content: selectedTemplate.description || ''
-  });
-  }
   getUserColor(user: any): string {
     const index = Math.abs(this.hashString(user.email)) % this.userColors.length;
     return this.userColors[index];
@@ -669,10 +662,8 @@ export class LeadsComponent extends BaseComponent {
   }
   initializeDynamicFields(): void {
     this.dynamicFields = [];
-
     if (this.stageLst && this.stageLst.length > 0) {
       const stage = this.stageLst[0];
-
       for (let i = 1; i <= 25; i++) {
         const value = stage[`f${i}`];
         if (value && value.trim() !== '') {
@@ -706,7 +697,7 @@ export class LeadsComponent extends BaseComponent {
     const dynamicFields = uniqueNames.map((name, index) => {
       return {
         [`f${index + 1}`]: name,
-        [`f${index + 1}Color`]: uniqueColors[index] || '', 
+        [`f${index + 1}Color`]: uniqueColors[index] || '',
       };
     });
     const customStatuses = this.statusOptionsByStage[this.selectedStage]
@@ -722,9 +713,9 @@ export class LeadsComponent extends BaseComponent {
         if (res) {
           this.toastr.success('Status saved successfully');
           this.offcanvasService.dismiss();
-          this.getCrmStages(); 
+          this.getCrmStages();
         } else {
-          this.toastr.error(res.message); 
+          this.toastr.error(res.message);
         }
       },
       error: (error) => {
@@ -742,12 +733,10 @@ export class LeadsComponent extends BaseComponent {
         companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
         type: this.userData ? JSON.parse(this.userData).type : '',
         stage: stageName,
-        campaignId : this.campaignId,
+        campaignId: this.campaignId,
       };
-
       const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
       const colorFields = Array.from({ length: 25 }, (_, i) => `f${i + 1}Color`);
-
       this.switchService.CrmStatus(payload).subscribe({
         next: (res: any) => {
           if (res.length === 1) {
@@ -790,8 +779,6 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-
-  
   getDynamicFields(status: any): string[] {
     const dynamicFields = [];
     for (let i = 1; i <= 25; i++) {
@@ -802,7 +789,6 @@ export class LeadsComponent extends BaseComponent {
     }
     return dynamicFields;
   }
-
 
   isHighlightedStatus(status: string): boolean {
     const highlighted = ['In Progress Leads', 'Lost Leads', 'Converted Leads', 'Wrong Leads'];
@@ -833,7 +819,6 @@ export class LeadsComponent extends BaseComponent {
     });
   }
 
-
   getCrmStages(): void {
     this.isStagesLoading = true;
     this.isAddStagesDisabled = true;
@@ -841,15 +826,15 @@ export class LeadsComponent extends BaseComponent {
       email: this.userData ? JSON.parse(this.userData).email : '',
       companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
       type: this.userData ? JSON.parse(this.userData).type : '',
-      campaignId : this.campaignId,
+      campaignId: this.campaignId,
     };
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
         if (res && res.length > 0) {
-          this.processStageData(res[0]); 
+          this.processStageData(res[0]);
           this.getCrmStatus();
         } else {
-          this.stageLst = []; 
+          this.stageLst = [];
         }
       },
       error: (err) => {
@@ -860,63 +845,64 @@ export class LeadsComponent extends BaseComponent {
 
   addNewOption(): void {
     const newName = this.newOptionName?.trim();
-    const newColor = this.newOptionColor; 
-
+    const newColor = this.newOptionColor;
     if (!newName) {
       this.toastr.warning('Please enter a status name.');
       return;
     }
-
     if (!newColor) {
       this.toastr.warning('Please select a color.');
       return;
     }
-
     const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
-
-    // Check if the item already exists in current options
     const isDuplicate = currentStageOptions.some(
       opt => opt.name.toLowerCase() === newName.toLowerCase()
     );
-
     if (newName && !isDuplicate) {
       currentStageOptions.push({
         name: newName,
         checked: false,
         isCustom: true,
-        color: newColor, 
+        color: newColor,
       });
-
       this.checkboxStageOptions = [...currentStageOptions];
       this.toastr.info('Item added.');
     } else {
       this.toastr.warning(`'${newName}' already exists`);
     }
-    
     this.newOptionName = '';
-    this.newOptionColor = ''; 
+    this.newOptionColor = '';
   }
-
 
   prepareCrmStageData() {
-  const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
-  for (let i = 0; i < 25; i++) {
-    this.crmStageData[`f${i + 1}`] = "";
-    this.crmStageData[`f${i + 1}Color`] = "";
-  }
-  selectedStages.forEach((stage, index) => {
-    if (index < 25) {
-      this.crmStageData[`f${index + 1}`] = stage.name;
-      this.crmStageData[`f${index + 1}Color`] = stage.color || "#cccccc"; 
+    const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
+    for (let i = 0; i < 25; i++) {
+      this.crmStageData[`f${i + 1}`] = "";
+      this.crmStageData[`f${i + 1}Color`] = "";
     }
-  });
-}
-
+    selectedStages.forEach((stage, index) => {
+      if (index < 25) {
+        this.crmStageData[`f${index + 1}`] = stage.name;
+        this.crmStageData[`f${index + 1}Color`] = stage.color || "#cccccc";
+      }
+    });
+  }
 
   getAgentColor(name: string): string {
     const index = Math.abs(this.hashString(name.trim())) % this.userColors.length;
     return this.userColors[index];
   }
+
+  getStageColor(stage: string): string {
+    if (!this.stageLst) {
+      return '#ccc'; 
+    }
+    const match = this.stageLst.find(
+      (s: { stageName: string }) => s.stageName.toLowerCase() === stage.toLowerCase()
+    );
+    return match?.color || '#ccc';
+  }
+
 
   getStageClass(stage: string): string {
     const baseClass = 'badge ps-3 fs-11';
@@ -924,49 +910,55 @@ export class LeadsComponent extends BaseComponent {
     const color = this.stageColorMap.get(key) || 'bg-secondary-transparent';
     return `${baseClass} ${color}`;
   }
+
   onStatusChange(): void {
     const selectedStage = this.leadForm.get('stage')?.value;
     this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
-
     if (selectedStage === 'In Progress Leads') {
       this.setInProgressStatus();
     }
-
     this.leadForm.get('status')?.setValue(null);
   }
-   onStageChange() {
+  
+  onStageChange() {
     this.checkboxStageOptions = [];
     if (!this.statusOptionsByStage[this.selectedStage]) {
-      this.statusOptionsByStage[this.selectedStage] = []; 
+      this.statusOptionsByStage[this.selectedStage] = [];
     }
     this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage];
-    if(this.statusOptionsByStageforDisplay[this.selectedStage]){
-    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage].map(item => {
-      const existsInSelected = this.statusOptionsByStageforDisplay[this.selectedStage].some((selected: { name: any; }) => selected.name === item.name);
-      return { ...item, checked: existsInSelected };
-    });
-    this.anyChecked = true;
+    if (this.statusOptionsByStageforDisplay[this.selectedStage]) {
+      this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage].map(item => {
+        const existsInSelected = this.statusOptionsByStageforDisplay[this.selectedStage].some((selected: { name: any; }) => selected.name === item.name);
+        return { ...item, checked: existsInSelected };
+      });
+      this.anyChecked = true;
+    }
+    else {
+      this.anyChecked = false;
+    }
   }
-  else{
-    this.anyChecked = false;
+
+  onFollowupStatusChange(): void {
+    const selectedStage = this.followupLeadForm.get('stage')?.value;
+    console.log('Followup selected stage:', selectedStage);
+    this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
+    if (selectedStage === 'In Progress Leads') {
+      this.setInProgressStatus();
+    }
+    this.followupLeadForm.get('status')?.setValue(null);
   }
-  
-  }
-  
+
+
   deleteOption(index: number) {
     const deletedOption = this.checkboxStageOptions[index];
-
     this.checkboxStageOptions.splice(index, 1);
-
     const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
     const mainIndex = currentStageOptions.findIndex(
       opt => opt.name.toLowerCase() === deletedOption.name.toLowerCase()
     );
-
     if (mainIndex !== -1) {
       currentStageOptions.splice(mainIndex, 1);
     }
-
     this.toastr.error(`'${deletedOption.name}' has been deleted`);
   }
 
@@ -979,9 +971,23 @@ export class LeadsComponent extends BaseComponent {
 
   getStatusClass(status: string): string {
     const baseClass = 'badge ps-3 fs-11 order-status';
-    const color = this.statusColorMap.get(status?.toLowerCase()) || 'bg-secondary-transparent';
+    const color = this.statusColorMap.get(status?.toLowerCase()) || 'bg-secondary text-white';
     return `${baseClass} ${color}`;
   }
+
+  getStatusColor(status: string): string {
+    if (!Array.isArray(this.statusLst)) {
+      return '#ccc';
+    }
+    for (const stage of this.statusLst) {
+      const field = stage.fields?.find((f: { name: string; }) => f.name?.toLowerCase() === status?.toLowerCase());
+      if (field?.color) {
+        return field.color;
+      }
+    }
+    return '#ccc';
+  }
+
 
   filterStatusList(event: any): void {
     const activePoints = event.active;
@@ -992,7 +998,6 @@ export class LeadsComponent extends BaseComponent {
       this.dataSource.filter = label.trim().toLowerCase();
     }
   }
-
 
   onCountryChange(data: any) {
     this.leadForm.patchValue({ country: data });
@@ -1016,7 +1021,6 @@ export class LeadsComponent extends BaseComponent {
   }
   getStatusCount(): void {
     this.statusClicked = false;
-    // this.selectedStatus = statusName;
     this.selectedStatusCount = null;
     const campaignId = this.campaignId;
     this.switchService.StatusCount(campaignId).subscribe({
@@ -1032,9 +1036,8 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
- onCheckboxChange() {
+  onCheckboxChange() {
     const selectedPlans = this.crmStaticStages.filter((plan) => plan.checked);
-    // Update f1 to f30 fields dynamically based on selected items
     selectedPlans.forEach((plan, index) => {
       if (index < 30) {
         this.crmStatusData[`f${index + 1}`] = plan.name;
@@ -1045,10 +1048,10 @@ export class LeadsComponent extends BaseComponent {
     }
   }
   resetForm() {
-    this.newItem = ''; // Reset the input field
-    this.addMoreVisible = false; // Hide the 'Add More' section
+    this.newItem = '';
+    this.addMoreVisible = false;
     this.crmStaticStages.forEach(plan => {
-      plan.checked = false; // Unselect all checkboxes
+      plan.checked = false;
     });
   }
 
@@ -1063,7 +1066,6 @@ export class LeadsComponent extends BaseComponent {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
       this.uploadSubmitted = false;
       this.uploadLead.reset();
@@ -1203,7 +1205,6 @@ export class LeadsComponent extends BaseComponent {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     this.imageFileSrcData = files;
-
   }
 
   get s() {
@@ -1214,35 +1215,38 @@ export class LeadsComponent extends BaseComponent {
     this.sendLeadSubmitted = true;
     if (this.sendLeadForm?.valid) {
       const formData = new FormData();
-      formData.append('file', this.imageFileSrcData);
+      formData.append('file', this.imageFileSrcData, this.imageFileSrcData.name);
       formData.append('email', this.sendLeadForm.get('email')?.value);
-      formData.append('template', this.sendLeadForm.get('template')?.value);
+      const templateValue = this.sendLeadForm.get('template')?.value;
+      const templateToSend = typeof templateValue === 'object' ? templateValue.templateGenId : templateValue;
+      formData.append('template', templateToSend);
       formData.append('subject', this.sendLeadForm.get('subject')?.value);
       formData.append('cc', this.sendLeadForm.get('cc')?.value);
       formData.append('bcc', this.sendLeadForm.get('bcc')?.value);
       formData.append('content', this.sendLeadForm.get('content')?.value);
-
-      this.switchService.CRMLeadSendMailFollowup(formData).subscribe({
-        next: (res: any) => {
-          if (res.status == true) {
-            this.imageFileSrcData = '';
-            modal.close();
-            this.submitted = false;
-            this.leadForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
-      })
-
+      for (const pair of (formData as any).entries()) {
+        console.log(pair[0] + ':', pair[1]);
+      }
+      // this.switchService.CRMLeadSendMailFollowup(formData).subscribe({
+      //   next: (res: any) => {
+      //     if (res.status == true) {
+      //       this.imageFileSrcData = '';
+      //       modal.close();
+      //       this.submitted = false;
+      //       this.leadForm.reset();
+      //       this.toastr.success(res.message, 'lead', {
+      //         timeOut: 3000, positionClass: 'toast-top-right'
+      //       });
+      //     } else {
+      //       this.toastr.error(res.message, 'lead', {
+      //         timeOut: 3000, positionClass: 'toast-top-right'
+      //       });
+      //     }
+      //   },
+      //   error: (error) => {
+      //     this.toastr.error(error.statusText);
+      //   },
+      // })
     }
   }
 
@@ -1360,7 +1364,7 @@ export class LeadsComponent extends BaseComponent {
         this.stageLst.push({ stageName: name, color: color || '#cccccc' });
       }
     }
-    
+
   }
 
   getCampaignData() {
@@ -1376,12 +1380,10 @@ export class LeadsComponent extends BaseComponent {
           const campaign = res.find(c => c.campgnId === this.campaignId);
           if (campaign) {
             this.selectedCampaign = campaign;
-            console.log('Selected Campaign:', this.selectedCampaign);
             const agentEmails = campaign.agents
               ?.split(',')
               ?.map((email: string) => email.trim())
               ?.filter((email: string) => email);
-            console.log('Agent Emails:', agentEmails);  // Debug log
             if (agentEmails?.length) {
               this.getAgentUsers(agentEmails);
             }
@@ -1400,13 +1402,10 @@ export class LeadsComponent extends BaseComponent {
   getAgentUsers(agentEmails: string[]) {
     const cn = JSON.parse(this.userData).companyName;
     const cc = JSON.parse(this.userData).companyCode;
-
     this.switchService.cmpnyUsers(cn, cc).subscribe({
       next: (users: any[]) => {
-        // Check if `users` is an array and filter based on agentEmails
         if (Array.isArray(users)) {
           this.agentUsers = users.filter(user => agentEmails.includes(user.email));
-          console.log('Filtered Agent Users:', this.agentUsers);  // Debug log
         } else {
           this.toastr.error("Unexpected user data format.");
         }
@@ -1484,15 +1483,15 @@ export class LeadsComponent extends BaseComponent {
   getSeriesData(fields: any[]): number[] {
     return fields.map((field) => {
       const foundStatus = this.statusCounts.find(status => status.status === field.name);
-      return foundStatus ? foundStatus.count : 0; 
+      return foundStatus ? foundStatus.count : 0;
     });
   }
-  
+
   getLabelData(fields: any[]): string[] {
     return fields.map((field) => {
       const foundStatus = this.statusCounts.find(status => status.status === field.name);
       const count = foundStatus ? foundStatus.count : 0;
-      return `${field.name} (${count})`; 
+      return `${field.name} (${count})`;
     });
   }
   editorContent: string = '<p>Start writing here...</p>';
@@ -1529,20 +1528,20 @@ export class LeadsComponent extends BaseComponent {
     this.topDisplayedCards = this.topshowMore ? this.matcardLst?.slice(0, 2) : this.matcardLst;
   }
   toggleTopShowMore() {
-  this.topshowMore = !this.topshowMore;
-  if (this.topshowMore) {
-    setTimeout(() => {
-      const scrollContainer = document.querySelector('.scrollable-container');
-      if (scrollContainer) {
-        scrollContainer.scrollTo({
-          top: 0,
-          behavior: 'smooth'  
-        });
-      }
-    }, 0); 
+    this.topshowMore = !this.topshowMore;
+    if (this.topshowMore) {
+      setTimeout(() => {
+        const scrollContainer = document.querySelector('.scrollable-container');
+        if (scrollContainer) {
+          scrollContainer.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }
+      }, 0);
+    }
   }
-  }
-  
+
 
 
 }

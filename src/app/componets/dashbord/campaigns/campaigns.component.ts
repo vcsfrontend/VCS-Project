@@ -36,13 +36,6 @@ export class CampaignsComponent extends BaseComponent {
   isStagesLoading: boolean = true; statusLst: any;
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
-  crmStaticStages = [
-    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff' },
-    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
-    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' }
-  ];
-
-
   constructor(private modalService: NgbModal, public switchService: SwitherService,
     private offcanvasService: NgbOffcanvas, private toastr: ToastrService, private fb: FormBuilder, private router: Router,
   ) {
@@ -172,7 +165,7 @@ export class CampaignsComponent extends BaseComponent {
           if (res.length == 1) {
             const options = Array.isArray(res)
               ? fields
-                .filter(field => res[0][field]) // skip empty values
+                .filter(field => res[0][field])
                 .map(field => ({
                   name: res[0][field],
                   checked: false,
@@ -191,22 +184,17 @@ export class CampaignsComponent extends BaseComponent {
           completedRequests++;
           if (completedRequests === this.stageLst.length) {
             const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
-
-            // Filter only selected stages from all statusOptionsByStage
             this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
-              .filter(([stage]) => selectedStageNames.includes(stage)) // ✅ Only show selected stages
+              .filter(([stage]) => selectedStageNames.includes(stage))
               .map(([stage, fields]) => ({
                 stage,
                 fields
               }));
           }
         }
-
       });
     }
   }
-
-  
 
   getCampaignData() {
     const payload = {
@@ -279,136 +267,14 @@ export class CampaignsComponent extends BaseComponent {
 
   viewCampaignLeads(campaign: any) {
     this.router.navigate(['/apps/crm/leads'], {
-      queryParams: { 
-        campaignId: campaign.campgnId ,
-        agents: campaign.agents
-      }
+      queryParams: { campaignId: campaign.campgnId },
+      state: { agents: campaign.agents }
     });
   }
 
+
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
-  }
-  // step = 1;
-
-  // nextStep() {
-  //   if (this.step < 3) {
-  //     this.step++;
-  //   }
-  // }
-
-
-  // prevStep() {
-  //   if (this.step > 1) this.step--;
-  // }
-
-
-
-  addLeadItem() {
-    const newItemName = this.newItem?.trim();
-    if (!newItemName) {
-      this.toastr.error('Please enter a lead Stage.');
-      return;
-    }
-
-    const itemExists = this.crmStaticStages.some(
-      (plan) => plan.name.toLowerCase() === newItemName.toLowerCase()
-    );
-
-    if (!itemExists) {
-      this.crmStaticStages.push({
-        name: newItemName,
-        checked: false,
-        isDefault: false,
-        isCustom: true,
-        color: this.newItemColor || '#000000'  // Assign the selected or default color
-      });
-      this.toastr.info('Item added Successfully');
-    } else {
-      this.toastr.warning('This item already exists!');
-    }
-
-    this.newItem = '';
-    this.newItemColor = '#000000'; // Reset color picker
-  }
-
-  deleteLeadItem(index: number) {
-    const deleted = this.crmStaticStages[index]?.name;
-    this.crmStaticStages.splice(index, 1);
-    this.toastr.error(`'${deleted}' has been deleted`);
-
-  }
-
-  addNewOption() {
-    const newName = this.newOptionName?.trim();
-
-    if (!newName) {
-      this.toastr.error('Please enter a status name.');
-      return;
-    }
-
-    const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
-
-    // Check if the item already exists in current options
-    const isDuplicate = currentStageOptions.some(
-      opt => opt.name.toLowerCase() === newName.toLowerCase()
-    );
-
-    if (this.newOptionName.trim() && !isDuplicate) {
-      currentStageOptions.push({
-        name: this.newOptionName,
-        checked: false,
-        isCustom: true
-      });
-
-      this.checkboxStageOptions = [...currentStageOptions];
-      this.toastr.info('item added.');
-    } else {
-      this.toastr.warning(`'${newName}' already exists`);
-    }
-
-    this.newOptionName = '';
-  }
-
-  deleteOption(index: number) {
-    const deletedOption = this.checkboxStageOptions[index];
-
-    this.checkboxStageOptions.splice(index, 1);
-
-    const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
-    const mainIndex = currentStageOptions.findIndex(
-      opt => opt.name.toLowerCase() === deletedOption.name.toLowerCase()
-    );
-
-    if (mainIndex !== -1) {
-      currentStageOptions.splice(mainIndex, 1);
-    }
-
-    this.toastr.error(`'${deletedOption.name}' has been deleted`);
-  }
-
-  onStageChange() {
-    this.checkboxStageOptions = [];
-    if (!this.statusOptionsByStage[this.selectedStage]) {
-      this.statusOptionsByStage[this.selectedStage] = [];
-    }
-    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage];
-    if (this.statusOptionsByStageforDisplay[this.selectedStage]) {
-      this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage].map(item => {
-        const existsInSelected = this.statusOptionsByStageforDisplay[this.selectedStage].some((selected: { name: any; }) => selected.name === item.name);
-        return { ...item, checked: existsInSelected };
-      });
-      this.anyChecked = true;
-    }
-    else {
-      this.anyChecked = false;
-    }
-
-    // this.anyChecked = this.checkboxStageOptions.some(
-    //   (item) => {console.log(item.checked);return item.checked === true}
-    // );
-
-
   }
 
 }
