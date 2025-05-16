@@ -1494,6 +1494,10 @@ export class LeadsComponent extends BaseComponent {
       return `${field.name} (${count})`;
     });
   }
+  getColorData(fields: any[]): string[] {
+  return fields.map((field) => field.color);
+  }
+
   editorContent: string = '<p>Start writing here...</p>';
 
   editorConfig: AngularEditorConfig = {
