@@ -93,6 +93,8 @@ th.mat-mdc-header-cell {
   font-size: 14px !important;
 }
 
+
+
 .ng-selt {
   position: relative;
   display: block;
@@ -138,4 +140,12 @@ th.mat-mdc-header-cell {
 
 .rotate-on-load {
   animation: rotateChart 1s ease-out;
+}
+
+.fixed-width-column {
+  width: 150px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -266,6 +266,7 @@ export class LeadsComponent extends BaseComponent {
       if (nav?.agents) {
         this.agents = nav.agents;
       }
+
       //Send Email 
       this.sendLeadForm = this.fb.group({
         email: ['', [Validators.required]],
@@ -276,6 +277,7 @@ export class LeadsComponent extends BaseComponent {
         content: ['', [Validators.required]],
         file: [''],
       });
+
       this.sendLeadForm.get('template')?.valueChanges.subscribe(templateGenId => {
         if (templateGenId) {
           this.getFormTemplate();
@@ -940,7 +942,6 @@ export class LeadsComponent extends BaseComponent {
 
   onFollowupStatusChange(): void {
     const selectedStage = this.followupLeadForm.get('stage')?.value;
-    console.log('Followup selected stage:', selectedStage);
     this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage] || [];
     if (selectedStage === 'In Progress Leads') {
       this.setInProgressStatus();
@@ -1104,7 +1105,7 @@ export class LeadsComponent extends BaseComponent {
             email: res.leadsEntry.email || "",
             currentStage: res.leadsEntry.currentStage || "",
             updatedBy: res.leadsEntry.updatedBy || "",
-            updatedTime: this.formatDateTime(res.leadsEntry.updatedTime), // Convert to readable format
+            updatedTime: res.leadsEntry.updatedTime || "", 
             leadId: res.leadsEntry.leadId || 0,
             followLeads: res.followLeads?.map((followup: any) => ({
               id: followup.id || 0,
@@ -1260,6 +1261,7 @@ export class LeadsComponent extends BaseComponent {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
       let followUpDetails = this.followupLeadForm.value;
       followUpDetails.leadEntry = { leadId: this.leadId };
+      followUpDetails.followupTime = this.convertTo12HourFormat(followUpDetails.followupTime);
       this.switchService.CRMAddFollowupLead(this.followupLeadForm.value).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1279,9 +1281,17 @@ export class LeadsComponent extends BaseComponent {
           }
         }
       })
-
     }
   }
+  convertTo12HourFormat(time24: string): string {
+    if (!time24) return '';
+    const [hourStr, minuteStr] = time24.split(':');
+    let hour = parseInt(hourStr, 10);
+    const suffix = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12; 
+    return `${hour.toString().padStart(2, '0')}:${minuteStr} ${suffix}`;
+  }
+
 
   getUsers() {
     if (JSON.parse(this.userData).type == 2) {
