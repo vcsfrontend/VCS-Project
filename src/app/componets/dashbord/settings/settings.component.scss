@@ -235,22 +235,28 @@ button:disabled {
 .custom-checkbox .mat-checkbox-label {
   font-size: 2px;
 }
-.mdc-checkbox__background
-{
-width: 11px !important;
-height: 11px !important;  
+.mdc-checkbox__background {
+  width: 11px !important;
+  height: 11px !important;  
 }
 .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate="true"]:enabled ~ .mdc-checkbox__background
 {
-background-color: #069  !important;
-border-color: #069  !important;
+  background-color: #069  !important;
+  border-color: #069  !important;
 }
 .mdc-checkbox__ripple{
-background: none !important;
+  background: none !important;
 }
 .center-align {
   text-align: center !important;
   font-weight: bold !important;
+}
+.mat-mdc-icon-button[disabled],
+.mat-mdc-icon-button.mat-mdc-button-disabled {
+  cursor: default;
+  pointer-events: none;
+  color: #000000;
+  background-color: #ffffff; 
 }
 
 .tex-right{
