@@ -66,7 +66,7 @@ export class LeadsComponent extends BaseComponent {
   statusClicked = false; statusCounts: { status: string; count: number }[] = [];
   crmStageData: any; crmStatusData: any;
   newOptionName: string = ''; status: string = 'In Progress Leads';
-  showValidationError = false;
+  showValidationError = false; fetchCrmLeadsList : any;
   showCheckboxError = false; showNameError = false;
   anyChecked: any; addMoreVisible: boolean = false;
   newItem: string = ''; isStage: boolean = false; showStages: boolean = false;
@@ -194,7 +194,7 @@ export class LeadsComponent extends BaseComponent {
     this.offcanvasService.open(content1, { position: 'end' });
   }
 
-  url1: string = ''; 
+  url1: string = '';
 
   handleFileInput(event: any): void {
     const file = event.target.files[0];
@@ -257,7 +257,9 @@ export class LeadsComponent extends BaseComponent {
     this.route.queryParams.subscribe(params => {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
-      this.getCrmLeads();
+      this.getFetchLeadData();
+      // this.getCrmLeads();
+
       if (this.campaignId) {
         this.getStatusCount();
         this.getCrmStages();
@@ -327,7 +329,7 @@ export class LeadsComponent extends BaseComponent {
         );
         this.filteredOptions.next(filtered);
       } else {
-        this.filteredOptions.next(this.options); 
+        this.filteredOptions.next(this.options);
       }
     });
     setTimeout(() => {
@@ -534,7 +536,7 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       companyName: [''],
-      executive: [''],
+      executive: [this.userEmail],
       products: [''],
       country: [''],
       stage: ['', Validators.required],
@@ -549,9 +551,9 @@ export class LeadsComponent extends BaseComponent {
       email: [''],
       leadId: [0],
       currentStage: [''],
-      updatedBy: [JSON.parse(this.userData).username],
+      updatedBy: [this.userEmail],
       updatedTime: [''],
-      entryBy: [JSON.parse(this.userData).username],
+      entryBy: [this.userEmail],
       campaignId: [this.campaignId]
     });
   }
@@ -562,9 +564,9 @@ export class LeadsComponent extends BaseComponent {
 
   onSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
-    this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).username);
-    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
-    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).username);
+    this.leadForm.get('executive')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
@@ -575,7 +577,7 @@ export class LeadsComponent extends BaseComponent {
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
-            this.getCrmLeads();
+            this.getFetchLeadData();
             this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           } else {
             this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
@@ -587,6 +589,36 @@ export class LeadsComponent extends BaseComponent {
       });
     }
   }
+
+  editLeadSubmit(modal: any) {
+    this.leadForm.get('campaignId')?.setValue(this.campaignId);
+    this.leadForm.get('executive')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
+    const payload = this.leadForm.value;
+    this.submitted = true;
+    if (this.leadForm?.valid) {
+      this.switchService.EditCrmLeads(payload).subscribe({
+        next: (res: any) => {
+          if (res.status) {
+            modal.close();
+            this.submitted = false;
+            this.leadForm.reset();
+            this.getFetchLeadData();
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+          } else {
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      });
+    }
+  }
+
+  
 
   selectFormTemplateSubmit() {
     if (this.selectTemplateForm.invalid) {
@@ -897,7 +929,7 @@ export class LeadsComponent extends BaseComponent {
 
   getStageColor(stage: string): string {
     if (!this.stageLst) {
-      return '#ccc'; 
+      return '#ccc';
     }
     const match = this.stageLst.find(
       (s: { stageName: string }) => s.stageName.toLowerCase() === stage.toLowerCase()
@@ -921,7 +953,7 @@ export class LeadsComponent extends BaseComponent {
     }
     this.leadForm.get('status')?.setValue(null);
   }
-  
+
   onStageChange() {
     this.checkboxStageOptions = [];
     if (!this.statusOptionsByStage[this.selectedStage]) {
@@ -1004,15 +1036,31 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm.patchValue({ country: data });
   }
 
-  getCrmLeads(): void {
-    const campaignId = this.campaignId;
-    this.switchService.CrmLeads(campaignId).subscribe({
+  // getCrmLeads(): void {
+  //   const campaignId = this.campaignId;
+  //   this.switchService.CrmLeads(campaignId).subscribe({
+  //     next: (res: any) => {
+  //       if (res) {
+  //         this.crmLeadsList = res;
+  //         this.dataSource.data = this.crmLeadsList;
+  //       } else {
+  //         this.toastr.error(res.message || 'Failed to load leads.');
+  //       }
+  //     },
+  //     error: (error) => {
+  //       this.toastr.error(error.statusText || 'Server Error');
+  //     },
+  //   });
+  // }
+
+  getFetchLeadData() {
+    this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
       next: (res: any) => {
-        if (res) {
-          this.crmLeadsList = res;
-          this.dataSource.data = this.crmLeadsList;
+        if (res?.executiveList) {
+          this.fetchCrmLeadsList = res.executiveList; 
+          this.dataSource.data = this.fetchCrmLeadsList;
         } else {
-          this.toastr.error(res.message || 'Failed to load leads.');
+          this.toastr.error('No leads found in the response.');
         }
       },
       error: (error) => {
@@ -1020,6 +1068,9 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
+
+
+
   getStatusCount(): void {
     this.statusClicked = false;
     this.selectedStatusCount = null;
@@ -1105,7 +1156,7 @@ export class LeadsComponent extends BaseComponent {
             email: res.leadsEntry.email || "",
             currentStage: res.leadsEntry.currentStage || "",
             updatedBy: res.leadsEntry.updatedBy || "",
-            updatedTime: res.leadsEntry.updatedTime || "", 
+            updatedTime: res.leadsEntry.updatedTime || "",
             leadId: res.leadsEntry.leadId || 0,
             followLeads: res.followLeads?.map((followup: any) => ({
               id: followup.id || 0,
@@ -1182,25 +1233,41 @@ export class LeadsComponent extends BaseComponent {
     this.sendLeadForm.patchValue({ email: element.email });
   }
 
-  editLead(element: any, content12: any) {
-    if (element.leadId) {
-      this.switchService.ViewCrmLeads(element.leadId).subscribe({
-        next: (res: any) => {
-          if (res.leadsEntry) {
-            this.leadForm.patchValue(res.leadsEntry);
-            this.leadForm.patchValue({ contact: this.formatMobileNumber(res.leadsEntry.contact) });
-            this.modalService.open(content12, { scrollable: true, centered: true, size: 'xl' });
+  editLead(element: any, Content14: any): void {
+    const payload = {
+      leadId: element.leadId || 0,
+      name: element.name || '',
+      companyName: element.companyName || '',
+      executive: element.executive || this.userEmail,
+      products: element.products || '',
+      country: element.country || '',
+      stage: element.stage || '',
+      status: element.status || '',
+      leadSource: element.leadSource || '',
+      zipCode: element.zipCode || '',
+      followUpDate: element.followUpDate || '',
+      state: element.state || '',
+      city: element.city || '',
+      address: element.address || '',
+      contact: element.contact ? this.formatMobileNumber(element.contact) : '',
+      email: element.email || '',
+      currentStage: element.currentStage || '',
+      updatedBy: this.userEmail, 
+      updatedTime: new Date().toISOString(), 
+      entryBy: element.entryBy || this.userEmail,
+      campaignId: element.campaignId || this.campaignId
+    };
+    this.leadForm.patchValue(payload);
 
-          } else {
-            this.toastr.error(res.message);
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
-      })
-    }
+    this.modalService.open(Content14, {
+      scrollable: true,
+      centered: true,
+      size: 'xl'
+    });
   }
+
+
+
 
   onEmailFileChange(event: any): void {
     this.imageFileSrcData = '';
@@ -1288,7 +1355,7 @@ export class LeadsComponent extends BaseComponent {
     const [hourStr, minuteStr] = time24.split(':');
     let hour = parseInt(hourStr, 10);
     const suffix = hour >= 12 ? 'PM' : 'AM';
-    hour = hour % 12 || 12; 
+    hour = hour % 12 || 12;
     return `${hour.toString().padStart(2, '0')}:${minuteStr} ${suffix}`;
   }
 
@@ -1505,7 +1572,7 @@ export class LeadsComponent extends BaseComponent {
     });
   }
   getColorData(fields: any[]): string[] {
-  return fields.map((field) => field.color);
+    return fields.map((field) => field.color);
   }
 
   editorContent: string = '<p>Start writing here...</p>';
