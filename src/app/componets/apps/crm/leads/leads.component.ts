@@ -66,7 +66,7 @@ export class LeadsComponent extends BaseComponent {
   statusClicked = false; statusCounts: { status: string; count: number }[] = [];
   crmStageData: any; crmStatusData: any;
   newOptionName: string = ''; status: string = 'In Progress Leads';
-  showValidationError = false; fetchCrmLeadsList : any;
+  showValidationError = false; fetchCrmLeadsList: any[] = [];
   showCheckboxError = false; showNameError = false;
   anyChecked: any; addMoreVisible: boolean = false;
   newItem: string = ''; isStage: boolean = false; showStages: boolean = false;
@@ -76,7 +76,7 @@ export class LeadsComponent extends BaseComponent {
   newItemColor: string = '#000000'; newOptionColor: any; showMore = true; topshowMore = false;
   campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm !: FormGroup;
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
-  rotateCharts = true;
+  rotateCharts = true; executiveList: any[] = []; entryList: any[] = [];
   crmStaticStages = [
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745' },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545' },
@@ -536,7 +536,7 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       companyName: [''],
-      executive: [this.userEmail],
+      executive: [''],
       products: [''],
       country: [''],
       stage: ['', Validators.required],
@@ -564,7 +564,7 @@ export class LeadsComponent extends BaseComponent {
 
   onSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
-    this.leadForm.get('executive')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('executive')?.setValue('');
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
@@ -592,8 +592,8 @@ export class LeadsComponent extends BaseComponent {
 
   editLeadSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
-    this.leadForm.get('executive')?.setValue(JSON.parse(this.userData).email);
-    this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('executive')?.setValue(this.element.executive ?? null);
+    this.leadForm.get('entryBy')?.setValue(this.element.entryBy ?? null);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
@@ -1054,21 +1054,22 @@ export class LeadsComponent extends BaseComponent {
   // }
 
   getFetchLeadData() {
-    this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
-      next: (res: any) => {
-        if (res?.executiveList) {
-          this.fetchCrmLeadsList = res.executiveList; 
-          this.dataSource.data = this.fetchCrmLeadsList;
-        } else {
-          this.toastr.error('No leads found in the response.');
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || 'Server Error');
-      },
-    });
-  }
-
+  this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
+    next: (res: any) => {
+      if (res?.executiveList || res?.entryList) {
+        const executiveList = res.executiveList || [];
+        const entryList = res.entryList || [];
+        const combined = [...executiveList, ...entryList];
+        this.fetchCrmLeadsList = combined;
+        this.dataSource.data = this.fetchCrmLeadsList;
+      } else {
+      }
+    },
+    error: (error) => {
+      this.toastr.error(error.statusText || 'Server Error');
+    },
+  });
+}
 
 
   getStatusCount(): void {
@@ -1201,7 +1202,8 @@ export class LeadsComponent extends BaseComponent {
       this.uploadSpinner = true;
       const formData = new FormData();
       formData.append('file', this.imageFileSrcData);
-      formData.append('uploadedBy', 'Balakrishna');
+      formData.append('uploadedBy', JSON.parse(this.userData)?.email || '');
+      formData.append('campaignId', this.campaignId || '');
       this.switchService.UploadCrmLeads(formData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1238,7 +1240,7 @@ export class LeadsComponent extends BaseComponent {
       leadId: element.leadId || 0,
       name: element.name || '',
       companyName: element.companyName || '',
-      executive: element.executive || this.userEmail,
+      executive: element.executive ?? null,
       products: element.products || '',
       country: element.country || '',
       stage: element.stage || '',
@@ -1254,7 +1256,7 @@ export class LeadsComponent extends BaseComponent {
       currentStage: element.currentStage || '',
       updatedBy: this.userEmail, 
       updatedTime: new Date().toISOString(), 
-      entryBy: element.entryBy || this.userEmail,
+      entryBy: element.entryBy ?? null,
       campaignId: element.campaignId || this.campaignId
     };
     this.leadForm.patchValue(payload);
@@ -1293,7 +1295,6 @@ export class LeadsComponent extends BaseComponent {
       formData.append('bcc', this.sendLeadForm.get('bcc')?.value);
       formData.append('content', this.sendLeadForm.get('content')?.value);
       for (const pair of (formData as any).entries()) {
-        console.log(pair[0] + ':', pair[1]);
       }
       // this.switchService.CRMLeadSendMailFollowup(formData).subscribe({
       //   next: (res: any) => {
@@ -1399,13 +1400,11 @@ export class LeadsComponent extends BaseComponent {
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
-
     if (this.selectedIdList.size == 0) {
       this.toastr.error('Please choose at least one', 'lead', {
         timeOut: 3000, positionClass: 'toast-top-right'
       });
     }
-
     if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
       this.allocateForm.patchValue({ idList: this.allocateForm });
       let allocateData = { idList: [...this.selectedIdList], executive: this.allocateForm.get('executive')?.value }
@@ -1418,6 +1417,7 @@ export class LeadsComponent extends BaseComponent {
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
+            this.getFetchLeadData();
           } else {
             this.toastr.error(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
