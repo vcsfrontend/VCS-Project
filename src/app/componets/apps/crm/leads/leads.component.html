@@ -106,9 +106,9 @@
                     <ng-container matColumnDef="stage">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
                         <td mat-cell *matCellDef="let element">
-                          <span class="badge me-1" [ngStyle]="{ 'background-color': getStageColor(element.stage) }">
-                            {{ element.stage }}
-                          </span>
+                            <span class="badge me-1" [ngStyle]="{ 'background-color': getStageColor(element.stage) }">
+                                {{ element.stage }}
+                            </span>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="status">
@@ -120,8 +120,9 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="followUpDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">FollowUpDate</th>
-                        <td mat-cell *matCellDef="let element" > 
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">FollowUpDate
+                        </th>
+                        <td mat-cell *matCellDef="let element">
                             {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm:ss a' }} </td>
                     </ng-container>
                     <ng-container matColumnDef="contact">
@@ -346,7 +347,8 @@
                         Campaign Users
                     </div>
                 </div>
-                <div class="card-body p-0 crm-card-chart" style="min-height: 240px; max-height: 245px; overflow-y: auto;">
+                <div class="card-body p-0 crm-card-chart"
+                    style="min-height: 240px; max-height: 245px; overflow-y: auto;">
                     <ul class="list-group list-group-flush" *ngIf="agentUsers && agentUsers.length > 0">
                         <li class="list-group-item" *ngFor="let user of agentUsers">
                             <div class="d-flex align-items-center">
@@ -361,8 +363,12 @@
                                     <div class="fs-12 text-muted">{{ user.username }}</div>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"><i class="ri-pencil-line"></i></a>
-                                    <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave "><i class="ri-delete-bin-line"></i></a>
+                                    <a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"><i
+                                            class="ri-pencil-line"></i></a>
+                                    <a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-sm btn-danger-light btn-wave "><i
+                                            class="ri-delete-bin-line"></i></a>
                                 </div>
                             </div>
                         </li>
@@ -743,7 +749,8 @@
                             aria-current="page" aria-selected="false ">Follow-Ups</a>
                         <ng-template ngbNavContent>
                             <div class="p-3" id="pill-flex-home" role="tabpanel">
-                                <ul class="list-unstyled border border-dark rounded p-3" *ngFor="let followup of element.followLeads">
+                                <ul class="list-unstyled border border-dark rounded p-3"
+                                    *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
                                         </span>{{followup.followupDate }}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupTime :
@@ -808,8 +815,9 @@
                 </div>
             </div>
             <div class="mb-4">
-                <textarea class="form-control" id="description" rows="4" placeholder="Description" formControlName="content">
-                                </textarea>
+                <textarea class="form-control" id="description" rows="4" placeholder="Description"
+                    formControlName="content">
+                </textarea>
             </div>
             <div class="card-body mt-3">
                 <input id="file" type="file" class="form-control rounded-0 w-50 position-relative"
@@ -819,7 +827,8 @@
         <div class="p-4 border-top">
             <div class="d-flex justify-content-end gap-3">
                 <button class="btn btn-primary w-50" type="submit">Send Mail</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
             </div>
         </div>
     </form>
@@ -834,19 +843,23 @@
     <form [formGroup]="selectTemplateForm" (ngSubmit)="selectFormTemplateSubmit()" class="d-flex flex-column h-100">
         <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
-            <input type="text" class="form-control" id="subject" placeholder="templateName" formControlName="templateName">
+                <input type="text" class="form-control" id="subject" placeholder="templateName"
+                    formControlName="templateName">
             </div>
             <div class="mb-4">
-                <textarea class="form-control" id="subject" rows="4" placeholder="Enter Your Subject" formControlName="subject"></textarea>
+                <textarea class="form-control" id="subject" rows="4" placeholder="Enter Your Subject"
+                    formControlName="subject"></textarea>
             </div>
             <div class="mb-4">
-                <textarea class="form-control" id="description" rows="4" placeholder="Enter Your Description" formControlName="description"></textarea>
+                <textarea class="form-control" id="description" rows="4" placeholder="Enter Your Description"
+                    formControlName="description"></textarea>
             </div>
         </div>
         <div class="p-4 border-top">
             <div class="d-flex justify-content-end gap-3">
-            <button class="btn btn-primary w-50" type="submit">Save Mail Template</button>
-            <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
+                <button class="btn btn-primary w-50" type="submit">Save Mail Template</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
             </div>
         </div>
     </form>
@@ -856,7 +869,8 @@
 <!-- Followup lead-->
 <ng-template #Content4 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add New Follow up Date For {{followupName}}</strong></h5>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add New Follow up Date For
+                {{followupName}}</strong></h5>
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
@@ -894,18 +908,27 @@
                 <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                     <label class="form-label">Status</label>
                     <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
-                        placeholder="Select a status" [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['status'].errors }">
+                        placeholder="Select a status"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['status'].errors }">
                     </ng-select>
                     <div *ngIf="followupLeadSubmitted && e['status'].errors" class="invalid-feedback">
                         <div *ngIf="e['status'].errors['required']">Status is required</div>
                     </div>
                 </div>
             </div>
-            <angular-editor [config]="editorConfig" formControlName="comments"
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="comments"
+                    formControlName="comments" [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }">
+                </textarea>
+                <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
+                <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
+            </div>
+            </div>
+            <!-- <angular-editor [config]="editorConfig" formControlName="comments"
                 [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }"></angular-editor>
             <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
                 <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
-            </div>
+            </div> -->
 
         </div>
         <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
@@ -934,11 +957,15 @@
             <li class="list-group-item">
                 <div class="container mt-3">
                     <div class="col-12">
-                        <div *ngFor="let plan of crmStaticStages; let i = index" class="form-check mb-3 d-flex align-items-center">
-                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked" [id]="'plan-' + i">
+                        <div *ngFor="let plan of crmStaticStages; let i = index"
+                            class="form-check mb-3 d-flex align-items-center">
+                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked"
+                                [id]="'plan-' + i">
                             <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
-                            <div class="ms-2" style="width: 20px; height: 20px; border-radius: 4px;" [style.background]="plan.color" *ngIf="plan.color"></div>
-                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom" (click)="deleteLeadItem(i)">
+                            <div class="ms-2" style="width: 20px; height: 20px; border-radius: 4px;"
+                                [style.background]="plan.color" *ngIf="plan.color"></div>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom"
+                                (click)="deleteLeadItem(i)">
                                 Delete
                             </button>
                         </div>
@@ -951,8 +978,8 @@
                                 <input type="text" class="form-control" placeholder="Enter value" [(ngModel)]="newItem">
                             </div>
                             <div class="col-xl-2 mb-3">
-                                <input type="color" class="form-control form-control-color lt ms-2 mt-2" [(ngModel)]="newItemColor"
-                                    title="Choose color">
+                                <input type="color" class="form-control form-control-color lt ms-2 mt-2"
+                                    [(ngModel)]="newItemColor" title="Choose color">
                             </div>
                             <div class="col-xl-2 mb-3">
                                 <button class="btn btn-primary " type="button" (click)="addLeadItem()">Save</button>
@@ -994,7 +1021,8 @@
                     <label class="form-check-label w-50" [for]="'checkbox-' + i">
                         {{ option.name }}
                     </label>
-                    <div *ngIf="option.color" class="color-box" [style.backgroundColor]="option.color" style="width: 20px; height: 20px; border-radius: 4px;"></div>
+                    <div *ngIf="option.color" class="color-box" [style.backgroundColor]="option.color"
+                        style="width: 20px; height: 20px; border-radius: 4px;"></div>
                     <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
                         Delete
                     </button>
@@ -1002,11 +1030,12 @@
             </div>
             <div class="row mt-3">
                 <div class="col-xl-4 mb-3">
-                    <input [(ngModel)]="newOptionName" type="text" class="form-control" placeholder="Enter new status name" />
+                    <input [(ngModel)]="newOptionName" type="text" class="form-control"
+                        placeholder="Enter new status name" />
                 </div>
                 <div class="col-xl-4 mb-3">
-                    <input type="color" class="form-control form-control-color lt ms-2 mt-2" [(ngModel)]="newOptionColor"
-                                    title="Choose color">
+                    <input type="color" class="form-control form-control-color lt ms-2 mt-2"
+                        [(ngModel)]="newOptionColor" title="Choose color">
                 </div>
                 <div class="col-md-4 mb-3">
                     <button class="btn btn-primary" (click)="addNewOption()">Save</button>
@@ -1016,11 +1045,9 @@
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save Status</button>
+            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save
+                Status</button>
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
-
-
-
