@@ -528,6 +528,11 @@ export class BaseComponent {
       {"name" :"Merge Duplicate & Reopen Leads"},
     ]
 
+    autoAllocate = [{"name" : "Yes"},
+      {"name" :"No"},
+    ]
+
+
 
     // SkinFinish = [{"name" : "test"},
     // ]

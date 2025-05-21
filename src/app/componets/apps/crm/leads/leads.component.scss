@@ -93,8 +93,6 @@ th.mat-mdc-header-cell {
   font-size: 14px !important;
 }
 
-
-
 .ng-selt {
   position: relative;
   display: block;
@@ -148,4 +146,18 @@ th.mat-mdc-header-cell {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.mat-column-sourceFlag {
+  width: 32px;
+  padding: 0 4px;
+  text-align: center;
+}
+
+.mdc-data-table__cell {
+    padding: 0 6px !important;
+}
+
+.mdc-data-table__header-cell {
+  padding: 0 6px !important;
 }

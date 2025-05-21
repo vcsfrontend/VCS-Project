@@ -1,16 +1,6 @@
-import {
-  Component,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, TemplateRef, ViewChild, ViewEncapsulation,} from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import {
-  NgbDropdownModule,
-  NgbModal,
-  NgbModalConfig,
-  NgbModule,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule,} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,13 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -35,18 +19,12 @@ import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
-import {
-  NgbOffcanvas,
-  OffcanvasDismissReasons,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import * as FilePond from 'filepond';
 import { FilePondComponent, FilePondModule } from 'ngx-filepond';
-import {
-  AngularEditorModule,
-  AngularEditorConfig,
-} from '@kolkov/angular-editor';
+import { AngularEditorModule, AngularEditorConfig} from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -54,162 +32,57 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-leads',
   standalone: true,
-  imports: [
-    RouterModule,
-    NgbModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AngularFireModule,
-    AngularFireDatabaseModule,
-    CommonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    AngularFirestoreModule,
-    ToastrModule,
-    SharedModule,
-    MaterialModuleModule,
-    MatSortModule,
-    NgbDropdownModule,
-    NgSelectModule,
-    FilePondModule,
-    AngularEditorModule,
-    NgChartsModule,
-    NgApexchartsModule,
-  ],
-  providers: [
-    FirebaseService,
-    { provide: ToastrService, useClass: ToastrService },
-    DatePipe,
-    NgbModalConfig,
-    NgbModal,
-  ],
-
+  imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule, AngularFireDatabaseModule, 
+    CommonModule, MatFormFieldModule, MatSelectModule, AngularFirestoreModule, ToastrModule, SharedModule,
+    MaterialModuleModule, MatSortModule, NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule,
+    NgChartsModule, NgApexchartsModule, ],
+  providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService },
+    DatePipe, NgbModalConfig, NgbModal,],
   templateUrl: './leads.component.html',
   styleUrl: './leads.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [
-    'select',
-    'slNo',
-    'action',
-    'name',
-    'executive',
-    'stage',
-    'status',
-    'followUpDate',
-    'contact',
-    'email',
-  ];
-  usersColumns: string[] = [
-    'slNo',
-    'name',
-    'role',
-    'email',
-    'date',
-    'callsAttempted',
-    'callsConnected',
-  ];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo',  'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email',];
+  usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
-  Crmusers: any[] = [];
-  CrmLeads: any = {};
-  element: any = {};
-  crmLeadsList: any;
-  campaignId!: string;
-  stageLst: any;
-  isStagesLoading: boolean = true;
-  isAddStagesDisabled: boolean = false;
-  statusOptionsByStage: { [stageName: string]: any[] } = {};
-  statusLst: any;
-  allStatuses: any;
-  selectedStage: string = '';
-  checkboxStageOptions: any[] = [];
-  selectedStatusCount: number | null = null;
-  chartOptions: any;
-  statusOptionsByStageforDisplay: any = {};
+  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
+  stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false; statusOptionsByStage: { [stageName: string]: any[] } = {};
+  statusLst: any; allStatuses: any; selectedStage: string = ''; checkboxStageOptions: any[] = [];
+  selectedStatusCount: number | null = null; chartOptions: any; statusOptionsByStageforDisplay: any = {};
   stageColorMap: Map<string, string> = new Map();
   statusColorMap: Map<string, string> = new Map();
-  userColors = [
-    'bg-primary',
-    'bg-success',
-    'bg-warning',
-    'bg-danger',
-    'bg-info',
-    'bg-secondary',
-  ];
+  userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary', ];
   userDataStorage = localStorage.getItem('userDetails');
-  userData: any = this.userDataStorage
-    ? JSON.parse(this.userDataStorage)
-    : null;
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage): null;
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
-  statusClicked = false;
-  statusCounts: { status: string; count: number }[] = [];
-  crmStageData: any;
-  crmStatusData: any;
-  newOptionName: string = '';
-  status: string = 'In Progress Leads';
-  showValidationError = false;
-  fetchCrmLeadsList: any[] = [];
-  showCheckboxError = false;
-  showNameError = false;
-  anyChecked: any;
-  addMoreVisible: boolean = false;
-  newItem: string = '';
-  isStage: boolean = false;
-  showStages: boolean = false;
+  statusClicked = false; statusCounts: { status: string; count: number }[] = [];
+  crmStageData: any; crmStatusData: any; newOptionName: string = '';
+  status: string = 'In Progress Leads'; showValidationError = false;
+  fetchCrmLeadsList: any[] = []; showCheckboxError = false; showNameError = false;
+  anyChecked: any; addMoreVisible: boolean = false; newItem: string = '';
+  isStage: boolean = false; showStages: boolean = false;
   leaditems: { checked: boolean; label: string }[] = [];
   leadStatusitems: { checked: boolean; label: string }[] = [];
-  selectedProgressLeads: any[] = [];
-  selectedLostLeads: any[] = [];
-  selectedConvertedLeads: any[] = [];
-  newItemColor: string = '#000000';
-  newOptionColor: any;
-  showMore = true;
-  topshowMore = false;
-  campaignList: any[] = [];
-  agentUsers: any[] = [];
-  selectedCampaign: any;
-  selectTemplateForm!: FormGroup;
-  formList: any;
-  tempFormList: any;
-  generatedTemplateId: any;
-  currentIndex: number = 0;
-  allTemplateGenIds: string[] = [];
-  rotateCharts = true;
-  executiveList: any[] = [];
-  entryList: any[] = [];
+  selectedProgressLeads: any[] = []; selectedLostLeads: any[] = [];
+  selectedConvertedLeads: any[] = []; newItemColor: string = '#000000';
+  newOptionColor: any; showMore = true; topshowMore = false; campaignList: any[] = [];
+  agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
+  formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0;
+  allTemplateGenIds: string[] = []; rotateCharts = true; executiveList: any[] = [];
+  entryList: any[] = []; agents: any;  leads: any;  imageFileSrcData: any;
   crmStaticStages = [
-    {
-      name: 'In Progress Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#28a745',
-    },
-    {
-      name: 'Lost Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#dc3545',
-    },
-    {
-      name: 'Converted Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#007bff',
-    },
+    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545',},
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
   ];
-  selectedType: string = '';
-  dynamicFields: { value: string }[] = [];
-  matcardLst: any;
+  selectedType: string = ''; dynamicFields: { value: string }[] = []; matcardLst: any;
   topDisplayedCards: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
@@ -225,11 +98,12 @@ export class LeadsComponent extends BaseComponent {
   public uploadLead!: FormGroup;
   public uploadSubmitted = false;
   public uploadSpinner = false;
-  imageFileSrcData: any;
   public leadCount = 0;
   public leadId = 0;
 
   public sendLeadForm!: FormGroup;
+  public sendwhatsLeadForm!: FormGroup;
+  public sendwhatsLeadFormSubmitted = false;
   public sendLeadSubmitted = false;
 
   public followupName = '';
@@ -237,49 +111,26 @@ export class LeadsComponent extends BaseComponent {
   public followupLeadForm!: FormGroup;
   public followupLeadSubmitted = false;
 
-  // public userData: any;
   public userList: any;
 
   public allocateForm!: FormGroup;
   public allocateSubmitted = false;
-  // campgnId: string = '';
-  leads: any;
   selectedIdList: Set<number> = new Set<number>();
 
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
-    plugins: {
-      legend: {
-        position: 'bottom',
-      },
-    },
+    plugins: { legend: { position: 'bottom', }, },
   };
-  public pieChartLabels = [
-    'Spoke',
-    'Active',
-    'Proposal sent',
-    'Meeting Fixed',
-    'Met',
-    'Closed',
-    'Lost',
-  ];
+  public pieChartLabels = ['Spoke', 'Active', 'Proposal sent', 'Meeting Fixed', 'Met', 'Closed', 'Lost',];
   public pieChartDatasets = [
     {
       data: [200, 150, 100, 43, 23, 78],
     },
   ];
-  public pieChartLegend = true;
-  public pieChartPlugins = [];
-  agents: any;
+  public pieChartLegend = true; public pieChartPlugins = [];
 
-  constructor(
-    config: NgbModalConfig,
-    private modalService: NgbModal,
-    private offcanvasService: NgbOffcanvas,
-    public switchService: SwitherService,
-    private toastr: ToastrService,
-    private fb: FormBuilder,
-    private route: ActivatedRoute
+  constructor( config: NgbModalConfig, private modalService: NgbModal, private offcanvasService: NgbOffcanvas,
+    public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder, private route: ActivatedRoute
   ) {
     super();
     this.statusOptionsByStage = {
@@ -385,10 +236,7 @@ export class LeadsComponent extends BaseComponent {
     const filterValue = (event.target as HTMLInputElement).value;
     this.usersDataSource.filter = filterValue.trim().toLowerCase();
   }
-  VerticallyScrol(content12: any) {
-    this.leadId = 0;
-    this.submitted = false;
-    this.leadForm.reset();
+  VerticallyScrol(content12: any) { this.leadId = 0; this.submitted = false; this.leadForm.reset();
     this.modalService.open(content12, {
       backdrop: 'static',
       keyboard: false,
@@ -428,6 +276,14 @@ export class LeadsComponent extends BaseComponent {
       if (nav?.agents) {
         this.agents = nav.agents;
       }
+      
+      //Send Email
+      this.sendwhatsLeadForm = this.fb.group({
+        template: ['', [Validators.required]],
+        subject: ['', [Validators.required, Validators.minLength(3)]],
+        content: ['', [Validators.required]],
+        file: [''],
+      });
 
       //Send Email
       this.sendLeadForm = this.fb.group({
@@ -470,7 +326,7 @@ export class LeadsComponent extends BaseComponent {
     //Send Email
     this.followupLeadForm = this.fb.group({
       followupDate: ['', [Validators.required]],
-      followupTime: ['', [Validators.required]],
+      followupTime: ['',],
       stage: ['', [Validators.required]],
       status: ['', [Validators.required]],
       comments: ['', [Validators.required]],
@@ -988,11 +844,11 @@ export class LeadsComponent extends BaseComponent {
                 const color = item[colorFields[index]];
                 return name
                   ? {
-                      name,
-                      checked: false,
-                      isCustom: false,
-                      color: color || '#cccccc',
-                    }
+                    name,
+                    checked: false,
+                    isCustom: false,
+                    color: color || '#cccccc',
+                  }
                   : null;
               })
               .filter((opt) => opt !== null);
@@ -1198,17 +1054,9 @@ export class LeadsComponent extends BaseComponent {
 
   onFollowupStatusChange(): void {
     const selectedStage = this.followupLeadForm.get('stage')?.value;
-    console.log('Selected Stage:', selectedStage);
-
     if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
-      console.log(
-        'Available Statuses:',
-        this.statusOptionsByStageforDisplay[selectedStage]
-      );
       this.checkboxStageOptions =
         this.statusOptionsByStageforDisplay[selectedStage];
-
-      // If the currently selected status is not in the list, clear it
       const currentStatus = this.followupLeadForm.get('status')?.value;
       if (
         !this.checkboxStageOptions.some(
@@ -1218,7 +1066,6 @@ export class LeadsComponent extends BaseComponent {
         this.followupLeadForm.patchValue({ status: null });
       }
     } else {
-      console.log('No statuses found for this stage');
       this.checkboxStageOptions = [];
       this.followupLeadForm.patchValue({ status: null });
     }
@@ -1301,51 +1148,40 @@ export class LeadsComponent extends BaseComponent {
   // }
 
   getFetchLeadData() {
-    this.switchService
-      .FetchLeadData(this.userEmail, this.campaignId)
-      .subscribe({
-        next: (res: any) => {
-          if (res?.executiveList || res?.entryList) {
-            const executiveList = res.executiveList || [];
-            const entryList = res.entryList || [];
-            const combined = [...executiveList, ...entryList];
-            this.fetchCrmLeadsList = combined;
-            this.dataSource.data = this.fetchCrmLeadsList;
-
-            const firstLead = combined[0];
-            if (firstLead) {
-              const defaultStage = firstLead.stage;
-              const defaultStatus = firstLead.status;
-
-              console.log('Default Stage:', defaultStage);
-              console.log('Default Status:', defaultStatus);
-
-              this.followupLeadForm.patchValue({ stage: defaultStage });
-
-              setTimeout(() => {
-                this.onFollowupStatusChange();
-                console.log(
-                  'Status options after change:',
-                  this.checkboxStageOptions
-                );
-
-                if (
-                  this.checkboxStageOptions.some(
-                    (opt) => opt.name === defaultStatus
-                  )
-                ) {
-                  this.followupLeadForm.patchValue({ status: defaultStatus });
-                } else {
-                  console.warn('Default status not found in options.');
-                }
-              }, 500);
-            }
+    this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
+      next: (res: any) => {
+        const executiveList = (res.executiveList || []).map((item: any) => ({
+          ...item,
+          source: 'executive',
+        }));
+        const entryList = (res.entryList || []).map((item: any) => ({
+          ...item,
+          source: 'entry',
+        }));
+        const combined = [...executiveList, ...entryList];
+        this.fetchCrmLeadsList = combined;
+        this.dataSource.data = combined;
+        this.leadCount = combined.length;
+        const hasExecutiveFlag = combined.some(item => item.source === 'executive');
+        this.displayedColumns = [
+          ...(hasExecutiveFlag ? ['sourceFlag'] : []),'select', 'slNo', 'action', 'name','executive','stage', 'status', 'followUpDate', 'contact','email',];
+        const firstLead = combined[0];
+        if (!firstLead) return;
+        this.followupLeadForm.patchValue({ stage: firstLead.stage });
+        setTimeout(() => {
+          this.onFollowupStatusChange();
+          const isValidStatus = this.checkboxStageOptions.some(
+            (opt) => opt.name === firstLead.status
+          );
+          if (isValidStatus) {
+            this.followupLeadForm.patchValue({ status: firstLead.status });
           }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText || 'Server Error');
-        },
-      });
+        }, 500);
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || 'Server Error');
+      },
+    });
   }
 
   getStatusCount(): void {
@@ -1365,6 +1201,7 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
+  
   onCheckboxChange() {
     const selectedPlans = this.crmStaticStages.filter((plan) => plan.checked);
     selectedPlans.forEach((plan, index) => {
@@ -1455,7 +1292,7 @@ export class LeadsComponent extends BaseComponent {
         } else {
         }
       },
-      error: (err: any) => {},
+      error: (err: any) => { },
     });
   }
 
@@ -1489,16 +1326,11 @@ export class LeadsComponent extends BaseComponent {
             this.uploadSubmitted = false;
             this.uploadSpinner = false;
             this.uploadLead.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
+            this.toastr.success(res.message, 'Bulk Lead Upload Successful',);
+            this.getFetchLeadData();
           } else {
             this.uploadSpinner = false;
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
+            this.toastr.error(res.message, 'lead',);
           }
         },
         error: (err: any) => {
@@ -1674,13 +1506,13 @@ export class LeadsComponent extends BaseComponent {
   }
 
   @ViewChild('followUpPond') followUpPond!: FilePondComponent;
-  followUpPondHandleInit() {}
+  followUpPondHandleInit() { }
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     this.imageFileSrcData = files;
   }
-  followUpPondHandleActivateFile(event: any) {}
+  followUpPondHandleActivateFile(event: any) { }
 
   get a() {
     return this.allocateForm.controls;
@@ -1842,9 +1674,9 @@ export class LeadsComponent extends BaseComponent {
       },
     },
   ];
-  pondHandleInit() {}
-  pondHandleAddFile(event: any) {}
-  pondHandleActivateFile(event: any) {}
+  pondHandleInit() { }
+  pondHandleAddFile(event: any) { }
+  pondHandleActivateFile(event: any) { }
   getSeriesData(fields: any[]): number[] {
     return fields.map((field) => {
       const foundStatus = this.statusCounts.find(
@@ -1951,4 +1783,26 @@ export class LeadsComponent extends BaseComponent {
       }, 0);
     }
   }
+
+  sendToWhatsApp(): void {
+    this.sendwhatsLeadFormSubmitted = true;
+    if (this.sendwhatsLeadForm.invalid) {
+      return;
+    }
+    const formValue = this.sendLeadForm.value;
+    const template = formValue.template?.templateName || 'No Template';
+    const subject = formValue.subject || 'No Subject';
+    const content = formValue.content || 'No Description';
+    const message =
+      `Template: ${template}\n` +
+      `Subject: ${subject}\n` +
+      `Description: ${content}`;
+    const encodedMessage = encodeURIComponent(message);
+    const phoneNumber = '7287959896';
+    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(url, '_blank');
+  }
+
+
+
 }
