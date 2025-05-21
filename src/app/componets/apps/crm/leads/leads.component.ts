@@ -83,7 +83,8 @@ export class LeadsComponent extends BaseComponent {
     { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
   ];
   selectedType: string = ''; dynamicFields: { value: string }[] = []; matcardLst: any;
-  topDisplayedCards: any;
+  topDisplayedCards: any; defaultStageName: string = '';defaultStatusName: string = '';allocateExecutive: boolean = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -293,7 +294,7 @@ export class LeadsComponent extends BaseComponent {
         cc: ['', [Validators.minLength(3)]],
         bcc: ['', [Validators.minLength(3)]],
         content: ['', [Validators.required]],
-        file: [''],
+        
       });
 
       this.sendLeadForm
@@ -308,6 +309,7 @@ export class LeadsComponent extends BaseComponent {
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]],
+      allocateExecutive: [false],
     });
 
     //Send Email
@@ -873,6 +875,14 @@ export class LeadsComponent extends BaseComponent {
                 stage,
                 fields,
               }));
+            if (this.defaultStageName && this.statusOptionsByStageforDisplay[this.defaultStageName]) {
+              const statusArray = this.statusOptionsByStageforDisplay[this.defaultStageName];
+              this.defaultStatusName = statusArray.length > 0 ? statusArray[0].name : '';
+              console.log('Default Stage:', this.defaultStageName);
+              console.log('Default Status:', this.defaultStatusName);
+            } else {
+              this.defaultStatusName = '';
+            }
           }
         },
       });
@@ -938,7 +948,12 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
         if (res && res.length > 0) {
+          const stageObj = res[0];
           this.processStageData(res[0]);
+          const stageKeys = Object.keys(stageObj).filter(key => /^f\d+$/.test(key));
+          const firstStageKey = stageKeys.find(key => stageObj[key]?.trim() !== '');
+          this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
+          console.log('statrting stage is :',this.defaultStageName);
           this.getCrmStatus();
         } else {
           this.stageLst = [];
@@ -1053,23 +1068,29 @@ export class LeadsComponent extends BaseComponent {
   }
 
   onFollowupStatusChange(): void {
-    const selectedStage = this.followupLeadForm.get('stage')?.value;
-    if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
-      this.checkboxStageOptions =
-        this.statusOptionsByStageforDisplay[selectedStage];
-      const currentStatus = this.followupLeadForm.get('status')?.value;
-      if (
-        !this.checkboxStageOptions.some(
-          (option) => option.name === currentStatus
-        )
-      ) {
-        this.followupLeadForm.patchValue({ status: null });
-      }
-    } else {
-      this.checkboxStageOptions = [];
-      this.followupLeadForm.patchValue({ status: null });
+  const selectedStage = this.followupLeadForm.get('stage')?.value;
+
+  if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
+    this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage];
+
+    const currentStatus = this.followupLeadForm.get('status')?.value;
+
+    const statusExists = this.checkboxStageOptions.some(
+      (option) => option.name === currentStatus
+    );
+
+    // If no current status selected or selected status is not in available options
+    if (!statusExists) {
+      const firstStatus = this.checkboxStageOptions[0]?.name || null;
+      this.followupLeadForm.patchValue({ status: firstStatus });
     }
+  } else {
+    // Clear options and status field if no stage or no matching status options
+    this.checkboxStageOptions = [];
+    this.followupLeadForm.patchValue({ status: null });
   }
+  }
+
 
   deleteOption(index: number) {
     const deletedOption = this.checkboxStageOptions[index];
@@ -1319,6 +1340,22 @@ export class LeadsComponent extends BaseComponent {
       formData.append('file', this.imageFileSrcData);
       formData.append('uploadedBy', JSON.parse(this.userData)?.email || '');
       formData.append('campaignId', this.campaignId || '');
+      formData.append('stage', this.defaultStageName || '');
+      formData.append('status', this.defaultStatusName || '');
+      const allocateExecutive = this.uploadLead.get('allocateExecutive')?.value;
+      formData.append('allocateExecutive', allocateExecutive.toString());
+      const formDataObject: any = {};
+      formData.forEach((value, key) => {
+        formDataObject[key] = value;
+      });
+      console.log('Payload Preview:', {
+      stage: this.defaultStageName,
+      status: this.defaultStatusName,
+      allocateExecutive: this.allocateExecutive
+    });
+
+      console.log('Preview Payload as Object:', formDataObject);
+
       this.switchService.UploadCrmLeads(formData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1392,49 +1429,44 @@ export class LeadsComponent extends BaseComponent {
   }
 
   sendMailLeadSubmit(modal: any) {
-    this.sendLeadSubmitted = true;
-    if (this.sendLeadForm?.valid) {
-      const formData = new FormData();
-      formData.append(
-        'file',
-        this.imageFileSrcData,
-        this.imageFileSrcData.name
-      );
-      formData.append('email', this.sendLeadForm.get('email')?.value);
-      const templateValue = this.sendLeadForm.get('template')?.value;
-      const templateToSend =
-        typeof templateValue === 'object'
-          ? templateValue.templateGenId
-          : templateValue;
-      formData.append('template', templateToSend);
-      formData.append('subject', this.sendLeadForm.get('subject')?.value);
-      formData.append('cc', this.sendLeadForm.get('cc')?.value);
-      formData.append('bcc', this.sendLeadForm.get('bcc')?.value);
-      formData.append('content', this.sendLeadForm.get('content')?.value);
-      for (const pair of (formData as any).entries()) {
-      }
-      // this.switchService.CRMLeadSendMailFollowup(formData).subscribe({
-      //   next: (res: any) => {
-      //     if (res.status == true) {
-      //       this.imageFileSrcData = '';
-      //       modal.close();
-      //       this.submitted = false;
-      //       this.leadForm.reset();
-      //       this.toastr.success(res.message, 'lead', {
-      //         timeOut: 3000, positionClass: 'toast-top-right'
-      //       });
-      //     } else {
-      //       this.toastr.error(res.message, 'lead', {
-      //         timeOut: 3000, positionClass: 'toast-top-right'
-      //       });
-      //     }
-      //   },
-      //   error: (error) => {
-      //     this.toastr.error(error.statusText);
-      //   },
-      // })
-    }
+  this.sendLeadSubmitted = true;
+  if (this.sendLeadForm?.valid) {
+    const templateValue = this.sendLeadForm.get('template')?.value;
+    const templateToSend = typeof templateValue === 'object'
+      ? templateValue.templateGenId
+      : templateValue;
+
+    const payload = {
+      email: this.sendLeadForm.get('email')?.value,
+      template: templateToSend,
+      subject: this.sendLeadForm.get('subject')?.value,
+      cc: this.sendLeadForm.get('cc')?.value,
+      bcc: this.sendLeadForm.get('bcc')?.value,
+      content: this.sendLeadForm.get('content')?.value,
+    };
+
+    this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
+      next: (res: any) => {
+        if (res.status == true) {
+          modal.close();
+          this.submitted = false;
+          this.leadForm.reset();
+          this.toastr.success(res.message, 'lead', {
+            timeOut: 3000, positionClass: 'toast-top-right'
+          });
+        } else {
+          this.toastr.error(res.message, 'lead', {
+            timeOut: 3000, positionClass: 'toast-top-right'
+          });
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    });
   }
+}
+
 
   get e() {
     return this.followupLeadForm.controls;
@@ -1803,6 +1835,20 @@ export class LeadsComponent extends BaseComponent {
     window.open(url, '_blank');
   }
 
+  validateAndOpenBulkUpload(content: any): void {
+  if (!this.stageLst || this.stageLst.length === 0) {
+    this.toastr.warning('Please add at least one Stage before uploading.');
+    return;
+  }
 
+  if (!this.statusLst || this.statusLst.length === 0) {
+    this.toastr.warning('Please add at least one Status before uploading.');
+    return;
+  }
+
+  this.openRight(content);
+  }
+
+  
 
 }
