@@ -658,7 +658,7 @@
             <li class="list-group-item">
                 <div class="d-flex align-items-center">
                     <div class="flex-fill">
-                        <a href="assets/images/browsers/Leads Sample Format.xls" download="Leads Sample Format.xls">
+                        <a href="assets/images/browsers/Leads Sample data.xls" download="Leads Sample Format.xls">
                             <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
                             </button></a>
                         <p class="px-3">Kindly download the Leads Format and fill your bulk Leads in the proper format
@@ -690,13 +690,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="col-xl-12 col-lg-12 col-md-12">
-                                    <button class="btn btn-primary me-1" type="submit"
-                                        [disabled]="uploadSpinner">Import</button>
-                                    <button class="btn btn-secondary" type="button"
-                                        (click)="offcanvas.dismiss('Cross click')">Cancel</button>
-                                </div>
                                 <div class="form-check mb-3">
                                     <input type="checkbox" class="form-check-input" id="allocateExecutive"
                                         formControlName="allocateExecutive" />
@@ -705,6 +698,12 @@
                                     </label>
                                 </div>
 
+                                <div class="col-xl-12 col-lg-12 col-md-12">
+                                    <button class="btn btn-primary me-1" type="submit"
+                                        [disabled]="uploadSpinner">Import</button>
+                                    <button class="btn btn-secondary" type="button"
+                                        (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </form>
