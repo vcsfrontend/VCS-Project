@@ -21,6 +21,12 @@
         <div class="card-body p-0">
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
+                    <ng-container matColumnDef="sourceFlag">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element">
+                            <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1" title="Executive Lead"></i>
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
                             <mat-checkbox [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
@@ -64,6 +70,13 @@
                                     </li>
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="openRight(Content113)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-teal-light label-btn label-end w-100 "
                                             (click)="editLead(element,Content14)">
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                         </button>
@@ -106,16 +119,20 @@
                     <ng-container matColumnDef="stage">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
                         <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" [ngStyle]="{ 'background-color': getStageColor(element.stage) }">
-                                {{ element.stage }}
+                            <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
+                                [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
+                                {{ element.stage | slice: 0:18 }}
+                                <ng-container *ngIf="element.stage.length > 18">...</ng-container>
                             </span>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
                         <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" [ngStyle]="{ 'background-color': getStatusColor(element.status) }">
-                                {{ element.status }}
+                            <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
+                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                                {{ element.status | slice: 0:18 }}
+                                <ng-container *ngIf="element.status.length > 18">...</ng-container>
                             </span>
                         </td>
                     </ng-container>
@@ -752,18 +769,15 @@
                                 <ul class="list-unstyled border border-dark rounded p-3"
                                     *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
-                                        </span>{{followup.followupDate }}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">FollowupTime :
-                                        </span>{{followup.followupTime }}</li>
+                                        </span>{{followup.followupDate | date: 'dd-MMM-yyyy hh:mm:ss a'}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Stage :
                                         </span>{{followup.stage}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Status :
                                         </span>{{followup.status}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
                                         </span>{{followup.followUpBy}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">CurrentStage :
-                                        </span>{{followup.currentStage}}
-                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Comments :
+                                        </span>{{followup.comments}}</li>
                                 </ul>
                             </div>
                         </ng-template>
@@ -781,6 +795,7 @@
         </div>
     </div>
 </ng-template>
+
 <ng-template #Content2 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Email</strong></h5>
@@ -799,8 +814,9 @@
                 </div>
             </div>
             <div class="mb-4">
-                <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
-                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['subject'].errors }">
+                <textarea class="form-control" id="subject" rows="4" placeholder="subject"
+                    formControlName="subject" [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['subject'].errors }">
+                </textarea>
                 <div *ngIf="sendLeadSubmitted && s['subject'].errors" class="invalid-feedback">
                     <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
                     <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
@@ -829,6 +845,50 @@
                 <button class="btn btn-primary w-50" type="submit">Send Mail</button>
                 <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
                     type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #Content113 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send What's app</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="sendwhatsLeadForm" (ngSubmit)="sendToWhatsApp()" class="d-flex flex-column h-100">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+            <div class="mb-4">
+                <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+                    bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && s['template'].errors }">
+                </ng-select>
+                <div *ngIf="sendwhatsLeadFormSubmitted && s['template'].errors" class="invalid-feedback">
+                    <div *ngIf="s['template'].errors['required']">Template is required</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && s['subject'].errors }">
+                <div *ngIf="sendwhatsLeadFormSubmitted && s['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                </div>
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Description"
+                    formControlName="content">
+          </textarea>
+            </div>
+            <div class="card-body mt-3">
+                <input id="file" type="file" class="form-control rounded-0 w-50 position-relative"
+                    (change)="onEmailFileChange($event)">
+            </div>
+        </div>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-end gap-3">
+                <button class="btn btn-success w-50" type="submit">Send to WhatsApp</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
             </div>
         </div>
     </form>
@@ -879,20 +939,11 @@
             <div class="row">
                 <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                     <label for="followupDate" class="form-label">Next Follow up date</label>
-                    <input type="date" class="form-control" id="followupDate" placeholder=""
+                    <input type="datetime-local" class="form-control" id="followupDate" placeholder=""
                         formControlName="followupDate"
                         [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }">
                     <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
                         <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
-                    <label for="followupTime" class="form-label">Follow up time</label>
-                    <input type="time" class="form-control" id="followupTime" placeholder=""
-                        formControlName="followupTime"
-                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupTime'].errors }">
-                    <div *ngIf="followupLeadSubmitted && e['followupTime'].errors" class="invalid-feedback">
-                        <div *ngIf="e['followupTime'].errors['required']">Followup Time is required</div>
                     </div>
                 </div>
                 <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
