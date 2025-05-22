@@ -52,10 +52,10 @@ export class CampaignsComponent extends BaseComponent {
     this.getCampaignSecific();
     this.campaignForm = this.fb.group({
       campaignId: [0],
-      campaignName: ['', Validators.required],
+      campaignName: ['', [Validators.required, Validators.minLength(4)]],
       pipeline: ['', Validators.required],
-      campaignPoc: [''],
-      agents: [['']],
+      campaignPoc: ['',Validators.required],
+      agents: [[], Validators.required],
       campaignPriority: [''],
       leadDuplicacy: [''],
       companyName: [this.userCompanyName],
@@ -277,4 +277,7 @@ export class CampaignsComponent extends BaseComponent {
     this.modalService.open(content7, { centered: true });
   }
 
+  get s() {
+    return this.campaignForm.controls;
+  }
 }

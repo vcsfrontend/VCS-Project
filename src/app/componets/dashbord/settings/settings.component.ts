@@ -845,7 +845,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     const adonai = this.userForm.get('tools')?.value.includes('Adonai');
     let payload = this.userForm.getRawValue();
     payload.username = payload.firstName + ' ' + payload.lastName,
-      payload.type = 1,
+      payload.type = 2,
       payload.crm = crm,
       payload.adonai = adonai,
       payload.companyCode = JSON.parse(this.userData).companyCode,
