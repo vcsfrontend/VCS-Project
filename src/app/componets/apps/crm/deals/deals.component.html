@@ -145,14 +145,13 @@
             </mat-form-field>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-                        (click)="openRight1(content1)" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Filter</button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-                        (click)="openRight(content)" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Bulk Upload</button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
+                    <button type="button" class="btn btn-primary border-end border-light"
+                        (click)="validateAndOpenBulkUpload(content)" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        Bulk Upload
+                    </button>
+                    <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);">Add New</button>
                 </div>
             </div>
         </div>
@@ -200,9 +199,9 @@
                                             Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
-                                    <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="editLead(element,Content12)">
+                                   <li class="m-2">
+                                        <button class="btn btn-teal-light label-btn label-end w-100 "
+                                            (click)="editLead(element,Content14)">
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
@@ -324,6 +323,124 @@
     </div>
 </div>
 
+<ng-template #Content14 let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLgLabel">
+            Edit Lead
+        </h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="leadForm" (ngSubmit)="editLeadSubmit(modal)">
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3 scrollable-content">
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name"
+                        [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
+                    <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                        <span *ngIf="f['name'].errors['required']">Name is required.</span>
+                        <span *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters long.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="contact-mail" class="form-label">Company Name</label>
+                    <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
+                        formControlName="companyName">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="company-name" class="form-label">Products</label>
+                    <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="company-name" class="form-label">Country</label>
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select"
+                        id="choices-multiple-remove-button3" formControlName="country"
+                        (change)="onCountryChange($any($event.target).value)"
+                        [ngClass]="{ 'is-invalid': submitted && f['country'].errors }" class="border rounded">
+                        <ng-option *ngFor="let c of countryLst" [value]="c.country">{{ c.country }}</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label" for="stage">Stage</label>
+                    <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName"
+                        placeholder="Select a stage" (change)="onStatusChange()"
+                        [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
+                        <span *ngIf="f['stage'].errors['required']">stage is required.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label">Status</label>
+                    <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                        placeholder="Select a status" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                        <span *ngIf="f['status'].errors['required']">status is required.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label">Lead Source</label>
+                    <ng-select formControlName="leadSource" [items]="leadSource" bindLabel="name" bindValue="name"
+                        placeholder="Select an option">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="zipCode" class="form-label">Zip Code</label>
+                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
+                        formControlName="zipCode"
+                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="followUpDate" class="form-label">Follow up date</label>
+                    <input type="datetime-local" class="form-control" id="followUpDateTime" placeholder=""
+                        formControlName="followUpDate">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" class="form-control" id="state" placeholder="Enter Your State"
+                        formControlName="state">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="Enter City Name"
+                        formControlName="city">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter Your Address"
+                        formControlName="address">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="contact" class="form-label">Contact</label>
+                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number"
+                        formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
+                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                        (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)" maxlength="10"
+                        (paste)="preventCopyPaste($event)">
+                    <div *ngIf="submitted && f['contact'].errors" class="invalid-feedback">
+                        <span *ngIf="f['contact'].errors['required']">Contact is required.</span>
+                        <span *ngIf="f['contact'].errors['maxlength']">Contact must be 10 characters.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="text" class="form-control  " id="email" placeholder="Enter your email" onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
+                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
+                        formControlName="email">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Update Lead</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">cancel</button>
+        </div>
+    </form>
+</ng-template>
+
 <!-- <div class="col-xl-12">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
@@ -392,17 +509,16 @@
     </div>
 </div>
 
-<ng-template #Content12 let-modal>
+<ng-template #Content112 let-modal>
     <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLgLabel"><b *ngIf="leadForm">
-                {{ (leadForm.get('leadId')?.value || 0) > 0 ? 'Edit' : 'Add Lead' }}
-            </b>
+        <h6 class="modal-title" id="exampleModalLgLabel">
+            Add Lead
         </h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
     </div>
     <form [formGroup]="leadForm" (ngSubmit)="onSubmit(modal)">
-        <div class="modal-body">
+        <div class="modal-body overflowImportant">
             <div class="row gy-3 scrollable-content">
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="name" class="form-label">Name</label>
@@ -419,40 +535,37 @@
                         formControlName="companyName">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-phone" class="form-label">Executive</label>
-                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
-                        placeholder="Select an Executive">
-                    </ng-select>
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Products</label>
                     <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Country</label>
-                    <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
-                        formControlName="country" (change)="onCountryChange($any($event.target).value)"
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select"
+                        id="choices-multiple-remove-button3" formControlName="country"
+                        (change)="onCountryChange($any($event.target).value)"
                         [ngClass]="{ 'is-invalid': submitted && f['country'].errors }" class="border rounded">
                         <ng-option *ngFor="let c of countryLst" [value]="c.country">{{ c.country }}</ng-option>
                     </ng-select>
                 </div>
-                <!-- Stage Dropdown -->
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label" for="stage">Stage</label>
                     <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName"
-                        placeholder="Select a stage" (change)="onStageChange()">
+                        placeholder="Select a stage" (change)="onStatusChange()"
+                        [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
                     </ng-select>
+                    <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
+                        <span *ngIf="f['stage'].errors['required']">stage is required.</span>
+                    </div>
                 </div>
-                
-                <!-- Status Dropdown (dynamically updates based on selected stage) -->
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label">Status</label>
                     <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
-                        placeholder="Select a status">
+                        placeholder="Select a status" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
                     </ng-select>
+                    <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                        <span *ngIf="f['status'].errors['required']">status is required.</span>
+                    </div>
                 </div>
-                
-                
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label class="form-label">Lead Source</label>
                     <ng-select formControlName="leadSource" [items]="leadSource" bindLabel="name" bindValue="name"
@@ -461,13 +574,13 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="zipCode" class="form-label">Zip Code</label>
-                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code" formControlName="zipCode"
+                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
+                        formControlName="zipCode"
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="followUpDate" class="form-label">Follow up date</label>
-                    <input type="date" class="form-control" id="followUpDate" placeholder=""
+                    <input type="datetime-local" class="form-control" id="followUpDateTime" placeholder=""
                         formControlName="followUpDate">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
@@ -499,15 +612,15 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="email" class="form-label">E-mail</label>
-                    <input type="text" class="form-control  " id="email" placeholder="Enter your email"
-                        onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
+                    <input type="text" class="form-control  " id="email" placeholder="Enter your email" onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
                         (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
-                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email">
+                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
+                        formControlName="email">
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-secondary">save lead</button>
+            <button type="submit" class="btn btn-primary">Save Lead</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>

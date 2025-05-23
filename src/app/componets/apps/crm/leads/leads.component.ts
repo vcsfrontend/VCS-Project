@@ -1033,9 +1033,7 @@ export class LeadsComponent extends BaseComponent {
               const statusArray =
                 this.statusOptionsByStageforDisplay[this.defaultStageName];
               this.defaultStatusName =
-                statusArray.length > 0 ? statusArray[0].name : '';
-              console.log('Default Stage:', this.defaultStageName);
-              console.log('Default Status:', this.defaultStatusName);
+                statusArray.length > 0 ? statusArray[0].name : ''
             } else {
               this.defaultStatusName = '';
             }
@@ -1113,7 +1111,6 @@ export class LeadsComponent extends BaseComponent {
             (key) => stageObj[key]?.trim() !== ''
           );
           this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
-          console.log('statrting stage is :', this.defaultStageName);
           this.getCrmStatus();
         } else {
           this.stageLst = [];
@@ -1229,27 +1226,17 @@ export class LeadsComponent extends BaseComponent {
 
   onFollowupStatusChange(): void {
     const selectedStage = this.followupLeadForm.get('stage')?.value;
-    console.log('Form stage:', selectedStage);
-    console.log('Available status options:', this.checkboxStageOptions);
-
     if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
-      this.checkboxStageOptions =
-        this.statusOptionsByStageforDisplay[selectedStage];
-
+      this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage];
       const currentStatus = this.followupLeadForm.get('status')?.value;
-
-      // Check if the current status is available in the new options
       const statusExists = this.checkboxStageOptions.some(
         (option) => option.name === currentStatus
       );
-
-      // Only change status if it's NOT valid
       if (!statusExists) {
         const firstStatus = this.checkboxStageOptions[0]?.name || null;
         this.followupLeadForm.patchValue({ status: firstStatus });
       }
     } else {
-      // If no stage selected or no options available, clear status field
       this.checkboxStageOptions = [];
       this.followupLeadForm.patchValue({ status: null });
     }
@@ -1443,7 +1430,6 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         if (res && res.leadsEntry) {
           this.selectedLeadId = data.leadId;
-          console.log(this.selectedLeadId);
           this.CrmLeads = {
             name: res.leadsEntry.name || '',
             companyName: res.leadsEntry.companyName || '',
@@ -1507,7 +1493,7 @@ export class LeadsComponent extends BaseComponent {
             status: followup.status || '',
             comments: this.stripHtmlTags(followup.comments || ''),
             followUpBy: followup.followUpBy || '',
-            updatedTime: this.formatDateTime(followup.updatedTime),
+            updatedTime: followup.updatedTime ? new Date(followup.updatedTime) : null
           }));
         } else {
           this.followUpDetails = [];
@@ -1550,14 +1536,6 @@ export class LeadsComponent extends BaseComponent {
       formData.forEach((value, key) => {
         formDataObject[key] = value;
       });
-      console.log('Payload Preview:', {
-        stage: this.defaultStageName,
-        status: this.defaultStatusName,
-        autoAllocate: this.allocateExecutive,
-      });
-
-      console.log('Preview Payload as Object:', formDataObject);
-
       this.switchService.UploadCrmLeads(formData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
