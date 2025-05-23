@@ -1,6 +1,16 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation,} from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule,} from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdownModule,
+  NgbModal,
+  NgbModalConfig,
+  NgbModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,7 +20,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -19,12 +35,18 @@ import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
-import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbOffcanvas,
+  OffcanvasDismissReasons,
+} from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import * as FilePond from 'filepond';
 import { FilePondComponent, FilePondModule } from 'ngx-filepond';
-import { AngularEditorModule, AngularEditorConfig} from '@kolkov/angular-editor';
+import {
+  AngularEditorModule,
+  AngularEditorConfig,
+} from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -32,59 +54,171 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-leads',
   standalone: true,
-  imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule, AngularFireDatabaseModule, 
-    CommonModule, MatFormFieldModule, MatSelectModule, AngularFirestoreModule, ToastrModule, SharedModule,
-    MaterialModuleModule, MatSortModule, NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule,
-    NgChartsModule, NgApexchartsModule, ],
-  providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService },
-    DatePipe, NgbModalConfig, NgbModal,],
+  imports: [
+    RouterModule,
+    NgbModule,
+    FormsModule,
+    ReactiveFormsModule,
+    AngularFireModule,
+    AngularFireDatabaseModule,
+    CommonModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    AngularFirestoreModule,
+    ToastrModule,
+    SharedModule,
+    MaterialModuleModule,
+    MatSortModule,
+    NgbDropdownModule,
+    NgSelectModule,
+    FilePondModule,
+    AngularEditorModule,
+    NgChartsModule,
+    NgApexchartsModule,
+  ],
+  providers: [
+    FirebaseService,
+    { provide: ToastrService, useClass: ToastrService },
+    DatePipe,
+    NgbModalConfig,
+    NgbModal,
+  ],
   templateUrl: './leads.component.html',
   styleUrl: './leads.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo',  'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email',];
-  usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
+  displayedColumns: string[] = [
+    'sourceFlag',
+    'select',
+    'slNo',
+    'action',
+    'name',
+    'executive',
+    'stage',
+    'status',
+    'followUpDate',
+    'contact',
+    'email',
+  ];
+  usersColumns: string[] = [
+    'slNo',
+    'name',
+    'role',
+    'email',
+    'date',
+    'callsAttempted',
+    'callsConnected',
+  ];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
-  Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
-  stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false; statusOptionsByStage: { [stageName: string]: any[] } = {};
-  statusLst: any; allStatuses: any; selectedStage: string = ''; checkboxStageOptions: any[] = [];
-  selectedStatusCount: number | null = null; chartOptions: any; statusOptionsByStageforDisplay: any = {};
+  Crmusers: any[] = [];
+  CrmLeads: any = {};
+  element: any = {};
+  crmLeadsList: any;
+  campaignId!: string;
+  stageLst: any;
+  isStagesLoading: boolean = true;
+  isAddStagesDisabled: boolean = false;
+  statusOptionsByStage: { [stageName: string]: any[] } = {};
+  statusLst: any;
+  allStatuses: any;
+  selectedStage: string = '';
+  checkboxStageOptions: any[] = [];
+  selectedStatusCount: number | null = null;
+  chartOptions: any;
+  statusOptionsByStageforDisplay: any = {};
   stageColorMap: Map<string, string> = new Map();
   statusColorMap: Map<string, string> = new Map();
-  userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary', ];
+  userColors = [
+    'bg-primary',
+    'bg-success',
+    'bg-warning',
+    'bg-danger',
+    'bg-info',
+    'bg-secondary',
+  ];
   userDataStorage = localStorage.getItem('userDetails');
-  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage): null;
+  userData: any = this.userDataStorage
+    ? JSON.parse(this.userDataStorage)
+    : null;
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
-  statusClicked = false; statusCounts: { status: string; count: number }[] = [];
-  crmStageData: any; crmStatusData: any; newOptionName: string = '';
-  status: string = 'In Progress Leads'; showValidationError = false;
-  fetchCrmLeadsList: any[] = []; showCheckboxError = false; showNameError = false;
-  anyChecked: any; addMoreVisible: boolean = false; newItem: string = '';
-  isStage: boolean = false; showStages: boolean = false;
+  statusClicked = false;
+  statusCounts: { status: string; count: number }[] = [];
+  crmStageData: any;
+  crmStatusData: any;
+  newOptionName: string = '';
+  status: string = 'In Progress Leads';
+  showValidationError = false;
+  fetchCrmLeadsList: any[] = [];
+  showCheckboxError = false;
+  showNameError = false;
+  anyChecked: any;
+  addMoreVisible: boolean = false;
+  newItem: string = '';
+  isStage: boolean = false;
+  showStages: boolean = false;
   leaditems: { checked: boolean; label: string }[] = [];
   leadStatusitems: { checked: boolean; label: string }[] = [];
-  selectedProgressLeads: any[] = []; selectedLostLeads: any[] = [];
-  selectedConvertedLeads: any[] = []; newItemColor: string = '#000000';
-  newOptionColor: any; showMore = true; topshowMore = false; campaignList: any[] = [];
-  agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
-  formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0;
-  allTemplateGenIds: string[] = []; rotateCharts = true; executiveList: any[] = [];
-  entryList: any[] = []; agents: any;  leads: any;  imageFileSrcData: any; followUpDetails: any[] = []; 
+  selectedProgressLeads: any[] = [];
+  selectedLostLeads: any[] = [];
+  selectedConvertedLeads: any[] = [];
+  newItemColor: string = '#000000';
+  newOptionColor: any;
+  showMore = true;
+  topshowMore = false;
+  campaignList: any[] = [];
+  agentUsers: any[] = [];
+  selectedCampaign: any;
+  selectTemplateForm!: FormGroup;
+  formList: any;
+  tempFormList: any;
+  generatedTemplateId: any;
+  currentIndex: number = 0;
+  allTemplateGenIds: string[] = [];
+  rotateCharts = true;
+  executiveList: any[] = [];
+  entryList: any[] = [];
+  agents: any;
+  leads: any;
+  imageFileSrcData: any;
+  followUpDetails: any[] = [];
   crmStaticStages = [
-    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
-    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545',},
-    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
+    {
+      name: 'In Progress Leads',
+      checked: false,
+      isDefault: true,
+      isCustom: false,
+      color: '#28a745',
+    },
+    {
+      name: 'Lost Leads',
+      checked: false,
+      isDefault: true,
+      isCustom: false,
+      color: '#dc3545',
+    },
+    {
+      name: 'Converted Leads',
+      checked: false,
+      isDefault: true,
+      isCustom: false,
+      color: '#007bff',
+    },
   ];
-  selectedType: string = ''; dynamicFields: { value: string }[] = []; matcardLst: any;
-  topDisplayedCards: any; defaultStageName: string = '';defaultStatusName: string = '';allocateExecutive: boolean = false;
-
+  selectedType: string = '';
+  dynamicFields: { value: string }[] = [];
+  matcardLst: any;
+  topDisplayedCards: any;
+  defaultStageName: string = '';
+  defaultStatusName: string = '';
+  allocateExecutive: boolean = false;
+  selectedLeadId: number = 0;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -120,18 +254,33 @@ export class LeadsComponent extends BaseComponent {
 
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
-    plugins: { legend: { position: 'bottom', }, },
+    plugins: { legend: { position: 'bottom' } },
   };
-  public pieChartLabels = ['Spoke', 'Active', 'Proposal sent', 'Meeting Fixed', 'Met', 'Closed', 'Lost',];
+  public pieChartLabels = [
+    'Spoke',
+    'Active',
+    'Proposal sent',
+    'Meeting Fixed',
+    'Met',
+    'Closed',
+    'Lost',
+  ];
   public pieChartDatasets = [
     {
       data: [200, 150, 100, 43, 23, 78],
     },
   ];
-  public pieChartLegend = true; public pieChartPlugins = [];
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
 
-  constructor( config: NgbModalConfig, private modalService: NgbModal, private offcanvasService: NgbOffcanvas,
-    public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder, private route: ActivatedRoute
+  constructor(
+    config: NgbModalConfig,
+    private modalService: NgbModal,
+    private offcanvasService: NgbOffcanvas,
+    public switchService: SwitherService,
+    private toastr: ToastrService,
+    private fb: FormBuilder,
+    private route: ActivatedRoute
   ) {
     super();
     this.statusOptionsByStage = {
@@ -237,7 +386,10 @@ export class LeadsComponent extends BaseComponent {
     const filterValue = (event.target as HTMLInputElement).value;
     this.usersDataSource.filter = filterValue.trim().toLowerCase();
   }
-  VerticallyScrol(content12: any) { this.leadId = 0; this.submitted = false; this.leadForm.reset();
+  VerticallyScrol(content12: any) {
+    this.leadId = 0;
+    this.submitted = false;
+    this.leadForm.reset();
     this.modalService.open(content12, {
       backdrop: 'static',
       keyboard: false,
@@ -277,7 +429,7 @@ export class LeadsComponent extends BaseComponent {
       if (nav?.agents) {
         this.agents = nav.agents;
       }
-      
+
       //Send Email
       this.sendwhatsLeadForm = this.fb.group({
         template: ['', [Validators.required]],
@@ -291,10 +443,9 @@ export class LeadsComponent extends BaseComponent {
         email: ['', [Validators.required]],
         template: ['', [Validators.required]],
         subject: ['', [Validators.required, Validators.minLength(3)]],
-        cc: ['', [Validators.minLength(3)]],
+        cc: ['', [Validators.required]],
         bcc: ['', [Validators.minLength(3)]],
         content: ['', [Validators.required]],
-        
       });
 
       this.sendLeadForm
@@ -328,7 +479,7 @@ export class LeadsComponent extends BaseComponent {
     //Send Email
     this.followupLeadForm = this.fb.group({
       followupDate: ['', [Validators.required]],
-      followupTime: ['',],
+      followupTime: [''],
       stage: ['', [Validators.required]],
       status: ['', [Validators.required]],
       comments: ['', [Validators.required]],
@@ -846,11 +997,11 @@ export class LeadsComponent extends BaseComponent {
                 const color = item[colorFields[index]];
                 return name
                   ? {
-                    name,
-                    checked: false,
-                    isCustom: false,
-                    color: color || '#cccccc',
-                  }
+                      name,
+                      checked: false,
+                      isCustom: false,
+                      color: color || '#cccccc',
+                    }
                   : null;
               })
               .filter((opt) => opt !== null);
@@ -875,9 +1026,14 @@ export class LeadsComponent extends BaseComponent {
                 stage,
                 fields,
               }));
-            if (this.defaultStageName && this.statusOptionsByStageforDisplay[this.defaultStageName]) {
-              const statusArray = this.statusOptionsByStageforDisplay[this.defaultStageName];
-              this.defaultStatusName = statusArray.length > 0 ? statusArray[0].name : '';
+            if (
+              this.defaultStageName &&
+              this.statusOptionsByStageforDisplay[this.defaultStageName]
+            ) {
+              const statusArray =
+                this.statusOptionsByStageforDisplay[this.defaultStageName];
+              this.defaultStatusName =
+                statusArray.length > 0 ? statusArray[0].name : '';
               console.log('Default Stage:', this.defaultStageName);
               console.log('Default Status:', this.defaultStatusName);
             } else {
@@ -950,10 +1106,14 @@ export class LeadsComponent extends BaseComponent {
         if (res && res.length > 0) {
           const stageObj = res[0];
           this.processStageData(res[0]);
-          const stageKeys = Object.keys(stageObj).filter(key => /^f\d+$/.test(key));
-          const firstStageKey = stageKeys.find(key => stageObj[key]?.trim() !== '');
+          const stageKeys = Object.keys(stageObj).filter((key) =>
+            /^f\d+$/.test(key)
+          );
+          const firstStageKey = stageKeys.find(
+            (key) => stageObj[key]?.trim() !== ''
+          );
           this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
-          console.log('statrting stage is :',this.defaultStageName);
+          console.log('statrting stage is :', this.defaultStageName);
           this.getCrmStatus();
         } else {
           this.stageLst = [];
@@ -1068,29 +1228,32 @@ export class LeadsComponent extends BaseComponent {
   }
 
   onFollowupStatusChange(): void {
-  const selectedStage = this.followupLeadForm.get('stage')?.value;
+    const selectedStage = this.followupLeadForm.get('stage')?.value;
+    console.log('Form stage:', selectedStage);
+    console.log('Available status options:', this.checkboxStageOptions);
 
-  if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
-    this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage];
+    if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
+      this.checkboxStageOptions =
+        this.statusOptionsByStageforDisplay[selectedStage];
 
-    const currentStatus = this.followupLeadForm.get('status')?.value;
+      const currentStatus = this.followupLeadForm.get('status')?.value;
 
-    const statusExists = this.checkboxStageOptions.some(
-      (option) => option.name === currentStatus
-    );
+      // Check if the current status is available in the new options
+      const statusExists = this.checkboxStageOptions.some(
+        (option) => option.name === currentStatus
+      );
 
-    // If no current status selected or selected status is not in available options
-    if (!statusExists) {
-      const firstStatus = this.checkboxStageOptions[0]?.name || null;
-      this.followupLeadForm.patchValue({ status: firstStatus });
+      // Only change status if it's NOT valid
+      if (!statusExists) {
+        const firstStatus = this.checkboxStageOptions[0]?.name || null;
+        this.followupLeadForm.patchValue({ status: firstStatus });
+      }
+    } else {
+      // If no stage selected or no options available, clear status field
+      this.checkboxStageOptions = [];
+      this.followupLeadForm.patchValue({ status: null });
     }
-  } else {
-    // Clear options and status field if no stage or no matching status options
-    this.checkboxStageOptions = [];
-    this.followupLeadForm.patchValue({ status: null });
   }
-  }
-
 
   deleteOption(index: number) {
     const deletedOption = this.checkboxStageOptions[index];
@@ -1169,40 +1332,43 @@ export class LeadsComponent extends BaseComponent {
   // }
 
   getFetchLeadData() {
-    this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
-      next: (res: any) => {
-        const executiveList = (res.executiveList || []).map((item: any) => ({
-          ...item,
-          source: 'executive',
-        }));
-        const entryList = (res.entryList || []).map((item: any) => ({
-          ...item,
-          source: 'entry',
-        }));
-        const combined = [...executiveList, ...entryList];
-        this.fetchCrmLeadsList = combined;
-        this.dataSource.data = combined;
-        this.leadCount = combined.length;
-        const hasExecutiveFlag = combined.some(item => item.source === 'executive');
-        this.displayedColumns = [
-          ...(hasExecutiveFlag ? ['sourceFlag'] : []),'select', 'slNo', 'action', 'name','executive','stage', 'status', 'followUpDate', 'contact','email',];
-        const firstLead = combined[0];
-        if (!firstLead) return;
-        this.followupLeadForm.patchValue({ stage: firstLead.stage });
-        setTimeout(() => {
-          this.onFollowupStatusChange();
-          const isValidStatus = this.checkboxStageOptions.some(
-            (opt) => opt.name === firstLead.status
+    this.switchService
+      .FetchLeadData(this.userEmail, this.campaignId)
+      .subscribe({
+        next: (res: any) => {
+          const executiveList = (res.executiveList || []).map((item: any) => ({
+            ...item,
+            source: 'executive',
+          }));
+          const entryList = (res.entryList || []).map((item: any) => ({
+            ...item,
+            source: 'entry',
+          }));
+          const combined = [...executiveList, ...entryList];
+          this.fetchCrmLeadsList = combined;
+          this.dataSource.data = combined;
+          this.leadCount = combined.length;
+          const hasExecutiveFlag = combined.some(
+            (item) => item.source === 'executive'
           );
-          if (isValidStatus) {
-            this.followupLeadForm.patchValue({ status: firstLead.status });
-          }
-        }, 500);
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || 'Server Error');
-      },
-    });
+          this.displayedColumns = [
+            ...(hasExecutiveFlag ? ['sourceFlag'] : []),
+            'select',
+            'slNo',
+            'action',
+            'name',
+            'executive',
+            'stage',
+            'status',
+            'followUpDate',
+            'contact',
+            'email',
+          ];
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText || 'Server Error');
+        },
+      });
   }
 
   getStatusCount(): void {
@@ -1222,7 +1388,7 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
-  
+
   onCheckboxChange() {
     const selectedPlans = this.crmStaticStages.filter((plan) => plan.checked);
     selectedPlans.forEach((plan, index) => {
@@ -1276,6 +1442,8 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.ViewCrmLeads(data.leadId).subscribe({
       next: (res: any) => {
         if (res && res.leadsEntry) {
+          this.selectedLeadId = data.leadId;
+          console.log(this.selectedLeadId);
           this.CrmLeads = {
             name: res.leadsEntry.name || '',
             companyName: res.leadsEntry.companyName || '',
@@ -1310,34 +1478,46 @@ export class LeadsComponent extends BaseComponent {
               })) || [],
           };
           this.element = this.CrmLeads;
+          this.followupLeadForm.patchValue({
+            stage: res.leadsEntry.stage || '',
+          });
+
+          setTimeout(() => {
+            this.onFollowupStatusChange();
+            this.followupLeadForm.patchValue({
+              status: res.leadsEntry.status || '',
+            });
+          }, 0);
+
+          this.onFollowupStatusChange();
         } else {
         }
       },
-      error: (err: any) => { },
+      error: (err: any) => {},
     });
   }
 
   openFollowUpPopover(element: any): void {
-  this.switchService.ViewCrmLeads(element.leadId).subscribe({
-    next: (res: any) => {
-      if (res && res.followLeads) {
-        this.followUpDetails = res.followLeads.map((followup: any) => ({
-          followupDate: followup.followupDate || '',
-          stage: followup.stage || '',
-          status: followup.status || '',
-          comments: this.stripHtmlTags(followup.comments || ''),
-          followUpBy: followup.followUpBy || '',
-          updatedTime: this.formatDateTime(followup.updatedTime),
-        }));
-      } else {
+    this.switchService.ViewCrmLeads(element.leadId).subscribe({
+      next: (res: any) => {
+        if (res && res.followLeads) {
+          this.followUpDetails = res.followLeads.map((followup: any) => ({
+            followupDate: followup.followupDate || '',
+            stage: followup.stage || '',
+            status: followup.status || '',
+            comments: this.stripHtmlTags(followup.comments || ''),
+            followUpBy: followup.followUpBy || '',
+            updatedTime: this.formatDateTime(followup.updatedTime),
+          }));
+        } else {
+          this.followUpDetails = [];
+        }
+      },
+      error: () => {
         this.followUpDetails = [];
-      }
-    },
-    error: () => {
-      this.followUpDetails = [];
-    }
-  });
-}
+      },
+    });
+  }
 
   formatMobileNumber(mobile: any): string {
     if (!mobile) return '';
@@ -1371,10 +1551,10 @@ export class LeadsComponent extends BaseComponent {
         formDataObject[key] = value;
       });
       console.log('Payload Preview:', {
-      stage: this.defaultStageName,
-      status: this.defaultStatusName,
-      autoAllocate: this.allocateExecutive
-    });
+        stage: this.defaultStageName,
+        status: this.defaultStatusName,
+        autoAllocate: this.allocateExecutive,
+      });
 
       console.log('Preview Payload as Object:', formDataObject);
 
@@ -1385,11 +1565,11 @@ export class LeadsComponent extends BaseComponent {
             this.uploadSubmitted = false;
             this.uploadSpinner = false;
             this.uploadLead.reset();
-            this.toastr.success(res.message, 'Bulk Lead Upload Successful',);
+            this.toastr.success(res.message, 'Bulk Lead Upload Successful');
             this.getFetchLeadData();
           } else {
             this.uploadSpinner = false;
-            this.toastr.error(res.message, 'lead',);
+            this.toastr.error(res.message, 'lead');
           }
         },
         error: (err: any) => {
@@ -1451,44 +1631,46 @@ export class LeadsComponent extends BaseComponent {
   }
 
   sendMailLeadSubmit(modal: any) {
-  this.sendLeadSubmitted = true;
-  if (this.sendLeadForm?.valid) {
-    const templateValue = this.sendLeadForm.get('template')?.value;
-    const templateToSend = typeof templateValue === 'object'
-      ? templateValue.templateGenId
-      : templateValue;
+    this.sendLeadSubmitted = true;
+    if (this.sendLeadForm?.valid) {
+      const templateValue = this.sendLeadForm.get('template')?.value;
+      const templateToSend =
+        typeof templateValue === 'object'
+          ? templateValue.templateGenId
+          : templateValue;
 
-    const payload = {
-      email: this.sendLeadForm.get('email')?.value,
-      template: templateToSend,
-      subject: this.sendLeadForm.get('subject')?.value,
-      cc: this.sendLeadForm.get('cc')?.value,
-      bcc: this.sendLeadForm.get('bcc')?.value,
-      content: this.sendLeadForm.get('content')?.value,
-    };
+      const payload = {
+        email: this.sendLeadForm.get('email')?.value,
+        template: templateToSend,
+        subject: this.sendLeadForm.get('subject')?.value,
+        cc: this.sendLeadForm.get('cc')?.value,
+        bcc: this.sendLeadForm.get('bcc')?.value,
+        content: this.sendLeadForm.get('content')?.value,
+      };
 
-    this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
-      next: (res: any) => {
-        if (res.status == true) {
-          modal.close();
-          this.submitted = false;
-          this.leadForm.reset();
-          this.toastr.success(res.message, 'lead', {
-            timeOut: 3000, positionClass: 'toast-top-right'
-          });
-        } else {
-          this.toastr.error(res.message, 'lead', {
-            timeOut: 3000, positionClass: 'toast-top-right'
-          });
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    });
+      this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.submitted = false;
+            this.leadForm.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          } else {
+            this.toastr.error(res.message, 'lead', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      });
+    }
   }
-}
-
 
   get e() {
     return this.followupLeadForm.controls;
@@ -1517,7 +1699,7 @@ export class LeadsComponent extends BaseComponent {
               this.toastr.success(res.message, 'lead');
               this.getFetchLeadData();
             } else {
-              this.toastr.error(res.message, 'lead' );
+              this.toastr.error(res.message, 'lead');
             }
           },
         });
@@ -1555,13 +1737,13 @@ export class LeadsComponent extends BaseComponent {
   }
 
   @ViewChild('followUpPond') followUpPond!: FilePondComponent;
-  followUpPondHandleInit() { }
+  followUpPondHandleInit() {}
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     this.imageFileSrcData = files;
   }
-  followUpPondHandleActivateFile(event: any) { }
+  followUpPondHandleActivateFile(event: any) {}
 
   get a() {
     return this.allocateForm.controls;
@@ -1569,11 +1751,32 @@ export class LeadsComponent extends BaseComponent {
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
-    if (this.selectedIdList.size == 0) {
-      this.toastr.error('Please choose at least one', 'lead', {
+    const selectedExecutive = this.allocateForm.get('executive')?.value;
+    const hasSelectedLeads = this.selectedIdList.size > 0;
+
+    // Check for both conditions
+    if (!selectedExecutive && !hasSelectedLeads) {
+      this.toastr.warning('Please choose one executive and one lead', 'lead', {
         timeOut: 3000,
         positionClass: 'toast-top-right',
       });
+      return;
+    }
+
+    if (!selectedExecutive) {
+      this.toastr.warning('Please choose one executive', 'lead', {
+        timeOut: 3000,
+        positionClass: 'toast-top-right',
+      });
+      return;
+    }
+
+    if (!hasSelectedLeads) {
+      this.toastr.warning('Please choose one lead', 'lead', {
+        timeOut: 3000,
+        positionClass: 'toast-top-right',
+      });
+      return;
     }
     if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
       this.allocateForm.patchValue({ idList: this.allocateForm });
@@ -1723,9 +1926,9 @@ export class LeadsComponent extends BaseComponent {
       },
     },
   ];
-  pondHandleInit() { }
-  pondHandleAddFile(event: any) { }
-  pondHandleActivateFile(event: any) { }
+  pondHandleInit() {}
+  pondHandleAddFile(event: any) {}
+  pondHandleActivateFile(event: any) {}
   getSeriesData(fields: any[]): number[] {
     return fields.map((field) => {
       const foundStatus = this.statusCounts.find(
@@ -1807,6 +2010,14 @@ export class LeadsComponent extends BaseComponent {
   openRight4(content4: any) {
     this.offcanvasService.open(content4, { position: 'end' });
   }
+  openFollowupLeadForm(leadData: any, content4: any): void {
+    this.openRight4(content4); // open the offcanvas
+    this.ViewCrmLeads(leadData); // fetch and set stage/status
+  }
+
+  openRight5(content5: any) {
+    this.offcanvasService.open(content5, { position: 'end' });
+  }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
   }
@@ -1853,19 +2064,16 @@ export class LeadsComponent extends BaseComponent {
   }
 
   validateAndOpenBulkUpload(content: any): void {
-  if (!this.stageLst || this.stageLst.length === 0) {
-    this.toastr.warning('Please add at least one Stage before uploading.');
-    return;
+    if (!this.stageLst || this.stageLst.length === 0) {
+      this.toastr.warning('Please add at least one Stage before uploading.');
+      return;
+    }
+
+    if (!this.statusLst || this.statusLst.length === 0) {
+      this.toastr.warning('Please add at least one Status before uploading.');
+      return;
+    }
+
+    this.openRight(content);
   }
-
-  if (!this.statusLst || this.statusLst.length === 0) {
-    this.toastr.warning('Please add at least one Status before uploading.');
-    return;
-  }
-
-  this.openRight(content);
-  }
-
-  
-
 }
