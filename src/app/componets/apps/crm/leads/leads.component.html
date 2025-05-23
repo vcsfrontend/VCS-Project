@@ -50,7 +50,7 @@
                         <td mat-cell *matCellDef="let element" class="d-flex p-2">
                             <a href="javascript:void(0);"
                                 class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                ata-bs-toggle="offcanvas" (click)="openFollowup(element,Content4);"
+                                ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-alarm-line"></i>
                             </a>
@@ -304,7 +304,7 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Stages</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight4(content4)"
+                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight5(content5)"
                         >Add
                         Stages</button>
                 </div>
@@ -885,7 +885,11 @@
                 </div>
             </div>
             <div class="mb-4">
-                <input type="text" class="form-control" id="cc" placeholder="email" formControlName="email">
+                <input type="text" class="form-control" id="cc" placeholder="email" formControlName="email"
+                [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['email'].errors }">
+                <div *ngIf="sendLeadSubmitted && s['email'].errors" class="invalid-feedback">
+                    <div *ngIf="s['email'].errors['required']">Email is required</div>
+                </div>
             </div>
             <div class="mb-4">
                 <input type="text" class="form-control" id="cc" placeholder="CC" formControlName="cc"
@@ -1070,7 +1074,7 @@
     </form>
 </ng-template>
 
-<ng-template #content4 let-offcanvas>
+<ng-template #content5 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
         <div class="mb-3">
