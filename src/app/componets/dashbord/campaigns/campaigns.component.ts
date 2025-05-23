@@ -6,9 +6,10 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { SwitherService } from '../../../shared/services/swither.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-campaigns',
@@ -33,11 +34,31 @@ export class CampaignsComponent extends BaseComponent {
   newOptionName: string = ''; statusOptionsByStage: { [stageName: string]: any[] } = {};
   statusOptionsByStageforDisplay: any = {}; selectedStage: string = ''; checkboxStageOptions: any[] = [];
   anyChecked: any; stageLst: any; crmStatusData: any; showValidationError = false; showCheckboxError = false; showNameError = false;
-  isStagesLoading: boolean = true; statusLst: any;
+  isStagesLoading: boolean = true; statusLst: any;  public leadCounts: { [campaignId: string]: number } = {};
+  stageCounts: { [campaignId: string]: { [stage: string]: number } } = {};
+  fetchCrmLeadsList: any[] = [];
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
+  dataSource = new MatTableDataSource<any>();  campaignId!: string;
+
+  displayedColumns: string[] = [
+    'sourceFlag',
+    'select',
+    'slNo',
+    'action',
+    'name',
+    'executive',
+    'stage',
+    'status',
+    'followUpDate',
+    'contact',
+    'email',
+  ];
+
   constructor(private modalService: NgbModal, public switchService: SwitherService,
     private offcanvasService: NgbOffcanvas, private toastr: ToastrService, private fb: FormBuilder, private router: Router,
+        private route: ActivatedRoute
+    
   ) {
     super()
   }
@@ -50,6 +71,11 @@ export class CampaignsComponent extends BaseComponent {
     this.getUsers();
     this.getCampaignData();
     this.getCampaignSecific();
+    this.campaignList.forEach(campaign => {
+      this.getLeadCountForCampaign(campaign.campgnId);
+    });
+    
+
     this.campaignForm = this.fb.group({
       campaignId: [0],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
@@ -101,6 +127,10 @@ export class CampaignsComponent extends BaseComponent {
             type: this.userType,
           });
           this.campaignSubmitted = false;
+          console.log('Campaign API Response:', res);
+          console.log('CampgnId:', res.campgnId);
+
+          this.getLeadCountForCampaign(res.campgnId)
           this.getCampaignData();
         } else {
           this.toastr.error(res.message || "Something went wrong while creating the campaign.");
@@ -112,8 +142,7 @@ export class CampaignsComponent extends BaseComponent {
       }
     });
   }
-
-
+  
   getCrmStages(): void {
     this.isStagesLoading = true;
     this.isAddStagesDisabled = true;
@@ -206,6 +235,9 @@ export class CampaignsComponent extends BaseComponent {
       next: (res: any) => {
         if (Array.isArray(res)) {
           this.campaignList = res;
+          this.campaignList.forEach(campaign => {
+          this.getLeadCountForCampaign(campaign.campgnId);
+      });
         } else {
           this.toastr.error("Unexpected response format.");
         }
@@ -266,11 +298,39 @@ export class CampaignsComponent extends BaseComponent {
   }
 
   viewCampaignLeads(campaign: any) {
+    this.getLeadCountForCampaign(campaign.campgnId);
     this.router.navigate(['/apps/crm/leads'], {
       queryParams: { campaignId: campaign.campgnId },
       state: { agents: campaign.agents }
     });
   }
+
+  getLeadCountForCampaign(campaignId: string) {
+  this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
+    next: (res: any) => {
+      console.log('FetchLeadData res:', res);
+      const executiveList = res.executiveList || [];
+      const entryList = res.entryList || [];
+      const combined = [...executiveList, ...entryList];
+      this.leadCounts[campaignId] = executiveList.length + entryList.length;
+      const stageMap: { [key: string]: number } = {};
+      combined.forEach(lead => {
+        const stage = lead.stage || 'Unknown';
+        stageMap[stage] = (stageMap[stage] || 0) + 1;
+      });
+
+      this.stageCounts[campaignId] = stageMap;
+
+      console.log(`Lead count for ${campaignId}:`, this.leadCounts[campaignId]);
+      console.log(`Stage breakdown for ${campaignId}:`, stageMap);
+    },
+    error: (err) => {
+      console.error('Error fetching lead count for campaign:', campaignId, err);
+      this.leadCounts[campaignId] = 0;
+      
+    }
+  });
+}
 
 
   open(content7: any) {
