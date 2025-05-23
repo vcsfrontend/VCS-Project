@@ -1514,15 +1514,10 @@ export class LeadsComponent extends BaseComponent {
               this.executiveName = '';
               this.followupName = '';
               this.leadId = 0;
-              this.toastr.success(res.message, 'lead', {
-                timeOut: 3000,
-                positionClass: 'toast-top-right',
-              });
+              this.toastr.success(res.message, 'lead');
+              this.getFetchLeadData();
             } else {
-              this.toastr.error(res.message, 'lead', {
-                timeOut: 3000,
-                positionClass: 'toast-top-right',
-              });
+              this.toastr.error(res.message, 'lead' );
             }
           },
         });
