@@ -309,7 +309,7 @@ export class LeadsComponent extends BaseComponent {
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]],
-      allocateExecutive: [false],
+      autoAllocate: [false],
     });
 
     //Send Email
@@ -1364,8 +1364,8 @@ export class LeadsComponent extends BaseComponent {
       formData.append('campaignId', this.campaignId || '');
       formData.append('stage', this.defaultStageName || '');
       formData.append('status', this.defaultStatusName || '');
-      const allocateExecutive = this.uploadLead.get('allocateExecutive')?.value;
-      formData.append('allocateExecutive', allocateExecutive.toString());
+      const autoAllocate = this.uploadLead.get('autoAllocate')?.value;
+      formData.append('autoAllocate', autoAllocate.toString());
       const formDataObject: any = {};
       formData.forEach((value, key) => {
         formDataObject[key] = value;
@@ -1373,7 +1373,7 @@ export class LeadsComponent extends BaseComponent {
       console.log('Payload Preview:', {
       stage: this.defaultStageName,
       status: this.defaultStatusName,
-      allocateExecutive: this.allocateExecutive
+      autoAllocate: this.allocateExecutive
     });
 
       console.log('Preview Payload as Object:', formDataObject);
