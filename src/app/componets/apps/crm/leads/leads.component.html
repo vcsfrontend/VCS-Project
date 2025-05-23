@@ -10,19 +10,20 @@
             </mat-form-field>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-primary border-end border-light"
+                    <button type="button" class="btn btn-outline-primary btn-wave"
                         (click)="validateAndOpenBulkUpload(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                         Bulk Upload
                     </button>
-                    <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
+
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
                         data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);">Add New</button>
                 </div>
             </div>
         </div>
         <div class="card-body p-0">
-            <div class="mat-elevation-z8 table-scroll-container" >
-                <table mat-table [dataSource]="dataSource" matSort class="mat-table-custom">
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
                     <ng-container matColumnDef="sourceFlag">
                         <th mat-header-cell *matHeaderCellDef></th>
                         <td mat-cell *matCellDef="let element">
@@ -46,7 +47,7 @@
                     </ng-container>
                     <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let element">
+                        <td mat-cell *matCellDef="let element" class="d-flex p-2">
                             <a href="javascript:void(0);"
                                 class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
                                 ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
@@ -91,11 +92,21 @@
                                     </li>
                                 </ul>
                             </span>
+                            <!-- <div ngbDropdown  class="dropdown no-caret mt-2">
+                                <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
+                                    <i class="ri-more-2-fill fs-18 text-muted"></i>
+                                </a>
+                                <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
+                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Convert to Deal</a></li>
+                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
+                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
+                                </ul>
+                            </div> -->
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Name</th>
+                        <td mat-cell *matCellDef="let element" class="fixed-width-column"> {{element.name}} </td>
                     </ng-container>
                     <ng-container matColumnDef="executive">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
@@ -103,8 +114,7 @@
                             <div class="d-flex align-items-center">
                                 <ng-container *ngIf="element.executive; else noExecutive">
                                     <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold"
-                                        [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive" container="body"
-                                        placement="top">
+                                        [ngClass]="getUserColor({ email: element.executive })">
                                         <span class="d-flex align-items-center justify-content-center w-100 h-100">
                                             {{ element.executive.charAt(0) | uppercase }}
                                         </span>
@@ -118,6 +128,10 @@
                             </div>
                         </td>
                     </ng-container>
+                    <ng-container matColumnDef="products">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Products</th>
+                        <td mat-cell *matCellDef="let element"> {{element.products}} </td>
+                    </ng-container>
                     <ng-container matColumnDef="stage">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
                         <td mat-cell *matCellDef="let element">
@@ -130,12 +144,12 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Status</th>
                         <td mat-cell *matCellDef="let element">
                             <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
-                                {{ element.status | slice: 0:18 }}
-                                <ng-container *ngIf="element.status.length > 18">...</ng-container>
+                                [ngbTooltip]="element.status.length > 16 ? element.status : null" placement="top">
+                                {{ element.status | slice: 0:16 }}
+                                <ng-container *ngIf="element.status.length > 16">...</ng-container>
                             </span>
                             <button *ngIf="element.followUpDate" class="btn btn-sm btn-link p-0 ms-2" [ngbPopover]="followupPopoverTemplate"
                                 popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
@@ -153,21 +167,22 @@
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Stage :</span>
                                                 <span class="badge me-1" type="button"
-                                                    [ngStyle]="{ 'background-color': getStageColor(element.stage) }">
-                                                    {{ followup.stage | slice: 0:18 }}
+                                                    [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
+                                                    [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
+                                                    {{ element.stage | slice: 0:18 }}
+                                                    <ng-container *ngIf="element.stage.length > 18">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Status :</span>
-                                                <span class="badge me-1" type="button"
-                                                    [ngStyle]="{ 'background-color': getStatusColor(element.status) }">
-                                                    {{ followup.status | slice: 0:18 }}
+                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
+                                                    [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                                                    {{ element.status | slice: 0:18 }}
+                                                    <ng-container *ngIf="element.status.length > 18">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
-                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm
-                                                a' }}
-                                                <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
+                                                <span class="fw-semibold me-1">FollUpBy :</span>{{ followup.followUpBy }}
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
@@ -177,13 +192,13 @@
                             
                                 </ng-container>
                                 <ng-template #noData>
-                                    <p class="text-muted"></p>
+                                    <p class="text-muted">No follow-up data available.</p>
                                 </ng-template>
                             </ng-template>
                         </td>
                     </ng-container>
-                    <ng-container matColumnDef="followUpDate" >
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <ng-container matColumnDef="followUpDate">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
                             FollowUpDate
                         </th>
                         <td mat-cell *matCellDef="let element">

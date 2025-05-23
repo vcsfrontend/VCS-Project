@@ -1351,6 +1351,17 @@ export class LeadsComponent extends BaseComponent {
             'contact',
             'email',
           ];
+          const selectedLead = combined.find(lead => lead.leadId === this.selectedLeadId);
+          if (!selectedLead) return;
+
+          // ✅ Patch the correct stage and status
+          this.followupLeadForm.patchValue({
+            stage: selectedLead.stage || '',
+            status: selectedLead.status || '',
+          });
+
+          // Optional: Trigger change if needed
+          this.onFollowupStatusChange();
         },
         error: (error) => {
           this.toastr.error(error.statusText || 'Server Error');
@@ -1988,10 +1999,15 @@ export class LeadsComponent extends BaseComponent {
   openRight4(content4: any) {
     this.offcanvasService.open(content4, { position: 'end' });
   }
-  openFollowupLeadForm(leadData: any, content4: any): void {
-    this.openRight4(content4); // open the offcanvas
-    this.ViewCrmLeads(leadData); // fetch and set stage/status
+  openFollowupLeadForm(element: any, content4: any): void {
+    this.followupName = element.name;
+    let executive = this.userData ? JSON.parse(this.userData).email : '';
+    this.executiveName = executive;
+    this.leadId = element.leadId;
+    this.openRight4(content4); 
+    this.ViewCrmLeads(element); 
   }
+  
 
   openRight5(content5: any) {
     this.offcanvasService.open(content5, { position: 'end' });
