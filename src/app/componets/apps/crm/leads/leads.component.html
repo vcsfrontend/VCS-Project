@@ -10,13 +10,12 @@
             </mat-form-field>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-primary btn-wave"
+                    <button type="button" class="btn btn-primary border-end border-light"
                         (click)="validateAndOpenBulkUpload(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                         Bulk Upload
                     </button>
-
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
+                    <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
                         data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);">Add New</button>
                 </div>
             </div>
@@ -47,7 +46,7 @@
                     </ng-container>
                     <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let element" class="d-flex p-2">
+                        <td mat-cell *matCellDef="let element">
                             <a href="javascript:void(0);"
                                 class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
                                 ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
@@ -92,16 +91,6 @@
                                     </li>
                                 </ul>
                             </span>
-                            <!-- <div ngbDropdown  class="dropdown no-caret mt-2">
-                                <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                    <i class="ri-more-2-fill fs-18 text-muted"></i>
-                                </a>
-                                <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
-                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Convert to Deal</a></li>
-                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
-                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
-                                </ul>
-                            </div> -->
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
@@ -113,8 +102,9 @@
                         <td mat-cell *matCellDef="let element">
                             <div class="d-flex align-items-center">
                                 <ng-container *ngIf="element.executive; else noExecutive">
-                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold"
-                                        [ngClass]="getUserColor({ email: element.executive })">
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer"
+                                        [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
+                                        tooltipClass="tooltip-primary">
                                         <span class="d-flex align-items-center justify-content-center w-100 h-100">
                                             {{ element.executive.charAt(0) | uppercase }}
                                         </span>
@@ -122,15 +112,11 @@
                                 </ng-container>
                                 <ng-template #noExecutive>
                                     <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
-                                        class="avatar avatar-sm avatar-rounded me-2 border" ngbTooltip="No executive assigned"
+                                        class="avatar avatar-sm avatar-rounded me-2 border pointer" ngbTooltip="No executive assigned"
                                         tooltipClass="tooltip-primary" />
                                 </ng-template>
                             </div>
                         </td>
-                    </ng-container>
-                    <ng-container matColumnDef="products">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Products</th>
-                        <td mat-cell *matCellDef="let element"> {{element.products}} </td>
                     </ng-container>
                     <ng-container matColumnDef="stage">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
@@ -147,9 +133,9 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Status</th>
                         <td mat-cell *matCellDef="let element">
                             <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                [ngbTooltip]="element.status.length > 16 ? element.status : null" placement="top">
-                                {{ element.status | slice: 0:16 }}
-                                <ng-container *ngIf="element.status.length > 16">...</ng-container>
+                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                                {{ element.status | slice: 0:18 }}
+                                <ng-container *ngIf="element.status.length > 18">...</ng-container>
                             </span>
                             <button *ngIf="element.followUpDate" class="btn btn-sm btn-link p-0 ms-2" [ngbPopover]="followupPopoverTemplate"
                                 popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
@@ -182,7 +168,8 @@
                                                 </span>
                                             </li>
                                             <li class="mb-2">
-                                                <span class="fw-semibold me-1">FollUpBy :</span>{{ followup.followUpBy }}
+                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }}
+                                                <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
@@ -192,7 +179,7 @@
                             
                                 </ng-container>
                                 <ng-template #noData>
-                                    <p class="text-muted">No follow-up data available.</p>
+                                    <p class="text-muted"></p>
                                 </ng-template>
                             </ng-template>
                         </td>

@@ -72,7 +72,7 @@ export type ChartOptions = {
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate'];
-  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName', 'modifiedTime','designId', 'planId', 'status', 'quotation', 'view' ]; 
+  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation', 'view' ]; 
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
@@ -1686,6 +1686,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     }
     
   }
+  
   
   
   
