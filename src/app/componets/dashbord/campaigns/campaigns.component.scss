@@ -11,3 +11,13 @@
 .kt{
     cursor: pointer;
 }
+.fixed-height-card {
+  height: 450px; /* Adjust as needed */
+  display: flex;
+  flex-direction: column;
+}
+
+.card-scroll {
+  overflow-y: auto;
+  flex-grow: 1;
+}
