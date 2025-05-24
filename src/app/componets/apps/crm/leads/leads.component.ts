@@ -132,13 +132,10 @@ export class LeadsComponent extends BaseComponent {
   stageColorMap: Map<string, string> = new Map();
   statusColorMap: Map<string, string> = new Map();
   userColors = [
-    'bg-primary',
-    'bg-success',
-    'bg-warning',
-    'bg-danger',
-    'bg-info',
-    'bg-secondary',
+    'bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
+    'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'
   ];
+
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage
     ? JSON.parse(this.userDataStorage)
@@ -893,18 +890,19 @@ export class LeadsComponent extends BaseComponent {
   }
 
   getUserColor(user: any): string {
-    const index =
-      Math.abs(this.hashString(user.email)) % this.userColors.length;
+    const index = this.hashString(user.email) % this.userColors.length;
     return this.userColors[index];
   }
 
+
   private hashString(str: string): number {
-    let hash = 0;
+    let hash = 5381;
     for (let i = 0; i < str.length; i++) {
-      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      hash = (hash * 33) ^ str.charCodeAt(i);
     }
-    return hash;
+    return hash >>> 0; 
   }
+
   initializeDynamicFields(): void {
     this.dynamicFields = [];
     if (this.stageLst && this.stageLst.length > 0) {
