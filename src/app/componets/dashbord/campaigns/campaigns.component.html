@@ -24,7 +24,7 @@
             <div class="flex-fill">
               <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
                 Campaign: {{ campaign.campaignName }}</a>
-              <span class="text-muted d-block fs-12">Managing Person: {{ campaign.campaignPoc }}</span>
+              <span class="text-muted d-block fs-12">Manager: {{ campaign.campaignPoc }}</span>
               <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="d-flex align-items-center flex-wrap avatar-list-stacked">
                   <ng-container *ngFor="let agent of campaign.agents.split(',')">

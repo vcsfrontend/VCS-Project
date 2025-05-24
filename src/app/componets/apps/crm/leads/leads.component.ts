@@ -1,16 +1,6 @@
-import {
-  Component,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, TemplateRef, ViewChild, ViewEncapsulation, } from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import {
-  NgbDropdownModule,
-  NgbModal,
-  NgbModalConfig,
-  NgbModule,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule, } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,13 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -35,18 +19,12 @@ import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
-import {
-  NgbOffcanvas,
-  OffcanvasDismissReasons,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbOffcanvas, OffcanvasDismissReasons, } from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import * as FilePond from 'filepond';
 import { FilePondComponent, FilePondModule } from 'ngx-filepond';
-import {
-  AngularEditorModule,
-  AngularEditorConfig,
-} from '@kolkov/angular-editor';
+import { AngularEditorModule, AngularEditorConfig, } from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -54,159 +32,53 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-leads',
   standalone: true,
-  imports: [
-    RouterModule,
-    NgbModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AngularFireModule,
-    AngularFireDatabaseModule,
-    CommonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    AngularFirestoreModule,
-    ToastrModule,
-    SharedModule,
-    MaterialModuleModule,
-    MatSortModule,
-    NgbDropdownModule,
-    NgSelectModule,
-    FilePondModule,
-    AngularEditorModule,
-    NgChartsModule,
-    NgApexchartsModule,
+  imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule, AngularFireDatabaseModule,
+    CommonModule, MatFormFieldModule, MatSelectModule, AngularFirestoreModule, ToastrModule, SharedModule, MaterialModuleModule,
+    MatSortModule, NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule, NgChartsModule, NgApexchartsModule,
   ],
-  providers: [
-    FirebaseService,
-    { provide: ToastrService, useClass: ToastrService },
-    DatePipe,
-    NgbModalConfig,
-    NgbModal,
-  ],
+  providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService },
+    DatePipe, NgbModalConfig, NgbModal,],
   templateUrl: './leads.component.html',
   styleUrl: './leads.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [
-    'sourceFlag',
-    'select',
-    'slNo',
-    'action',
-    'name',
-    'executive',
-    'stage',
-    'status',
-    'followUpDate',
-    'contact',
-    'email',
-  ];
-  usersColumns: string[] = [
-    'slNo',
-    'name',
-    'role',
-    'email',
-    'date',
-    'callsAttempted',
-    'callsConnected',
-  ];
+  displayedColumns: string[] = ['sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email',];
+  usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
-  pageSize = 10;
-  Crmusers: any[] = [];
-  CrmLeads: any = {};
-  element: any = {};
-  crmLeadsList: any;
-  campaignId!: string;
-  stageLst: any;
-  isStagesLoading: boolean = true;
-  isAddStagesDisabled: boolean = false;
-  statusOptionsByStage: { [stageName: string]: any[] } = {};
-  statusLst: any;
-  allStatuses: any;
-  selectedStage: string = '';
-  checkboxStageOptions: any[] = [];
-  selectedStatusCount: number | null = null;
-  chartOptions: any;
-  statusOptionsByStageforDisplay: any = {};
-  stageColorMap: Map<string, string> = new Map();
-  statusColorMap: Map<string, string> = new Map();
+  pageSize = 10; Crmusers: any[] = []; CrmLeads: any = {}; element: any = {};
+  crmLeadsList: any; campaignId!: string; stageLst: any; isStagesLoading: boolean = true;
+  isAddStagesDisabled: boolean = false; statusOptionsByStage: { [stageName: string]: any[] } = {};
+  statusLst: any; allStatuses: any; selectedStage: string = ''; checkboxStageOptions: any[] = [];
+  selectedStatusCount: number | null = null; chartOptions: any; followUpCount: any; statusOptionsByStageforDisplay: any = {};
+  stageColorMap: Map<string, string> = new Map(); statusColorMap: Map<string, string> = new Map();
   userColors = [
     'bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
     'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'
   ];
-
   userDataStorage = localStorage.getItem('userDetails');
-  userData: any = this.userDataStorage
-    ? JSON.parse(this.userDataStorage)
-    : null;
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
-  statusClicked = false;
-  statusCounts: { status: string; count: number }[] = [];
-  crmStageData: any;
-  crmStatusData: any;
-  newOptionName: string = '';
-  status: string = 'In Progress Leads';
-  showValidationError = false;
-  fetchCrmLeadsList: any[] = [];
-  showCheckboxError = false;
-  showNameError = false;
-  anyChecked: any;
-  addMoreVisible: boolean = false;
-  newItem: string = '';
-  isStage: boolean = false;
-  showStages: boolean = false;
-  leaditems: { checked: boolean; label: string }[] = [];
-  leadStatusitems: { checked: boolean; label: string }[] = [];
-  selectedProgressLeads: any[] = [];
-  selectedLostLeads: any[] = [];
-  selectedConvertedLeads: any[] = [];
-  newItemColor: string = '#000000';
-  newOptionColor: any;
-  showMore = true;
-  topshowMore = false;
-  campaignList: any[] = [];
-  agentUsers: any[] = [];
-  selectedCampaign: any;
-  selectTemplateForm!: FormGroup;
-  formList: any;
-  tempFormList: any;
-  generatedTemplateId: any;
-  currentIndex: number = 0;
-  allTemplateGenIds: string[] = [];
-  rotateCharts = true;
-  executiveList: any[] = [];
-  entryList: any[] = [];
-  agents: any;
-  leads: any;
-  imageFileSrcData: any;
+  statusClicked = false; statusCounts: { status: string; count: number }[] = [];
+  crmStageData: any; crmStatusData: any; newOptionName: string = ''; status: string = 'In Progress Leads';
+  showValidationError = false; fetchCrmLeadsList: any[] = []; showCheckboxError = false; showNameError = false;
+  anyChecked: any; addMoreVisible: boolean = false; newItem: string = ''; isStage: boolean = false; showStages: boolean = false;
+  leaditems: { checked: boolean; label: string }[] = []; leadStatusitems: { checked: boolean; label: string }[] = [];
+  selectedProgressLeads: any[] = []; selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
+  newItemColor: string = '#000000'; newOptionColor: any; showMore = true; topshowMore = false;
+  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
+  formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
+  rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any; imageFileSrcData: any;
   followUpDetails: any[] = [];
   crmStaticStages = [
-    {
-      name: 'In Progress Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#28a745',
-    },
-    {
-      name: 'Lost Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#dc3545',
-    },
-    {
-      name: 'Converted Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#007bff',
-    },
+    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
   ];
   selectedType: string = '';
   dynamicFields: { value: string }[] = [];
@@ -253,15 +125,7 @@ export class LeadsComponent extends BaseComponent {
     responsive: true,
     plugins: { legend: { position: 'bottom' } },
   };
-  public pieChartLabels = [
-    'Spoke',
-    'Active',
-    'Proposal sent',
-    'Meeting Fixed',
-    'Met',
-    'Closed',
-    'Lost',
-  ];
+  public pieChartLabels = ['Spoke', 'Active', 'Proposal sent', 'Meeting Fixed', 'Met', 'Closed', 'Lost',];
   public pieChartDatasets = [
     {
       data: [200, 150, 100, 43, 23, 78],
@@ -900,7 +764,7 @@ export class LeadsComponent extends BaseComponent {
     for (let i = 0; i < str.length; i++) {
       hash = (hash * 33) ^ str.charCodeAt(i);
     }
-    return hash >>> 0; 
+    return hash >>> 0;
   }
 
   initializeDynamicFields(): void {
@@ -995,11 +859,11 @@ export class LeadsComponent extends BaseComponent {
                 const color = item[colorFields[index]];
                 return name
                   ? {
-                      name,
-                      checked: false,
-                      isCustom: false,
-                      color: color || '#cccccc',
-                    }
+                    name,
+                    checked: false,
+                    isCustom: false,
+                    color: color || '#cccccc',
+                  }
                   : null;
               })
               .filter((opt) => opt !== null);
@@ -1321,21 +1185,29 @@ export class LeadsComponent extends BaseComponent {
       .FetchLeadData(this.userEmail, this.campaignId)
       .subscribe({
         next: (res: any) => {
+          const now = new Date(); // Current time
+
           const executiveList = (res.executiveList || []).map((item: any) => ({
             ...item,
             source: 'executive',
+            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
           }));
+
           const entryList = (res.entryList || []).map((item: any) => ({
             ...item,
             source: 'entry',
+            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
           }));
+
           const combined = [...executiveList, ...entryList];
           this.fetchCrmLeadsList = combined;
           this.dataSource.data = combined;
           this.leadCount = combined.length;
+          this.followUpCount = combined.filter(item => item.followUpDue).length;
           const hasExecutiveFlag = combined.some(
             (item) => item.source === 'executive'
           );
+
           this.displayedColumns = [
             ...(hasExecutiveFlag ? ['sourceFlag'] : []),
             'select',
@@ -1349,16 +1221,15 @@ export class LeadsComponent extends BaseComponent {
             'contact',
             'email',
           ];
+
           const selectedLead = combined.find(lead => lead.leadId === this.selectedLeadId);
           if (!selectedLead) return;
 
-          // ✅ Patch the correct stage and status
           this.followupLeadForm.patchValue({
             stage: selectedLead.stage || '',
             status: selectedLead.status || '',
           });
 
-          // Optional: Trigger change if needed
           this.onFollowupStatusChange();
         },
         error: (error) => {
@@ -1366,6 +1237,7 @@ export class LeadsComponent extends BaseComponent {
         },
       });
   }
+
 
   getStatusCount(): void {
     this.statusClicked = false;
@@ -1488,7 +1360,7 @@ export class LeadsComponent extends BaseComponent {
         } else {
         }
       },
-      error: (err: any) => {},
+      error: (err: any) => { },
     });
   }
 
@@ -1724,13 +1596,13 @@ export class LeadsComponent extends BaseComponent {
   }
 
   @ViewChild('followUpPond') followUpPond!: FilePondComponent;
-  followUpPondHandleInit() {}
+  followUpPondHandleInit() { }
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     this.imageFileSrcData = files;
   }
-  followUpPondHandleActivateFile(event: any) {}
+  followUpPondHandleActivateFile(event: any) { }
 
   get a() {
     return this.allocateForm.controls;
@@ -1913,9 +1785,9 @@ export class LeadsComponent extends BaseComponent {
       },
     },
   ];
-  pondHandleInit() {}
-  pondHandleAddFile(event: any) {}
-  pondHandleActivateFile(event: any) {}
+  pondHandleInit() { }
+  pondHandleAddFile(event: any) { }
+  pondHandleActivateFile(event: any) { }
   getSeriesData(fields: any[]): number[] {
     return fields.map((field) => {
       const foundStatus = this.statusCounts.find(
@@ -2002,10 +1874,10 @@ export class LeadsComponent extends BaseComponent {
     let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
-    this.openRight4(content4); 
-    this.ViewCrmLeads(element); 
+    this.openRight4(content4);
+    this.ViewCrmLeads(element);
   }
-  
+
 
   openRight5(content5: any) {
     this.offcanvasService.open(content5, { position: 'end' });

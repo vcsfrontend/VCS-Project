@@ -1169,3 +1169,14 @@
         </div>
     </div>
 </ng-template>
+
+<div class="d-flex align-items-center" *ngIf="followUpCount > 0">
+    <div class="pe-2 lh-1">
+        <span class="avatar bg-danger-transparent avatar-rounded">{{ followUpCount }} </span>
+    </div>
+    <div class="flex-grow-1 d-flex align-items-center justify-content-between">
+        <div>
+            <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Leads Follow-Ups Pending</a></p>
+        </div>
+    </div>
+</div>

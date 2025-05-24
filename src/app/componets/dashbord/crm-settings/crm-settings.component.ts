@@ -54,8 +54,8 @@ export class CrmSettingsComponent extends BaseComponent {
   isStagesLoading: boolean = true; showValidationError = false;
   showCheckboxError = false; showNameError = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {};
-  statusOptionsByStageforDisplay : any = {};
-  anyChecked:any;
+  statusOptionsByStageforDisplay: any = {};
+  anyChecked: any;
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
     private fb: FormBuilder,
   ) {
@@ -69,9 +69,9 @@ export class CrmSettingsComponent extends BaseComponent {
   }
 
   crmStaticStages = [
-    { name: 'In Progress Leads', checked: false, isDefault: true,isCustom:false },
-    { name: 'Lost Leads', checked: false, isDefault: true,isCustom:false },
-    { name: 'Converted Leads', checked: false, isDefault: true,isCustom:false },
+    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false },
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false },
   ];
 
 
@@ -248,11 +248,9 @@ export class CrmSettingsComponent extends BaseComponent {
           this.dynamicFields.push({ value: value.trim() });
         }
       }
-
-      console.log('Dynamic Fields:', this.dynamicFields);
     }
   }
-  saveCrmStatus():void {
+  saveCrmStatus(): void {
     if (!this.selectedStage) {
       this.showValidationError = true;
       this.toastr.error('Please select a stage before saving.');
@@ -272,22 +270,18 @@ export class CrmSettingsComponent extends BaseComponent {
     }
     const allNames = selectedOptions.map(option => option.name);
     const uniqueNames = [...new Set(allNames)];
-  
+
     const dynamicFields = uniqueNames.map((name, index) => {
       return { [`f${index + 1}`]: name };
     });
     const customStatuses = currentStageOptions
-  .filter(opt => opt.isCustom)
-  .map(opt => opt.name);
+      .filter(opt => opt.isCustom)
+      .map(opt => opt.name);
     this.crmStatusData = {
       ...this.crmStatusData,
-      customStatuses, 
+      customStatuses,
       ...Object.assign({}, ...dynamicFields),
     };
-  
-    console.log(this.crmStatusData);
-  
-    // ✅ Optional: call the API
     this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
       next: (res: any) => {
         if (res) {
@@ -303,38 +297,31 @@ export class CrmSettingsComponent extends BaseComponent {
       },
     });
   }
-  
+
   getCrmStatus(): void {
     let completedRequests = 0;
-  
     for (let i = 0; i < this.stageLst.length; i++) {
-      const stageName = this.stageLst[i].stageName; // fix: capture value locally
-      console.log('stages are',stageName)
+      const stageName = this.stageLst[i].stageName;
       const payload = {
         email: this.userEmail,
         companyCode: this.userCompanyCode,
         type: this.userType,
         stage: stageName,
       };
-  
-      
-      console.log(this.statusOptionsByStageforDisplay)
       const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
       this.switchService.CrmStatus(payload).subscribe({
         next: (res: any) => {
-          if(res.length==1){
-          const options = Array.isArray(res)
-            ? fields
+          if (res.length == 1) {
+            const options = Array.isArray(res)
+              ? fields
                 .filter(field => res[0][field]) // skip empty values
                 .map(field => ({
                   name: res[0][field],
                   checked: false,
                   isCustom: false
                 }))
-            : [];
-  
-          this.statusOptionsByStageforDisplay[stageName] = options;  // use local stageName
-          console.log(this.statusOptionsByStageforDisplay)
+              : [];
+            this.statusOptionsByStageforDisplay[stageName] = options;
           }
         },
         error: (error) => {
@@ -347,23 +334,19 @@ export class CrmSettingsComponent extends BaseComponent {
           completedRequests++;
           if (completedRequests === this.stageLst.length) {
             const selectedStageNames = this.stageLst.map((s: { stageName: string }) => s.stageName);
-        
-            // Filter only selected stages from all statusOptionsByStage
             this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
-              .filter(([stage]) => selectedStageNames.includes(stage)) // ✅ Only show selected stages
+              .filter(([stage]) => selectedStageNames.includes(stage))
               .map(([stage, fields]) => ({
                 stage,
                 fields
               }));
-        
-            console.log("Filtered status list (only selected stages):", this.statusLst);
           }
         }
-          
+
       });
     }
-  }  
-  
+  }
+
   getDynamicFields(status: any): string[] {
     const dynamicFields = [];
     for (let i = 1; i <= 25; i++) {
@@ -384,7 +367,6 @@ export class CrmSettingsComponent extends BaseComponent {
 
   saveCrmStages() {
     this.prepareCrmStageData();
-    console.log("saved crmstages",this.crmStageData);
     const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
     if (selectedStages.length === 0) {
       this.toastr.error('Please select at least one stage before saving.');
@@ -408,32 +390,32 @@ export class CrmSettingsComponent extends BaseComponent {
   }
   addNewOption() {
     const newName = this.newOptionName?.trim();
-  
+
     if (!newName) {
       this.toastr.error('Please enter a status name.');
       return;
     }
-  
+
     const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
-  
+
     // Check if the item already exists in current options
     const isDuplicate = currentStageOptions.some(
       opt => opt.name.toLowerCase() === newName.toLowerCase()
     );
-  
+
     if (this.newOptionName.trim() && !isDuplicate) {
       currentStageOptions.push({
         name: this.newOptionName,
         checked: false,
         isCustom: true
       });
-  
+
       this.checkboxStageOptions = [...currentStageOptions];
       this.toastr.info('item added.');
     } else {
       this.toastr.warning(`'${newName}' already exists`);
     }
-  
+
     this.newOptionName = '';
   }
 
@@ -441,8 +423,6 @@ export class CrmSettingsComponent extends BaseComponent {
     const selectedStages = this.crmStaticStages
       .filter(stage => stage.checked)
       .map(stage => stage.name);
-
-    console.log("Selected Stages: ", selectedStages);
     for (let i = 0; i < 25; i++) {
       this.crmStageData[`f${i + 1}`] = selectedStages[i] || "";
     }
@@ -469,8 +449,7 @@ export class CrmSettingsComponent extends BaseComponent {
             }
           }
           this.stageLst = extractedStages;
-          console.log("extracted stages are ",extractedStages);
-          this.getCrmStatus(); 
+          this.getCrmStatus();
           this.isAddStagesDisabled = this.stageLst.length > 0;
         }
         else {
@@ -505,33 +484,20 @@ export class CrmSettingsComponent extends BaseComponent {
 
   onStageChange() {
     this.checkboxStageOptions = [];
-    console.log(this.checkboxStageOptions)
-
-    console.log('Selected Stage:', this.selectedStage);
     if (!this.statusOptionsByStage[this.selectedStage]) {
-      this.statusOptionsByStage[this.selectedStage] = []; 
+      this.statusOptionsByStage[this.selectedStage] = [];
     }
-    
     this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage];
-    console.log(this.checkboxStageOptions)
-    
-    if(this.statusOptionsByStageforDisplay[this.selectedStage]){
-    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage].map(item => {
-      const existsInSelected = this.statusOptionsByStageforDisplay[this.selectedStage].some((selected: { name: any; }) => selected.name === item.name);
-      return { ...item, checked: existsInSelected };
-    });
-    this.anyChecked = true;
-  }
-  else{
-    this.anyChecked = false;
-  }
-  
-  // this.anyChecked = this.checkboxStageOptions.some(
-  //   (item) => {console.log(item.checked);return item.checked === true}
-  // );
-  
-    
-  console.log(this.checkboxStageOptions, this.anyChecked);
+    if (this.statusOptionsByStageforDisplay[this.selectedStage]) {
+      this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage].map(item => {
+        const existsInSelected = this.statusOptionsByStageforDisplay[this.selectedStage].some((selected: { name: any; }) => selected.name === item.name);
+        return { ...item, checked: existsInSelected };
+      });
+      this.anyChecked = true;
+    }
+    else {
+      this.anyChecked = false;
+    }
   }
 
 

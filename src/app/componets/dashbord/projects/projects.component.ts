@@ -5,7 +5,7 @@ import {
 } from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient for making HTTP requests
+import { HttpClient } from '@angular/common/http';
 import { FilePondOptions } from 'filepond';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -56,44 +56,37 @@ export type ChartOptions = {
 @Component({
   selector: 'app-projects',
   standalone: true,
-  // imports: [SharedModule, NgApexchartsModule, CommonModule, FormsModule,
-  //   NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,ReactiveFormsModule],
-  //   providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, DatePipe],
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
     OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
     NgbDropdownModule, MatDatepickerModule, MatInputModule, MatNativeDateModule, NgSelectModule,],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
-
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate'];
-  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation', 'view' ]; 
+  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation', 'view'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
   projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
   action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
-  estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false;topDisplayedCards: any;
-  des: string = "3FO3LL66G60B";  adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
-  
+  estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false; topDisplayedCards: any;
+  des: string = "3FO3LL66G60B"; adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
+
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
   @ViewChild('myProjectPaginator') myProjectPaginator!: MatPaginator;
-@ViewChild('elitePaginator') elitePaginator!: MatPaginator;
-
-  //@ViewChild(MatPaginator) paginator!: MatPaginator;
-  //@ViewChild(MatPaginator) elitePaginator!: MatPaginator;
+  @ViewChild('elitePaginator') elitePaginator!: MatPaginator;
 
   pageSize = 5;
-  modal: any; ttlAmtToBeRcvd: any; projectLst: any=[]; userDetails: any; dateDiff: any;
-  roleid:any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
+  modal: any; ttlAmtToBeRcvd: any; projectLst: any = []; userDetails: any; dateDiff: any;
+  roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
   pondOptions: FilePondOptions; lastField: any; ProDataList: any;
   spinnerLoading = false;
   pendingRequests = 0;
@@ -102,7 +95,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
-  }  
+  }
 
   toggleShowMore(): void {
     this.showMore = !this.showMore;
@@ -142,10 +135,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   openLg3(content14: any) {
-    this.modalService.open(content14, { size: 'lg',centered: true },);
+    this.modalService.open(content14, { size: 'lg', centered: true },);
   }
   openLg4(content15: any) {
-    this.modalService.open(content15, { size: 'xl',centered: true },);
+    this.modalService.open(content15, { size: 'xl', centered: true },);
   }
 
   openRights(content: any) {
@@ -170,12 +163,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     private router: Router,
     private offcanvasService: NgbOffcanvas
   ) {
-    // Initialize FilePond options if needed
     super();
     this.userDetails = localStorage.getItem('userDetails');
     this.pondOptions = {
       allowMultiple: true,
-      // other FilePond options here
     };
   }
 
@@ -185,8 +176,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.getLst(); this.getMatCardLst();
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
-    //this.getdesignData();
-    // this.fetchPaymentStages();
     this.createProjectForm = this.fb.group({
       projectName: ['', Validators.required],
       clientName: ['', Validators.required],
@@ -195,13 +184,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       state: ['', Validators.required],
       city: ['', Validators.required],
       projectState: [''],
-      projectEstimation: ['', [Validators.required, Validators.min(0)]], // Assuming estimation should be a positive number
-      projectArea: ['', [Validators.required, Validators.min(0)]], // Assuming area should be a positive number
+      projectEstimation: ['', [Validators.required, Validators.min(0)]],
+      projectArea: ['', [Validators.required, Validators.min(0)]],
       projectStartDate: ['', Validators.required],
       projectEndDate: ['', Validators.required],
       action: [''],
       companyName: [JSON.parse(this.userDetails)?.companyName],
-      attachments: [null], // Adjust based on your attachment handling
+      attachments: [null],
       email: [JSON.parse(this.userDetails)?.email],
       type: [JSON.parse(this.userDetails)?.type],
       username: [JSON.parse(this.userDetails)?.username],
@@ -216,29 +205,29 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       clientAddress: ['', Validators.required],
       projectName: ['', Validators.required],
       designId: ['', Validators.required],
-      discount:['',Validators.required],
-      flatNo:['',Validators.required],
-      others:['',Validators.required],
-      projectConfig:['',Validators.required],
-      quotationNumber:['',Validators.required],
-      gMC:['',Validators.required],
-      gPA:['',Validators.required],
-      gSC:['',Validators.required],
-      tDMC:['',Validators.required],
-      tDPA:['',Validators.required],
-      tDSC:['',Validators.required],
-      dedEmail:['',Validators.required],
-      dedMobile:['',Validators.required],
-      dedName:['',Validators.required],
-      rmdEmail:['',Validators.required],
-      rmdMobile:['',Validators.required],
-      rmdName:['',Validators.required],
-      Optimizerprocess:['',Validators.required],
-      shutterList:['',Validators.required],
-      functionalList:['',Validators.required],
-      hardwareList:['',Validators.required],
-      email:['',Validators.required],
-      type:['',Validators.required],
+      discount: ['', Validators.required],
+      flatNo: ['', Validators.required],
+      others: [0, Validators.required],
+      projectConfig: ['', Validators.required],
+      quotationNumber: ['', Validators.required],
+      gMC: [0, Validators.required],
+      gPA: ['', Validators.required],
+      gSC: [0, Validators.required],
+      tDMC: [0, Validators.required],
+      tDPA: ['', Validators.required],
+      tDSC: [0, Validators.required],
+      dedEmail: ['', Validators.required],
+      dedMobile: ['', Validators.required],
+      dedName: ['', Validators.required],
+      rmdEmail: ['', Validators.required],
+      rmdMobile: ['', Validators.required],
+      rmdName: ['', Validators.required],
+      Optimizerprocess: ['', Validators.required],
+      shutterList: ['', Validators.required],
+      functionalList: ['', Validators.required],
+      hardwareList: ['', Validators.required],
+      email: ['', Validators.required],
+      type: ['', Validators.required],
     });
 
 
@@ -247,14 +236,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   get f() {
     return this.createProjectForm.controls;
   }
-  
+
 
   minEndDate: string = '';
   onStartDateChange(event: Event): void {
     const startDate = (event.target as HTMLInputElement).value;
-    this.minEndDate = startDate; // Set the minimum end date
+    this.minEndDate = startDate;
     const endDate = this.createProjectForm.get('projectEndDate')?.value;
-    // Reset the end date if it is earlier than the new start date
     if (endDate && endDate < startDate) {
       this.createProjectForm.get('projectEndDate')?.setValue('');
     }
@@ -262,7 +250,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   dynamicFields: { value: string; percent: number; fieldNm: string; }[] = [];
   initializeDynamicFields() {
-    // Loop through f1 to f30 and add only those with non-empty values to dynamicFields
     for (let i = 1; i <= 30; i++) {
       const fieldName = `f${i}`;
       const percentName = `f${i}Percent`;
@@ -275,7 +262,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       }
     }
     this.lastField = this.dynamicFields[this.dynamicFields.length - 1].value;
-    console.log('Last Field:', this.lastField);
     this.getdesignData()
   }
 
@@ -362,14 +348,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
       },
       error: (err) => {
-        console.error('Error:', err);
         this.toastr.error('Something went wrong');
       }
     });
-  }  
-  
-  
-  viewSpecificUrl(data:any) {
+  }
+
+
+  viewSpecificUrl(data: any) {
     const userDetails = JSON.parse(this.userDetails);
     const userEmail = userDetails?.email;
     this.designId = data?.designId ? data.designId : '';
@@ -381,17 +366,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         this.toastr.success("User available with this email!");
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error(error.statusText || "An error occurred while fetching design details.");
       },
     });
   }
-  
+
   onSubmit(): void {
     this.submitted = true;
     if (this.createProjectForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
-      // this.btnDisable = false;
       return;
     }
     else if (this.createProjectForm.valid) {
@@ -404,8 +387,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         projectData.companyCode = JSON.parse(this.userDetails)?.companyCode,
         projectData.projStatus = this.dynamicFields[0].value,
         projectData.percentage = this.dynamicFields[0].percent,
-        // projectData.projectStartDate = this.dp.transform(projectData.projectStartDate, 'dd-MM-yyyy'),
-        // projectData.projectEndDate = this.dp.transform(projectData.projectEndDate, 'dd-MM-yyyy'),
         this.switchService.saveProject(projectData).subscribe({
           next: (response) => {
             const parts = response.message.split('<>');
@@ -418,20 +399,16 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             this.btnDisable = false;
           },
           complete: () => {
-            console.log('Project creation process completed.');
-            this.resetForm(); // Optionally reset the form after submission
+            this.resetForm();
           },
         });
     } else {
-      // Mark all controls as touched to show validation errors
       this.createProjectForm.markAllAsTouched();
-      console.log('Form is invalid');
     }
   }
 
   onSubmitTaskDetails(id: any) {
     let payload = {
-      // "id": 0,
       "projectId": id,
       "heading": 'Project created',
       "projectStatus": this.dynamicFields[0].value,
@@ -454,16 +431,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     })
   }
 
-  // Optional: You can create a method to reset the form
   resetForm(): void {
     this.createProjectForm.reset();
     this.createProjectForm.get('businessCategory')?.setValue('');
   }
 
   ngAfterViewInit() {
-    
+
     this.myProjectDataSource.paginator = this.myProjectPaginator;
-    this.eliteDataSource.paginator = this.elitePaginator; 
+    this.eliteDataSource.paginator = this.elitePaginator;
     this.updateButtons();
   }
 
@@ -471,14 +447,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (this.myProjectPaginator && this.myProjectPaginator.pageIndex !== undefined && this.myProjectPaginator.pageSize !== undefined) {
       return this.myProjectPaginator.pageIndex * this.myProjectPaginator.pageSize + index + 1;
     }
-    return index + 1; // Default return if paginator is not yet defined
+    return index + 1;
   }
 
   EliteGetSNo(index: number): number {
     if (this.elitePaginator && this.elitePaginator.pageIndex !== undefined && this.elitePaginator.pageSize !== undefined) {
       return this.elitePaginator.pageIndex * this.elitePaginator.pageSize + index + 1;
     }
-    return index + 1; // Default return if paginator is not yet defined
+    return index + 1;
   }
 
   addDateDifference() {
@@ -502,9 +478,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       next: (res: any) => {
         if (res) {
           this.projectLst = res.projList;
-          this.myProjectDataSource.data = this.projectLst;          
-          // this.projectLst = this.projectLst.filter((e:any) => e.dateDifference >= 0);
-          // this.projectLst.sort((a:any, b:any) => a.dateDifference - b.dateDifference);
+          this.myProjectDataSource.data = this.projectLst;
         } else {
           this.toastr.error(res.message);
         }
@@ -513,7 +487,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     })
   }
   onFilterChange(id: any) {
-    // if(id=='2'){ this.projName = ''} else if (id=='3'){ this.projId = ''} else {this.projName = '', this.projId = '', this.getMatCardLst()}
     id === '2' ? this.projName = '' : id === '3' ? this.projId = '' :
       (this.projName = '', this.projId = '', this.getMatCardLst());
   }
@@ -525,7 +498,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.adonaiSubEndDate = res.subData.subEndDate || '';
           this.adonaiDaysLeft = this.calculateDateDiff(this.adonaiSubEndDate);
-         
+
         } else {
           this.toastr.error(res.message);
           return;
@@ -538,16 +511,16 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     const today = new Date();
     const end = new Date(endDate);
     if (isNaN(end.getTime())) return 'Invalid date';
-  
+
     const diffTime = end.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-  
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
     if (diffDays < 0) return 'Expired';
     if (diffDays === 0) return 'Last day';
-  
+
     return `Subscription ends in ${diffDays} days`;
   }
-  
+
 
   getMatCardLst() {
     this.startLoading();
@@ -577,22 +550,21 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
               const matchedProject = paymentLastLst.find((lastProject: any) => lastProject.projectId === project.projectId);
               if (matchedProject) {
                 project.paymentPercent = matchedProject.paymentPercent;
-                project.paymentStage = matchedProject.paymentStage  // Add projPercent to the project
+                project.paymentStage = matchedProject.paymentStage
               } else {
-                project.paymentPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
+                project.paymentPercent = 0;
               }
             });
             projLst?.forEach((e: any) => {
               const matchedProjectstg = proLastLst.find((lastStg: any) => lastStg.projectId === e.projectId);
               if (matchedProjectstg) {
                 e.projectPercent = matchedProjectstg.projectPercent;
-                e.projectStage = matchedProjectstg.projectStage  // Add projPercent to the project
+                e.projectStage = matchedProjectstg.projectStage
               } else {
-                e.projectPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
+                e.projectPercent = 0;
               }
             });
             this.matcardLst = projLst;
-            // this.addDateDifference();
             this.matcardLst?.sort((a: any, b: any) => a.priorityDays - b.priorityDays);
             this.toggleShowMore();
             this.toggleTopShowMore();
@@ -601,7 +573,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           }
           this.stopLoading();
         }
-        
+
       })
     }
   }
@@ -660,9 +632,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   fetchPaymentStages(data: any) {
-    //   this.http.get('https://api.example.com/payment-stages').subscribe((data: any) => {
-    //     this.paymentStages = data.map((item: any) => ({ ...item, isNew: false }));
-    //   });
     this.estamount = data.projectEstimation;
     this.lstData = data
     this.switchService.getProjEstimation(data.projectId).subscribe({
@@ -670,8 +639,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.paymentStages = res.map((item: any) => ({ ...item, isNew: false }));
           this.paymentStages.forEach((e: any) => { e.updatedTime = this.convertToIST(e.updatedTime); });
-          // const lastElement = this.paymentStages[this.paymentStages.length - 1];
-          // this.lastPendingAmount = lastElement ? lastElement.pendingAmount : data.projectEstimation;
           this.calculateTotalReceivedAmount();
         } else {
           this.toastr.error(res.message);
@@ -690,15 +657,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       this.toastr.warning('Please fill all the fields before adding a new row.', 'Validation Error');
       return;
     } else {
-
-      // const totalPercentage = this.paymentStages.reduce((sum:any, payment:any) => {
-      //   return sum + (payment.percantage ? parseFloat(payment.percantage) : 0);
-      // }, 0);
-
-      // if (totalPercentage > 100) {
-      //   this.toastr.error('Total percentage cannot exceed 100. Please correct the values.', 'Validation Error');
-      //   return;
-      // }
       this.hasAddedRow = true;
       this.paymentStages.push({
         projectId: this.lstData?.projectId,
@@ -719,7 +677,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   convertToIST(utcDateString: string): Date {
     const utcDate = new Date(utcDateString);
-    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds (5 hours 30 minutes)
+    const istOffset = 5.5 * 60 * 60 * 1000;
     return new Date(utcDate.getTime() + istOffset);
   }
 
@@ -744,25 +702,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       payment.amountToBeRecieved = '0';
     }
   }
-  // calculateAmountToBeReceived(payment: any): void {
-  //   if (this.estamount && payment.percantage) {
-  //     payment.amountToBeRecieved = (+this.estamount * parseFloat(payment.percantage) / 100).toFixed(0);
-  //   } else {
-  //     payment.amountToBeRecieved = '0';
-  //   }
-  // }
 
   onPercentageChange(payment: any): void {
-    // Calculate the total percentage excluding the current row
     const totalPercentageExcludingCurrent = this.paymentStages.reduce((sum: any, p: any) => {
       return sum + (p === payment || !p.percantage ? 0 : parseFloat(p.percantage));
     }, 0);
 
-    // Check if the new total exceeds 100
     const newTotalPercentage = totalPercentageExcludingCurrent + (payment.percantage ? parseFloat(payment.percantage) : 0);
 
     if (newTotalPercentage > 100) {
-      // Show error message and reset the value
       this.toastr.error('Total percentage cannot exceed 100. Please enter a valid value.', 'Validation Error');
       payment.percantage = ''; payment.amountToBeRecieved = '';
     }
@@ -839,9 +787,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       this.toastr.warning('Please fill all the fields before adding a new row.', 'Validation Error');
       return;
     } else {
-      // let totalPendingSum = this.paymentStages.reduce((sum: number, e: any) => {
-      //   return sum + (+e.pendingAmount || 0); 
-      // }, 0);
       let payload = this.paymentStages.map((e: any) => ({
         id: e.id || 0,
         projectId: e.projectId || "",
@@ -854,7 +799,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         updatedBy: e.updatedBy || "",
         projectEstimation: e.projectEstimation || "",
         totalAmount: e.totalAmount || "",
-        totalPending: '' //totalPendingSum
+        totalPending: ''
       }));
       this.switchService.saveProjEstimation(payload).subscribe({
         next: (response) => {
@@ -1356,7 +1301,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       offsetX: 110
     },
     xaxis: {
-      // categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
       categories: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     },
     yaxis: [
@@ -1429,7 +1373,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     tooltip: {
       fixed: {
         enabled: true,
-        position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+        position: "topLeft",
         offsetY: 30,
         offsetX: 60
       }
@@ -1442,16 +1386,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   ReadMore: boolean = true
 
-  //hiding info box
   visible: boolean = false
 
-
-  //onclick toggling both
   onclick() {
-    this.ReadMore = !this.ReadMore; //not equal to condition
+    this.ReadMore = !this.ReadMore;
     this.visible = !this.visible
   }
- 
+
 
   EliteApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -1487,7 +1428,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (input.files && input.files.length > 0) {
       this.fileName = input.files[0].name;
     } else {
-      this.fileName = null; // Reset if no file selected
+      this.fileName = null;
     }
   }
   fields: Array<{ value: string }> = [];
@@ -1533,6 +1474,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   updateButtons() {
+    if (!this.scrollContent?.nativeElement) {
+      return;
+    }
     const { scrollLeft, scrollWidth, clientWidth } = this.scrollContent.nativeElement;
     this.isAtStart = scrollLeft <= 0;
     this.isAtEnd = scrollLeft + clientWidth >= scrollWidth;
@@ -1548,7 +1492,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.spinnerLoading = true;
   }
 
-  // Stop loading: Decrease pending requests count and hide spinner when all requests complete
   stopLoading() {
     this.pendingRequests--;
     if (this.pendingRequests === 0) {
@@ -1583,21 +1526,20 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             tagId: project.tagId || "N/A",
             designPanoUrl: project.designPanoUrl || "N/A",
           }));
-          
+
           this.eliteDataSource.data = this.projectList;
-          this.elitePaginator.length=this.projectList.length; 
-        } 
+          this.elitePaginator.length = this.projectList.length;
+        }
         this.stopLoading();
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error(error.statusText || "An error occurred while fetching projects.");
         this.stopLoading();
       },
     });
   }
-  
-  
+
+
   get i() {
     return this.inventoryForm.controls;
   }
@@ -1627,69 +1569,59 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     }
   }
 
-  selectDesignId(data:any)
-  {
-    console.log(data);
+  selectDesignId(data: any) {
     this.inventoryForm.patchValue({ designId: data.designId });
   }
 
   getTimeAgo(dateString: string): string {
-    if (!dateString) return 'Invalid date'; 
+    if (!dateString) return 'Invalid date';
     let fixedDateString = dateString;
     if (dateString.includes('/')) {
-        let parts = dateString.split(/[\s/:]+/); 
-        if (parts.length >= 3) {
-            fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
-        }
+      let parts = dateString.split(/[\s/:]+/);
+      if (parts.length >= 3) {
+        fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
+      }
     }
-  
-    let modifiedDate = new Date(fixedDateString); 
-    if (isNaN(modifiedDate.getTime())) return 'Invalid date'; 
-  
+
+    let modifiedDate = new Date(fixedDateString);
+    if (isNaN(modifiedDate.getTime())) return 'Invalid date';
+
     let now = new Date();
     let differenceInMs = now.getTime() - modifiedDate.getTime();
     let differenceInMinutes = Math.floor(differenceInMs / (1000 * 60));
     let differenceInHours = Math.floor(differenceInMinutes / 60);
     let differenceInDays = Math.floor(differenceInHours / 24);
-  
+
     if (differenceInMinutes < 1) return 'Just now';
     if (differenceInMinutes < 60) return `${differenceInMinutes} min ago`;
     if (differenceInHours < 24) return `${differenceInHours} hours ago`;
     if (differenceInDays === 1) return 'Yesterday';
-  
+
     return `${differenceInDays} days ago`;
   }
 
   onQuotationSubmit(modal: any) {
     this.submitted = true;
-  
     if (this.quotationForm?.valid) {
       setTimeout(() => {
         const mockResponse = { status: true, message: 'Quotation successfully created!' };
-  
         if (mockResponse.status) {
-          modal.close(); // Close modal
+          modal.close();
           this.submitted = false;
           this.quotationForm.reset();
           this.toastr.success(mockResponse.message, 'Quotation', {
             timeOut: 3000, positionClass: 'toast-top-right'
           });
         } else {
-          this.toastr.error(mockResponse.message, 'Quotation', {
-            timeOut: 3000, positionClass: 'toast-top-right'
-          });
+          this.toastr.error(mockResponse.message, 'Quotation',);
         }
       }, 1000);
-    } if (this.quotationForm.invalid) {
+    }
+
+    if (this.quotationForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
       return;
     }
-    
   }
-  
-  
-  
-  
-
 
 }

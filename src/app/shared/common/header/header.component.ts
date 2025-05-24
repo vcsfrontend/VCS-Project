@@ -36,9 +36,10 @@ export class HeaderComponent implements OnInit {
   cartItemCount: number = 5;
   notificationCount: number = 5;
   public isCollapsed = true;
+   public leadCount = 0;
   collapse: any;
-  closeResult = '';
-  themeType: string | undefined; userName:any; userData:any;
+  closeResult = ''; campaignId!: string; followUpCount: any;
+  themeType: string | undefined; userName:any; userData:any;  userEmail :any
 
   selectedItem: string  | null ='selectedItem'
   isOpen: boolean = false; isCrm:boolean = false; isAdonai:boolean = false;
@@ -53,6 +54,7 @@ export class HeaderComponent implements OnInit {
   ) {this.localStorageBackUp()
     this.userData = localStorage.getItem('userDetails'),
     this.userName = JSON.parse(this.userData)?.username,
+    this.userEmail = JSON.parse(this.userData)?.email,
     this.isCrm = JSON.parse(this.userData)?.crm,
     this.isAdonai = JSON.parse(this.userData)?.adonai
   }
@@ -245,6 +247,7 @@ export class HeaderComponent implements OnInit {
   public SearchResultEmpty: boolean = false;
 
   ngOnInit(): void {
+    this.getFetchLeadData();
     const storedSelectedItem = localStorage.getItem('selectedItem');
     // this.updateSelectedItem();
   // If there's no selected item stored, set a default one
@@ -416,5 +419,34 @@ export class HeaderComponent implements OnInit {
   //   this.router.navigate(['/auth/login']);
     
   // }
+
+  getFetchLeadData() {
+    this.switchService
+      .FetchLeadData(this.userEmail, this.campaignId)
+      .subscribe({
+        next: (res: any) => {
+          const now = new Date();
+          const executiveList = (res.executiveList || []).map((item: any) => ({
+            ...item,
+            source: 'executive',
+            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
+          }));
+          const entryList = (res.entryList || []).map((item: any) => ({
+            ...item,
+            source: 'entry',
+            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
+          }));
+          const combined = [...executiveList, ...entryList];
+          this.leadCount = combined.length;
+          this.followUpCount = combined.filter(item => item.followUpDue).length;
+          const hasExecutiveFlag = combined.some(
+            (item) => item.source === 'executive'
+          );
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText || 'Server Error');
+        },
+      });
+  }
   
 }

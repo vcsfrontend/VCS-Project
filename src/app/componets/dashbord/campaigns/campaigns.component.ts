@@ -126,10 +126,6 @@ export class CampaignsComponent extends BaseComponent {
             email: this.userEmail,
             type: this.userType,
           });
-          this.campaignSubmitted = false;
-          console.log('Campaign API Response:', res);
-          console.log('CampgnId:', res.campgnId);
-
           this.getLeadCountForCampaign(res.campgnId)
           this.getCampaignData();
         } else {
@@ -308,7 +304,6 @@ export class CampaignsComponent extends BaseComponent {
   getLeadCountForCampaign(campaignId: string) {
   this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
     next: (res: any) => {
-      console.log('FetchLeadData res:', res);
       const executiveList = res.executiveList || [];
       const entryList = res.entryList || [];
       const combined = [...executiveList, ...entryList];
@@ -318,11 +313,7 @@ export class CampaignsComponent extends BaseComponent {
         const stage = lead.stage || 'Unknown';
         stageMap[stage] = (stageMap[stage] || 0) + 1;
       });
-
       this.stageCounts[campaignId] = stageMap;
-
-      console.log(`Lead count for ${campaignId}:`, this.leadCounts[campaignId]);
-      console.log(`Stage breakdown for ${campaignId}:`, stageMap);
     },
     error: (err) => {
       console.error('Error fetching lead count for campaign:', campaignId, err);
