@@ -291,7 +291,7 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Stages</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight5(content5)"
+                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight5(content5)" [disabled]="isAddStagesDisabled"
                         >Add
                         Stages</button>
                 </div>
@@ -378,7 +378,7 @@
                     <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Lead Analytics</div>
                     <div class="text-center">
                         <button class="btn btn-primary" (click)="toggleTopShowMore()">
-                            {{ topshowMore ? 'Show More' : 'Show Less' }}
+                            {{ topshowMore ? 'Show Less' : 'Show More' }}
                         </button>
                     </div>
                 </div>
@@ -1007,7 +1007,9 @@
                     <label for="followupDate" class="form-label">Next Follow up date</label>
                     <input type="datetime-local" class="form-control" id="followupDate" placeholder=""
                         formControlName="followupDate"
-                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }">
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }"
+                        [min]="minDateTime" />
+
                     <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
                         <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
                     </div>
