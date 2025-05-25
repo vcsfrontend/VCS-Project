@@ -16,8 +16,10 @@
                 </div>
                 <div class="d-flex flex-wrap gap-3">
                     <input type="text" [(ngModel)]="searchUser" placeholder="Search..." class="form-control w-auto" />
-                    <button type="button" class="btn btn-primary text-center"
-                        (click)="isAddEdt=!isAddEdt;aeTyp='a';onRst()">Add Team
+                    <button type="button" class="btn btn-primary text-center" (click)="isAddEdt=!isAddEdt;aeTyp='a';onRst()">Add Team
+                    </button>
+                    <button class="btn btn-primary" (click)="toggleTopShowMore()">
+                        {{ topshowMore ? 'Show Less' : 'Show More' }}
                     </button>
                 </div>
             </div>
@@ -203,13 +205,15 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="adoanAiRole== 'ADMIN'">
+    <div class="row ms-1 scrollable-container" [ngStyle]="{
+        'max-height': topshowMore ? '220px' : '220px',
+        'overflow-y': topshowMore ? 'auto' : 'hidden',
+        'transition': 'max-height 0.5s ease' }" *ngIf="adoanAiRole== 'ADMIN'" >
         <div *ngFor="let contact of filterUserData()" class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
-            <div class="card custom-card text-center">
+            <div class="card custom-card text-center border-bottom">
                 <div class="card-body p-4">
-                    <div class="avatar avatar-xl avatar-rounded mb-3">
-                        <img [src]="contact.logoUrl ? contact.logoUrl : 'assets/images/profile.jpg'" alt="Profile Image"
-                            class="img-thumbnail">
+                    <div class="avatar avatar-lg avatar-rounded mb-2" [ngClass]="getUserColor(contact)">
+                        {{ contact.email?.charAt(0) | uppercase }}
                     </div>
                     <div class="mb-3">
                         <h6 class="mb-1 fw-medium">
@@ -228,7 +232,8 @@
                             View Tools
                         </button>
                         <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button"
-                        (click)="openRight(content2);ViewUserDetails(contact)"data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                            (click)="openRight(content2);ViewUserDetails(contact)" data-bs-target="#offcanvasRight"
+                            aria-controls="offcanvasRight">
                             <i class="fe fe-eye text-muted"></i>
                         </button>
                     </div>
@@ -993,11 +998,10 @@
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="sawDisplayedColumn"></tr>
                     <tr mat-row *matRowDef="let row; columns: sawDisplayedColumn;"></tr>
-            
                 </table>
-                <mat-paginator #sawPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                </mat-paginator>
             </div>
+            <mat-paginator #sawPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                </mat-paginator>
         </div>
     </div>
 </div>
@@ -1037,18 +1041,20 @@
                     Stages</button>
                 </div>
                 <div class="container mt-4 mb-4" *ngIf="showStages">
-                    <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
-                        <div class="col-sm-8">
-                            <input type="text"
-                                class="form-control form-control-sm p-2 font-weight-bold border"
-                                [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text"
-                                class="form-control form-control-sm p-2 font-weight-bold border"
-                                [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
-                                onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                                maxlength="3" placeholder="Percent" [disabled]="isStageDel">
+                    <div style="max-height: 260px; overflow-y: auto;">
+                        <div *ngFor="let field of dynamicFields; let i = index" class="row mb-3 align-items-center">
+                            <div class="col-sm-8">
+                                <input type="text"
+                                    class="form-control form-control-sm p-2 font-weight-bold border"
+                                    [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text"
+                                    class="form-control form-control-sm p-2 font-weight-bold border"
+                                    [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
+                                    onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                                    maxlength="3" placeholder="Percent" [disabled]="isStageDel">
+                            </div>
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"
@@ -1068,18 +1074,18 @@
                 </button>
                 </div>
                 <div class="container mt-4 mb-4" *ngIf="showPmntStages" >
-                    <div *ngFor="let field of dynamicPmntFields; let i = index" class="row mb-3 align-items-center">
-                        <div class="col-sm-8">
-                            <input type="text"
-                                class="form-control form-control-sm p-2 font-weight-bold border"
-                                [ngModel]="field.value" [ngModelOptions]="{standalone: true}" [readonly]="true">
-                        </div>
-                        <div class="col-sm-2">
-                            <input type="text"
-                                class="form-control form-control-sm p-2 font-weight-bold border"
-                                [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
-                                onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
-                                maxlength="3" placeholder="Percent" [disabled]="isPmntStageDel">
+                    <div style="max-height: 260px; overflow-y: auto;">
+                        <div *ngFor="let field of dynamicPmntFields; let i = index" class="row mb-3 align-items-center">
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control form-control-sm p-2 font-weight-bold border" [ngModel]="field.value"
+                                    [ngModelOptions]="{standalone: true}" [readonly]="true">
+                            </div>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control form-control-sm p-2 font-weight-bold border"
+                                    [(ngModel)]="field.percent" [ngModelOptions]="{standalone: true}"
+                                    onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                                    maxlength="3" placeholder="Percent" [disabled]="isPmntStageDel">
+                            </div>
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary btn-sm btn-wave waves-effect waves-light"

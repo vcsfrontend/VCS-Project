@@ -49,7 +49,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   sawDataSource = new MatTableDataSource<any>();
   partsDataSource = new MatTableDataSource<any>();
   selectedSawIdList: Set<any> = new Set<any>();
-  selectedSawRow: any = null;
+  selectedSawRow: any = null; topshowMore = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
@@ -1464,6 +1464,31 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.partsSubmitted = false;
     }
   }
+
+  toggleTopShowMore() {
+    this.topshowMore = !this.topshowMore;
+    if (this.topshowMore) {
+      setTimeout(() => {
+        const scrollContainer = document.querySelector('.scrollable-container');
+        if (scrollContainer) {
+          scrollContainer.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      }, 0);
+    }
+  }
+
+  getUserColor(contact: any): string {
+  const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+  if (contact && contact.email) {
+    const index = contact.email.charCodeAt(0) % colors.length;
+    return colors[index];
+  }
+  return 'bg-secondary';
+}
+
 
 
 }
