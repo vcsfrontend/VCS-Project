@@ -266,25 +266,16 @@ button:disabled {
   text-align: right !important;
 }
 
-/* Make the container scroll horizontally */
 .table-container {
-  width: 100%;
-  overflow-x: hidden;
-  display: block;
+  overflow-x: auto;
 }
 
-/* Let the table expand as needed */
-::ng-deep .mat-table {
-  min-width: 1000px;  
-  table-layout: auto !important;
-  width: auto !important;
-}
-
-/* Prevent content from wrapping in cells */
-::ng-deep .mat-header-cell,
-::ng-deep .mat-cell {
-  white-space: nowrap !important;
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 8px 16px;
+  max-width: 200px; 
 }
+
+

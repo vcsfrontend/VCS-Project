@@ -184,30 +184,14 @@ th.mat-mdc-header-cell {
   padding: 0 6px !important;
 }
 
-.table-scroll-container {
-  width: 100%;
+.table-container {
   overflow-x: auto;
 }
 
-.mat-table-custom {
-  min-width: 1200px;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.mat-header-cell,
-.mat-cell {
+.mat-table th, 
+.mat-table td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px;
-}
-
-.mat-column-email,
-.mat-column-name,
-.mat-column-contact {
-  max-width: 220px;
-}
-.pointer{
-  cursor: pointer;
+  max-width: 200px; 
 }
