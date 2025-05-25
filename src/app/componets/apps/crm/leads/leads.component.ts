@@ -74,8 +74,8 @@ export class LeadsComponent extends BaseComponent {
   campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any; imageFileSrcData: any;
-  followUpDetails: any[] = [];
-  crmStaticStages = [
+  followUpDetails: any[] = []; nextLeadStatus : any;
+  crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
     { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
@@ -1181,62 +1181,53 @@ export class LeadsComponent extends BaseComponent {
   // }
 
   getFetchLeadData() {
-    this.switchService
-      .FetchLeadData(this.userEmail, this.campaignId)
-      .subscribe({
-        next: (res: any) => {
-          const now = new Date(); // Current time
+  this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
+    next: (res: any) => {
+      const now = new Date();
+      const executiveList = (res.executiveList || []).map((item: any) => ({
+        ...item,
+        followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
+        followUpDateObj: item.followUpDate ? new Date(item.followUpDate) : null
+      }));
+      const entryList = (res.entryList || []).map((item: any) => ({
+        ...item,
+        followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
+        followUpDateObj: item.followUpDate ? new Date(item.followUpDate) : null
+      }));
 
-          const executiveList = (res.executiveList || []).map((item: any) => ({
-            ...item,
-            source: 'executive',
-            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
-          }));
+      const combined = [...executiveList, ...entryList];
 
-          const entryList = (res.entryList || []).map((item: any) => ({
-            ...item,
-            source: 'entry',
-            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
-          }));
+      this.followUpCount = combined.filter(item => item.followUpDue).length;
 
-          const combined = [...executiveList, ...entryList];
-          this.fetchCrmLeadsList = combined;
-          this.dataSource.data = combined;
-          this.leadCount = combined.length;
-          this.followUpCount = combined.filter(item => item.followUpDue).length;
-          const hasExecutiveFlag = combined.some(
-            (item) => item.source === 'executive'
-          );
+      this.dataSource.data = combined;
 
-          this.displayedColumns = [
-            ...(hasExecutiveFlag ? ['sourceFlag'] : []),
-            'select',
-            'slNo',
-            'action',
-            'name',
-            'executive',
-            'stage',
-            'status',
-            'followUpDate',
-            'contact',
-            'email',
-          ];
+      // Find the lead with the nearest follow-up date
+      const sortedByFollowUpDate = combined
+        .filter(item => item.followUpDateObj)
+        .sort((a, b) => a.followUpDateObj.getTime() - b.followUpDateObj.getTime());
 
-          const selectedLead = combined.find(lead => lead.leadId === this.selectedLeadId);
-          if (!selectedLead) return;
+      const nextLead = sortedByFollowUpDate.length ? sortedByFollowUpDate[0] : null;
 
-          this.followupLeadForm.patchValue({
-            stage: selectedLead.stage || '',
-            status: selectedLead.status || '',
-          });
+      // Save the status of that lead
+      this.nextLeadStatus = nextLead ? nextLead.status : 'No follow-up';
 
-          this.onFollowupStatusChange();
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText || 'Server Error');
-        },
-      });
-  }
+      // Save to localStorage
+      localStorage.setItem('leadData', JSON.stringify({
+        campaignId: this.campaignId,
+        followUpCount: this.followUpCount,
+        nextLeadStatus: this.nextLeadStatus
+      }));
+
+      // other code...
+    },
+    error: (error) => {
+      this.toastr.error(error.statusText || 'Server Error');
+    }
+  });
+}
+
+
+
 
 
   getStatusCount(): void {

@@ -407,19 +407,29 @@
             <ul class="list-unstyled mb-0" id="header-notification-scroll" (click)="handleCardClick($event)">
               <li ngbDropdownItem class="dropdown-item" id="not4">
                 <div class="d-flex align-items-center">
-                  <div class="pe-2 lh-1">
-                    <span class="avatar bg-danger-transparent avatar-rounded">40</span>
+                  <div class="d-flex align-items-center">
+                    <div class="pe-2 lh-1">
+                      <span class="avatar bg-danger-transparent avatar-rounded">
+                        {{ followUpCount }}
+                      </span>
+                    </div>
+                    <div class="flex-grow-1 d-flex align-items-center justify-content-between">
+                      <div>
+                        <p class="mb-0 fw-medium">
+                          <a [routerLink]="['/apps/crm/leads']" [queryParams]="{ campaignId: campaignId }">
+                            <span style="background-color: yellow; padding: 2px 4px; border-radius: 4px;">
+                              {{ nextLeadStatus }}
+                            </span>
+                            Follow-Ups Pending
+                          </a>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                   <div class="flex-grow-1 d-flex align-items-center justify-content-between">
                     <div>
-                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Leads Follow-Ups</a></p>
-                      <span class="text-muted fw-normal fs-12 header-notification-text">Transaction
-                      ID: 123456789</span>
-                    </div>
-                    <div>
                       <a href="javascript:void(0);" (click)="removeNotify('not4')"
-                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
-                      class="ti ti-x"></i></a>
+                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i class="ti ti-x"></i></a>
                     </div>
                   </div>
                 </div>
@@ -430,7 +440,7 @@
 
             <div class="p-3 empty-header-item1 border-top">
               <div class="text-center">
-                <a routerLink="pages/notifications" class="link-primary text-decoration-underline">View All</a>
+                <a class="link-primary text-decoration-underline">View All</a>
               </div>
             </div>
           }

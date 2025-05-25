@@ -1,16 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, inject,} from '@angular/core';
 import { Menu, NavService } from '../../services/navservice';
 import { SwitcherComponent } from '../switcher/switcher.component';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AppStateService } from '../../services/app-state.service';
-import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
-import { filter } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule ,UrlTree } from '@angular/router';
+import { filter ,interval,Subscription} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -38,7 +32,7 @@ export class HeaderComponent implements OnInit {
   public isCollapsed = true;
    public leadCount = 0;
   collapse: any;
-  closeResult = ''; campaignId!: string; followUpCount: any;
+  closeResult = ''; campaignId!: string; followUpCount: any; nextLeadStatus :any;
   themeType: string | undefined; userName:any; userData:any;  userEmail :any
 
   selectedItem: string  | null ='selectedItem'
@@ -244,23 +238,29 @@ export class HeaderComponent implements OnInit {
   public menuItems!: Menu[];
   public items!: Menu[];
   public text!: string;
+    private routerSub!: Subscription;
+  private intervalSub!: Subscription;
   public SearchResultEmpty: boolean = false;
-
   ngOnInit(): void {
-    this.getFetchLeadData();
+    this.logRoute();
+    this.loadLeadData();
+    this.routerSub = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.loadLeadData();
+      }
+    });
+    this.intervalSub = interval(5000).subscribe(() => this.loadLeadData());
+    this.loadLeadData();
     const storedSelectedItem = localStorage.getItem('selectedItem');
-    // this.updateSelectedItem();
-  // If there's no selected item stored, set a default one
-  if (!storedSelectedItem) {
-    this.selectedItem = "Sales Dashboard"; // You can set any default item here
-    localStorage.setItem('selectedItem', this.selectedItem);
-  } else {
-    this.selectedItem = storedSelectedItem;
-  }
+    if (!storedSelectedItem) {
+      this.selectedItem = "Sales Dashboard"; // You can set any default item here
+      localStorage.setItem('selectedItem', this.selectedItem);
+    } else {
+      this.selectedItem = storedSelectedItem;
+    }
     this.navServices.items.subscribe((menuItems) => {
       this.items = menuItems;
     });
-    // To clear and close the search field by clicking on body
     document.querySelector('.main-content')?.addEventListener('click', () => {
       this.clearSearch();
     });
@@ -276,6 +276,8 @@ export class HeaderComponent implements OnInit {
     this.selectedItem = dashboard ? dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + ' Dashboard' : this.selectedItem;
   }
   ngOnDestroy(): void {
+    this.routerSub.unsubscribe();
+    this.intervalSub.unsubscribe();
     const windowObject: any = window;
     let html = this.elementRef.nativeElement.ownerDocument.documentElement;
     if (windowObject.innerWidth <= '991') {
@@ -420,33 +422,21 @@ export class HeaderComponent implements OnInit {
     
   // }
 
-  getFetchLeadData() {
-    this.switchService
-      .FetchLeadData(this.userEmail, this.campaignId)
-      .subscribe({
-        next: (res: any) => {
-          const now = new Date();
-          const executiveList = (res.executiveList || []).map((item: any) => ({
-            ...item,
-            source: 'executive',
-            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
-          }));
-          const entryList = (res.entryList || []).map((item: any) => ({
-            ...item,
-            source: 'entry',
-            followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
-          }));
-          const combined = [...executiveList, ...entryList];
-          this.leadCount = combined.length;
-          this.followUpCount = combined.filter(item => item.followUpDue).length;
-          const hasExecutiveFlag = combined.some(
-            (item) => item.source === 'executive'
-          );
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText || 'Server Error');
-        },
-      });
+  loadLeadData() {
+    const storedDataRaw = localStorage.getItem('leadData');
+    const storedData = storedDataRaw ? JSON.parse(storedDataRaw) : {};
+    this.campaignId = storedData.campaignId || null;
+    this.followUpCount = storedData.followUpCount || 0;
+    this.nextLeadStatus = storedData.nextLeadStatus || 'No follow-up';
+  }
+
+  logRoute() {
+    const urlTree: UrlTree = this.router.createUrlTree(['/apps/crm/leads'], {
+      queryParams: { campaignId: this.campaignId }
+    });
+
+    const fullUrl = this.router.serializeUrl(urlTree);
+    console.log('Generated Route URL:', fullUrl);
   }
   
 }

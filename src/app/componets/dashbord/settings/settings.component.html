@@ -787,7 +787,7 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body p-3">
         <ul class="list-group list-group-flush mb-0">
             <li class="list-group-item">
                 <div class="container mt-3">
@@ -828,7 +828,7 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body p-3">
         <ul class="list-group list-group-flush mb-0">
             <li class="list-group-item">
                 <div class="container mt-3">
@@ -924,80 +924,77 @@
             </div>
         </div>
         <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <div class="table-responsive">
-                    <table mat-table [dataSource]="sawDataSource" class="mat-table">
-                        <ng-container matColumnDef="select">
-                            <th mat-header-cell *matHeaderCellDef>
-                                <mat-checkbox [checked]="isSawAllSelected()" [indeterminate]="isSawIndeterminate()"
-                                    (change)="onSawSelectAllChange($event)"></mat-checkbox>
-                            </th>
-                            <td mat-cell *matCellDef="let element">
-                                <mat-checkbox (change)="onSawRowCheckboxChange(element, $event)"
-                                    [disabled]="isCheckboxSawDisabled(element)" [checked]="selectedSawRow?.sawId == element.sawId"
-                                    class="custom-checkbox"></mat-checkbox>
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="slNo">
-                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                            <td mat-cell *matCellDef="let element; let i = index"> {{sawGetSNo(i)}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="bladeWidth">
-                            <th mat-header-cell *matHeaderCellDef> Blade Width </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.bladeWidth }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stockType">
-                            <th mat-header-cell *matHeaderCellDef> Stock Type </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.stockType }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="cutType">
-                            <th mat-header-cell *matHeaderCellDef> Cut Type </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.cutType }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="cutPreference">
-                            <th mat-header-cell *matHeaderCellDef> Cut Preference </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.cutPreference }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="strategy">
-                            <th mat-header-cell *matHeaderCellDef> Strategy </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.strategy }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="maxPhase">
-                            <th mat-header-cell *matHeaderCellDef> Max Phase </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.maxPhase }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="headCuts">
-                            <th mat-header-cell *matHeaderCellDef> Head Cuts </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.headCuts ? 'Yes' :
-                                'No' }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="primaryCompression">
-                            <th mat-header-cell *matHeaderCellDef> Primary Compression </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.efficiencyOptions?.primaryCompression
-                                }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stackHeight">
-                            <th mat-header-cell *matHeaderCellDef> Stack Height </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.stackHeight }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stockSelection">
-                            <th mat-header-cell *matHeaderCellDef> Stock Selection </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.options?.stockSelection }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="minSpacing">
-                            <th mat-header-cell *matHeaderCellDef> Min Spacing </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.options?.minSpacing }} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="stackingMode">
-                            <th mat-header-cell *matHeaderCellDef> Stacking Mode </th>
-                            <td mat-cell *matCellDef="let element"> {{ element.options?.stackingMode }} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="sawDisplayedColumn"></tr>
-                        <tr mat-row *matRowDef="let row; columns: sawDisplayedColumn;"></tr>
-
-                    </table>
-
-                </div>
+            <div class="table-container mat-elevation-z8">
+                <table mat-table [dataSource]="sawDataSource" class="mat-table">
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox [checked]="isSawAllSelected()" [indeterminate]="isSawIndeterminate()"
+                                (change)="onSawSelectAllChange($event)"></mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-checkbox (change)="onSawRowCheckboxChange(element, $event)"
+                                [disabled]="isCheckboxSawDisabled(element)" [checked]="selectedSawRow?.sawId == element.sawId"
+                                class="custom-checkbox"></mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{sawGetSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="bladeWidth">
+                        <th mat-header-cell *matHeaderCellDef> Blade Width </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.bladeWidth }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="stockType">
+                        <th mat-header-cell *matHeaderCellDef> Stock Type </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.stockType }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cutType">
+                        <th mat-header-cell *matHeaderCellDef> Cut Type </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.cutType }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="cutPreference">
+                        <th mat-header-cell *matHeaderCellDef> Cut Preference </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.cutPreference }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="strategy">
+                        <th mat-header-cell *matHeaderCellDef> Strategy </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.strategy }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="maxPhase">
+                        <th mat-header-cell *matHeaderCellDef> Max Phase </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.maxPhase }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="headCuts">
+                        <th mat-header-cell *matHeaderCellDef> Head Cuts </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.guillotineOptions?.headCuts ? 'Yes' :
+                            'No' }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="primaryCompression">
+                        <th mat-header-cell *matHeaderCellDef> Primary Compression </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.efficiencyOptions?.primaryCompression
+                            }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="stackHeight">
+                        <th mat-header-cell *matHeaderCellDef> Stack Height </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.stackHeight }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="stockSelection">
+                        <th mat-header-cell *matHeaderCellDef> Stock Selection </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.options?.stockSelection }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="minSpacing">
+                        <th mat-header-cell *matHeaderCellDef> Min Spacing </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.options?.minSpacing }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="stackingMode">
+                        <th mat-header-cell *matHeaderCellDef> Stacking Mode </th>
+                        <td mat-cell *matCellDef="let element"> {{ element.options?.stackingMode }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="sawDisplayedColumn"></tr>
+                    <tr mat-row *matRowDef="let row; columns: sawDisplayedColumn;"></tr>
+            
+                </table>
                 <mat-paginator #sawPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
                 </mat-paginator>
             </div>
