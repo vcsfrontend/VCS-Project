@@ -64,6 +64,7 @@ export class LeadsComponent extends BaseComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
+  Adonai: boolean = this.userData ? this.userData.adonai : false;
   statusClicked = false; statusCounts: { status: string; count: number }[] = [];
   crmStageData: any; crmStatusData: any; newOptionName: string = ''; status: string = 'In Progress Leads';
   showValidationError = false; fetchCrmLeadsList: any[] = []; showCheckboxError = false; showNameError = false;
@@ -74,7 +75,7 @@ export class LeadsComponent extends BaseComponent {
   campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any; imageFileSrcData: any;
-  followUpDetails: any[] = []; nextLeadStatus : any;
+  followUpDetails: any[] = []; nextLeadStatus : any;  minDateTime: string = '';
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -276,6 +277,16 @@ export class LeadsComponent extends BaseComponent {
     this.getCampaignData();
     this.getlistFormTemplate();
     this.getFormTemplate();
+    const now = new Date();
+      // Pad with 0 if needed
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      const yyyy = now.getFullYear();
+      const mm = pad(now.getMonth() + 1);
+      const dd = pad(now.getDate());
+      const hh = pad(now.getHours());
+      const mi = pad(now.getMinutes());
+
+      this.minDateTime = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
     this.route.queryParams.subscribe((params) => {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
@@ -536,7 +547,7 @@ export class LeadsComponent extends BaseComponent {
   deleteLeadItem(index: number) {
     const deleted = this.crmStaticStages[index]?.name;
     this.crmStaticStages.splice(index, 1);
-    this.toastr.error(`'${deleted}' has been deleted`);
+    this.toastr.warning(`'${deleted}' has been deleted`);
   }
   addLeadStatusItem() {
     this.leadStatusitems.push({ checked: false, label: '' });
@@ -969,13 +980,32 @@ export class LeadsComponent extends BaseComponent {
           const stageKeys = Object.keys(stageObj).filter((key) =>
             /^f\d+$/.test(key)
           );
+          const anyStagesSelected = this.crmStaticStages.some(stage => stage.checked);
+          this.isAddStagesDisabled = anyStagesSelected;
+
           const firstStageKey = stageKeys.find(
             (key) => stageObj[key]?.trim() !== ''
           );
           this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
+          const isAdonaiUser = this.Adonai;
+          this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
+          const defaultStageExists = this.stageLst.some((s: any) => s.stageName === 'Design Stage');
+
+          if (isAdonaiUser && !defaultStageExists) {
+            const insertIndex = Math.max(1, this.stageLst.length - 2);  // ensures index is at least 1
+            const defaultStage = {
+              stageName: 'Design Stage',
+              color:'#000000',
+              createdBy: this.userEmail,
+              companyCode: this.userCompanyCode,
+            };
+            this.stageLst.splice(insertIndex, 0, defaultStage); // insert at calculated position
+          }
           this.getCrmStatus();
+          this.isAddStagesDisabled=true;
         } else {
           this.stageLst = [];
+          this.isAddStagesDisabled=false;
         }
       },
       error: (err) => {
@@ -987,30 +1017,46 @@ export class LeadsComponent extends BaseComponent {
   addNewOption(): void {
     const newName = this.newOptionName?.trim();
     const newColor = this.newOptionColor;
+
     if (!newName) {
       this.toastr.warning('Please enter a status name.');
       return;
     }
+
     if (!newColor) {
       this.toastr.warning('Please select a color.');
       return;
     }
-    const currentStageOptions = this.statusOptionsByStage[this.selectedStage];
+
+    const currentStageOptions = this.statusOptionsByStage[this.selectedStage] || [];
+    const currentDisplayOptions = this.statusOptionsByStageforDisplay[this.selectedStage] || [];
+
     const isDuplicate = currentStageOptions.some(
-      (opt) => opt.name.toLowerCase() === newName.toLowerCase()
+      (opt: any) => opt.name.toLowerCase() === newName.toLowerCase()
     );
-    if (newName && !isDuplicate) {
-      currentStageOptions.push({
+
+    if (!isDuplicate) {
+      const newOption = {
         name: newName,
-        checked: false,
+        checked: true,
         isCustom: true,
         color: newColor,
-      });
+      };
+
+      // Push to both arrays
+      currentStageOptions.push(newOption);
+      currentDisplayOptions.push(newOption);
+
+      // Reassign for binding
+      this.statusOptionsByStage[this.selectedStage] = [...currentStageOptions];
+      this.statusOptionsByStageforDisplay[this.selectedStage] = [...currentDisplayOptions];
       this.checkboxStageOptions = [...currentStageOptions];
+
       this.toastr.info('Item added.');
     } else {
       this.toastr.warning(`'${newName}' already exists`);
     }
+
     this.newOptionName = '';
     this.newOptionColor = '';
   }
@@ -1067,23 +1113,35 @@ export class LeadsComponent extends BaseComponent {
 
   onStageChange() {
     this.checkboxStageOptions = [];
-    if (!this.statusOptionsByStage[this.selectedStage]) {
-      this.statusOptionsByStage[this.selectedStage] = [];
-    }
-    this.checkboxStageOptions = this.statusOptionsByStage[this.selectedStage];
-    if (this.statusOptionsByStageforDisplay[this.selectedStage]) {
-      this.checkboxStageOptions = this.statusOptionsByStage[
-        this.selectedStage
-      ].map((item) => {
-        const existsInSelected = this.statusOptionsByStageforDisplay[
-          this.selectedStage
-        ].some((selected: { name: any }) => selected.name === item.name);
-        return { ...item, checked: existsInSelected };
-      });
-      this.anyChecked = true;
-    } else {
-      this.anyChecked = false;
-    }
+
+    const allOptions: any[] = this.statusOptionsByStage[this.selectedStage] || [];
+    const selectedOptions: any[] = this.statusOptionsByStageforDisplay[this.selectedStage] || [];
+
+    this.checkboxStageOptions = allOptions.map((item: any) => {
+      const matched = selectedOptions.find((opt: any) => opt.name === item.name);
+      return {
+        ...item,
+        checked: matched ? true : false,
+        color: matched?.color || item.color || '#cccccc',
+        isCustom: matched?.isCustom || false,
+      };
+    });
+
+    const dynamicOptions = selectedOptions.filter(
+      (opt: any) => !allOptions.some((o: any) => o.name === opt.name)
+    ).map(opt => ({
+      ...opt,
+      checked: true, 
+      color: opt.color || '#cccccc',
+      isCustom: false,
+    }));
+
+    this.checkboxStageOptions = [
+      ...this.checkboxStageOptions,
+      ...dynamicOptions,
+    ];
+
+    this.anyChecked = this.checkboxStageOptions.some((opt: any) => opt.checked);
   }
 
   onFollowupStatusChange(): void {
@@ -1114,7 +1172,7 @@ export class LeadsComponent extends BaseComponent {
     if (mainIndex !== -1) {
       currentStageOptions.splice(mainIndex, 1);
     }
-    this.toastr.error(`'${deletedOption.name}' has been deleted`);
+    this.toastr.warning(`'${deletedOption.name}' has been deleted`);
   }
 
   setInProgressStatus(): void {
@@ -1196,6 +1254,7 @@ export class LeadsComponent extends BaseComponent {
       }));
 
       const combined = [...executiveList, ...entryList];
+      this.leadCount = combined.length;
 
       this.followUpCount = combined.filter(item => item.followUpDue).length;
 
@@ -1217,6 +1276,7 @@ export class LeadsComponent extends BaseComponent {
         followUpCount: this.followUpCount,
         nextLeadStatus: this.nextLeadStatus
       }));
+      this.getStatusCount();
 
       // other code...
     },
