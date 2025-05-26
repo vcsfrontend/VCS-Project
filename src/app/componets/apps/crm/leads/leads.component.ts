@@ -43,7 +43,7 @@ import { forkJoin } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = ['sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email',];
+  displayedColumns: string[] = ['sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email','city'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -762,6 +762,19 @@ export class LeadsComponent extends BaseComponent {
       subject: selectedTemplate.subject || '',
       content: selectedTemplate.description || '',
     });
+  }
+  onWhatsappTemplateChange(selectedTemplate: any): void {
+    if (!selectedTemplate || !selectedTemplate.templateGenId) {
+      this.toastr.warning('Please Select Template');
+      return;
+    }
+    this.sendwhatsLeadForm.patchValue({
+      subject: selectedTemplate.subject || '',
+      content: selectedTemplate.description || '',
+    });
+  }
+  get P() {
+    return this.sendwhatsLeadForm.controls;
   }
 
   getUserColor(user: any): string {

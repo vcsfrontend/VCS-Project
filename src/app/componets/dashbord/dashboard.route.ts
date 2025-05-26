@@ -205,7 +205,7 @@ export const admin: Routes = [
   {
     path: 'reports',
     loadComponent: () =>
-    import('../apps/crm/reports/reports.component').then((m) => m.ReportsComponent),
+    import('./reports/reports.component').then((m) => m.ReportsComponent),
   },
 {
   path: 'personal',

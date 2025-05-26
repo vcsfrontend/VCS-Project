@@ -454,7 +454,7 @@ export class NavService implements OnDestroy {
           type: 'link',
           linkType : 'internal',
           active: false,
-          path: '/apps/crm/reports'
+          path: '/dashboard/reports'
         },
         {
           title: 'CRM Settings',

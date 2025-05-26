@@ -200,6 +200,10 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
                         <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                     </ng-container>
+                    <ng-container matColumnDef="city">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>city</th>
+                        <td mat-cell *matCellDef="let element"> {{element.city}} </td>
+                    </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
@@ -925,19 +929,19 @@
         <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
                 <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
-                    bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
-                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && s['template'].errors }">
+                    bindLabel="templateName" (change)="onWhatsappTemplateChange($event)" class="border rounded"
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && P['template'].errors }">
                 </ng-select>
-                <div *ngIf="sendwhatsLeadFormSubmitted && s['template'].errors" class="invalid-feedback">
-                    <div *ngIf="s['template'].errors['required']">Template is required</div>
+                <div *ngIf="sendwhatsLeadFormSubmitted && P['template'].errors" class="invalid-feedback">
+                    <div *ngIf="P['template'].errors['required']">Template is required</div>
                 </div>
             </div>
             <div class="mb-4">
                 <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
-                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && s['subject'].errors }">
-                <div *ngIf="sendwhatsLeadFormSubmitted && s['subject'].errors" class="invalid-feedback">
-                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
-                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && P['subject'].errors }">
+                <div *ngIf="sendwhatsLeadFormSubmitted && P['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="P['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="P['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
                 </div>
             </div>
             <div class="mb-4">
