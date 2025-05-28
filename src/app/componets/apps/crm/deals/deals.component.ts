@@ -70,7 +70,7 @@ export class DealsComponent extends BaseComponent {
   newOptionName: string = '';newOptionColor: any;newItem: string = '';newItemColor: string = '#000000';
   addMoreVisible : boolean =false;selectedLeadId: number = 0;  followUpDetails: any[] = [];
   selectedProgressLeads: any[] = []; selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
-  tempFormList: any; selectTemplateForm!: FormGroup; allTemplateGenIds: string[] = [];
+  tempFormList: any; selectTemplateForm!: FormGroup; allTemplateGenIds: string[] = []; formList: any;
   stageColor : { [key: string]: string }={
   'Open': '#28a745',           
   };
@@ -317,6 +317,7 @@ export class DealsComponent extends BaseComponent {
   ngOnInit(): void {
     this.getCrmStages();
     this.getFormTemplate();
+    this.getlistFormTemplate();
     const now = new Date();
       // Pad with 0 if needed
       const pad = (n: number) => n.toString().padStart(2, '0');
@@ -1626,7 +1627,6 @@ export class DealsComponent extends BaseComponent {
         next: (response) => {
           this.toastr.success(response.message);
           this.getCrmStages();
-          this.getCrmStatus();
         },
         error: (error) => {
           this.toastr.error("Failed to delete Lead stages.");
@@ -1647,7 +1647,6 @@ export class DealsComponent extends BaseComponent {
         next: (response) => {
           this.toastr.success(response.message);
           this.getCrmStages();
-          this.getCrmStatus();
         },
         error: (error) => {
           this.toastr.error("Failed to delete Lead status.");
@@ -1685,6 +1684,28 @@ export class DealsComponent extends BaseComponent {
       },
       error: (err) => {
         this.toastr.error('Error fetching template details');
+      },
+    });
+  }
+
+   getlistFormTemplate() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    this.switchService.listFormTemplate(payload).subscribe({
+      next: (res: any) => {
+        this.formList = res;
+        this.allTemplateGenIds = res.map(
+          (template: any) => template.templateGenId
+        );
+        if (this.allTemplateGenIds.length > 0) {
+          this.getFormTemplate();
+        }
+      },
+      error: (error) => {
+        this.toastr.error('Error fetching product data');
       },
     });
   }
