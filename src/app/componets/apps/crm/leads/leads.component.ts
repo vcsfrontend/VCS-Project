@@ -75,12 +75,21 @@ export class LeadsComponent extends BaseComponent {
   campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any; imageFileSrcData: any;
-  followUpDetails: any[] = []; nextLeadStatus : any;  minDateTime: string = '';
+  followUpDetails: any[] = []; nextLeadStatus : any;  minDateTime: string = ''; selectedopen:any[]=[];showForm: boolean = false;
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
     { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
+
   ];
+  stageColor : { [key: string]: string }={
+  'Open': '#28a745',           
+  };
+  statusColor : { [key: string]: string }= {
+  'active': '#007bff',         
+  };
+  uploadStageDisplay: { name: string, color: string } = { name: '', color: '' };
+  uploadStatusDisplay: { name: string, color: string } = { name: '', color: '' };
   selectedType: string = '';
   dynamicFields: { value: string }[] = [];
   matcardLst: any;
@@ -149,6 +158,7 @@ export class LeadsComponent extends BaseComponent {
       'In Progress Leads': [...this.inPorgressLeads],
       'Lost Leads': [...this.lostLeads],
       'Converted Leads': [...this.convertedLeads],
+      'open Stage':[...this.openStage]
     };
     this.userData = localStorage.getItem('userDetails');
     this.chartOptions = {
@@ -597,6 +607,12 @@ export class LeadsComponent extends BaseComponent {
       color: '#007bff',
     },
   ];
+  openStage = [
+    {name:'active',checked: false, isDefault: true, color:'#28a745'},
+    {name:'connected',checked: false, isDefault: true,color:'#28a743'},
+    { name: 'Not Connected', checked: false, isDefault: true,color: '#ffc107' },
+    { name: 'Invalid', checked: false, isDefault: true,color: '#dc3545' },
+  ];
 
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible;
@@ -912,14 +928,28 @@ export class LeadsComponent extends BaseComponent {
                 stage,
                 fields,
               }));
+              const openStageIndex = this.statusLst.findIndex((s: { stage: string; }) => s.stage === 'open');
+              if (openStageIndex !== -1) {
+                this.statusLst[openStageIndex].fields = this.openStage;
+              } else {
+                this.statusLst.push({
+                  stage: 'open',
+                  fields: this.openStage
+                });
+              }
+
+    // Set defaults
+            this.defaultStageName = 'Open';
+            this.defaultStatusName = 'Connected';
             if (
               this.defaultStageName &&
               this.statusOptionsByStageforDisplay[this.defaultStageName]
             ) {
               const statusArray =
                 this.statusOptionsByStageforDisplay[this.defaultStageName];
-              this.defaultStatusName =
-                statusArray.length > 0 ? statusArray[0].name : ''
+              // this.defaultStatusName =
+              //   statusArray.length > 0 ? statusArray[0].name : ''
+              this.defaultStatusName='active';
             } else {
               this.defaultStatusName = '';
             }
@@ -999,9 +1029,10 @@ export class LeadsComponent extends BaseComponent {
           const firstStageKey = stageKeys.find(
             (key) => stageObj[key]?.trim() !== ''
           );
-          this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
+          // this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
+          this.defaultStageName = 'open';
           const isAdonaiUser = this.Adonai;
-          this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
+          // this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
           const defaultStageExists = this.stageLst.some((s: any) => s.stageName === 'Design Stage');
 
           if (isAdonaiUser && !defaultStageExists) {
@@ -1012,8 +1043,18 @@ export class LeadsComponent extends BaseComponent {
               createdBy: this.userEmail,
               companyCode: this.userCompanyCode,
             };
-            this.stageLst.splice(insertIndex, 0, defaultStage); // insert at calculated position
+            this.stageLst.splice(insertIndex, 0, defaultStage); 
           }
+          const defaultStageName = 'Open';
+          const defaultStageColor = '#007bff'; 
+
+          if (!this.stageLst.find((s:any) => s.stageName === defaultStageName)) {
+          this.stageLst.unshift({
+          stageName: defaultStageName,
+          color: defaultStageColor
+            });
+          }
+          
           this.getCrmStatus();
           this.isAddStagesDisabled=true;
         } else {
@@ -1100,6 +1141,9 @@ export class LeadsComponent extends BaseComponent {
     if (!this.stageLst) {
       return '#ccc';
     }
+    const normalizedStage = stage.trim().toLowerCase();
+
+    if (normalizedStage === 'open') return '#007bff';
     const match = this.stageLst.find(
       (s: { stageName: string }) =>
         s.stageName.toLowerCase() === stage.toLowerCase()
@@ -1121,8 +1165,10 @@ export class LeadsComponent extends BaseComponent {
     if (selectedStage === 'In Progress Leads') {
       this.setInProgressStatus();
     }
+   
     this.leadForm.get('status')?.setValue(null);
   }
+  
 
   onStageChange() {
     this.checkboxStageOptions = [];
@@ -1209,6 +1255,9 @@ export class LeadsComponent extends BaseComponent {
     if (!Array.isArray(this.statusLst)) {
       return '#ccc';
     }
+    const normalizedStatus = status.trim().toLowerCase();
+
+    if (normalizedStatus === 'active') return '#28a745';
     for (const stage of this.statusLst) {
       const field = stage.fields?.find(
         (f: { name: string }) => f.name?.toLowerCase() === status?.toLowerCase()
@@ -1467,6 +1516,8 @@ export class LeadsComponent extends BaseComponent {
 
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
+    this.defaultStageName = 'open';
+    this.defaultStatusName='active';
     if (this.uploadLead?.valid) {
       this.uploadSpinner = true;
       const formData = new FormData();
@@ -1489,7 +1540,20 @@ export class LeadsComponent extends BaseComponent {
             this.uploadSpinner = false;
             this.uploadLead.reset();
             this.toastr.success(res.message, 'Bulk Lead Upload Successful');
+            const stageColor = this.stageColor[this.defaultStageName] || '#ccc';
+            const statusColor = this.statusColor[this.defaultStatusName] || '#ccc';
+
+            this.uploadStageDisplay = {
+              name: this.defaultStageName,
+              color: stageColor
+            };
+
+            this.uploadStatusDisplay = {
+              name: this.defaultStatusName,
+              color: statusColor
+            };
             this.getFetchLeadData();
+
           } else {
             this.uploadSpinner = false;
             this.toastr.error(res.message, 'lead');
@@ -2004,4 +2068,13 @@ export class LeadsComponent extends BaseComponent {
 
     this.openRight(content);
   }
+  onStatusButtonClick(status: string): void {
+    if (status === 'Connected') {
+      this.showForm = true;
+    } else {
+      this.showForm = false;
+    }
+  }
+
+
 }

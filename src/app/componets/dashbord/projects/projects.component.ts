@@ -92,6 +92,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   pendingRequests = 0;
   adonaiURL: any;
   quotationForm!: FormGroup;
+  quoteForm!: FormGroup;
 
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
@@ -139,6 +140,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
   openLg4(content15: any) {
     this.modalService.open(content15, { size: 'xl', centered: true },);
+  }
+  openLg5(content16: any) {
+    this.modalService.open(content16, { size: 'xl', centered: true },);
   }
 
   openRights(content: any) {

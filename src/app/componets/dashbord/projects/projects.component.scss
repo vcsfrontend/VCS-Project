@@ -317,3 +317,38 @@ mat-label {
   letter-spacing: 0.5px;
   margin-right: 10px;
 }
+.card-container {
+  overflow-y: auto;
+  max-height: 370px;
+}
+.heigh {
+  display: flex;
+  flex-direction: column;
+  height: 95%; 
+}
+@media (max-width :1200px ) {
+  .heigh {
+    height: 95%;
+    padding: 15px;
+  }
+}
+@media (max-width: 1024px) {
+  .heigh {
+    height: 95%;
+    padding: 15px;
+  }
+}
+@media (max-width: 768px) {
+  .heigh {
+    height: 95%; 
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heigh {
+    height: auto;
+    padding: 10px;
+    flex-direction: column; 
+  }
+}
