@@ -1,4 +1,3 @@
-
 <div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
     <h1 class="page-title fw-medium fs-18 mb-2">Projects</h1>
     <nav>
@@ -18,8 +17,10 @@
         </div>
         <div class="card-header justify-content-between" *ngIf="roleid!=7">
             <marquee behavior="scroll" direction="left" class="fs-18 font-weight-bold" style="color: #006699;">
-                <p><strong> Welcome to adonai, Explore Endless Designs </strong> <span [ngClass]="'badge bg-danger-transparent fs-11'" *ngIf="adonaiSubEndDate"> ({{ adonaiDaysLeft }})</span> </p> 
-                 
+                <p><strong> Welcome to adonai, Explore Endless Designs </strong> <span
+                        [ngClass]="'badge bg-danger-transparent fs-11'" *ngIf="adonaiSubEndDate"> ({{ adonaiDaysLeft
+                        }})</span> </p>
+
             </marquee>
         </div>
         <div class="row">
@@ -32,7 +33,7 @@
                 <button class="btn btn-primary btn-wave waves-effect waves-light"
                     style="background-color: #006699; color: white;" aria-expanded="false" (click)="onClkDesign()"
                     type="button" [disabled]="(roleid == 7 && dateDiff == '0') || (roleid == 12 && actstatus == false)">
-                    Click to Explore Endless Designs 
+                    Click to Explore Endless Designs
                 </button>
                 <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light ms-3"
                     aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
@@ -244,15 +245,15 @@
                         <mat-label>Fliter</mat-label>
                         <input matInput (keyup)="applyMyProjectFilter($event)" #input>
                     </mat-form-field>
-                        <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                            aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
-                            New Design
-                        </button>
-                        <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                            aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
-                            All Projects
-                        </button>
-                        <a class="btn btn-secondary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                        aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
+                        New Design
+                    </button>
+                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                        aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
+                        All Projects
+                    </button>
+                    <a class="btn btn-secondary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
                         (click)="openLg(Content10);submitted=false"><i
                             class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
                 </div>
@@ -326,35 +327,39 @@
                 </div>
             </div>
         </div>
-        <div class="row" [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
+        <div class="row"
+            [ngStyle]="{ 'max-height': showMore ? 'auto' : '340px', 'overflow-y': showMore ? 'auto' : 'scroll' }">
             <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-3">
-                <div class="card custom-card">
+                <div class="card custom-card heigh">
                     <div class="card-header d-flex align-items-center justify-content-center">
                         <button href="javascript:void(0);" class="btn btn-primary btn-wave me-3 opp"
                             aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
-                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Create New Project 
+                            <i class="ri-add-line align-middle me-1 fw-medium"></i>Create New Project
                         </button>
                     </div>
                 </div>
             </div>
             <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"
                 *ngFor="let item of (showMore ? projectList : projectList.slice(0, 3))">
-                <div class="card custom-card">
+                <div class="card custom-card ">
                     <div class="card-body align-items-center">
-                        <img class="img-thumbnail" [src]="item.planPic" alt="Project Image" *ngIf="item.planPic; else noImage"
-                            (click)="viewSpecificUrl(item)" style="cursor: pointer;" />
+                        <img class="img-thumbnail" [src]="item.planPic" alt="Project Image"
+                            *ngIf="item.planPic; else noImage" (click)="viewSpecificUrl(item)"
+                            style="cursor: pointer;" />
                         <ng-template #noImage>
                             <span>No image available</span>
                         </ng-template>
                         <div class="d-flex justify-content-between align-items-center mt-2">
-                            <a class="btn btn-sm btn-primary btn-wave" *ngIf="item.name.length > 13" [ngbTooltip]="item.name"
-                                [container]="'body'" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            <a class="btn btn-sm btn-primary btn-wave" *ngIf="item.name.length > 13"
+                                [ngbTooltip]="item.name" [container]="'body'"
+                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 {{ item.name | slice:0:13}}...</a>
                             <a class="btn btn-sm btn-primary btn-wave" *ngIf="item.name.length <= 13"
                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 {{ item.name }} </a>
                             <a class="btn btn-sm btn-primary btn-wave"><i
-                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>{{ getTimeAgo(item.modifiedTime)
+                                    class="bi bi-calendar-date align-middle me-1 fw-medium"></i>{{
+                                getTimeAgo(item.modifiedTime)
                                 }}</a>
                         </div>
                     </div>
@@ -402,9 +407,9 @@
                                 Plan Pic </th>
                             <td mat-cell *matCellDef="let element">
                                 <ng-container *ngIf="element.planPic; else noImage">
-                                    <a >
-                                        <img class="custom-img-size" [src]="element.planPic" alt="Project Image" width="50"
-                                            (click)="viewSpecificUrl(element)" style="height: auto;" />
+                                    <a>
+                                        <img class="custom-img-size" [src]="element.planPic" alt="Project Image"
+                                            width="50" (click)="viewSpecificUrl(element)" style="height: auto;" />
                                     </a>
                                 </ng-container>
                                 <ng-template #noImage>
@@ -441,8 +446,7 @@
                         <ng-container matColumnDef="quotation">
                             <th mat-header-cell *matHeaderCellDef>Quotation </th>
                             <td mat-cell *matCellDef="let element">
-                                <button type="button" class="btn btn-primary" 
-                                    (click)="openLg2(content14)">Download
+                                <button type="button" class="btn btn-primary" (click)="openLg2(content14)">Download
                                 </button>
                             </td>
                         </ng-container>
@@ -453,6 +457,11 @@
                                     class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
                                     (click)="openLg4(content15)">
                                     <i class="ri-eye-line"></i>
+                                </a>
+                                <a href="javascript:void(0);"
+                                    class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                    (click)="openLg5(content16)">
+                                    <i class="ri-alarm-line"></i>
                                 </a>
                             </td>
                         </ng-container>
@@ -884,8 +893,8 @@
 <ng-template #content13 let-modal>
     <div class="modal-header justify-content-center">
         <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"
-            (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <div class="row d-flex justify-content-center">
@@ -918,9 +927,8 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-secondary"
-                data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                (click)="openLg3(content14)">  Submit</button>
+        <button type="submit" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+            (click)="openLg3(content14)"> Submit</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
     </div>
@@ -931,135 +939,135 @@
     <form [formGroup]="quotationForm" (ngSubmit)="onQuotationSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <div class="col-xl-12">
                 <div class="row gy-2">
                     <div class="col-xl-3">
                         <label for="projectName" class="form-label">Client Name</label>
-                        <input type="text" class="form-control" id="projectName"
-                            formControlName="clientName" placeholder="Enter Client Name">
+                        <input type="text" class="form-control" id="projectName" formControlName="clientName"
+                            placeholder="Enter Client Name">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Client Address</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="clientAddress" placeholder="Enter Client Address">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="clientAddress"
+                            placeholder="Enter Client Address">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Project Name</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="projectName" placeholder="Enter Client Address">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="projectName"
+                            placeholder="Enter Client Address">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Discount</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="discount" placeholder="Enter Discount">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="discount"
+                            placeholder="Enter Discount">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Flat_No</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="flatNo" placeholder="Enter Flat_No">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="flatNo"
+                            placeholder="Enter Flat_No">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Others</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="others" placeholder="Enter Others">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="others"
+                            placeholder="Enter Others">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Project_Config</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="projectConfig" placeholder="Enter Project_Config">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="projectConfig"
+                            placeholder="Enter Project_Config">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Quotation_Number</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="quotationNumber" placeholder="Enter Quotation_Number">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="quotationNumber"
+                            placeholder="Enter Quotation_Number">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_MC</label>
-                        <input type="text" class="form-control" id="clientName"
-                            formControlName="gMC" placeholder="Enter Granite Material Cost">
+                        <input type="text" class="form-control" id="clientName" formControlName="gMC"
+                            placeholder="Enter Granite Material Cost">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_PA</label>
-                        <input type="text" class="form-control" id="clientName"
-                            formControlName="gPA" placeholder="Enter Granite Projected Area">
+                        <input type="text" class="form-control" id="clientName" formControlName="gPA"
+                            placeholder="Enter Granite Projected Area">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">G_SC</label>
-                        <input type="text" class="form-control" id="clientName"
-                            formControlName="gSC" placeholder="Enter Granite Service Cost">
+                        <input type="text" class="form-control" id="clientName" formControlName="gSC"
+                            placeholder="Enter Granite Service Cost">
                     </div>
                     <div class="col-xl-3">
                         <label for="clientName" class="form-label">TD_MC</label>
-                        <input type="text" class="form-control" id="clientName"
-                            formControlName="tDMC" placeholder="Enter Tils Dodadoing Material Cost">
+                        <input type="text" class="form-control" id="clientName" formControlName="tDMC"
+                            placeholder="Enter Tils Dodadoing Material Cost">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">TD_PA</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="tDPA" placeholder="Enter Tils Dodadoing Projected Area">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="tDPA"
+                            placeholder="Enter Tils Dodadoing Projected Area">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">TD_SC</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="tDSC" placeholder="Enter Tils Dodadoing Service Cost">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="tDSC"
+                            placeholder="Enter Tils Dodadoing Service Cost">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Email</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="dedEmail" placeholder="Enter DED_Email">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="dedEmail"
+                            placeholder="Enter DED_Email">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Mobile</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="dedMobile" placeholder="Enter DED_Mobile">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="dedMobile"
+                            placeholder="Enter DED_Mobile">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">DED_Name</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="dedName" placeholder="Enter DED_Name">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="dedName"
+                            placeholder="Enter DED_Name">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Email</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="rmdEmail" placeholder="Enter RMD_Email">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="rmdEmail"
+                            placeholder="Enter RMD_Email">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Mobile</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="rmdMobile" placeholder="Enter RMD_Mobile">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="rmdMobile"
+                            placeholder="Enter RMD_Mobile">
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">RMD_Name</label>
-                        <input type="text" class="form-control" id="projectAddress"
-                            formControlName="rmdName" placeholder="Enter RMD_Name">
+                        <input type="text" class="form-control" id="projectAddress" formControlName="rmdName"
+                            placeholder="Enter RMD_Name">
                     </div>
                     <div class="row pt-2">
                         <div class="col-xl-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                                formControlName="Optimizerprocess">
+                                    formControlName="Optimizerprocess">
                                 <label class="form-check-label" for="checkebox-sm">
-                                   Panel List
+                                    Panel List
                                 </label>
                             </div>
                         </div>
                         <div class="col-xl-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                                formControlName="functionalList">
+                                    formControlName="functionalList">
                                 <label class="form-check-label" for="checkebox-sm">
-                                   Hardware list
+                                    Hardware list
                                 </label>
                             </div>
                         </div>
                         <div class="col-xl-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                                formControlName="hardwareList">
+                                    formControlName="hardwareList">
                                 <label class="form-check-label" for="checkebox-sm">
                                     Shutter List
                                 </label>
@@ -1068,7 +1076,7 @@
                         <div class="col-xl-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" checked=""
-                                formControlName="shutterList">
+                                    formControlName="shutterList">
                                 <label class="form-check-label" for="checkebox-sm">
                                     BOM
                                 </label>
@@ -1090,11 +1098,11 @@
     <form [formGroup]="inventoryForm" (ngSubmit)="onInventorySubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Project History</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="row" >
+            <div class="row">
                 <div class="col-xxl-4 col-lg-4 col-md-4 col-xl-4">
                     <div class="card custom-card bg-light">
                         <div class="card-header d-flex align-items-center justify-content-between">
@@ -1240,5 +1248,61 @@
     </form>
 </ng-template>
 
-
-  
+<ng-template #content16 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Project History</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="quoteForm">
+            <div class="modal-body overflowImportant">
+                <div class="row gy-3 scrollable-content">
+                    <div class="col-xl-3 col-lg-3 col-md-3">
+                        <label for="name" class="form-label">Client Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Name"
+                            formControlName="clientname" >
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3">
+                        <label for="contact-mail" class="form-label">Project Name</label>
+                        <input type="email" class="form-control" id="contact-mail"
+                            placeholder="companyName" formControlName="projectName">
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3">
+                        <label for="company-name" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="company-name" placeholder=""
+                            formControlName="phoneNumber">
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3">
+                        <label for="zipCode" class="form-label">Project Built-up Area (sq. ft.)</label>
+                        <input type="number" class="form-control" id="zipCode"
+                            placeholder="Enter Your Zip Code" formControlName="sft">
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3">
+                        <label for="state" class="form-label">Email</label>
+                        <input type="text" class="form-control" id="state"
+                            placeholder="Enter Your State" formControlName="email">
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4">
+                        <label for="city" class="form-label">Project Address</label>
+                        <textarea class="form-control" id="subject" rows="2" placeholder="project address" 
+                            formControlName="projectaddress">
+                        </textarea>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4">
+                        <label for="city" class="form-label">Client Address</label>
+                        <textarea class="form-control" id="subject" rows="2" placeholder="project address" 
+                            formControlName="clientaddress">
+                        </textarea>
+                    </div>
+                    
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+</ng-template>
