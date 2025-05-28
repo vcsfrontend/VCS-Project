@@ -28,6 +28,7 @@ import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-leads',
@@ -69,7 +70,7 @@ export class DealsComponent extends BaseComponent {
   newOptionName: string = '';newOptionColor: any;newItem: string = '';newItemColor: string = '#000000';
   addMoreVisible : boolean =false;selectedLeadId: number = 0;  followUpDetails: any[] = [];
   selectedProgressLeads: any[] = []; selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
-
+  tempFormList: any; selectTemplateForm!: FormGroup; allTemplateGenIds: string[] = [];
   stageColor : { [key: string]: string }={
   'Open': '#28a745',           
   };
@@ -315,6 +316,7 @@ export class DealsComponent extends BaseComponent {
 
   ngOnInit(): void {
     this.getCrmStages();
+    this.getFormTemplate();
     const now = new Date();
       // Pad with 0 if needed
       const pad = (n: number) => n.toString().padStart(2, '0');
@@ -357,6 +359,19 @@ export class DealsComponent extends BaseComponent {
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
       executive: ['', [Validators.required]]
+    });
+
+    //Send Email
+    this.selectTemplateForm = this.fb.group({
+      campaignId: [0],
+      templateGenId: [''],
+      templateName: [''],
+      subject: [''],
+      description: [''],
+      createdDate: [new Date().toISOString()],
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
     });
 
     this.getUsers();
@@ -1598,5 +1613,83 @@ export class DealsComponent extends BaseComponent {
       },
     });
   }
-  
+
+  deleteLeadStages() {
+    const payload = {
+      comapanyCode: this.userCompanyCode,
+      campaignId: 'DUMMY9DD1748413866634',
+      email: this.userEmail,
+      type: this.userType
+    }
+    if (confirm('Are you sure you want to delete this Lead stages?')) {
+      this.switchService.deleteLeadStages(payload).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getCrmStages();
+          this.getCrmStatus();
+        },
+        error: (error) => {
+          this.toastr.error("Failed to delete Lead stages.");
+        }
+      });
+    }
+  }
+
+  deleteLeadStatus() {
+    const payload = {
+      comapanyCode: this.userCompanyCode,
+      campaignId: 'DUMMY9DD1748413866634',
+      email: this.userEmail,
+      type: this.userType
+    }
+    if (confirm('Are you sure you want to delete this Lead status?')) {
+      this.switchService.deleteLeadStatus(payload).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getCrmStages();
+          this.getCrmStatus();
+        },
+        error: (error) => {
+          this.toastr.error("Failed to delete Lead status.");
+        }
+      });
+    }
+  }
+
+
+  selectFormTemplateSubmit() {
+    if (this.selectTemplateForm.invalid) {
+      this.selectTemplateForm.markAllAsTouched();
+      return;
+    }
+    const payload = this.selectTemplateForm.value;
+    this.switchService.selectFormTemplate(payload).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Template submitted successfully!');
+        this.getFormTemplate();
+        this.selectTemplateForm.reset();
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || 'Error submitting the template.');
+      },
+    });
+  }
+
+  getFormTemplate(): void {
+    const requests = this.allTemplateGenIds.map((id) =>
+      this.switchService.fetchFormTemplate(id)
+    );
+    forkJoin(requests).subscribe({
+      next: (responses: any[]) => {
+        this.tempFormList = responses;
+      },
+      error: (err) => {
+        this.toastr.error('Error fetching template details');
+      },
+    });
+  }
+
+  openRight13(content13: any) {
+    this.offcanvasService.open(content13, { position: 'end' });
+  }
 }
