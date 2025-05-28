@@ -2108,5 +2108,47 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+  deleteLeadStages() {
+    const payload = {
+      comapanyCode: this.userCompanyCode,
+      campaignId: this.campaignId,
+      email: this.userEmail,
+      type: this.userType
+    }
+    if (confirm('Are you sure you want to delete this Lead stages?')) {
+      this.switchService.deleteLeadStages(payload).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getCrmStages();
+          this.getCrmStatus();
+        },
+        error: (error) => {
+          this.toastr.error("Failed to delete Lead stages.");
+        }
+      });
+    }
+  }
+
+  deleteLeadStatus() {
+    const payload = {
+      comapanyCode: this.userCompanyCode,
+      campaignId: this.campaignId,
+      email: this.userEmail,
+      type: this.userType
+    }
+    if (confirm('Are you sure you want to delete this Lead status?')) {
+      this.switchService.deleteLeadStatus(payload).subscribe({
+        next: (response) => {
+          this.toastr.success(response.message);
+          this.getCrmStages();
+          this.getCrmStatus();
+        },
+        error: (error) => {
+          this.toastr.error("Failed to delete Lead status.");
+        }
+      });
+    }
+  }
+
 
 }

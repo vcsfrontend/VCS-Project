@@ -1010,7 +1010,7 @@
                     </ul>
                 </div>
                 <div class="card-footer text-end">
-                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStages()">Delete</button>
                 </div>
             </div>
         </div>
@@ -1039,6 +1039,30 @@
                             </ul>
                         </li>
                     </ul>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStatus()">Delete</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card custom-card">
+                <div class="card-header justify-content-between d-flex">
+                    <div class="card-title">Mail Templates</div>
+                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight13(content13)">Add Mail
+                        Template</button>
+                </div>
+                <div class="card-body " style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                    <div *ngFor="let template of tempFormList" class="card custom-card card-bg-light mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold mb-3">{{ template.templateName }}</h5>
+                            <p><strong>Subject:</strong> {{ template.subject }}</p>
+                            <p><strong>Description:</strong> {{ template.description }}</p>
+                            <p><strong>Created Date:</strong> {{ template.createdDate | date: 'dd/MM/yyyy hh:mm a' }}
+                            </p>
+                            <p><strong>Email:</strong> {{ template.email }}</p>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
@@ -1155,6 +1179,37 @@
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
+</ng-template>
+
+<ng-template #content13 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Email Template</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="selectTemplateForm" (ngSubmit)="selectFormTemplateSubmit()" class="d-flex flex-column h-100">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+            <div class="mb-4">
+                <input type="text" class="form-control" id="subject" placeholder="templateName"
+                    formControlName="templateName">
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="subject" rows="4" placeholder="Enter Your Subject"
+                    formControlName="subject"></textarea>
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Enter Your Description"
+                    formControlName="description"></textarea>
+            </div>
+        </div>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-end gap-3">
+                <button class="btn btn-primary w-50" type="submit">Save Mail Template</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
 </ng-template>
 
 <!-- <div class="modal fade" id="create-contact" tabindex="-1" aria-hidden="true">
