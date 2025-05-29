@@ -151,7 +151,7 @@
                         Bulk Upload
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112)">Add New</button>
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);">Add New</button>
                 </div>
             </div>
         </div>
@@ -219,7 +219,7 @@
                                     </li>
                                 </ul>
                             </span>
-                            <div ngbDropdown  class="dropdown no-caret mt-2">
+                            <!-- <div ngbDropdown  class="dropdown no-caret mt-2">
                                 <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <i class="ri-more-2-fill fs-18 text-muted"></i>
                                 </a>
@@ -228,7 +228,7 @@
                                     <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
                                     <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
                                 </ul>
-                            </div>
+                            </div> -->
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
@@ -497,6 +497,25 @@
         </div>
     </div>
 </div> -->
+<div class="row">
+    <div class="col-xl-4" *ngFor="let stage of stageLst; let i = index">
+        <div class="card custom-card">
+            <div class="card-header border-bottom-0 justify-content-between">
+                <div class="card-title">
+                    {{ stage.stageName }}
+                </div>
+            </div>
+            <div class="card-body border-top">
+                <div id="pie-basic">
+                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [legend]="chartOptions.legend"
+                            [labels]="chartOptions.labels" [responsive]="chartOptions.responsive" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels">
+                    </apx-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <ng-template #Content112 let-modal>
     <div class="modal-header">
         <h6 class="modal-title" id="exampleModalLgLabel">
@@ -1047,90 +1066,6 @@
                 </div>
                 <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="col-lg-12">
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card custom-card">
-                <div class="card-header justify-content-between">
-                    <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Lead Analytics</div>
-                    <div class="text-center">
-                        <button class="btn btn-primary" (click)="toggleTopShowMore()">
-                            {{ topshowMore ? 'Show Less' : 'Show More' }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-8 mb-4 scrollable-container" [ngStyle]="{
-        'max-height': topshowMore ? '330px' : '350px',
-        'overflow-y': topshowMore ? 'auto' : 'hidden',
-        'transition': 'max-height 0.5s ease' }">
-            <div class="row">
-                <div class="col-xl-6" *ngFor="let statusGroup of statusLst">
-                    <div class="card custom-card">
-                        <div class="card-header border-bottom-0 justify-content-between">
-                            <div class="card-title">
-                                {{ statusGroup.stage }}
-                            </div>
-                        </div>
-                        <div class="card-body border-top">
-                            <div id="pie-basic" [ngClass]="{ 'rotate-on-load': rotateCharts }">
-                                <apx-chart [series]="getSeriesData(statusGroup.fields)" [chart]="chartOptions.chart"
-                                    [legend]="chartOptions.legend" [labels]="getLabelData(statusGroup.fields)"
-                                    [responsive]="chartOptions.responsive" [colors]="getColorData(statusGroup.fields)"
-                                    [dataLabels]="chartOptions.dataLabels"></apx-chart>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card custom-card overflow-hidden">
-                <div class="card-header justify-content-between">
-                    <div class="card-title">
-                        Campaign Users
-                    </div>
-                </div>
-                <div class="card-body p-0 crm-card-chart"
-                    style="min-height: 240px; max-height: 245px; overflow-y: auto;">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item" *ngFor="let user of userList">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-md avatar-rounded me-2 border text-white fw-bold"
-                                    [ngClass]="getUserColor(user)">
-                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
-                                        {{ user.email?.charAt(0) | uppercase }}
-                                    </span>
-                                </div>
-                                <div class="flex-fill">
-                                    <span class="fs-14">{{ user.email }}</span>
-                                    <div class="fs-12 text-muted">{{ user.username }}</div>
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <a aria-label="anchor" href="javascript:void(0);"
-                                        class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"><i
-                                            class="ri-pencil-line"></i></a>
-                                    <a aria-label="anchor" href="javascript:void(0);"
-                                        class="btn btn-icon btn-sm btn-danger-light btn-wave "><i
-                                            class="ri-delete-bin-line"></i></a>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-footer">
-                    <div class="text-center">
-                        <a href="javascript:void(0);">
-                            <span class="text-secondary">View All <i class="ri-share-box-line align-middle"></i></span>
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
