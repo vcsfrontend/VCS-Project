@@ -56,6 +56,11 @@ export class CrmSettingsComponent extends BaseComponent {
   statusOptionsByStage: { [stageName: string]: any[] } = {};
   statusOptionsByStageforDisplay: any = {};
   anyChecked: any;leadForm!:FormGroup;selectedManager: string = '';companyForm! : FormGroup;
+
+  relationshipManagers = [
+    { value: 'designer1', label: 'Admin 1' },
+    { value: 'designer2', label: 'Admin 2' }
+  ];
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
     private fb: FormBuilder,
   ) {
@@ -693,5 +698,9 @@ export class CrmSettingsComponent extends BaseComponent {
   }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
+  }
+
+  onManagerChange(): void {
+    this.selectedManager = this.companyForm.get('relationshipmanager')?.value;
   }
 }
