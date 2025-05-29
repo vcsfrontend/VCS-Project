@@ -1261,12 +1261,12 @@
                     <div class="col-xl-3 col-lg-3 col-md-3">
                         <label for="name" class="form-label">Client Name</label>
                         <input type="text" class="form-control" id="name" placeholder="Name"
-                            formControlName="clientname" >
+                            formControlName="clientname">
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-3">
                         <label for="contact-mail" class="form-label">Project Name</label>
-                        <input type="email" class="form-control" id="contact-mail"
-                            placeholder="companyName" formControlName="projectName">
+                        <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
+                            formControlName="projectName">
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-3">
                         <label for="company-name" class="form-label">Phone</label>
@@ -1275,27 +1275,42 @@
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-3">
                         <label for="zipCode" class="form-label">Project Built-up Area (sq. ft.)</label>
-                        <input type="number" class="form-control" id="zipCode"
-                            placeholder="Enter Your Zip Code" formControlName="sft">
+                        <input type="number" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
+                            formControlName="sft">
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-3">
                         <label for="state" class="form-label">Email</label>
-                        <input type="text" class="form-control" id="state"
-                            placeholder="Enter Your State" formControlName="email">
+                        <input type="text" class="form-control" id="state" placeholder="Enter Your State"
+                            formControlName="email">
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-4">
                         <label for="city" class="form-label">Project Address</label>
-                        <textarea class="form-control" id="subject" rows="2" placeholder="project address" 
+                        <textarea class="form-control" id="subject" rows="2" placeholder="project address"
                             formControlName="projectaddress">
                         </textarea>
                     </div>
                     <div class="col-xl-4 col-lg-4 col-md-4">
                         <label for="city" class="form-label">Client Address</label>
-                        <textarea class="form-control" id="subject" rows="2" placeholder="project address" 
+                        <textarea class="form-control" id="subject" rows="2" placeholder="project address"
                             formControlName="clientaddress">
                         </textarea>
                     </div>
-                    
+                    <div class="col-xl-3 col-lg-3 col-md-3">
+                        <label for="city" class="form-label">Designers</label>
+                        <ng-select formControlName="designer" placeholder="Select an Designer">
+                            <ng-option [value]="'designer1'">Designer 1</ng-option>
+                            <ng-option [value]="'designer2'">Designer 2</ng-option>
+                        </ng-select>
+
+                    </div>
+                    <div class="col-xl-3 col-lg-3 col-md-3">
+                        <label for="city" class="form-label">Relationship Manager</label>
+                        <ng-select formControlName="relationshipmanager" placeholder="Select an Relationship Manager ">
+                            <ng-option [value]="'designer1'">Admin 1</ng-option>
+                            <ng-option [value]="'designer2'">Admin 2</ng-option>
+                        </ng-select>
+
+                    </div>
                 </div>
             </div>
         </form>
@@ -1306,3 +1321,8 @@
             data-bs-dismiss="modal">Close</button>
     </div>
 </ng-template>
+
+<a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+    (click)="openLg5(content16)">
+    <i class="ri-alarm-line"></i>
+</a>

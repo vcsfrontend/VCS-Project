@@ -74,7 +74,7 @@ export class DealsComponent extends BaseComponent {
   selectedStatusCount: number | null = null;statusCounts: { status: string; count: number }[] = [];
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
   stageColor : { [key: string]: string }={
-  'Open': '#28a745',           
+  'Open': '#007bff',           
   };
   statusColor : { [key: string]: string }= {
   'active': '#007bff',         
@@ -1814,5 +1814,40 @@ export class DealsComponent extends BaseComponent {
   getUserColor(user: any): string {
     const index = this.hashString(user.email) % this.userColors.length;
     return this.userColors[index];
+  }
+
+  getStatusColor(status: string): string {
+    if (!Array.isArray(this.statusLst)) {
+      return '#ccc';
+    }
+    const normalizedStatus = status.trim().toLowerCase();
+
+    if (normalizedStatus === 'active') return '#28a745';
+    for (const stage of this.statusLst) {
+      const field = stage.fields?.find(
+        (f: { name: string }) => f.name?.toLowerCase() === status?.toLowerCase()
+      );
+      if (field?.color) {
+        return field.color;
+      }
+    }
+    return '#ccc';
+  }
+  getStageColor(stage: string): string {
+    if (!this.stageLst) {
+      return '#ccc';
+    }
+    const normalizedStage = stage.trim().toLowerCase();
+
+    if (normalizedStage === 'open') return '#28a745';
+    const match = this.stageLst.find(
+      (s: { stageName: string }) =>
+        s.stageName.toLowerCase() === stage.toLowerCase()
+    );
+    return match?.color || '#ccc';
+  }
+   capitalizeFirstLetter(text: string): string {
+  if (!text) return '';
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
 }
