@@ -134,6 +134,54 @@
     </div>
 </div>
 
+<div class="card custom-card mt-3">
+  <div class="card-header justify-content-between">
+    <div class="card-title">
+      CRM Roles
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-3">
+      <label class="form-label">Relationship Manager</label>
+      <ng-select formControlName="relationshipmanager" placeholder="Select a Relationship Manager">
+        <ng-option [value]="'designer1'">Admin 1</ng-option>
+        <ng-option [value]="'designer2'">Admin 2</ng-option>
+      </ng-select>
+    </div>
+  </div>
+
+  <div class="card-body p-0">
+    <form [formGroup]="companyForm">
+      <div class="row gy-3 scrollable-content m-2 pb-2">
+        
+        <!-- Show for Admin 1 -->
+        <ng-container *ngIf="selectedManager === 'designer1'">
+          <div class="col-xl-6 col-lg-3 col-md-3">
+            <label class="form-label">Project Name</label>
+            <input type="text" class="form-control" formControlName="projectName" placeholder="Project Name">
+          </div>
+          <div class="col-xl-6 col-lg-3 col-md-3">
+            <label class="form-label">Business Category</label>
+            <input type="text" class="form-control" formControlName="businesscategory" placeholder="Business Category">
+          </div>
+        </ng-container>
+
+        <!-- Show for Admin 2 -->
+        <ng-container *ngIf="selectedManager === 'designer2'">
+          <div class="col-xl-6 col-lg-3 col-md-3">
+            <label class="form-label">Products</label>
+            <input type="text" class="form-control" formControlName="products" placeholder="Products">
+          </div>
+          <div class="col-xl-6 col-lg-3 col-md-3">
+            <label class="form-label">Company Name</label>
+            <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name">
+          </div>
+        </ng-container>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+
 
 <ng-template #content1 let-modal>
     <form [formGroup]="designCrmForm" (ngSubmit)="desigCrmSubmit(modal)">
@@ -312,7 +360,8 @@
                             <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="plan.checked"
                                 [id]="'plan-' + i">
                             <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
-                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom" (click)="deleteLeadItem(i)">
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom"
+                                (click)="deleteLeadItem(i)">
                                 Delete
                             </button>
                         </div>
@@ -375,17 +424,16 @@
                         placeholder="Enter new status name" />
                 </div>
                 <div class="col-md-4 mb-3">
-                    <button class="btn btn-primary" (click)="addNewOption()" >Save</button>
+                    <button class="btn btn-primary" (click)="addNewOption()">Save</button>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save Status</button>
+            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save
+                Status</button>
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
-
-

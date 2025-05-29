@@ -55,7 +55,7 @@ export class CrmSettingsComponent extends BaseComponent {
   showCheckboxError = false; showNameError = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {};
   statusOptionsByStageforDisplay: any = {};
-  anyChecked: any;
+  anyChecked: any;leadForm!:FormGroup;selectedManager: string = '';companyForm! : FormGroup;
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
     private fb: FormBuilder,
   ) {
@@ -135,6 +135,18 @@ export class CrmSettingsComponent extends BaseComponent {
     this.getCrmStages();
     // this.getCrmStatus(); 
     this.getDesignationCrmRloes(); this.getUsers();
+    this.companyForm = this.fb.group({
+    relationshipmanager: [''],
+    companyName: [''],
+    businesscategory: [''],
+    products: [''],
+    projectName: ['']
+  });
+
+  // Subscribe to value changes
+  this.companyForm.get('relationshipmanager')?.valueChanges.subscribe(value => {
+    this.selectedManager = value;
+  });
     this.crmStageData = {
       stageId: 0,
       companyName: this.userCompanyName,
