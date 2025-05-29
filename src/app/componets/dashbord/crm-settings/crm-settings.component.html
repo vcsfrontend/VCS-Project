@@ -135,25 +135,25 @@
 </div>
 
 <div class="card custom-card mt-3">
-  <div class="card-header justify-content-between">
-    <div class="card-title">
-      CRM Roles
+  <form [formGroup]="companyForm">
+    <div class="card-header justify-content-between">
+      <div class="card-title">CRM ROLES</div>
+      <div class="col-xl-3 col-lg-3 col-md-3">
+        <label class="form-label">Relationship Manager</label>
+        <ng-select
+          formControlName="relationshipmanager"
+          [items]="relationshipManagers"
+          bindLabel="label"
+          bindValue="value"
+          placeholder="Select a Relationship Manager">
+        </ng-select>
+      </div>
     </div>
-    <div class="col-xl-3 col-lg-3 col-md-3">
-      <label class="form-label">Relationship Manager</label>
-      <ng-select formControlName="relationshipmanager" placeholder="Select a Relationship Manager">
-        <ng-option [value]="'designer1'">Admin 1</ng-option>
-        <ng-option [value]="'designer2'">Admin 2</ng-option>
-      </ng-select>
-    </div>
-  </div>
 
-  <div class="card-body p-0">
-    <form [formGroup]="companyForm">
+    <div class="card-body p-0">
       <div class="row gy-3 scrollable-content m-2 pb-2">
-        
         <!-- Show for Admin 1 -->
-        <ng-container *ngIf="selectedManager === 'designer1'">
+        <ng-container *ngIf="companyForm.get('relationshipmanager')?.value === 'designer1'">
           <div class="col-xl-6 col-lg-3 col-md-3">
             <label class="form-label">Project Name</label>
             <input type="text" class="form-control" formControlName="projectName" placeholder="Project Name">
@@ -165,7 +165,7 @@
         </ng-container>
 
         <!-- Show for Admin 2 -->
-        <ng-container *ngIf="selectedManager === 'designer2'">
+        <ng-container *ngIf="companyForm.get('relationshipmanager')?.value === 'designer2'">
           <div class="col-xl-6 col-lg-3 col-md-3">
             <label class="form-label">Products</label>
             <input type="text" class="form-control" formControlName="products" placeholder="Products">
@@ -175,13 +175,10 @@
             <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name">
           </div>
         </ng-container>
-
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>
-
-
 
 <ng-template #content1 let-modal>
     <form [formGroup]="designCrmForm" (ngSubmit)="desigCrmSubmit(modal)">
