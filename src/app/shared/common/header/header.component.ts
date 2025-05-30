@@ -436,7 +436,6 @@ export class HeaderComponent implements OnInit {
     });
 
     const fullUrl = this.router.serializeUrl(urlTree);
-    console.log('Generated Route URL:', fullUrl);
   }
   
 }

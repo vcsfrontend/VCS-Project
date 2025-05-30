@@ -332,18 +332,16 @@ export class CampaignsComponent extends BaseComponent {
     return this.campaignForm.controls;
   }
   deleteCampaignById(data: any) {
-   const campaign_Id = data.campgnId;
-  console.log("Deleting campaign with ID:", campaign_Id);
-
-  this.switchService.deleteCampaign(campaign_Id).subscribe({
-    next: (res: any) => {
-      this.toastr.success('Deletion successful');
-      // Optionally refresh list or perform further action
-    },
-    error: (error) => {
-      this.toastr.error("Failed to delete campaign.");
-    }
-  });
-}
+    const campaign_Id = data.campgnId;
+    this.switchService.deleteCampaign(campaign_Id).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Campaign Deleted successfully');
+        this.getCampaignData();
+      },
+      error: (error) => {
+        this.toastr.error("Failed to delete campaign.");
+      }
+    });
+  }
 
 }

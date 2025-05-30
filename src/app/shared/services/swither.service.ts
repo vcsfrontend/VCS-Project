@@ -166,12 +166,12 @@ export class SwitherService {
   deleteLeadStages(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/deleteStages`, data); }  
   deleteLeadStatus(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/deleteStatus`, data); }    
   StatusCount(campaignId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_count_Status?campaignId=${campaignId}`); }  
-  sepecificCampaign(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_campaign_specific`,data); }  
+  sepecificCampaign(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_campaign_specific`,data); } 
+  deleteCampaign(campaign_Id:any): Observable<any> { return this.http.get(`${this.apiUrl}designation/delete_campaign/${campaign_Id}`); }   
   selectFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/create_crm_email_template`,data); }
   listFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_template_names`,data); }  
   fetchFormTemplate(templateGenId :any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getTemplateOnTemplateGenId?templateGenId=${templateGenId }`); } 
-  deleteLeads(lead_Id:any): Observable<any> { return this.http.delete(`${this.apiUrl}crmActions/delete_lead/${lead_Id}`); }  
-  deleteCampaign(campaign_Id:any): Observable<any> { return this.http.delete(`${this.apiUrl}crmActions/delete_campaign/${campaign_Id}`); }  
+  deleteLeads(lead_Id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead/${lead_Id}`); }  
   allEmailTemplates(companyCode :any,email : any,type : any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_all_email_templates?companyCode=${companyCode }&email=${companyCode }&type=${type}`); } 
 
 
