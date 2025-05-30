@@ -2353,18 +2353,23 @@ export class LeadsComponent extends BaseComponent {
   }
 
   deleteCrmLead(data: any) {
-    const lead_Id = data.leadId;
-    console.log(lead_Id);
+    const lead_Id = data?.leadId;
+    if (!lead_Id) {
+      this.toastr.error('Invalid lead ID');
+      return;
+    }
+
     if (confirm('Are you sure you want to delete this Lead?')) {
       this.switchService.deleteLeads(lead_Id).subscribe({
         next: (res: any) => {
-          this.toastr.success('deletion successfull');
+          this.toastr.success('Lead deleted successfully');
           this.getFetchLeadData();
         },
         error: (error) => {
-          this.toastr.error('Failed to delete Lead status.');
+          this.toastr.error('Failed to delete Lead.');
         },
       });
     }
   }
+
 }
