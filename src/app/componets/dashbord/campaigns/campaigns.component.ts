@@ -333,6 +333,7 @@ export class CampaignsComponent extends BaseComponent {
   }
   deleteCampaignById(data: any) {
     const campaign_Id = data.campgnId;
+    if (confirm('Are you sure you want to delete this Campaign?')) {
     this.switchService.deleteCampaign(campaign_Id).subscribe({
       next: (res: any) => {
         this.toastr.success('Campaign Deleted successfully');
@@ -342,6 +343,7 @@ export class CampaignsComponent extends BaseComponent {
         this.toastr.error("Failed to delete campaign.");
       }
     });
+  }
   }
 
 }

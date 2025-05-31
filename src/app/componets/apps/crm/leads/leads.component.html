@@ -1117,7 +1117,7 @@
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
             <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
-                (click)="saveCrmStages()">Save Stages</button>
+                (click)="saveCrmStages()" [disabled]="isStagesDisabled">Save Stages</button>
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>

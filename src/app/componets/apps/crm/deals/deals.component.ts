@@ -590,32 +590,42 @@ export class DealsComponent extends BaseComponent {
   getFetchLeadData(campaignId:string) {
     this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
       next: (res: any) => {
-      const now = new Date();
-      const executiveList = (res.executiveList || []).map((item: any) => ({
-        ...item,
-        followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
-        followUpDateObj: item.followUpDate ? new Date(item.followUpDate) : null
-      }));
-      const entryList = (res.entryList || []).map((item: any) => ({
-        ...item,
-        followUpDue: item.followUpDate ? new Date(item.followUpDate) < now : false,
-        followUpDateObj: item.followUpDate ? new Date(item.followUpDate) : null
-      }));
-
-      const combined = [...executiveList, ...entryList];
-      this.leadCount = combined.length;
-
-      this.dataSource.data = combined;
-
-      // Find the lead with the nearest follow-up date
-      const sortedByFollowUpDate = combined
-        .filter(item => item.followUpDateObj)
-        .sort((a, b) => a.followUpDateObj.getTime() - b.followUpDateObj.getTime());
-
-      this.getStatusCount();
-
-      // other code...
-    },
+          const now = new Date();
+          const executiveList = (res.executiveList || []).map((item: any) => ({
+            ...item,
+            followUpDue: item.followUpDate
+              ? new Date(item.followUpDate) < now
+              : false,
+            followUpDateObj: item.followUpDate
+              ? new Date(item.followUpDate)
+              : null,
+            source: 'executive',
+          }));
+          const entryList = (res.entryList || []).map((item: any) => ({
+            ...item,
+            followUpDue: item.followUpDate
+              ? new Date(item.followUpDate) < now
+              : false,
+            followUpDateObj: item.followUpDate
+              ? new Date(item.followUpDate)
+              : null,
+            source: 'entry',
+          }));
+          const combined = [...executiveList, ...entryList];
+          this.leadCount = combined.length;
+          this.dataSource.data = combined;
+          const sortedByFollowUpDate = combined
+            .filter((item) => item.followUpDateObj)
+            .sort(
+              (a, b) =>
+                a.followUpDateObj.getTime() - b.followUpDateObj.getTime()
+            );
+          const nextLead = sortedByFollowUpDate.length
+            ? sortedByFollowUpDate[0]
+            : null;
+          
+          this.getStatusCount();
+        },
       error: (error) => {
         this.toastr.error(error.statusText || 'Server Error');
       },
@@ -1067,6 +1077,7 @@ export class DealsComponent extends BaseComponent {
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
+            this.getFetchLeadData('DUMMY9DD1748413866634');
           } else {
             this.toastr.error(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'

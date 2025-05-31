@@ -1,6 +1,16 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation, } from '@angular/core';
+import {
+  Component,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule, } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdownModule,
+  NgbModal,
+  NgbModalConfig,
+  NgbModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,7 +20,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators, } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -19,16 +35,23 @@ import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
-import { NgbOffcanvas, OffcanvasDismissReasons, } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbOffcanvas,
+  OffcanvasDismissReasons,
+} from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import * as FilePond from 'filepond';
 import { FilePondComponent, FilePondModule } from 'ngx-filepond';
-import { AngularEditorModule, AngularEditorConfig, } from '@kolkov/angular-editor';
+import {
+  AngularEditorModule,
+  AngularEditorConfig,
+} from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { forkJoin } from 'rxjs';
+
 @Component({
   selector: 'app-leads',
   standalone: true,
@@ -181,7 +204,8 @@ export class LeadsComponent extends BaseComponent {
   selectedOpen: any[] = [];
   showForm: boolean = false;
   allowCustomStatus: boolean = true;
-  shouldDisableAddStatus = false;
+  shouldDisableAddStatus = false;isImporting: boolean = false;
+  isStagesDisabled : boolean =false;
   crmStaticStages = [
     {
       name: 'In Progress Leads',
@@ -393,6 +417,15 @@ export class LeadsComponent extends BaseComponent {
     this.usersDataSource.filter = filterValue.trim().toLowerCase();
   }
   VerticallyScrol(content12: any) {
+    if (!this.stageLst || this.stageLst.length === 0) {
+      this.toastr.warning('Please add at least one Stage before uploading.');
+      return;
+    }
+
+    if (!this.statusLst || this.statusLst.length === 0) {
+      this.toastr.warning('Please add at least one Status before uploading.');
+      return;
+    }
     this.leadId = 0;
     this.submitted = false;
     this.leadForm.reset();
@@ -865,6 +898,7 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         // this.getFormTemplate();
+        this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
       error: (err) => {
@@ -1015,6 +1049,7 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.success('Status saved successfully');
           this.offcanvasService.dismiss();
           this.getCrmStages();
+          this.getCrmStatus();
         } else {
           this.toastr.error(res.message);
         }
@@ -1027,8 +1062,15 @@ export class LeadsComponent extends BaseComponent {
 
   getCrmStatus(): void {
     let completedRequests = 0;
+    const hasSavedStageStatuses: string[] = [];
+
+    // ❗ Important: Reset these before reloading data
+    this.statusOptionsByStageforDisplay = {};
+    this.statusLst = [];
+
     for (let i = 0; i < this.stageLst.length; i++) {
-      const stageName = this.stageLst[i].stageName;
+      const stageName = this.stageLst[i].stageName.trim();
+
       const payload = {
         email: this.userData ? JSON.parse(this.userData).email : '',
         companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
@@ -1036,11 +1078,13 @@ export class LeadsComponent extends BaseComponent {
         stage: stageName,
         campaignId: this.campaignId,
       };
+
       const fields = Array.from({ length: 25 }, (_, i) => `f${i + 1}`);
       const colorFields = Array.from(
         { length: 25 },
         (_, i) => `f${i + 1}Color`
       );
+
       this.switchService.CrmStatus(payload).subscribe({
         next: (res: any) => {
           if (res.length === 1) {
@@ -1059,7 +1103,15 @@ export class LeadsComponent extends BaseComponent {
                   : null;
               })
               .filter((opt) => opt !== null);
-            this.statusOptionsByStageforDisplay[stageName] = options;
+
+            // 🧼 Always assign fresh copy
+            this.statusOptionsByStageforDisplay[stageName] = JSON.parse(
+              JSON.stringify(options)
+            );
+
+            if (options.length > 0) {
+              hasSavedStageStatuses.push(stageName);
+            }
           }
         },
         error: (error) => {
@@ -1070,28 +1122,33 @@ export class LeadsComponent extends BaseComponent {
         },
         complete: () => {
           completedRequests++;
+
           if (completedRequests === this.stageLst.length) {
-            const selectedStageNames = this.stageLst.map(
-              (s: { stageName: string }) => s.stageName
+            this.statusLst = [];
+
+            // ✅ Push valid status lists only
+            for (const [stage, fields] of Object.entries(
+              this.statusOptionsByStageforDisplay
+            )) {
+              const clonedFields = JSON.parse(JSON.stringify(fields)); // avoid reference bugs
+              this.statusLst.push({ stage, fields: clonedFields });
+            }
+
+            // ✅ Inject OPEN stage if not already
+            const openExists = this.statusLst.some(
+              (s: any) => s.stage.toLowerCase() === 'open'
             );
-            this.statusLst = Object.entries(this.statusOptionsByStageforDisplay)
-              .filter(([stage]) => selectedStageNames.includes(stage))
-              .map(([stage, fields]) => ({
-                stage,
-                fields,
-              }));
-            const openStageIndex = this.statusLst.findIndex(
-              (s: { stage: string }) => s.stage.toLowerCase() === 'Open'
-            );
-            if (openStageIndex !== -1) {
-              this.statusLst[openStageIndex].fields = this.openStage;
-            } else {
+            if (!openExists && this.openStage && this.openStage.length > 0) {
               this.statusLst.push({
                 stage: 'open',
-                fields: this.openStage,
+                fields: JSON.parse(JSON.stringify(this.openStage)),
               });
-              this.statusOptionsByStageforDisplay['open'] = this.openStage;
+              this.statusOptionsByStageforDisplay['open'] = JSON.parse(
+                JSON.stringify(this.openStage)
+              );
             }
+
+            // ✅ Sort 'open' to the top
             this.statusLst.sort(
               (
                 a: { stage: string; fields: any[] },
@@ -1103,21 +1160,16 @@ export class LeadsComponent extends BaseComponent {
               }
             );
 
-            // Set defaults
-            this.defaultStageName = 'open';
-            this.defaultStatusName = 'Connected';
-            if (
-              this.defaultStageName &&
-              this.statusOptionsByStageforDisplay[this.defaultStageName]
-            ) {
-              const statusArray =
-                this.statusOptionsByStageforDisplay[this.defaultStageName];
-              // this.defaultStatusName =
-              //   statusArray.length > 0 ? statusArray[0].name : ''
-              this.defaultStatusName = 'active';
-            } else {
-              this.defaultStatusName = '';
-            }
+            // ✅ Default selections
+            this.defaultStageName =
+              this.statusLst.find(
+                (s: { stage: string }) => s.stage.toLowerCase() === 'open'
+              )?.stage ||
+              this.stageLst[0]?.stageName ||
+              '';
+            this.defaultStatusName = 'active';
+
+            // ✅ Button Disable Logic
             this.shouldDisableAddStatus =
               this.stageLst.length > 0 &&
               this.stageLst.every((stage: any) => {
@@ -1125,6 +1177,7 @@ export class LeadsComponent extends BaseComponent {
                 const options = this.statusOptionsByStageforDisplay[stageName];
                 return Array.isArray(options) && options.length > 0;
               });
+
           }
         },
       });
@@ -1167,6 +1220,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
   saveCrmStages() {
+    this.isStagesDisabled = true;
     const selectedStages = this.crmStaticStages.filter(
       (stage) => stage.checked
     );
@@ -1179,6 +1233,7 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         if (res) {
           this.toastr.success('Stages saved successfully');
+          this.isStagesDisabled = false;
           this.offcanvasService.dismiss();
           this.getCrmStages();
           this.isAddStagesDisabled = true;
@@ -1188,6 +1243,7 @@ export class LeadsComponent extends BaseComponent {
       },
       error: (error) => {
         this.toastr.error(error.statusText);
+        this.isStagesDisabled = false;
       },
     });
   }
@@ -1747,6 +1803,7 @@ export class LeadsComponent extends BaseComponent {
 
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
+    this.isImporting = true;
     this.defaultStageName = 'open';
     this.defaultStatusName = 'active';
     if (this.uploadLead?.valid) {
@@ -1771,6 +1828,7 @@ export class LeadsComponent extends BaseComponent {
             this.uploadSpinner = false;
             this.uploadLead.reset();
             this.toastr.success(res.message, 'Bulk Lead Upload Successful');
+            this.isImporting = false;
             const stageColor = this.stageColor[this.defaultStageName] || '#ccc';
             const statusColor =
               this.statusColor[this.defaultStatusName] || '#ccc';
@@ -1788,6 +1846,7 @@ export class LeadsComponent extends BaseComponent {
           } else {
             this.uploadSpinner = false;
             this.toastr.error(res.message, 'lead');
+            this.isImporting = false;
           }
         },
         error: (err: any) => {
@@ -2371,5 +2430,4 @@ export class LeadsComponent extends BaseComponent {
       });
     }
   }
-
 }
