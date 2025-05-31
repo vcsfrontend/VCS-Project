@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgbModal, NgbDropdownModule, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule, FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, } from '@angular/forms';
+import { FormsModule, FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormArray, } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { SwitherService } from '../../../shared/services/swither.service';
@@ -56,10 +56,11 @@ export class CrmSettingsComponent extends BaseComponent {
   statusOptionsByStage: { [stageName: string]: any[] } = {};
   statusOptionsByStageforDisplay: any = {};
   anyChecked: any;leadForm!:FormGroup;selectedManager: string = '';companyForm! : FormGroup;
+  showCustomInput: boolean = false;leadData :any;selectedOption: string = 'option1'; LeadEntryData : any;
 
   relationshipManagers = [
-    { value: 'designer1', label: 'Admin 1' },
-    { value: 'designer2', label: 'Admin 2' }
+    { value: 'designer1', label: 'Option 1' },
+    { value: 'designer2', label: 'Option 2' }
   ];
   constructor(private modalService: NgbModal, private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService,
     private fb: FormBuilder,
@@ -138,20 +139,21 @@ export class CrmSettingsComponent extends BaseComponent {
 
   ngOnInit() {
     this.getCrmStages();
-    // this.getCrmStatus(); 
+    // this.getCrmStatus();
+    this.getLeadEntry(); 
     this.getDesignationCrmRloes(); this.getUsers();
     this.companyForm = this.fb.group({
-    relationshipmanager: [''],
-    companyName: [''],
-    businesscategory: [''],
-    products: [''],
-    projectName: ['']
+      relationshipmanager: ['designer1'],
+      companyName: [''],
+      products: [''],
+      customCompanies: this.fb.array([])
+    });
+
+    this.companyForm.get('relationshipmanager')?.valueChanges.subscribe(value => {
+      this.selectedOption = value;
   });
 
-  // Subscribe to value changes
-  this.companyForm.get('relationshipmanager')?.valueChanges.subscribe(value => {
-    this.selectedManager = value;
-  });
+
     this.crmStageData = {
       stageId: 0,
       companyName: this.userCompanyName,
@@ -251,6 +253,11 @@ export class CrmSettingsComponent extends BaseComponent {
       email: [this.userEmail],
       type: [this.userType]
     });
+
+    this.leadData = {      
+      f1: "",
+      f2: "",
+    }
   }
   dynamicFields: { value: string; }[] = [];
   initializeDynamicFields(): void {
@@ -702,5 +709,61 @@ export class CrmSettingsComponent extends BaseComponent {
 
   onManagerChange(): void {
     this.selectedManager = this.companyForm.get('relationshipmanager')?.value;
+  }
+  get customCompanies(): FormArray {
+    return this.companyForm.get('customCompanies') as FormArray;
+  }
+
+  addCustomCompany(): void {
+    this.customCompanies.push(new FormControl(''));
+  }
+
+  saveAddLeadEntry(){
+    let payload ={
+      columnId : 0,
+      f1 : this.companyForm.get('companyName')?.value,
+      f2 : this.companyForm.get('products')?.value,
+      companyCode : this.userCompanyCode,
+      email : this.userEmail,
+      type : this.userType
+    }
+    this.switchService.addLeadEntry(payload).subscribe({
+      next : (res:any) =>{
+        this.toastr.success('data saved succesfully');
+        this.companyForm.reset();
+      },
+      error : (error) =>{
+        this.toastr.error(error.statusText);
+      }
+    })
+  }
+
+  getLeadEntry() {
+  let payload = {
+    companyCode: this.userCompanyCode,
+    email: this.userEmail,
+    type: this.userType
+  };
+
+  this.switchService.listLeadEntry(payload).subscribe({
+    next: (res: any) => {
+      this.LeadEntryData = res;
+      if (res && res.length > 0) {
+        const lead = res[0];
+        this.leadForm.patchValue({
+          companyName: lead.companyName || '',
+          products: lead.products || ''
+        });
+      }
+    },
+    error: (error) => {
+      console.error('Failed to load lead entries:', error);
+    }
+  });
+}
+
+  
+  addMore() {
+    this.showCustomInput = true;
   }
 }
