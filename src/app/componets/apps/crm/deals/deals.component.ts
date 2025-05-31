@@ -73,7 +73,8 @@ export class DealsComponent extends BaseComponent {
   tempFormList: any; selectTemplateForm!: FormGroup; allTemplateGenIds: string[] = [];
   selectedStatusCount: number | null = null;statusCounts: { status: string; count: number }[] = [];
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
-  stageColor : { [key: string]: string }={
+  selectedLeads: number[] = []; currentPhoneNumber: string = '';
+  stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
   statusColor : { [key: string]: string }= {
@@ -105,6 +106,8 @@ export class DealsComponent extends BaseComponent {
   public uploadLead!: FormGroup;
   public uploadSubmitted = false;
   public uploadSpinner = false;
+  public sendwhatsLeadFormSubmitted = false;
+  public sendwhatsLeadForm!: FormGroup;
   imageFileSrcData: any;
   public leadCount = 0;
   public leadId = 0;
@@ -322,8 +325,10 @@ export class DealsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
+    this.LeadForm('DUMMY9DD1748413866634');
     this.getCrmStages();
     this.getFormTemplate();
+    this.getAllEmailTemplates();
     const now = new Date();
       // Pad with 0 if needed
       const pad = (n: number) => n.toString().padStart(2, '0');
@@ -553,7 +558,7 @@ export class DealsComponent extends BaseComponent {
       updatedBy: [this.userEmail],
       updatedTime: [''],
       entryBy: [this.userEmail],
-      campaignId: [this.campaignId],
+      campaignId: ['DUMMY9DD1748413866634'],
     });
   }
 
@@ -1868,5 +1873,97 @@ export class DealsComponent extends BaseComponent {
    capitalizeFirstLetter(text: string): string {
   if (!text) return '';
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }
+
+  deleteSelectedLeads() {
+    if (!this.selectedLeads.length) {
+      this.toastr.error('Please select at least one lead');
+      return;
+    }
+    if (confirm('Are you sure you want to delete the selected leads?')) {
+      this.switchService.deleteLeads({ leadList: this.selectedLeads }).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Leads deleted successfully');
+          this.getFetchLeadData('DUMMY9DD1748413866634');
+          this.selectedLeads = []; 
+        },
+        error: (error) => {
+          this.toastr.error('Failed to delete leads.');
+        },
+      });
+    }
+  }
+
+
+  deleteSingleLead(leadId: number) {
+    if (confirm('Are you sure you want to delete this lead?')) {
+      this.switchService.deleteLeads({ leadList: [leadId] }).subscribe({
+        next: () => {
+          this.toastr.success('Lead deleted successfully');
+          this.getFetchLeadData('DUMMY9DD1748413866634');
+          this.selectedLeads = this.selectedLeads.filter(id => id !== leadId); // Remove if selected
+        },
+        error: () => {
+          this.toastr.error('Failed to delete lead.');
+        },
+      });
+    }
+  }
+
+  getAllEmailTemplates(): void {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    this.switchService.allEmailTemplates(payload).subscribe({
+      next: (res: any[]) => {
+        this.tempFormList = res;
+      },
+      error: (err) => {
+        this.toastr.error('Error fetching template details');
+      },
+    });
+  }
+
+ sendToWhatsApp() {
+  this.sendwhatsLeadFormSubmitted = true;
+
+  if (this.sendwhatsLeadForm.invalid) {
+    return;
+  }
+
+  const formValue = this.sendwhatsLeadForm.value;
+  const template = formValue.template?.templateName || 'No Template';
+  const subject = formValue.subject || 'No Subject';
+  const content = formValue.content || 'No Description';
+
+  const message = `Template: ${template}\nSubject: ${subject}\nDescription: ${content}`;
+  const encodedMessage = encodeURIComponent(message);
+
+  // Sanitize phone number and add country code (assuming India '91' here)
+  const cleanedPhoneNumber = this.currentPhoneNumber.replace(/\D/g, '');
+  const fullPhoneNumber = cleanedPhoneNumber.startsWith('91') ? cleanedPhoneNumber : '91' + cleanedPhoneNumber;
+
+  const url = `https://wa.me/${fullPhoneNumber}?text=${encodedMessage}`;
+  window.open(url, '_blank');
+}
+
+
+
+
+  get P() {
+    return this.sendwhatsLeadForm.controls;
+  }
+
+  onWhatsappTemplateChange(selectedTemplate: any): void {
+    if (!selectedTemplate || !selectedTemplate.templateGenId) {
+      this.toastr.warning('Please Select Template');
+      return;
+    }
+    this.sendwhatsLeadForm.patchValue({
+      subject: selectedTemplate.subject || '',
+      content: selectedTemplate.description || '',
+    });
   }
 }
