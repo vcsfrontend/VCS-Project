@@ -117,7 +117,7 @@ export class LeadsComponent extends BaseComponent {
   pageSize = 10;
   Crmusers: any[] = []; selectedLeads: number[] = [];
   CrmLeads: any = {};
-  element: any = {};
+  element: any = {}; 
   crmLeadsList: any;
   campaignId!: string;
   stageLst: any;
@@ -205,7 +205,7 @@ export class LeadsComponent extends BaseComponent {
   showForm: boolean = false;
   allowCustomStatus: boolean = true;
   shouldDisableAddStatus = false;isImporting: boolean = false;
-  isStagesDisabled : boolean =false;
+  isStagesDisabled : boolean =false; phoneNumber: string = '';
   crmStaticStages = [
     {
       name: 'In Progress Leads',
@@ -1622,6 +1622,9 @@ export class LeadsComponent extends BaseComponent {
             (item) => item.followUpDue
           ).length;
           this.dataSource.data = combined;
+          if (combined.length > 0 && combined[0].contact) {
+            this.phoneNumber = combined[0].contact;
+          }
           const sortedByFollowUpDate = combined
             .filter((item) => item.followUpDateObj)
             .sort(
@@ -2158,7 +2161,6 @@ export class LeadsComponent extends BaseComponent {
     });
   }
 
-  // Handle single row selection
   onRowCheckboxChange(leadId: number, event: any) {
     if (event.checked) {
       if (!this.selectedLeads.includes(leadId)) {
@@ -2167,14 +2169,16 @@ export class LeadsComponent extends BaseComponent {
     } else {
       this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
     }
+    console.log('Row checkbox changed:', this.selectedLeads);
   }
 
   onSelectAllChange(event: any) {
     if (event.checked) {
-      this.selectedLeads = this.leads.map(lead => lead.leadId);
+      this.selectedLeads = this.dataSource.data.map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
     }
+    console.log('Select All changed:', this.selectedLeads);
   }
 
   isSelected(leadId: number): boolean {
@@ -2182,13 +2186,12 @@ export class LeadsComponent extends BaseComponent {
   }
 
   isAllSelected(): boolean {
-    return this.selectedLeads.length === this.leads.length;
+    return this.selectedLeads.length === this.dataSource.data.length;
   }
 
   isIndeterminate(): boolean {
     return this.selectedLeads.length > 0 && !this.isAllSelected();
   }
-
   @ViewChild('myPond') myPond!: FilePondComponent;
 
   pondOptions: FilePond.FilePondOptions = {
@@ -2346,10 +2349,13 @@ export class LeadsComponent extends BaseComponent {
       `Subject: ${subject}\n` +
       `Description: ${content}`;
     const encodedMessage = encodeURIComponent(message);
-    const phoneNumber = '7287959896';
-    const url = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+    // Use dynamic phoneNumber here, fallback to default if empty
+    const phoneNumberToUse = this.phoneNumber;
+    const url = `https://wa.me/${phoneNumberToUse}?text=${encodedMessage}`;
     window.open(url, '_blank');
   }
+
 
   validateAndOpenBulkUpload(content: any): void {
     if (!this.stageLst || this.stageLst.length === 0) {
@@ -2438,6 +2444,21 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+
+  deleteSingleLead(leadId: number) {
+    if (confirm('Are you sure you want to delete this lead?')) {
+      this.switchService.deleteLeads({ leadList: [leadId] }).subscribe({
+        next: () => {
+          this.toastr.success('Lead deleted successfully');
+          this.getFetchLeadData();
+          this.selectedLeads = this.selectedLeads.filter(id => id !== leadId); // Remove if selected
+        },
+        error: () => {
+          this.toastr.error('Failed to delete lead.');
+        },
+      });
+    }
+  }
 
 
 

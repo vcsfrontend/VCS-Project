@@ -183,7 +183,7 @@
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
                             <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light me-1"
                                 ata-bs-toggle="offcanvas" (click)="openFollowup(element,Content4);"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-alarm-line"></i>
@@ -206,6 +206,13 @@
                                             Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="openRight(Content113); currentPhoneNumber = element.phoneNumber.toString()" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
                                    <li class="m-2">
                                         <button class="btn btn-teal-light label-btn label-end w-100 "
                                             (click)="editLead(element,Content14)">
@@ -213,7 +220,7 @@
                                         </button>
                                     </li>
                                     <li class="m-2">
-                                        <button class="btn btn-danger label-btn label-end w-100">
+                                        <button class="btn btn-danger label-btn label-end w-100" (click)="deleteSingleLead(element.leadId)">
                                             Delete<i class="ri-delete-bin-line label-btn-icon"></i>
                                         </button>
                                     </li>
@@ -385,7 +392,7 @@
                             class="ri-alarm-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
                             class="ri-mail-line bt-icon"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave"><i
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"><i
                             class="ri-delete-bin-line"></i></button>
                 </div>
             </div>
@@ -1099,15 +1106,16 @@
                 <div class="card-body " style="min-height: 338px; max-height: 340px; overflow-y: auto;">
                     <div *ngFor="let template of tempFormList" class="card custom-card card-bg-light mb-3">
                         <div class="card-body">
-                            <h5 class="card-title fw-semibold mb-3">{{ template.templateName }}</h5>
-                            <p><strong>Subject:</strong> {{ template.subject }}</p>
-                            <p><strong>Description:</strong> {{ template.description }}</p>
+                            <h5 class="card-title fw-semibold mb-3">{{ capitalizeFirstLetter (template.templateName) }}</h5>
+                            <p><strong>Subject:</strong> {{ capitalizeFirstLetter (template.subject) }}</p>
+                            <p><strong>Description:</strong> {{ capitalizeFirstLetter (template.description) }}</p>
                             <p><strong>Created Date:</strong> {{ template.createdDate | date: 'dd/MM/yyyy hh:mm a' }}
                             </p>
                             <p><strong>Email:</strong> {{ template.email }}</p>
                         </div>
                     </div>
                 </div>
+
                 <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
                 </div>
@@ -1388,3 +1396,48 @@
     </ng-template>
     </div>
 </div> -->
+
+<ng-template #Content113 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send What's app</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="sendwhatsLeadForm" (ngSubmit)="sendToWhatsApp()" class="d-flex flex-column h-100">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+            <div class="mb-4">
+                <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+                    bindLabel="templateName" (change)="onWhatsappTemplateChange($event)" class="border rounded"
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && P['template'].errors }">
+                </ng-select>
+                <div *ngIf="sendwhatsLeadFormSubmitted && P['template'].errors" class="invalid-feedback">
+                    <div *ngIf="P['template'].errors['required']">Template is required</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && P['subject'].errors }">
+                <div *ngIf="sendwhatsLeadFormSubmitted && P['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="P['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="P['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                </div>
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Description"
+                    formControlName="content">
+          </textarea>
+            </div>
+            <div class="card-body mt-3">
+                <input id="file" type="file" class="form-control rounded-0 w-50 position-relative"
+                    (change)="onEmailFileChange($event)">
+            </div>
+        </div>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-end gap-3">
+                <button class="btn btn-success w-50" type="submit">Send to WhatsApp</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
