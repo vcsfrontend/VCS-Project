@@ -37,9 +37,15 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   z-index: 10;
   background-color: #006699 !important;
   color: white !important;
-  // border-right: 0.25px solid white !important;
 }
-
+table.mat-mdc-table .mdc-data-table__header-cell:nth-child(2) {
+  border-right: none !important;
+  box-shadow: none !important;
+}
+table.mat-mdc-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
 
 .mat-elevation-z8 {
   max-height: 400px;
@@ -197,11 +203,12 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   max-width: 200px; 
 }
 
+
 .filter-field {
-  margin-top: -3px !important;
-  margin-bottom: -45px !important;
-  width: 35%; 
+  margin-top: -13px !important;
+  margin-bottom: -35px !important;
+  width: 15%;
+  /* Adjust width if needed */
   max-height: 72px !important;
-  margin-left: -1% !important;
-  
+  margin-left: 15% !important;
 }
