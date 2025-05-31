@@ -244,7 +244,7 @@
                         <td mat-cell *matCellDef="let element">
                             <div class="d-flex align-items-center">
                                 <ng-container *ngIf="element.executive; else noExecutive">
-                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer"
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer" style="cursor: pointer;"
                                         [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
                                         tooltipClass="tooltip-primary">
                                         <span class="d-flex align-items-center justify-content-center w-100 h-100">
@@ -254,7 +254,7 @@
                                 </ng-container>
                                 <ng-template #noExecutive>
                                     <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
-                                        class="avatar avatar-sm avatar-rounded me-2 border pointer" ngbTooltip="No executive assigned"
+                                        class="avatar avatar-sm avatar-rounded me-2 border pointer" style="cursor: pointer;" ngbTooltip="No executive assigned"
                                         tooltipClass="tooltip-primary" />
                                 </ng-template>
                             </div>
