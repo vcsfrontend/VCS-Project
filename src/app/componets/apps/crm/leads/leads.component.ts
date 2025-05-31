@@ -241,7 +241,7 @@ export class LeadsComponent extends BaseComponent {
     color: '',
   };
   selectedType: string = '';
-  dynamicFields: { value: string }[] = [];
+  dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
   matcardLst: any;
   topDisplayedCards: any;
   defaultStageName: string = '';
@@ -498,13 +498,12 @@ export class LeadsComponent extends BaseComponent {
         content: ['', [Validators.required]],
       });
 
-      this.sendLeadForm
-        .get('template')
+      this.sendLeadForm.get('template')
         ?.valueChanges.subscribe((templateGenId) => {
           if (templateGenId) {
             // this.getFormTemplate();
           }
-        });
+      });
     });
 
     //Upload Lead Validatoin
@@ -680,6 +679,14 @@ export class LeadsComponent extends BaseComponent {
       stageActivity: 'YES',
       type: this.userType,
     };
+    this.updateColumns();
+  }
+  updateColumns() {
+    this.showSourceFlagColumn = this.dataSource.data.some(element => element.source === 'executive');
+
+    if (!this.showSourceFlagColumn) {
+      this.displayedColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
+    }
   }
 
   addLeadItem() {
