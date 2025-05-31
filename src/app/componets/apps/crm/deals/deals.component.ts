@@ -53,7 +53,7 @@ export class DealsComponent extends BaseComponent {
   userType: string = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
 
-  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email'];
+  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -62,7 +62,7 @@ export class DealsComponent extends BaseComponent {
   campaignId :string='DUMMY9DD1748413866634' ; stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any; allStatuses: any;
   selectedStage: string = ''; checkboxStageOptions: any[] = [];showCheckboxError = false;
-  chartOptions:any ;  statusOptionsByStageforDisplay : any = {};
+  chartOptions:any ;  statusOptionsByStageforDisplay : any = {}; showSourceFlagColumn: boolean = false;
   fetchCrmLeadsList: any[] = []; defaultStageName: string = '';defaultStatusName: string = '';
   uploadStageDisplay: { name: string, color: string } = { name: '', color: '' };
   uploadStatusDisplay: { name: string, color: string } = { name: '', color: '' };
@@ -522,6 +522,14 @@ export class DealsComponent extends BaseComponent {
       stageActivity: 'YES',
       type: this.userType,
     };
+    this.updateColumns();
+  }
+  updateColumns() {
+    this.showSourceFlagColumn = this.dataSource.data.some(element => element.source === 'executive');
+
+    if (!this.showSourceFlagColumn) {
+      this.displayedColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
+    }
   }
   LeadForm(campaignId: string) {
     this.leadForm = this.fb.group({

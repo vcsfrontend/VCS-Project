@@ -5,7 +5,7 @@
                 {{leadCount}} Leads found
             </div>
             <mat-form-field class="filter-field">
-                <mat-label>Seach</mat-label>
+                <mat-label>Search Here</mat-label>
                 <input matInput (keyup)="applyFilter($event)" #input>
             </mat-form-field>
             <div class="text-center">
@@ -48,7 +48,7 @@
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
                         <td mat-cell *matCellDef="let element">
                             <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light"
                                 ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-alarm-line"></i>
@@ -60,7 +60,7 @@
                                 <i class="ri-eye-line"></i>
                             </a>
                             <span ngbDropdown placement="right-top">
-                                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
+                                <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
                                     ngbDropdownToggle></i>
                                 <ul class="dropdown-menu z-1" ngbDropdownMenu>
                                     <li class="m-2">
@@ -79,7 +79,7 @@
                                         </button>
                                     </li>
                                     <li class="m-2">
-                                        <button class="btn btn-teal-light label-btn label-end w-100 "
+                                        <button class="btn btn-teal label-btn label-end w-100 "
                                             (click)="editLead(element,Content14)">
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                         </button>
@@ -154,17 +154,17 @@
                                                 <span class="fw-semibold me-1">Stage :</span>
                                                 <span class="badge me-1" type="button"
                                                     [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
-                                                    [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
-                                                    {{ element.stage | slice: 0:18 }}
-                                                    <ng-container *ngIf="element.stage.length > 18">...</ng-container>
+                                                    [ngbTooltip]="element.stage.length > 25 ? element.stage : null" placement="top">
+                                                    {{ element.stage | slice: 0:25 }}
+                                                    <ng-container *ngIf="element.stage.length > 25">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Status :</span>
                                                 <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                                    [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
-                                                    {{ element.status | slice: 0:18 }}
-                                                    <ng-container *ngIf="element.status.length > 18">...</ng-container>
+                                                    [ngbTooltip]="element.status.length > 25 ? element.status : null" placement="top">
+                                                    {{ element.status | slice: 0:25 }}
+                                                    <ng-container *ngIf="element.status.length > 25">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
@@ -186,7 +186,7 @@
                     </ng-container>
                     <ng-container matColumnDef="followUpDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
-                            FollowUpDate
+                            Followup Date
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
@@ -201,11 +201,11 @@
                         <td mat-cell *matCellDef="let element"> {{element.email}} </td>
                     </ng-container>
                     <ng-container matColumnDef="city">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>city</th>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
                         <td mat-cell *matCellDef="let element"> {{element.city}} </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
                 </table>
             </div>
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
