@@ -51,6 +51,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { forkJoin } from 'rxjs';
+import { errorRoutingModule } from '../../../error/error.route';
 
 @Component({
   selector: 'app-leads',
@@ -453,6 +454,7 @@ export class LeadsComponent extends BaseComponent {
   ngOnInit(): void {
     this.getCampaignData();
     this.getlistFormTemplate();
+    this.getLeadEntry();
     // this.getFormTemplate();
     this.getAllEmailTemplates();
     const now = new Date();
@@ -2458,6 +2460,32 @@ export class LeadsComponent extends BaseComponent {
         },
       });
     }
+  }
+
+  getLeadEntry(){
+    let payload ={
+      email: this.userData ? JSON.parse(this.userData).email : '',
+      companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
+      type: this.userData ? JSON.parse(this.userData).type : '',
+    }
+    this.switchService.listLeadEntry(payload).subscribe({
+      next : (res:any) =>{
+        if (res && res.length > 0) {
+        const lead = res[0];
+        this.leadForm.patchValue({
+          companyName: lead.companyName,
+          products: lead.products
+        });
+
+        // Debug
+        console.log('Company Name:', lead.companyName,);
+        console.log('Products:', lead.products);
+      }
+      },
+      error:(error) =>{
+
+      }
+    })
   }
 
 
