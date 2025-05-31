@@ -171,8 +171,8 @@ export class SwitherService {
   selectFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/create_crm_email_template`,data); }
   listFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_template_names`,data); }  
   fetchFormTemplate(templateGenId :any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getTemplateOnTemplateGenId?templateGenId=${templateGenId }`); } 
-  deleteLeads(lead_Id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead/${lead_Id}`); }  
-  allEmailTemplates(companyCode :any,email : any,type : any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_all_email_templates?companyCode=${companyCode }&email=${companyCode }&type=${type}`); } 
+  deleteLeads(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/delete_lead`,data); }  
+  allEmailTemplates(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/get_all_email_templates`,data); } 
 
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}

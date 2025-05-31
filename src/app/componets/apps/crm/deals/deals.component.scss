@@ -32,6 +32,9 @@ table {
 //   background-color: #006699 !important;
 // }
 table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   background-color: #006699 !important;
   color: white !important;
   // border-right: 0.25px solid white !important;
