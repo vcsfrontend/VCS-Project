@@ -84,11 +84,11 @@
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
-                                    <li class="m-2">
+                                    <!-- <li class="m-2">
                                         <button class="btn btn-danger label-btn label-end w-100" (click)="deleteCrmLead(element)">
                                             Delete<i class="ri-delete-bin-line label-btn-icon"></i>
                                         </button>
-                                    </li>
+                                    </li> -->
                                 </ul>
                             </span>
                         </td>
@@ -232,7 +232,7 @@
                             class="ri-alarm-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
                             class="ri-mail-line bt-icon"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave"><i
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"><i
                             class="ri-delete-bin-line"></i></button>
                 </div>
             </div>

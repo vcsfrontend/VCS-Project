@@ -115,7 +115,7 @@ export class LeadsComponent extends BaseComponent {
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
-  Crmusers: any[] = [];
+  Crmusers: any[] = []; selectedLeads: number[] = [];
   CrmLeads: any = {};
   element: any = {};
   crmLeadsList: any;
@@ -127,7 +127,7 @@ export class LeadsComponent extends BaseComponent {
   statusLst: any;
   allStatuses: any;
   selectedStage: string = '';
-  checkboxStageOptions: any[] = [];
+  checkboxStageOptions: any[] = []; 
   isStatusDataLoaded: boolean = false;
   selectedStatusCount: number | null = null;
   chartOptions: any;
@@ -196,7 +196,7 @@ export class LeadsComponent extends BaseComponent {
   executiveList: any[] = [];
   entryList: any[] = [];
   agents: any;
-  leads: any;
+  leads: any[] = [];
   imageFileSrcData: any;
   followUpDetails: any[] = [];
   nextLeadStatus: any;
@@ -454,7 +454,7 @@ export class LeadsComponent extends BaseComponent {
     this.getCampaignData();
     this.getlistFormTemplate();
     // this.getFormTemplate();
-    // this.getAllEmailTemplates();
+    this.getAllEmailTemplates();
     const now = new Date();
     // Pad with 0 if needed
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -469,6 +469,7 @@ export class LeadsComponent extends BaseComponent {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
       this.getFetchLeadData();
+      this.selectedLeads = [];
       // this.getCrmLeads();
 
       if (this.campaignId) {
@@ -951,16 +952,19 @@ export class LeadsComponent extends BaseComponent {
   // }
 
   getAllEmailTemplates(): void {
-    this.switchService
-      .allEmailTemplates(this.userEmail, this.userCompanyCode, this.userType)
-      .subscribe({
-        next: (res: any[]) => {
-          this.tempFormList = res;
-        },
-        error: (err) => {
-          this.toastr.error('Error fetching template details');
-        },
-      });
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    this.switchService.allEmailTemplates(payload).subscribe({
+      next: (res: any[]) => {
+        this.tempFormList = res;
+      },
+      error: (err) => {
+        this.toastr.error('Error fetching template details');
+      },
+    });
   }
 
   onTemplateChange(selectedTemplate: any): void {
@@ -2157,36 +2161,32 @@ export class LeadsComponent extends BaseComponent {
   // Handle single row selection
   onRowCheckboxChange(leadId: number, event: any) {
     if (event.checked) {
-      this.selectedIdList.add(leadId);
+      if (!this.selectedLeads.includes(leadId)) {
+        this.selectedLeads.push(leadId);
+      }
     } else {
-      this.selectedIdList.delete(leadId);
+      this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
     }
   }
 
-  // Handle "select all" checkbox
   onSelectAllChange(event: any) {
     if (event.checked) {
-      this.selectedIdList = new Set(
-        this.dataSource.data.map((row: { leadId: any }) => row.leadId)
-      );
+      this.selectedLeads = this.leads.map(lead => lead.leadId);
     } else {
-      this.selectedIdList.clear();
+      this.selectedLeads = [];
     }
   }
 
-  isAllSelected() {
-    return this.selectedIdList.size === this.dataSource.data.length;
+  isSelected(leadId: number): boolean {
+    return this.selectedLeads.includes(leadId);
   }
 
-  isIndeterminate() {
-    return (
-      this.selectedIdList.size > 0 &&
-      this.selectedIdList.size < this.dataSource.data.length
-    );
+  isAllSelected(): boolean {
+    return this.selectedLeads.length === this.leads.length;
   }
 
-  isSelected(leadId: number) {
-    return this.selectedIdList.has(leadId);
+  isIndeterminate(): boolean {
+    return this.selectedLeads.length > 0 && !this.isAllSelected();
   }
 
   @ViewChild('myPond') myPond!: FilePondComponent;
@@ -2418,23 +2418,28 @@ export class LeadsComponent extends BaseComponent {
     return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
   }
 
-  deleteCrmLead(data: any) {
-    const lead_Id = data?.leadId;
-    if (!lead_Id) {
-      this.toastr.error('Invalid lead ID');
+
+  deleteSelectedLeads() {
+    if (!this.selectedLeads.length) {
+      this.toastr.error('Please select at least one lead');
       return;
     }
-
-    if (confirm('Are you sure you want to delete this Lead?')) {
-      this.switchService.deleteLeads(lead_Id).subscribe({
+    if (confirm('Are you sure you want to delete the selected leads?')) {
+      this.switchService.deleteLeads({ leadList: this.selectedLeads }).subscribe({
         next: (res: any) => {
-          this.toastr.success('Lead deleted successfully');
+          this.toastr.success('Leads deleted successfully');
           this.getFetchLeadData();
+          this.selectedLeads = []; 
         },
         error: (error) => {
-          this.toastr.error('Failed to delete Lead.');
+          this.toastr.error('Failed to delete leads.');
         },
       });
     }
   }
+
+
+
+
+
 }
