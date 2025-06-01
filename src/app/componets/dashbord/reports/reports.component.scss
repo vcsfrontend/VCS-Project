@@ -18,3 +18,12 @@
   max-height: 72px !important;
   margin-left: 6% !important;
 }
+
+table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky !important;
+  z-index: 2 !important;
+  top: 0px;
+  background-color: #006699 !important;
+  color: white !important;
+  border-right: none;
+}
