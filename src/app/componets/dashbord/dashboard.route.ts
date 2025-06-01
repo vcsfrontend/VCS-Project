@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { salesOnlyGuard } from '../../guards/sales-only.guard';
 
 export const admin: Routes = [
  {path:'dashboard',children:[
@@ -76,7 +77,9 @@ export const admin: Routes = [
   path: 'adonai-users',
   loadComponent: () =>
     import('./adonai-users/adonai-users.component').then((m) => m.AdonaiUsersComponent),
+  canActivate: [salesOnlyGuard],
 },
+
 {
   path: 'products',
   loadComponent: () =>

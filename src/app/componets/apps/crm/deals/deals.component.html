@@ -184,7 +184,7 @@
                         <td mat-cell *matCellDef="let element">
                             <a href="javascript:void(0);"
                                 class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light me-1"
-                                ata-bs-toggle="offcanvas" (click)="openFollowup(element,Content4);"
+                                ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-alarm-line"></i>
                             </a>
@@ -900,24 +900,22 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvas)" class="overflowSendMailForm">
-        <div class="offcanvas-body p-0 m-4 ">
+    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvasRef)" class="d-flex flex-column h-100">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
-                <ng-select name="choices-multiple-remove-button3" placeholder="Select" formControlName="template"
-                    class="border rounded" [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['template'].errors }">
-                    <ng-option value="1">Template 1</ng-option>
-                    <ng-option value="2">Template 2</ng-option>
+                <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+                    bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
+                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['template'].errors }">
                 </ng-select>
                 <div *ngIf="sendLeadSubmitted && s['template'].errors" class="invalid-feedback">
                     <div *ngIf="s['template'].errors['required']">Template is required</div>
                 </div>
             </div>
             <div class="mb-4">
-                <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
-                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['subject'].errors }">
-                <div *ngIf="sendLeadSubmitted && s['subject'].errors" class="invalid-feedback">
-                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
-                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                <input type="text" class="form-control" id="cc" placeholder="email" formControlName="email"
+                [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['email'].errors }">
+                <div *ngIf="sendLeadSubmitted && s['email'].errors" class="invalid-feedback">
+                    <div *ngIf="s['email'].errors['required']">Email is required</div>
                 </div>
             </div>
             <div class="mb-4">
@@ -928,37 +926,30 @@
                     <span *ngIf="s['cc'].errors['email']">Invalid email address.</span>
                 </div>
             </div>
-
             <div class="mb-4">
-                <input type="text" class="form-control" id="bcc" placeholder="BCC" formControlName="bcc"
-                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['bcc'].errors }">
-                <div *ngIf="sendLeadSubmitted && s['bcc'].errors" class="invalid-feedback">
-                    <span *ngIf="s['bcc'].errors['required']">BCC is required.</span>
-                    <span *ngIf="s['bcc'].errors['email']">Invalid email address.</span>
+                <textarea class="form-control" id="subject" rows="4" placeholder="subject" formControlName="subject"
+                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['subject'].errors }">
+                </textarea>
+                <div *ngIf="sendLeadSubmitted && s['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
                 </div>
             </div>
-
-            <!-- <ckeditor [(ngModel)]="emailContent"></ckeditor> -->
-            <angular-editor [config]="editorConfig" formControlName="content"
-                [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['content'].errors }"></angular-editor>
-            <div *ngIf="sendLeadSubmitted && s['content'].errors" class="invalid-feedback">
-                <span *ngIf="s['content'].errors['required']">Content is required.</span>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Description"
+                    formControlName="content">
+                </textarea>
             </div>
-            <div class="card-body mt-3">
+            <!-- <div class="card-body mt-3">
                 <input id="file" type="file" class="form-control rounded-0 w-50 position-relative"
                     (change)="onEmailFileChange($event)">
-                <!--<file-pond #myPond [options]="pondOptions" class="multiple-filepond" (oninit)="pondHandleInit()"
-                    (onaddfile)="pondHandleAddFile($event)" (onactivatefile)="pondHandleActivateFile($event)">
-                </file-pond>-->
-            </div>
+            </div> -->
         </div>
-        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                <button class="btn btn-primary mr-3 w-100" type="submit">Send Mail</button>
-            </div>
-            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
-                    type="submit">Cancel</button>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-end gap-3">
+                <button class="btn btn-primary w-50" type="submit">Send Mail</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
             </div>
         </div>
     </form>
@@ -973,14 +964,19 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <div class="mt-2">
+    <div class="d-flex pt-4 gap-3 ms-2">
+        <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
+        <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)">Not Connected</button>
+
+    </div>
+    <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
         <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
             <div class="offcanvas-body p-0 m-4 ">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label for="followupDate" class="form-label">Next Follow up date</label>
                         <input type="datetime-local" class="form-control" id="followupDate" placeholder=""
-                            formControlName="followupDate"
+                            formControlName="followupDate" [disabled]="readonlyMode"
                             [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }"
                             [min]="minDateTime" />
 
@@ -990,8 +986,8 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                         <label class="form-label" for="stage">Stage</label>
-                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName"
-                            placeholder="Select a stage" (change)="onFollowupStatusChange()"
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName" [disabled]="readonlyMode"
+                            placeholder="Select a stage" (change)="onFollowupStatusChange()" 
                             [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['stage'].errors }">
                         </ng-select>
                         <div *ngIf="followupLeadSubmitted && e['stage'].errors" class="invalid-feedback">
@@ -1000,7 +996,7 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                         <label class="form-label">Status</label>
-                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name" [disabled]="readonlyMode"
                             placeholder="Select a status"
                             [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['status'].errors }">
                         </ng-select>

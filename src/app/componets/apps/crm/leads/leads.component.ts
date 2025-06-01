@@ -2387,9 +2387,14 @@ export class LeadsComponent extends BaseComponent {
   this.selectedStatus = status;
   this.showForm = true;
     if (status === 'Not Connected') {
-    // Set default values
     const now = new Date();
-    const formattedNow = now.toISOString().slice(0, 16); // for datetime-local
+    const year = now.getFullYear();
+    const month = ('0' + (now.getMonth() + 1)).slice(-2);
+    const day = ('0' + now.getDate()).slice(-2);
+    const hours = ('0' + now.getHours()).slice(-2);
+    const minutes = ('0' + now.getMinutes()).slice(-2);
+
+    const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
 
     this.followupLeadForm.patchValue({
       status: 'Not Connected',

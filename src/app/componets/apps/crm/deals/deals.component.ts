@@ -73,7 +73,8 @@ export class DealsComponent extends BaseComponent {
   tempFormList: any; selectTemplateForm!: FormGroup; allTemplateGenIds: string[] = [];
   selectedStatusCount: number | null = null;statusCounts: { status: string; count: number }[] = [];
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
-  selectedLeads: number[] = []; currentPhoneNumber: string = '';
+  selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
+  showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {};
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -256,6 +257,13 @@ export class DealsComponent extends BaseComponent {
     this.offcanvasService.open(content5, { position: 'end' });
   }
 
+  offcanvasRef: any;
+  openRight7(content: any) {
+    this.offcanvasRef = this.offcanvasService.open(content, {
+      position: 'end',
+    });
+  }
+
   openRight4(content4: any) {
     this.offcanvasService.open(content4, { position: 'end' });
   }
@@ -367,6 +375,12 @@ export class DealsComponent extends BaseComponent {
       followUpBy: [''],
     });
 
+     this.sendwhatsLeadForm = this.fb.group({
+        template: ['', [Validators.required]],
+        subject: ['', [Validators.required, Validators.minLength(3)]],
+        content: ['', [Validators.required]],
+        file: [''],
+      });
 
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
@@ -1035,36 +1049,42 @@ export class DealsComponent extends BaseComponent {
   sendMailLeadSubmit(modal: any) {
     this.sendLeadSubmitted = true;
     if (this.sendLeadForm?.valid) {
-      const formData = new FormData();
-      formData.append('file', this.imageFileSrcData);
-      formData.append('email', this.sendLeadForm.get('email')?.value);
-      formData.append('template', this.sendLeadForm.get('template')?.value);
-      formData.append('subject', this.sendLeadForm.get('subject')?.value);
-      formData.append('cc', this.sendLeadForm.get('cc')?.value);
-      formData.append('bcc', this.sendLeadForm.get('bcc')?.value);
-      formData.append('content', this.sendLeadForm.get('content')?.value);
+      const templateValue = this.sendLeadForm.get('template')?.value;
+      const templateToSend =
+        typeof templateValue === 'object'
+          ? templateValue.templateGenId
+          : templateValue;
 
-      this.switchService.CRMLeadSendMailFollowup(formData).subscribe({
+      const payload = {
+        email: this.sendLeadForm.get('email')?.value,
+        template: templateToSend,
+        subject: this.sendLeadForm.get('subject')?.value,
+        cc: this.sendLeadForm.get('cc')?.value,
+        bcc: this.sendLeadForm.get('bcc')?.value,
+        content: this.sendLeadForm.get('content')?.value,
+      };
+
+      this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
         next: (res: any) => {
           if (res.status == true) {
-            this.imageFileSrcData = '';
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
             this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
             });
           } else {
             this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
             });
           }
         },
         error: (error) => {
           this.toastr.error(error.statusText);
         },
-      })
-
+      });
     }
   }
 
@@ -1941,19 +1961,25 @@ export class DealsComponent extends BaseComponent {
   const message = `Template: ${template}\nSubject: ${subject}\nDescription: ${content}`;
   const encodedMessage = encodeURIComponent(message);
 
-  // Sanitize phone number and add country code (assuming India '91' here)
   const cleanedPhoneNumber = this.currentPhoneNumber.replace(/\D/g, '');
   const fullPhoneNumber = cleanedPhoneNumber.startsWith('91') ? cleanedPhoneNumber : '91' + cleanedPhoneNumber;
 
   const url = `https://wa.me/${fullPhoneNumber}?text=${encodedMessage}`;
   window.open(url, '_blank');
 }
-
-
-
-
   get P() {
     return this.sendwhatsLeadForm.controls;
+  }
+
+  onTemplateChange(selectedTemplate: any): void {
+    if (!selectedTemplate || !selectedTemplate.templateGenId) {
+      this.toastr.warning('Please Select Template');
+      return;
+    }
+    this.sendLeadForm.patchValue({
+      subject: selectedTemplate.subject || '',
+      content: selectedTemplate.description || '',
+    });
   }
 
   onWhatsappTemplateChange(selectedTemplate: any): void {
@@ -1965,5 +1991,33 @@ export class DealsComponent extends BaseComponent {
       subject: selectedTemplate.subject || '',
       content: selectedTemplate.description || '',
     });
+  }
+
+   onStatusButtonClick(status: string,modal :any): void {
+    this.selectedStatus = status;
+    this.showForm = true;
+      if (status === 'Not Connected') {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = ('0' + (now.getMonth() + 1)).slice(-2);
+      const day = ('0' + now.getDate()).slice(-2);
+      const hours = ('0' + now.getHours()).slice(-2);
+      const minutes = ('0' + now.getMinutes()).slice(-2);
+
+      const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+      this.followupLeadForm.patchValue({
+        status: 'Not Connected',
+        followupDate: formattedNow,
+        comments: 'Not connected',       // Optional
+      });
+      this.followupLeadSubmit(modal)
+    }
+    else if (status === 'Connected') {
+      this.readonlyMode = false;
+      if (this.originalConnectedForm) {
+        this.followupLeadForm.patchValue(this.originalConnectedForm);
+      }
+    }
   }
 }
