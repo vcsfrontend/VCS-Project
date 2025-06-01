@@ -58,7 +58,7 @@ export class CrmSettingsComponent extends BaseComponent {
   anyChecked: any;leadForm!:FormGroup;selectedManager: string = '';companyForm! : FormGroup;
   showCustomInput: boolean = false;leadData :any;selectedOption: string = 'option1'; LeadEntryData : any;
   formDesigner1!: FormGroup;
-  formDesigner2!: FormGroup;fetchedData:any;
+  formDesigner2!: FormGroup; fetchedData:any; editableFields = ['f1', 'f2'];
   companyinfo = [
     { value: 'designer1', label: 'Option 1' },
     { value: 'designer2', label: 'Option 2' }
@@ -165,7 +165,6 @@ export class CrmSettingsComponent extends BaseComponent {
 
 
     this.crmStageData = {
-      stageId: 0,
       companyName: this.userCompanyName,
       companyCode: this.userCompanyCode,
       email: this.userEmail,
@@ -200,7 +199,6 @@ export class CrmSettingsComponent extends BaseComponent {
       type: this.userType
     };
     this.crmStatusData = {
-      stageId: 0,
       companyName: this.userCompanyName,
       companyCode: this.userCompanyCode,
       email: this.userEmail,
@@ -728,56 +726,83 @@ export class CrmSettingsComponent extends BaseComponent {
     this.customCompanies.push(new FormControl(''));
   }
 
-  saveAddLeadEntry(){
+  saveAddLeadEntry() {
     const selectedManager = this.companyForm.get('companyinfo')?.value;
-    let payload ={
-      columnId : 0,
-      f1 : '',
-      f2 : '',
-      companyCode : this.userCompanyCode,
-      email : this.userEmail,
-      type : this.userType
+    let payload = {
+      f1: '',
+      f2: '',
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
     }
     if (selectedManager === 'designer1') {
       payload.f1 = this.formDesigner1.get('companyName')?.value;
       payload.f2 = this.formDesigner1.get('products')?.value;
     } else if (selectedManager === 'designer2') {
       payload.f1 = this.formDesigner2.get('companyName')?.value;
-      payload.f2 = this.formDesigner2.get('customValue')?.value; // or whatever field you use
+      payload.f2 = this.formDesigner2.get('customValue')?.value;
     }
-      console.log('Final Payload:', payload);
-
     this.switchService.addLeadEntry(payload).subscribe({
-      next : (res:any) =>{
+      next: (res: any) => {
         this.toastr.success('data saved succesfully');
         this.formDesigner1.reset();
         this.getLeadEntry();
       },
-      error : (error) =>{
+      error: (error) => {
         this.toastr.error(error.statusText);
       }
     })
   }
-
-  getLeadEntry() {
-  let payload = {
-    companyCode: this.userCompanyCode,
-    email: this.userEmail,
-    type: this.userType
-  };
-
-  this.switchService.listLeadEntry(payload).subscribe({
-    next: (res: any) => {
-      this.fetchedData = res;
-        console.log('Fetched Data:', this.fetchedData);
-    },
-    error: (error) => {
-      console.error('Failed to load lead entries:', error);
-    }
-  });
-}
-
   
+  getLeadEntry() {
+    let payload = {
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
+    };
+    this.switchService.listLeadEntry(payload).subscribe({
+      next: (res: any) => {
+        this.fetchedData = res;
+      },
+      error: (error) => {
+        console.error('Failed to load lead entries:', error);
+      }
+    });
+  }
+
+//   editLeadEntry() {
+//   const payload = this.fetchedData;
+//   const column_id = payload.columnId;
+
+//   this.switchService.editLeadEntry(column_id, payload).subscribe({
+//     next: (res: any) => {
+//       console.log('Lead updated successfully:', res);
+//       this.fetchedData = res;  // Update your UI with latest data if needed
+//       this.getLeadEntry();     // Refresh data if required
+//     },
+//     error: (error) => {
+//       console.error('Failed to update lead entry:', error);
+//     }
+//   });
+// }
+
+
+  deleteLeadEntry() {
+    const column_id = this.fetchedData.columnId;
+    console.log(column_id)
+    this.switchService.deleteLeadEntry(column_id).subscribe({
+      next: (res: any) => {
+        this.fetchedData = res;
+        this.getLeadEntry();
+      },
+      error: (error) => {
+        console.error('Failed to delete lead entry:', error);
+      }
+    });
+  }
+
+
+
   addMore() {
     this.showCustomInput = true;
   }

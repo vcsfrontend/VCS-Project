@@ -70,131 +70,132 @@
     </div>
 </div>
 
-<div class="card custom-card mt-3">
-    <div class="card-header justify-content-between">
-        <div class="card-title">
-            CRM Roles
-        </div>
-        <div class="d-flex flex-wrap gap-3">
-            <!-- <mat-form-field class="filters-field-1">
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card custom-card mt-3">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    CRM Roles
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <!-- <mat-form-field class="filters-field-1">
                 <mat-label>Search Here</mat-label>
                 <input matInput (keyup)="crmApplyFilter($event)" #input>
             </mat-form-field> -->
-            <button type="button" class="btn btn-primary" (click)="openLg1(content1)">
-                <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Users</button>
-        </div>
-    </div>
-    <div class="card-body p-0">
-        <div class="mat-elevation-z8">
-            <div class="table-responsive">
-                <table mat-table [dataSource]="crmDataSource" class="mat-table">
-                    <ng-container matColumnDef="slNo">
-                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="designNo">
-                        <th mat-header-cell *matHeaderCellDef> DesignNo </th>
-                        <td mat-cell *matCellDef="let element">{{element.designNo }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="desigRole">
-                        <th mat-header-cell *matHeaderCellDef> Design Role </th>
-                        <td mat-cell *matCellDef="let element">{{element.desigRole | titlecase }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="crmDesigRoleId">
-                        <th mat-header-cell *matHeaderCellDef> RoleId </th>
-                        <td mat-cell *matCellDef="let element"> {{element.crmDesigRoleId}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef> Email </th>
-                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="edit">
-                        <th mat-header-cell *matHeaderCellDef> edit </th>
-                        <td mat-cell *matCellDef="let element"> <a aria-label="anchor" href="javascript:void(0);"
-                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
-                                    class="ri-edit-line"></i></a> </td>
-                    </ng-container>
-                    <ng-container matColumnDef="delete">
-                        <th mat-header-cell *matHeaderCellDef> Delete </th>
-                        <td mat-cell *matCellDef="let element">
-                            <a aria-label="anchor" href="javascript:void(0);"
-                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle">
-                                <i class="ri-delete-bin-line"></i>
-                            </a>
-                        </td>
-                    </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="crmUsersColumn"></tr>
-                    <tr mat-row *matRowDef="let row; columns: crmUsersColumn">
-                    </tr>
-                </table>
+                    <button type="button" class="btn btn-primary" (click)="openLg1(content1)">
+                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Users</button>
+                </div>
             </div>
-            <mat-paginator #crmPaginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons>
-            </mat-paginator>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="crmDataSource" class="mat-table">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="designNo">
+                                <th mat-header-cell *matHeaderCellDef> DesignNo </th>
+                                <td mat-cell *matCellDef="let element">{{element.designNo }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="desigRole">
+                                <th mat-header-cell *matHeaderCellDef> Design Role </th>
+                                <td mat-cell *matCellDef="let element">{{element.desigRole | titlecase }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="crmDesigRoleId">
+                                <th mat-header-cell *matHeaderCellDef> RoleId </th>
+                                <td mat-cell *matCellDef="let element"> {{element.crmDesigRoleId}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef> Email </th>
+                                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> edit </th>
+                                <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                        href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                            class="ri-edit-line"></i></a> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="delete">
+                                <th mat-header-cell *matHeaderCellDef> Delete </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="crmUsersColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: crmUsersColumn">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #crmPaginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-6">
+        <div class="card custom-card mt-3">
+            <form [formGroup]="companyForm">
+                <div class="card-header justify-content-between d-flex">
+                    <div class="card-title">Company Info</div>
+                    <div class="col-xl-4">
+                        <ng-select formControlName="companyinfo" [items]="companyinfo" bindLabel="label"
+                            bindValue="value">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row gy-3 m-2">
+                        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer1'">
+                            <div [formGroup]="formDesigner1" class="d-flex gap-2">
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name" />
+                                </div>
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="products" placeholder="Products" />
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer2'">
+                            <div [formGroup]="formDesigner2" class="row w-100">
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Enter custom value" />
+                                </div>
+                                <div class="col-xl-6 d-flex align-items-end">
+                                    <button class="btn btn-primary" type="button" (click)="addMore()">Add Custom</button>
+                                </div>
+                                <div class="col-xl-6 mt-2" *ngIf="showCustomInput">
+                                    <input type="text" class="form-control" formControlName="customValue" placeholder="Enter custom value" />
+                                </div>
+                            </div>
+                            <div class="col-xl-6 d-flex align-items-end">
+                                <button type="button" class="btn btn-primary mt-2" (click)="saveAddLeadEntry()">Save</button>
+                            </div>
+                            <table class="table table-striped mt-2">
+                                <tbody>
+                                    <div *ngIf="fetchedData">
+                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                            <div *ngFor="let field of editableFields">
+                                                <input class="form-control" type="text" [value]="fetchedData[field]" />
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-danger mt-2 ms-2" (click)="deleteLeadEntry()">Delete</button>
+                                    </div>
+                                </tbody>
+                            </table>
+                        </ng-container>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
-<div class="card custom-card mt-3">
-  <form [formGroup]="companyForm">
-    <div class="card-header justify-content-between d-flex">
-      <div class="card-title">Company Info</div>
-      <div class="col-xl-3">
-        <ng-select
-          formControlName="companyinfo"
-          [items]="companyinfo"
-          bindLabel="label"
-          bindValue="value">
-        </ng-select>
-      </div>
-    </div>
-
-    <div class="card-body">
-      <div class="row gy-3 m-2">
-        <!-- Form for Designer1 -->
-        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer1'">
-          <div [formGroup]="formDesigner1" class="d-flex gap-2">
-            <div class="col-xl-6">
-              <label class="form-label">Company Name</label>
-              <input type="text" class="form-control" formControlName="companyName" />
-            </div>
-            <div class="col-xl-6">
-              <label class="form-label">Products</label>
-              <input type="text" class="form-control" formControlName="products" />
-            </div>
-          </div>
-        </ng-container>
-
-        <!-- Form for Designer2 -->
-        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer2'">
-          <div [formGroup]="formDesigner2" class="row w-100">
-            <div class="col-xl-6">
-              <input type="text" class="form-control" formControlName="companyName" />
-            </div>
-            <div class="col-xl-6 d-flex align-items-end">
-              <button class="btn btn-primary" type="button" (click)="addMore()">Add Custom</button>
-            </div>
-
-            <div class="col-xl-6 mt-2" *ngIf="showCustomInput">
-              <input type="text" class="form-control" formControlName="customValue" placeholder="Enter custom value" />
-            </div>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-    <table class="table table-striped mt-2">
-        <tbody>
-            <tr *ngFor="let entry of fetchedData | keyvalue">
-                <td>{{ entry.key }}</td>
-                <td>{{ entry.value }}</td>
-            </tr>
-    
-        </tbody>
-    </table>
-
-    <button type="button" class="btn btn-primary" (click)="saveAddLeadEntry()">Save</button>
-  </form>
-</div>
-
 <ng-template #content1 let-modal>
     <form [formGroup]="designCrmForm" (ngSubmit)="desigCrmSubmit(modal)">
         <div class="modal-header justify-content-center">
