@@ -57,8 +57,9 @@ export class CrmSettingsComponent extends BaseComponent {
   statusOptionsByStageforDisplay: any = {};
   anyChecked: any;leadForm!:FormGroup;selectedManager: string = '';companyForm! : FormGroup;
   showCustomInput: boolean = false;leadData :any;selectedOption: string = 'option1'; LeadEntryData : any;
-
-  relationshipManagers = [
+  formDesigner1!: FormGroup;
+  formDesigner2!: FormGroup;fetchedData:any;
+  companyinfo = [
     { value: 'designer1', label: 'Option 1' },
     { value: 'designer2', label: 'Option 2' }
   ];
@@ -143,13 +144,22 @@ export class CrmSettingsComponent extends BaseComponent {
     this.getLeadEntry(); 
     this.getDesignationCrmRloes(); this.getUsers();
     this.companyForm = this.fb.group({
-      relationshipmanager: ['designer1'],
+      companyinfo: ['designer1'],
+      // companyName: [''],
+      // products: [''],
+      // customCompanies: this.fb.array([])
+    });
+    this.formDesigner1 = this.fb.group({
       companyName: [''],
       products: [''],
-      customCompanies: this.fb.array([])
     });
 
-    this.companyForm.get('relationshipmanager')?.valueChanges.subscribe(value => {
+    this.formDesigner2 = this.fb.group({
+      companyName: [''],
+      customValue: [''],
+    });
+
+    this.companyForm.get('companyinfo')?.valueChanges.subscribe(value => {
       this.selectedOption = value;
   });
 
@@ -708,7 +718,7 @@ export class CrmSettingsComponent extends BaseComponent {
   }
 
   onManagerChange(): void {
-    this.selectedManager = this.companyForm.get('relationshipmanager')?.value;
+    this.selectedManager = this.companyForm.get('companyinfo')?.value;
   }
   get customCompanies(): FormArray {
     return this.companyForm.get('customCompanies') as FormArray;
@@ -719,18 +729,29 @@ export class CrmSettingsComponent extends BaseComponent {
   }
 
   saveAddLeadEntry(){
+    const selectedManager = this.companyForm.get('companyinfo')?.value;
     let payload ={
       columnId : 0,
-      f1 : this.companyForm.get('companyName')?.value,
-      f2 : this.companyForm.get('products')?.value,
+      f1 : '',
+      f2 : '',
       companyCode : this.userCompanyCode,
       email : this.userEmail,
       type : this.userType
     }
+    if (selectedManager === 'designer1') {
+      payload.f1 = this.formDesigner1.get('companyName')?.value;
+      payload.f2 = this.formDesigner1.get('products')?.value;
+    } else if (selectedManager === 'designer2') {
+      payload.f1 = this.formDesigner2.get('companyName')?.value;
+      payload.f2 = this.formDesigner2.get('customValue')?.value; // or whatever field you use
+    }
+      console.log('Final Payload:', payload);
+
     this.switchService.addLeadEntry(payload).subscribe({
       next : (res:any) =>{
         this.toastr.success('data saved succesfully');
-        this.companyForm.reset();
+        this.formDesigner1.reset();
+        this.getLeadEntry();
       },
       error : (error) =>{
         this.toastr.error(error.statusText);
@@ -747,14 +768,8 @@ export class CrmSettingsComponent extends BaseComponent {
 
   this.switchService.listLeadEntry(payload).subscribe({
     next: (res: any) => {
-      this.LeadEntryData = res;
-      if (res && res.length > 0) {
-        const lead = res[0];
-        this.leadForm.patchValue({
-          companyName: lead.companyName || '',
-          products: lead.products || ''
-        });
-      }
+      this.fetchedData = res;
+        console.log('Fetched Data:', this.fetchedData);
     },
     error: (error) => {
       console.error('Failed to load lead entries:', error);

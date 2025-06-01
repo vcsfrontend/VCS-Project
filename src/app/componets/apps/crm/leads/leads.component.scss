@@ -39,10 +39,6 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   color: white !important;
   border-right: none;
 }
-table.mat-mdc-table .mdc-data-table__header-cell:first-child {
-  border-right: none !important;
-  box-shadow: none !important;
-}
 table.mat-mdc-table {
   border-collapse: separate;
   border-spacing: 0;

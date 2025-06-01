@@ -37,14 +37,20 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   z-index: 10;
   background-color: #006699 !important;
   color: white !important;
+  border-right: none !important;
+  box-shadow: none !important;
 }
+table.mat-mdc-table .mdc-data-table__header-cell:nth-child(2)::after {
+  display: none !important;
+}
+
 table.mat-mdc-table .mdc-data-table__header-cell:nth-child(2) {
   border-right: none !important;
   box-shadow: none !important;
 }
-table.mat-mdc-table {
-  border-collapse: separate;
-  border-spacing: 0;
+table.mat-mdc-table .mdc-data-table__header-cell:first-child {
+  border-right: none !important;
+  box-shadow: none !important;
 }
 
 .mat-elevation-z8 {

@@ -130,7 +130,7 @@ export class LeadsComponent extends BaseComponent {
   selectedStage: string = '';
   checkboxStageOptions: any[] = []; 
   isStatusDataLoaded: boolean = false;
-  selectedStatusCount: number | null = null;
+  selectedStatusCount: number | null = null;selectedStatus: string = '';
   chartOptions: any;
   followUpCount: any;
   statusOptionsByStageforDisplay: any = {};
@@ -158,7 +158,7 @@ export class LeadsComponent extends BaseComponent {
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
-  userType: string = this.userData ? this.userData.type : '';
+  userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
   statusClicked = false;
   statusCounts: { status: string; count: number }[] = [];
@@ -206,7 +206,8 @@ export class LeadsComponent extends BaseComponent {
   showForm: boolean = false;
   allowCustomStatus: boolean = true;
   shouldDisableAddStatus = false;isImporting: boolean = false;
-  isStagesDisabled : boolean =false; phoneNumber: string = '';
+  isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
+  fetchedData:any;
   crmStaticStages = [
     {
       name: 'In Progress Leads',
@@ -417,7 +418,7 @@ export class LeadsComponent extends BaseComponent {
     const filterValue = (event.target as HTMLInputElement).value;
     this.usersDataSource.filter = filterValue.trim().toLowerCase();
   }
-  VerticallyScrol(content12: any) {
+  VerticallyScrol(content12: any,leadData?: any) {
     if (!this.stageLst || this.stageLst.length === 0) {
       this.toastr.warning('Please add at least one Stage before uploading.');
       return;
@@ -427,6 +428,13 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please add at least one Status before uploading.');
       return;
     }
+    if (leadData) {
+    this.leadForm.patchValue({
+      companyName: leadData.companyName || '',
+      products: leadData.products || '',
+    });
+    }
+
     this.leadId = 0;
     this.submitted = false;
     this.leadForm.reset();
@@ -437,6 +445,8 @@ export class LeadsComponent extends BaseComponent {
       centered: true,
       size: 'xl',
     });
+
+    
   }
   // openLg(content10:any) {
   //   this.modalService.open(content10, { size: 'lg' },);
@@ -454,7 +464,6 @@ export class LeadsComponent extends BaseComponent {
   ngOnInit(): void {
     this.getCampaignData();
     this.getlistFormTemplate();
-    this.getLeadEntry();
     // this.getFormTemplate();
     this.getAllEmailTemplates();
     const now = new Date();
@@ -508,6 +517,8 @@ export class LeadsComponent extends BaseComponent {
           }
       });
     });
+
+    this.getLeadEntry();
 
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
@@ -2372,13 +2383,28 @@ export class LeadsComponent extends BaseComponent {
 
     this.openRight(content);
   }
-  onStatusButtonClick(status: string): void {
-    if (status === 'Connected') {
-      this.showForm = true;
-    } else {
-      this.showForm = false;
+  onStatusButtonClick(status: string,modal :any): void {
+  this.selectedStatus = status;
+  this.showForm = true;
+    if (status === 'Not Connected') {
+    // Set default values
+    const now = new Date();
+    const formattedNow = now.toISOString().slice(0, 16); // for datetime-local
+
+    this.followupLeadForm.patchValue({
+      status: 'Not Connected',
+      followupDate: formattedNow,
+      comments: 'Not connected',       // Optional
+    });
+    this.followupLeadSubmit(modal)
+  }
+   else if (status === 'Connected') {
+    this.readonlyMode = false;
+     if (this.originalConnectedForm) {
+      this.followupLeadForm.patchValue(this.originalConnectedForm);
     }
   }
+}
 
   deleteLeadStages() {
     const payload = {
@@ -2461,31 +2487,28 @@ export class LeadsComponent extends BaseComponent {
       });
     }
   }
+  
+  getLeadEntry() {
+    let payload = {
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
+    };
 
-  getLeadEntry(){
-    let payload ={
-      email: this.userData ? JSON.parse(this.userData).email : '',
-      companyCode: this.userData ? JSON.parse(this.userData).companyCode : '',
-      type: this.userData ? JSON.parse(this.userData).type : '',
-    }
     this.switchService.listLeadEntry(payload).subscribe({
-      next : (res:any) =>{
-        if (res && res.length > 0) {
-        const lead = res[0];
+      next: (res: any) => {
         this.leadForm.patchValue({
-          companyName: lead.companyName,
-          products: lead.products
-        });
+          companyName: res.f1 || '',
+          products: res.f2 || ''
+      });
+      console.log('Form value before patching:', this.leadForm.value);
 
-        // Debug
-        console.log('Company Name:', lead.companyName,);
-        console.log('Products:', lead.products);
-      }
+          console.log('Fetched Data:', res);
       },
-      error:(error) =>{
-
+      error: (error) => {
+        console.error('Failed to load lead entries:', error);
       }
-    })
+    });
   }
 
 
