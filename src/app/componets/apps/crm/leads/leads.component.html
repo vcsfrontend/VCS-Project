@@ -388,10 +388,10 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-8 mb-4 scrollable-container" [ngStyle]="{
+        <div class="mb-4 scrollable-container" [ngClass]="userType !== 2 ? 'col-lg-8' : 'col-lg-12'" [ngStyle]="{
         'max-height': topshowMore ? '330px' : '350px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
-        'transition': 'max-height 0.5s ease' }">
+        'transition': 'max-height 0.5s ease' }" >
             <div class="row">
                 <div class="col-xl-6" *ngFor="let statusGroup of statusLst">
                     <div class="card custom-card">
@@ -412,7 +412,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4" *ngIf="userType !== 2">
             <div class="card custom-card overflow-hidden">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
@@ -998,18 +998,18 @@
             aria-label="Close"></button>
     </div>
     <div class="d-flex pt-4 gap-3 ms-2">
-        <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected')">Connected</button>
-        <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected')">Not Connected</button>
+        <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
+        <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)">Not Connected</button>
 
     </div>
-    <div *ngIf="showForm" class="mt-2">
+    <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
         <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
             <div class="offcanvas-body p-0 m-4 ">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label for="followupDate" class="form-label">Next Follow up date</label>
                         <input type="datetime-local" class="form-control" id="followupDate" placeholder=""
-                            formControlName="followupDate"
+                            formControlName="followupDate" [disabled]="readonlyMode"
                             [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }"
                             [min]="minDateTime" />
 
@@ -1019,8 +1019,8 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                         <label class="form-label" for="stage">Stage</label>
-                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName"
-                            placeholder="Select a stage" (change)="onFollowupStatusChange()"
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName" [disabled]="readonlyMode"
+                            placeholder="Select a stage" (change)="onFollowupStatusChange()" 
                             [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['stage'].errors }">
                         </ng-select>
                         <div *ngIf="followupLeadSubmitted && e['stage'].errors" class="invalid-feedback">
@@ -1029,7 +1029,7 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
                         <label class="form-label">Status</label>
-                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name" [disabled]="readonlyMode"
                             placeholder="Select a status"
                             [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['status'].errors }">
                         </ng-select>
@@ -1175,5 +1175,4 @@
         </div>
     </div>
 </ng-template>
-
 

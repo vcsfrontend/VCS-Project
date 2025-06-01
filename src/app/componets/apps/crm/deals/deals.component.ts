@@ -50,7 +50,7 @@ export class DealsComponent extends BaseComponent {
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
-  userType: string = this.userData ? this.userData.type : '';
+  userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
 
   displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city'];

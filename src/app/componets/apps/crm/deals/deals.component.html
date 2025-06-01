@@ -1138,7 +1138,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-8 mb-4 scrollable-container" [ngStyle]="{
+        <div class="col-xl-8 mb-4 scrollable-container" [ngClass]="userType == 2 ? 'col-lg-12' : 'col-lg-8'" [ngStyle]="{
         'max-height': topshowMore ? '330px' : '350px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
         'transition': 'max-height 0.5s ease' }">
@@ -1162,7 +1162,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4" *ngIf="userType !== 2">
             <div class="card custom-card overflow-hidden">
                 <div class="card-header justify-content-between">
                     <div class="card-title">

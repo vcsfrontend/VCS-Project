@@ -135,50 +135,63 @@
 </div>
 
 <div class="card custom-card mt-3">
-  <form [formGroup]="companyForm" >
-    <div class="card-header justify-content-between">
-      <div class="card-title">CRM ROLES</div>
-      <div class="col-xl-3 col-lg-3 col-md-3">
+  <form [formGroup]="companyForm">
+    <div class="card-header justify-content-between d-flex">
+      <div class="card-title">Company Info</div>
+      <div class="col-xl-3">
         <ng-select
-          formControlName="relationshipmanager"
-          [items]="relationshipManagers"
+          formControlName="companyinfo"
+          [items]="companyinfo"
           bindLabel="label"
-          bindValue="value"
-          placeholder="Select a Relationship Manager">
+          bindValue="value">
         </ng-select>
       </div>
     </div>
 
-    <div class="card-body p-0">
-      <div class="row gy-3 scrollable-content m-2 pb-2">
-        <ng-container *ngIf="companyForm.get('relationshipmanager')?.value === 'designer1'">
-            <div class="col-xl-6 col-lg-3 col-md-3">
-                <label class="form-label">Company Name</label>
-                <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name">
+    <div class="card-body">
+      <div class="row gy-3 m-2">
+        <!-- Form for Designer1 -->
+        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer1'">
+          <div [formGroup]="formDesigner1" class="d-flex gap-2">
+            <div class="col-xl-6">
+              <label class="form-label">Company Name</label>
+              <input type="text" class="form-control" formControlName="companyName" />
             </div>
-          <div class="col-xl-6 col-lg-3 col-md-3">
-            <label class="form-label">Products</label>
-            <input type="text" class="form-control" formControlName="products" placeholder="Products">
+            <div class="col-xl-6">
+              <label class="form-label">Products</label>
+              <input type="text" class="form-control" formControlName="products" />
+            </div>
           </div>
         </ng-container>
-        <!-- Show for Admin 1 -->
-        <ng-container *ngIf="companyForm.get('relationshipmanager')?.value === 'designer2'">
-            <div class="col-xl-6 col-lg-3 col-md-3">
-                <input type="text" class="form-control" placeholder="Company Name">
+
+        <!-- Form for Designer2 -->
+        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer2'">
+          <div [formGroup]="formDesigner2" class="row w-100">
+            <div class="col-xl-6">
+              <input type="text" class="form-control" formControlName="companyName" />
             </div>
-            <div class="col-xl-6 col-lg-3 col-md-3 mb-3">
-                <button class="btn btn-primary gappp me-3" type="button" (click)="addMore()">
-                    Add Custom
-                </button>
-            </div>        
-            <div class="col-xl-6 mb-3" *ngIf="showCustomInput">
-                <input type="text" class="form-control" placeholder="Enter value">
+            <div class="col-xl-6 d-flex align-items-end">
+              <button class="btn btn-primary" type="button" (click)="addMore()">Add Custom</button>
             </div>
+
+            <div class="col-xl-6 mt-2" *ngIf="showCustomInput">
+              <input type="text" class="form-control" formControlName="customValue" placeholder="Enter custom value" />
+            </div>
+          </div>
         </ng-container>
-       
       </div>
     </div>
-    <button type="button" class="btn btn-primary border-end border-light" (click)="saveAddLeadEntry()">Save</button>
+    <table class="table table-striped mt-2">
+        <tbody>
+            <tr *ngFor="let entry of fetchedData | keyvalue">
+                <td>{{ entry.key }}</td>
+                <td>{{ entry.value }}</td>
+            </tr>
+    
+        </tbody>
+    </table>
+
+    <button type="button" class="btn btn-primary" (click)="saveAddLeadEntry()">Save</button>
   </form>
 </div>
 
@@ -436,3 +449,5 @@
         </div>
     </div>
 </ng-template>
+
+
