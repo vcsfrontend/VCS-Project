@@ -524,6 +524,7 @@ export class LeadsComponent extends BaseComponent {
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]],
       autoAllocate: [false],
+      agents:['']
     });
 
     //Send Email
@@ -811,10 +812,10 @@ export class LeadsComponent extends BaseComponent {
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible;
   }
+
   LeadForm(campaignId: string) {
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      companyName: [''],
       executive: [''],
       products: [''],
       country: [''],
@@ -833,6 +834,10 @@ export class LeadsComponent extends BaseComponent {
       updatedBy: [this.userEmail],
       updatedTime: [''],
       entryBy: [this.userEmail],
+      companyCode: [this.userCompanyCode],
+      companyName: [this.userCompanyName],
+      individualEmail: [this.userEmail],
+      type: [this.userType],
       campaignId: [this.campaignId],
     });
   }
@@ -846,6 +851,10 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm.get('executive')?.setValue('');
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('companyCode')?.setValue(JSON.parse(this.userData).companyCode);
+    this.leadForm.get('companyName')?.setValue(JSON.parse(this.userData).companyName);
+    this.leadForm.get('individualEmail')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('type')?.setValue(JSON.parse(this.userData).type);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
@@ -1665,10 +1674,14 @@ export class LeadsComponent extends BaseComponent {
   }
 
   getStatusCount(): void {
-    this.statusClicked = false;
     this.selectedStatusCount = null;
-    const campaignId = this.campaignId;
-    this.switchService.StatusCount(campaignId).subscribe({
+    const payload = {
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      campaignId: this.campaignId 
+    };
+    this.switchService.StatusCount(payload).subscribe({
       next: (res: any[]) => {
         if (Array.isArray(res)) {
           this.statusCounts = res;
@@ -1841,6 +1854,7 @@ export class LeadsComponent extends BaseComponent {
       formData.append('campaignId', this.campaignId || '');
       formData.append('stage', this.defaultStageName || '');
       formData.append('status', this.defaultStatusName || '');
+      formData.append('agents', '');
       const autoAllocate = this.uploadLead.get('autoAllocate')?.value;
       formData.append('autoAllocate', autoAllocate.toString());
       const formDataObject: any = {};
@@ -2182,7 +2196,6 @@ export class LeadsComponent extends BaseComponent {
     } else {
       this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
     }
-    console.log('Row checkbox changed:', this.selectedLeads);
   }
 
   onSelectAllChange(event: any) {
@@ -2191,7 +2204,6 @@ export class LeadsComponent extends BaseComponent {
     } else {
       this.selectedLeads = [];
     }
-    console.log('Select All changed:', this.selectedLeads);
   }
 
   isSelected(leadId: number): boolean {
@@ -2505,18 +2517,10 @@ export class LeadsComponent extends BaseComponent {
         this.leadForm.patchValue({
           companyName: res.f1 || '',
           products: res.f2 || ''
-      });
-      console.log('Form value before patching:', this.leadForm.value);
-
-          console.log('Fetched Data:', res);
+        });
       },
       error: (error) => {
-        console.error('Failed to load lead entries:', error);
       }
     });
   }
-
-
-
-
 }

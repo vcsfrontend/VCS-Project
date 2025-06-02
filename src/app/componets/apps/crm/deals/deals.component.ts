@@ -74,7 +74,7 @@ export class DealsComponent extends BaseComponent {
   selectedStatusCount: number | null = null;statusCounts: { status: string; count: number }[] = [];
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
   selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
-  showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {};
+  showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -151,6 +151,7 @@ export class DealsComponent extends BaseComponent {
   }];
   public pieChartLegend = true;
   public pieChartPlugins = [];
+  form: any;
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder,
@@ -338,22 +339,33 @@ export class DealsComponent extends BaseComponent {
     this.getFormTemplate();
     this.getAllEmailTemplates();
     const now = new Date();
-      // Pad with 0 if needed
-      const pad = (n: number) => n.toString().padStart(2, '0');
-      const yyyy = now.getFullYear();
-      const mm = pad(now.getMonth() + 1);
-      const dd = pad(now.getDate());
-      const hh = pad(now.getHours());
-      const mi = pad(now.getMinutes());
+    // Pad with 0 if needed
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const mi = pad(now.getMinutes());
 
-      this.minDateTime = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
-    this.getFetchLeadData('DUMMY9DD1748413866634');
+    this.minDateTime = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+    this.getfetchLeadsIndividual();
+
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]],
+      agents: [''],
       autoAllocate: [false],
-
     });
+    this.uploadLead.get('autoAllocate')?.valueChanges.subscribe((checked) => {
+      if (checked) {
+        this.uploadLead.get('agents')?.setValidators(Validators.required);
+      } else {
+        this.uploadLead.get('agents')?.clearValidators();
+        this.uploadLead.get('agents')?.reset();
+      }
+      this.uploadLead.get('agents')?.updateValueAndValidity();
+    });
+
 
     //Send Email 
     this.sendLeadForm = this.fb.group({
@@ -375,12 +387,12 @@ export class DealsComponent extends BaseComponent {
       followUpBy: [''],
     });
 
-     this.sendwhatsLeadForm = this.fb.group({
-        template: ['', [Validators.required]],
-        subject: ['', [Validators.required, Validators.minLength(3)]],
-        content: ['', [Validators.required]],
-        file: [''],
-      });
+    this.sendwhatsLeadForm = this.fb.group({
+      template: ['', [Validators.required]],
+      subject: ['', [Validators.required, Validators.minLength(3)]],
+      content: ['', [Validators.required]],
+      file: [''],
+    });
 
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
@@ -417,7 +429,7 @@ export class DealsComponent extends BaseComponent {
       this.rotateCharts = false;
     }, 1000);
 
-     this.crmStageData = {
+    this.crmStageData = {
       stageId: 0,
       companyName: this.userCompanyName,
       companyCode: this.userCompanyCode,
@@ -545,15 +557,14 @@ export class DealsComponent extends BaseComponent {
   }
   updateColumns() {
     this.showSourceFlagColumn = this.dataSource.data.some(element => element.source === 'executive');
-
     if (!this.showSourceFlagColumn) {
       this.displayedColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
     }
   }
+
   LeadForm(campaignId: string) {
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
-      companyName: [''],
       executive: [''],
       products: [''],
       country: [''],
@@ -572,6 +583,10 @@ export class DealsComponent extends BaseComponent {
       updatedBy: [this.userEmail],
       updatedTime: [''],
       entryBy: [this.userEmail],
+      companyCode: [this.userCompanyCode],
+      companyName: [this.userCompanyName],
+      individualEmail: [this.userEmail],
+      type: [this.userType],
       campaignId: ['DUMMY9DD1748413866634'],
     });
   }
@@ -585,6 +600,10 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('executive')?.setValue('');
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('companyCode')?.setValue(JSON.parse(this.userData).companyCode);
+    this.leadForm.get('companyName')?.setValue(JSON.parse(this.userData).companyName);
+    this.leadForm.get('individualEmail')?.setValue(JSON.parse(this.userData).email);
+    this.leadForm.get('type')?.setValue(JSON.parse(this.userData).type);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
@@ -595,7 +614,7 @@ export class DealsComponent extends BaseComponent {
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
-            this.getFetchLeadData('DUMMY9DD1748413866634');
+            this.getfetchLeadsIndividual();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
@@ -614,8 +633,9 @@ export class DealsComponent extends BaseComponent {
     }
   }
 
-  getFetchLeadData(campaignId:string) {
-    this.switchService.FetchLeadData(this.userEmail, this.campaignId).subscribe({
+  getfetchLeadsIndividual() {
+    const entryBy =  this.userEmail;
+    this.switchService.fetchLeadsIndividual(entryBy).subscribe({
       next: (res: any) => {
           const now = new Date();
           const executiveList = (res.executiveList || []).map((item: any) => ({
@@ -907,47 +927,36 @@ export class DealsComponent extends BaseComponent {
   }
 
 
+  
   uploadLeadSubmit(modal: any) {
     this.uploadSubmitted = true;
-    this.defaultStageName = 'open';
-    this.defaultStatusName='active';
-    if (this.uploadLead?.valid) {
+    if (this.uploadLead.valid) {
       this.uploadSpinner = true;
       const formData = new FormData();
       formData.append('file', this.imageFileSrcData);
       formData.append('uploadedBy', JSON.parse(this.userData)?.email || '');
-      formData.append('campaignId', 'DUMMY9DD1748413866634');
-      formData.append('stage', this.defaultStageName || '');
-      formData.append('status', this.defaultStatusName || '');
+      formData.append('campaignId', (JSON.parse(this.userData)?.userType === 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
+      formData.append('stage', this.defaultStageName || 'open');
+      formData.append('status', this.defaultStatusName || 'active');
       const autoAllocate = this.uploadLead.get('autoAllocate')?.value;
       formData.append('autoAllocate', autoAllocate.toString());
-      const formDataObject: any = {};
+      const selectedAgent = this.uploadLead.get('agents')?.value;
+      if (autoAllocate && selectedAgent) {
+        formData.append('agents', selectedAgent);
+      } else {
+        formData.append('agents', '');
+      }
       formData.forEach((value, key) => {
-        formDataObject[key] = value;
       });
-      console.log('formdata:',formDataObject)
       this.switchService.UploadCrmLeads(formData).subscribe({
         next: (res: any) => {
-          if (res.status == true) {
+          if (res.status === true) {
             modal.close();
+            this.uploadLead.reset();
             this.uploadSubmitted = false;
             this.uploadSpinner = false;
-            this.uploadLead.reset();
             this.toastr.success(res.message, 'Bulk Lead Upload Successful');
-            const stageColor = this.stageColor[this.defaultStageName] || '#ccc';
-            const statusColor = this.statusColor[this.defaultStatusName] || '#ccc';
-
-            this.uploadStageDisplay = {
-              name: this.defaultStageName,
-              color: stageColor
-            };
-
-            this.uploadStatusDisplay = {
-              name: this.defaultStatusName,
-              color: statusColor
-            };
-            this.getFetchLeadData('DUMMY9DD1748413866634');
-
+            this.getfetchLeadsIndividual();
           } else {
             this.uploadSpinner = false;
             this.toastr.error(res.message, 'lead');
@@ -955,14 +964,16 @@ export class DealsComponent extends BaseComponent {
         },
         error: (err: any) => {
           this.uploadSpinner = false;
-          this.toastr.error('Error fetching CRM Bulkupload leads', 'lead', {
-            timeOut: 3000,
-            positionClass: 'toast-top-right',
-          });
+          this.toastr.error('Error uploading CRM leads', 'lead');
         },
       });
     }
   }
+
+
+
+
+
 
   sendEmail(element: any) {
     this.sendLeadForm.patchValue({ email: element.email });
@@ -1016,7 +1027,7 @@ export class DealsComponent extends BaseComponent {
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
-            this.getFetchLeadData('DUMMY9DD1748413866634');
+            this.getfetchLeadsIndividual();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
@@ -1110,7 +1121,7 @@ export class DealsComponent extends BaseComponent {
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
-            this.getFetchLeadData('DUMMY9DD1748413866634');
+            this.getfetchLeadsIndividual();
           } else {
             this.toastr.error(res.message, 'lead', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -1161,13 +1172,11 @@ export class DealsComponent extends BaseComponent {
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
-
     if (this.selectedIdList.size == 0) {
       this.toastr.error('Please choose at least one', 'lead', {
         timeOut: 3000, positionClass: 'toast-top-right'
       });
     }
-
     if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
       this.allocateForm.patchValue({ idList: this.allocateForm });
       let allocateData = { idList: [...this.selectedIdList], executive: this.allocateForm.get('executive')?.value }
@@ -1177,13 +1186,10 @@ export class DealsComponent extends BaseComponent {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
             this.selectedIdList.clear();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
+            this.toastr.success(res.message, 'lead');
+            this.getfetchLeadsIndividual();
           } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
+            this.toastr.error(res.message, 'lead', );
           }
         },
         error: (error) => {
@@ -1194,35 +1200,34 @@ export class DealsComponent extends BaseComponent {
     }
   }
 
-
-  // Handle single row selection
   onRowCheckboxChange(leadId: number, event: any) {
     if (event.checked) {
-      this.selectedIdList.add(leadId);
+      if (!this.selectedLeads.includes(leadId)) {
+        this.selectedLeads.push(leadId);
+      }
     } else {
-      this.selectedIdList.delete(leadId);
+      this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
     }
   }
 
-  // Handle "select all" checkbox
   onSelectAllChange(event: any) {
     if (event.checked) {
-      this.selectedIdList = new Set(this.dataSource.data.map((row: { leadId: any }) => row.leadId));
+      this.selectedLeads = this.dataSource.data.map((row: any) => row.leadId);
     } else {
-      this.selectedIdList.clear();
+      this.selectedLeads = [];
     }
   }
 
-  isAllSelected() {
-    return this.selectedIdList.size === this.dataSource.data.length;
+  isSelected(leadId: number): boolean {
+    return this.selectedLeads.includes(leadId);
   }
 
-  isIndeterminate() {
-    return this.selectedIdList.size > 0 && this.selectedIdList.size < this.dataSource.data.length;
+  isAllSelected(): boolean {
+    return this.selectedLeads.length === this.dataSource.data.length;
   }
 
-  isSelected(leadId: number) {
-    return this.selectedIdList.has(leadId);
+  isIndeterminate(): boolean {
+    return this.selectedLeads.length > 0 && !this.isAllSelected();
   }
 
   @ViewChild("myPond") myPond!: FilePondComponent;
@@ -1796,8 +1801,13 @@ export class DealsComponent extends BaseComponent {
 
   getStatusCount(): void {
     this.selectedStatusCount = null;
-    const campaignId = this.campaignId;
-    this.switchService.StatusCount(campaignId).subscribe({
+    const payload = {
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      campaignId: this.campaignId 
+    };
+    this.switchService.StatusCount(payload).subscribe({
       next: (res: any[]) => {
         if (Array.isArray(res)) {
           this.statusCounts = res;
@@ -1810,6 +1820,7 @@ export class DealsComponent extends BaseComponent {
       },
     });
   }
+
 
   getSeriesData(fields: any[]): number[] {
     return fields.map((field) => {
@@ -1904,8 +1915,8 @@ export class DealsComponent extends BaseComponent {
       this.switchService.deleteLeads({ leadList: this.selectedLeads }).subscribe({
         next: (res: any) => {
           this.toastr.success('Leads deleted successfully');
-          this.getFetchLeadData('DUMMY9DD1748413866634');
-          this.selectedLeads = []; 
+          this.getfetchLeadsIndividual();
+          this.selectedLeads = [];
         },
         error: (error) => {
           this.toastr.error('Failed to delete leads.');
@@ -1914,13 +1925,12 @@ export class DealsComponent extends BaseComponent {
     }
   }
 
-
   deleteSingleLead(leadId: number) {
     if (confirm('Are you sure you want to delete this lead?')) {
       this.switchService.deleteLeads({ leadList: [leadId] }).subscribe({
         next: () => {
           this.toastr.success('Lead deleted successfully');
-          this.getFetchLeadData('DUMMY9DD1748413866634');
+          this.getfetchLeadsIndividual();
           this.selectedLeads = this.selectedLeads.filter(id => id !== leadId); // Remove if selected
         },
         error: () => {

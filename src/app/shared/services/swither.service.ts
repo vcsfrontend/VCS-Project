@@ -165,7 +165,7 @@ export class SwitherService {
   displayCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/list_campaigns`, data); }
   deleteLeadStages(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/deleteStages`, data); }  
   deleteLeadStatus(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/deleteStatus`, data); }    
-  StatusCount(campaignId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_count_Status?campaignId=${campaignId}`); }  
+  StatusCount(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/get_count_Status`, data); }  
   sepecificCampaign(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_campaign_specific`,data); } 
   deleteCampaign(campaign_Id:any): Observable<any> { return this.http.get(`${this.apiUrl}designation/delete_campaign/${campaign_Id}`); }   
   selectFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/create_crm_email_template`,data); }
@@ -177,6 +177,7 @@ export class SwitherService {
   listLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_lead_entry_columns`,data); }
   editLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead_entry_columns`,data); }   
   deleteLeadEntry(column_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead_column/${column_id}`); } 
+  fetchLeadsIndividual(entryBy:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual/${entryBy}`); } 
 
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}

@@ -337,8 +337,8 @@
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="followUpDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>FollowUpDate</th>
-                        <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date:'dd-MM-yy' }} </td>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Followup Date</th>
+                        <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a'  }} </td>
                     </ng-container>
                     <ng-container matColumnDef="contact">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
@@ -729,13 +729,17 @@
                                     </div>
                                 </div>
                                 <div class="form-check mb-3">
-                                    <input type="checkbox" class="form-check-input" id="allocateExecutive"
-                                        formControlName="autoAllocate" />
+                                    <input type="checkbox" class="form-check-input" id="allocateExecutive" formControlName="autoAllocate" />
                                     <label class="form-check-label" for="allocateExecutive">
                                         Allocate Executive
                                     </label>
                                 </div>
-
+                                <div *ngIf="uploadLead.get('autoAllocate')?.value">
+                                    <label>Select User</label>
+                                    <ng-select [items]="userList" bindLabel="email" bindValue="email" placeholder="Select a user"
+                                        formControlName="agents" [multiple]="true">
+                                    </ng-select>
+                                </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12">
                                     <button class="btn btn-primary me-1" type="submit"
                                         [disabled]="uploadSpinner">Import</button>
@@ -1166,7 +1170,7 @@
                     </div>
                 </div>
                 <div class="card-body p-0 crm-card-chart"
-                    style="min-height: 300px; max-height: 350px; overflow-y: auto;">
+                   style="min-height: 290px; max-height: 290px; overflow-y: auto;">
                     <ul class="list-group list-group-flush" >
                         <li class="list-group-item" *ngFor="let user of userList">
                             <div class="d-flex align-items-center">
