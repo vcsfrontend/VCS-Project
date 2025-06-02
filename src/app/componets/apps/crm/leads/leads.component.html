@@ -473,12 +473,22 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-mail" class="form-label">Company Name</label>
+                    <label for="contact-mail" class="form-label">
+                        <ng-container *ngIf="companyLst?.type === 2 && companyLst?.f1;  else defaultLabel1">
+                            {{ companyLst.f1 }}
+                        </ng-container>
+                        <ng-template #defaultLabel1>Company Name</ng-template>
+                    </label>
                     <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
                         formControlName="companyName" >
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">Products</label>
+                    <label for="company-name" class="form-label">
+                        <ng-container *ngIf="companyLst?.type === 2 && companyLst?.f2; else defaultLabel2">
+                            {{ companyLst.f2 }}
+                        </ng-container>
+                        <ng-template #defaultLabel2>Products</ng-template>
+                    </label>
                     <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
