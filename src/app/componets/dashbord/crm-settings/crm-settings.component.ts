@@ -59,6 +59,7 @@ export class CrmSettingsComponent extends BaseComponent {
   showCustomInput: boolean = false;leadData :any;selectedOption: string = 'option1'; LeadEntryData : any;
   formDesigner1!: FormGroup;
   formDesigner2!: FormGroup; fetchedData:any; editableFields = ['f1', 'f2'];
+  hasSubmitted: boolean = false;isEditing : boolean=false;
   companyinfo = [
     { value: 'designer1', label: 'Option 1' },
     { value: 'designer2', label: 'Option 2' }
@@ -141,7 +142,7 @@ export class CrmSettingsComponent extends BaseComponent {
   ngOnInit() {
     this.getCrmStages();
     // this.getCrmStatus();
-    this.getLeadEntry(); 
+    this.getLeadEntry();
     this.getDesignationCrmRloes(); this.getUsers();
     this.companyForm = this.fb.group({
       companyinfo: ['designer1'],
@@ -155,14 +156,19 @@ export class CrmSettingsComponent extends BaseComponent {
     });
 
     this.formDesigner2 = this.fb.group({
-      companyName: [''],
-      customValue: [''],
+      companyName: ['',Validators.required],
+      customValue: ['',Validators.required],
     });
 
     this.companyForm.get('companyinfo')?.valueChanges.subscribe(value => {
       this.selectedOption = value;
   });
 
+  const saved = localStorage.getItem('submittedDesignerData');
+    if (saved) {
+      this.fetchedData = JSON.parse(saved);
+      this.hasSubmitted = true;
+    }
 
     this.crmStageData = {
       companyName: this.userCompanyName,
@@ -728,6 +734,15 @@ export class CrmSettingsComponent extends BaseComponent {
 
   saveAddLeadEntry() {
     const selectedManager = this.companyForm.get('companyinfo')?.value;
+    const formToValidate = selectedManager === 'designer1' ? this.formDesigner1 : this.formDesigner2;
+
+    this.hasSubmitted = true;
+
+    if (formToValidate.invalid) {
+      return; // stop if invalid
+    }
+    this.fetchedData = this.formDesigner2.value;
+    localStorage.setItem('submittedDesignerData', JSON.stringify(this.fetchedData));
     let payload = {
       f1: '',
       f2: '',
@@ -746,6 +761,7 @@ export class CrmSettingsComponent extends BaseComponent {
       next: (res: any) => {
         this.toastr.success('data saved succesfully');
         this.formDesigner1.reset();
+        // this.hasSubmitted = true;
         this.getLeadEntry();
       },
       error: (error) => {
@@ -762,7 +778,16 @@ export class CrmSettingsComponent extends BaseComponent {
     };
     this.switchService.listLeadEntry(payload).subscribe({
       next: (res: any) => {
+        if (res && res.columnId) {
         this.fetchedData = res;
+        this.hasSubmitted = true;
+        const selectedType = res.type === 2 ? 'designer2' : 'designer1';
+        this.companyForm.patchValue({ companyinfo: selectedType });
+        }
+        else{
+          this.fetchedData = null;
+          this.hasSubmitted = false;
+        } 
       },
       error: (error) => {
         console.error('Failed to load lead entries:', error);
@@ -770,29 +795,48 @@ export class CrmSettingsComponent extends BaseComponent {
     });
   }
 
-//   editLeadEntry() {
-//   const payload = this.fetchedData;
-//   const column_id = payload.columnId;
+  startEdit() {
+    this.isEditing = true;
+    this.formDesigner2.patchValue({
+      companyName: this.fetchedData.f1,
+      customValue: this.fetchedData.f2
+    });
+  }
 
-//   this.switchService.editLeadEntry(column_id, payload).subscribe({
-//     next: (res: any) => {
-//       console.log('Lead updated successfully:', res);
-//       this.fetchedData = res;  // Update your UI with latest data if needed
-//       this.getLeadEntry();     // Refresh data if required
-//     },
-//     error: (error) => {
-//       console.error('Failed to update lead entry:', error);
-//     }
-//   });
-// }
+  editLeadEntry() {
+  const payload = {
+    ...this.fetchedData,
+    f1: this.formDesigner2.get('companyName')?.value,
+    f2: this.formDesigner2.get('customValue')?.value              
+  };
+  const column_id = payload.columnId;
+  console.log (payload);
+  this.switchService.editLeadEntry(payload).subscribe({
+    next: (res: any) => {
+      console.log('Lead updated successfully:', res);
+      this.fetchedData = res;  
+      this.getLeadEntry();     
+    },
+    error: (error) => {
+      console.error('Failed to update lead entry:', error);
+    }
+  });
+  }
 
+  cancelEdit() {
+  this.isEditing = false;
+  }
 
   deleteLeadEntry() {
     const column_id = this.fetchedData.columnId;
     console.log(column_id)
+    if (confirm('Are you sure you want to delete this Lead stages?')) {
     this.switchService.deleteLeadEntry(column_id).subscribe({
       next: (res: any) => {
-        this.fetchedData = res;
+        this.hasSubmitted = false;
+        this.fetchedData = null;
+        this.showCustomInput = false;
+        this.formDesigner2.reset();
         this.getLeadEntry();
       },
       error: (error) => {
@@ -800,10 +844,13 @@ export class CrmSettingsComponent extends BaseComponent {
       }
     });
   }
-
-
+  }
 
   addMore() {
     this.showCustomInput = true;
+  }
+  
+  get g() {
+    return this.formDesigner2.controls;
   }
 }

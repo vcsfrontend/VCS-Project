@@ -160,12 +160,17 @@
                                 <div class="col-xl-6">
                                     <input type="text" class="form-control" formControlName="products" placeholder="Products" />
                                 </div>
+                                
                             </div>
                         </ng-container>
                         <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer2'">
-                            <div [formGroup]="formDesigner2" class="row w-100">
+                            <div *ngIf="!hasSubmitted && !fetchedData" [formGroup]="formDesigner2" class="row w-100">
                                 <div class="col-xl-6">
-                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Enter custom value" />
+                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Enter custom value" 
+                                    [ngClass]="{ 'is-invalid': hasSubmitted && g['companyName'].errors }"/>
+                                    <div *ngIf="hasSubmitted && g['companyName'].errors" class="invalid-feedback">
+                                        <span *ngIf="g['companyName'].errors['required']">status is required.</span>
+                                    </div>
                                 </div>
                                 <div class="col-xl-6 d-flex align-items-end">
                                     <button class="btn btn-primary" type="button" (click)="addMore()">Add Custom</button>
@@ -173,19 +178,34 @@
                                 <div class="col-xl-6 mt-2" *ngIf="showCustomInput">
                                     <input type="text" class="form-control" formControlName="customValue" placeholder="Enter custom value" />
                                 </div>
+                                <div class="col-xl-6 d-flex align-items-end">
+                                    <button type="button" class="btn btn-primary mt-2" (click)="saveAddLeadEntry()" [disabled]="hasSubmitted">Save</button>
+                                </div>
                             </div>
-                            <div class="col-xl-6 d-flex align-items-end">
-                                <button type="button" class="btn btn-primary mt-2" (click)="saveAddLeadEntry()">Save</button>
+
+                            <div *ngIf="isEditing" [formGroup]="formDesigner2" class="row w-100 mt-2">
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Edit company name" />                
+                                </div>
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="customValue" placeholder="Edit custom value" />
+                                </div>
+                                <div class="col-xl-12 d-flex gap-2 mt-3">
+                                    <button class="btn btn-success" (click)="editLeadEntry()">Save Changes</button>
+                                    <button class="btn btn-danger" (click)="cancelEdit()">Cancel</button>
+                                </div>
                             </div>
+                      
                             <table class="table table-striped mt-2">
                                 <tbody>
-                                    <div *ngIf="fetchedData">
+                                    <div *ngIf="hasSubmitted && !isEditing">
                                         <div style="display: flex; gap: 10px; align-items: center;">
                                             <div *ngFor="let field of editableFields">
                                                 <input class="form-control" type="text" [value]="fetchedData[field]" />
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-danger mt-2 ms-2" (click)="deleteLeadEntry()">Delete</button>
+                                        <button type="button" class="btn btn-secondary mt-2 ms-2" (click)="startEdit()">Edit</button>
                                     </div>
                                 </tbody>
                             </table>

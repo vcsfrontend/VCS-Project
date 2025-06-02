@@ -207,7 +207,7 @@ export class LeadsComponent extends BaseComponent {
   allowCustomStatus: boolean = true;
   shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
-  fetchedData:any;
+  fetchedData:any;companyLst:any;
   crmStaticStages = [
     {
       name: 'In Progress Leads',
@@ -427,12 +427,6 @@ export class LeadsComponent extends BaseComponent {
     if (!this.statusLst || this.statusLst.length === 0) {
       this.toastr.warning('Please add at least one Status before uploading.');
       return;
-    }
-    if (leadData) {
-    this.leadForm.patchValue({
-      companyName: leadData.companyName || '',
-      products: leadData.products || '',
-    });
     }
 
     this.leadId = 0;
@@ -2365,7 +2359,7 @@ export class LeadsComponent extends BaseComponent {
     if (this.sendwhatsLeadForm.invalid) {
       return;
     }
-    const formValue = this.sendLeadForm.value;
+    const formValue = this.sendwhatsLeadForm.value;
     const template = formValue.template?.templateName || 'No Template';
     const subject = formValue.subject || 'No Subject';
     const content = formValue.content || 'No Description';
@@ -2514,12 +2508,10 @@ export class LeadsComponent extends BaseComponent {
 
     this.switchService.listLeadEntry(payload).subscribe({
       next: (res: any) => {
-        this.leadForm.patchValue({
-          companyName: res.f1 || '',
-          products: res.f2 || ''
-        });
+        this.companyLst = res;             
       },
       error: (error) => {
+        this.toastr.error(error.statusText);
       }
     });
   }
