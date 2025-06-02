@@ -518,7 +518,10 @@ export class LeadsComponent extends BaseComponent {
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]],
       autoAllocate: [false],
-      agents:['']
+      agents:[''],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
     });
 
     //Send Email
@@ -1845,6 +1848,9 @@ export class LeadsComponent extends BaseComponent {
       const formData = new FormData();
       formData.append('file', this.imageFileSrcData);
       formData.append('uploadedBy', JSON.parse(this.userData)?.email || '');
+      formData.append('companyCode', JSON.parse(this.userData)?.companyCode || '');
+      formData.append('email', JSON.parse(this.userData)?.email || '');
+      formData.append('type', JSON.parse(this.userData)?.type || '');
       formData.append('campaignId', this.campaignId || '');
       formData.append('stage', this.defaultStageName || '');
       formData.append('status', this.defaultStatusName || '');
@@ -1867,12 +1873,10 @@ export class LeadsComponent extends BaseComponent {
             const stageColor = this.stageColor[this.defaultStageName] || '#ccc';
             const statusColor =
               this.statusColor[this.defaultStatusName] || '#ccc';
-
             this.uploadStageDisplay = {
               name: this.defaultStageName,
               color: stageColor,
             };
-
             this.uploadStatusDisplay = {
               name: this.defaultStatusName,
               color: statusColor,

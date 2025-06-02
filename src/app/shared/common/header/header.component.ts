@@ -31,9 +31,11 @@ export class HeaderComponent implements OnInit {
   notificationCount: number = 5;
   public isCollapsed = true;
    public leadCount = 0;
-  collapse: any;
+  collapse: any; userList: any; loggedInUser: any;
   closeResult = ''; campaignId!: string; followUpCount: any; nextLeadStatus :any;
   themeType: string | undefined; userName:any; userData:any;  userEmail :any
+  userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
+    'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'];
 
   selectedItem: string  | null ='selectedItem'
   isOpen: boolean = false; isCrm:boolean = false; isAdonai:boolean = false;
@@ -249,6 +251,8 @@ export class HeaderComponent implements OnInit {
         this.loadLeadData();
       }
     });
+    this.loggedInUser = JSON.parse(this.userData);
+    this.userName = this.loggedInUser?.name || this.loggedInUser?.username;
     this.intervalSub = interval(5000).subscribe(() => this.loadLeadData());
     this.loadLeadData();
     const storedSelectedItem = localStorage.getItem('selectedItem');
@@ -436,6 +440,19 @@ export class HeaderComponent implements OnInit {
     });
 
     const fullUrl = this.router.serializeUrl(urlTree);
+  }
+
+  private hashString(str: string): number {
+    let hash = 5381;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash * 33) ^ str.charCodeAt(i);
+    }
+    return hash >>> 0;
+  }
+
+  getUserColor(user: any): string {
+    const index = this.hashString(user.email) % this.userColors.length;
+    return this.userColors[index];
   }
   
 }
