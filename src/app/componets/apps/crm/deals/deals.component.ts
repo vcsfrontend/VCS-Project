@@ -935,6 +935,9 @@ export class DealsComponent extends BaseComponent {
       const formData = new FormData();
       formData.append('file', this.imageFileSrcData);
       formData.append('uploadedBy', JSON.parse(this.userData)?.email || '');
+      formData.append('companyCode', JSON.parse(this.userData)?.companyCode || '');
+      formData.append('email', JSON.parse(this.userData)?.email || '');
+      formData.append('type', JSON.parse(this.userData)?.type || '');
       formData.append('campaignId', (JSON.parse(this.userData)?.userType === 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
       formData.append('stage', this.defaultStageName || 'open');
       formData.append('status', this.defaultStatusName || 'active');
