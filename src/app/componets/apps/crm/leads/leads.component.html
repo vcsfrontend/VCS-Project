@@ -325,7 +325,7 @@
                         Status</button>
                 </div>
                 <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
-                    <div *ngIf="statusLst && statusLst.length === 0">No statuses found</div>
+                    <div *ngIf="statusLst && statusLst.length === 0"></div>
                     <ul class="list-unstyled">
                         <li *ngFor="let status of statusLst" class="mb-3">
                             <i class="bi bi-arrow-right-circle-fill text-info me-2"></i>
@@ -742,14 +742,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-check mb-3">
+                                <div class="form-check mb-3" *ngIf="userType !== 1">
                                     <input type="checkbox" class="form-check-input" id="allocateExecutive"
                                         formControlName="autoAllocate" />
                                     <label class="form-check-label" for="allocateExecutive">
                                         Allocate Executive
                                     </label>
                                 </div>
-
                                 <div class="col-xl-12 col-lg-12 col-md-12">
                                     <button class="btn btn-primary me-1" type="submit"
                                         [disabled]="uploadSpinner">Import</button>
