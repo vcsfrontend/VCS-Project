@@ -1855,7 +1855,7 @@ export class LeadsComponent extends BaseComponent {
       formData.append('stage', this.defaultStageName || '');
       formData.append('status', this.defaultStatusName || '');
       formData.append('agents', '');
-      const autoAllocate = this.uploadLead.get('autoAllocate')?.value;
+      const autoAllocate = this.userType === 1 ? false : this.uploadLead.get('autoAllocate')?.value;
       formData.append('autoAllocate', autoAllocate.toString());
       const formDataObject: any = {};
       formData.forEach((value, key) => {
@@ -1868,7 +1868,7 @@ export class LeadsComponent extends BaseComponent {
             this.uploadSubmitted = false;
             this.uploadSpinner = false;
             this.uploadLead.reset();
-            this.toastr.success(res.message, 'Bulk Lead Upload Successful');
+            this.toastr.success('Bulk Lead Upload Successful');
             this.isImporting = false;
             const stageColor = this.stageColor[this.defaultStageName] || '#ccc';
             const statusColor =
@@ -2470,7 +2470,7 @@ export class LeadsComponent extends BaseComponent {
 
   deleteSelectedLeads() {
     if (!this.selectedLeads.length) {
-      this.toastr.error('Please select at least one lead');
+      this.toastr.warning('Please select at least one lead');
       return;
     }
     if (confirm('Are you sure you want to delete the selected leads?')) {

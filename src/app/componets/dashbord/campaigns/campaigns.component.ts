@@ -24,7 +24,7 @@ export class CampaignsComponent extends BaseComponent {
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
-  userType: string = this.userData ? this.userData.type : '';
+  userType: any = this.userData ? this.userData.type : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   campaignForm!: FormGroup;
   isSubmitting: boolean = false; modal: any;
@@ -80,8 +80,8 @@ export class CampaignsComponent extends BaseComponent {
       campaignId: [0],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
       pipeline: ['', Validators.required],
-      campaignPoc: ['',Validators.required],
-      agents: [[], Validators.required],
+      campaignPoc: [''],
+      agents: [[]],
       campaignPriority: [''],
       leadDuplicacy: [''],
       companyName: [this.userCompanyName],
@@ -92,6 +92,9 @@ export class CampaignsComponent extends BaseComponent {
       campgnId: [''],
 
     });
+    if (this.userType === 1) {
+      this.campaignForm.patchValue({ campaignPoc: this.userEmail });
+    }
   }
 
   submitCampaign(modal: any) {
