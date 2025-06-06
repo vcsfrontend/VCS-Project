@@ -1045,9 +1045,7 @@ export class LeadsComponent extends BaseComponent {
       this.showValidationError = false;
     }
     this.crmStatusData.stage = this.selectedStage;
-    const selectedOptions = this.checkboxStageOptions.filter(
-      (option) => option.checked
-    );
+    const selectedOptions = this.checkboxStageOptions.filter(opt => opt.checked);
     if (selectedOptions.length === 0) {
       this.showCheckboxError = true;
       this.toastr.error('Please select at least one status.');
@@ -1056,23 +1054,43 @@ export class LeadsComponent extends BaseComponent {
       this.showCheckboxError = false;
     }
     const allNames = selectedOptions.map((option) => option.name);
-    const uniqueNames = [...new Set(allNames)];
+    const uniqueNames =  [...new Set(selectedOptions.map(opt => opt.name))];
     const allColors = selectedOptions.map((option) => option.color);
-    const uniqueColors = [...new Set(allColors)];
-    const dynamicFields = uniqueNames.map((name, index) => {
-      return {
-        [`f${index + 1}`]: name,
-        [`f${index + 1}Color`]: uniqueColors[index] || '',
-      };
-    });
+    const uniqueColors = [...new Set(selectedOptions.map(opt => opt.color))];
+    // const dynamicFields = uniqueNames.map((name, index) => {
+    //   return {
+    //     [`f${index + 1}`]: name,
+    //     [`f${index + 1}Color`]: uniqueColors[index] || '',
+    //   };
+    // });
+     const dynamicFields = uniqueNames.map((name, index) => ({
+      [`f${index + 1}`]: name,
+      [`f${index + 1}Color`]: uniqueColors[index] || ''
+    }));
     const customStatuses = this.statusOptionsByStage[this.selectedStage]
       .filter((opt) => opt.isCustom)
       .map((opt) => opt.name);
+    // this.crmStatusData = {
+    //   ...this.crmStatusData,
+    //   customStatuses,
+    //   ...Object.assign({}, ...dynamicFields),
+    // };
+    // Step 1: Clear all 25 fields by setting them to empty strings (not deleting keys)
+    for (let i = 1; i <= 25; i++) {
+      this.crmStatusData[`f${i}`] = '';
+      this.crmStatusData[`f${i}Color`] = '';
+    }
     this.crmStatusData = {
       ...this.crmStatusData,
+      stage: this.selectedStage,
       customStatuses,
-      ...Object.assign({}, ...dynamicFields),
+      ...Object.assign({}, ...dynamicFields)
     };
+    this.statusOptionsByStageforDisplay[this.selectedStage] = selectedOptions.map(opt => ({
+      name: opt.name,
+      color: opt.color,
+      isCustom: opt.isCustom || false
+    }));
     this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
       next: (res: any) => {
         if (res) {
@@ -1442,13 +1460,41 @@ export class LeadsComponent extends BaseComponent {
 
   onStatusChange(): void {
     const selectedStage = this.leadForm.get('stage')?.value;
-    this.checkboxStageOptions =
-      this.statusOptionsByStageforDisplay[selectedStage] || [];
-    if (selectedStage === 'In Progress Leads') {
-      this.setInProgressStatus();
+
+    if (selectedStage === 'open') {
+    this.checkboxStageOptions = this.openStage.map(opt => ({
+      ...opt,
+      checked: true,
+      isCustom: false
+    }));
+
+    const firstStatus = this.checkboxStageOptions[0]?.name || null;
+    this.leadForm.patchValue({ status: firstStatus });
+    return;
     }
 
-    this.leadForm.get('status')?.setValue(null);
+    if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
+      this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage];
+      const currentStatus = this.leadForm.get('status')?.value;
+      const statusExists = this.checkboxStageOptions.some(
+        (option) => option.name === currentStatus
+      );
+      if (!statusExists) {
+        const firstStatus = this.checkboxStageOptions[0]?.name || null;
+        this.leadForm.patchValue({ status: firstStatus });
+      }
+    } else {
+      this.checkboxStageOptions = [];
+      this.leadForm.patchValue({ status: null });
+    }
+    // const selectedStage = this.leadForm.get('stage')?.value;
+    // this.checkboxStageOptions =
+    //   this.statusOptionsByStageforDisplay[selectedStage] || [];
+    // if (selectedStage === 'In Progress Leads') {
+    //   this.setInProgressStatus();
+    // }
+
+    // this.leadForm.get('status')?.setValue(null);
   }
 
   onStageChange() {
@@ -1861,6 +1907,7 @@ export class LeadsComponent extends BaseComponent {
       formData.forEach((value, key) => {
         formDataObject[key] = value;
       });
+      console.log(formDataObject)
       this.switchService.UploadCrmLeads(formData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1934,6 +1981,7 @@ export class LeadsComponent extends BaseComponent {
       centered: true,
       size: 'xl',
     });
+    this.onStatusChange();
   }
 
   onEmailFileChange(event: any): void {

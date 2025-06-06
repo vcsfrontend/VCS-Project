@@ -781,7 +781,8 @@ export class CrmSettingsComponent extends BaseComponent {
         if (res && res.columnId) {
         this.fetchedData = res;
         this.hasSubmitted = true;
-        const selectedType = res.type === 2 ? 'designer2' : 'designer1';
+        let isEmpty = Object.values(res).every(value => value === null);
+        const selectedType = isEmpty ? 'designer1' : 'designer2';
         this.companyForm.patchValue({ companyinfo: selectedType });
         }
         else{

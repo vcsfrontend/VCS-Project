@@ -102,7 +102,7 @@
                         <td mat-cell *matCellDef="let element">
                             <div class="d-flex align-items-center">
                                 <ng-container *ngIf="element.executive; else noExecutive">
-                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer"
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer" style="cursor: pointer;"
                                         [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
                                         tooltipClass="tooltip-primary">
                                         <span class="d-flex align-items-center justify-content-center w-100 h-100">
@@ -388,12 +388,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-8 mb-4 scrollable-container"  [ngStyle]="{
+        <div class="mb-4 scrollable-container" [ngClass]="userType !== 2 ? 'col-lg-12' : 'col-lg-8'"  [ngStyle]="{
         'max-height': topshowMore ? '330px' : '350px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
         'transition': 'max-height 0.5s ease' }" >
             <div class="row">
-                <div class="col-xl-6" *ngFor="let statusGroup of statusLst">
+                <div [ngClass]="userType !== 2 ? 'col-lg-4' : 'col-lg-6'" *ngFor="let statusGroup of statusLst">
                     <div class="card custom-card">
                         <div class="card-header border-bottom-0 justify-content-between">
                             <div class="card-title">
@@ -412,7 +412,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4" *ngIf="userType !== 1">
             <div class="card custom-card overflow-hidden">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
@@ -474,7 +474,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="contact-mail" class="form-label">
-                        <ng-container *ngIf="companyLst?.type === 2 && companyLst?.f1;  else defaultLabel1">
+                        <ng-container *ngIf="companyLst?.f1;  else defaultLabel1">
                             {{ companyLst.f1 }}
                         </ng-container>
                         <ng-template #defaultLabel1>Company Name</ng-template>
@@ -484,7 +484,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">
-                        <ng-container *ngIf="companyLst?.type === 2 && companyLst?.f2; else defaultLabel2">
+                        <ng-container *ngIf="companyLst?.f2; else defaultLabel2">
                             {{ companyLst.f2 }}
                         </ng-container>
                         <ng-template #defaultLabel2>Products</ng-template>
@@ -602,12 +602,22 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-mail" class="form-label">Company Name</label>
+                    <label for="contact-mail" class="form-label">
+                        <ng-container *ngIf="companyLst?.f1;  else defaultLabel1">
+                            {{ companyLst.f1 }}
+                        </ng-container>
+                        <ng-template #defaultLabel1>Company Name</ng-template>
+                    </label>
                     <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
-                        formControlName="companyName">
+                        formControlName="companyName" >
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">Products</label>
+                    <label for="company-name" class="form-label">
+                        <ng-container *ngIf="companyLst?.f2; else defaultLabel2">
+                            {{ companyLst.f2 }}
+                        </ng-container>
+                        <ng-template #defaultLabel2>Products</ng-template>
+                    </label>
                     <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
@@ -742,7 +752,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-check mb-3" *ngIf="userType !== 1">
+                                <div class="form-check m-3" *ngIf="userType !== 1">
                                     <input type="checkbox" class="form-check-input" id="allocateExecutive"
                                         formControlName="autoAllocate" />
                                     <label class="form-check-label" for="allocateExecutive">
