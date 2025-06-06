@@ -146,7 +146,7 @@
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-primary border-end border-light"
-                        (click)="openRight(content)" data-bs-toggle="offcanvas"
+                        (click)="validateAndOpenBulkUpload(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                         Bulk Upload
                     </button>
@@ -748,7 +748,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-check ms-3 mb-3">
+                                <div class="form-check ms-3 mb-3" *ngIf="userType!==1">
                                     <input type="checkbox" class="form-check-input" id="allocateExecutive" formControlName="autoAllocate" style="cursor: pointer;">
                                     <label class="form-check-label" for="allocateExecutive">
                                         Allocate Executive
@@ -1158,12 +1158,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-8 mb-4 scrollable-container" [ngClass]="userType == 2 ? 'col-lg-12' : 'col-lg-8'" [ngStyle]="{
+        <div class="mb-4 scrollable-container" [ngClass]="userType !== 2 ? 'col-lg-12' : 'col-lg-8'" [ngStyle]="{
         'max-height': topshowMore ? '330px' : '350px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
         'transition': 'max-height 0.5s ease' }">
             <div class="row">
-                <div class="col-xl-6" *ngFor="let statusGroup of statusLst">
+                <div [ngClass]="userType !== 2 ? 'col-lg-4' : 'col-lg-6'"  *ngFor="let statusGroup of statusLst">
                     <div class="card custom-card">
                         <div class="card-header border-bottom-0 justify-content-between">
                             <div class="card-title">
@@ -1343,7 +1343,7 @@
                     formControlName="templateName">
             </div>
             <div class="mb-4">
-                <textarea class="form-control" id="subject" rows="4" placeholder="Enter Your Subject"
+                <textarea class="form-control" id="subject" rows="6" placeholder="Enter Your Subject"
                     formControlName="subject"></textarea>
             </div>
             <div class="mb-4">

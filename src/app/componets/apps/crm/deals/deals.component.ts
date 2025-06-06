@@ -340,6 +340,7 @@ export class DealsComponent extends BaseComponent {
     this.getFormTemplate();
     this.getAllEmailTemplates();
     this.getLeadEntry();
+
     const now = new Date();
     // Pad with 0 if needed
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -430,7 +431,7 @@ export class DealsComponent extends BaseComponent {
     setTimeout(() => {
       this.rotateCharts = false;
     }, 1000);
-
+    
     this.crmStageData = {
       stageId: 0,
       companyName: this.userCompanyName,
@@ -1042,6 +1043,7 @@ export class DealsComponent extends BaseComponent {
       centered: true,
       size: 'xl',
     });
+    this.onStatusChange();
 
   }
 
@@ -1315,12 +1317,18 @@ export class DealsComponent extends BaseComponent {
     { name: 'Ella Davis', role: 'Manager', email: 'ella.davis@example.com', date: '2025-04-22', callsAttempted: 28, callsConnected: 20 },
   ];
 
-  // validateAndOpenBulkUpload(content: any): void {
-  //   if (!this.stageLst || this.stageLst.length === 0) {
-  //     this.toastr.warning('Please add at least one Stage before uploading.');
-  //     return;
-  //   }
-  // }
+  validateAndOpenBulkUpload(content: any): void {
+    if (!this.stageLst || this.stageLst.length === 0) {
+      this.toastr.warning('Please add at least one Stage before uploading.');
+      return;
+    }
+    if (!this.statusLst || this.statusLst.length === 0) {
+      this.toastr.warning('Please add at least one Status before uploading.');
+      return;
+    }
+
+    this.openRight(content);
+  }
 
   VerticallyScrol(content112: any) {
     this.leadId = 0;
@@ -1862,6 +1870,7 @@ export class DealsComponent extends BaseComponent {
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         this.getFormTemplate();
+        this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
       error: (err) => {
@@ -2100,10 +2109,11 @@ export class DealsComponent extends BaseComponent {
     });
   }
 
-   onStatusButtonClick(status: string,modal :any): void {
+  onStatusButtonClick(status: string,modal :any): void {
     this.selectedStatus = status;
     this.showForm = true;
-      if (status === 'Not Connected') {
+    const followupDate = this.followupLeadForm.get('followupDate');
+    if (status === 'Not Connected') {
       const now = new Date();
       const year = now.getFullYear();
       const month = ('0' + (now.getMonth() + 1)).slice(-2);
@@ -2112,16 +2122,18 @@ export class DealsComponent extends BaseComponent {
       const minutes = ('0' + now.getMinutes()).slice(-2);
 
       const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
-
+      followupDate?.clearValidators();
       this.followupLeadForm.patchValue({
         status: 'Not Connected',
-        followupDate: formattedNow,
+        followupDate: '',
         comments: 'Not connected',       // Optional
       });
       this.followupLeadSubmit(modal)
     }
     else if (status === 'Connected') {
       this.readonlyMode = false;
+      followupDate?.setValidators([Validators.required]);
+      followupDate?.updateValueAndValidity();
       if (this.originalConnectedForm) {
         this.followupLeadForm.patchValue(this.originalConnectedForm);
       }

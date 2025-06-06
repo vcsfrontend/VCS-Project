@@ -814,12 +814,13 @@ export class CrmSettingsComponent extends BaseComponent {
   console.log (payload);
   this.switchService.editLeadEntry(payload).subscribe({
     next: (res: any) => {
-      console.log('Lead updated successfully:', res);
+      this.toastr.success('companyInfo updated successfully:');
       this.fetchedData = res;  
-      this.getLeadEntry();     
+      this.getLeadEntry();
+      this.isEditing = false;     
     },
     error: (error) => {
-      console.error('Failed to update lead entry:', error);
+      this.toastr.error('Failed to update companyInfo');
     }
   });
   }
