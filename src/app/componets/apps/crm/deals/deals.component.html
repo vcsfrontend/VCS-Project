@@ -421,12 +421,22 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-mail" class="form-label">Company Name</label>
+                    <label for="contact-mail" class="form-label">
+                        <ng-container *ngIf="companyLst?.f1;  else defaultLabel1">
+                            {{ companyLst.f1 }}
+                        </ng-container>
+                        <ng-template #defaultLabel1>Company Name</ng-template>
+                    </label>
                     <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
-                        formControlName="companyName">
+                        formControlName="companyName" >
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">Products</label>
+                    <label for="company-name" class="form-label">
+                        <ng-container *ngIf="companyLst?.f2; else defaultLabel2">
+                            {{ companyLst.f2 }}
+                        </ng-container>
+                        <ng-template #defaultLabel2>Products</ng-template>
+                    </label>
                     <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
@@ -588,12 +598,22 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-mail" class="form-label">Company Name</label>
+                    <label for="contact-mail" class="form-label">
+                        <ng-container *ngIf="companyLst?.f1;  else defaultLabel1">
+                            {{ companyLst.f1 }}
+                        </ng-container>
+                        <ng-template #defaultLabel1>Company Name</ng-template>
+                    </label>
                     <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
-                        formControlName="companyName">
+                        formControlName="companyName" >
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">Products</label>
+                    <label for="company-name" class="form-label">
+                        <ng-container *ngIf="companyLst?.f2; else defaultLabel2">
+                            {{ companyLst.f2 }}
+                        </ng-container>
+                        <ng-template #defaultLabel2>Products</ng-template>
+                    </label>
                     <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
@@ -728,16 +748,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-check mb-3">
-                                    <input type="checkbox" class="form-check-input" id="allocateExecutive" formControlName="autoAllocate" />
+                                <div class="form-check ms-3 mb-3">
+                                    <input type="checkbox" class="form-check-input" id="allocateExecutive" formControlName="autoAllocate" style="cursor: pointer;">
                                     <label class="form-check-label" for="allocateExecutive">
                                         Allocate Executive
                                     </label>
                                 </div>
-                                <div *ngIf="uploadLead.get('autoAllocate')?.value">
-                                    <label>Select User</label>
+                                <div class="mb-3" *ngIf="uploadLead.get('autoAllocate')?.value">
+                                    <label class="mb-3" >Select User</label>
                                     <ng-select [items]="userList" bindLabel="email" bindValue="email" placeholder="Select a user"
-                                        formControlName="agents" [multiple]="true">
+                                        formControlName="agents" [multiple]="true" style="cursor: pointer;">
                                     </ng-select>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12">
@@ -1070,7 +1090,7 @@
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Status</div>
                     <button class="btn btn-primary ms-auto" type="button" (click)="openRight12(content12)"
-                        [disabled]="!stageLst || stageLst.length === 0">Add
+                        [disabled]="shouldDisableAddStatus">Add
                         Status</button>
                 </div>
                 <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
