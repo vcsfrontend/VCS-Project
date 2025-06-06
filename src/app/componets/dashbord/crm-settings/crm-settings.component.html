@@ -201,7 +201,7 @@
                                     <div *ngIf="hasSubmitted && !isEditing">
                                         <div style="display: flex; gap: 10px; align-items: center;">
                                             <div *ngFor="let field of editableFields">
-                                                <input class="form-control" type="text" [value]="fetchedData[field]" />
+                                                <input class="form-control" type="text" [value]="fetchedData[field]" [disabled]="true" />
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-danger mt-2 ms-2" (click)="deleteLeadEntry()">Delete</button>

@@ -2443,6 +2443,7 @@ export class LeadsComponent extends BaseComponent {
   }
   onStatusButtonClick(status: string,modal :any): void {
   this.selectedStatus = status;
+  const followupDate = this.followupLeadForm.get('followupDate');
   this.showForm = true;
     if (status === 'Not Connected') {
     const now = new Date();
@@ -2453,16 +2454,18 @@ export class LeadsComponent extends BaseComponent {
     const minutes = ('0' + now.getMinutes()).slice(-2);
 
     const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
-
+    followupDate?.clearValidators();
     this.followupLeadForm.patchValue({
       status: 'Not Connected',
-      followupDate: formattedNow,
+      followupDate: '',
       comments: 'Not connected',       // Optional
     });
     this.followupLeadSubmit(modal)
   }
    else if (status === 'Connected') {
     this.readonlyMode = false;
+    followupDate?.setValidators([Validators.required]);
+    followupDate?.updateValueAndValidity();
      if (this.originalConnectedForm) {
       this.followupLeadForm.patchValue(this.originalConnectedForm);
     }
