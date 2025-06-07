@@ -83,7 +83,7 @@ export class LeadsComponent extends BaseComponent {
   imageFileSrcData: any; followUpDetails: any[] = []; nextLeadStatus: any; minDateTime: string = '';
   selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
-  fetchedData:any;companyLst:any;
+  fetchedData:any;companyLst:any;selectedFileName:any
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -1603,6 +1603,7 @@ export class LeadsComponent extends BaseComponent {
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     ];
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
+      this.selectedFileName = '';
       this.uploadSubmitted = false;
       this.uploadLead.reset();
       this.toastr.error('Please choose Valid file', 'lead', {
@@ -1612,6 +1613,7 @@ export class LeadsComponent extends BaseComponent {
     } else {
       this.imageFileSrcData = files;
     }
+    this.selectedFileName = files.name;
   }
 
   get l() {
@@ -2259,7 +2261,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
 
-  validateAndOpenBulkUpload(content: any): void {
+  validateAndOpenBulkUpload(fileInput: HTMLInputElement): void {
     if (!this.stageLst || this.stageLst.length === 0) {
       this.toastr.warning('Please add at least one Stage before uploading.');
       return;
@@ -2270,7 +2272,9 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
 
-    this.openRight(content);
+    // this.openRight(content);
+    fileInput.click();
+
   }
   onStatusButtonClick(status: string,modal :any): void {
   this.selectedStatus = status;
