@@ -1,16 +1,6 @@
-import {
-  Component,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
+import { Component, TemplateRef, ViewChild, ViewEncapsulation,} from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import {
-  NgbDropdownModule,
-  NgbModal,
-  NgbModalConfig,
-  NgbModule,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule,} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -20,13 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -35,18 +19,12 @@ import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
-import {
-  NgbOffcanvas,
-  OffcanvasDismissReasons,
-} from '@ng-bootstrap/ng-bootstrap';
+import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import * as FilePond from 'filepond';
 import { FilePondComponent, FilePondModule } from 'ngx-filepond';
-import {
-  AngularEditorModule,
-  AngularEditorConfig,
-} from '@kolkov/angular-editor';
+import { AngularEditorModule, AngularEditorConfig,} from '@kolkov/angular-editor';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
@@ -56,200 +34,68 @@ import { errorRoutingModule } from '../../../error/error.route';
 @Component({
   selector: 'app-leads',
   standalone: true,
-  imports: [
-    RouterModule,
-    NgbModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AngularFireModule,
-    AngularFireDatabaseModule,
-    CommonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    AngularFirestoreModule,
-    ToastrModule,
-    SharedModule,
-    MaterialModuleModule,
-    MatSortModule,
-    NgbDropdownModule,
-    NgSelectModule,
-    FilePondModule,
-    AngularEditorModule,
-    NgChartsModule,
-    NgApexchartsModule,
-  ],
-  providers: [
-    FirebaseService,
-    { provide: ToastrService, useClass: ToastrService },
-    DatePipe,
-    NgbModalConfig,
-    NgbModal,
-  ],
+  imports: [ RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule, AngularFireDatabaseModule,
+    CommonModule, MatFormFieldModule, MatSelectModule, AngularFirestoreModule, ToastrModule, SharedModule,
+    MaterialModuleModule, MatSortModule, NgbDropdownModule, NgSelectModule, FilePondModule, AngularEditorModule,
+    NgChartsModule, NgApexchartsModule,],
+  providers: [ FirebaseService, { provide: ToastrService, useClass: ToastrService },
+    DatePipe, NgbModalConfig, NgbModal, ],
   templateUrl: './leads.component.html',
   styleUrl: './leads.component.scss',
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [
-    'sourceFlag',
-    'select',
-    'slNo',
-    'action',
-    'name',
-    'executive',
-    'stage',
-    'status',
-    'followUpDate',
-    'contact',
-    'email',
-    'city',
-  ];
-  usersColumns: string[] = [
-    'slNo',
-    'name',
-    'role',
-    'email',
-    'date',
-    'callsAttempted',
-    'callsConnected',
-  ];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city',];
+  usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10;
   Crmusers: any[] = []; selectedLeads: number[] = [];
-  CrmLeads: any = {};
-  element: any = {}; 
-  crmLeadsList: any;
-  campaignId!: string;
-  stageLst: any;
-  isStagesLoading: boolean = true;
-  isAddStagesDisabled: boolean = false;
-  statusOptionsByStage: { [stageName: string]: any[] } = {};
-  statusLst: any;
-  allStatuses: any;
-  selectedStage: string = '';
-  checkboxStageOptions: any[] = []; 
-  isStatusDataLoaded: boolean = false;
-  selectedStatusCount: number | null = null;selectedStatus: string = '';
-  chartOptions: any;
-  followUpCount: any;
-  statusOptionsByStageforDisplay: any = {};
-  stageColorMap: Map<string, string> = new Map();
+  CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
+  stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
+  statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any;
+  allStatuses: any; selectedStage: string = ''; checkboxStageOptions: any[] = []; 
+  isStatusDataLoaded: boolean = false; selectedStatusCount: number | null = null;
+  selectedStatus: string = ''; chartOptions: any; followUpCount: any;
+  statusOptionsByStageforDisplay: any = {}; stageColorMap: Map<string, string> = new Map();
   statusColorMap: Map<string, string> = new Map();
-  userColors = [
-    'bg-primary',
-    'bg-success',
-    'bg-warning',
-    'bg-danger',
-    'bg-info',
-    'bg-secondary',
-    'bg-pink',
-    'bg-teal',
-    'bg-indigo',
-    'bg-orange',
-    'bg-dark',
-    'bg-light',
-  ];
+  userColors = [ 'bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary', 'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark','bg-light', ];
   userDataStorage = localStorage.getItem('userDetails');
-  userData: any = this.userDataStorage
-    ? JSON.parse(this.userDataStorage)
-    : null;
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
-  statusClicked = false;
-  statusCounts: { status: string; count: number }[] = [];
-  crmStageData: any;
-  crmStatusData: any;
-  newOptionName: string = '';
-  status: string = 'In Progress Leads';
-  showValidationError = false;
-  fetchCrmLeadsList: any[] = [];
-  showCheckboxError = false;
-  showNameError = false;
-  anyChecked: any;
-  addMoreVisible: boolean = false;
-  newItem: string = '';
-  isStage: boolean = false;
-  showStages: boolean = false;
-  leaditems: { checked: boolean; label: string }[] = [];
-  leadStatusitems: { checked: boolean; label: string }[] = [];
-  selectedProgressLeads: any[] = [];
-  selectedLostLeads: any[] = [];
-  selectedConvertedLeads: any[] = [];
-  newItemColor: string = '#000000';
-  newOptionColor: any;
-  showMore = true;
-  topshowMore = false;
-  campaignList: any[] = [];
-  agentUsers: any[] = [];
-  selectedCampaign: any;
-  selectTemplateForm!: FormGroup;
-  formList: any;
-  tempFormList: any;
-  generatedTemplateId: any;
-  currentIndex: number = 0;
-  allTemplateGenIds: string[] = [];
-  rotateCharts = true;
-  executiveList: any[] = [];
-  entryList: any[] = [];
-  agents: any;
-  leads: any[] = [];
-  imageFileSrcData: any;
-  followUpDetails: any[] = [];
-  nextLeadStatus: any;
-  minDateTime: string = '';
-  selectedOpen: any[] = [];
-  showForm: boolean = false;
-  allowCustomStatus: boolean = true;
-  shouldDisableAddStatus = false;isImporting: boolean = false;
+  statusClicked = false; statusCounts: { status: string; count: number }[] = [];
+  crmStageData: any; crmStatusData: any; newOptionName: string = ''; status: string = 'In Progress Leads';
+  showValidationError = false;  fetchCrmLeadsList: any[] = [];
+  showCheckboxError = false; showNameError = false;
+  anyChecked: any; addMoreVisible: boolean = false; newItem: string = '';  isStage: boolean = false;
+  showStages: boolean = false; leaditems: { checked: boolean; label: string }[] = [];
+  leadStatusitems: { checked: boolean; label: string }[] = []; selectedProgressLeads: any[] = [];
+  selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
+  newItemColor: string = '#000000'; newOptionColor: any; showMore = true; topshowMore = false;
+  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
+  formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
+  rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any[] = [];
+  imageFileSrcData: any; followUpDetails: any[] = []; nextLeadStatus: any; minDateTime: string = '';
+  selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
   fetchedData:any;companyLst:any;
-  crmStaticStages = [
-    {
-      name: 'In Progress Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#28a745',
-    },
-    {
-      name: 'Lost Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#dc3545',
-    },
-    {
-      name: 'Converted Leads',
-      checked: false,
-      isDefault: true,
-      isCustom: false,
-      color: '#007bff',
-    },
+  crmStaticStages = [ 
+    {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff',},
   ];
-  stageColor: { [key: string]: string } = {
-    open: '#007bff',
-  };
-  statusColor: { [key: string]: string } = {
-    active: '#007bff',
-  };
+  stageColor: { [key: string]: string } = { open: '#007bff',};
+  statusColor: { [key: string]: string } = { active: '#007bff', };
   uploadStageDisplay: { name: string; color: string } = { name: '', color: '' };
-  uploadStatusDisplay: { name: string; color: string } = {
-    name: '',
-    color: '',
-  };
-  selectedType: string = '';
-  dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
-  matcardLst: any;
-  topDisplayedCards: any;
-  defaultStageName: string = '';
-  defaultStatusName: string = '';
-  allocateExecutive: boolean = false;
-  selectedLeadId: number = 0;
+  uploadStatusDisplay: { name: string; color: string } = { name: '', color: '', };
+  selectedType: string = ''; dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
+  matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
+  allocateExecutive: boolean = false; selectedLeadId: number = 0;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -287,20 +133,8 @@ export class LeadsComponent extends BaseComponent {
     responsive: true,
     plugins: { legend: { position: 'bottom' } },
   };
-  public pieChartLabels = [
-    'Spoke',
-    'Active',
-    'Proposal sent',
-    'Meeting Fixed',
-    'Met',
-    'Closed',
-    'Lost',
-  ];
-  public pieChartDatasets = [
-    {
-      data: [200, 150, 100, 43, 23, 78],
-    },
-  ];
+  public pieChartLabels = [ 'Spoke', 'Active', 'Proposal sent', 'Meeting Fixed', 'Met', 'Closed', 'Lost', ];
+  public pieChartDatasets = [ { data: [200, 150, 100, 43, 23, 78],},];
   public pieChartLegend = true;
   public pieChartPlugins = [];
 
@@ -314,9 +148,9 @@ export class LeadsComponent extends BaseComponent {
     private route: ActivatedRoute
   ) {
     super();
-    this.statusOptionsByStage = {
-      'In Progress Leads': [...this.inPorgressLeads],
-      'Lost Leads': [...this.lostLeads],
+    this.statusOptionsByStage = 
+    { 'In Progress Leads': [...this.inPorgressLeads],
+       'Lost Leads': [...this.lostLeads],
       'Converted Leads': [...this.convertedLeads],
       'open Stage': [...this.openStage],
     };
@@ -456,10 +290,6 @@ export class LeadsComponent extends BaseComponent {
   );
 
   ngOnInit(): void {
-    this.getCampaignData();
-    this.getlistFormTemplate();
-    // this.getFormTemplate();
-    this.getAllEmailTemplates();
     const now = new Date();
     // Pad with 0 if needed
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -474,13 +304,14 @@ export class LeadsComponent extends BaseComponent {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
       this.getFetchLeadData();
+      this.getCrmStages();
+      this.getStatusCount();
+      this.getCampaignData();
+      this.getlistFormTemplate();
+      this.getAllEmailTemplates();
       this.selectedLeads = [];
-      // this.getCrmLeads();
+    // this.getCrmLeads();
 
-      if (this.campaignId) {
-        this.getStatusCount();
-        this.getCrmStages();
-      }
       const nav = history.state;
       if (nav?.agents) {
         this.agents = nav.agents;
