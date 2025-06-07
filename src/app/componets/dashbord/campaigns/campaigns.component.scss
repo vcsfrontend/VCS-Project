@@ -21,3 +21,13 @@
   overflow-y: auto;
   flex-grow: 1;
 }
+.avatar {
+    position: relative;
+    height: 2rem;
+    width: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 500;
+}
