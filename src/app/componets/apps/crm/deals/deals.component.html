@@ -146,7 +146,7 @@
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-primary border-end border-light"
-                        (click)="validateAndOpenBulkUpload(content)" data-bs-toggle="offcanvas"
+                        (click)="openRight(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                         Bulk Upload
                     </button>
@@ -715,8 +715,8 @@
         <ul class="list-group list-group-flush mb-0">
             <li class="list-group-item">
                 <div class="d-flex align-items-center">
-                    <div class="flex-fill">
-                        <a href="assets/images/browsers/Leads Sample Format.xls" download="Leads Sample Format.xls">
+                     <div class="flex-fill">
+                        <a href="assets/images/browsers/Leads Sample data.xls" download="Leads Sample Format.xls">
                             <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
                             </button></a>
                         <p class="px-3">Kindly download the Leads Format and fill your bulk Leads in the proper format
@@ -738,11 +738,19 @@
                         <div class="container">
                             <div class="row bg-light">
                                 <div class="col-xl-12 col-lg-12 col-md-12 d-flex">
-                                    <div class="input-group mb-3">
+                                    <div class="input-group">
                                         <input formControlName="file" id="file" type="file"
-                                            class="form-control rounded w-50 position-relative "
-                                            (change)="onFileChange($event)"
-                                            [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
+                                            class="d-none"
+                                            (change)="onFileChange($event)" #fileInput
+                                            [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }" >
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text no-hover" (click)="validateAndOpenBulkUpload(fileInput)"
+                                                [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
+                                                    Choose File
+                                                </label>
+                                                <input type="text" class="form-control" [value]="selectedFileName || 'No file chosen'"  readonly
+                                                [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }" />
+                                            </div>
                                         <div *ngIf="uploadSubmitted && l['file'].errors" class="invalid-feedback w-50">
                                             <span *ngIf="l['file'].errors['required']">File is required.</span>
                                         </div>

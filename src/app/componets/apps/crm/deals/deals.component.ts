@@ -75,7 +75,7 @@ export class DealsComponent extends BaseComponent {
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
   selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
-  shouldDisableAddStatus = false;companyLst:any;
+  shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -823,21 +823,26 @@ export class DealsComponent extends BaseComponent {
     // this.toastr.error('Copy, paste, and cut actions are disabled for security reasons.','signup', {
     //   timeOut: 3000, positionClass: 'toast-top-right' });
   }
-
   onFileChange(event: any): void {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     const allExcel: Array<string> = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
 
+    if (!files) {
+    return;
+    }
+
     if (allExcel.indexOf(event.target.files[0].type) === -1) {
+      this.selectedFileName = '';
       this.uploadSubmitted = false;
       this.uploadLead.reset();
-      this.toastr.error('Please choose Valid file', 'lead', {
+      this.toastr.warning('Please choose Valid file', 'lead', {
         timeOut: 3000, positionClass: 'toast-top-right'
       });
     } else {
       this.imageFileSrcData = files;
     }
+      this.selectedFileName = files.name;
 
   }
 
@@ -1317,17 +1322,18 @@ export class DealsComponent extends BaseComponent {
     { name: 'Ella Davis', role: 'Manager', email: 'ella.davis@example.com', date: '2025-04-22', callsAttempted: 28, callsConnected: 20 },
   ];
 
-  validateAndOpenBulkUpload(content: any): void {
+  validateAndOpenBulkUpload(fileInput: HTMLInputElement): void {
     if (!this.stageLst || this.stageLst.length === 0) {
       this.toastr.warning('Please add at least one Stage before uploading.');
       return;
     }
+
     if (!this.statusLst || this.statusLst.length === 0) {
       this.toastr.warning('Please add at least one Status before uploading.');
       return;
     }
 
-    this.openRight(content);
+    fileInput.click();
   }
 
   VerticallyScrol(content112: any) {
