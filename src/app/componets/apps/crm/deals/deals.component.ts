@@ -75,7 +75,7 @@ export class DealsComponent extends BaseComponent {
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
   selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
-  shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;
+  shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -247,7 +247,9 @@ export class DealsComponent extends BaseComponent {
     this.modalService.open(content1, { centered: true });
   }
   openRight(content: any) {
-    this.offcanvasService.open(content, { position: 'end' });
+    this.offcanvasRef = this.offcanvasService.open(content, {
+      position: 'end',
+    });
   }
   openRight1(content1: any) {
     this.offcanvasService.open(content1, { position: 'end' });
@@ -259,7 +261,6 @@ export class DealsComponent extends BaseComponent {
     this.offcanvasService.open(content5, { position: 'end' });
   }
 
-  offcanvasRef: any;
   openRight7(content: any) {
     this.offcanvasRef = this.offcanvasService.open(content, {
       position: 'end',
@@ -342,7 +343,6 @@ export class DealsComponent extends BaseComponent {
     this.getLeadEntry();
 
     const now = new Date();
-    // Pad with 0 if needed
     const pad = (n: number) => n.toString().padStart(2, '0');
     const yyyy = now.getFullYear();
     const mm = pad(now.getMonth() + 1);
@@ -376,7 +376,7 @@ export class DealsComponent extends BaseComponent {
       template: ['', [Validators.required]],
       subject: ['', [Validators.required, Validators.minLength(3)]],
       cc: ['', [Validators.required, Validators.email]],
-      bcc: ['', [Validators.required, Validators.email]],
+      // bcc: ['', [Validators.required, Validators.email]],
       content: ['', [Validators.required]]
     });
 
@@ -1111,21 +1111,24 @@ export class DealsComponent extends BaseComponent {
         template: templateToSend,
         subject: this.sendLeadForm.get('subject')?.value,
         cc: this.sendLeadForm.get('cc')?.value,
-        bcc: this.sendLeadForm.get('bcc')?.value,
+        // bcc: this.sendLeadForm.get('bcc')?.value,
         content: this.sendLeadForm.get('content')?.value,
       };
+      console.log(payload)
 
       this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
         next: (res: any) => {
           if (res.status == true) {
-            modal.close();
+            this.sendLeadSubmitted = false;
             this.submitted = false;
-            this.leadForm.reset();
+            modal.close();
+            this.sendLeadForm.reset();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
-            });
-          } else {
+            });           
+          } 
+          else {
             this.toastr.error(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
@@ -1814,6 +1817,7 @@ export class DealsComponent extends BaseComponent {
             followUpBy: followup.followUpBy || '',
             updatedTime: followup.updatedTime ? new Date(followup.updatedTime) : null
           }));
+          console.log(this.followUpDetails)
         } else {
           this.followUpDetails = [];
         }
@@ -2162,4 +2166,6 @@ export class DealsComponent extends BaseComponent {
       }
     });
   }
+
+  
 }
