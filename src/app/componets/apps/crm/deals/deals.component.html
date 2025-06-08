@@ -305,23 +305,24 @@
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Stage :</span>
-                                                <span class="badge me-1" type="button"
-                                                    [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
-                                                    [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
-                                                    {{ element.stage | slice: 0:18 }}
-                                                    <ng-container *ngIf="element.stage.length > 18">...</ng-container>
+                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
+                                                    [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null" placement="top">
+                                                    {{ followup.stage | slice: 0:18 }}
+                                                    <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Status :</span>
-                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                                    [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
-                                                    {{ element.status | slice: 0:18 }}
-                                                    <ng-container *ngIf="element.status.length > 18">...</ng-container>
+                                                <span class="badge me-1" type="button"
+                                                    [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
+                                                    [ngbTooltip]="followup.status.length > 18 ? followup.status : null" placement="top">
+                                                    {{ followup.status | slice: 0:18 }}
+                                                    <ng-container *ngIf="followup.status.length > 18">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
-                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }}
+                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a'
+                                                }}
                                                 <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
                                             </li>
                                             <li class="mb-2">
@@ -837,7 +838,7 @@
 
 <ng-template #content3 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>View Lead</strong></h5>
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
@@ -861,9 +862,18 @@
                                         </span>{{element.products}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">country : </span>{{element.country}}
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">stage : </span>{{element.stage}}
+                                    <li class="mb-2"><span class="fw-semibold me-1">Stage : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage || '') }"
+                                            [ngbTooltip]="(element.stage?.length || 0) > 18 ? element.stage : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.stage?.length || 0) > 18">...</ng-container></span>
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">status : </span>{{element.status}}
+                                    <li class="mb-2"><span class="fw-semibold me-1">Status : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status || '') }"
+                                            [ngbTooltip]="(element.status?.length || 0) > 18 ? element.status : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.status?.length || 0) > 18">...</ng-container>
+                                        </span>
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">leadSource :
                                         </span>{{element.leadSource}}</li>
@@ -880,12 +890,12 @@
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Email: </span>{{element.email}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">CurrentStage:
-                                        </span>{{element.currentStage}}</li>
+                                        </span>{{element.stage}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">UpdatedBy:
                                         </span>{{element.updatedBy}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">UpdatedTime:
-                                        </span>{{ element.updatedTime | date: 'dd/MM/yyyy' }}</li>
-
+                                        </span>{{ element.updatedTime | date: 'dd/MM/yyyy' }}
+                                    </li>
                                 </ul>
                             </div>
                         </ng-template>
@@ -895,18 +905,17 @@
                             aria-current="page" aria-selected="false ">Follow-Ups</a>
                         <ng-template ngbNavContent>
                             <div class="p-3" id="pill-flex-home" role="tabpanel">
-                                <ul class="list-unstyled" *ngFor="let followup of element.followLeads">
+                                <ul class="list-unstyled border border-dark rounded p-3" *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
-                                        </span>{{followup.followupDate }}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
-                                        </span>{{followup.followupTime }}</li>
+                                        </span>{{followup.followupDate | date: 'dd-MMM-yyyy hh:mm:ss a'}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Stage :
                                         </span>{{followup.stage}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Status :
+                                        </span>{{followup.status}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
                                         </span>{{followup.followUpBy}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">CurrentStage :
-                                        </span>{{followup.currentStage}}
-                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Comments :
+                                        </span>{{followup.comments}}</li>
                                 </ul>
                             </div>
                         </ng-template>
@@ -1053,12 +1062,10 @@
                 </div> -->
 
             </div>
-            <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-                <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                    <button class="btn btn-primary mr-3 w-100" type="submit">Update Status</button>
-                </div>
-                <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
+            <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
+                <div class="d-flex justify-content-end gap-3">
+                    <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
                         type="submit">Cancel</button>
                 </div>
             </div>

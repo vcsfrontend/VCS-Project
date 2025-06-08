@@ -816,19 +816,17 @@
                                     <li class="mb-2"><span class="fw-semibold me-1">country : </span>{{element.country}}
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Stage : </span>
-                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
-                                            [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage || '') }"
+                                            [ngbTooltip]="(element.stage?.length || 0) > 18 ? element.stage : null" placement="top">
                                             {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
-                                            <ng-container *ngIf="element.stage.length > 18">...</ng-container></span>
+                                            <ng-container *ngIf="(element.stage?.length || 0) > 18">...</ng-container></span>
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Status : </span>
-                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                            [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status || '') }"
+                                            [ngbTooltip]="(element.status?.length || 0) > 18 ? element.status : null" placement="top">
                                             {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
-                                            <ng-container *ngIf="element.status.length > 18">...</ng-container>
+                                            <ng-container *ngIf="(element.status?.length || 0) > 18">...</ng-container>
                                         </span>
-                                    </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">status : </span>{{element.status}}
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">leadSource :
                                         </span>{{element.leadSource}}</li>
@@ -845,7 +843,7 @@
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Email: </span>{{element.email}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">CurrentStage:
-                                        </span>{{element.currentStage}}</li>
+                                        </span>{{element.stage}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">UpdatedBy:
                                         </span>{{element.updatedBy}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">UpdatedTime:
@@ -871,6 +869,7 @@
                                         </span>{{followup.followUpBy}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Comments :
                                         </span>{{followup.comments}}</li>
+                                    
                                 </ul>
                             </div>
                         </ng-template>
@@ -1092,12 +1091,10 @@
                 </div> -->
 
             </div>
-            <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-                <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                    <button class="btn btn-primary mr-3 w-100" type="submit">Update Status</button>
-                </div>
-                <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
+            <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
+                <div class="d-flex justify-content-end gap-3">
+                    <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
                         type="submit">Cancel</button>
                 </div>
             </div>

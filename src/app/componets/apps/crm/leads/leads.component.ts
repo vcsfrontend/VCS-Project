@@ -1207,8 +1207,7 @@ export class LeadsComponent extends BaseComponent {
     if (!newColor) {
       this.toastr.warning('Please select a color.');
       return;
-    }
-
+    }    
     const currentStageOptions =
       this.statusOptionsByStage[this.selectedStage] || [];
     const currentDisplayOptions =
@@ -1850,7 +1849,7 @@ export class LeadsComponent extends BaseComponent {
           if (res.status == true) {
             modal.close();
             this.submitted = false;
-            this.leadForm.reset();
+            this.sendLeadForm.reset();
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
