@@ -603,7 +603,7 @@ export class DealsComponent extends BaseComponent {
   }
 
   onSubmit(modal: any) {
-    this.leadForm.get('campaignId')?.setValue(this.campaignId);
+    this.leadForm.get('campaignId')?.setValue ((JSON.parse(this.userData)?.userType !== 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
     this.leadForm.get('executive')?.setValue('');
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
@@ -613,6 +613,7 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('type')?.setValue(JSON.parse(this.userData).type);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
+    console.log(payload);
     this.submitted = true;
     if (this.leadForm?.valid) {
       this.switchService.AddCrmLeads(payload).subscribe({
@@ -1047,8 +1048,10 @@ export class DealsComponent extends BaseComponent {
       updatedBy: this.userEmail,
       updatedTime: new Date().toISOString(),
       entryBy: element.entryBy ?? null,
-      campaignId: element.campaignId || this.campaignId,
+      individualEmail:this.userEmail,
+      campaignId:((JSON.parse(this.userData)?.userType !== 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634'),
     };
+    console.log(payload);
     this.leadForm.patchValue(payload);
     this.modalService.open(Content14, {
       scrollable: true,
@@ -1066,6 +1069,7 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
+    console.log(payload);
     this.submitted = true;
     if (this.leadForm?.valid) {
       this.switchService.EditCrmLeads(payload).subscribe({
