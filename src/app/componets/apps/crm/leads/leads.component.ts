@@ -95,7 +95,7 @@ export class LeadsComponent extends BaseComponent {
   uploadStatusDisplay: { name: string; color: string } = { name: '', color: '', };
   selectedType: string = ''; dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
   matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
-  allocateExecutive: boolean = false; selectedLeadId: number = 0;
+  allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -121,6 +121,7 @@ export class LeadsComponent extends BaseComponent {
   public followupName = '';
   public executiveName = '';
   public followupLeadForm!: FormGroup;
+  public FilterForm!:FormGroup
   public followupLeadSubmitted = false;
 
   public userList: any;
@@ -351,7 +352,7 @@ export class LeadsComponent extends BaseComponent {
       autoAllocate: [false],
       agents:[''],
       companyCode: [this.userCompanyCode],
-      email: [this.userEmail],
+      email: [this.individualEmail],
       type: [this.userType],
     });
 
@@ -381,6 +382,19 @@ export class LeadsComponent extends BaseComponent {
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
       executive: ['', [Validators.required]],
+    });
+
+     this.FilterForm = this.fb.group({
+      filterStage: [''],
+      filterStatus: [''],
+      filterSource: [''],
+      filterExecutive: [''],
+      filterCity: [''],
+      filterState: [''],
+      companyName: [this.userCompanyName],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
     });
 
     this.getUsers();
@@ -710,6 +724,27 @@ export class LeadsComponent extends BaseComponent {
         },
       });
     }
+  }
+
+  submitFilter(){
+    let payload = {
+      ...this.FilterForm.value,
+      companyName: [this.userCompanyName],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
+    }
+    this.switchService.filterCrmLeads(payload).subscribe({
+      next : (res:any) => {
+        if (res.status === true)
+        this.toastr.success('filtered data successfully');
+        this.offcanvasService.dismiss();
+        this.FilterForm.reset();
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    })
   }
 
   editLeadSubmit(modal: any) {
@@ -1739,7 +1774,6 @@ export class LeadsComponent extends BaseComponent {
       formData.forEach((value, key) => {
         formDataObject[key] = value;
       });
-      console.log(formDataObject)
       this.switchService.UploadCrmLeads(formData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1949,36 +1983,24 @@ export class LeadsComponent extends BaseComponent {
     this.allocateSubmitted = true;
     const selectedExecutive = this.allocateForm.get('executive')?.value;
     const hasSelectedLeads = this.selectedIdList.size > 0;
-
-    // Check for both conditions
-    if (!selectedExecutive && !hasSelectedLeads) {
-      this.toastr.warning('Please choose one executive and one lead', 'lead', {
-        timeOut: 3000,
-        positionClass: 'toast-top-right',
-      });
+    console.log('Selected Executive:', selectedExecutive); 
+    if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
+      this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
     }
-
-    if (!selectedExecutive) {
-      this.toastr.warning('Please choose one executive', 'lead', {
-        timeOut: 3000,
-        positionClass: 'toast-top-right',
-      });
+    if (selectedExecutive == null || selectedExecutive === '') {
+      this.toastr.warning('Please select executive', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
     }
-
     if (!hasSelectedLeads) {
-      this.toastr.warning('Please choose one lead', 'lead', {
-        timeOut: 3000,
-        positionClass: 'toast-top-right',
-      });
+      this.toastr.warning('Please choose one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
     }
     if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
-      this.allocateForm.patchValue({ idList: this.allocateForm });
-      let allocateData = {
+      this.allocateForm.patchValue({ idList: [...this.selectedIdList] });
+      const allocateData = {
         idList: [...this.selectedIdList],
-        executive: this.allocateForm.get('executive')?.value,
+        executive: selectedExecutive,
       };
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
@@ -1986,16 +2008,10 @@ export class LeadsComponent extends BaseComponent {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
             this.selectedIdList.clear();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
             this.getFetchLeadData();
           } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           }
         },
         error: (error) => {
@@ -2004,6 +2020,7 @@ export class LeadsComponent extends BaseComponent {
       });
     }
   }
+
 
   processStageData(data: any) {
     this.stageLst = [];
@@ -2290,9 +2307,9 @@ export class LeadsComponent extends BaseComponent {
     const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
     followupDate?.clearValidators();
     this.followupLeadForm.patchValue({
-      status: 'Not Connected',
+      status: 'not connected',
       followupDate: '',
-      comments: 'Not connected',       // Optional
+      comments: 'Not connected',    
     });
     this.followupLeadSubmit(modal)
   }

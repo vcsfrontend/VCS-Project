@@ -75,7 +75,7 @@ export class DealsComponent extends BaseComponent {
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
   selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
-  shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any;
+  shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any; individualEmail :any;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -358,6 +358,9 @@ export class DealsComponent extends BaseComponent {
       file: ['', [Validators.required]],
       agents: [''],
       autoAllocate: [false],
+      companyCode: [this.userCompanyCode],
+      email: [this.individualEmail],
+      type: [this.userType],
     });
     this.uploadLead.get('autoAllocate')?.valueChanges.subscribe((checked) => {
       if (checked) {
@@ -1216,7 +1219,7 @@ export class DealsComponent extends BaseComponent {
   onAllocateSubmit() {
     this.allocateSubmitted = true;
     if (this.selectedIdList.size == 0) {
-      this.toastr.error('Please choose at least one', 'lead', {
+      this.toastr.warning('Please choose at least one', 'lead', {
         timeOut: 3000, positionClass: 'toast-top-right'
       });
     }
@@ -1761,10 +1764,6 @@ export class DealsComponent extends BaseComponent {
                 const options = this.statusOptionsByStageforDisplay[stageName];
                 return Array.isArray(options) && options.length > 0;
               });
-
-              console.log('shouldDisableAddStatus:', this.shouldDisableAddStatus);
-
-
           }
         },
       });
@@ -1817,7 +1816,6 @@ export class DealsComponent extends BaseComponent {
             followUpBy: followup.followUpBy || '',
             updatedTime: followup.updatedTime ? new Date(followup.updatedTime) : null
           }));
-          console.log(this.followUpDetails)
         } else {
           this.followUpDetails = [];
         }
@@ -2134,9 +2132,9 @@ export class DealsComponent extends BaseComponent {
       const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
       followupDate?.clearValidators();
       this.followupLeadForm.patchValue({
-        status: 'Not Connected',
+        status: 'not connected',
         followupDate: '',
-        comments: 'Not connected',       // Optional
+        comments: 'Not connected',   
       });
       this.followupLeadSubmit(modal)
     }

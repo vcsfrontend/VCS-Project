@@ -290,7 +290,7 @@
                                 {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
                                 <ng-container *ngIf="element.status.length > 18">...</ng-container>
                             </span>
-                            <button *ngIf="element.followUpDate" class="btn btn-sm btn-link p-0 ms-2" [ngbPopover]="followupPopoverTemplate"
+                            <button *ngIf="element.followUpDate" class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
                                 popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
                                 type="button">
                                 <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
@@ -935,6 +935,7 @@
         </div>
     </div>
 </ng-template>
+
 <ng-template #Content2 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Email</strong></h5>
@@ -1010,7 +1011,7 @@
         <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)">Not Connected</button>
 
     </div>
-    <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
+    <div  *ngIf="showForm && selectedStatus !== 'not connected'" class="mt-2">
         <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
             <div class="offcanvas-body p-0 m-4 ">
                 <div class="row">
