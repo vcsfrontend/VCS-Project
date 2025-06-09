@@ -1982,7 +1982,7 @@ export class LeadsComponent extends BaseComponent {
   onAllocateSubmit() {
     this.allocateSubmitted = true;
     const selectedExecutive = this.allocateForm.get('executive')?.value;
-    const hasSelectedLeads = this.selectedIdList.size > 0;
+    const hasSelectedLeads = this.selectedLeads.length > 0;
     console.log('Selected Executive:', selectedExecutive); 
     if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
       this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
@@ -1996,18 +1996,19 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please choose one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
     }
-    if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
-      this.allocateForm.patchValue({ idList: [...this.selectedIdList] });
+    if (this.allocateForm?.valid) {
+      this.allocateForm.patchValue({ idList: [...this.selectedLeads] });
       const allocateData = {
-        idList: [...this.selectedIdList],
+        idList: [...this.selectedLeads],
         executive: selectedExecutive,
       };
+      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
-            this.selectedIdList.clear();
+            this.selectedLeads=[];
             this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
             this.getFetchLeadData();
           } else {

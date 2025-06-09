@@ -76,6 +76,7 @@ export class DealsComponent extends BaseComponent {
   selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
   shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any; individualEmail :any;
+   phoneNumber: string = '';
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -667,6 +668,9 @@ export class DealsComponent extends BaseComponent {
           const combined = [...executiveList, ...entryList];
           this.leadCount = combined.length;
           this.dataSource.data = combined;
+          if (combined.length > 0 && combined[0].contact) {
+            this.phoneNumber = combined[0].contact;
+          }
           const sortedByFollowUpDate = combined
             .filter((item) => item.followUpDateObj)
             .sort(
@@ -1218,20 +1222,20 @@ export class DealsComponent extends BaseComponent {
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
-    if (this.selectedIdList.size == 0) {
+    if (this.selectedLeads.length == 0) {
       this.toastr.warning('Please choose at least one', 'lead', {
         timeOut: 3000, positionClass: 'toast-top-right'
       });
     }
-    if (this.allocateForm?.valid && this.selectedIdList.size > 0) {
+    if (this.allocateForm?.valid) {
       this.allocateForm.patchValue({ idList: this.allocateForm });
-      let allocateData = { idList: [...this.selectedIdList], executive: this.allocateForm.get('executive')?.value }
+      let allocateData = { idList: [...this.selectedLeads], executive: this.allocateForm.get('executive')?.value }
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
-            this.selectedIdList.clear();
+            this.selectedLeads=[];
             this.toastr.success(res.message, 'lead');
             this.getfetchLeadsIndividual();
           } else {
@@ -2070,27 +2074,26 @@ export class DealsComponent extends BaseComponent {
     });
   }
 
- sendToWhatsApp() {
-  this.sendwhatsLeadFormSubmitted = true;
+  sendToWhatsApp(): void {
+    this.sendwhatsLeadFormSubmitted = true;
+    if (this.sendwhatsLeadForm.invalid) {
+      return;
+    }
+    const formValue = this.sendwhatsLeadForm.value;
+    const template = formValue.template?.templateName || 'No Template';
+    const subject = formValue.subject || 'No Subject';
+    const content = formValue.content || 'No Description';
+    const message =
+      `Template: ${template}\n` +
+      `Subject: ${subject}\n` +
+      `Description: ${content}`;
+    const encodedMessage = encodeURIComponent(message);
 
-  if (this.sendwhatsLeadForm.invalid) {
-    return;
+    // Use dynamic phoneNumber here, fallback to default if empty
+    const phoneNumberToUse = this.phoneNumber;
+    const url = `https://wa.me/${phoneNumberToUse}?text=${encodedMessage}`;
+    window.open(url, '_blank');
   }
-
-  const formValue = this.sendwhatsLeadForm.value;
-  const template = formValue.template?.templateName || 'No Template';
-  const subject = formValue.subject || 'No Subject';
-  const content = formValue.content || 'No Description';
-
-  const message = `Template: ${template}\nSubject: ${subject}\nDescription: ${content}`;
-  const encodedMessage = encodeURIComponent(message);
-
-  const cleanedPhoneNumber = this.currentPhoneNumber.replace(/\D/g, '');
-  const fullPhoneNumber = cleanedPhoneNumber.startsWith('91') ? cleanedPhoneNumber : '91' + cleanedPhoneNumber;
-
-  const url = `https://wa.me/${fullPhoneNumber}?text=${encodedMessage}`;
-  window.open(url, '_blank');
-}
   get P() {
     return this.sendwhatsLeadForm.controls;
   }
