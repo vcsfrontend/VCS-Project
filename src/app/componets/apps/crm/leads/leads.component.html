@@ -11,6 +11,11 @@
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-primary border-end border-light"
+                        (click)="openRight(Content1)" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        Filter
+                    </button>
+                    <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                         Bulk Upload
@@ -137,7 +142,7 @@
                                 {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
                                 <ng-container *ngIf="element.status.length > 18">...</ng-container>
                             </span>
-                            <button *ngIf="element.followUpDate" class="btn btn-sm btn-link p-0 ms-2" [ngbPopover]="followupPopoverTemplate"
+                            <button *ngIf="element.followUpDate || element.status === 'not connected'" class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
                                 popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
                                 type="button">
                                 <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
@@ -580,6 +585,54 @@
     </form>
 </ng-template>
 
+<ng-template #Content1 let-offcanvas>
+    <form [formGroup]="FilterForm" (ngSubmit)="submitFilter()">
+        <div class="offcanvas-header border-bottom border-block-end-dashed">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0"> 
+            <div class="col-xl-12 pt-3">
+                <div class="text-center">
+                    <div class="row gy-3 p-4">
+                        <div class="col-xl-6">
+                            <ng-select formControlName="filterStage" [items]="pipeLine" bindLabel="name" bindValue="name"
+                                placeholder="Select an Stage" [multiple]="true">
+                            </ng-select>
+                        </div>
+                        <div class="col-xl-6">
+                            <ng-select formControlName="filterStatus" [items]="pipeLine" bindLabel="name" bindValue="name"
+                                placeholder="Select an Stage" [multiple]="true">
+                            </ng-select>
+                        </div>
+                        <div class="col-xl-6">
+                            <ng-select formControlName="filterSource" [items]="pipeLine" bindLabel="name" bindValue="name"
+                                placeholder="Select an Source" [multiple]="true">
+                            </ng-select>
+                        </div>
+                        <div class="col-xl-6">
+                            <ng-select formControlName="filterExecutive" [items]="pipeLine" bindLabel="name" bindValue="name"
+                                placeholder="Select an Executive" [multiple]="true">
+                            </ng-select>
+                        </div>
+                        <div class="col-xl-6">
+                            <ng-select formControlName="filterCity" [items]="pipeLine" bindLabel="name" bindValue="name"
+                                placeholder="Select an City" [multiple]="true">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3" type="submit">Filter</button>
+                <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
 
 <ng-template #Content14 let-modal>
     <div class="modal-header">

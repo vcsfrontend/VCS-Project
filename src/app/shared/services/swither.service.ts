@@ -178,6 +178,7 @@ export class SwitherService {
   editLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead_entry_columns`,data); }   
   deleteLeadEntry(column_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead_column/${column_id}`); } 
   fetchLeadsIndividual(entryBy:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual/${entryBy}`); } 
+  filterCrmLeads(data:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual`, data); } 
 
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
