@@ -226,4 +226,7 @@ table.mat-mdc-table .mdc-data-table__header-cell:first-child {
 .no-hover{
   cursor: pointer;
 }
-
+.label-btn.label-end{
+  padding-inline-start: 0rem !important;
+  padding-inline-end: 1rem !important;
+}
