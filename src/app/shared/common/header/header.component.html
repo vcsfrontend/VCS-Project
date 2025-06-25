@@ -404,7 +404,7 @@
           </div>
           <div class="dropdown-divider"></div>
           <overlay-scrollbars [defer]>
-            <ul class="list-unstyled mb-0" id="header-notification-scroll" (click)="handleCardClick($event)">
+            <ul class="list-unstyled mb-0" id="header-notification-scroll" *ngIf="followUpCount > 1" (click)="handleCardClick($event)">
               <li ngbDropdownItem class="dropdown-item" id="not4">
                 <div class="d-flex align-items-center">
                   <div class="d-flex align-items-center">
@@ -413,7 +413,7 @@
                         {{ followUpCount }}
                       </span>
                     </div>
-                    <div class="flex-grow-1 d-flex align-items-center justify-content-between">
+                    <div class="flex-grow-1 d-flex align-items-center justify-content-between" >
                       <div>
                         <p class="mb-0 fw-medium">
                           <a [routerLink]="['/apps/crm/leads']" [queryParams]="{ campaignId: campaignId }">

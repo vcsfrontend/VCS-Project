@@ -4,7 +4,7 @@ import {
   ApexYAxis, ApexTitleSubtitle, ApexLegend, ApexResponsive, NgApexchartsModule
 } from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { FilePondOptions } from 'filepond';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -211,29 +211,50 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       designId: ['', Validators.required],
       discount: ['', Validators.required],
       flatNo: ['', Validators.required],
-      others: [0, Validators.required],
+      others: ['', Validators.required],
       projectConfig: ['', Validators.required],
       quotationNumber: ['', Validators.required],
-      gMC: [0, Validators.required],
+      gMC: ['', Validators.required],
       gPA: ['', Validators.required],
-      gSC: [0, Validators.required],
-      tDMC: [0, Validators.required],
+      gSC: ['', Validators.required],
+      tDMC: ['', Validators.required],
       tDPA: ['', Validators.required],
-      tDSC: [0, Validators.required],
+      tDSC: ['', Validators.required],
       dedEmail: ['', Validators.required],
       dedMobile: ['', Validators.required],
       dedName: ['', Validators.required],
       rmdEmail: ['', Validators.required],
       rmdMobile: ['', Validators.required],
       rmdName: ['', Validators.required],
-      Optimizerprocess: ['', Validators.required],
-      shutterList: ['', Validators.required],
-      functionalList: ['', Validators.required],
-      hardwareList: ['', Validators.required],
+      Optimizerprocess: [false, Validators.required],
+      BOM:[false,Validators.required],
+      shutterList: [false],
+      shutterOptions: this.fb.group({
+        PanelList: [false],
+        groupPannelList: [false],
+        functionalList: [false],
+        HardwareList: [false],
+        isDetailPannelRequired: [false],
+        isFunctionalPartsAndDoorsRequired: [false]
+      }),
       email: ['', Validators.required],
       type: ['', Validators.required],
     });
 
+    const atLeastOneCheckboxInline = (group: AbstractControl): ValidationErrors | null => {
+      const controls = (group as FormGroup).controls;
+      const anyChecked = Object.values(controls).some(control => control.value === true);
+      return anyChecked ? null : { atLeastOneRequired: true };
+    };
+    this.quotationForm.get('shutterList')?.valueChanges.subscribe(checked => {
+      const group = this.quotationForm.get('shutterOptions');
+      if (checked) {
+        group?.setValidators(atLeastOneCheckboxInline);
+      } else {
+        group?.clearValidators();
+      }
+      group?.updateValueAndValidity();
+    });
 
   }
 
@@ -1604,28 +1625,55 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     return `${differenceInDays} days ago`;
   }
 
-  onQuotationSubmit(modal: any) {
-    this.submitted = true;
-    if (this.quotationForm?.valid) {
-      setTimeout(() => {
-        const mockResponse = { status: true, message: 'Quotation successfully created!' };
-        if (mockResponse.status) {
-          modal.close();
-          this.submitted = false;
-          this.quotationForm.reset();
-          this.toastr.success(mockResponse.message, 'Quotation', {
-            timeOut: 3000, positionClass: 'toast-top-right'
-          });
-        } else {
-          this.toastr.error(mockResponse.message, 'Quotation',);
-        }
-      }, 1000);
-    }
+  atLeastOneCheckboxChecked(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const controls = (group as FormGroup).controls;
+    const anyChecked = Object.values(controls).some(control => control.value === true);
+    return anyChecked ? null : { atLeastOneRequired: true };
+  };
+  }
 
-    if (this.quotationForm.invalid) {
-      this.toastr.error('Please fill mandatory fields');
-      return;
+
+  onQuotationSubmit(modal: any) {
+  this.submitted = true;
+
+  this.quotationForm.markAllAsTouched();
+
+  const shutterListChecked = this.quotationForm.get('shutterList')?.value;
+  const shutterOptionsGroup = this.quotationForm.get('shutterOptions') as FormGroup;
+
+  if (shutterListChecked) {
+    shutterOptionsGroup.setValidators(this.atLeastOneCheckboxChecked());
+  } else {
+    shutterOptionsGroup.clearValidators();
+  }
+
+  shutterOptionsGroup.updateValueAndValidity();
+
+  // Check entire form validity
+  if (this.quotationForm.invalid) {
+    this.toastr.error('Please fill mandatory fields');
+    return;
+  }
+
+  // Simulated API call / success
+  setTimeout(() => {
+    const mockResponse = { status: true, message: 'Quotation successfully created!' };
+    if (mockResponse.status) {
+      modal.close();
+      this.submitted = false;
+      this.quotationForm.reset();
+      this.toastr.success(mockResponse.message, 'Quotation', {
+        timeOut: 3000, positionClass: 'toast-top-right'
+      });
+    } else {
+      this.toastr.error(mockResponse.message, 'Quotation');
     }
+  }, 1000);
+  }
+
+  get g() {
+    return this.quotationForm.controls;
   }
 
 }
