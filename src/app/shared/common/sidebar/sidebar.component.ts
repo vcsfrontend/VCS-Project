@@ -102,13 +102,13 @@ export class SidebarComponent implements AfterViewInit {
           // case 'leads':
           //   item.isVisible = true;
           //   break;
-          case 'deals':
+          case 'Deals':
             item.isVisible = true;
             break;
           case 'users':
             item.isVisible = true;
             break;
-          case 'reports':
+          case 'Reports':
             item.isVisible = true;
             break;
           // case 'optimizer':
@@ -125,6 +125,9 @@ export class SidebarComponent implements AfterViewInit {
             break;
           case 'Settings':
             this.checkAdminRole(item);
+            break;
+          case 'Tasks':
+            item.isVisible = true;
             break;
         }
       })

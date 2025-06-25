@@ -219,3 +219,7 @@ table.mat-mdc-table {
 .no-hover{
   cursor: pointer;
 }
+.mat-mdc-tooltip .mdc-tooltip__surface {
+  background-color: #000000 !important;
+  cursor: pointer;
+}

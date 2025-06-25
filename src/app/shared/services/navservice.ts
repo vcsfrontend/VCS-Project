@@ -429,7 +429,7 @@ export class NavService implements OnDestroy {
       active: false,
       children: [
         {
-          title: 'campaigns',
+          title: 'Campaigns',
           dirchange: false,
           type: 'link',
           linkType : 'internal',
@@ -439,7 +439,7 @@ export class NavService implements OnDestroy {
           path: '/dashboard/campaigns',
         }, 
         {
-          title: 'deals',
+          title: 'Deals',
           icon: 'bi-grid side-menu__icon',
           dirchange: false,
           type: 'link',
@@ -448,7 +448,7 @@ export class NavService implements OnDestroy {
           path: '/apps/crm/deals'
         },
         {
-          title: 'reports',
+          title: 'Reports',
           icon: 'bi-layout-text-window side-menu__icon',
           dirchange: false,
           type: 'link',
@@ -477,7 +477,15 @@ export class NavService implements OnDestroy {
               
       ],
     },
-    
+    {
+      title: 'Tasks',
+      icon: 'bi-bag side-menu__icon',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path: '/dashboard/tasks'
+    },
     // {
     //   title: 'proposal',
     //   icon: 'bi-bag side-menu__icon',
