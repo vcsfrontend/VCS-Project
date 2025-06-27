@@ -230,3 +230,8 @@ table.mat-mdc-table .mdc-data-table__header-cell:first-child {
   padding-inline-start: 0rem !important;
   padding-inline-end: 1rem !important;
 }
+.virtual-scroll-wrapper {
+  height: 500px;
+  overflow-y: auto;
+}
+
