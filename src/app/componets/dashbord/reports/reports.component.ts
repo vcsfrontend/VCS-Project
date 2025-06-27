@@ -5,12 +5,15 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
+import { NgbDropdownModule,NgbNavModule,NgbModal, NgbModalConfig, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [CommonModule, DatePipe, MatFormFieldModule,MaterialModuleModule,SharedModule],
+  imports: [CommonModule, DatePipe, MatFormFieldModule,MaterialModuleModule,SharedModule,NgSelectModule, NgbModule, NgbNavModule, NgbDropdownModule,],
+  providers: [NgbModalConfig, NgbModal,],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.scss'
 })
@@ -19,9 +22,19 @@ export class ReportsComponent {
   dataSource = new MatTableDataSource<any>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pageSize = 10;
-   constructor( ) {
+   constructor(private modalService: NgbModal, ) {
       // super();
+      
     }
+  
+  modal: any;
+  
+  open(content:any) {
+    this.modalService.open(content,{ centered: true });
+  }
+  flatpickrOptions: any = {
+    inline: true,
+  };
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -116,5 +129,10 @@ export class ReportsComponent {
     city: 'San Francisco'
   }
 ];
+
+showDetailsMap: { [key: string]: boolean } = {};
+ toggleDetails(taskId: string | number) {
+    this.showDetailsMap[taskId] = !this.showDetailsMap[taskId];
+  }
 
 }
