@@ -195,6 +195,9 @@ export class LeadsComponent extends BaseComponent {
   openRight1(content1: any) {
     this.offcanvasService.open(content1, { position: 'end' });
   }
+  openRight2(content30: any) {
+    this.modalService.open(content30, { centered: true });
+  }
 
   openFollowup(element: any, content1: any) {
     this.followupName = element.name;
@@ -1489,7 +1492,7 @@ export class LeadsComponent extends BaseComponent {
     return '#ccc';
   }
 
-  filterStatusList(event: any): void {
+  filterStatusList(event: any): void { 
     const activePoints = event.active;
     if (activePoints && activePoints.length > 0) {
       const chartElement = activePoints[0];
