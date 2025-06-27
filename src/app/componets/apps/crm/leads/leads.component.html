@@ -84,6 +84,13 @@
                                         </button>
                                     </li>
                                     <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Create Task<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
                                         <button class="btn btn-teal label-btn label-end w-100 "
                                             (click)="editLead(element,Content14)">
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
@@ -605,33 +612,31 @@
         </div>
         <div class="offcanvas-body p-0"> 
             <div class="col-xl-12 pt-3">
-                <div class="text-center">
-                    <div class="row gy-3 p-4">
-                        <div class="col-xl-6">
-                            <ng-select formControlName="filterStage" [items]="pipeLine" bindLabel="name" bindValue="name"
-                                placeholder="Select an Stage" [multiple]="true">
-                            </ng-select>
-                        </div>
-                        <div class="col-xl-6">
-                            <ng-select formControlName="filterStatus" [items]="pipeLine" bindLabel="name" bindValue="name"
-                                placeholder="Select an Stage" [multiple]="true">
-                            </ng-select>
-                        </div>
-                        <div class="col-xl-6">
-                            <ng-select formControlName="filterSource" [items]="pipeLine" bindLabel="name" bindValue="name"
-                                placeholder="Select an Source" [multiple]="true">
-                            </ng-select>
-                        </div>
-                        <div class="col-xl-6">
-                            <ng-select formControlName="filterExecutive" [items]="pipeLine" bindLabel="name" bindValue="name"
-                                placeholder="Select an Executive" [multiple]="true">
-                            </ng-select>
-                        </div>
-                        <div class="col-xl-6">
-                            <ng-select formControlName="filterCity" [items]="pipeLine" bindLabel="name" bindValue="name"
-                                placeholder="Select an City" [multiple]="true">
-                            </ng-select>
-                        </div>
+                <div class="row gy-3 p-4">
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterStage" [items]="stageLst" bindLabel="stageName"
+                            bindValue="stageName" placeholder="Select an Stage" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterStatus" [items]="statusLst" bindLabel="statusName"
+                            bindValue="statusName" placeholder="Select an Status" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterSource" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select an Source" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterExecutive" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select an Executive" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterCity" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select an City" [multiple]="true">
+                        </ng-select>
                     </div>
                 </div>
             </div>
@@ -1282,3 +1287,62 @@
     </div>
 </ng-template>
 
+
+<ng-template #content30 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Create Task</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row gy-2">
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">Task Name</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Task Name">
+                </div>
+                <div class="col-xl-12">
+                    <label class="form-label">Assigned To</label>
+                    <ng-select class="ti-form-select  !rounded-s-none" name="choices-multiple-remove-button"
+                        placeholder="select" id="choices-multiple-remove-button" [multiple]="true">
+                        <ng-option value="Choice 1" selected>Angelina May</ng-option>
+                        <ng-option value="Choice 2">Kiara advain</ng-option>
+                        <ng-option value="Choice 3">Hercules Jhon</ng-option>
+                        <ng-option value="Choice 4">Mayor Kim</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Deadline (Optional)</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-text text-muted modal-calender"> <i class="ri-calendar-line"></i>
+                            </div>
+                            <input type="date" class="form-control w-full !rounded-s-none" id="addignedDate"
+                                placeholder="Choose date and time">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Priority</label>
+                    <ng-select data-trigger name="choices-single-default" placeholder="select"
+                        id="choices-single-default">
+                        <ng-option value="" selected>Select</ng-option>
+                        <ng-option value="Critical">Critical</ng-option>
+                        <ng-option value="High">High</ng-option>
+                        <ng-option value="Medium">Medium</ng-option>
+                        <ng-option value="Low">Low</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-12">
+                    <label class="form-label">Remarks</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Task Name">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+            <button type="button" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+</ng-template>
