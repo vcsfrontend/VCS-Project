@@ -20,6 +20,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 export class ReportsComponent {
   displayedColumns: string[] = ['slNo', 'name', 'role', 'number', 'date','totalCallsAttempted','totalCallsConnectd', 'totalCallsNotConnectd','totalInprogressLeads', 'totalConvertedLeads','totalLostleads','startcallingtime'];
   dataSource = new MatTableDataSource<any>();
+  showTable: boolean = false;
+  temp: any[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pageSize = 10;
    constructor(private modalService: NgbModal, ) {
@@ -128,11 +130,12 @@ export class ReportsComponent {
     email: 'david.kim@example.com',
     city: 'San Francisco'
   }
-];
+  ];
 
-showDetailsMap: { [key: string]: boolean } = {};
- toggleDetails(taskId: string | number) {
+  showDetailsMap: { [key: string]: boolean } = {};
+  toggleDetails(taskId: string | number) {
     this.showDetailsMap[taskId] = !this.showDetailsMap[taskId];
   }
 
+  
 }

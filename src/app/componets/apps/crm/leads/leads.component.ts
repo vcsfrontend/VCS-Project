@@ -83,7 +83,9 @@ export class LeadsComponent extends BaseComponent {
   imageFileSrcData: any; followUpDetails: any[] = []; nextLeadStatus: any; minDateTime: string = '';
   selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
-  fetchedData:any;companyLst:any;selectedFileName:any
+  fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
+  notconnectedstatusClicked = false;
+
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -95,7 +97,7 @@ export class LeadsComponent extends BaseComponent {
   uploadStatusDisplay: { name: string; color: string } = { name: '', color: '', };
   selectedType: string = ''; dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
   matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
-  allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;
+  allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;  hasSelectedInvalid = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -1416,6 +1418,7 @@ export class LeadsComponent extends BaseComponent {
 
   onFollowupStatusChange(): void {
     const selectedStage = this.followupLeadForm.get('stage')?.value;
+
     if (selectedStage === 'open') {
       this.checkboxStageOptions = this.openStage.map((opt) => ({
         ...opt,
@@ -1423,13 +1426,26 @@ export class LeadsComponent extends BaseComponent {
         isCustom: false,
       }));
 
+      if (this.hasSelectedInvalid) {
+        this.checkboxStageOptions = this.checkboxStageOptions.filter(
+          (opt) => opt.name !== 'Invalid'
+        );
+      }
+
       const firstStatus = this.checkboxStageOptions[0]?.name || null;
       this.followupLeadForm.patchValue({ status: firstStatus });
       return;
     }
+
     if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
-      this.checkboxStageOptions =
-        this.statusOptionsByStageforDisplay[selectedStage];
+      this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage];
+
+      if (this.hasSelectedInvalid) {
+        this.checkboxStageOptions = this.checkboxStageOptions.filter(
+          (opt) => opt.name !== 'Invalid'
+        );
+      }
+
       const currentStatus = this.followupLeadForm.get('status')?.value;
       const statusExists = this.checkboxStageOptions.some(
         (option) => option.name === currentStatus
@@ -1443,6 +1459,7 @@ export class LeadsComponent extends BaseComponent {
       this.followupLeadForm.patchValue({ status: null });
     }
   }
+
 
   deleteOption(index: number) {
     const deletedOption = this.checkboxStageOptions[index];
@@ -1800,7 +1817,7 @@ export class LeadsComponent extends BaseComponent {
             this.getFetchLeadData();
           } else {
             this.uploadSpinner = false;
-            this.toastr.error(res.message, 'lead');
+            this.toastr.error(res.message, 'invalid file');
             this.isImporting = false;
           }
         },
@@ -1911,6 +1928,18 @@ export class LeadsComponent extends BaseComponent {
 
   followupLeadSubmit(modal: any) {
     this.followupLeadSubmitted = true;
+    const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
+    const originalStatus = this.originalStatus?.toLowerCase().trim();
+
+    if (
+      currentStatus &&
+      this.originalStatus &&
+      currentStatus.toLowerCase().trim() === this.originalStatus.toLowerCase().trim()
+    ) {
+      this.toastr.warning('Please select a different status before submitting.', 'Validation');
+      return;
+    }
+   
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
       let followUpDetails = this.followupLeadForm.value;
@@ -1986,6 +2015,7 @@ export class LeadsComponent extends BaseComponent {
     this.allocateSubmitted = true;
     const selectedExecutive = this.allocateForm.get('executive')?.value;
     const hasSelectedLeads = this.selectedLeads.length > 0;
+    console.log('Selected Executive:', selectedExecutive); 
     if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
       this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
@@ -2004,6 +2034,7 @@ export class LeadsComponent extends BaseComponent {
         idList: [...this.selectedLeads],
         executive: selectedExecutive,
       };
+      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2138,24 +2169,31 @@ export class LeadsComponent extends BaseComponent {
   pondHandleInit() {}
   pondHandleAddFile(event: any) {}
   pondHandleActivateFile(event: any) {}
+
   getSeriesData(fields: any[]): number[] {
-    return fields.map((field) => {
-      const foundStatus = this.statusCounts.find(
-        (status) => status.status === field.name
-      );
-      return foundStatus ? foundStatus.count : 0;
-    });
+  return fields.map((field) => {
+    const foundStatus = this.statusCounts.find(
+      (status) => status.status.toLowerCase() === field.name.toLowerCase()
+    );
+    return foundStatus ? foundStatus.count : 0;
+  });
   }
 
-  getLabelData(fields: any[]): string[] {
-    return fields.map((field) => {
-      const foundStatus = this.statusCounts.find(
-        (status) => status.status === field.name
-      );
-      const count = foundStatus ? foundStatus.count : 0;
-      return `${field.name} (${count})`;
-    });
+  capitalizeWords(text: string): string {
+  return text.replace(/\b\w/g, char => char.toUpperCase());
   }
+
+
+  getLabelData(fields: any[]): string[] {
+  return fields.map((field) => {
+    const foundStatus = this.statusCounts.find(
+      (status) => status.status.toLowerCase() === field.name.toLowerCase()
+    );
+    const count = foundStatus ? foundStatus.count : 0;
+    return `${this.capitalizeWords(field.name)} (${count})`;
+  });
+  }
+
   getColorData(fields: any[]): string[] {
     return fields.map((field) => field.color);
   }
@@ -2221,9 +2259,11 @@ export class LeadsComponent extends BaseComponent {
   }
   openFollowupLeadForm(element: any, content4: any): void {
     this.followupName = element.name;
+    this.notconnectedstatusClicked = false;
     let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
+    this.originalStatus = element.status?.toLowerCase().trim();
     this.openRight4(content4);
     this.ViewCrmLeads(element);
   }
@@ -2299,21 +2339,22 @@ export class LeadsComponent extends BaseComponent {
   const followupDate = this.followupLeadForm.get('followupDate');
   this.showForm = true;
     if (status === 'Not Connected') {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = ('0' + (now.getMonth() + 1)).slice(-2);
-    const day = ('0' + now.getDate()).slice(-2);
-    const hours = ('0' + now.getHours()).slice(-2);
-    const minutes = ('0' + now.getMinutes()).slice(-2);
+      this.notconnectedstatusClicked = true; 
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = ('0' + (now.getMonth() + 1)).slice(-2);
+      const day = ('0' + now.getDate()).slice(-2);
+      const hours = ('0' + now.getHours()).slice(-2);
+      const minutes = ('0' + now.getMinutes()).slice(-2);
 
-    const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
-    followupDate?.clearValidators();
-    this.followupLeadForm.patchValue({
-      status: 'not connected',
-      followupDate: '',
-      comments: 'Not connected',    
+      const formattedNow = `${year}-${month}-${day}T${hours}:${minutes}`;
+      followupDate?.clearValidators();
+      this.followupLeadForm.patchValue({
+        status: 'not connected',
+        followupDate: '',
+        comments: 'Not connected',    
     });
-    this.followupLeadSubmit(modal)
+    this.followupLeadSubmit(modal);
   }
    else if (status === 'Connected') {
     this.readonlyMode = false;
@@ -2423,4 +2464,11 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
+
+  get isStatusUnchanged(): boolean {
+  const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
+  const original = this.originalStatus?.toLowerCase().trim();
+  return current === original;
+  }
+
 }

@@ -76,7 +76,7 @@ export class DealsComponent extends BaseComponent {
   selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
   shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any; individualEmail :any;
-   phoneNumber: string = '';
+   phoneNumber: string = '';originalStatus: string = '';  notconnectedstatusClicked = false; hasSelectedInvalid = false;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -273,9 +273,11 @@ export class DealsComponent extends BaseComponent {
   }
   openFollowupLeadForm(element: any, content4: any): void {
     this.followupName = element.name;
+    this.notconnectedstatusClicked = false;
     let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
+    this.originalStatus = element.status?.toLowerCase().trim();
     this.openRight4(content4);
     this.ViewCrmLeads(element);
     
@@ -613,7 +615,7 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('type')?.setValue(JSON.parse(this.userData).type);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
-    console.log(payload);
+    // console.log(payload);
     this.submitted = true;
     if (this.leadForm?.valid) {
       this.switchService.AddCrmLeads(payload).subscribe({
@@ -699,6 +701,12 @@ export class DealsComponent extends BaseComponent {
       checked: true,
       isCustom: false
     }));
+
+    if (this.hasSelectedInvalid) {
+        this.checkboxStageOptions = this.checkboxStageOptions.filter(
+          (opt) => opt.name !== 'Invalid'
+        );
+    }
 
     const firstStatus = this.checkboxStageOptions[0]?.name || null;
     this.followupLeadForm.patchValue({ status: firstStatus });
@@ -1159,6 +1167,18 @@ export class DealsComponent extends BaseComponent {
 
   followupLeadSubmit(modal: any) {
     this.followupLeadSubmitted = true;
+    const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
+    const originalStatus = this.originalStatus?.toLowerCase().trim();
+
+    if (
+      currentStatus &&
+      this.originalStatus &&
+      currentStatus.toLowerCase().trim() === this.originalStatus.toLowerCase().trim()
+    ) {
+      this.toastr.warning('Please select a different status before submitting.', 'Validation');
+      return;
+    }
+
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
       let followUpDetails = this.followupLeadForm.value;
@@ -1945,22 +1965,27 @@ export class DealsComponent extends BaseComponent {
 
 
   getSeriesData(fields: any[]): number[] {
-    return fields.map((field) => {
-      const foundStatus = this.statusCounts.find(
-        (status) => status.status === field.name
-      );
-      return foundStatus ? foundStatus.count : 0;
-    });
+  return fields.map((field) => {
+    const foundStatus = this.statusCounts.find(
+      (status) => status.status.toLowerCase() === field.name.toLowerCase()
+    );
+    return foundStatus ? foundStatus.count : 0;
+  });
   }
 
+  capitalizeWords(text: string): string {
+  return text.replace(/\b\w/g, char => char.toUpperCase());
+  }
+
+
   getLabelData(fields: any[]): string[] {
-    return fields.map((field) => {
-      const foundStatus = this.statusCounts.find(
-        (status) => status.status === field.name
-      );
-      const count = foundStatus ? foundStatus.count : 0;
-      return `${field.name} (${count})`;
-    });
+  return fields.map((field) => {
+    const foundStatus = this.statusCounts.find(
+      (status) => status.status.toLowerCase() === field.name.toLowerCase()
+    );
+    const count = foundStatus ? foundStatus.count : 0;
+    return `${this.capitalizeWords(field.name)} (${count})`;
+  });
   }
   getColorData(fields: any[]): string[] {
     return fields.map((field) => field.color);
@@ -2129,6 +2154,7 @@ export class DealsComponent extends BaseComponent {
     this.showForm = true;
     const followupDate = this.followupLeadForm.get('followupDate');
     if (status === 'Not Connected') {
+      this.notconnectedstatusClicked = true; 
       const now = new Date();
       const year = now.getFullYear();
       const month = ('0' + (now.getMonth() + 1)).slice(-2);
@@ -2170,6 +2196,12 @@ export class DealsComponent extends BaseComponent {
         this.toastr.error(error.statusText);
       }
     });
+  }
+
+  get isStatusUnchanged(): boolean {
+  const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
+  const original = this.originalStatus?.toLowerCase().trim();
+  return current === original;
   }
 
   

@@ -257,7 +257,7 @@
                     <div *ngIf="a['executive'].errors['required']">Executive is required</div>
                 </div>
             </form>
-            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" class="ms-2">
+            <!-- <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" class="ms-2">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
                     <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
@@ -271,7 +271,7 @@
                 <div *ngIf="allocateSubmitted && a['executive'].errors" class="invalid-feedback">
                     <div *ngIf="a['executive'].errors['required']">Executive is required</div>
                 </div>
-            </form>
+            </form> -->
             <div class="text-center ms-3 ">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
@@ -1134,7 +1134,7 @@
     </div>
     <div class="d-flex pt-4 gap-3 ms-2">
         <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
-        <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)">Not Connected</button>
+        <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)" [disabled]="notconnectedstatusClicked">Not Connected</button>
 
     </div>
     <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
@@ -1191,7 +1191,7 @@
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
                 <div class="d-flex justify-content-end gap-3">
-                    <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
+                    <button class="btn btn-primary mr-3 w-50" type="submit" [disabled]="isStatusUnchanged">Update Status</button>
                     <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
                         type="submit">Cancel</button>
                 </div>
