@@ -87,7 +87,14 @@
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
-                                            Create Task<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                            Create Task<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="openRight2(content31)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                         </button>
                                     </li>
                                     <li class="m-2">
@@ -244,6 +251,21 @@
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
                         id="button-addon1" data-mdb-ripple-color="dark">
                         Allocate
+                    </button>
+                </div>
+                <div *ngIf="allocateSubmitted && a['executive'].errors" class="invalid-feedback">
+                    <div *ngIf="a['executive'].errors['required']">Executive is required</div>
+                </div>
+            </form>
+            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" class="ms-2">
+                <div class="input-group w-auto"
+                    [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
+                    <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
+                        placeholder="Select an Executive" class="rounded-0 ng-selt">
+                    </ng-select>
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
+                        id="button-addon1" data-mdb-ripple-color="dark">
+                        Submit
                     </button>
                 </div>
                 <div *ngIf="allocateSubmitted && a['executive'].errors" class="invalid-feedback">
@@ -615,12 +637,12 @@
                 <div class="row gy-3 p-4">
                     <div class="col-xl-6">
                         <ng-select formControlName="filterStage" [items]="stageLst" bindLabel="stageName"
-                            bindValue="stageName" placeholder="Select an Stage" [multiple]="true">
+                            bindValue="stageName"  (change)="onStatusChange()" placeholder="Select an Stage" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <ng-select formControlName="filterStatus" [items]="statusLst" bindLabel="statusName"
-                            bindValue="statusName" placeholder="Select an Status" [multiple]="true">
+                        <ng-select formControlName="filterStatus" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                            placeholder="Select a status">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
@@ -629,8 +651,8 @@
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <ng-select formControlName="filterExecutive" [items]="pipeLine" bindLabel="name" bindValue="name"
-                            placeholder="Select an Executive" [multiple]="true">
+                        <ng-select formControlName="filterExecutive" [items]="agentUsers" bindLabel="email" bindValue="email"
+                            placeholder="Select an Executive">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
@@ -1346,3 +1368,68 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #content31 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row gy-2">
+                <div class="col-xl-12">
+                    <label class="form-label">Assigned To</label>
+                    <ng-select class="ti-form-select  !rounded-s-none" name="choices-multiple-remove-button"
+                        placeholder="select" id="choices-multiple-remove-button" [multiple]="true">
+                        <ng-option value="Choice 1" selected>Angelina May</ng-option>
+                        <ng-option value="Choice 2">Kiara advain</ng-option>
+                        <ng-option value="Choice 3">Hercules Jhon</ng-option>
+                        <ng-option value="Choice 4">Mayor Kim</ng-option>
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+            <button type="button" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+</ng-template>
+
+
+<!-- <div class="btn-group dropend my-1" ngbDropdown placement="right-top">
+<button type="button" class="btn btn-primary dropdown-toggle"
+ngbDropdownToggle   data-bs-toggle="dropdown" aria-expanded="false">
+    Dropright
+</button>
+<ul class="dropdown-menu" ngbDropdownMenu>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
+    <li>
+        <hr class="dropdown-divider">
+    </li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
+</ul>
+</div>
+<div class="btn-group dropend my-1" ngbDropdown placement="right-top">
+<button type="button" class="btn btn-info">
+    Split dropend
+</button>
+<button type="button"
+    class="btn btn-info dropdown-toggle dropdown-toggle-split"
+    ngbDropdownToggle  data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="visually-hidden">Toggle Dropright</span>
+</button>
+<ul class="dropdown-menu" ngbDropdownMenu>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
+    <li>
+        <hr class="dropdown-divider">
+    </li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
+</ul>
+</div> -->

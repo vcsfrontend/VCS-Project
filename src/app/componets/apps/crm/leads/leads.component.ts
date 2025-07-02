@@ -1986,7 +1986,6 @@ export class LeadsComponent extends BaseComponent {
     this.allocateSubmitted = true;
     const selectedExecutive = this.allocateForm.get('executive')?.value;
     const hasSelectedLeads = this.selectedLeads.length > 0;
-    console.log('Selected Executive:', selectedExecutive); 
     if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
       this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
@@ -2005,7 +2004,6 @@ export class LeadsComponent extends BaseComponent {
         idList: [...this.selectedLeads],
         executive: selectedExecutive,
       };
-      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {

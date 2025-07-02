@@ -208,37 +208,41 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       clientName: ['', Validators.required],
       clientAddress: ['', Validators.required],
       projectName: ['', Validators.required],
-      designId: ['', Validators.required],
-      discount: ['', Validators.required],
-      flatNo: ['', Validators.required],
-      others: ['', Validators.required],
-      projectConfig: ['', Validators.required],
-      quotationNumber: ['', Validators.required],
-      gMC: ['', Validators.required],
-      gPA: ['', Validators.required],
-      gSC: ['', Validators.required],
-      tDMC: ['', Validators.required],
-      tDPA: ['', Validators.required],
-      tDSC: ['', Validators.required],
-      dedEmail: ['', Validators.required],
-      dedMobile: ['', Validators.required],
-      dedName: ['', Validators.required],
-      rmdEmail: ['', Validators.required],
-      rmdMobile: ['', Validators.required],
-      rmdName: ['', Validators.required],
-      Optimizerprocess: [false, Validators.required],
+      designId: ['3FO3FHW47ADD'],
+      discount: [''],
+      flatNo: [''],
+      others: [''],
+      projectConfig: [''],
+      quotationNumber: [''],
+      dedEmail: [''],
+      dedMobile: [''],
+      dedName: [''],
+      rmdEmail: [''],
+      rmdMobile: [''],
+      rmdName: [''],
+      optimizerProcess: [false],
       BOM:[false,Validators.required],
-      shutterList: [false],
+      isDetailPannelRequired: [false],
       shutterOptions: this.fb.group({
-        PanelList: [false],
+        pannelList: [false],
         groupPannelList: [false],
-        functionalList: [false],
-        HardwareList: [false],
-        isDetailPannelRequired: [false],
-        isFunctionalPartsAndDoorsRequired: [false]
+        shutterList: [false],
+        hardwareList: [false],
+        isFunctionalPartsAndDoorsRequired: [true]
       }),
-      email: ['', Validators.required],
-      type: ['', Validators.required],
+      functionalList: [false],
+      email: [JSON.parse(this.userData).email],
+      type: [JSON.parse(this.userData).type,],
+      bomRequired:[false],
+      kandbJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbec356fe98bb21739f0001/QUOTE%20-S-%E5%8E%A8%E5%8D%AB-1F.json",],
+      wardrobeJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbf6405366a2fcb81730001/QUOTE%20-S-%E5%85%A8%E5%B1%8B%E5%AE%B6%E5%85%B7-1F.json"],
+      tdmc: 10.0,
+      gmc: 10.0,
+      gsc: 10.0,
+      tdsc: 10.0,
+      gpa: 10.0,
+      tdpa: 10.0,
+      customizedQuotation:[true]
     });
 
     const atLeastOneCheckboxInline = (group: AbstractControl): ValidationErrors | null => {
@@ -246,7 +250,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       const anyChecked = Object.values(controls).some(control => control.value === true);
       return anyChecked ? null : { atLeastOneRequired: true };
     };
-    this.quotationForm.get('shutterList')?.valueChanges.subscribe(checked => {
+    this.quotationForm.get('isDetailPannelRequired')?.valueChanges.subscribe(checked => {
       const group = this.quotationForm.get('shutterOptions');
       if (checked) {
         group?.setValidators(atLeastOneCheckboxInline);
@@ -388,7 +392,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res.url) {
           window.open(res.url, '_blank');
         }
-        this.toastr.success("User available with this email!");
       },
       error: (error) => {
         this.toastr.error(error.statusText || "An error occurred while fetching design details.");
@@ -1635,41 +1638,52 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
 
   onQuotationSubmit(modal: any) {
-  this.submitted = true;
-
-  this.quotationForm.markAllAsTouched();
-
-  const shutterListChecked = this.quotationForm.get('shutterList')?.value;
-  const shutterOptionsGroup = this.quotationForm.get('shutterOptions') as FormGroup;
-
-  if (shutterListChecked) {
-    shutterOptionsGroup.setValidators(this.atLeastOneCheckboxChecked());
-  } else {
-    shutterOptionsGroup.clearValidators();
-  }
-
-  shutterOptionsGroup.updateValueAndValidity();
-
-  // Check entire form validity
-  if (this.quotationForm.invalid) {
-    this.toastr.error('Please fill mandatory fields');
-    return;
-  }
-
-  // Simulated API call / success
-  setTimeout(() => {
-    const mockResponse = { status: true, message: 'Quotation successfully created!' };
-    if (mockResponse.status) {
-      modal.close();
-      this.submitted = false;
-      this.quotationForm.reset();
-      this.toastr.success(mockResponse.message, 'Quotation', {
-        timeOut: 3000, positionClass: 'toast-top-right'
-      });
+    this.submitted = true;
+    this.quotationForm.markAllAsTouched();
+    const shutterListChecked = this.quotationForm.get('isDetailPannelRequired')?.value;
+    const shutterOptionsGroup = this.quotationForm.get('shutterOptions') as FormGroup;
+    if (shutterListChecked) {
+      shutterOptionsGroup.setValidators(this.atLeastOneCheckboxChecked());
     } else {
-      this.toastr.error(mockResponse.message, 'Quotation');
+      shutterOptionsGroup.clearValidators();
     }
-  }, 1000);
+    shutterOptionsGroup.updateValueAndValidity();
+    if (this.quotationForm.invalid) {
+      this.toastr.error('Please fill mandatory fields');
+      return;
+    }
+    const { shutterOptions, ...rest } = this.quotationForm.value;
+    const opts = shutterOptions;
+    const payload = {
+      ...rest,
+      pannelList: opts.pannelList,
+      groupPannelList: opts.groupPannelList,
+      functionalList: opts.functionalList,
+      hardwareList: opts.hardwareList,
+      shutterList:opts.shutterList,
+      isDetailPannelRequired: opts.isDetailPannelRequired,
+      isFunctionalPartsAndDoorsRequired: opts.isFunctionalPartsAndDoorsRequired,
+      tdmc: parseFloat(rest.tdmc),
+      gmc: parseFloat(rest.gmc),
+      gsc: parseFloat(rest.gsc),
+      tdsc: parseFloat(rest.tdsc),
+      gpa: parseFloat(rest.gpa),
+      tdpa: parseFloat(rest.tdpa),
+    };
+    console.log(payload);
+    // this.switchService.quotationXl(payload).subscribe({
+    //   next: (res) => {
+    //     if (res && res.status) {
+    //       modal.close();
+    //       this.toastr.success(res.message, 'lead');
+    //     } else {
+    //       this.toastr.error(res?.message || 'Unexpected response', 'lead');
+    //     }
+    //   },
+    //   error: (err) => {
+    //     this.toastr.error(err.statusText || 'Something went wrong', 'lead');
+    //   }
+    // });
   }
 
   get g() {
