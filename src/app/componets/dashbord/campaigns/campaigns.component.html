@@ -1,3 +1,99 @@
+<div class="row mt-4">
+    <div class="col-xl-2">
+        <div class="card custom-card border border-primary bg-primary-transparent">
+            <div class="card-body">
+                <div class="text-center">
+                    <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                        <i class="ri-briefcase-2-line fs-16"></i>
+                    </span>
+                    <p class="fs-14 fw-medium mb-2">My Campaigns</p>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                        <h5 class="mb-0 fw-medium">32%</h5>
+                        <span class="badge bg-success-transparent rounded-pill ms-1">+0.89%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2">
+        <div class="card custom-card border border-secondary bg-secondary-transparent">
+            <div class="card-body">
+                <div class="text-center">
+                    <span class="avatar avatar-md bg-secondary shadow-sm avatar-rounded mb-2">
+                        <i class="ri-bill-line fs-16"></i>
+                    </span>
+                    <p class="fs-14 fw-medium mb-2">My Leads</p>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                       <button class="btn btn-sm btn-secondary-light btn-wave">View All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2">
+        <div class="card custom-card border border-info bg-info-transparent">
+            <div class="card-body">
+                <div class="text-center">
+                    <span class="avatar avatar-md bg-info shadow-sm avatar-rounded mb-2">
+                        <i class="ri-line-chart-line fs-16"></i>
+                    </span>
+                    <p class="fs-14 fw-medium mb-2">My Reports</p>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                       <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2">
+        <div class="card custom-card border border-warning bg-warning-transparent">
+            <div class="card-body">
+                <div class="text-center">
+                    <span class="avatar avatar-md bg-warning shadow-sm avatar-rounded mb-2">
+                        <i class="ri-money-dollar-box-line fs-16"></i>
+                    </span>
+                    <p class="fs-14 fw-medium mb-2">Call Logs</p>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                       <button class="btn btn-sm btn-warning-light btn-wave">View All</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2">
+        <div class="card custom-card border border-danger bg-danger-transparent">
+            <div class="card-body">
+                <div class="text-center">
+                    <span class="avatar avatar-md bg-danger shadow-sm avatar-rounded mb-2">
+                        <i class="ri-profile-line fs-16"></i>
+                    </span>
+                    <p class="fs-14 fw-medium mb-2">Opex Ratio</p>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                        <h5 class="mb-0 fw-medium">32%</h5>
+                        <span class="badge bg-success-transparent rounded-pill ms-1">+0.89%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2">
+        <div class="card custom-card border border-success bg-success-transparent">
+            <div class="card-body">
+                <div class="text-center">
+                    <span class="avatar avatar-md bg-success shadow-sm avatar-rounded mb-2">
+                        <i class="ri-wallet-2-line fs-16"></i>
+                    </span>
+                    <p class="fs-14 fw-medium mb-2">Total Income</p>
+                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                        <h5 class="mb-0 fw-medium">$14,800</h5>
+                        <span class="badge bg-success-transparent rounded-pill ms-1">+7.45%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
 <div class="col-xl-12 pt-3">
   <div class="card custom-card">
     <div class="card-header justify-content-between">
@@ -26,23 +122,30 @@
                 Campaign: {{ campaign.campaignName }}</a>
               <span class="text-muted d-block fs-12">Manager: {{ campaign.campaignPoc | slice:0:15 }}{{ campaign.campaignPoc.length > 15 ? '...' : '' }}</span>
               <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-center flex-wrap avatar-list-stacked" *ngIf="userType!==1">
-                  <ng-container *ngFor="let agent of campaign.agents.split(',')">
-                    <span
-                      class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center cu"
-                      [ngClass]="getAgentColor(agent)" tabindex="0" role="button" data-bs-toggle="popover"
-                      triggers="focus" placement="right" popoverTitle="Campaign User" [ngbPopover]="agent.trim()">
-                      {{ agent.trim().charAt(0) | uppercase }}
-                    </span>
+                <div class="d-flex align-items-center flex-wrap avatar-list-stacked" *ngIf="userType !== 1 && campaign.agents">
+                  <ng-container *ngIf="campaign.agents.split(',') as agentList">
+                    <ng-container *ngFor="let agent of agentList.slice(0, 3)">
+                      <span
+                        class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center cu"
+                        [ngClass]="getAgentColor(agent)" tabindex="0" role="button" data-bs-toggle="popover" triggers="focus"
+                        placement="right" popoverTitle="Campaign User" ngbPopover="Popover with success header">
+                        {{ agent.trim().charAt(0) | uppercase }}
+                      </span>
+                    </ng-container>
+                    <a *ngIf="agentList.length > 3"
+                      class="avatar avatar-sm bg-primary avatar-rounded mt-1 text-fixed-white d-flex align-items-center justify-content-center ms-1 cu"
+                      href="javascript:void(0);">
+                      +{{ agentList.length - 3 }}
+                    </a>
                   </ng-container>
                 </div>
                 <div class="mb-1">
                   Priority:
                   <span class="badge" [ngClass]="{
-                                                                'bg-danger-transparent': campaign.campaignPriority === 'High',
-                                                                'bg-warning-transparent': campaign.campaignPriority === 'Medium',
-                                                                'bg-success-transparent': campaign.campaignPriority === 'Low'
-                                                              }">{{ campaign.campaignPriority }}</span>
+                      'bg-danger-transparent': campaign.campaignPriority === 'High',
+                      'bg-warning-transparent': campaign.campaignPriority === 'Medium',
+                      'bg-success-transparent': campaign.campaignPriority === 'Low'
+                    }">{{ campaign.campaignPriority }}</span>
                 </div>
               </div>
             </div>
