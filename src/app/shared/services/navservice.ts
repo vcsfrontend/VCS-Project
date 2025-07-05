@@ -474,6 +474,15 @@ export class NavService implements OnDestroy {
           active: false,
           path: '/dashboard/crm-settings'
         },
+        // {
+        //   title: 'Support',
+        //   icon: 'bi-layout-text-window side-menu__icon',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType: 'internal',
+        //   active: false,
+        //   path: 'pages/chat'
+        // },
         {
           title: 'Support',
           icon: 'bi-layout-text-window side-menu__icon',
@@ -481,8 +490,9 @@ export class NavService implements OnDestroy {
           type: 'link',
           linkType: 'internal',
           active: false,
-          path: 'pages/chat'
+          path: '/dashboard/support'
         },
+        
               
       ],
     },

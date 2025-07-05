@@ -1,0 +1,992 @@
+<div class="row mt-4">
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom border-block-end-dashed">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search Task Here"
+                            aria-describedby="button-addon2">
+                        <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
+                                class="ri-search-line text-muted"></i></button>
+                    </div>
+                </div>
+                <div class="p-3 task-navigation border-bottom border-block-end-dashed">
+                    <ul class="list-unstyled task-main-nav mb-0">
+                        <li class="px-0 pt-0">
+                            <span class="fs-11 text-muted op-7 fw-medium">Filters</span>
+                        </li>
+                        <li class="active">
+                            <a href="javascript:void(0);">
+                                <div class="d-flex align-items-center">
+                                    <input class="form-check-input me-2 mt-1 kt" type="checkbox">
+                                    <label class="form-check-label w-50 mt-1">
+                                        All Tasks
+                                    </label>
+                                    <span class="badge bg-success-transparent rounded-pill">167</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="javascript:void(0);">
+                                <div class="d-flex align-items-center">
+                                    <input class="form-check-input me-2 mt-1 kt" type="checkbox">
+                                    <label class="form-check-label w-50 mt-1">
+                                        Pending Tasks
+                                    </label>
+                                    <span class="badge bg-success-transparent rounded-pill">167</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="javascript:void(0);">
+                                <div class="d-flex align-items-center">
+                                    <input class="form-check-input me-2 mt-1 kt" type="checkbox">
+                                    <label class="form-check-label w-50 mt-1">
+                                        Inprogress Tasks
+                                    </label>
+                                    <span class="badge bg-success-transparent rounded-pill">167</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href="javascript:void(0);">
+                                <div class="d-flex align-items-center">
+                                    <input class="form-check-input me-2 mt-1 kt" type="checkbox">
+                                    <label class="form-check-label w-50 mt-1">
+                                        Complated Tasks
+                                    </label>
+                                    <span class="badge bg-success-transparent rounded-pill">167</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="p-3 text-center">
+                    <img src="./assets/images/media/media-66.png" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-9">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-body p-0">
+                        <div class="d-flex p-3 align-items-center justify-content-between">
+                            <div>
+                                <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block" role="tablist">
+                                    <li [ngbNavItem]="1" class="nav-item m-1">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                            aria-selected="true">Demo Booking</a>
+                                            <ng-template ngbNavContent>
+                                                <div class=" p-0" id="all-tasks" role="tabpanel">
+                                                    <div class="row" id="tasks-container">
+                                                        <div class="col-xl-4 task-card">
+                                                            <div class="card custom-card task-pending-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
+                                                                                class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>1.Issue : Login Issue</p>
+                                                                            <p class="mb-3">Client Name : <span class="fs-12 mb-1 text-muted">Pavan</span></p>
+                                                                            <p class="mb-3">Contact Number : <span class="fs-12 mb-1 text-muted">9876543210</span></p>
+                                                                            <p class="mb-3">Issue Status : <span class="badges bg-success-transparent">Completed</span></p>
+                                                                            <p class="mb-3">Reporting On : <span class="fs-12 mb-1 text-muted">20,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">20,Nov
+                                                                                    2023</span></p>
+                                                                            <!-- <p class="mb-0">Users :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p> -->
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i class="ri-edit-line"
+                                                                                        (click)="open(content)"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-warning-transparent d-block">High</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card custom-card task-inprogress-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Designing
+                                                                                New Authentication Pages</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">26,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">12,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/15.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-success-transparent d-block">Low</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
+                                                                                <a href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Developing
+                                                                                New Events in Plugin
+                                                                            </p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">5,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 task-card">
+                                                            <div class="card custom-card task-inprogress-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Design
+                                                                                New Landing Pages </p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">21,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/12.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
+                                                                                Plugin Development</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">28,Oct
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-success-transparent d-block">Low</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Documentation
+                                                                                For New Template</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">25,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-danger-transparent d-block">Critical</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 task-card">
+                                                            <div class="card custom-card task-pending-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
+                                                                                <a href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Updating
+                                                                                Old Ui
+                                                                            </p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">30,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">05,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/14.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/21.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/16.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-warning-transparent d-block">High</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Designing
+                                                                                Of New Ecommerce Pages</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">1,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">15,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-success-transparent d-block">Low</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card custom-card task-inprogress-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Improving
+                                                                                Ui Of Updated Templates</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">4,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="2" class="nav-item m-1">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                            aria-selected="true">Pending</a>
+                                            <ng-template ngbNavContent>
+                                                <div class="p-0" id="pending" role="tabpanel">
+                                                    <div class="row">
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-pending-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
+                                                                                Project Blueprint</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">13,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-warning-transparent d-block">High</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-pending-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
+                                                                                <a href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Updating
+                                                                                Old Ui
+                                                                            </p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">30,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">05,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/14.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/21.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/16.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-warning-transparent d-block">High</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="3" class="nav-item m-1">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                            aria-selected="true">In Progress</a>
+                                            <ng-template ngbNavContent>
+                                                <div class="p-0" id="in-progress" role="tabpanel">
+                                                    <div class="row">
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-inprogress-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Design
+                                                                                New Landing Pages </p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">21,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/12.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-inprogress-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Designing
+                                                                                New Authentication Pages</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">26,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">12,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/15.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-success-transparent d-block">Low</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-inprogress-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Improving
+                                                                                Ui Of Updated Templates</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">4,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="4" class="nav-item m-1">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                            aria-selected="true">Completed</a>
+                                            <ng-template ngbNavContent>
+                                                <div class="p-0" id="completed" role="tabpanel">
+                                                    <div class="row">
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
+                                                                                Plugin Development</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">28,Oct
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-success-transparent d-block">Low</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Documentation
+                                                                                For New Template</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">25,Nov
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-danger-transparent d-block">Critical</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
+                                                                                <a href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Developing
+                                                                                New Events in Plugin
+                                                                            </p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">5,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4">
+                                                            <div class="card custom-card task-completed-card">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                    href="javascript:void(0);"><i
+                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Designing
+                                                                                Of New Ecommerce Pages</p>
+                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">1,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">15,Dec
+                                                                                    2023</span></p>
+                                                                            <p class="mb-0">Assigned To :
+                                                                                <span class="avatar-list-stacked ms-1">
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
+                                                                                    </span>
+                                                                                    <span class="avatar avatar-sm avatar-rounded">
+                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
+                                                                                    </span>
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                        class="ri-edit-line"></i></button>
+                                                                                <button
+                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                            </div>
+                                                                            <span class="badge bg-success-transparent d-block">Low</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                    </li>
+                                    <button class="btn btn-primary btn-sm d-flex align-items-center justify-content-center" (click)="open(content)"
+                                        data-bs-toggle="modal" data-bs-target="#addtask">
+                                        <i class="ri-add-circle-line fs-16 align-middle me-1 mb-1 mt-1"></i>Add issues
+                                    </button>
+                                </ul>
+                            </div>
+                            <div>
+                                <div ngbDropdown class="dropdown no-caret">
+                                    <button ngbDropdownToggle class="btn btn-icon btn-sm btn-light btn-wave waves-light waves-effect" type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="ti ti-dots-vertical"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content task-tabs-container">
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End::row-1 -->
+
+
+<div class="col-xl-12 mt-3">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                User Reports
+            </div>
+            <mat-form-field class="filter-field">
+                <mat-label>Seach</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-primary border-end border-light">Add New</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSources" matSort class="mat-table">
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="role">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Designation</th>
+                        <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="number">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Number</th>
+                        <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="reportingTo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reporting To</th>
+                        <td mat-cell *matCellDef="let element"> {{element.reportingTo}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                        <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="createdAt">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdAt}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
+                </table>
+            </div>
+            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #content id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Support Form</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row gy-2">
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">Client Name</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Client Name">
+                </div>
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">Client Number</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Client Number">
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Select Issue Type</label>
+                    <ng-select class="ti-form-select  !rounded-s-none" name="choices-multiple-remove-button"
+                        placeholder="select" id="choices-multiple-remove-button" [multiple]="true">
+                        <ng-option value="Choice 1" selected>Login Issue</ng-option>
+                        <ng-option value="Choice 2">Book a Demo</ng-option>
+                        <ng-option value="Choice 4">Pricing</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Demo Date</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-text text-muted modal-calender"> <i class="ri-calendar-line"></i>
+                            </div>
+                            <input type="datetime-local" class="form-control w-full !rounded-s-none" id="addignedDate"
+                                placeholder="Choose date and time">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+            <button type="button" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+</ng-template>
