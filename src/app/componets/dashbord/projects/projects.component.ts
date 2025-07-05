@@ -212,9 +212,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       clientAddress: ['', Validators.required],
       projectName: ['', Validators.required],
       designId: [this.designId],
-      discount: [''],
+      discount: [0],
       flatNo: [''],
-      others: [''],
+      others: [0],
       projectConfig: [''],
       quotationNumber: [''],
       dedEmail: [''],
@@ -225,17 +225,20 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       rmdName: [''],
       optimizerProcess: [false],
       functionalList: [false],
-      BOM:[false,Validators.required],
+      customizedOptions: this.fb.group({
+        kbRequired: [false],
+        wardrobeRequired: [false],
+      }),
       shutterOptions: this.fb.group({
         pannelList: [false],
         groupPannelList: [false],
         shutterList: [false],
         hardwareList: [false],
-        isFunctionalPartsAndDoorsRequired: [true]
       }),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
       bomRequired:[false],
+      isFunctionalPartsAndDoorsRequired: [true],
       kandbJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbec356fe98bb21739f0001/QUOTE%20-S-%E5%8E%A8%E5%8D%AB-1F.json",],
       wardrobeJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbf6405366a2fcb81730001/QUOTE%20-S-%E5%85%A8%E5%B1%8B%E5%AE%B6%E5%85%B7-1F.json"],
       tdmc: 0.0,
@@ -570,7 +573,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         projectname: this.addFilter == '3' ? this.projName : '',
         filter: this.addFilter == '1' ? 'All' : (this.addFilter == '2' ? 'projectid' : 'projectname'),
       }
-
       this.switchService.projectLst(payload).subscribe({
         next: (res: any) => {
           if (res) {
@@ -1640,7 +1642,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   };
   }
 
-
+ fileUrl: string = '';
   onQuotationSubmit(modal: any,data: any) {
     this.submitted = true;
     this.quotationForm.markAllAsTouched();
@@ -1674,23 +1676,26 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       tdpa: parseFloat(rest.tdpa),
     };
     console.log(payload,this.designId);
-    // this.switchService.quotationXl(payload).subscribe({
-    //   next: (res) => {
-    //     if (res && res.status) {
-    //       modal.close();
-    //       this.toastr.success(res.message, 'lead');
-    //     } else {
-    //       this.toastr.error(res?.message || 'Unexpected response', 'lead');
-    //     }
-    //   },
-    //   error: (err) => {
-    //     this.toastr.error(err.statusText || 'Something went wrong', 'lead');
-    //   }
-    // });
+    this.switchService.quotationXl(payload).subscribe({
+      next: (res) => {
+        if (res && res.status) {
+          modal.close();
+          this.toastr.success('Quotation generated successfully');
+          this.fileUrl = res.fileUrl;
+        } 
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || 'Something went wrong',);
+      }
+    });
   }
 
   get g() {
     return this.quotationForm.controls;
+  }
+
+  allowOnlyNumbers(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '');
   }
 
 }
