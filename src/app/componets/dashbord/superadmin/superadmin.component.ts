@@ -84,7 +84,7 @@ curve:string
   styleUrl: './superadmin.component.scss'
 })
 export class SuperadminComponent {
-  displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'mobile', 'adonai', 'crm', 'action', 'view', 'edit' ];
+  displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'mobile', 'adonai', 'crm', 'action', 'view', 'edit', 'loginTime', 'logoutTime' ];
   displayAdonaiColumns: string[] = ['slNo', 'email', 'history'];
   displayCrmColumns: string[] = ['slNo', 'email', 'history'];
   salesDisplayColumns: string[] = ['slNo','email', 'roleId', 'subRole', 'status', 'userName', 'createdAt'];

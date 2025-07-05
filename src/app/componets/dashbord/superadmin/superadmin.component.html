@@ -600,16 +600,15 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
-                    <h4>Users</h4> 
+                    Users
                 </div>
+                <mat-form-field class="filter-field">
+                   <mat-label>Search Here</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" #input>
+                </mat-form-field>
             </div>
             <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <mat-form-field class="mt-2 p-2">
-                        <mat-label>Filter</mat-label>
-                        <input matInput (keyup)="applyFilter($event)" #input>
-                    </mat-form-field>
-                    <div class="table-responsive">
+                <div class="table-container mat-elevation-z8">
                         <table mat-table [dataSource]="dataSource">
                             <ng-container matColumnDef="slNo">
                                 <th mat-header-cell *matHeaderCellDef> S.No. </th>
@@ -681,10 +680,17 @@
                                     </div>   
                                 </td>
                             </ng-container>
+                            <ng-container matColumnDef="loginTime">
+                                <th mat-header-cell *matHeaderCellDef> Login Time </th>
+                                <td mat-cell *matCellDef="let element"> {{element.loginTime}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="logoutTime">
+                                <th mat-header-cell *matHeaderCellDef> Logout Time </th>
+                                <td mat-cell *matCellDef="let element"> {{element.logoutTime}} </td>
+                            </ng-container>
                             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                         </table>
-                    </div>
                     <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
                         aria-label="Select page of periodic elements">
                     </mat-paginator>

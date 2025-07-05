@@ -111,6 +111,9 @@ export class SidebarComponent implements AfterViewInit {
           case 'Reports':
             item.isVisible = true;
             break;
+          case 'support':
+            item.isVisible = true;
+            break;
           // case 'optimizer':
           //   item.isVisible = true;
           //   break;

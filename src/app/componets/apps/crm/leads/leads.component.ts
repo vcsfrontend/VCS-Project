@@ -544,12 +544,17 @@ export class LeadsComponent extends BaseComponent {
     this.updateColumns();
   }
   updateColumns() {
-    this.showSourceFlagColumn = this.dataSource.data.some(element => element.source === 'executive');
+    const hasExecutiveLead = this.dataSource.data.some(element => element.source === 'executive');
 
-    if (!this.showSourceFlagColumn) {
-      this.displayedColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
+    const newColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
+
+    if (hasExecutiveLead) {
+      this.displayedColumns = ['sourceFlag', ...newColumns]; 
+    } else {
+      this.displayedColumns = [...newColumns];  
     }
   }
+
 
   addLeadItem() {
     const newItemName = this.newItem?.trim();
@@ -1541,8 +1546,7 @@ export class LeadsComponent extends BaseComponent {
   // }
 
   getFetchLeadData() {
-    this.switchService
-      .FetchLeadData(this.userEmail, this.campaignId)
+    this.switchService.FetchLeadData(this.userEmail, this.campaignId)
       .subscribe({
         next: (res: any) => {
           const now = new Date();
@@ -1572,6 +1576,7 @@ export class LeadsComponent extends BaseComponent {
             (item) => item.followUpDue
           ).length;
           this.dataSource.data = combined;
+          this.updateColumns();
           if (combined.length > 0 && combined[0].contact) {
             this.phoneNumber = combined[0].contact;
           }

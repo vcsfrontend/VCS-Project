@@ -73,11 +73,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
   projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
-  action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
+  action: string = ''; designId: any; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false; topDisplayedCards: any;
   des: string = "3FO3LL66G60B"; adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
-
+  selectedRow: any;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -132,12 +132,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   openLg2(content13: any) {
-    this.modalService.open(content13, { size: 'lg', centered: true },);
+    this.modalService.open(content13, { size: 'lg', centered: true });
   }
 
-  openLg3(content14: any) {
+
+  openLg3(content14: any, element: any) {
+    this.selectedRow = element;
     this.modalService.open(content14, { size: 'lg', centered: true },);
   }
+
   openLg4(content15: any) {
     this.modalService.open(content15, { size: 'xl', centered: true },);
   }
@@ -208,7 +211,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       clientName: ['', Validators.required],
       clientAddress: ['', Validators.required],
       projectName: ['', Validators.required],
-      designId: ['3FO3FHW47ADD'],
+      designId: [this.designId],
       discount: [''],
       flatNo: [''],
       others: [''],
@@ -221,8 +224,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       rmdMobile: [''],
       rmdName: [''],
       optimizerProcess: [false],
+      functionalList: [false],
       BOM:[false,Validators.required],
-      isDetailPannelRequired: [false],
       shutterOptions: this.fb.group({
         pannelList: [false],
         groupPannelList: [false],
@@ -230,19 +233,19 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         hardwareList: [false],
         isFunctionalPartsAndDoorsRequired: [true]
       }),
-      functionalList: [false],
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
       bomRequired:[false],
       kandbJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbec356fe98bb21739f0001/QUOTE%20-S-%E5%8E%A8%E5%8D%AB-1F.json",],
       wardrobeJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbf6405366a2fcb81730001/QUOTE%20-S-%E5%85%A8%E5%B1%8B%E5%AE%B6%E5%85%B7-1F.json"],
-      tdmc: 10.0,
-      gmc: 10.0,
-      gsc: 10.0,
-      tdsc: 10.0,
-      gpa: 10.0,
-      tdpa: 10.0,
-      customizedQuotation:[true]
+      tdmc: 0.0,
+      gmc: 0.0,
+      gsc: 0.0,
+      tdsc: 0.0,
+      gpa: 0.0,
+      tdpa: 0.0,
+      customizedQuotation:[true],
+      isDetailPannelRequired: [true] 
     });
 
     const atLeastOneCheckboxInline = (group: AbstractControl): ValidationErrors | null => {
@@ -1600,6 +1603,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   selectDesignId(data: any) {
     this.inventoryForm.patchValue({ designId: data.designId });
   }
+  
 
   getTimeAgo(dateString: string): string {
     if (!dateString) return 'Invalid date';
@@ -1637,7 +1641,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
 
-  onQuotationSubmit(modal: any) {
+  onQuotationSubmit(modal: any,data: any) {
     this.submitted = true;
     this.quotationForm.markAllAsTouched();
     const shutterListChecked = this.quotationForm.get('isDetailPannelRequired')?.value;
@@ -1652,17 +1656,16 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       this.toastr.error('Please fill mandatory fields');
       return;
     }
+    this.designId = this.selectedRow?.designId || '';
     const { shutterOptions, ...rest } = this.quotationForm.value;
     const opts = shutterOptions;
     const payload = {
       ...rest,
+      designId: this.designId,
       pannelList: opts.pannelList,
       groupPannelList: opts.groupPannelList,
-      functionalList: opts.functionalList,
       hardwareList: opts.hardwareList,
       shutterList:opts.shutterList,
-      isDetailPannelRequired: opts.isDetailPannelRequired,
-      isFunctionalPartsAndDoorsRequired: opts.isFunctionalPartsAndDoorsRequired,
       tdmc: parseFloat(rest.tdmc),
       gmc: parseFloat(rest.gmc),
       gsc: parseFloat(rest.gsc),
@@ -1670,7 +1673,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       gpa: parseFloat(rest.gpa),
       tdpa: parseFloat(rest.tdpa),
     };
-    console.log(payload);
+    console.log(payload,this.designId);
     // this.switchService.quotationXl(payload).subscribe({
     //   next: (res) => {
     //     if (res && res.status) {

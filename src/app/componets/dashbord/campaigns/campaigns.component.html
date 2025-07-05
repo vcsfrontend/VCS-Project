@@ -126,9 +126,8 @@
                   <ng-container *ngIf="campaign.agents.split(',') as agentList">
                     <ng-container *ngFor="let agent of agentList.slice(0, 3)">
                       <span
-                        class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center cu"
-                        [ngClass]="getAgentColor(agent)" tabindex="0" role="button" data-bs-toggle="popover" triggers="focus"
-                        placement="right" popoverTitle="Campaign User" ngbPopover="Popover with success header">
+                        class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center"
+                        [ngClass]="getAgentColor(agent)" tabindex="0" role="button">
                         {{ agent.trim().charAt(0) | uppercase }}
                       </span>
                     </ng-container>
