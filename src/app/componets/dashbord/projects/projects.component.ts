@@ -225,16 +225,22 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       rmdName: [''],
       optimizerProcess: [false],
       functionalList: [false],
-      customizedOptions: this.fb.group({
-        kbRequired: [false],
-        wardrobeRequired: [false],
-      }),
+      // customizedOptions: this.fb.group({
+      //   kbRequired: [false],
+      //   wardrobeRequired: [false],
+      // }),
       shutterOptions: this.fb.group({
         pannelList: [false],
         groupPannelList: [false],
         shutterList: [false],
         hardwareList: [false],
       }),
+      customizedOptions: this.fb.group({
+        BOM : [false],
+        kbRequired : [false],
+        wardrobeRequired :[false]
+
+      },{ validators: [this.atLeastOneSelectedValidator()] }),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
       bomRequired:[false],
@@ -250,6 +256,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       customizedQuotation:[true],
       isDetailPannelRequired: [true] 
     });
+
+    
 
     const atLeastOneCheckboxInline = (group: AbstractControl): ValidationErrors | null => {
       const controls = (group as FormGroup).controls;
@@ -267,6 +275,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     });
 
   }
+
+  atLeastOneSelectedValidator() {
+  return (group: FormGroup): { [key: string]: any } | null => {
+    const anySelected = Object.values(group.controls).some(control => control.value === true);
+    return anySelected ? null : { required: true };
+  };
+  }
+
 
   get f() {
     return this.createProjectForm.controls;
@@ -551,6 +567,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
     if (diffDays < 0) return 'Expired';
     if (diffDays === 0) return 'Last day';
+    if(diffDays == 1) return 'Subscription ends in 1 day';
+
 
     return `Subscription ends in ${diffDays} days`;
   }
@@ -1697,5 +1715,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   allowOnlyNumbers(event: any) {
     event.target.value = event.target.value.replace(/[^0-9]/g, '');
   }
+
+  
 
 }
