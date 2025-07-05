@@ -998,7 +998,8 @@
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Others</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="others"
-                            placeholder="Enter Others" [ngClass]="{ 'is-invalid': submitted && g['others'].errors }">
+                            placeholder="Enter Others" [ngClass]="{ 'is-invalid': submitted && g['others'].errors }"
+                            (keypress)="allowOnlyNumbers($event)">
                         <div *ngIf="submitted && g['others'].errors" class="invalid-feedback">
                             <div *ngIf="g['others'].errors['required']">others is
                                 required
@@ -1155,6 +1156,26 @@
                                 </label>
                             </div>
                         </div>
+                        <div formGroupName="shutterOptions" *ngIf="quotationForm.get('isDetailPannelRequired')?.value">
+                            <div class="col-xl-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
+                                        formControlName="kbRequired">
+                                    <label class="form-check-label" for="checkebox-sm">
+                                        Kitchen & Bath
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-xl-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
+                                        formControlName="wardrobeRequired">
+                                    <label class="form-check-label" for="checkebox-sm">
+                                        Wardrobe
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-xl-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" 
@@ -1167,7 +1188,7 @@
                         <div class="col-xl-1">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" 
-                                    formControlName="BOM">
+                                    formControlName="bomRequired">
                                 <label class="form-check-label" for="checkebox-sm">
                                     BOM
                                 </label>
@@ -1246,6 +1267,11 @@
                 data-bs-dismiss="modal">Close</button>
         </div>
     </form>
+    <div class="mt-3">
+        <a [href]="fileUrl" target="_blank" download>
+            <i class="bi bi-download"></i> Download Quotation Excel
+        </a>
+    </div>
 </ng-template>
 
 <ng-template #content15 let-modal>
@@ -1475,4 +1501,5 @@
             data-bs-dismiss="modal">Close</button>
     </div>
 </ng-template>
+
 
