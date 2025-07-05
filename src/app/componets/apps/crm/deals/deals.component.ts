@@ -1059,7 +1059,6 @@ export class DealsComponent extends BaseComponent {
       individualEmail:this.userEmail,
       campaignId:((JSON.parse(this.userData)?.userType !== 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634'),
     };
-    console.log(payload);
     this.leadForm.patchValue(payload);
     this.modalService.open(Content14, {
       scrollable: true,
@@ -1077,7 +1076,6 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
-    console.log(payload);
     this.submitted = true;
     if (this.leadForm?.valid) {
       this.switchService.EditCrmLeads(payload).subscribe({
@@ -1133,7 +1131,6 @@ export class DealsComponent extends BaseComponent {
         // bcc: this.sendLeadForm.get('bcc')?.value,
         content: this.sendLeadForm.get('content')?.value,
       };
-      console.log(payload)
 
       this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
         next: (res: any) => {
@@ -1662,7 +1659,6 @@ export class DealsComponent extends BaseComponent {
     //     isCustom: opt.isCustom || false
     //   }))
     // };
-    console.log('Final payload:', this.crmStatusData);
 
     this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
       next: (res: any) => {
