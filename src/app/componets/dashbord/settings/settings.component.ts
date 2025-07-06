@@ -61,10 +61,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   // userForm!: FormGroup;
   cnfmPaswrd: any = ''; paswrd: any = '';
   adoanAiRole: any; todayDt = new Date();
-  crmRole: any; 
+  crmRole: any;
   toolsList = Object.keys(Tools).map(key => ({
-    label: Tools[key as keyof typeof Tools], 
-    value: key                                    
+    label: Tools[key as keyof typeof Tools],
+    value: key
   }));
   passwordStrengthMessage: string = '';
   passwordStrengthColor: string = ''; // Control message color
@@ -78,7 +78,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   private modalRef: any; noUsers: any = ''; users: any = ''; city: any = ''; selectedCountry: any = 'India';
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
-  isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any;
+  isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -109,6 +109,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   public sawForm!: FormGroup;
   public sawSubmitted = false;
   public partsSubmitted = false;
+  public quoteSubmitted = false;
   public stockForm!: FormGroup;
   public partsForm!: FormGroup;
   StData: any;
@@ -197,7 +198,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
     const selectedSawRow = localStorage.getItem('selectedSawRow');
     this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
-   
+
     this.formInit();
     this.productForm = this.fb.group({
       name: '',
@@ -234,7 +235,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
@@ -335,6 +336,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
       type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
     });
+
     this.partsForm = this.fb.group({
       partList: this.fb.array([this.createPartGroup()]),
       companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
@@ -352,10 +354,49 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.checkPasswordMatch(value);
     });
 
+    this.quoteMarignForm = this.fb.group({
+      f1: [''],
+      f1Percent: [0],
+      f2: [''],
+      f2Percent: [0],
+      f3: [''],
+      f3Percent: [0],
+      f4: [''],
+      f4Percent: [0],
+      f5: [''],
+      f5Percent: [0],
+      f6: [''],
+      f6Percent: [0],
+      f7: [''],
+      f7Percent: [0],
+      f8: [''],
+      f8Percent: [0],
+      f9: [''],
+      f9Percent: [0],
+      f10: [''],
+      f10Percent: [0],
+      f11: [''],
+      f11Percent: [0],
+      f12: [''],
+      f12Percent: [0],
+      f13: [''],
+      f13Percent: [0],
+      f14: [''],
+      f14Percent: [0],
+      f15: [''],
+      f15Percent: [0],
+      companyName: [JSON.parse(this.userData)?.companyName,],
+      companyCode: [JSON.parse(this.userData)?.companyCode,],
+      email: [JSON.parse(this.userData)?.email,],
+      type: [JSON.parse(this.userData)?.type,],
+      updatedBy:[localStorage.getItem('username')] ,
+      updatedTime:[],
+    });
+
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
-
+    this.getMarginData();
 
   }
 
@@ -1079,6 +1120,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
   }
+  openRight13(content13: any) {
+    this.modalService.open(content13, { centered: true, });
+  }
+  openRight14(content14: any) {
+    this.modalService.open(content14, { centered: true, });
+  }
 
 
 
@@ -1250,18 +1297,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (res && res.length > 0) {
           this.stockDataSource.data = res;
-          
-
           if (this.stockPaginator) {
             this.stockDataSource.paginator = this.stockPaginator;
           }
-
         } else {
           this.stockDataSource.data = [];
         }
       },
       error: (error) => {
-        
         this.toastr.error("Error fetching stock data");
         this.stockDataSource.data = [];
       },
@@ -1274,18 +1317,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type
     };
-
     this.switchService.SawData(payload).subscribe({
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
-
-
-
-
           /*const sawArray = this.sawForm.get('sawList') as FormArray;
           sawArray.clear(); // Clear old values before adding new ones
-
           res.forEach((saw) => {
             sawArray.push(this.fb.group({
               bladeWidth: [saw.bladeWidth, Validators.required],
@@ -1307,18 +1344,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
               })
             }));
           });*/
-
-
           // Ensure paginator is set only if it exists
           if (this.sawPaginator) {
             this.sawDataSource.paginator = this.sawPaginator;
-          } 
+          }
         } else {
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
@@ -1326,7 +1360,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   onSawRowCheckboxChange(row: any, event: any) {
     if (event.checked) {
-      this.selectedSawRow = row;     
+      this.selectedSawRow = row;
       localStorage.setItem('selectedSawRow', JSON.stringify(this.selectedSawRow));
     } else {
       this.selectedSawRow = null;
@@ -1342,7 +1376,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   onSawSelectAllChange(event: any) {
     if (event.checked) {
       //this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
-      
     } else {
       this.selectedSawIdList.clear();
     }
@@ -1360,7 +1393,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     return this.selectedSawIdList.has(data);
   }
 
-
   getPartsData() {
     let payload = {
       email: JSON.parse(this.userData)?.email,
@@ -1371,18 +1403,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.partsDataSource.data = res;
-          
-
           // Ensure paginator is set only if it exists
           if (this.partsPaginator) {
             this.partsDataSource.paginator = this.partsPaginator;
-          } 
+          }
         } else {
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
@@ -1401,7 +1430,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
-
           } else {
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -1425,7 +1453,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
-
           } else {
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -1435,7 +1462,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       })
       this.sawSubmitted = false;
     }
-
   }
 
   resetPartList() {
@@ -1453,7 +1479,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
-
           } else {
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -1481,14 +1506,64 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   getUserColor(contact: any): string {
-  const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
-  if (contact && contact.email) {
-    const index = contact.email.charCodeAt(0) % colors.length;
-    return colors[index];
+    const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+    if (contact && contact.email) {
+      const index = contact.email.charCodeAt(0) % colors.length;
+      return colors[index];
+    }
+    return 'bg-secondary';
   }
-  return 'bg-secondary';
-}
 
+  quoteMarginSubmit(modal:any){
+    this.quoteSubmitted = true;
+    if (this.quoteMarignForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.quoteMarignForm.value,
+      companyName: JSON.parse(this.userData).companyName,
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    console.log(payload);
+    this.switchService.savedynamicMargins(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          this.quoteMarignForm.reset();
+          this.quoteSubmitted = false;
+          modal.close();
+          this.getMarginData();
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
 
-
+  getMarginData(){
+    let payload = {
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    console.log(payload);
+    this.switchService.fetchDynamicMargin(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
 }
