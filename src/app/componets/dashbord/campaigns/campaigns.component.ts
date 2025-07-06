@@ -246,6 +246,7 @@ export class CampaignsComponent extends BaseComponent {
       }
     });
   }
+  
   getCampaignSecific() {
     const payload = {
       email: this.userEmail,

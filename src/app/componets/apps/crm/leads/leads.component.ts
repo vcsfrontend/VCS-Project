@@ -66,7 +66,7 @@ export class LeadsComponent extends BaseComponent {
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
-  userType: any = this.userData ? this.userData.type : '';
+  userType: any = this.userData ? this.userData.type : ''; campaignName :any;
   Adonai: boolean = this.userData ? this.userData.adonai : false;
   statusClicked = false; statusCounts: { status: string; count: number }[] = [];
   crmStageData: any; crmStatusData: any; newOptionName: string = ''; status: string = 'In Progress Leads';
@@ -98,7 +98,7 @@ export class LeadsComponent extends BaseComponent {
   selectedType: string = ''; dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
   matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
   allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;  hasSelectedInvalid = false;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator; LeadToCampaignForm!: FormGroup;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('sort2') sort2!: MatSort;
@@ -123,7 +123,7 @@ export class LeadsComponent extends BaseComponent {
   public followupName = '';
   public executiveName = '';
   public followupLeadForm!: FormGroup;
-  public FilterForm!:FormGroup
+  public FilterForm!:FormGroup;
   public followupLeadSubmitted = false;
 
   public userList: any;
@@ -401,6 +401,13 @@ export class LeadsComponent extends BaseComponent {
       email: [this.userEmail],
       type: [this.userType],
     });
+
+    // lead Move to Campaign
+
+    this.LeadToCampaignForm = this.fb.group({
+      campaignId: [this.campaignId,],
+    });
+
 
     this.getUsers();
     this.searchControl.valueChanges.subscribe((searchText) => {
@@ -1893,7 +1900,6 @@ export class LeadsComponent extends BaseComponent {
         typeof templateValue === 'object'
           ? templateValue.templateGenId
           : templateValue;
-
       const payload = {
         email: this.sendLeadForm.get('email')?.value,
         template: templateToSend,
@@ -2016,6 +2022,37 @@ export class LeadsComponent extends BaseComponent {
     return this.allocateForm.controls;
   }
 
+  get c() {
+    return this.LeadToCampaignForm.controls;
+  }
+
+  leadToCampaignSubmit() {
+    if (this.LeadToCampaignForm.valid) {
+      console.log(this.LeadToCampaignForm.value);
+      const payload = {
+        campaignId: this.LeadToCampaignForm.value.campaignId || this.campaignId,
+        leadId: this.selectedLeadId,
+      };
+      console.log(payload);
+      // this.switchService.EditCrmLeads(payload).subscribe(
+      //   (res: any) => {
+      //     if (res && res.status === 200) {
+      //       console.log('Lead updated successfully');
+      //       this.toastr.success('Lead updated successfully');
+      //     } else {
+      //       console.log('Failed to update lead');
+      //       this.toastr.error('Failed to update lead');
+      //     }
+      //   },
+      //   (error) => {
+      //     console.error('Error while updating lead:', error);
+      //     this.toastr.error('Something went wrong!');
+      //   }
+      // );
+    }
+  }
+
+
   onAllocateSubmit() {
     this.allocateSubmitted = true;
     const selectedExecutive = this.allocateForm.get('executive')?.value;
@@ -2059,7 +2096,6 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-
   processStageData(data: any) {
     this.stageLst = [];
     for (let i = 1; i <= 25; i++) {
@@ -2071,6 +2107,7 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+
   getCampaignData() {
     const payload = {
       email: this.userEmail,
@@ -2080,7 +2117,11 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.displayCampaignData(payload).subscribe({
       next: (res: any[]) => {
         if (Array.isArray(res)) {
-          this.campaignList = res;
+          this.campaignList = res.map((c: any) => ({
+            id: c.campgnId,
+            campaignName: c.campaignName,
+            agents: c.agents,
+          }));
           const campaign = res.find((c) => c.campgnId === this.campaignId);
           if (campaign) {
             this.selectedCampaign = campaign;

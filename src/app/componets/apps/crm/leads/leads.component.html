@@ -1369,32 +1369,30 @@
 </ng-template>
 
 <ng-template #content31 id="addtask" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <div class="row gy-2">
-                <div class="col-xl-12">
-                    <label class="form-label">Assigned To</label>
-                    <ng-select class="ti-form-select  !rounded-s-none" name="choices-multiple-remove-button"
-                        placeholder="select" id="choices-multiple-remove-button" [multiple]="true">
-                        <ng-option value="Choice 1" selected>Angelina May</ng-option>
-                        <ng-option value="Choice 2">Kiara advain</ng-option>
-                        <ng-option value="Choice 3">Hercules Jhon</ng-option>
-                        <ng-option value="Choice 4">Mayor Kim</ng-option>
-                    </ng-select>
+    <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label class="form-label">Select Campaign</label>
+                        <ng-select [items]="campaignList" bindLabel="campaignName" bindValue="id" placeholder="Select Campaign"
+                            formControlName="campaignId">
+                        </ng-select>
+                    </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-            <button type="button" class="btn btn-primary">Create</button>
-        </div>
-    </div>
+    </form>
 </ng-template>
 
 
