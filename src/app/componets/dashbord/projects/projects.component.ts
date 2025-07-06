@@ -225,10 +225,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       rmdName: [''],
       optimizerProcess: [false],
       functionalList: [false],
-      // customizedOptions: this.fb.group({
-      //   kbRequired: [false],
-      //   wardrobeRequired: [false],
-      // }),
       shutterOptions: this.fb.group({
         pannelList: [false],
         groupPannelList: [false],
@@ -236,14 +232,12 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         hardwareList: [false],
       }),
       customizedOptions: this.fb.group({
-        BOM : [false],
+        bomRequired : [false],
         kbRequired : [false],
         wardrobeRequired :[false]
-
       },{ validators: [this.atLeastOneSelectedValidator()] }),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
-      bomRequired:[false],
       isFunctionalPartsAndDoorsRequired: [true],
       kandbJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbec356fe98bb21739f0001/QUOTE%20-S-%E5%8E%A8%E5%8D%AB-1F.json",],
       wardrobeJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbf6405366a2fcb81730001/QUOTE%20-S-%E5%85%A8%E5%B1%8B%E5%AE%B6%E5%85%B7-1F.json"],
@@ -1677,10 +1671,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       return;
     }
     this.designId = this.selectedRow?.designId || '';
-    const { shutterOptions, ...rest } = this.quotationForm.value;
+    const { shutterOptions, customizedOptions, ...rest } = this.quotationForm.value;
     const opts = shutterOptions;
+    const cusOpts = customizedOptions;
     const payload = {
       ...rest,
+      bomRequired: cusOpts.bomRequired,
+      kbRequired: cusOpts.kbRequired,
+      wardrobeRequired: cusOpts.wardrobeRequired,
       designId: this.designId,
       pannelList: opts.pannelList,
       groupPannelList: opts.groupPannelList,
@@ -1693,13 +1691,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       gpa: parseFloat(rest.gpa),
       tdpa: parseFloat(rest.tdpa),
     };
-    console.log(payload,this.designId);
+    console.log(payload);
     this.switchService.quotationXl(payload).subscribe({
       next: (res) => {
-        if (res && res.status) {
-          modal.close();
-          this.toastr.success('Quotation generated successfully');
+        if ( res.status === 200) {
+          this.toastr.success('Quotation Generated successfully!');
           this.fileUrl = res.fileUrl;
+          modal.close();
         } 
       },
       error: (err) => {
