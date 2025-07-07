@@ -79,6 +79,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
+  projectConfigForm!:FormGroup;projectConfigList: string[] = [];
+  quotationNumber: any;
+
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -239,6 +242,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
+    this.getProjectConfig();
     this.saveData = {
       id: 0,
       companyName: JSON.parse(this.userData).companyName,
@@ -344,6 +348,30 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
     });
 
+    this.projectConfigForm = this.fb.group({
+      quotationNumber: ['', Validators.required],
+      projectConfigs: this.fb.array([
+        this.fb.control('', Validators.required) // Initial one input
+      ]),
+      configId:0,
+      companyName: [JSON.parse(this.userData)?.companyName,],
+      companyCode: [JSON.parse(this.userData)?.companyCode,],
+      email: [JSON.parse(this.userData)?.email,],
+      type: [JSON.parse(this.userData)?.type,],
+      updatedBy:[localStorage.getItem('username')] ,
+      updatedTime:[],
+      f1:[''],
+      f2:[''],
+      f3:[''],
+      f4:[''],
+      f5:[''],
+      f6:[''],
+      f7:[''],
+      f8:[''],
+      f9:[''],
+      f10:['']
+    });
+
     // setTimeout(() => {
 
     // }, 500);
@@ -393,12 +421,29 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       updatedTime:[],
     });
 
+
+
+
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
     this.getMarginData();
 
   }
+  get projectConfigs(): FormArray {
+  return this.projectConfigForm.get('projectConfigs') as FormArray;
+  }
+
+  addProjectConfig(): void {
+    this.projectConfigs.push(this.fb.control('', Validators.required));
+  }
+
+  removeProjectConfig(index: number): void {
+    if (this.projectConfigs.length > 1) {
+      this.projectConfigs.removeAt(index);
+    }
+  }
+
 
   onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
@@ -1566,4 +1611,73 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       }
     });
   }
+
+  onProjectConfigSubmit(modal:any){
+    if (this.projectConfigForm.invalid) return;
+    const formValue = this.projectConfigForm.value;
+    const configs = this.projectConfigForm.get('projectConfigs')?.value || [];
+    for (let i = 0; i < 10; i++) {
+    const key = `f${i + 1}`;
+    const value = configs[i] || ''; 
+    this.projectConfigForm.get(key)?.setValue(value);
+    }
+
+  this.projectConfigForm.get('updatedTime')?.setValue(new Date().toISOString());
+  const {
+    projectConfigs, 
+    ...restValues     
+  } = this.projectConfigForm.value;
+
+  const payload = {
+    ...restValues
+  };
+
+  console.log('Final Payload:', payload);
+    this.switchService.saveProjectConfig(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Saved Successful');
+          this.projectConfigForm.reset();
+          modal.close();
+          this.getProjectConfig();
+        } else {
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  getProjectConfig(){
+    let payload = {
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+     console.log(payload);
+    this.switchService.fetchProjectConfig(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+           const configs: string[] = [];
+      for (let i = 1; i <= 10; i++) {
+        const value = res[`f${i}`];
+        if (value) configs.push(value);
+      }
+
+      this.projectConfigList = configs;
+      this.quotationNumber = res.quotationNumber;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+
+
+  
 }

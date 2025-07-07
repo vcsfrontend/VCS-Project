@@ -70,14 +70,25 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     'projectArea', 'projectStartDate', 'projectEndDate'];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation', 'view'];
 
-  pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
+  pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
   projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
   action: string = ''; designId: any; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false; topDisplayedCards: any;
   des: string = "3FO3LL66G60B"; adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
-  selectedRow: any;
+  selectedRow: any;userList: any;
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userType: any = this.userData ? this.userData.type : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  userPhoneNumber: any ;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;
+  showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
+  projectConfigList: string[] = [];
+  quotationNumber: any;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -180,9 +191,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   ngOnInit(): void {
     this.getAdonai();
     this.getProjectList();
-    this.getLst(); this.getMatCardLst();
+    this.getLst(); this.getMatCardLst();    this.getUsers();    this.getUserInfo(this.userEmail);
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
-    this.getAllStages(); this.getAllPmntStages();
+    this.getAllStages(); this.getAllPmntStages();this.getProjectConfig();
     this.createProjectForm = this.fb.group({
       projectName: ['', Validators.required],
       clientName: ['', Validators.required],
@@ -226,16 +237,16 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       optimizerProcess: [false],
       functionalList: [false],
       shutterOptions: this.fb.group({
-        pannelList: [false],
-        groupPannelList: [false],
-        shutterList: [false],
+        pannelList: [true],
+        groupPannelList: [true],
+        shutterList: [true],
         hardwareList: [false],
       }),
       customizedOptions: this.fb.group({
-        bomRequired : [false],
-        kbRequired : [false],
-        wardrobeRequired :[false]
-      },{ validators: [this.atLeastOneSelectedValidator()] }),
+        bomRequired : [true],
+        kbRequired : [true],
+        wardrobeRequired :[true]
+      },),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
       isFunctionalPartsAndDoorsRequired: [true],
@@ -248,10 +259,24 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       gpa: 0.0,
       tdpa: 0.0,
       customizedQuotation:[true],
-      isDetailPannelRequired: [true] 
+      isDetailPannelRequired: [true],
+      otherDesignerName: [''],
+      otherDesignerEmail: [''],
+      otherDesignerPhone: [''],
+      otherRmdName:[''],
+      otherRmdEmail:[''],
+      otherRmdPhone:['']
     });
-
-    
+    if (this.userType === 1) {
+      this.quotationForm.patchValue({
+      rmdEmail: this.userEmail,
+      rmdMobile: this.userPhoneNumber,
+      rmdName: this.userName,
+      dedEmail: this.userEmail,
+      dedMobile: this.userPhoneNumber,
+      dedName: this.userName,
+      });
+    }
 
     const atLeastOneCheckboxInline = (group: AbstractControl): ValidationErrors | null => {
       const controls = (group as FormGroup).controls;
@@ -1656,22 +1681,44 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
  fileUrl: string = '';
   onQuotationSubmit(modal: any,data: any) {
+    const dedSelected = this.quotationForm.value.dedEmail;
+    const rmdSelected = this.quotationForm.value.rmdEmail;
+
+    if (dedSelected?.email === 'Other' || dedSelected === 'Other') {
+    this.quotationForm.patchValue({
+      dedEmail: this.quotationForm.value.otherDesignerEmail,
+      dedMobile: this.quotationForm.value.otherDesignerPhone,
+      dedName: this.quotationForm.value.otherDesignerName
+    });
+    }
+
+    if (rmdSelected?.email === 'Other' || rmdSelected === 'Other') {
+    this.quotationForm.patchValue({
+      rmdEmail: this.quotationForm.value.otherRmdEmail,
+      rmdMobile: this.quotationForm.value.otherRmdPhone,
+      rmdName: this.quotationForm.value.otherRmdName
+    });
+    }
+
     this.submitted = true;
     this.quotationForm.markAllAsTouched();
     const shutterListChecked = this.quotationForm.get('isDetailPannelRequired')?.value;
     const shutterOptionsGroup = this.quotationForm.get('shutterOptions') as FormGroup;
-    if (shutterListChecked) {
-      shutterOptionsGroup.setValidators(this.atLeastOneCheckboxChecked());
-    } else {
-      shutterOptionsGroup.clearValidators();
-    }
-    shutterOptionsGroup.updateValueAndValidity();
     if (this.quotationForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
       return;
     }
     this.designId = this.selectedRow?.designId || '';
-    const { shutterOptions, customizedOptions, ...rest } = this.quotationForm.value;
+    const { shutterOptions, customizedOptions, ...rawRest} = this.quotationForm.value;
+    const {
+      otherRmdEmail,
+      otherRmdName,
+      otherRmdPhone,
+      otherDesignerName,
+      otherDesignerEmail,
+      otherDesignerPhone,
+      ...rest
+    } = rawRest;
     const opts = shutterOptions;
     const cusOpts = customizedOptions;
     const payload = {
@@ -1713,7 +1760,190 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   allowOnlyNumbers(event: any) {
     event.target.value = event.target.value.replace(/[^0-9]/g, '');
   }
+  getUsers() {
+    if (this.userData.type == 2) {
+      let cn = this.userCompanyName;
+      let cc = this.userCompanyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.userList = res;
+            this.userList.push({
+              email: 'Other',
+              phoneNumber: null,
+              username: null
+            });
+            console.log('userList',this.userList);
+            const matchedUser = this.userList.find((user: any) => user.email === this.userEmail);
+            if (matchedUser) {
+              this.userPhoneNumber = matchedUser.phoneNumber;
+              this.quotationForm.patchValue({
+                rmdMobile:  this.userPhoneNumber,
+                rmdName: matchedUser.username,
+              }); 
+              console.log('Phone number:', this.userPhoneNumber);
+              console.log('username',this.userName);
+            } else {
+              console.log('User not found in list');
+            }
 
-  
+          } else {
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+    }
+    else if (this.userData.type == 1) {
+  // ✅ Type 1 user — no API, just show "Other"
+      this.userList = [{
+        email: 'Other',
+        phoneNumber: null,
+        username: null
+      }];
+    }
+  }
+
+  getUserInfo(email: string) {
+    if (!email) {
+      console.error("Invalid email passed to getUserInfo.");
+      return;
+    }
+    this.switchService.userInfo(email).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.userData = res;
+          this.userPhoneNumber = res.phoneNumber;
+          if (this.userType === 1) {
+            this.quotationForm.patchValue({
+              rmdEmail: this.userEmail,
+              rmdMobile: this.userPhoneNumber,
+              rmdName: this.userName,
+              dedEmail: this.userEmail,
+              dedMobile: this.userPhoneNumber,
+              dedName: this.userName,
+            });
+          }
+          else{
+            this.quotationForm.patchValue({
+              rmdEmail: '',
+              rmdMobile:'',
+              rmdName: ''
+            });
+          }
+
+
+        } else {
+          this.toastr.error("User not found.");
+        }
+      },
+      error: (err: any) => {
+        console.error("Error fetching user data:", err);
+        this.toastr.error("Failed to fetch user data. Please try again.");
+      }
+    });
+  }
+
+ onUserSelected(selectedUser: any): void {
+  console.log('Selected user:', selectedUser);
+  if (selectedUser?.email === 'Other') {
+    this.showOtherRelationshipFields = true;
+
+    // Clear auto-fill fields
+    this.quotationForm.patchValue({
+      rmdMobile: '',
+      rmdName: ''
+    });
+    } else {
+      this.showOtherRelationshipFields = false;
+      if (selectedUser) {
+        this.quotationForm.patchValue({
+          rmdMobile: selectedUser.phoneNumber || '',
+          rmdName: selectedUser.username || ''
+        });
+      } else {
+        this.quotationForm.patchValue({
+          rmdMobile: '',
+          rmdName: ''
+        });
+      }
+  }
+  }
+
+  onDedSelected(selectedUser: any): void {
+    console.log('Selected user:', selectedUser);
+    if (selectedUser?.email === 'Other') {
+    this.showOtherDesignerFields = true;
+
+    // Clear auto-fill fields
+    this.quotationForm.patchValue({
+      dedMobile: '',
+      dedName: ''
+    });
+    } else {
+    this.showOtherDesignerFields = false;
+    if (selectedUser) {
+      this.quotationForm.patchValue({
+        dedMobile: selectedUser.phoneNumber || '',
+        dedName: selectedUser.username || ''
+      });
+    } else {
+      this.quotationForm.patchValue({
+        dedMobile: '',
+        dedName: ''
+      });
+    }
+  }
+  }
+
+
+
+  toggleGraniteFields() {
+    this.graniteEnabled = !this.graniteEnabled;
+    if (!this.graniteEnabled) {
+      this.quotationForm.patchValue({ gpa: 0, gsc: 0,gmc:0 });
+    }
+  }
+  toggleTDMCFields() {
+    this.TDMCEnabled = !this.TDMCEnabled;
+    if (!this.TDMCEnabled) {
+      this.quotationForm.patchValue({ tdmc: 0, tdpa: 0,tdsc:0 });
+    }
+  }
+
+  getProjectConfig(){
+    let payload = {
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+     console.log(payload);
+    this.switchService.fetchProjectConfig(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+           const configs: string[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const value = res[`f${i}`];
+            if (value) configs.push(value);
+          }
+          this.projectConfigList = configs;
+          this.quotationForm.patchValue({
+            quotationNumber: res.quotationNumber
+          });
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
 
 }
