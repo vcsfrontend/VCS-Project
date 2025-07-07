@@ -223,9 +223,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       clientAddress: ['', Validators.required],
       projectName: ['', Validators.required],
       designId: [this.designId],
-      discount: [0],
+      discount: [0, [Validators.pattern(/^[0-9]+$/)]],
       flatNo: [''],
-      others: [0],
+      others: [0, [Validators.pattern(/^[0-9]+$/)]],
       projectConfig: [''],
       quotationNumber: [''],
       dedEmail: [''],
@@ -250,14 +250,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
       isFunctionalPartsAndDoorsRequired: [true],
-      kandbJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbec356fe98bb21739f0001/QUOTE%20-S-%E5%8E%A8%E5%8D%AB-1F.json",],
-      wardrobeJsonLink:["https://custommodel-oss.kujiale.com/productiondata/2025/06/29/00000197bbbf6405366a2fcb81730001/QUOTE%20-S-%E5%85%A8%E5%B1%8B%E5%AE%B6%E5%85%B7-1F.json"],
-      tdmc: 0.0,
-      gmc: 0.0,
-      gsc: 0.0,
-      tdsc: 0.0,
-      gpa: 0.0,
-      tdpa: 0.0,
+      kandbJsonLink:["",],
+      wardrobeJsonLink:[""],
+      tdmc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      gmc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      gsc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      tdsc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      gpa: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      tdpa: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
       customizedQuotation:[true],
       isDetailPannelRequired: [true],
       otherDesignerName: [''],
@@ -1679,25 +1679,23 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   };
   }
 
- fileUrl: string = '';
-  onQuotationSubmit(modal: any,data: any) {
+  fileUrl: string = '';
+  onQuotationSubmit(modal: any, data: any) {
     const dedSelected = this.quotationForm.value.dedEmail;
     const rmdSelected = this.quotationForm.value.rmdEmail;
-
     if (dedSelected?.email === 'Other' || dedSelected === 'Other') {
-    this.quotationForm.patchValue({
-      dedEmail: this.quotationForm.value.otherDesignerEmail,
-      dedMobile: this.quotationForm.value.otherDesignerPhone,
-      dedName: this.quotationForm.value.otherDesignerName
-    });
+      this.quotationForm.patchValue({
+        dedEmail: this.quotationForm.value.otherDesignerEmail,
+        dedMobile: this.quotationForm.value.otherDesignerPhone,
+        dedName: this.quotationForm.value.otherDesignerName
+      });
     }
-
     if (rmdSelected?.email === 'Other' || rmdSelected === 'Other') {
-    this.quotationForm.patchValue({
-      rmdEmail: this.quotationForm.value.otherRmdEmail,
-      rmdMobile: this.quotationForm.value.otherRmdPhone,
-      rmdName: this.quotationForm.value.otherRmdName
-    });
+      this.quotationForm.patchValue({
+        rmdEmail: this.quotationForm.value.otherRmdEmail,
+        rmdMobile: this.quotationForm.value.otherRmdPhone,
+        rmdName: this.quotationForm.value.otherRmdName
+      });
     }
 
     this.submitted = true;
@@ -1709,7 +1707,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       return;
     }
     this.designId = this.selectedRow?.designId || '';
-    const { shutterOptions, customizedOptions, ...rawRest} = this.quotationForm.value;
+    const { shutterOptions, customizedOptions, ...rawRest } = this.quotationForm.value;
     const {
       otherRmdEmail,
       otherRmdName,
@@ -1730,7 +1728,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       pannelList: opts.pannelList,
       groupPannelList: opts.groupPannelList,
       hardwareList: opts.hardwareList,
-      shutterList:opts.shutterList,
+      shutterList: opts.shutterList,
       tdmc: parseFloat(rest.tdmc),
       gmc: parseFloat(rest.gmc),
       gsc: parseFloat(rest.gsc),
@@ -1741,11 +1739,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     console.log(payload);
     this.switchService.quotationXl(payload).subscribe({
       next: (res) => {
-        if ( res.status === 200) {
+        if (res.status === 200) {
           this.toastr.success('Quotation Generated successfully!');
           this.fileUrl = res.fileUrl;
           modal.close();
-        } 
+        }
       },
       error: (err) => {
         this.toastr.error(err.statusText || 'Something went wrong',);
@@ -1922,7 +1920,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
-     console.log(payload);
     this.switchService.fetchProjectConfig(payload).subscribe({
       next: (res: any) => {
         if (res) {
@@ -1943,6 +1940,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
+  }
+
+  allowOnlynum(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    event.preventDefault();
+  }
   }
 
 

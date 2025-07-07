@@ -978,11 +978,11 @@
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Discount</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="discount"
-                            placeholder="Enter Discount" [ngClass]="{ 'is-invalid': submitted && g['discount'].errors }">
+                            placeholder="Enter Discount" [ngClass]="{ 'is-invalid': submitted && g['discount'].errors }"
+                            (keypress)="allowOnlynum($event)">
                         <div *ngIf="submitted && g['discount'].errors" class="invalid-feedback">
-                            <div *ngIf="g['discount'].errors['required']">discount is
-                                required
-                            </div>
+                            <div *ngIf="g['discount'].errors['required']">discount is required </div>
+                            <div *ngIf="g['discount'].errors['pattern']">Only numbers are allowed.</div>
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -999,17 +999,16 @@
                         <label for="projectAddress" class="form-label">Others</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="others"
                             placeholder="Enter Others" [ngClass]="{ 'is-invalid': submitted && g['others'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
+                            (keypress)="allowOnlynum($event)">
                         <div *ngIf="submitted && g['others'].errors" class="invalid-feedback">
-                            <div *ngIf="g['others'].errors['required']">others is
-                                required
-                            </div>
+                            <div *ngIf="g['others'].errors['required']">others is required </div>
+                            <div *ngIf="g['others'].errors['pattern']">Only numbers are allowed.</div>
                         </div>
                     </div>
                     <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Project_Config</label>
                         <ng-select formControlName="projectConfig" [items]="projectConfigList" 
-                            placeholder="Select an Manager"  [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }">
+                            placeholder="Select Project Configuration"  [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }">
                         </ng-select>
                         <!-- <input type="text" class="form-control" id="projectAddress" formControlName="projectConfig"
                             placeholder="Enter Project_Config"  [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }"> -->
@@ -1019,7 +1018,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-3">
+                    <!-- <div class="col-xl-3">
                         <label for="projectAddress" class="form-label">Quotation_Number</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="quotationNumber"
                             placeholder="Enter Quotation_Number" [ngClass]="{ 'is-invalid': submitted && g['quotationNumber'].errors }">
@@ -1028,45 +1027,46 @@
                                 required
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-3">
                         <label class="form-label">
                             <input type="checkbox" class="form-check-input" id="graniteCheckbox" [checked]="graniteEnabled"
-                                (change)="toggleGraniteFields()"> Granite projected area
+                                (change)="toggleGraniteFields()"> Granite Material Cost
                         </label>
                     </div>
                     <div class="col-xl-3" *ngIf="graniteEnabled">
                         <label for="gmc" class="form-label">Granite Material Cost</label>
                             <div class="d-flex align-items-center gap-2">
                             <input type="text" class="form-control" id="gmc" formControlName="gmc" placeholder="Enter Granite Material Cost"
-                                [ngClass]="{ 'is-invalid': submitted && g['gmc'].errors }" (keypress)="allowOnlyNumbers($event)">
+                                [ngClass]="{ 'is-invalid': submitted && g['gmc'].errors }" (keypress)="allowOnlynum($event)">
                         </div>
-                    
-                        <!-- Validation message -->
                         <div *ngIf="submitted && g['gmc'].errors" class="invalid-feedback d-block mt-1">
                             <div *ngIf="g['gmc'].errors['required']">G_MC is required</div>
+                            <div *ngIf="g['gmc'].errors['pattern']">Only numbers are allowed.</div>
                         </div>
                     </div>
                     <div class="col-xl-3" *ngIf="graniteEnabled">
                         <label for="clientName" class="form-label">Granite Projected Area</label>
                         <input type="text" class="form-control" id="clientName" formControlName="gpa"
                             placeholder="Enter Granite Projected Area" [ngClass]="{ 'is-invalid': submitted && g['gpa'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
+                             (keypress)="allowOnlynum($event)">
                         <div *ngIf="submitted && g['gpa'].errors" class="invalid-feedback">
                             <div *ngIf="g['gpa'].errors['required']">G_Mc is
                                 required
                             </div>
+                            <div *ngIf="g['gpa'].errors['pattern']">Only numbers are allowed.</div>
                         </div>
                     </div>
                     <div class="col-xl-3" *ngIf="graniteEnabled">
                         <label for="clientName" class="form-label">Granite Service Cost</label>
                         <input type="text" class="form-control" id="clientName" formControlName="gsc"
                             placeholder="Enter Granite Service Cost" [ngClass]="{ 'is-invalid': submitted && g['gsc'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
+                            (keypress)="allowOnlynum($event)">
                         <div *ngIf="submitted && g['gsc'].errors" class="invalid-feedback">
                             <div *ngIf="g['gsc'].errors['required']">G_SC is
                                 required
                             </div>
+                            <div *ngIf="g['gsc'].errors['pattern']">Only numbers are allowed.</div>
                         </div>
                     </div>
                     <div class="col-xl-3">
@@ -1079,18 +1079,19 @@
                         <label for="clientName" class="form-label">Tiles dadoing material cost</label>
                         <input type="text" class="form-control" id="clientName" formControlName="tdmc"
                             placeholder="Enter Tils Dodadoing Material Cost" [ngClass]="{ 'is-invalid': submitted && g['tdmc'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
+                            (keypress)="allowOnlynum($event)">
                         <div *ngIf="submitted && g['tdmc'].errors" class="invalid-feedback">
                             <div *ngIf="g['tdmc'].errors['required']">tDMC is
                                 required
                             </div>
+                            <div *ngIf="g['tdmc'].errors['pattern']">Only numbers are allowed.</div>
                         </div>
                     </div>
                     <div class="col-xl-3" *ngIf="TDMCEnabled">
                         <label for="projectAddress" class="form-label">Tiles dadoing projected area</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="tdpa"
                             placeholder="Enter Tils Dodadoing Projected Area"  [ngClass]="{ 'is-invalid': submitted && g['tdpa'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
+                            >
                         <div *ngIf="submitted && g['tdpa'].errors" class="invalid-feedback">
                             <div *ngIf="g['tdpa'].errors['required']">tDPA is
                                 required
@@ -1101,16 +1102,17 @@
                         <label for="projectAddress" class="form-label"> Tiles dadoing service cost </label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="tdsc"
                             placeholder="Enter Tils Dodadoing Service Cost" [ngClass]="{ 'is-invalid': submitted && g['tdsc'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
+                            (keypress)="allowOnlynum($event)">
                         <div *ngIf="submitted && g['tdsc'].errors" class="invalid-feedback">
                             <div *ngIf="g['tdsc'].errors['required']">tDSC is
                                 required
                             </div>
+                            <div *ngIf="g['tdsc'].errors['pattern']">Only numbers are allowed.</div>
                         </div>
                     </div>
                     
                      <div class="col-xl-3">
-                        <label for="dedEmail" class="form-label">Designer</label>
+                        <label for="dedEmail" class="form-label">Project Designer</label>
                         <ng-select formControlName="dedEmail" [items]="userList" bindLabel="email" bindValue="email"
                             placeholder="Select DED_Email" (change)="onDedSelected($event)"
                             [ngClass]="{ 'is-invalid': submitted && g['dedEmail'].errors }">
@@ -1124,7 +1126,7 @@
                     <div *ngIf="showOtherDesignerFields" class="row">
                         <div class="col-xl-3">
                             <label>Other Designer Name</label>
-                            <input type="text" class="form-control" formControlName="otherDesignerName">
+                            <input type="text" class="form-control" formControlName="otherDesignerName" placeholder="">
                         </div>
                         <div class="col-xl-3">
                             <label>Other Designer Email</label>
@@ -1158,7 +1160,7 @@
                     </div> -->
                     
                     <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">RMD_Email</label>
+                        <label for="projectAddress" class="form-label">RelationShip Manager</label>
                         <ng-select formControlName="rmdEmail" [items]="userList" bindLabel="email" bindValue="email"
                             placeholder="Select an Manager" (change)="onUserSelected($event)" [ngClass]="{ 'is-invalid': submitted && g['rmdEmail'].errors }">
                         </ng-select>
@@ -1332,7 +1334,7 @@
                 data-bs-dismiss="modal">Close</button>
         </div>
     </form>
-    <div class="mt-3">
+    <div class="mt-3" *ngIf="fileUrl">
         <a [href]="fileUrl" target="_blank" download>
             <i class="bi bi-download"></i> Download Quotation Excel
         </a>
@@ -1566,401 +1568,3 @@
             data-bs-dismiss="modal">Close</button>
     </div>
 </ng-template>
-
-    <form [formGroup]="quotationForm" (ngSubmit)="onQuotationSubmit(modal, selectedRow)">
-        <div class="modal-header justify-content-center">
-            <h6 class="modal-title" id="staticBackdropLabel3">Quotation Details</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <div class="col-xl-12">
-                <div class="row gy-2">
-                    <div class="col-xl-3">
-                        <label for="projectName" class="form-label">Client Name</label>
-                        <input type="text" class="form-control" id="projectName" formControlName="clientName" placeholder="Enter Client Name"
-                            [ngClass]="{ 'is-invalid': submitted && g['clientName'].errors }" maxlength="50">
-                        <div *ngIf="submitted && g['clientName'].errors" class="invalid-feedback">
-                            <div *ngIf="g['clientName'].errors['required']">Client name is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">Client Address</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="clientAddress"
-                            placeholder="Enter Client Address" [ngClass]="{ 'is-invalid': submitted && g['clientAddress'].errors }" maxlength="50">
-                        <div *ngIf="submitted && g['clientAddress'].errors" class="invalid-feedback">
-                            <div *ngIf="g['clientAddress'].errors['required']">client Address is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">Project Name</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="projectName"
-                            placeholder="Enter Client Address" [ngClass]="{ 'is-invalid': submitted && g['projectName'].errors }" maxlength="50">
-                        <div *ngIf="submitted && g['projectName'].errors" class="invalid-feedback">
-                            <div *ngIf="g['projectName'].errors['required']">project Name is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">Discount</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="discount"
-                            placeholder="Enter Discount" [ngClass]="{ 'is-invalid': submitted && g['discount'].errors }">
-                        <div *ngIf="submitted && g['discount'].errors" class="invalid-feedback">
-                            <div *ngIf="g['discount'].errors['required']">discount is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">Flat_No</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="flatNo"
-                            placeholder="Enter Flat_No" [ngClass]="{ 'is-invalid': submitted && g['flatNo'].errors }">
-                        <div *ngIf="submitted && g['flatNo'].errors" class="invalid-feedback">
-                            <div *ngIf="g['flatNo'].errors['required']">flatNo is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">Others</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="others"
-                            placeholder="Enter Others" [ngClass]="{ 'is-invalid': submitted && g['others'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
-                        <div *ngIf="submitted && g['others'].errors" class="invalid-feedback">
-                            <div *ngIf="g['others'].errors['required']">others is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">Project_Config</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="projectConfig"
-                            placeholder="Enter Project_Config"  [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }">
-                        <div *ngIf="submitted && g['projectConfig'].errors" class="invalid-feedback">
-                            <div *ngIf="g['projectConfig'].errors['required']">project Config is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">Quotation_Number</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="quotationNumber"
-                            placeholder="Enter Quotation_Number" [ngClass]="{ 'is-invalid': submitted && g['quotationNumber'].errors }">
-                        <div *ngIf="submitted && g['quotationNumber'].errors" class="invalid-feedback">
-                            <div *ngIf="g['quotationNumber'].errors['required']">quotation Number is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label class="form-label">
-                            <input type="checkbox" class="form-check-input" id="graniteCheckbox" [checked]="graniteEnabled"
-                                (change)="toggleGraniteFields()">    Enable Granite Fields
-                        </label>
-                    </div>
-                    <div class="col-xl-3" *ngIf="graniteEnabled">
-                        <label for="gmc" class="form-label">G_MC</label>
-                            <div class="d-flex align-items-center gap-2">
-                            <input type="text" class="form-control" id="gmc" formControlName="gmc" placeholder="Enter Granite Material Cost"
-                                [ngClass]="{ 'is-invalid': submitted && g['gmc'].errors }" (keypress)="allowOnlyNumbers($event)">
-                        </div>
-                    
-                        <!-- Validation message -->
-                        <div *ngIf="submitted && g['gmc'].errors" class="invalid-feedback d-block mt-1">
-                            <div *ngIf="g['gmc'].errors['required']">G_MC is required</div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3" *ngIf="graniteEnabled">
-                        <label for="clientName" class="form-label">G_PA</label>
-                        <input type="text" class="form-control" id="clientName" formControlName="gpa"
-                            placeholder="Enter Granite Projected Area" [ngClass]="{ 'is-invalid': submitted && g['gpa'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
-                        <div *ngIf="submitted && g['gpa'].errors" class="invalid-feedback">
-                            <div *ngIf="g['gpa'].errors['required']">G_Mc is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3" *ngIf="graniteEnabled">
-                        <label for="clientName" class="form-label">G_SC</label>
-                        <input type="text" class="form-control" id="clientName" formControlName="gsc"
-                            placeholder="Enter Granite Service Cost" [ngClass]="{ 'is-invalid': submitted && g['gsc'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
-                        <div *ngIf="submitted && g['gsc'].errors" class="invalid-feedback">
-                            <div *ngIf="g['gsc'].errors['required']">G_SC is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label class="form-label">
-                            <input type="checkbox" class="form-check-input" id="graniteCheckbox" [checked]="TDMCEnabled"
-                                (change)="toggleTDMCFields()"> Enable TDMC Fields
-                        </label>
-                    </div>
-                    <div class="col-xl-3" *ngIf="TDMCEnabled">
-                        <label for="clientName" class="form-label">TD_MC</label>
-                        <input type="text" class="form-control" id="clientName" formControlName="tdmc"
-                            placeholder="Enter Tils Dodadoing Material Cost" [ngClass]="{ 'is-invalid': submitted && g['tdmc'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
-                        <div *ngIf="submitted && g['tdmc'].errors" class="invalid-feedback">
-                            <div *ngIf="g['tdmc'].errors['required']">tDMC is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3" *ngIf="TDMCEnabled">
-                        <label for="projectAddress" class="form-label">TD_PA</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="tdpa"
-                            placeholder="Enter Tils Dodadoing Projected Area"  [ngClass]="{ 'is-invalid': submitted && g['tdpa'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
-                        <div *ngIf="submitted && g['tdpa'].errors" class="invalid-feedback">
-                            <div *ngIf="g['tdpa'].errors['required']">tDPA is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3" *ngIf="TDMCEnabled">
-                        <label for="projectAddress" class="form-label">TD_SC</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="tdsc"
-                            placeholder="Enter Tils Dodadoing Service Cost" [ngClass]="{ 'is-invalid': submitted && g['tdsc'].errors }"
-                            (keypress)="allowOnlyNumbers($event)">
-                        <div *ngIf="submitted && g['tdsc'].errors" class="invalid-feedback">
-                            <div *ngIf="g['tdsc'].errors['required']">tDSC is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="dedEmail" class="form-label">Designer</label>
-                        <ng-select formControlName="dedEmail" [items]="userList" bindLabel="email" bindValue="email"
-                            placeholder="Select DED_Email" (change)="onDedSelected($event)"
-                            [ngClass]="{ 'is-invalid': submitted && g['dedEmail'].errors }">
-                        </ng-select>
-                    
-                        <div *ngIf="submitted && g['dedEmail'].errors" class="invalid-feedback">
-                            <div *ngIf="g['dedEmail'].errors['required']">DED Email is required</div>
-                        </div>
-                    </div>
-                    <!-- Other Designer Fields -->
-                    <div *ngIf="showOtherDesignerFields" class="row">
-                        <div class="col-xl-3">
-                            <label>Other Designer Name</label>
-                            <input type="text" class="form-control" formControlName="otherDesignerName">
-                        </div>
-                        <div class="col-xl-3">
-                            <label>Other Designer Email</label>
-                            <input type="email" class="form-control" formControlName="otherDesignerEmail">
-                        </div>
-                        <div class="col-xl-3">
-                            <label>Other Designer Phone</label>
-                            <input type="text" class="form-control" formControlName="otherDesignerPhone"
-                                (keypress)="allowOnlyNumbers($event)">
-                        </div>
-                    </div>
-
-                    <!-- <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">DED_Mobile</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="dedMobile"
-                            placeholder="Enter DED_Mobile" [ngClass]="{ 'is-invalid': submitted && g['dedMobile'].errors }">
-                        <div *ngIf="submitted && g['dedMobile'].errors" class="invalid-feedback">
-                            <div *ngIf="g['dedMobile'].errors['required']">dedMobile is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">DED_Name</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="dedName"
-                            placeholder="Enter DED_Name" [ngClass]="{ 'is-invalid': submitted && g['dedName'].errors }">
-                        <div *ngIf="submitted && g['dedName'].errors" class="invalid-feedback">
-                            <div *ngIf="g['dedName'].errors['required']">dedName is
-                                required
-                            </div>
-                        </div>
-                    </div> -->
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">RMD_Email</label>
-                        <ng-select formControlName="rmdEmail" [items]="userList" bindLabel="email" bindValue="email"
-                            placeholder="Select an Manager" (change)="onUserSelected($event)" [ngClass]="{ 'is-invalid': submitted && g['rmdEmail'].errors }">
-                        </ng-select>
-                        <div *ngIf="submitted && g['rmdEmail'].errors" class="invalid-feedback">
-                            <div *ngIf="g['rmdEmail'].errors['required']">rmdEmail is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div *ngIf="showOtherRelationshipFields" class="row">
-                        <div class="col-xl-3">
-                            <label>RelationShip Manger Name</label>
-                            <input type="text" class="form-control" formControlName="otherRmdName">
-                        </div>
-                        <div class="col-xl-3">
-                            <label>RelationShip Manger Email</label>
-                            <input type="email" class="form-control" formControlName="otherRmdEmail">
-                        </div>
-                        <div class="col-xl-3">
-                            <label>RelationShip Manger Phone</label>
-                            <input type="text" class="form-control" formControlName="otherRmdPhone"
-                                (keypress)="allowOnlyNumbers($event)">
-                        </div>
-                    </div>
-                    <!-- <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">RMD_Mobile</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="rmdMobile"
-                            placeholder="Enter RMD_Mobile" [ngClass]="{ 'is-invalid': submitted && g['rmdMobile'].errors }">
-                        <div *ngIf="submitted && g['rmdMobile'].errors" class="invalid-feedback">
-                            <div *ngIf="g['rmdMobile'].errors['required']">rmdMobile is
-                                required
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-3">
-                        <label for="projectAddress" class="form-label">RMD_Name</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="rmdName"
-                            placeholder="Enter RMD_Name" [ngClass]="{ 'is-invalid': submitted && g['rmdName'].errors }">
-                        <div *ngIf="submitted && g['rmdName'].errors" class="invalid-feedback">
-                            <div *ngIf="g['rmdName'].errors['required']">rmdName is
-                                required
-                            </div>
-                        </div>
-                    </div> -->
-                    <div class="row pt-2">
-                        <div class="col-xl-2">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" 
-                                    formControlName="customizedQuotation">
-                                <label class="form-check-label" for="checkebox-sm">
-                                    Customized Quotation
-                                </label>
-                            </div>
-                        </div>
-                        <!-- <div formGroupName="customizedOptions" *ngIf="quotationForm.get('customizedQuotation')?.value">
-                            <div class="row pt-2 pb-3">
-                                <div class="col-xl-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" formControlName="bomRequired">
-                                        <label class="form-check-label" for="checkebox-sm">
-                                            BOM
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
-                                            formControlName="kbRequired">
-                                        <label class="form-check-label" for="checkebox-sm">
-                                            K & B
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
-                                            formControlName="wardrobeRequired">
-                                        <label class="form-check-label" for="checkebox-sm">
-                                            wardrobe
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12" *ngIf="
-                          quotationForm.get('customizedQuotation')?.value &&
-                          quotationForm.get('customizedOptions')?.invalid &&
-                          (quotationForm.get('customizedOptions')?.touched || quotationForm.get('customizedOptions')?.dirty)">
-                            <small class="text-danger">Please select at least one option under Customized Quotation.</small>
-                        </div> -->
-                        <div class="col-xl-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" 
-                                    formControlName="isDetailPannelRequired">
-                                <label class="form-check-label" for="checkebox-sm">
-                                   DetailPanelList
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-xl-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" formControlName="functionalList">
-                                <label class="form-check-label" for="checkebox-sm">
-                                    functional Parts & Door List
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-xl-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" 
-                                    formControlName="optimizerProcess">
-                                <label class="form-check-label" for="checkebox-sm">
-                                    Optimizer Process
-                                </label>
-                            </div>
-                        </div>
-                        <!-- <div formGroupName="shutterOptions" *ngIf="quotationForm.get('isDetailPannelRequired')?.value">
-                            <div class="row pt-2 pb-3">
-                                <div class="col-xl-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkebox-sm" formControlName="pannelList">
-                                        <label class="form-check-label" for="checkebox-sm">
-                                            Panel List
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
-                                            formControlName="groupPannelList">
-                                        <label class="form-check-label" for="checkebox-sm">
-                                            groupPannel List
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
-                                            formControlName="shutterList">
-                                        <label class="form-check-label" for="checkebox-sm">
-                                            Shutter List
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="checkebox-sm"
-                                            formControlName="hardwareList">
-                                        <label class="form-check-label" for="checkebox-sm">
-                                            Hardware list
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- <div class="col-12" *ngIf="
-                                quotationForm.get('isDetailPannelRequired')?.value &&
-                                quotationForm.get('shutterOptions')?.invalid &&
-                                (quotationForm.get('shutterOptions')?.touched || quotationForm.get('shutterOptions')?.dirty)
-                            ">
-                            <small class="text-danger">Please select at least one option under Detail Panel Options.</small>
-                        </div> -->
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"> Submit</button>
-            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-                data-bs-dismiss="modal">Close</button>
-        </div>
-    </form>
-    <div class="mt-3">
-        <a [href]="fileUrl" target="_blank" download>
-            <i class="bi bi-download"></i> Download Quotation Excel
-        </a>
-    </div>
