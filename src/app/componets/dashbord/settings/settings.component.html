@@ -1135,15 +1135,22 @@
                     <table class="table text-nowrap">
                         <thead>
                             <tr>
+                                <th scope="col">Quotation Number</th>
                                 <th scope="col">Project Configuration</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><span class="d-block mb-1">2Bhk</span></td>
+                            <tr *ngFor="let config of projectConfigList; let i = index">
+                                <td *ngIf="i === 0" [attr.rowspan]="projectConfigList.length">
+                                    {{ quotationNumber }}
+                                </td>
+                                <td>
+                                    <span class="d-block mb-1">{{ config }}</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>
@@ -1182,28 +1189,50 @@
 </ng-template>
 
 <ng-template #content14 id="addtask" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Project Configuration</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <div class="row gy-2">
-                <div class="col-xl-6">
-                    <label for="task-name" class="form-label">Project Configuration</label>
-                    <input type="text" class="form-control" id="task-name" placeholder="Project Configuration">
+    <form [formGroup]="projectConfigForm" (ngSubmit)="onProjectConfigSubmit(modal)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title">Project Configuration</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+    
+            <div class="modal-body px-4">
+                <div formArrayName="projectConfigs">
+                    <div class="row gy-2" *ngFor="let control of projectConfigs.controls; let i = index">
+                        <div class="col-xl-6">
+                            <label class="form-label">Project Configuration {{ i + 1 }}</label>
+                            <input type="text" class="form-control" [formControlName]="i"
+                                placeholder="Enter project configuration" />
+                        </div>
+    
+                        <div class="col-xl-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger btn-sm" (click)="removeProjectConfig(i)"
+                                *ngIf="projectConfigs.length > 1">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-xl-6">
-                    <label for="task-name" class="form-label">Quotation Number</label>
-                    <input type="text" class="form-control" id="task-name" placeholder="Quotation Number">
+    
+                <div class="row gy-2 mt-2">
+                    <div class="col-xl-6">
+                        <label for="quotationNumber" class="form-label">Quotation Number</label>
+                        <input type="text" class="form-control" id="quotationNumber" placeholder="Quotation Number"
+                            formControlName="quotationNumber">
+                    </div>
                 </div>
+    
+                <button type="button" class="btn btn-primary mt-3" (click)="addProjectConfig()">Add Project Config</button>
+            </div>
+    
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary" [disabled]="projectConfigForm.invalid">Create</button>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-            <button type="button" class="btn btn-primary">Create</button>
-        </div>
-    </div>
+    </form>
+
+
 </ng-template>
