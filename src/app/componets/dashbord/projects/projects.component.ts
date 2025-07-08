@@ -88,7 +88,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   userPhoneNumber: any ;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;
   showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
   projectConfigList: string[] = [];
-  quotationNumber: any;
+  quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -266,7 +266,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       otherRmdName:[''],
       otherRmdEmail:[''],
       otherRmdPhone:['']
-    });
+    },
+     {
+    validators: [this.atLeastOneCheckboxSelected()]
+    }
+  );
     if (this.userType === 1) {
       this.quotationForm.patchValue({
       rmdEmail: this.userEmail,
@@ -1739,9 +1743,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     console.log(payload);
     this.switchService.quotationXl(payload).subscribe({
       next: (res) => {
-        if (res.status === 200) {
+        if (res) {
           this.toastr.success('Quotation Generated successfully!');
-          this.fileUrl = res.fileUrl;
+          this.fileUrl = res.url;
           modal.close();
         }
       },
@@ -1948,6 +1952,49 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     event.preventDefault();
   }
   }
+  atLeastOneCheckboxSelected(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const formGroup = group as FormGroup;
+    const controls = formGroup.controls;
+
+    const isChecked = ['optimizerProcess', 'functionalList', 'customizedQuotation', 'isDetailPannelRequired']
+      .some(key => controls[key]?.value === true);
+
+    return isChecked ? null : { atLeastOneRequired: true };
+  };
+  }
+
+  nextStep() {
+  if (this.step === 1) {
+    this.submittedStep1 = true;
+    if (
+      this.quotationForm.get('clientName')?.invalid ||
+      this.quotationForm.get('clientAddress')?.invalid
+    ) {
+      return; // prevent going to step 2
+    }
+  }
+
+  if (this.step === 2) {
+    this.submittedStep2 = true;
+    if (
+      this.quotationForm.get('others')?.invalid
+      
+    ) {
+      return; // prevent going to step 3
+    }
+  }
+
+  if (this.step < 3) this.step++;
+  }
+
+
+  prevStep() {
+    if (this.step > 1) {
+      this.step--;
+    }
+  }
+
 
 
 }
