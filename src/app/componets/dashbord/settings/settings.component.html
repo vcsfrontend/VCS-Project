@@ -1197,39 +1197,24 @@
                     aria-label="Close"></button>
             </div>
     
-            <div class="modal-body px-4">
-                <div formArrayName="projectConfigs">
-                    <div class="row gy-2" *ngFor="let control of projectConfigs.controls; let i = index">
-                        <div class="col-xl-6">
-                            <label class="form-label">Project Configuration {{ i + 1 }}</label>
-                            <input type="text" class="form-control" [formControlName]="i"
-                                placeholder="Enter project configuration" />
-                        </div>
-    
-                        <div class="col-xl-2 d-flex align-items-end">
-                            <button type="button" class="btn btn-danger btn-sm" (click)="removeProjectConfig(i)"
-                                *ngIf="projectConfigs.length > 1">
-                                Remove
-                            </button>
-                        </div>
-                    </div>
+            <div class="modal-body px-4">   
+                
+                <div class="col-xl-6">
+                    <label class="form-label">Project Configuration </label>
+                    <input type="text" class="form-control" formControlName="f1"
+                        placeholder="Enter project configuration" />
                 </div>
-    
-                <div class="row gy-2 mt-2">
-                    <div class="col-xl-6">
-                        <label for="quotationNumber" class="form-label">Quotation Number</label>
-                        <input type="text" class="form-control" id="quotationNumber" placeholder="Quotation Number"
-                            formControlName="quotationNumber">
-                    </div>
+                <div class="col-xl-6">
+                    <label for="quotationNumber" class="form-label">Quotation Number</label>
+                    <input type="text" class="form-control" id="quotationNumber" placeholder="Quotation Number"
+                        formControlName="quotationNumber">
                 </div>
-    
-                <button type="button" class="btn btn-primary mt-3" (click)="addProjectConfig()">Add Project Config</button>
             </div>
     
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
-                <button type="submit" class="btn btn-primary" [disabled]="projectConfigForm.invalid">Create</button>
+                <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </div>
     </form>

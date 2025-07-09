@@ -80,7 +80,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
   projectConfigForm!:FormGroup;projectConfigList: string[] = [];
-  quotationNumber: any;
+  quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
 
   userForm: FormGroup = this.fb.group({
     type: [2],
@@ -349,10 +349,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
 
     this.projectConfigForm = this.fb.group({
-      quotationNumber: ['', Validators.required],
-      projectConfigs: this.fb.array([
-        this.fb.control('', Validators.required) // Initial one input
-      ]),
+      quotationNumber: [''],
       configId:0,
       companyName: [JSON.parse(this.userData)?.companyName,],
       companyCode: [JSON.parse(this.userData)?.companyCode,],
@@ -371,6 +368,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       f9:[''],
       f10:['']
     });
+
 
     // setTimeout(() => {
 
@@ -430,21 +428,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.getMarginData();
 
   }
-  get projectConfigs(): FormArray {
-  return this.projectConfigForm.get('projectConfigs') as FormArray;
-  }
-
-  addProjectConfig(): void {
-    this.projectConfigs.push(this.fb.control('', Validators.required));
-  }
-
-  removeProjectConfig(index: number): void {
-    if (this.projectConfigs.length > 1) {
-      this.projectConfigs.removeAt(index);
-    }
-  }
-
-
   onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
     this.switchService.onAdonai(JSON.parse(this.userData)?.email).subscribe({
@@ -1565,21 +1548,66 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-    let payload = {
-      ...this.quoteMarignForm.value,
+    const newMarginName = this.quoteMarignForm.get('f1')?.value || '';
+    const newMarginPercent = this.quoteMarignForm.get('f1Percent')?.value || 0;
+    let mergedMargins = this.previousMarginResponse ? { ...this.previousMarginResponse } : {};
+
+    let nextIndex = -1;
+    for (let i = 1; i <= 15; i++) {
+      if (!mergedMargins[`f${i}`]) {
+        nextIndex = i;
+        break;
+      }
+    }
+
+    if (nextIndex === -1) {
+      this.toastr.warning("Maximum 15 margin entries reached.");
+      return;
+    }
+
+    mergedMargins[`f${nextIndex}`] = newMarginName;
+    mergedMargins[`f${nextIndex}Percent`] = newMarginPercent;
+
+    // 5. Ensure all f1–f15 & f1Percent–f15Percent keys exist
+    for (let i = 1; i <= 15; i++) {
+      const fKey = `f${i}`;
+      const pKey = `f${i}Percent`;
+
+      if (!mergedMargins.hasOwnProperty(fKey)) {
+        mergedMargins[fKey] = '';
+      }
+
+      if (!mergedMargins.hasOwnProperty(pKey)) {
+        mergedMargins[pKey] = 0;
+      }
+    }
+
+
+    const companyInfo = {
       companyName: JSON.parse(this.userData).companyName,
       companyCode: JSON.parse(this.userData).companyCode,
       email: JSON.parse(this.userData).email,
-      type: JSON.parse(this.userData).type
+      type: JSON.parse(this.userData).type,
+      updatedBy: localStorage.getItem('username'),
+      updatedTime: new Date().toISOString(),
     };
-    console.log(payload);
-    this.switchService.savedynamicMargins(payload).subscribe({
+    const finalPayload = {
+  ...mergedMargins,
+  ...companyInfo
+    };
+
+    console.log(finalPayload);
+    this.switchService.savedynamicMargins(finalPayload).subscribe({
       next: (res: any) => {
-        if (res.status === true) {
-          this.toastr.success(res.message);
+        if (res && res.marginId !== undefined) {
+          this.toastr.success('Margin Saved Successfully!');
           this.quoteMarignForm.reset();
           this.quoteSubmitted = false;
           modal.close();
+          this.previousMarginResponse = res;
+
+          // Reset form for next margin input
+          this.quoteMarignForm.reset({ f1: '', f1Percent: 0 });
           this.getMarginData();
         } else {
           this.toastr.error(res.message);
@@ -1593,7 +1621,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   getMarginData(){
     let payload = {
-      companyCode: JSON.parse(this.userData).companyCode,
+      companycode: JSON.parse(this.userData).companyCode,
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
@@ -1602,9 +1630,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (res.status === true) {
           this.toastr.success(res.message);
-        } else {
-          this.toastr.error(res.message);
-        }
+        } 
       },
       error: (error) => {
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
@@ -1613,34 +1639,72 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   onProjectConfigSubmit(modal:any){
-    if (this.projectConfigForm.invalid) return;
-    const formValue = this.projectConfigForm.value;
-    const configs = this.projectConfigForm.get('projectConfigs')?.value || [];
-    for (let i = 0; i < 10; i++) {
-    const key = `f${i + 1}`;
-    const value = configs[i] || ''; 
-    this.projectConfigForm.get(key)?.setValue(value);
+    this.quoteSubmitted = true;
+
+    if (this.projectConfigForm.invalid) {
+      this.toastr.error("Please enter Project Configuration.");
+      return;
+    }
+    const rawQuote = this.projectConfigForm.get('quotationNumber')?.value || '';
+
+    const newConfigValue = this.projectConfigForm.get('f1')?.value || '';
+
+    let mergedPayload = this.previousConfigResponse ? { ...this.previousConfigResponse } : {};
+
+    let nextIndex = -1;
+    for (let i = 1; i <= 10; i++) {
+      if (!mergedPayload[`f${i}`]) {
+        nextIndex = i;
+        break;
+      }
     }
 
-  this.projectConfigForm.get('updatedTime')?.setValue(new Date().toISOString());
-  const {
-    projectConfigs, 
-    ...restValues     
-  } = this.projectConfigForm.value;
+    if (nextIndex === -1) {
+      this.toastr.warning("Maximum 10 Project Configurations reached.");
+      return;
+    }
 
-  const payload = {
-    ...restValues
-  };
+    mergedPayload[`f${nextIndex}`] = newConfigValue;
 
-  console.log('Final Payload:', payload);
-    this.switchService.saveProjectConfig(payload).subscribe({
+    this.projectConfigForm.get('f1')?.reset();
+
+    for (let i = 1; i <= 10; i++) {
+      const key = `f${i}`;
+      if (!mergedPayload[key]) mergedPayload[key] = '';
+    }
+
+    const companyInfo: any = {
+      configId: 0,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      email: JSON.parse(this.userData)?.email,
+      type: JSON.parse(this.userData)?.type,
+      updatedBy: localStorage.getItem('username'),
+      updatedTime: new Date().toISOString()
+    };
+   
+    if (Object.keys(this.previousConfigResponse).length === 0 && rawQuote)  {
+      companyInfo.quotationNumber = rawQuote;
+    }
+
+    const finalPayload = {
+      ...companyInfo,
+      ...mergedPayload
+    };
+
+    console.log('Final Payload:', finalPayload);
+
+    this.switchService.saveProjectConfig(finalPayload).subscribe({
       next: (res: any) => {
-        if (res) {
-          this.toastr.success('Saved Successful');
-          this.projectConfigForm.reset();
+       if (res && res.configId !== undefined) {
+          this.toastr.success('Project Configuration saved!');
+          this.previousConfigResponse = res;
           modal.close();
+          this.projectConfigForm.reset({
+            projectConfigs: [],
+            quotationNumber: '', 
+          });
           this.getProjectConfig();
-        } else {
         }
       },
       error: (error) => {
