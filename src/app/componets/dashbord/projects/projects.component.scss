@@ -352,3 +352,29 @@ mat-label {
     flex-direction: column; 
   }
 }
+
+.ct {
+    margin-top: -5px;
+    margin-bottom: -20px;
+}
+
+.mat-icon {
+    -webkit-user-select: none;
+    user-select: none;
+    background-repeat: no-repeat;
+    display: inline-block;
+    fill: currentColor;
+    height: 24px;
+    width: 24px;
+    overflow: visible;
+    margin-left: 6px;
+    padding-top: 5px;
+    align-items: center;
+}
+
+.btn-smm {
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+}
+
