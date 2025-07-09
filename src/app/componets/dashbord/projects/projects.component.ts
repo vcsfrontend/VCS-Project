@@ -1744,12 +1744,19 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       gpa: parseFloat(rest.gpa),
       tdpa: parseFloat(rest.tdpa),
     };
-    console.log(payload);
     this.switchService.quotationXl(payload).subscribe({
       next: (res) => {
         if (res) {
           this.toastr.success('Quotation Generated successfully!');
           this.fileUrl = res.url;
+          const fileUrls = [
+            res.detiledPanelListUrl,
+            res.functionalPartsListUrl,
+            res.productionList,
+            res.customizedQuoteurl
+          ];
+          this.downloadAllFiles(fileUrls);
+
           modal.close();
         }
       },
@@ -1779,7 +1786,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
               phoneNumber: null,
               username: null
             });
-            console.log('userList',this.userList);
             const matchedUser = this.userList.find((user: any) => user.email === this.userEmail);
             if (matchedUser) {
               this.userPhoneNumber = matchedUser.phoneNumber;
@@ -1787,11 +1793,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
                 rmdMobile:  this.userPhoneNumber,
                 rmdName: matchedUser.username,
               }); 
-              console.log('Phone number:', this.userPhoneNumber);
-              console.log('username',this.userName);
-            } else {
-              console.log('User not found in list');
-            }
+              
+            } 
 
           } else {
             this.toastr.error(res.message, 'signup', {
@@ -1817,7 +1820,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   getUserInfo(email: string) {
     if (!email) {
-      console.error("Invalid email passed to getUserInfo.");
       return;
     }
     this.switchService.userInfo(email).subscribe({
@@ -1849,14 +1851,12 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
       },
       error: (err: any) => {
-        console.error("Error fetching user data:", err);
         this.toastr.error("Failed to fetch user data. Please try again.");
       }
     });
   }
 
  onUserSelected(selectedUser: any): void {
-  console.log('Selected user:', selectedUser);
   if (selectedUser?.email === 'Other') {
     this.showOtherRelationshipFields = true;
 
@@ -1882,7 +1882,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   onDedSelected(selectedUser: any): void {
-    console.log('Selected user:', selectedUser);
     if (selectedUser?.email === 'Other') {
     this.showOtherDesignerFields = true;
 
@@ -2007,16 +2006,29 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     };
     this.switchService.quotationHistory(payload).subscribe({
       next: (res: any) => {
-        if (res) {
-          selectedRow.quotationHistoryList = res.data; 
-        } else {
-          this.toastr.error(res.message || 'No data found.');
-        }
-      },
+        if (res ) {
+          // assuming selectedRow refers to the current table element (like a project row)
+          selectedRow.quotationHistoryList = res;
+          console.log('📝 History List Set:', selectedRow.quotationHistoryList);
+        } 
+
+        },
       error: (error) => {
         this.toastr.error(error.statusText || 'An error occurred while fetching the quotation history.');
       }
     });
+  }
+
+  downloadAllFiles(fileUrls: string[]) {
+  fileUrls.forEach((url, index) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = '_blank';
+    link.download = ''; // optional: customize file name if backend provides it
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
   }
 
 

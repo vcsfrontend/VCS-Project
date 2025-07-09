@@ -1111,9 +1111,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><span class="d-block mb-1">Rupay Card ****2783</span></td>
-                                <td><span class="d-block mb-1">Completed</span></td>
+                            <tr *ngFor="let margin of projectMarginList">
+                                <td>{{ margin.name }}</td>
+                                <td>{{ margin.percent }}%</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1204,7 +1204,7 @@
                     <input type="text" class="form-control" formControlName="f1"
                         placeholder="Enter project configuration" />
                 </div>
-                <div class="col-xl-6">
+                <div class="col-xl-6" >
                     <label for="quotationNumber" class="form-label">Quotation Number</label>
                     <input type="text" class="form-control" id="quotationNumber" placeholder="Quotation Number"
                         formControlName="quotationNumber">

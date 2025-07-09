@@ -79,9 +79,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
-  projectConfigForm!:FormGroup;projectConfigList: string[] = [];
+  projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
-
+  quotationSubmitted = false;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -1628,9 +1628,21 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     console.log(payload);
     this.switchService.fetchDynamicMargin(payload).subscribe({
       next: (res: any) => {
-        if (res.status === true) {
-          this.toastr.success(res.message);
-        } 
+        if (res) {
+          const configs: { name: string, percent: number }[] = [];
+
+          for (let i = 1; i <= 10; i++) {
+            const name = res[`f${i}`];
+            const percent = res[`f${i}Percent`];
+
+            if (name) {
+              configs.push({ name, percent: percent || 0 });
+            }
+          }
+
+          this.projectMarginList = configs;
+        }
+
       },
       error: (error) => {
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
@@ -1646,7 +1658,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       return;
     }
     const rawQuote = this.projectConfigForm.get('quotationNumber')?.value || '';
-
+    
     const newConfigValue = this.projectConfigForm.get('f1')?.value || '';
 
     let mergedPayload = this.previousConfigResponse ? { ...this.previousConfigResponse } : {};
@@ -1724,13 +1736,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (res) {
            const configs: string[] = [];
-      for (let i = 1; i <= 10; i++) {
-        const value = res[`f${i}`];
-        if (value) configs.push(value);
-      }
+          for (let i = 1; i <= 10; i++) {
+            const value = res[`f${i}`];
+            if (value) configs.push(value);
+          }
 
-      this.projectConfigList = configs;
-      this.quotationNumber = res.quotationNumber;
+          this.projectConfigList = configs;
+          this.quotationNumber = res.quotationNumber;
         } else {
           this.toastr.error(res.message);
         }

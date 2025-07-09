@@ -455,7 +455,7 @@
                                 </button>
                                 <ng-template #quotationHistory>
                                     <ng-container *ngIf="!!element.quotationHistoryList && element.quotationHistoryList.length > 0; else noData">
-                                        <div class="col-lg-12" style="max-height: 200px; overflow-y: auto;">
+                                        <div class="col-lg-12" style="max-height: 200px; max-width: 500px; overflow-y: auto;">
                                             <ul class="list-unstyled mb-0" *ngFor="let item of element.quotationHistoryList">
                                                 <li class="leave-activity-content mb-2">
                                                     <div class="d-flex align-items-top">
@@ -1431,9 +1431,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary  me-2" type="button" (click)="prevStep()">Back</button>
-                        <button type="submit" class="btn btn-primary"> Submit</button>
-                        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                        <button class="btn btn-secondary  me-2 ct" type="button" (click)="prevStep()">Back</button>
+                        <button type="submit" class="btn btn-primary ct"> Submit</button>
+                        <button type="button" class="btn btn-danger ct" (click)="modal.close('Close click')"
                             data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
