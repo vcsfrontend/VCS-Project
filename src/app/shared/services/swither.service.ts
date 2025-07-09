@@ -185,7 +185,8 @@ export class SwitherService {
   fetchDynamicMargin(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_dynamic_margins`, data); } 
 
   saveProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_project_conf`, data); } 
-  fetchProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_project_conf`, data); } 
+  fetchProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_project_conf`, data); }
+  quotationHistory(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/getQuoteGenHistory`, data); }  
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }

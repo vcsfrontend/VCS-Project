@@ -68,7 +68,7 @@ export type ChartOptions = {
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate'];
-  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation', 'view'];
+  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
@@ -77,7 +77,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false; topDisplayedCards: any;
   des: string = "3FO3LL66G60B"; adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
-  selectedRow: any;userList: any;
+  selectedRow: any;userList: any; quotationHistoryVisible = false;
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
@@ -87,7 +87,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userPhoneNumber: any ;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;
   showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
-  projectConfigList: string[] = [];
+  projectConfigList: string[] = []; quotationHistoryList: any[] = [];
   quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
@@ -149,7 +149,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   openLg3(content14: any, element: any) {
     this.selectedRow = element;
-    this.modalService.open(content14, { size: 'lg', centered: true },);
+    this.modalService.open(content14, { centered: true },);
   }
 
   openLg4(content15: any) {
@@ -161,6 +161,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   openRights(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
+  }
+   openNew(content40: any) {
+    this.offcanvasService.open(content40, { position: 'end', });
   }
 
   open(content11: any) {
@@ -260,6 +263,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       tdpa: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
       customizedQuotation:[true],
       isDetailPannelRequired: [true],
+      productionList:[false],
       otherDesignerName: [''],
       otherDesignerEmail: [''],
       otherDesignerPhone: [''],
@@ -1956,10 +1960,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   return (group: AbstractControl): ValidationErrors | null => {
     const formGroup = group as FormGroup;
     const controls = formGroup.controls;
-
     const isChecked = ['optimizerProcess', 'functionalList', 'customizedQuotation', 'isDetailPannelRequired']
       .some(key => controls[key]?.value === true);
-
     return isChecked ? null : { atLeastOneRequired: true };
   };
   }
@@ -1993,6 +1995,28 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (this.step > 1) {
       this.step--;
     }
+  }
+
+  getQuotationHistory(selectedRow: any,) {
+    this.designId = selectedRow?.designId || '';
+    const payload = {
+      companyCode: this.userData.companyCode || '',
+      email: this.userData.email,
+      type: this.userData.type,
+      designId: this.designId
+    };
+    this.switchService.quotationHistory(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          selectedRow.quotationHistoryList = res.data; 
+        } else {
+          this.toastr.error(res.message || 'No data found.');
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || 'An error occurred while fetching the quotation history.');
+      }
+    });
   }
 
 
