@@ -89,6 +89,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
   projectConfigList: string[] = []; quotationHistoryList: any[] = [];
   quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
+  projectMarginList:any;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -196,7 +197,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.getProjectList();
     this.getLst(); this.getMatCardLst();    this.getUsers();    this.getUserInfo(this.userEmail);
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
-    this.getAllStages(); this.getAllPmntStages();this.getProjectConfig();
+    this.getAllStages(); this.getAllPmntStages();this.getProjectConfig();this.getMarginData();
     this.createProjectForm = this.fb.group({
       projectName: ['', Validators.required],
       clientName: ['', Validators.required],
@@ -224,12 +225,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.quotationForm = this.fb.group({
       clientName: ['', Validators.required],
       clientAddress: ['', Validators.required],
+      clientEmail:[''],
+      clientMobileNumber:['',[Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       projectName: ['', Validators.required],
       designId: [this.designId],
       discount: [0, [Validators.pattern(/^[0-9]+$/)]],
       flatNo: [''],
       others: [0, [Validators.pattern(/^[0-9]+$/)]],
       projectConfig: [''],
+      margin:[''],
       quotationNumber: [''],
       dedEmail: [''],
       dedMobile: [''],
@@ -1691,6 +1695,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   onQuotationSubmit(modal: any, data: any) {
     const dedSelected = this.quotationForm.value.dedEmail;
     const rmdSelected = this.quotationForm.value.rmdEmail;
+    const margin = this.quotationForm.get('margin')?.value;
     if (dedSelected?.email === 'Other' || dedSelected === 'Other') {
       this.quotationForm.patchValue({
         dedEmail: this.quotationForm.value.otherDesignerEmail,
@@ -1723,12 +1728,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       otherDesignerName,
       otherDesignerEmail,
       otherDesignerPhone,
+      
       ...rest
     } = rawRest;
     const opts = shutterOptions;
     const cusOpts = customizedOptions;
     const payload = {
       ...rest,
+      margin: margin?.name || '',
+      marginPercent: margin?.percent || 0,
       bomRequired: cusOpts.bomRequired,
       kbRequired: cusOpts.kbRequired,
       wardrobeRequired: cusOpts.wardrobeRequired,
@@ -1744,6 +1752,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       gpa: parseFloat(rest.gpa),
       tdpa: parseFloat(rest.tdpa),
     };
+    console.log('payload',payload);
     this.switchService.quotationXl(payload).subscribe({
       next: (res) => {
         if (res) {
@@ -1970,7 +1979,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.submittedStep1 = true;
     if (
       this.quotationForm.get('clientName')?.invalid ||
-      this.quotationForm.get('clientAddress')?.invalid
+      this.quotationForm.get('clientAddress')?.invalid,
+      this.quotationForm.get('clientMobileNumber')?.invalid
     ) {
       return; // prevent going to step 2
     }
@@ -2031,6 +2041,36 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   });
   }
 
+  getMarginData(){
+    let payload = {
+      companycode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    console.log(payload);
+    this.switchService.fetchDynamicMargin(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          const configs: { name: string, percent: number }[] = [];
+
+          for (let i = 1; i <= 10; i++) {
+            const name = res[`f${i}`];
+            const percent = res[`f${i}Percent`];
+
+            if (name) {
+              configs.push({ name, percent: percent || 0 });
+            }
+          }
+
+          this.projectMarginList = configs;
+        }
+
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
 
 
 }

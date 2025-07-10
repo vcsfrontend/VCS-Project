@@ -450,17 +450,17 @@
                                 </button>
                                 <button class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="quotationHistory"
                                     popoverTitle="Quotation History" (click)="getQuotationHistory(element)" [autoClose]="'outside'"
-                                    placement="bottom" type="button">
+                                    placement="top" type="button">
                                     <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
                                 </button>
                                 <ng-template #quotationHistory>
                                     <ng-container *ngIf="!!element.quotationHistoryList && element.quotationHistoryList.length > 0; else noData">
                                         <div class="col-lg-12" style="max-height: 200px; max-width: 500px; overflow-y: auto;">
-                                            <ul class="list-unstyled mb-0" *ngFor="let item of element.quotationHistoryList">
-                                                <li class="leave-activity-content mb-2">
+                                            <ul class="list-unstyled mb-0 timeline" >
+                                                <li *ngFor="let item of element.quotationHistoryList" class="leave-activity-content mb-2 timeline-item">
                                                     <div class="d-flex align-items-top">
                                                         <div class="me-3">
-                                                            <span class="avatar avatar-rounded avatar-sm bg-warning">
+                                                            <span class="avatar avatar-rounded avatar-sm bg-warning profile-pic">
                                                                 V{{ item.versionNo }}
                                                             </span>
                                                         </div>
@@ -1040,11 +1040,17 @@
                         </div>
                         <div class="col-xl-12">
                             <label for="projectAddress" class="form-label">Client Mobile Number</label>
-                            <input type="text" class="form-control" id="projectAddress" placeholder="Enter Client Mobile Number">
+                            <input type="text" class="form-control" id="projectAddress" placeholder="Enter Client Mobile Number"
+                            formControlName="clientMobileNumber" (keypress)="allowOnlynum($event)" maxlength="10" [ngClass]="{ 'is-invalid': submittedStep1 && g['clientMobileNumber'].invalid }">
+                            <div class="invalid-feedback" *ngIf="submittedStep1 && g['clientMobileNumber'].errors">
+                                <span *ngIf="g['clientMobileNumber'].errors['required']">Mobile number is required.</span>
+                                <span *ngIf="g['clientMobileNumber'].errors['pattern']">Enter a valid 10-digit mobile number.</span>
+                            </div>
                         </div>
                         <div class="col-xl-12">
                             <label for="projectAddress" class="form-label">Client Email</label>
-                            <input type="text" class="form-control" id="projectAddress" placeholder="Enter Client Email">
+                            <input type="text" class="form-control" id="projectAddress" placeholder="Enter Client Email"
+                            formControlName="clientEmail">
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
@@ -1217,6 +1223,13 @@
                                 <div *ngIf="g['others'].errors['required']">others is required </div>
                                 <div *ngIf="g['others'].errors['pattern']">Only numbers are allowed.</div>
                             </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="projectAddress" class="form-label">Margin</label>
+                            <ng-select formControlName="margin" [items]="projectMarginList" bindLabel="name"
+                                bindValue="" placeholder="Select Project Configuration"
+                                [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }">
+                            </ng-select>  
                         </div>
                     <div class="col-xl-6">
                         <label class="form-label">
@@ -1676,4 +1689,5 @@
             data-bs-dismiss="modal">Close</button>
     </div>
 </ng-template>
+
 

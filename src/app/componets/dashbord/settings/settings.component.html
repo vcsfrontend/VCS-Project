@@ -1107,7 +1107,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Margin Name</th>
-                                <th scope="col">Margin Amount</th>
+                                <th scope="col">Margin Amount%</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1173,9 +1173,9 @@
                             formControlName="f1">
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">Margin Price</label>
+                        <label class="form-label">Margin Price %</label>
                         <input type="text" class="form-control" id="task-name" placeholder="Margin Price"
-                            formControlName="f1Percent">
+                            formControlName="f1Percent" (keypress)="allowOnlynum($event)">
                     </div>
                 </div>
             </div>
@@ -1204,10 +1204,10 @@
                     <input type="text" class="form-control" formControlName="f1"
                         placeholder="Enter project configuration" />
                 </div>
-                <div class="col-xl-6" >
+                <div class="col-xl-6"  *ngIf="!quotationSubmitted">
                     <label for="quotationNumber" class="form-label">Quotation Number</label>
                     <input type="text" class="form-control" id="quotationNumber" placeholder="Quotation Number"
-                        formControlName="quotationNumber">
+                        formControlName="quotationNumber" [disabled]="quotationSubmitted">
                 </div>
             </div>
     
