@@ -378,3 +378,44 @@ mat-label {
     font-size: 0.75rem;
 }
 
+
+// line
+.timeline {
+  position: relative;
+  // margin-left: 30px;
+}
+
+.timeline-item .me-3 {
+  position: relative;
+}
+
+.timeline-item .me-3::after {
+  content: '';
+  position: absolute;
+  top: 40px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: calc(100% - 40px);
+  background-color: #ccc;
+  z-index: 0;
+}
+
+.timeline-item:last-child .me-3::after {
+  display: none;
+}
+
+.profile-pic {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fbc02d;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}

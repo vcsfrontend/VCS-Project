@@ -1652,7 +1652,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   onProjectConfigSubmit(modal:any){
     this.quoteSubmitted = true;
-
+      const quotationValue = this.projectConfigForm.get('quotationNumber')?.value;
     if (this.projectConfigForm.invalid) {
       this.toastr.error("Please enter Project Configuration.");
       return;
@@ -1711,10 +1711,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
        if (res && res.configId !== undefined) {
           this.toastr.success('Project Configuration saved!');
           this.previousConfigResponse = res;
+          if (quotationValue) {
+            this.quotationSubmitted = true;
+          }
+
           modal.close();
           this.projectConfigForm.reset({
             projectConfigs: [],
-            quotationNumber: '', 
           });
           this.getProjectConfig();
         }
@@ -1727,7 +1730,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   getProjectConfig(){
     let payload = {
-      companyCode: JSON.parse(this.userData).companyCode,
+      companycode: JSON.parse(this.userData).companyCode,
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
@@ -1753,7 +1756,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
   }
 
-
+ allowOnlynum(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    event.preventDefault();
+  }
+  }
 
   
 }
