@@ -81,7 +81,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
   projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
-  quotationSubmitted = false;
+  quotationSubmitted = false;quotationmarginsubmit:boolean=false;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -381,8 +381,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
 
     this.quoteMarignForm = this.fb.group({
-      f1: [''],
-      f1Percent: [0],
+      f1: ['',Validators.required],
+      f1Percent: [0,Validators.required],
       f2: [''],
       f2Percent: [0],
       f3: [''],
@@ -1543,7 +1543,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   quoteMarginSubmit(modal:any){
-    this.quoteSubmitted = true;
+    this.quotationmarginsubmit=true;
     if (this.quoteMarignForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
@@ -1602,7 +1602,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         if (res && res.marginId !== undefined) {
           this.toastr.success('Margin Saved Successfully!');
           this.quoteMarignForm.reset();
-          this.quoteSubmitted = false;
           modal.close();
           this.previousMarginResponse = res;
 
@@ -1711,10 +1710,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
        if (res && res.configId !== undefined) {
           this.toastr.success('Project Configuration saved!');
           this.previousConfigResponse = res;
-          if (quotationValue) {
-            this.quotationSubmitted = true;
-          }
-
           modal.close();
           this.projectConfigForm.reset({
             projectConfigs: [],
@@ -1763,5 +1758,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   }
 
+   get g() {
+    return this.quoteMarignForm.controls;
+  }
   
 }
