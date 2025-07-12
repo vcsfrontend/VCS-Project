@@ -81,7 +81,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
   projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
-  quotationSubmitted = false;quotationmarginsubmit:boolean=false;
+  quotationSubmitted = true; quotationmarginsubmit:boolean=false;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -105,7 +105,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   newItem: string = ''; newPmntItem: string = '';
   items: { label: string; checked: boolean }[] = [];
 
-  addMoreVisible: boolean = false; // Flag to toggle visibility
+  addMoreVisible: boolean = false; 
   addMorePmntVisible: boolean = false;
   searchUser: string = '';
   userDetails: any = {};
@@ -381,8 +381,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
 
     this.quoteMarignForm = this.fb.group({
-      f1: ['',Validators.required],
-      f1Percent: [0,Validators.required],
+      f1: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      f1Percent: [0, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       f2: [''],
       f2Percent: [0],
       f3: [''],
@@ -1595,8 +1595,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   ...mergedMargins,
   ...companyInfo
     };
-
-    console.log(finalPayload);
     this.switchService.savedynamicMargins(finalPayload).subscribe({
       next: (res: any) => {
         if (res && res.marginId !== undefined) {
@@ -1624,24 +1622,19 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
-    console.log(payload);
     this.switchService.fetchDynamicMargin(payload).subscribe({
       next: (res: any) => {
         if (res) {
           const configs: { name: string, percent: number }[] = [];
-
           for (let i = 1; i <= 10; i++) {
             const name = res[`f${i}`];
             const percent = res[`f${i}Percent`];
-
             if (name) {
               configs.push({ name, percent: percent || 0 });
             }
           }
-
           this.projectMarginList = configs;
         }
-
       },
       error: (error) => {
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
@@ -1697,14 +1690,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     if (Object.keys(this.previousConfigResponse).length === 0 && rawQuote)  {
       companyInfo.quotationNumber = rawQuote;
     }
-
     const finalPayload = {
       ...companyInfo,
       ...mergedPayload
     };
-
-    console.log('Final Payload:', finalPayload);
-
     this.switchService.saveProjectConfig(finalPayload).subscribe({
       next: (res: any) => {
        if (res && res.configId !== undefined) {
@@ -1729,7 +1718,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
-     console.log(payload);
     this.switchService.fetchProjectConfig(payload).subscribe({
       next: (res: any) => {
         if (res) {
@@ -1738,7 +1726,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             const value = res[`f${i}`];
             if (value) configs.push(value);
           }
-
           this.projectConfigList = configs;
           this.quotationNumber = res.quotationNumber;
         } else {

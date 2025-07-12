@@ -89,7 +89,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
   projectConfigList: string[] = []; quotationHistoryList: any[] = [];
   quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
-  projectMarginList:any;
+  projectMarginList:any; isLoading = false;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -99,7 +99,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   pageSize = 5;
   modal: any; ttlAmtToBeRcvd: any; projectLst: any = []; userDetails: any; dateDiff: any;
   roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
-  pondOptions: FilePondOptions; lastField: any; ProDataList: any;
+  pondOptions: FilePondOptions; lastField: any; ProDataList: any; onQuotationSubmitted: boolean = false;
   spinnerLoading = false;
   pendingRequests = 0;
   adonaiURL: any;
@@ -197,7 +197,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.getProjectList();
     this.getLst(); this.getMatCardLst();    this.getUsers();    this.getUserInfo(this.userEmail);
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
-    this.getAllStages(); this.getAllPmntStages();this.getProjectConfig();this.getMarginData();
+    this.getAllStages(); this.getAllPmntStages();
+    this.getProjectConfig();
+    this.getMarginData();
     this.createProjectForm = this.fb.group({
       projectName: ['', Validators.required],
       clientName: ['', Validators.required],
@@ -223,11 +225,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
 
     this.quotationForm = this.fb.group({
-      clientName: ['', Validators.required],
-      clientAddress: ['', Validators.required],
+      clientName: ['',],
+      clientAddress: ['',],
       clientEmail:[''],
-      clientMobileNumber:['',[Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
-      projectName: ['', Validators.required],
+      clientMobileNumber:['',[Validators.pattern(/^[0-9]{10}$/)]],
+      projectName: [''],
       designId: [this.designId],
       discount: [0, [Validators.pattern(/^[0-9]+$/)]],
       flatNo: [''],
@@ -257,7 +259,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
       isFunctionalPartsAndDoorsRequired: [true],
-      kandbJsonLink:["",],
+      kandbJsonLink:[""],
       wardrobeJsonLink:[""],
       tdmc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
       gmc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
@@ -1710,8 +1712,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         rmdName: this.quotationForm.value.otherRmdName
       });
     }
-
-    this.submitted = true;
+    this.onQuotationSubmitted = true;
     this.quotationForm.markAllAsTouched();
     const shutterListChecked = this.quotationForm.get('isDetailPannelRequired')?.value;
     const shutterOptionsGroup = this.quotationForm.get('shutterOptions') as FormGroup;
@@ -1719,6 +1720,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       this.toastr.error('Please fill mandatory fields');
       return;
     }
+    this.isLoading = true;
     this.designId = this.selectedRow?.designId || '';
     const { shutterOptions, customizedOptions, ...rawRest } = this.quotationForm.value;
     const {
@@ -1728,7 +1730,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       otherDesignerName,
       otherDesignerEmail,
       otherDesignerPhone,
-      
       ...rest
     } = rawRest;
     const opts = shutterOptions;
@@ -1752,11 +1753,11 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       gpa: parseFloat(rest.gpa),
       tdpa: parseFloat(rest.tdpa),
     };
-    console.log('payload',payload);
     this.switchService.quotationXl(payload).subscribe({
       next: (res) => {
         if (res) {
           this.toastr.success('Quotation Generated successfully!');
+          this.isLoading = false;
           this.fileUrl = res.url;
           const fileUrls = [
             res.detiledPanelListUrl,
@@ -1764,13 +1765,24 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             res.productionList,
             res.customizedQuoteurl
           ];
-          this.downloadAllFiles(fileUrls);
-
+          const validFileUrls = Array.from(
+            new Set(
+              fileUrls.filter(url => url && url.trim() !== '' && url.startsWith('http'))
+            )
+          );
+          if (validFileUrls.length > 0) {
+            this.downloadAllFiles(validFileUrls);
+          } else {
+            console.warn('No valid file URLs found for download.');
+          }
           modal.close();
+          this.onQuotationSubmitted = false;
+          this.quotationForm.reset();
         }
       },
       error: (err) => {
         this.toastr.error(err.statusText || 'Something went wrong',);
+        this.isLoading = false;
       }
     });
   }
@@ -2017,11 +2029,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.switchService.quotationHistory(payload).subscribe({
       next: (res: any) => {
         if (res ) {
-          // assuming selectedRow refers to the current table element (like a project row)
           selectedRow.quotationHistoryList = res;
-          console.log('📝 History List Set:', selectedRow.quotationHistoryList);
         } 
-
         },
       error: (error) => {
         this.toastr.error(error.statusText || 'An error occurred while fetching the quotation history.');
@@ -2030,15 +2039,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   downloadAllFiles(fileUrls: string[]) {
-  fileUrls.forEach((url, index) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = '_blank';
-    link.download = ''; // optional: customize file name if backend provides it
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  });
+    fileUrls.forEach((url, index) => {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.download = '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
   }
 
   getMarginData(){
@@ -2047,24 +2056,19 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
-    console.log(payload);
     this.switchService.fetchDynamicMargin(payload).subscribe({
       next: (res: any) => {
         if (res) {
           const configs: { name: string, percent: number }[] = [];
-
           for (let i = 1; i <= 10; i++) {
             const name = res[`f${i}`];
             const percent = res[`f${i}Percent`];
-
             if (name) {
               configs.push({ name, percent: percent || 0 });
             }
           }
-
           this.projectMarginList = configs;
         }
-
       },
       error: (error) => {
         this.toastr.error(error.statusText || "An error occurred while saving the product.");

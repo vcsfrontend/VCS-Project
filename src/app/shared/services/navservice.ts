@@ -360,15 +360,15 @@ export class NavService implements OnDestroy {
       type: 'sub',
       active: false,
       children: [
-        {
-          title: 'optimizer',
-          icon: 'bi-file-earmark',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          active: false,
-          path : "/dashboard/optimizer"
-        },        
+        // {
+        //   title: 'optimizer',
+        //   icon: 'bi-file-earmark',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType : 'internal',
+        //   active: false,
+        //   path : "/dashboard/optimizer"
+        // },        
         {
           title: 'Products',
           dirchange: false,
