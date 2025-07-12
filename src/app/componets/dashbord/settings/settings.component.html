@@ -1180,7 +1180,8 @@
                         <input type="text" class="form-control" id="task-name" placeholder="Margin Price"
                             formControlName="f1Percent" (keypress)="allowOnlynum($event)" [ngClass]="{ 'is-invalid': quotationmarginsubmit && g['f1Percent'].invalid }">
                         <div *ngIf="quotationmarginsubmit && g['f1Percent'].invalid" class="text-danger">
-                            Margin percent is required.
+                            <div *ngIf="g['f1Percent'].errors?.['required']"> Margin percent is required.</div>
+                            <div *ngIf="g['f1Percent'].errors?.['pattern']"> Only numbers are allowed. </div>
                         </div>
                     </div>
                 </div>
@@ -1202,9 +1203,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
-    
-            <div class="modal-body px-4">   
-                
+            <div class="modal-body px-4 d-flex justify-content-center">   
                 <div class="col-xl-6">
                     <label class="form-label">Project Configuration </label>
                     <input type="text" class="form-control" formControlName="f1"
@@ -1216,7 +1215,6 @@
                         formControlName="quotationNumber" [disabled]="quotationSubmitted">
                 </div>
             </div>
-    
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
