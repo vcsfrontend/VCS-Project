@@ -752,7 +752,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         receivedAmount: '',
         pendingAmount: '',
         amountToBeRecieved: '',
-        updatedBy: JSON.parse(this.userData)?.username,
+        updatedBy: this.userData?.username,
         updatedTime: '',
         isNew: true
       });
@@ -1692,6 +1692,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     return anyChecked ? null : { atLeastOneRequired: true };
   };
   }
+downloadButtons: { label: string; url: string }[] = [];
 
   fileUrl: string = '';
   onQuotationSubmit(modal: any, data: any) {
@@ -1754,37 +1755,43 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       tdpa: parseFloat(rest.tdpa),
     };
     this.switchService.quotationXl(payload).subscribe({
-      next: (res) => {
-        if (res) {
-          this.toastr.success('Quotation Generated successfully!');
-          this.isLoading = false;
-          this.fileUrl = res.url;
-          const fileUrls = [
-            res.detiledPanelListUrl,
-            res.functionalPartsListUrl,
-            res.productionList,
-            res.customizedQuoteurl
-          ];
-          const validFileUrls = Array.from(
-            new Set(
-              fileUrls.filter(url => url && url.trim() !== '' && url.startsWith('http'))
-            )
-          );
-          if (validFileUrls.length > 0) {
-            this.downloadAllFiles(validFileUrls);
-          } else {
-            console.warn('No valid file URLs found for download.');
-          }
-          modal.close();
-          this.onQuotationSubmitted = false;
-          this.quotationForm.reset();
-        }
-      },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Something went wrong',);
+    next: (res) => {
+      if (res) {
+        this.toastr.success('Quotation Generated successfully!');
         this.isLoading = false;
+
+        // Save main quotation file URL (if needed elsewhere)
+        this.fileUrl = res.url;
+
+        // Prepare download buttons based on valid URLs
+        this.downloadButtons = [
+          { label: 'Detailed Panel List', url: res.detiledPanelListUrl },
+          { label: 'Parts & Door List', url: res.functionalPartsListUrl },
+          { label: 'Production List', url: res.productionList },
+          { label: 'Customized Quote', url: res.customizedQuoteurl },
+          { label: 'Hardware List', url: res.hardwareListUrl }
+        ].filter(file => file.url?.trim() && file.url.startsWith('http'));
+
+        // Extract URLs for auto-download
+        const validFileUrls = this.downloadButtons.map(file => file.url);
+
+        if (validFileUrls.length > 0) {
+          this.downloadAllFiles(validFileUrls);
+        } else {
+          console.warn('No valid file URLs found for download.');
+        }
+
+        // Cleanup
+        modal.close();
+        this.onQuotationSubmitted = false;
+        this.quotationForm.reset();
       }
-    });
+    },
+    error: (err) => {
+      this.toastr.error(err.statusText || 'Something went wrong');
+      this.isLoading = false;
+    }
+  });
   }
 
   get g() {
@@ -1830,7 +1837,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       })
     }
     else if (this.userData.type == 1) {
-  // ✅ Type 1 user — no API, just show "Other"
       this.userList = [{
         email: 'Other',
         phoneNumber: null,

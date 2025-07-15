@@ -84,7 +84,7 @@ export class LeadsComponent extends BaseComponent {
   selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
   fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
-  notconnectedstatusClicked = false;
+  notconnectedstatusClicked = false; adoanAiRole: any;
 
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
@@ -158,6 +158,7 @@ export class LeadsComponent extends BaseComponent {
       'open Stage': [...this.openStage],
     };
     this.userData = localStorage.getItem('userDetails');
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
     this.chartOptions = {
       series: [44, 55, 13, 43, 22],
       chart: {
@@ -194,11 +195,19 @@ export class LeadsComponent extends BaseComponent {
       position: 'end',
     });
   }
+
   openRight1(content1: any) {
     this.offcanvasService.open(content1, { position: 'end' });
   }
+
   openRight2(content30: any) {
     this.modalService.open(content30, { centered: true });
+  }
+
+  selectedLeadData: any;
+  openRight3(content31: any, element: any) {
+    this.selectedLeadData = element;
+    this.modalService.open(content31, { centered: true });
   }
 
   openFollowup(element: any, content1: any) {
@@ -1978,6 +1987,7 @@ export class LeadsComponent extends BaseComponent {
         });
     }
   }
+  
   convertTo12HourFormat(time24: string): string {
     if (!time24) return '';
     const [hourStr, minuteStr] = time24.split(':');
@@ -2027,30 +2037,21 @@ export class LeadsComponent extends BaseComponent {
   }
 
   leadToCampaignSubmit() {
-    if (this.LeadToCampaignForm.valid) {
-      console.log(this.LeadToCampaignForm.value);
-      const payload = {
-        campaignId: this.LeadToCampaignForm.value.campaignId || this.campaignId,
-        leadId: this.selectedLeadId,
-      };
-      console.log(payload);
-      // this.switchService.EditCrmLeads(payload).subscribe(
-      //   (res: any) => {
-      //     if (res && res.status === 200) {
-      //       console.log('Lead updated successfully');
-      //       this.toastr.success('Lead updated successfully');
-      //     } else {
-      //       console.log('Failed to update lead');
-      //       this.toastr.error('Failed to update lead');
-      //     }
-      //   },
-      //   (error) => {
-      //     console.error('Error while updating lead:', error);
-      //     this.toastr.error('Something went wrong!');
-      //   }
-      // );
-    }
+    this.selectedLeadId = this.selectedLeadData.leadId;
+    const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+    this.campaignId = selectedCampaignId;
+    console.log('Lead ID:', this.selectedLeadId);
+    console.log('Campaign ID:', this.campaignId);
+    const data = {
+      leadId: this.selectedLeadId,
+      campaignId: this.campaignId,
+    };
+    this.editLeadSubmit(data);
   }
+
+
+
+
 
 
   onAllocateSubmit() {

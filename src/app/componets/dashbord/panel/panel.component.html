@@ -95,9 +95,8 @@
                                 <i class="ri-delete-bin-line"></i>
                             </a> </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="panelDisplayedColumn"></tr>
-                    <tr mat-row *matRowDef="let row; columns: panelDisplayedColumn">
-                    </tr>
+                    <tr mat-header-row *matHeaderRowDef="panelDisplayedColumn" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: panelDisplayedColumn" style="height:47px; vertical-align:middle;"> </tr>
                 </table>
             </div>
             <mat-paginator #panelPaginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons>

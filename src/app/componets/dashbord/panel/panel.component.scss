@@ -11,4 +11,29 @@
     overflow-y: auto !important; 
     overflow-x: hidden; 
     padding: 15px; 
-  }
+}
+.cu{
+    cursor: pointer;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+  cursor: pointer;
+}
+
+table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky !important;
+  z-index: 2 !important;
+  top: 0px;
+  background-color: #006699 !important;
+  color: white !important;
+  border-right: none;
+}

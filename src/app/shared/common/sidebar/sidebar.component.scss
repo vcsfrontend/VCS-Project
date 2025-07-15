@@ -39,7 +39,7 @@
     align-items: center;
     text-decoration: none;
     font-size: 0.82rem;
-    color: white;
+    color: white !important;
     font-weight: 300;
     border: 1px solid transparent;
     border-radius: 0.5rem;
@@ -51,7 +51,7 @@
     color: white;
 }
 .app-sidebar .side-menu__item:hover .side-menu__label{
-    color: white;
+    color: white ;
 }
 .app-sidebar .side-menu__item.active .side-menu__icon{
     fill: white;
