@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { ShowCodeContentDirective } from '../../../shared/directives/show-code-content.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { flatMap } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -81,7 +82,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
   projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
-  quotationSubmitted = true; quotationmarginsubmit:boolean=false;
+  quotationSubmitted = false; quotationmarginsubmit:boolean=false;projectconfigsubmit:boolean=false;
+  submittedQuotationNumber :any;addmargindisable:boolean=false; f1submitCount:number=0;
+  userEmail:any;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -243,6 +246,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
+    
+    this.userEmail = JSON.parse(this.userData).email;
+
+    
     this.saveData = {
       id: 0,
       companyName: JSON.parse(this.userData).companyName,
@@ -357,7 +364,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       type: [JSON.parse(this.userData)?.type,],
       updatedBy:[localStorage.getItem('username')] ,
       updatedTime:[],
-      f1:[''],
+      f1:['',Validators.required],
       f2:[''],
       f3:[''],
       f4:[''],
@@ -381,7 +388,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
 
     this.quoteMarignForm = this.fb.group({
-      f1: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      f1: ['', [Validators.required]],
       f1Percent: [0, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
       f2: [''],
       f2Percent: [0],
@@ -425,7 +432,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
+   
     this.getMarginData();
+    
 
   }
   onClkDesign(key: string = '') {
@@ -438,6 +447,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         } else {
           if (key == 'i') {
             this.roleid = res.roleId;
+           
           } else {
             window.open(res.newDesign, '_blank');
             this.toastr.success(res.message);
@@ -1591,6 +1601,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       updatedBy: localStorage.getItem('username'),
       updatedTime: new Date().toISOString(),
     };
+    
     const finalPayload = {
   ...mergedMargins,
   ...companyInfo
@@ -1600,10 +1611,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         if (res && res.marginId !== undefined) {
           this.toastr.success('Margin Saved Successfully!');
           this.quoteMarignForm.reset();
-          modal.close();
           this.previousMarginResponse = res;
+          // localStorage.setItem('previousMarginResponse', JSON.stringify(res));
+          modal.close();
 
-          // Reset form for next margin input
           this.quoteMarignForm.reset({ f1: '', f1Percent: 0 });
           this.getMarginData();
         } else {
@@ -1624,7 +1635,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     };
     this.switchService.fetchDynamicMargin(payload).subscribe({
       next: (res: any) => {
-        if (res) {
+        if (res && res.marginId) {
+          this.previousMarginResponse = res;
           const configs: { name: string, percent: number }[] = [];
           for (let i = 1; i <= 10; i++) {
             const name = res[`f${i}`];
@@ -1643,8 +1655,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   onProjectConfigSubmit(modal:any){
+    this.projectconfigsubmit = true ;
     this.quoteSubmitted = true;
-      const quotationValue = this.projectConfigForm.get('quotationNumber')?.value;
+    const quotationValue = this.projectConfigForm.get('quotationNumber')?.value;
     if (this.projectConfigForm.invalid) {
       this.toastr.error("Please enter Project Configuration.");
       return;
@@ -1694,11 +1707,19 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       ...companyInfo,
       ...mergedPayload
     };
+    if (this.quotationSubmitted && this.submittedQuotationNumber) {
+      finalPayload.quotationNumber = this.submittedQuotationNumber;
+    }
     this.switchService.saveProjectConfig(finalPayload).subscribe({
       next: (res: any) => {
        if (res && res.configId !== undefined) {
           this.toastr.success('Project Configuration saved!');
           this.previousConfigResponse = res;
+          
+         const enteredQuotation = this.projectConfigForm.get('quotationNumber')?.value;
+          this.quotationSubmitted = true;
+          // localStorage.setItem('quotationSubmitted', 'true');
+          // localStorage.setItem('submittedQuotationNumber', enteredQuotation);
           modal.close();
           this.projectConfigForm.reset({
             projectConfigs: [],
@@ -1720,7 +1741,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     };
     this.switchService.fetchProjectConfig(payload).subscribe({
       next: (res: any) => {
-        if (res) {
+        if (res && res.configId) {
+          this.previousConfigResponse = res;
+          this.quotationSubmitted = true;
+          this.submittedQuotationNumber = res.quotationNumber;
            const configs: string[] = [];
           for (let i = 1; i <= 10; i++) {
             const value = res[`f${i}`];
@@ -1728,9 +1752,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
           }
           this.projectConfigList = configs;
           this.quotationNumber = res.quotationNumber;
-        } else {
-          this.toastr.error(res.message);
-        }
+        } 
       },
       error: (error) => {
         this.toastr.error(error.statusText || "An error occurred while saving the product.");
@@ -1745,8 +1767,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   }
 
-   get g() {
+  get g() {
     return this.quoteMarignForm.controls;
+  }
+
+  get h() {
+    return this.projectConfigForm.controls;
   }
   
 }
