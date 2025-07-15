@@ -1091,66 +1091,69 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-xl-5">
-        <div class="card custom-card overflow-hidden">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    Margin
+<div *ngIf="roleid==5">
+    <div class="row">
+        <div class="col-xl-5">
+            <div class="card custom-card overflow-hidden">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                        Margin
+                    </div>
+                    <button  class="btn btn-primary" (click)="openRight13(content13)">
+                        Add Margin
+                    </button>
                 </div>
-                <a href="javascript:void(0);" class="btn btn-primary" (click)="openRight13(content13)">Add
-                    Margin</a>
-            </div>
-            <div class="card-body px-0 pt-2 pb-0">
-                <div class="table-responsive">
-                    <table class="table text-nowrap">
-                        <thead>
-                            <tr>
-                                <th scope="col">Margin Name</th>
-                                <th scope="col">Margin Amount%</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let margin of projectMarginList">
-                                <td>{{ margin.name }}</td>
-                                <td>{{ margin.percent }}%</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="card-body px-0 pt-2 pb-0">
+                    <div class="table-responsive">
+                        <table class="table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Margin Name</th>
+                                    <th scope="col">Margin Amount%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let margin of projectMarginList">
+                                    <td>{{ margin.name }}</td>
+                                    <td>{{ margin.percent }}%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-xl-4">
-        <div class="card custom-card overflow-hidden">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                   Project Configuration
+        <div class="col-xl-4">
+            <div class="card custom-card overflow-hidden">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                    Project Configuration
+                    </div>
+                    <a href="javascript:void(0);" class="btn btn-primary" (click)="openRight14(content14)">Add
+                        Configuration</a>
                 </div>
-                <a href="javascript:void(0);" class="btn btn-primary" (click)="openRight14(content14)">Add
-                    Configuration</a>
-            </div>
-            <div class="card-body px-0 pt-2 pb-0">
-                <div class="table-responsive">
-                    <table class="table text-nowrap">
-                        <thead>
-                            <tr>
-                                <th scope="col">Quotation Number</th>
-                                <th scope="col">Project Configuration</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let config of projectConfigList; let i = index">
-                                <td *ngIf="i === 0" [attr.rowspan]="projectConfigList.length">
-                                    {{ quotationNumber }}
-                                </td>
-                                <td>
-                                    <span class="d-block mb-1">{{ config }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="card-body px-0 pt-2 pb-0">
+                    <div class="table-responsive">
+                        <table class="table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Quotation Number</th>
+                                    <th scope="col">Project Configuration</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let config of projectConfigList; let i = index">
+                                    <td *ngIf="i === 0" [attr.rowspan]="projectConfigList.length">
+                                        {{ quotationNumber }}
+                                    </td>
+                                    <td>
+                                        <span class="d-block mb-1">{{ config }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
+                    </div>
                 </div>
             </div>
         </div>
@@ -1203,11 +1206,14 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body px-4 d-flex justify-content-center">   
+            <div class="modal-body px-4 gap-3 d-flex justify-content-center">   
                 <div class="col-xl-6">
                     <label class="form-label">Project Configuration </label>
                     <input type="text" class="form-control" formControlName="f1"
-                        placeholder="Enter project configuration" />
+                        placeholder="Enter project configuration" [ngClass]="{ 'is-invalid': projectconfigsubmit && h['f1'].invalid }"/>
+                    <div *ngIf="projectconfigsubmit && h['f1'].invalid" class="text-danger">
+                            project config is required.
+                    </div>
                 </div>
                 <div class="col-xl-6"  *ngIf="!quotationSubmitted">
                     <label for="quotationNumber" class="form-label">Quotation Number</label>
