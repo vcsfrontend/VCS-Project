@@ -26,7 +26,7 @@ export class CampaignsComponent extends BaseComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: any = this.userData ? this.userData.type : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
-  campaignForm!: FormGroup;
+  campaignForm!: FormGroup; adoanAiRole: any;
   isSubmitting: boolean = false; modal: any;
   public campaignSubmitted = false; campaignList: any[] = [];
   public userList: any; newItem: string = ''; leaditems: { checked: boolean; label: string }[] = [];
@@ -35,7 +35,7 @@ export class CampaignsComponent extends BaseComponent {
   statusOptionsByStageforDisplay: any = {}; selectedStage: string = ''; checkboxStageOptions: any[] = [];
   anyChecked: any; stageLst: any; crmStatusData: any; showValidationError = false; showCheckboxError = false; showNameError = false;
   isStagesLoading: boolean = true; statusLst: any;  public leadCounts: { [campaignId: string]: number } = {};
-  stageCounts: { [campaignId: string]: { [stage: string]: number } } = {};
+  stageCounts: { [campaignId: string]: { [stage: string]: number } } = {}; campaignCount: any; totalLeadCount: any;
   fetchCrmLeadsList: any[] = [];
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
@@ -58,9 +58,12 @@ export class CampaignsComponent extends BaseComponent {
   constructor(private modalService: NgbModal, public switchService: SwitherService,
     private offcanvasService: NgbOffcanvas, private toastr: ToastrService, private fb: FormBuilder, private router: Router,
         private route: ActivatedRoute
+        
     
   ) {
     super()
+    this.userData = localStorage.getItem('userDetails');
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
   }
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible;
@@ -234,6 +237,7 @@ export class CampaignsComponent extends BaseComponent {
       next: (res: any) => {
         if (Array.isArray(res)) {
           this.campaignList = res;
+          this.campaignCount = this.campaignList.length;
           this.campaignList.forEach(campaign => {
           this.getLeadCountForCampaign(campaign.campgnId);
       });
@@ -306,26 +310,30 @@ export class CampaignsComponent extends BaseComponent {
   }
 
   getLeadCountForCampaign(campaignId: string) {
-  this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
-    next: (res: any) => {
-      const executiveList = res.executiveList || [];
-      const entryList = res.entryList || [];
-      const combined = [...executiveList, ...entryList];
-      this.leadCounts[campaignId] = executiveList.length + entryList.length;
-      const stageMap: { [key: string]: number } = {};
-      combined.forEach(lead => {
-        const stage = lead.stage || 'Unknown';
-        stageMap[stage] = (stageMap[stage] || 0) + 1;
-      });
-      this.stageCounts[campaignId] = stageMap;
-    },
-    error: (err) => {
-      console.error('Error fetching lead count for campaign:', campaignId, err);
-      this.leadCounts[campaignId] = 0;
-      
-    }
-  });
-}
+    this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
+      next: (res: any) => {
+        const executiveList = res.executiveList || [];
+        const entryList = res.entryList || [];
+        const combined = [...executiveList, ...entryList];
+        this.leadCounts[campaignId] = executiveList.length + entryList.length;
+        const stageMap: { [key: string]: number } = {};
+        const count = combined.length;
+        this.leadCounts[campaignId] = count;
+        this.updateTotalLeadCount();
+        combined.forEach(lead => {
+          const stage = lead.stage || 'Unknown';
+          stageMap[stage] = (stageMap[stage] || 0) + 1;
+        });
+        this.stageCounts[campaignId] = stageMap;
+      },
+      error: () => {
+        this.leadCounts[campaignId] = 0;
+      }
+    });
+  }
+  updateTotalLeadCount() {
+    this.totalLeadCount = Object.values(this.leadCounts).reduce((sum, count) => sum + count, 0);
+  }
 
 
   open(content7: any) {
@@ -338,16 +346,16 @@ export class CampaignsComponent extends BaseComponent {
   deleteCampaignById(data: any) {
     const campaign_Id = data.campgnId;
     if (confirm('Are you sure you want to delete this Campaign?')) {
-    this.switchService.deleteCampaign(campaign_Id).subscribe({
-      next: (res: any) => {
-        this.toastr.success('Campaign Deleted successfully');
-        this.getCampaignData();
-      },
-      error: (error) => {
-        this.toastr.error("Failed to delete campaign.");
-      }
-    });
-  }
+      this.switchService.deleteCampaign(campaign_Id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Campaign Deleted successfully');
+          this.getCampaignData();
+        },
+        error: (error) => {
+          this.toastr.error("Failed to delete campaign.");
+        }
+      });
+    }
   }
 
 }

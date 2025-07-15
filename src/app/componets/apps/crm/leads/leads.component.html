@@ -13,12 +13,12 @@
                     <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(Content1)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                        Filter
+                        Filter 
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                        Bulk Upload
+                        Bulk Upload 
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
                         data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);">Add New</button>
@@ -91,7 +91,7 @@
                                     </li>
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="openRight2(content31)" data-bs-target="#offcanvasRight"
+                                            (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                         </button>
@@ -102,7 +102,7 @@
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
-                                    <li class="m-2">
+                                    <li class="m-2" *ngIf="adoanAiRole== 'ADMIN'">
                                         <button class="btn btn-danger label-btn label-end w-100" (click)="deleteSingleLead(element.leadId)">
                                             Delete<i class="ri-delete-bin-line label-btn-icon"></i>
                                         </button>
@@ -200,7 +200,6 @@
                                             </li>
                                         </ul>
                                     </div>
-                            
                                 </ng-container>
                                 <ng-template #noData>
                                     <p class="text-muted"></p>
@@ -277,7 +276,7 @@
                             class="ri-alarm-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
                             class="ri-mail-line bt-icon"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"><i
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()" *ngIf="adoanAiRole== 'ADMIN'"><i
                             class="ri-delete-bin-line"></i></button>
                 </div>
             </div>
@@ -335,7 +334,7 @@
     </div>
 </div> -->
 <div class="col-lg-12">
-    <div class="row">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN'">
         <div class="col-lg-4">
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
@@ -418,8 +417,8 @@
         </div>
     </div>
 </div>
-<div class="col-lg-12">
-    <div class="row">
+<div class="col-lg-12" >
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN'">
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
@@ -446,7 +445,7 @@
                         </div>
                         <div class="card-body border-top">
                             <div id="pie-basic" [ngClass]="{ 'rotate-on-load': rotateCharts }">
-                                <apx-chart [series]="getSeriesData(statusGroup.fields)" [chart]="chartOptions.chart"
+                                <apx-chart *ngIf="chartOptions" [series]="getSeriesData(statusGroup.fields)" [chart]="chartOptions.chart"
                                     [legend]="chartOptions.legend" [labels]="getLabelData(statusGroup.fields)"
                                     [responsive]="chartOptions.responsive" [colors]="getColorData(statusGroup.fields)"
                                     [dataLabels]="chartOptions.dataLabels"></apx-chart>

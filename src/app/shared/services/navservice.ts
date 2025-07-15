@@ -355,7 +355,7 @@ export class NavService implements OnDestroy {
     // },
     {
       title: 'Optimization',
-      icon: 'bi-house',
+      icon: 'bi bi-grid side-menu__icon',
       dirchange: false,
       type: 'sub',
       active: false,
@@ -423,7 +423,7 @@ export class NavService implements OnDestroy {
     },
     {
       title: 'CRM',
-      icon: 'bi-house',
+      icon: 'bi bi-file-earmark side-menu__icon',
       dirchange: false,
       type: 'sub',
       active: false,
