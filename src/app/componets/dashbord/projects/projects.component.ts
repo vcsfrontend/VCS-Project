@@ -1977,10 +1977,20 @@ downloadButtons: { label: string; url: string }[] = [];
   }
 
   allowOnlynum(event: KeyboardEvent) {
-  const charCode = event.which ? event.which : event.keyCode;
-  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-    event.preventDefault();
-  }
+    const allowedChars = '0123456789.';
+    const inputChar = event.key;
+
+    if (
+      ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
+    ) {
+      return;
+    }
+
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
+      event.preventDefault();
+    }
   }
   atLeastOneCheckboxSelected(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
