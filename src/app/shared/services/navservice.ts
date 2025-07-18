@@ -496,6 +496,15 @@ export class NavService implements OnDestroy {
               
       ],
     },
+    {
+      title: 'Appointment',
+      icon: 'bi-layout-text-window side-menu__icon',
+      dirchange: false,
+      type: 'link',
+      linkType: 'internal',
+      active: false,
+      path: '/dashboard/appointments'
+    },
     
     // {
     //   title: 'proposal',

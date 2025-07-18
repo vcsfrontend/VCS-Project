@@ -216,6 +216,11 @@ export const admin: Routes = [
     import('./reports/reports.component').then((m) => m.ReportsComponent),
   },
   {
+    path: 'appointments',
+    loadComponent: () =>
+    import('./appointments/appointments.component').then((m) => m.AppointmentsComponent),
+  },
+  {
     path: 'tasks',
     loadComponent: () =>
     import('./tasks/tasks.component').then((m) => m.TasksComponent),
