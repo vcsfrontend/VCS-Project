@@ -1,1 +1,9 @@
-<p>appointments works!</p>
+<div class="col-lg-10 mt-4 bg-white">
+    <full-calendar [options]="calendarOptions">
+        <ng-template #eventContent let-arg>
+            <div class="custom-event">
+                <strong>{{ arg.event.title }}</strong>
+            </div>
+        </ng-template>
+    </full-calendar>
+</div>
