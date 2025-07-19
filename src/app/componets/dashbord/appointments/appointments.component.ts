@@ -6,17 +6,35 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/common/sharedmodule';
-
+import { FormGroup,FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import { BaseComponent } from '../../../shared/base/base.component';
+import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule,SharedModule],
+  imports: [CommonModule, FullCalendarModule,SharedModule,NgSelectModule,FormsModule,ReactiveFormsModule,MatTooltipModule],
   templateUrl: './appointments.component.html',
   styleUrl: './appointments.component.scss'
 })
-export class AppointmentsComponent {
- calendarOptions: CalendarOptions = {
+export class AppointmentsComponent extends BaseComponent {
+  campaignForm! : FormGroup;
+  weekdays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+  availabilityForm !: FormGroup;
+  constructor(private modalService: NgbModal,private fb: FormBuilder ) {
+      super()
+     
+  }
+  ngOnInit() {
+  this.availabilityForm = this.fb.group({
+    duration: ['30'],
+    ...this.createWeekControls()
+    });
+  }
+  
+  calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
     headerToolbar: {
@@ -46,5 +64,24 @@ export class AppointmentsComponent {
 
   renderEventContent(arg: any) {
     return { domNodes: [] };
+  }
+  open(content7: any) {
+    this.modalService.open(content7, { centered: true });
+  }
+
+  createWeekControls(): { [key: string]: FormControl } {
+  const controls: { [key: string]: FormControl } = {};
+  for (let i = 0; i < 5; i++) {
+    controls['start_' + i] = new FormControl('09:00');
+    controls['end_' + i] = new FormControl('03:00');
+  }
+  return controls;
+  }
+
+  submitAvailability() {
+    if (this.availabilityForm.valid) {
+      console.log(this.availabilityForm.value);
+      // Add your logic here
+    }
   }
 }
