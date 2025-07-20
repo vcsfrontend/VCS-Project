@@ -63,12 +63,12 @@ export class SidebarComponent implements AfterViewInit {
               item.isVisible = val
             });
             break;
-          case 'CRM':
-            // this.navServices.isCRMApplicable$.subscribe(val => {
-            //   item.isVisible = val
-            // });
-            item.isVisible=true;
-            break;
+          // case 'CRM':
+          //   // this.navServices.isCRMApplicable$.subscribe(val => {
+          //   //   item.isVisible = val
+          //   // });
+          //   item.isVisible=true;
+          //   break;
           case 'Dashboard':
             item.isVisible = true;
             break;
@@ -87,9 +87,9 @@ export class SidebarComponent implements AfterViewInit {
           case 'Customer':
             item.isVisible = true;
             break;
-          case 'Crm':
-            item.isVisible = true;
-            break;
+          // case 'Crm':
+          //   item.isVisible = true;
+          //   break;
           case 'Adonai Users':
             this.getSalesUsers(this.userEmail, item);
             break;
@@ -102,33 +102,33 @@ export class SidebarComponent implements AfterViewInit {
           // case 'leads':
           //   item.isVisible = true;
           //   break;
-          case 'Deals':
-            item.isVisible = true;
-            break;
-          case 'users':
-            item.isVisible = true;
-            break;
-          case 'Reports':
-            item.isVisible = true;
-            break;
-          case 'support':
-            item.isVisible = true;
-            break;
+          // case 'Deals':
+          //   item.isVisible = true;
+          //   break;
+          // case 'users':
+          //   item.isVisible = true;
+          //   break;
+          // case 'Reports':
+          //   item.isVisible = true;
+          //   break;
+          // case 'support':
+          //   item.isVisible = true;
+          //   break;
           // case 'optimizer':
           //   item.isVisible = true;
           //   break;
-          case 'Optimization':
-            item.isVisible=true;
-            break;
-          case 'proposal':
-            item.isVisible = true;
-            break;
-          case 'clients':
-            item.isVisible = true;
-            break;
-          case 'Appointment':
-            item.isVisible = true;
-            break;
+          // case 'Optimization':
+          //   item.isVisible=true;
+          //   break;
+          // case 'proposal':
+          //   item.isVisible = true;
+          //   break;
+          // case 'clients':
+          //   item.isVisible = true;
+          //   break;
+          // case 'Appointment':
+          //   item.isVisible = true;
+          //   break;
           case 'Settings':
             this.checkAdminRole(item);
             break;

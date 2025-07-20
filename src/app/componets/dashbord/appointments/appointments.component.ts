@@ -68,6 +68,9 @@ export class AppointmentsComponent extends BaseComponent {
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
   }
+  openRight(content1: any) {
+    this.modalService.open(content1, { centered: true });
+  }
 
   createWeekControls(): { [key: string]: FormControl } {
   const controls: { [key: string]: FormControl } = {};
@@ -84,4 +87,5 @@ export class AppointmentsComponent extends BaseComponent {
       // Add your logic here
     }
   }
+  
 }
