@@ -74,13 +74,16 @@ width: 80%; /* Adjust the width for the mobile input field */
   border: 1px solid var(--default-border);
   padding: 0.75rem 0;
 }
+
 .table th, .table td {
 padding: 0.55rem 1.25rem;
 vertical-align: middle;
 line-height: 1.462;
 font-size: 0.813rem;
 font-weight: 400;
-}.authentication .desktop-logo, .authentication .desktop-dark {
+}
+
+.authentication .desktop-logo, .authentication .desktop-dark {
   height: 6.5rem;
   line-height: 1.5rem;
   margin-top: -50px;
@@ -195,6 +198,8 @@ input.invalid {
   cursor: pointer;
 }
 
+
+
 button:disabled {
   background-color: #aaa;
 }
@@ -223,8 +228,8 @@ button:disabled {
 }
 
 .modal-dialog {
-  max-width: 90vw !important; /* Increase modal width */
-  height: 90vh  !important; /* Set modal height */
+  max-width: 40vw !important; 
+  height: 90vh  !important; 
 }
 
 .overflowImportant {  
@@ -233,24 +238,44 @@ button:disabled {
 .custom-checkbox .mat-checkbox-label {
   font-size: 2px;
 }
-.mdc-checkbox__background
-{
-width: 11px !important;
-height: 11px !important;  
+.mdc-checkbox__background {
+  width: 11px !important;
+  height: 11px !important;  
 }
 .mdc-checkbox .mdc-checkbox__native-control:enabled:checked ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate ~ .mdc-checkbox__background, .mdc-checkbox .mdc-checkbox__native-control[data-indeterminate="true"]:enabled ~ .mdc-checkbox__background
 {
-background-color: #069  !important;
-border-color: #069  !important;
+  background-color: #069  !important;
+  border-color: #069  !important;
 }
 .mdc-checkbox__ripple{
-background: none !important;
+  background: none !important;
 }
 .center-align {
   text-align: center !important;
   font-weight: bold !important;
 }
+.mat-mdc-icon-button[disabled],
+.mat-mdc-icon-button.mat-mdc-button-disabled {
+  cursor: default;
+  pointer-events: none;
+  color: #000000;
+  background-color: #ffffff; 
+}
 
 .tex-right{
   text-align: right !important;
 }
+
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+}
+
+

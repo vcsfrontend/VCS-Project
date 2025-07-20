@@ -35145,7 +35145,8 @@ div:where(.swal2-container) div:where(.swal2-validation-message) {
 }
 
 .os-scrollbar .os-scrollbar-handle {
-  background-color: var(--default-border) !important;
+  background-color: var(--primary-color) !important;
+  cursor: pointer;
 }
 
 .chatnameperson {

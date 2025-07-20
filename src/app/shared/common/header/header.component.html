@@ -386,7 +386,7 @@
       <!-- End::header-element -->
 
       <!-- Start::header-element  notifications-->
-      <li ngbDropdown class="header-element notifications-dropdown d-xl-block d-none" [autoClose]="'outside'">
+      <li ngbDropdown class="header-element notifications-dropdown d-xl-block d-none mt-1" [autoClose]="'outside'">
          <!-- Start::header-link|dropdown-toggle  -->
         <a ngbDropdownToggle href="javascript:void(0);" class="header-link dropdown-toggle" data-bs-toggle="dropdown"
           data-bs-auto-close="outside" id="messageDropdown" aria-expanded="false">
@@ -404,22 +404,32 @@
           </div>
           <div class="dropdown-divider"></div>
           <overlay-scrollbars [defer]>
-            <ul class="list-unstyled mb-0" id="header-notification-scroll" (click)="handleCardClick($event)">
+            <ul class="list-unstyled mb-0" id="header-notification-scroll" *ngIf="followUpCount > 1" (click)="handleCardClick($event)">
               <li ngbDropdownItem class="dropdown-item" id="not4">
                 <div class="d-flex align-items-center">
-                  <div class="pe-2 lh-1">
-                    <span class="avatar bg-danger-transparent avatar-rounded">40</span>
+                  <div class="d-flex align-items-center">
+                    <div class="pe-2 lh-1">
+                      <span class="avatar bg-danger-transparent avatar-rounded">
+                        {{ followUpCount }}
+                      </span>
+                    </div>
+                    <div class="flex-grow-1 d-flex align-items-center justify-content-between" >
+                      <div>
+                        <p class="mb-0 fw-medium">
+                          <a [routerLink]="['/apps/crm/leads']" [queryParams]="{ campaignId: campaignId }">
+                            <span style="background-color: rgb(5, 63, 99); padding: 2px 4px; border-radius: 4px;">
+                              {{ nextLeadStatus }}
+                            </span>
+                            Follow-Ups Pending
+                          </a>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                   <div class="flex-grow-1 d-flex align-items-center justify-content-between">
                     <div>
-                      <p class="mb-0 fw-medium"><a routerLink="pages/notifications">Leads Follow-Ups</a></p>
-                      <span class="text-muted fw-normal fs-12 header-notification-text">Transaction
-                      ID: 123456789</span>
-                    </div>
-                    <div>
                       <a href="javascript:void(0);" (click)="removeNotify('not4')"
-                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i
-                      class="ti ti-x"></i></a>
+                        class="min-w-fit-content text-muted me-1 dropdown-item-close1"><i class="ti ti-x"></i></a>
                     </div>
                   </div>
                 </div>
@@ -430,7 +440,7 @@
 
             <div class="p-3 empty-header-item1 border-top">
               <div class="text-center">
-                <a routerLink="pages/notifications" class="link-primary text-decoration-underline">View All</a>
+                <a class="link-primary text-decoration-underline">View All</a>
               </div>
             </div>
           }
@@ -464,9 +474,10 @@
         <a ngbDropdownToggle href="javascript:void(0);" class="header-link dropdown-toggle" id="mainHeaderProfile"
           data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
           <div class="d-flex align-items-center">
-            <div class="me-sm-2 me-0">
-              <!-- <i class="bi bi-person-circle"></i> -->
-              <img src="./assets/images/brand-logos/profile1.jpg" alt="img" class="avatar avatar-sm avatar-rounded">
+            <div class="avatar avatar-md avatar-rounded me-2 border text-white fw-bold" [ngClass]="getUserColor(loggedInUser)">
+              <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                {{ loggedInUser?.email?.charAt(0) | uppercase }}
+              </span>
             </div>
             <div class="d-xl-block d-none lh-1">
               <span class="fw-medium lh-1">{{userName}}</span>

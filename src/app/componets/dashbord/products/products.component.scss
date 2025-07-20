@@ -5,10 +5,39 @@
     max-height: 72px !important;
     margin-left: 9% !important;
 }
-.table-responsive {
-    overflow-x: auto;
+
+.overflowImportant {
+    max-height: 70vh; 
+    overflow-y: auto !important; 
+    overflow-x: hidden; 
+    padding: 15px; 
+}
+.cu{
     cursor: pointer;
 }
+
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+  cursor: pointer;
+}
+
+table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky !important;
+  z-index: 2 !important;
+  top: 0px;
+  background-color: #006699 !important;
+  color: white !important;
+  border-right: none;
+}
+
 ::ng-deep .tooltip-inner {
     max-width: 400px !important;  
     white-space: pre-wrap;        

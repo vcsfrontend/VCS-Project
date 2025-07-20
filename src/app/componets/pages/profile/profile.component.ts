@@ -6,7 +6,7 @@ import { Lightbox, LightboxModule } from 'ng-gallery/lightbox';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 
 
 const data = [
@@ -47,22 +47,29 @@ const data = [
   selector: 'app-profile',
   standalone: true,
   imports: [SharedModule,NgbNavModule,NgbDropdownModule,GalleryModule,LightboxModule, OverlayscrollbarsModule,
-    DatePipe
+    DatePipe,CommonModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 
 export class ProfileComponent {
-  userData: any = null;
   userDataStorage = localStorage.getItem('userDetails');
-  userEmail: string = this.userDataStorage ? JSON.parse(this.userDataStorage).email : '';;
+  userData: any = this.userDataStorage
+    ? JSON.parse(this.userDataStorage)
+    : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  userType: any = this.userData ? this.userData.type : '';
   imageData = data; pjData : any;
-  items!: GalleryItem[];
+  items!: GalleryItem[];lastField: any;stageLst: any;
   constructor(public gallery: Gallery, public lightbox: Lightbox ,
     public switchService: SwitherService,private toastr: ToastrService,) {}
-  ngOnInit() {
+  ngOnInit():void {
     this.getUserInfo(this.userEmail);
+    this.getAllStages();
     this.items = this.imageData.map(
       (item) => new ImageItem({ src: item.srcUrl, thumb: item.previewUrl })
     );
@@ -84,7 +91,6 @@ export class ProfileComponent {
       next: (res: any) => {
         if (res) {
           this.userData = res;
-          console.log("User Data:", this.userData);
         } else {
           this.toastr.error("User not found.");
         }
@@ -94,6 +100,69 @@ export class ProfileComponent {
         this.toastr.error("Failed to fetch user data. Please try again.");
       }
     });
+  }
+
+  dynamicFields: { value: string; percent: number; fieldNm: string; }[] = [];
+  initializeDynamicFields() {
+    for (let i = 1; i <= 30; i++) {
+      const fieldName = `f${i}`;
+      const percentName = `f${i}Percent`;
+      if (this.stageLst[fieldName]) {
+        this.dynamicFields.push({
+          value: this.stageLst[fieldName],
+          percent: this.stageLst[percentName],
+          fieldNm: fieldName
+        });
+      }
+    }
+    this.lastField = this.dynamicFields[this.dynamicFields.length - 1].value;
+    this.getdesignData()
+  }
+
+  getAllStages() {
+    let payload = {
+      "email": this.userEmail,
+      "type": this.userType,
+      "companyname": this.userCompanyName,
+      "companycode": this.userCompanyCode,
+    }
+    this.switchService.getStages(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.stageLst = res;
+          this.initializeDynamicFields();
+        } else {
+          this.toastr.error(res.message)
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
+  }
+  getdesignData() {
+    let payload = {
+      "email": this.userEmail,
+      "type": this.userType,
+      "companyname": this.userCompanyName,
+      "companycode": this.userCompanyCode,
+      lastStage: this.lastField
+    }
+    this.switchService.designersDbData(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.pjData = res;
+        } else {
+          this.toastr.error(res.message, '', {
+            timeOut: 3000,
+            positionClass: 'toast-top-right',
+          });
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    })
   }
   
 }

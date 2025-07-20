@@ -1,76 +1,39 @@
-<div class="row">    
-    <div class="col-xl-8 pt-3">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">Leads </div>
-                <div class="text-center">
-                    <div class="btn-list">
-                        <button type="button" class="btn btn-primary btn-wave" data-bs-toggle="offcanvas"
-                        (click)="open(content7)" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Create Campaign</button>
-                        <button type="button" class="btn btn-secondary btn-wave">Active</button>
-                        <button type="button" class="btn btn-purple btn-wave">Spoke</button>
-                        <button type="button" class="btn btn-danger btn-wave">Closed</button>
-                        <button type="button" class="btn btn-warning btn-wave">Proposal sent</button>
-                        <button type="button" class="btn btn-dark btn-wave text-white">Meeting Fixed</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4 pt-3">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <!--<div class="card-title">Leads </div>-->
-                <div class="text-center">
-                    <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
-                        [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend" (chartClick)="filterStatusList($event)">
-                    </canvas>
-                    <!--<div class="btn-list">
-                        <button type="button" class="btn btn-primary btn-wave">New Leads</button>
-                        <button type="button" class="btn btn-secondary btn-wave"
-                            (click)="filterStatusList('Active')">Active</button>
-                        <button type="button" class="btn btn-purple btn-wave"
-                            (click)="filterStatusList('Spoke')">Spoke</button>
-                        <button type="button" class="btn btn-danger btn-wave"
-                            (click)="filterStatusList('Closed')">Closed</button>
-                        <button type="button" class="btn btn-warning btn-wave"
-                            (click)="filterStatusList('Proposal sent')">Proposal sent</button>
-                        <button type="button" class="btn btn-dark btn-wave text-white"
-                            (click)="filterStatusList('Meeting Fixed')">Meeting Fixed</button>
-                    </div>-->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="col-xl-12">
+<div class="col-xl-12 mt-3">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
             <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
                 {{leadCount}} Leads found
             </div>
             <mat-form-field class="filter-field">
-                <mat-label>Seach</mat-label>
+                <mat-label>Search Here</mat-label>
                 <input matInput (keyup)="applyFilter($event)" #input>
             </mat-form-field>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-                        (click)="openRight1(content1)" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Filter</button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-                        (click)="openRight(content)" data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Bulk Upload</button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content12);">Add New</button>
+                    <button type="button" class="btn btn-primary border-end border-light"
+                        (click)="openRight(Content1)" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        Filter 
+                    </button>
+                    <button type="button" class="btn btn-primary border-end border-light"
+                        (click)="openRight(content)" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        Bulk Upload 
+                    </button>
+                    <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);">Add New</button>
                 </div>
             </div>
         </div>
         <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort>
+            <div class="table-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+                    <ng-container matColumnDef="sourceFlag">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element">
+                            <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1" title="Executive Lead"></i>
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
                             <mat-checkbox [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
@@ -87,10 +50,10 @@
                     </ng-container>
                     <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let element" class="d-flex">
+                        <td mat-cell *matCellDef="let element">
                             <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                ata-bs-toggle="offcanvas" (click)="openFollowup(element,Content4);"
+                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light me-1"
+                                ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-alarm-line"></i>
                             </a>
@@ -101,7 +64,7 @@
                                 <i class="ri-eye-line"></i>
                             </a>
                             <span ngbDropdown placement="right-top">
-                                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
+                                <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
                                     ngbDropdownToggle></i>
                                 <ul class="dropdown-menu z-1" ngbDropdownMenu>
                                     <li class="m-2">
@@ -114,61 +77,143 @@
                                     </li>
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="editLead(element,Content12)">
-                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
+                                            (click)="openRight(Content113)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
                                     <li class="m-2">
-                                        <button class="btn btn-danger label-btn label-end w-100">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Create Task<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-teal label-btn label-end w-100 "
+                                            (click)="editLead(element,Content14)">
+                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+                                        <button class="btn btn-danger label-btn label-end w-100" (click)="deleteSingleLead(element.leadId)">
                                             Delete<i class="ri-delete-bin-line label-btn-icon"></i>
                                         </button>
                                     </li>
                                 </ul>
                             </span>
-                            <div ngbDropdown  class="dropdown no-caret mt-2">
-                                <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                    <i class="ri-more-2-fill fs-18 text-muted"></i>
-                                </a>
-                                <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
-                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Convert to Deal</a></li>
-                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
-                                    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
-                                </ul>
-                            </div>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                        <td mat-cell *matCellDef="let element" class="cursor-pointer"
+                            [matTooltip]="element.name?.length > 20 ? element.name : ''" matTooltipPosition="above"
+                            matTooltipClass="custom-tooltip">
+                            {{ element.name?.length > 20
+                            ? (capitalizeFirstLetter(element.name).slice(0, 20))
+                            : capitalizeFirstLetter(element.name) }}
+                        </td>
                     </ng-container>
-                    <!--<ng-container matColumnDef="companyName">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header> companyName </th>
-                        <td mat-cell *matCellDef="let element"> {{element.companyName}} </td>
-                    </ng-container>-->
                     <ng-container matColumnDef="executive">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
-                        <td mat-cell *matCellDef="let element"><a href="javascript:void(0);" data-bs-toggle="tooltip"
-                                ngbTooltip="{{element.executive}}" tooltipClass="tooltip-primary"
-                                class="avatar avatar-sm online avatar-rounded">
-                                <img src="./assets/images/brand-logos/profile1.jpg" alt="img">
-                            </a></td>
-
-                    </ng-container>
-                    <ng-container matColumnDef="products">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Products</th>
-                        <td mat-cell *matCellDef="let element"> {{element.products}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
                         <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" [ngClass]="getStatusClass(element.status)">
-                                {{ element.status }}
+                            <div class="d-flex align-items-center">
+                                <ng-container *ngIf="element.executive; else noExecutive">
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer" style="cursor: pointer;"
+                                        [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
+                                        tooltipClass="tooltip-primary">
+                                        <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                            {{ element.executive.charAt(0) | uppercase }}
+                                        </span>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noExecutive>
+                                    <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
+                                        class="avatar avatar-sm avatar-rounded me-2 border pointer" ngbTooltip="No executive assigned"
+                                        tooltipClass="tooltip-primary" />
+                                </ng-template>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="stage">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="badge me-1" type="button"
+                                [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
+                                [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
+                                {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
+                                <ng-container *ngIf="element.stage.length > 18">...</ng-container>
                             </span>
                         </td>
                     </ng-container>
+                    <ng-container matColumnDef="status">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Status</th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
+                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                                {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
+                                <ng-container *ngIf="element.status.length > 18">...</ng-container>
+                            </span>
+                            <button *ngIf="element.followUpDate || element.status === 'not connected'" class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
+                                popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
+                                type="button">
+                                <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
+                            </button>
+                            <ng-template #followupPopoverTemplate>
+                                <ng-container *ngIf="!!followUpDetails && followUpDetails.length > 0; else noData">
+                                    <div style="max-height: 200px; overflow-y: auto;">
+                                        <ul class="list-unstyled border-bottom" *ngFor="let followup of followUpDetails">
+                                            <li class="mb-2">
+                                                <span class="fw-semibold me-1">FollowupDate :</span>
+                                                {{ followup.followupDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                                            </li>
+                                            <li class="mb-2">
+                                                <span class="fw-semibold me-1">Stage :</span>
+                                                <span class="badge me-1" type="button"
+                                                    [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
+                                                    [ngbTooltip]="element.stage.length > 25 ? element.stage : null" placement="top">
+                                                    {{ element.stage | slice: 0:25 }}
+                                                    <ng-container *ngIf="element.stage.length > 25">...</ng-container>
+                                                </span>
+                                            </li>
+                                            <li class="mb-2">
+                                                <span class="fw-semibold me-1">Status :</span>
+                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
+                                                    [ngbTooltip]="element.status.length > 25 ? element.status : null" placement="top">
+                                                    {{ element.status | slice: 0:25 }}
+                                                    <ng-container *ngIf="element.status.length > 25">...</ng-container>
+                                                </span>
+                                            </li>
+                                            <li class="mb-2">
+                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }}
+                                                <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
+                                            </li>
+                                            <li class="mb-2">
+                                                <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noData>
+                                    <p class="text-muted"></p>
+                                </ng-template>
+                            </ng-template>
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="followUpDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>FollowUpDate</th>
-                        <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date:'dd-MM-yy' }} </td>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
+                            Followup Date
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                        </td>
                     </ng-container>
                     <ng-container matColumnDef="contact">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
@@ -176,24 +221,20 @@
                     </ng-container>
                     <ng-container matColumnDef="email">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                        <td mat-cell *matCellDef="let element" [matTooltip]="element.email?.length > 20 ? element.email : ''" matTooltipPosition="above"
+                            matTooltipClass="custom-tooltip"> {{element.email ?.length > 20 
+                             ? (capitalizeFirstLetter(element.email).slice(0, 20))
+                            : capitalizeFirstLetter(element.email)}} </td>
                     </ng-container>
-                    <!-- <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef> Actions </th>
-                        <td mat-cell *matCellDef="let element">                     
-                    
-                            <button mat-icon-button [matMenuTriggerFor]="menu">
-                            <mat-icon>more_vert</mat-icon>
-                            </button>
-                            <mat-menu #menu="matMenu">
-                            <button mat-menu-item (click)="sendEmail(element)" class="action-option">Send Email</button>
-                            <button mat-menu-item (click)="editLead(element,Content12)" class="action-option">Edit</button>                                
-                            </mat-menu>                              
-    
-                        </td>
-                        </ng-container> -->
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    <ng-container matColumnDef="city">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
+                        <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''" matTooltipPosition="above"
+                            matTooltipClass="custom-tooltip"> {{element.city ?.length > 20 
+                             ? (capitalizeFirstLetter(element.city).slice(0, 20))
+                            : capitalizeFirstLetter(element.city)}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
                 </table>
             </div>
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
@@ -202,7 +243,7 @@
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
-                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                    <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
                         placeholder="Select an Executive" class="rounded-0 ng-selt">
                     </ng-select>
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
@@ -214,82 +255,256 @@
                     <div *ngIf="a['executive'].errors['required']">Executive is required</div>
                 </div>
             </form>
+            <!-- <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" class="ms-2">
+                <div class="input-group w-auto"
+                    [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
+                    <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
+                        placeholder="Select an Executive" class="rounded-0 ng-selt">
+                    </ng-select>
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
+                        id="button-addon1" data-mdb-ripple-color="dark">
+                        Submit
+                    </button>
+                </div>
+                <div *ngIf="allocateSubmitted && a['executive'].errors" class="invalid-feedback">
+                    <div *ngIf="a['executive'].errors['required']">Executive is required</div>
+                </div>
+            </form> -->
             <div class="text-center ms-3 ">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
                             class="ri-alarm-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
                             class="ri-mail-line bt-icon"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave"><i
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()" *ngIf="adoanAiRole== 'ADMIN' || userType== 1"><i
                             class="ri-delete-bin-line"></i></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-xl-4">
-        <div class="card custom-card">
-            <div class="card-header border-bottom-0 justify-content-between">
-                <div class="card-title">
-                    Lead Statistics
-                </div>
+
+<!-- <div class="col-xl-12">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                Leads found
             </div>
-            <div class="card-body border-top">
-                <div id="pie-basic">
-                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [legend]="chartOptions.legend"
-                            [labels]="chartOptions.labels" [responsive]="chartOptions.responsive" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels">
-                    </apx-chart>
+            <mat-form-field class="filter-field">
+                <mat-label>Seach</mat-label>
+                <input matInput (keyup)="userFilter($event)" #input>
+            </mat-form-field>
+        <div class="card-body p-0">
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="usersDataSource" matSort #sort2="matSort">
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{usersGetSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="role">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+                        <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                        <td mat-cell *matCellDef="let element"> {{ element.date }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="callsAttempted">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Attempted</th>
+                        <td mat-cell *matCellDef="let element"> {{element.callsAttempted}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="callsConnected">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Connected</th>
+                        <td mat-cell *matCellDef="let element"> {{element.callsConnected}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="usersColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: usersColumns;"></tr>
+                </table>
+            </div>
+            <mat-paginator #usersPaginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div> -->
+<div class="col-lg-12">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+        <div class="col-lg-4">
+            <div class="card custom-card">
+                <div class="card-header justify-content-between d-flex">
+                    <div class="card-title">Lead Stages</div>
+                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight5(content5)" [disabled]="isAddStagesDisabled"
+                        >Add
+                        Stages</button>
+                </div>
+                <div class="card-body p-3" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
+                    <div *ngIf="stageLst?.length === 0"></div>
+                    <ul class="list-group">
+                        <li *ngFor="let stage of stageLst" class="list-group-item d-flex align-items-center">
+                            <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{ 
+                                                'width': '15px', 'height': '15px', 
+                                                'background-color': stage.color || '#ccc' 
+                                            }"></span>
+                            <span class="font-weight-bold">{{ capitalizeFirstLetter (stage.stageName) }}</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStages()">Delete</button>
                 </div>
             </div>
         </div>
-    </div>    
-    <div class="col-xl-4">
-        <div class="card custom-card">
-            <div class="card-header border-bottom-0 justify-content-between">
-                <div class="card-title">
-                    In Progress Leads
+        <div class="col-lg-4">
+            <div class="card custom-card">
+                <div class="card-header justify-content-between d-flex">
+                    <div class="card-title">Lead Status</div>
+                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight12(content12)"
+                        [disabled]="shouldDisableAddStatus">Add
+                        Status</button>
+                </div>
+                <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                    <div *ngIf="statusLst && statusLst.length === 0"></div>
+                    <ul class="list-unstyled">
+                        <li *ngFor="let status of statusLst" class="mb-3">
+                            <i class="bi bi-arrow-right-circle-fill text-info me-2"></i>
+                            <strong>{{ capitalizeFirstLetter(status.stage) }}</strong>
+                            <ul class="list-group mt-2">
+                                <li *ngFor="let field of status.fields"
+                                    class="list-group-item d-flex align-items-center">
+                                    <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{'width': '15px','height': '15px', 
+                                                    'background-color': field.color || '#ccc'}">
+                                    </span>
+                                    {{ capitalizeFirstLetter (field.name) }}
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStatus()">Delete</button>
                 </div>
             </div>
-            <div class="card-body border-top">
-                <div id="pie-basic">
-                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [legend]="chartOptions.legend"
-                            [labels]="chartOptions.labels" [responsive]="chartOptions.responsive" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels">
-                    </apx-chart>
+        </div>
+        <div class="col-lg-4">
+            <div class="card custom-card">
+                <div class="card-header justify-content-between d-flex">
+                    <div class="card-title">Mail Templates</div>
+                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight13(content13)">Add Mail
+                        Template</button>
+                </div>
+                <div class="card-body " style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                    <div *ngFor="let template of tempFormList" class="card custom-card card-bg-light mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold mb-3">{{ capitalizeFirstLetter (template.templateName) }}</h5>
+                            <p><strong>Subject:</strong> {{ capitalizeFirstLetter (template.subject?.slice(0,100)) }}</p>
+                            <p><strong>Description:</strong> {{ capitalizeFirstLetter(template.description?.slice(0, 100)) }}</p>
+                            <p><strong>Created Date:</strong> {{ template.createdDate | date: 'dd/MM/yyyy hh:mm a' }}
+                            </p>
+                            <p><strong>Email:</strong> {{ template.email }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-end">
+                    <button type="button" class="btn btn-danger btn-sm">Delete</button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-4">
-        <div class="card custom-card">
-            <div class="card-header border-bottom-0 justify-content-between">
-                <div class="card-title">
-                    Closed Leads
+</div>
+<div class="col-lg-12" >
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+        <div class="col-xl-12">
+            <div class="card custom-card">
+                <div class="card-header justify-content-between">
+                    <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Lead Analytics</div>
+                    <div class="text-center">
+                        <button class="btn btn-primary" (click)="toggleTopShowMore()">
+                            {{ topshowMore ? 'Show Less' : 'Show More' }}
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="card-body border-top">
-                <div id="pie-basic">
-                    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [legend]="chartOptions.legend"
-                            [labels]="chartOptions.labels" [responsive]="chartOptions.responsive" [colors]="chartOptions.colors" [dataLabels]="chartOptions.dataLabels">
-                    </apx-chart>
+        </div>
+        <div class="mb-4 scrollable-container" [ngClass]="userType !== 2 ? 'col-lg-12' : 'col-lg-8'"  [ngStyle]="{
+        'max-height': topshowMore ? '330px' : '350px',
+        'overflow-y': topshowMore ? 'auto' : 'hidden',
+        'transition': 'max-height 0.5s ease' }" >
+            <div class="row">
+                <div [ngClass]="userType !== 2 ? 'col-lg-4' : 'col-lg-6'" *ngFor="let statusGroup of statusLst">
+                    <div class="card custom-card">
+                        <div class="card-header border-bottom-0 justify-content-between">
+                            <div class="card-title">
+                                {{ statusGroup.stage }}
+                            </div>
+                        </div>
+                        <div class="card-body border-top">
+                            <div id="pie-basic" [ngClass]="{ 'rotate-on-load': rotateCharts }">
+                                <apx-chart *ngIf="chartOptions" [series]="getSeriesData(statusGroup.fields)" [chart]="chartOptions.chart"
+                                    [legend]="chartOptions.legend" [labels]="getLabelData(statusGroup.fields)"
+                                    [responsive]="chartOptions.responsive" [colors]="getColorData(statusGroup.fields)"
+                                    [dataLabels]="chartOptions.dataLabels"></apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4" *ngIf="userType !== 1">
+            <div class="card custom-card overflow-hidden">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                        Campaign Users
+                    </div>
+                </div>
+                <div class="card-body p-0 crm-card-chart"
+                   style="min-height: 290px; max-height: 290px; overflow-y: auto;">
+                    <ul class="list-group list-group-flush" *ngIf="agentUsers && agentUsers.length > 0">
+                        <li class="list-group-item" *ngFor="let user of agentUsers">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-md avatar-rounded me-2 border text-white fw-bold"
+                                    [ngClass]="getUserColor(user)">
+                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                        {{ user.email?.charAt(0) | uppercase }}
+                                    </span>
+                                </div>
+                                <div class="flex-fill">
+                                    <span class="fs-14">{{ user.email }}</span>
+                                    <div class="fs-12 text-muted">{{ user.username }}</div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"><i
+                                            class="ri-pencil-line"></i></a>
+                                    <a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-sm btn-danger-light btn-wave "><i
+                                            class="ri-delete-bin-line"></i></a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<ng-template #Content12 let-modal>
+
+<ng-template #Content112 let-modal>
     <div class="modal-header">
-        <h6 class="modal-title" id="exampleModalLgLabel"><b *ngIf="leadForm">
-                {{ (leadForm.get('leadId')?.value || 0) > 0 ? 'Edit' : 'Add' }}
-            </b>
+        <h6 class="modal-title" id="exampleModalLgLabel">
+            Add Lead
         </h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
     </div>
     <form [formGroup]="leadForm" (ngSubmit)="onSubmit(modal)">
-        <div class="modal-body">
-
+        <div class="modal-body overflowImportant">
             <div class="row gy-3 scrollable-content">
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="name" class="form-label">Name</label>
@@ -301,20 +516,24 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-mail" class="form-label">Company Name</label>
+                    <label for="contact-mail" class="form-label">
+                        <ng-container *ngIf="companyLst?.f1;  else defaultLabel1">
+                            {{ companyLst.f1 }}
+                        </ng-container>
+                        <ng-template #defaultLabel1>Company Name</ng-template>
+                    </label>
                     <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
-                        formControlName="companyName">
+                        formControlName="companyName" >
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="contact-phone" class="form-label">Executive</label>
-                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
-                        placeholder="Select an Executive">
-                    </ng-select>
-                </div>
-                <!--<div class="col-xl-3 col-lg-3 col-md-3">
-                    <label for="company-name" class="form-label">Products</label>
+                    <label for="company-name" class="form-label">
+                        <ng-container *ngIf="companyLst?.f2; else defaultLabel2">
+                            {{ companyLst.f2 }}
+                        </ng-container>
+                        <ng-template #defaultLabel2>Products</ng-template>
+                    </label>
                     <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
-                </div>-->
+                </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Country</label>
                     <ng-select name="choices-multiple-remove-button3" placeholder="Select"
@@ -325,21 +544,22 @@
                     </ng-select>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label class="form-label" for="stage"> Stage</label>
-                    <ng-select formControlName="stage" [items]="stageList" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
+                    <label class="form-label" for="stage">Stage</label>
+                    <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName"
+                        placeholder="Select a stage" (change)="onStatusChange()"
+                        [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
                     </ng-select>
                     <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
-                        <div *ngIf="f['stage'].errors['required']">Stage is required</div>
+                        <span *ngIf="f['stage'].errors['required']">stage is required.</span>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
-                    <label class="form-label"> Status</label>
-                    <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
-                        placeholder="Select an option" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
+                    <label class="form-label">Status</label>
+                    <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                        placeholder="Select a status" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
                     </ng-select>
                     <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
-                        <div *ngIf="f['status'].errors['required']">Status is required</div>
+                        <span *ngIf="f['status'].errors['required']">status is required.</span>
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
@@ -351,17 +571,12 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="zipCode" class="form-label">Zip Code</label>
                     <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
-                        formControlName="zipCode" [ngClass]="{ 'is-invalid': submitted && f['zipCode'].errors }"
+                        formControlName="zipCode"
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                    <div *ngIf="submitted && f['zipCode'].errors" class="invalid-feedback">
-                        <span *ngIf="f['zipCode'].errors['required']">Zip Code is required.</span>
-                        <span *ngIf="f['zipCode'].errors['minlength']">Zip Code must be at least 6 characters
-                            long.</span>
-                    </div>
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="followUpDate" class="form-label">Follow up date</label>
-                    <input type="date" class="form-control" id="followUpDate" placeholder=""
+                    <input type="datetime-local" class="form-control" id="followUpDateTime" placeholder=""
                         formControlName="followUpDate">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
@@ -372,18 +587,12 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="city" class="form-label">City</label>
                     <input type="text" class="form-control" id="city" placeholder="Enter City Name"
-                        formControlName="city" [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
-                    <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
-                        <div *ngIf="f['city'].errors['required']">City is required</div>
-                    </div>
+                        formControlName="city">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="address" class="form-label">Address</label>
                     <input type="text" class="form-control" id="address" placeholder="Enter Your Address"
-                        formControlName="address" [ngClass]="{ 'is-invalid': submitted && f['address'].errors }">
-                    <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
-                        <span *ngIf="f['address'].errors['required']">Address is required.</span>
-                    </div>
+                        formControlName="address">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="contact" class="form-label">Contact</label>
@@ -399,20 +608,190 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="email" class="form-label">E-mail</label>
-                    <input type="text" class="form-control  " id="email" placeholder="Enter your email"
-                        onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
-                                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
-                                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)' formControlName="email"
-                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }">
-                    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-                        <span *ngIf="f['email'].errors['required']">Email is required.</span>
-                        <span *ngIf="f['email'].errors['email']">Invalid email address.</span>
-                    </div>
+                    <input type="text" class="form-control  " id="email" placeholder="Enter your email" onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
+                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
+                        formControlName="email">
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-secondary">save lead</button>
+            <button type="submit" class="btn btn-primary">Save Lead</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">cancel</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #Content1 let-offcanvas>
+    <form [formGroup]="FilterForm" (ngSubmit)="submitFilter()">
+        <div class="offcanvas-header border-bottom border-block-end-dashed">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0"> 
+            <div class="col-xl-12 pt-3">
+                <div class="row gy-3 p-4">
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterStage" [items]="stageLst" bindLabel="stageName"
+                            bindValue="stageName"  (change)="onStatusChange()" placeholder="Select an Stage" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterStatus" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                            placeholder="Select a status">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterSource" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select an Source" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterExecutive" [items]="agentUsers" bindLabel="email" bindValue="email"
+                            placeholder="Select an Executive">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="filterCity" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select an City" [multiple]="true">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3" type="submit">Filter</button>
+                <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #Content14 let-modal>
+    <div class="modal-header">
+        <h6 class="modal-title" id="exampleModalLgLabel">
+            Edit Lead
+        </h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="leadForm" (ngSubmit)="editLeadSubmit(modal)">
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3 scrollable-content">
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name"
+                        [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
+                    <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                        <span *ngIf="f['name'].errors['required']">Name is required.</span>
+                        <span *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters long.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="contact-mail" class="form-label">
+                        <ng-container *ngIf="companyLst?.f1;  else defaultLabel1">
+                            {{ companyLst.f1 }}
+                        </ng-container>
+                        <ng-template #defaultLabel1>Company Name</ng-template>
+                    </label>
+                    <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
+                        formControlName="companyName" >
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="company-name" class="form-label">
+                        <ng-container *ngIf="companyLst?.f2; else defaultLabel2">
+                            {{ companyLst.f2 }}
+                        </ng-container>
+                        <ng-template #defaultLabel2>Products</ng-template>
+                    </label>
+                    <input type="text" class="form-control" id="company-name" placeholder="" formControlName="products">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="company-name" class="form-label">Country</label>
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select"
+                        id="choices-multiple-remove-button3" formControlName="country"
+                        (change)="onCountryChange($any($event.target).value)"
+                        [ngClass]="{ 'is-invalid': submitted && f['country'].errors }" class="border rounded">
+                        <ng-option *ngFor="let c of countryLst" [value]="c.country">{{ c.country }}</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label" for="stage">Stage</label>
+                    <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName"
+                        placeholder="Select a stage" (change)="onStatusChange()"
+                        [ngClass]="{ 'is-invalid': submitted && f['stage'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && f['stage'].errors" class="invalid-feedback">
+                        <span *ngIf="f['stage'].errors['required']">stage is required.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label">Status</label>
+                    <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                        placeholder="Select a status" [ngClass]="{ 'is-invalid': submitted && f['status'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && f['status'].errors" class="invalid-feedback">
+                        <span *ngIf="f['status'].errors['required']">status is required.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label class="form-label">Lead Source</label>
+                    <ng-select formControlName="leadSource" [items]="leadSource" bindLabel="name" bindValue="name"
+                        placeholder="Select an option">
+                    </ng-select>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="zipCode" class="form-label">Zip Code</label>
+                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
+                        formControlName="zipCode"
+                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="followUpDate" class="form-label">Follow up date</label>
+                    <input type="datetime-local" class="form-control" id="followUpDateTime" placeholder=""
+                        formControlName="followUpDate">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" class="form-control" id="state" placeholder="Enter Your State"
+                        formControlName="state">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" placeholder="Enter City Name"
+                        formControlName="city">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Enter Your Address"
+                        formControlName="address">
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="contact" class="form-label">Contact</label>
+                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number"
+                        formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
+                        onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
+                        (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)" maxlength="10"
+                        (paste)="preventCopyPaste($event)">
+                    <div *ngIf="submitted && f['contact'].errors" class="invalid-feedback">
+                        <span *ngIf="f['contact'].errors['required']">Contact is required.</span>
+                        <span *ngIf="f['contact'].errors['maxlength']">Contact must be 10 characters.</span>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-3 col-md-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="text" class="form-control  " id="email" placeholder="Enter your email" onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
+                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
+                        formControlName="email">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Update Lead</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
@@ -430,7 +809,7 @@
             <li class="list-group-item">
                 <div class="d-flex align-items-center">
                     <div class="flex-fill">
-                        <a href="assets/images/browsers/Leads Sample Format.xls" download="Leads Sample Format.xls">
+                        <a href="assets/images/browsers/Leads Sample data.xls" download="Leads Sample Format.xls">
                             <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
                             </button></a>
                         <p class="px-3">Kindly download the Leads Format and fill your bulk Leads in the proper format
@@ -452,17 +831,31 @@
                         <div class="container">
                             <div class="row bg-light">
                                 <div class="col-xl-12 col-lg-12 col-md-12 d-flex">
-                                    <div class="input-group mb-3">
+                                    <div class="input-group">
                                         <input formControlName="file" id="file" type="file"
-                                            class="form-control rounded w-50 position-relative "
-                                            (change)="onFileChange($event)"
+                                            class="d-none"
+                                            (change)="onFileChange($event)" #fileInput
                                             [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
+                                            <div class="input-group mb-3">
+                                                <label class="input-group-text no-hover" (click)="validateAndOpenBulkUpload(fileInput)"
+                                                [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }">
+                                                    Choose File
+                                                </label>
+                                                <input type="text" class="form-control" [value]="selectedFileName || 'No file chosen'"  readonly
+                                                [ngClass]="{ 'is-invalid': uploadSubmitted && l['file'].errors }" />
+                                            </div>
                                         <div *ngIf="uploadSubmitted && l['file'].errors" class="invalid-feedback w-50">
                                             <span *ngIf="l['file'].errors['required']">File is required.</span>
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="form-check m-3" *ngIf="userType !== 1">
+                                    <input type="checkbox" class="form-check-input" id="allocateExecutive"
+                                        formControlName="autoAllocate" style="cursor: pointer;" />
+                                    <label class="form-check-label" for="allocateExecutive">
+                                        Allocate Executive
+                                    </label>
+                                </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12">
                                     <button class="btn btn-primary me-1" type="submit"
                                         [disabled]="uploadSpinner">Import</button>
@@ -483,56 +876,9 @@
     </div>
 </ng-template>
 
-<ng-template #content1 let-offcanvas>
-    <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
-        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
-            aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body p-0">
-        <div class="col-xl-12 pt-3">
-            <div class="card custom-card">
-                <div class="card-header justify-content-between">
-                    <div class="text-center">
-                        <div class="btn-list">
-                            <button type="button" class="btn btn-primary btn-wave">New Leads</button>
-                            <button type="button" class="btn btn-secondary btn-wave">Active</button>
-                            <button type="button" class="btn btn-purple btn-wave">Spoke</button>
-                            <button type="button" class="btn btn-danger btn-wave">Closed</button>
-                            <button type="button" class="btn btn-warning btn-wave">Proposal sent</button>
-                            <button type="button" class="btn btn-dark btn-wave text-white">Meeting Fixed</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- <div>
-            <ul class="list-group list-group-flush mb-0">
-                <li class="list-group-item">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-fill">
-                            <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
-                                Format</button>
-                            <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then
-                                upload it for proper importing of the data.</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div> -->
-    </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary mr-3" type="submit">Filter</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Reset
-                Filters</button>
-        </div>
-    </div>
-</ng-template>
-
 <ng-template #content3 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>View Lead</strong></h5>
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
@@ -556,9 +902,18 @@
                                         </span>{{element.products}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">country : </span>{{element.country}}
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">stage : </span>{{element.stage}}
+                                    <li class="mb-2"><span class="fw-semibold me-1">Stage : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage || '') }"
+                                            [ngbTooltip]="(element.stage?.length || 0) > 18 ? element.stage : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.stage?.length || 0) > 18">...</ng-container></span>
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">status : </span>{{element.status}}
+                                    <li class="mb-2"><span class="fw-semibold me-1">Status : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status || '') }"
+                                            [ngbTooltip]="(element.status?.length || 0) > 18 ? element.status : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.status?.length || 0) > 18">...</ng-container>
+                                        </span>
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">leadSource :
                                         </span>{{element.leadSource}}</li>
@@ -575,12 +930,11 @@
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Email: </span>{{element.email}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">CurrentStage:
-                                        </span>{{element.currentStage}}</li>
+                                        </span>{{element.stage}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">UpdatedBy:
                                         </span>{{element.updatedBy}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">UpdatedTime:
-                                        </span>{{ element.updatedTime | date: 'dd/MM/yyyy' }}</li>
-
+                                        </span>{{ element.updatedTime | date:'dd/MMM/yyyy a' }}</li>
                                 </ul>
                             </div>
                         </ng-template>
@@ -590,18 +944,28 @@
                             aria-current="page" aria-selected="false ">Follow-Ups</a>
                         <ng-template ngbNavContent>
                             <div class="p-3" id="pill-flex-home" role="tabpanel">
-                                <ul class="list-unstyled" *ngFor="let followup of element.followLeads">
+                                <ul class="list-unstyled border border-dark rounded p-3"
+                                    *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
-                                        </span>{{followup.followupDate }}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
-                                        </span>{{followup.followupTime }}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Stage :
-                                        </span>{{followup.stage}}</li>
+                                        </span>{{followup.followupDate | date: 'dd-MMM-yyyy hh:mm:ss a'}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Stage : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage || '') }"
+                                            [ngbTooltip]="(element.stage?.length || 0) > 18 ? element.stage : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.stage?.length || 0) > 18">...</ng-container></span>
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Status : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status || '') }"
+                                            [ngbTooltip]="(element.status?.length || 0) > 18 ? element.status : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.status?.length || 0) > 18">...</ng-container>
+                                        </span>
+                                    </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
                                         </span>{{followup.followUpBy}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">CurrentStage :
-                                        </span>{{followup.currentStage}}
-                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Comments :
+                                        </span>{{followup.comments}}</li>
+                                    
                                 </ul>
                             </div>
                         </ng-template>
@@ -615,36 +979,33 @@
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary mr-3" type="submit">Filter</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Reset
-                Filters</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
+
 <ng-template #Content2 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Email</strong></h5>
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvas)" class="overflowSendMailForm">
-        <div class="offcanvas-body p-0 m-4 ">
+    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvasRef)" class="d-flex flex-column h-100">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
-                <ng-select name="choices-multiple-remove-button3" placeholder="Select" formControlName="template"
-                    class="border rounded" [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['template'].errors }">
-                    <ng-option value="1">Template 1</ng-option>
-                    <ng-option value="2">Template 2</ng-option>
+                <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+                    bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
+                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['template'].errors }">
                 </ng-select>
                 <div *ngIf="sendLeadSubmitted && s['template'].errors" class="invalid-feedback">
                     <div *ngIf="s['template'].errors['required']">Template is required</div>
                 </div>
             </div>
             <div class="mb-4">
-                <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
-                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['subject'].errors }">
-                <div *ngIf="sendLeadSubmitted && s['subject'].errors" class="invalid-feedback">
-                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
-                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                <input type="text" class="form-control" id="cc" placeholder="email" formControlName="email"
+                [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['email'].errors }">
+                <div *ngIf="sendLeadSubmitted && s['email'].errors" class="invalid-feedback">
+                    <div *ngIf="s['email'].errors['required']">Email is required</div>
                 </div>
             </div>
             <div class="mb-4">
@@ -655,37 +1016,106 @@
                     <span *ngIf="s['cc'].errors['email']">Invalid email address.</span>
                 </div>
             </div>
-
             <div class="mb-4">
-                <input type="text" class="form-control" id="bcc" placeholder="BCC" formControlName="bcc"
-                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['bcc'].errors }">
-                <div *ngIf="sendLeadSubmitted && s['bcc'].errors" class="invalid-feedback">
-                    <span *ngIf="s['bcc'].errors['required']">BCC is required.</span>
-                    <span *ngIf="s['bcc'].errors['email']">Invalid email address.</span>
+                <textarea class="form-control" id="subject" rows="4" placeholder="subject" formControlName="subject"
+                    [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['subject'].errors }">
+                </textarea>
+                <div *ngIf="sendLeadSubmitted && s['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
                 </div>
             </div>
-
-            <!-- <ckeditor [(ngModel)]="emailContent"></ckeditor> -->
-            <angular-editor [config]="editorConfig" formControlName="content"
-                [ngClass]="{ 'is-invalid': sendLeadSubmitted && s['content'].errors }"></angular-editor>
-            <div *ngIf="sendLeadSubmitted && s['content'].errors" class="invalid-feedback">
-                <span *ngIf="s['content'].errors['required']">Content is required.</span>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Description"
+                    formControlName="content">
+                </textarea>
             </div>
-            <div class="card-body mt-3">
+            <!-- <div class="card-body mt-3">
                 <input id="file" type="file" class="form-control rounded-0 w-50 position-relative"
                     (change)="onEmailFileChange($event)">
-                <!--<file-pond #myPond [options]="pondOptions" class="multiple-filepond" (oninit)="pondHandleInit()"
-                    (onaddfile)="pondHandleAddFile($event)" (onactivatefile)="pondHandleActivateFile($event)">
-                </file-pond>-->
+            </div> -->
+        </div>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-end gap-3">
+                <button class="btn btn-primary w-50" type="submit">Send Mail</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
             </div>
         </div>
-        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                <button class="btn btn-primary mr-3 w-100" type="submit">Send Mail</button>
+    </form>
+</ng-template>
+
+<ng-template #Content113 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send What's app</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="sendwhatsLeadForm" (ngSubmit)="sendToWhatsApp()" class="d-flex flex-column h-100">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+            <div class="mb-4">
+                <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+                    bindLabel="templateName" (change)="onWhatsappTemplateChange($event)" class="border rounded"
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && P['template'].errors }">
+                </ng-select>
+                <div *ngIf="sendwhatsLeadFormSubmitted && P['template'].errors" class="invalid-feedback">
+                    <div *ngIf="P['template'].errors['required']">Template is required</div>
+                </div>
             </div>
-            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
-                    type="submit">Cancel</button>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="subject" placeholder="Subject" formControlName="subject"
+                    [ngClass]="{ 'is-invalid': sendwhatsLeadFormSubmitted && P['subject'].errors }">
+                <div *ngIf="sendwhatsLeadFormSubmitted && P['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="P['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="P['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                </div>
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Description"
+                    formControlName="content">
+          </textarea>
+            </div>
+            <div class="card-body mt-3">
+                <input id="file" type="file" class="form-control"
+                    (change)="onEmailFileChange($event)">
+            </div>
+        </div>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-end gap-3">
+                <button class="btn btn-success w-50" type="submit">Send to WhatsApp</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content13 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Email Template</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <form [formGroup]="selectTemplateForm" (ngSubmit)="selectFormTemplateSubmit()" class="d-flex flex-column h-100">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+            <div class="mb-4">
+                <input type="text" class="form-control" id="subject" placeholder="templateName"
+                    formControlName="templateName">
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="subject" rows="4" placeholder="Enter Your Subject"
+                    formControlName="subject"></textarea>
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Enter Your Description"
+                    formControlName="description"></textarea>
+            </div>
+        </div>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-end gap-3">
+                <button class="btn btn-primary w-50" type="submit">Save Mail Template</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                    type="button">Cancel</button>
             </div>
         </div>
     </form>
@@ -695,127 +1125,307 @@
 <!-- Followup lead-->
 <ng-template #Content4 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add New Update {{followupName}}</strong></h5>
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add New Follow up Date For
+                {{followupName}}</strong></h5>
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
-        <div class="offcanvas-body p-0 m-4 ">
-            <div class="row">
-                <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
-                    <label for="followupDate" class="form-label">Next Follow up date</label>
-                    <input type="date" class="form-control" id="followupDate" placeholder=""
-                        formControlName="followupDate"
-                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }">
-                    <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
-                        <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
-                    <label for="followupTime" class="form-label">Follow up time</label>
-                    <input type="time" class="form-control" id="followupTime" placeholder=""
-                        formControlName="followupTime"
-                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupTime'].errors }">
-                    <div *ngIf="followupLeadSubmitted && e['followupTime'].errors" class="invalid-feedback">
-                        <div *ngIf="e['followupTime'].errors['required']">Followup Time is required</div>
-                    </div>
-                </div>
+    <div class="d-flex pt-4 gap-3 ms-2">
+        <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
+        <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)" [disabled]="notconnectedstatusClicked">Not Connected</button>
 
-                <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
-                    <label class="form-label" for="stage"> Stage</label>
-                    <ng-select formControlName="stage" [items]="stageList" bindLabel="name" bindValue="name"
-                        placeholder="Select an option"
-                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['stage'].errors }">
-                    </ng-select>
-                    <div *ngIf="followupLeadSubmitted && e['stage'].errors" class="invalid-feedback">
-                        <div *ngIf="e['stage'].errors['required']">Stage is required</div>
+    </div>
+    <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
+        <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
+            <div class="offcanvas-body p-0 m-4 ">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
+                        <label for="followupDate" class="form-label">Next Follow up date</label>
+                        <input type="datetime-local" class="form-control" id="followupDate" placeholder=""
+                            formControlName="followupDate" [disabled]="readonlyMode"
+                            [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }"
+                            [min]="minDateTime" />
+
+                        <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
+                            <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
+                        <label class="form-label" for="stage">Stage</label>
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName" bindValue="stageName" [disabled]="readonlyMode"
+                            placeholder="Select a stage" (change)="onFollowupStatusChange()" 
+                            [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['stage'].errors }">
+                        </ng-select>
+                        <div *ngIf="followupLeadSubmitted && e['stage'].errors" class="invalid-feedback">
+                            <div *ngIf="e['stage'].errors['required']">Stage is required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
+                        <label class="form-label">Status</label>
+                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name" [disabled]="readonlyMode"
+                            placeholder="Select a status"
+                            [ngClass]="{ 'is-invalid': followupLeadSubmitted && f['status'].errors }">
+                        </ng-select>
+                        <div *ngIf="followupLeadSubmitted && e['status'].errors" class="invalid-feedback">
+                            <div *ngIf="e['status'].errors['required']">Status is required</div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
-                    <label class="form-label"> Status</label>
-                    <ng-select formControlName="status" [items]="leadStatus" bindLabel="name" bindValue="name"
-                        placeholder="Select an option"
-                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['status'].errors }">
-                    </ng-select>
-                    <div *ngIf="followupLeadSubmitted && e['status'].errors" class="invalid-feedback">
-                        <div *ngIf="e['status'].errors['required']">Status is required</div>
+                <div class="mb-4">
+                    <textarea class="form-control" id="description" rows="4" placeholder="comments"
+                        formControlName="comments"
+                        [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }">
+                    </textarea>
+                    <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
+                        <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
                     </div>
                 </div>
+                <!-- <angular-editor [config]="editorConfig" formControlName="comments"
+                    [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }"></angular-editor>
+                <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
+                    <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
+                </div> -->
 
             </div>
-
-            <!-- <ckeditor [(ngModel)]="emailContent"></ckeditor> -->
-            <angular-editor [config]="editorConfig" formControlName="comments"
-                [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }"></angular-editor>
-            <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
-                <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
+            <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
+                <div class="d-flex justify-content-end gap-3">
+                    <button class="btn btn-primary mr-3 w-50" type="submit" [disabled]="isStatusUnchanged">Update Status</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
+                        type="submit">Cancel</button>
+                </div>
             </div>
+        </form>
+    </div>
+</ng-template>
 
+<ng-template #content5 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
+        <div class="mb-3">
+            <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                <button class="btn btn-primary mr-3 w-100" type="submit">Update Status</button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush mb-0">
+            <li class="list-group-item">
+                <div class="container mt-3">
+                    <div class="col-12">
+                        <div *ngFor="let plan of crmStaticStages; let i = index"
+                            class="form-check mb-3 d-flex align-items-center">
+                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked"
+                                [id]="'plan-' + i">
+                            <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <div class="ms-2" style="width: 20px; height: 20px; border-radius: 4px;"
+                                [style.background]="plan.color" *ngIf="plan.color"></div>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom"
+                                (click)="deleteLeadItem(i)">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container mt-3">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-xl-6 mb-3">
+                                <input type="text" class="form-control" placeholder="Enter value" [(ngModel)]="newItem">
+                            </div>
+                            <div class="col-xl-2 mb-3">
+                                <input type="color" class="form-control form-control-color lt ms-2 mt-2"
+                                    [(ngModel)]="newItemColor" title="Choose color">
+                            </div>
+                            <div class="col-xl-2 mb-3">
+                                <button class="btn btn-primary " type="button" (click)="addLeadItem()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
+                (click)="saveCrmStages()" [disabled]="isStagesDisabled">Save Stages</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content12 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Status</strong></h5>
+        <div class="mb-3">
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
+            <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
+                bindValue="stageName" [multiple]="false" (change)="onStageChange()" required>
+            </ng-select>
+        </div>
+        <div *ngIf="selectedStage && checkboxStageOptions" class="container mt-3 ms-3">
+            <div class="col-12">
+                <div *ngFor="let option of checkboxStageOptions; let i = index" class="form-check mb-2 d-flex">
+                    <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="option.checked"
+                        [id]="'checkbox-' + i" />
+                    <label class="form-check-label w-50" [for]="'checkbox-' + i">
+                        {{ option.name }}
+                    </label>
+                    <div *ngIf="option.color" class="color-box" [style.backgroundColor]="option.color"
+                        style="width: 20px; height: 20px; border-radius: 4px;"></div>
+                    <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
+                        Delete
+                    </button>
+                </div>
             </div>
-            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-100"
-                    type="submit">Cancel</button>
+            <div class="row mt-3"  *ngIf="allowCustomStatus">
+                <div class="col-xl-4 mb-3">
+                    <input [(ngModel)]="newOptionName" type="text" class="form-control"
+                        placeholder="Enter new status name" />
+                </div>
+                <div class="col-xl-4 mb-3">
+                    <input type="color" class="form-control form-control-color lt ms-2 mt-2"
+                        [(ngModel)]="newOptionColor" title="Choose color">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button class="btn btn-primary" (click)="addNewOption()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save
+                Status</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+
+<ng-template #content30 id="addtask" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Create Task</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body px-4">
+            <div class="row gy-2">
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">Task Name</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Task Name">
+                </div>
+                <div class="col-xl-12">
+                    <label class="form-label">Assigned To</label>
+                    <ng-select class="ti-form-select  !rounded-s-none" name="choices-multiple-remove-button"
+                        placeholder="select" id="choices-multiple-remove-button" [multiple]="true">
+                        <ng-option value="Choice 1" selected>Angelina May</ng-option>
+                        <ng-option value="Choice 2">Kiara advain</ng-option>
+                        <ng-option value="Choice 3">Hercules Jhon</ng-option>
+                        <ng-option value="Choice 4">Mayor Kim</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Deadline (Optional)</label>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-text text-muted modal-calender"> <i class="ri-calendar-line"></i>
+                            </div>
+                            <input type="date" class="form-control w-full !rounded-s-none" id="addignedDate"
+                                placeholder="Choose date and time">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Priority</label>
+                    <ng-select data-trigger name="choices-single-default" placeholder="select"
+                        id="choices-single-default">
+                        <ng-option value="" selected>Select</ng-option>
+                        <ng-option value="Critical">Critical</ng-option>
+                        <ng-option value="High">High</ng-option>
+                        <ng-option value="Medium">Medium</ng-option>
+                        <ng-option value="Low">Low</ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-xl-12">
+                    <label class="form-label">Remarks</label>
+                    <input type="text" class="form-control" id="task-name" placeholder="Task Name">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                (click)="modal.close('Cross click')">Cancel</button>
+            <button type="button" class="btn btn-primary">Create</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content31 id="addtask" let-modal>
+    <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label class="form-label">Select Campaign</label>
+                        <ng-select [items]="campaignList" bindLabel="campaignName" bindValue="id" placeholder="Select Campaign"
+                            formControlName="campaignId">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </div>
     </form>
 </ng-template>
 
-<div class="modal fade" id="create-contact" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <ng-template #content7 let-c="close" let-d="dismiss">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title">Create New Campaign</h6>
-                <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body px-4">
-                <div class="row gy-3">
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Campaign Name</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Pipeline</label>
-                        <ng-select formControlName="pipeLine" [items]="pipeLine" bindLabel="name" bindValue="name"
-                        placeholder="Select an option">
-                    </ng-select>
-                    </div>
-                    <div class="col-xl-12">
-                        <label for="deal-name" class="form-label">Who will managing this Campaign</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                    <div class="col-xl-12">
-                        <label for="deal-name" class="form-label">Select Agents</label>
-                        <ng-select placeholder="Multiple Select" class="js-example-placeholder-multiple js-states"
-                            [multiple]="true">
-                            <ng-option value="fr-1">Appple</ng-option>
-                            <ng-option value="fr-2">Mango</ng-option>
-                            <ng-option value="fr-3">Orange</ng-option>
-                            <ng-option value="fr-4">Guava</ng-option>
-                            <ng-option value="fr-5">Pineapple</ng-option>
-                        </ng-select>
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Campaign Priority</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="deal-name" class="form-label">Lead Duplicacy</label>
-                        <input type="text" class="form-control" id="deal-name" placeholder="Contact Name">
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light"
-                    data-bs-dismiss="modal"  (click)="c('Cancel click')">Cancel</button>
-                <button type="button" class="btn btn-primary">Create Campaign</button>
-            </div>
-        </div>
-    </ng-template>
-    </div>
+
+<!-- <div class="btn-group dropend my-1" ngbDropdown placement="right-top">
+<button type="button" class="btn btn-primary dropdown-toggle"
+ngbDropdownToggle   data-bs-toggle="dropdown" aria-expanded="false">
+    Dropright
+</button>
+<ul class="dropdown-menu" ngbDropdownMenu>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
+    <li>
+        <hr class="dropdown-divider">
+    </li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
+</ul>
 </div>
+<div class="btn-group dropend my-1" ngbDropdown placement="right-top">
+<button type="button" class="btn btn-info">
+    Split dropend
+</button>
+<button type="button"
+    class="btn btn-info dropdown-toggle dropdown-toggle-split"
+    ngbDropdownToggle  data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="visually-hidden">Toggle Dropright</span>
+</button>
+<ul class="dropdown-menu" ngbDropdownMenu>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
+    <li>
+        <hr class="dropdown-divider">
+    </li>
+    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
+</ul>
+</div> -->

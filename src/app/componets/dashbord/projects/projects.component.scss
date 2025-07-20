@@ -90,11 +90,9 @@
   font-size: 0.813rem;
   font-weight: 400;
   text-align: center;
-  color: #000000;
 }
 .form-control:disabled, .form-select:disabled {
   background-color: #00000000;
-  color: #000000;
   text-align: center;
 }
 
@@ -317,3 +315,125 @@ mat-label {
   letter-spacing: 0.5px;
   margin-right: 10px;
 }
+.card-container {
+  overflow-y: auto;
+  max-height: 370px;
+}
+.heigh {
+  display: flex;
+  flex-direction: column;
+  height: 95%; 
+}
+@media (max-width :1200px ) {
+  .heigh {
+    height: 95%;
+    padding: 15px;
+  }
+}
+@media (max-width: 1024px) {
+  .heigh {
+    height: 95%;
+    padding: 15px;
+  }
+}
+@media (max-width: 768px) {
+  .heigh {
+    height: 95%; 
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heigh {
+    height: auto;
+    padding: 10px;
+    flex-direction: column; 
+  }
+}
+
+.ct {
+    margin-top: -5px;
+    margin-bottom: -20px;
+}
+
+.mat-icon {
+    -webkit-user-select: none;
+    user-select: none;
+    background-repeat: no-repeat;
+    display: inline-block;
+    fill: currentColor;
+    height: 24px;
+    width: 24px;
+    overflow: visible;
+    margin-left: 6px;
+    padding-top: 5px;
+    align-items: center;
+}
+
+.btn-smm {
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+}
+
+
+// line
+.timeline {
+  position: relative;
+  // margin-left: 30px;
+}
+
+.timeline-item .me-3 {
+  position: relative;
+}
+
+.timeline-item .me-3::after {
+  content: '';
+  position: absolute;
+  top: 40px; 
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: calc(100% - 40px);
+  background-color: #ccc;
+  z-index: 0;
+}
+
+.timeline-item:last-child .me-3::after {
+  display: none;
+}
+
+.profile-pic {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #fbc02d;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.spinner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.spinner-img {
+  width: 70px;
+  height: 70px;
+  /* No animation here */
+}
+

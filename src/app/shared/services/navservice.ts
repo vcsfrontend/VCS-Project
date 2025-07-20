@@ -305,16 +305,17 @@ export class NavService implements OnDestroy {
       active: false,
       path: '/apps/crm/leads'
     },
-    {
-      title: 'deals',
-      icon: 'bi-grid side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path: '/apps/crm/deals'
-    },
     
+    
+    // {
+    //   title: 'reports',
+    //   icon: 'bi-layout-text-window side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path: '/apps/crm/reports'
+    // },
     // {
     //   title: 'Designers',
     //   dirchange: false,
@@ -354,20 +355,20 @@ export class NavService implements OnDestroy {
     // },
     {
       title: 'Optimization',
-      icon: 'bi-house',
+      icon: 'bi bi-grid side-menu__icon',
       dirchange: false,
       type: 'sub',
       active: false,
       children: [
-        {
-          title: 'optimizer',
-          icon: 'bi-file-earmark',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          active: false,
-          path : "/dashboard/optimizer"
-        },        
+        // {
+        //   title: 'optimizer',
+        //   icon: 'bi-file-earmark',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType : 'internal',
+        //   active: false,
+        //   path : "/dashboard/optimizer"
+        // },        
         {
           title: 'Products',
           dirchange: false,
@@ -420,6 +421,91 @@ export class NavService implements OnDestroy {
         },
       ],
     },
+    {
+      title: 'CRM',
+      icon: 'bi bi-file-earmark side-menu__icon',
+      dirchange: false,
+      type: 'sub',
+      active: false,
+      children: [
+        {
+          title: 'Campaigns',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          icon: ' bi-layers side-menu__icon',
+          active: false,
+          selected: false,
+          path: '/dashboard/campaigns',
+        }, 
+        {
+          title: 'Deals',
+          icon: 'bi-grid side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          active: false,
+          path: '/apps/crm/deals'
+        },
+        {
+          title: 'Tasks',
+          icon: 'bi-bag side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType: 'internal',
+          active: false,
+          path: '/dashboard/tasks'
+        },
+        {
+          title: 'Reports',
+          icon: 'bi-layout-text-window side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          active: false,
+          path: '/dashboard/reports'
+        },
+        {
+          title: 'CRM Settings',
+          icon: 'bi-layout-text-window side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType: 'internal',
+          active: false,
+          path: '/dashboard/crm-settings'
+        },
+        // {
+        //   title: 'Support',
+        //   icon: 'bi-layout-text-window side-menu__icon',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType: 'internal',
+        //   active: false,
+        //   path: 'pages/chat'
+        // },
+        {
+          title: 'Support',
+          icon: 'bi-layout-text-window side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType: 'internal',
+          active: false,
+          path: '/dashboard/support'
+        },
+        
+              
+      ],
+    },
+    {
+      title: 'Appointment',
+      icon: 'bi-layout-text-window side-menu__icon',
+      dirchange: false,
+      type: 'link',
+      linkType: 'internal',
+      active: false,
+      path: '/dashboard/appointments'
+    },
+    
     // {
     //   title: 'proposal',
     //   icon: 'bi-bag side-menu__icon',

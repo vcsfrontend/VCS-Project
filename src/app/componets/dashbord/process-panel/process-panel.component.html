@@ -58,8 +58,8 @@
                                 class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle ms-1">
                                 <i class="ri-delete-bin-line"></i></a> </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="processPanelDisplayedColumn"></tr>
-                    <tr mat-row *matRowDef="let row; columns: processPanelDisplayedColumn">
+                    <tr mat-header-row *matHeaderRowDef="processPanelDisplayedColumn" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: processPanelDisplayedColumn" style="height:47px; vertical-align:middle;">
                     </tr>
                 </table>
             </div>

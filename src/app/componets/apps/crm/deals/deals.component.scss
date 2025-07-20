@@ -1,3 +1,237 @@
-.overflowImportant {  
-    overflow-y: scroll !important;
+// .dropdown {
+//     width: 300px;
+// }
+::ng-deep .offcanvas {
+  max-width: 40% !important;
 }
+
+.scrollable-content {
+  max-height: 300px;
+  /* You can set a height limit here */
+  overflow-y: auto;
+  /* Enables scrolling for content inside */
+}
+
+.demo.position-relative.d-flex.gap-2 {
+  margin-top: 200px;
+}
+
+table {
+  width: 100%;
+}
+
+// th.mat-mdc-header-cell {
+//   position: sticky !important;
+//   top: 0;
+//   background-color: #006699 !important;
+//   z-index: 2 !important;
+//   color: #ffffff !important;
+// }
+
+// .custom-header-row {
+//   background-color: #006699 !important;
+// }
+table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #006699 !important;
+  color: white !important;
+  border-right: none !important;
+  box-shadow: none !important;
+}
+table.mat-mdc-table .mdc-data-table__header-cell:nth-child(2)::after {
+  display: none !important;
+}
+
+table.mat-mdc-table .mdc-data-table__header-cell:nth-child(2) {
+  border-right: none !important;
+  box-shadow: none !important;
+}
+table.mat-mdc-table .mdc-data-table__header-cell:first-child {
+  border-right: none !important;
+  box-shadow: none !important;
+}
+
+.mat-elevation-z8 {
+  max-height: 400px;
+  /* Adjust as necessary */
+  overflow-y: auto;
+}
+
+.scrollable-content {
+  max-height: 400px;
+  overflow: hidden;
+}
+
+.action-option:hover {
+  background-color: #10007626 !important;
+  line-height: 1.375;
+  width: calc(100% - 1rem);
+  margin: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  min-width: 10rem;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.bt-icon {
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
+}
+
+.overflowSendMailForm {
+  overflow: auto;
+}
+
+
+.title {
+  position: relative;
+  margin-block-end: 0;
+  font-size: 1.15rem;
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.custom-checkbox .mat-checkbox-label {
+  font-size: 2px;
+}
+
+.mdc-checkbox__background {
+  width: 11px !important;
+  height: 11px !important;
+}
+
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control[data-indeterminate="true"]:enabled~.mdc-checkbox__background {
+  background-color: #069 !important;
+  border-color: #069 !important;
+}
+
+.mdc-checkbox__ripple {
+  background: none !important;
+}
+
+.custom-editor .angular-editor-textarea {
+  font-size: 14px !important;
+}
+
+.ng-selt {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 200px;
+}
+
+.marge {
+  margin-top: -40px !important;
+}
+
+.uploadSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+.kt {
+  cursor: pointer;
+}
+
+.lt {
+  width: 22px;
+  height: 22px;
+  border-radius: 25%;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.bg-color {
+  background-color: var(--color) !important;
+}
+
+.scrollable-container {
+  scroll-behavior: smooth;
+  /* This makes all scrolls smooth */
+}
+
+@keyframes rotateChart {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotate-on-load {
+  animation: rotateChart 1s ease-out;
+}
+
+// .fixed-width-column {
+//   width: 170px;
+//   max-width: 170px;
+//   overflow: hidden;
+//   text-overflow: hidden;
+//   white-space: nowrap;
+// }
+
+
+.mat-column-sourceFlag {
+  width: 32px;
+  padding: 0 4px;
+  text-align: center;
+}
+
+.mdc-data-table__cell {
+  padding: 0 10px !important;
+}
+
+.mdc-data-table__header-cell {
+  padding: 0 10px !important;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+}
+
+
+.filter-field {
+  margin-top: -13px !important;
+  margin-bottom: -35px !important;
+  width: 15%;
+  /* Adjust width if needed */
+  max-height: 72px !important;
+  margin-left: 15% !important;
+}
+.badge {
+    padding: 0.40rem 0.45rem;
+    font-weight: 500;
+    border-radius: 0.25rem;
+}
+.no-hover{
+  cursor: pointer;
+}
+.label-btn.label-end{
+  padding-inline-start: 0rem !important;
+  padding-inline-end: 1rem !important;
+}
+.virtual-scroll-wrapper {
+  height: 500px;
+  overflow-y: auto;
+}
+

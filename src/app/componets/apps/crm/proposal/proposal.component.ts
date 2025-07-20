@@ -151,20 +151,20 @@ export class ProposalComponent extends BaseComponent {
   }
 
   getProposal() {
-    this.switchService.CrmLeads().subscribe({
-      next: (res: any) => {
-        if (res) {          
-          this.dataSource.data = res;
-          this.proposalCount = res.length;
-          console.log(res);
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    })
+    // this.switchService.CrmLeads().subscribe({
+    //   next: (res: any) => {
+    //     if (res) {          
+    //       this.dataSource.data = res;
+    //       this.proposalCount = res.length;
+    //       console.log(res);
+    //     } else {
+    //       this.toastr.error(res.message);
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.toastr.error(error.statusText);
+    //   },
+    // })
   }
 
 

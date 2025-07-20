@@ -518,6 +518,22 @@ export class BaseComponent {
       {"name" :"uncheck all"},
     ]
 
+    campaignPriority = [{"name" : "High"},
+      {"name" :"Medium"},
+      {"name" :"Low"},
+    ]
+    leadDuplicacy = [{"name" : "Ignore Duplicate Default"},
+      {"name" :"Merge Duplicate"},
+      {"name" :"Create Duplicate Leads"},
+      {"name" :"Merge Duplicate & Reopen Leads"},
+    ]
+
+    autoAllocate = [{"name" : "Yes"},
+      {"name" :"No"},
+    ]
+
+
+
     // SkinFinish = [{"name" : "test"},
     // ]
 

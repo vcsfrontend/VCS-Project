@@ -52,7 +52,6 @@ export class ProductsComponent {
     this.getProductData();
 
     this.productForm = this.fb.group({
-      prodId: [{ value: this.generateProductId(), disabled: true }],
       code: ['', Validators.required],
       name: ['', Validators.required],
       description: [''],
@@ -156,7 +155,7 @@ export class ProductsComponent {
     if (confirm('Are you sure you want to delete this product?')) {
       this.switchService.deleteProductData(prodId).subscribe({
         next: (response) => {
-          this.toastr.success(response.message);
+          this.toastr.success('Product Deleted Successfully');
           this.getProductData();
         },
         error: (error) => {

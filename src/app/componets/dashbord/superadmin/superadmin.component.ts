@@ -84,10 +84,10 @@ curve:string
   styleUrl: './superadmin.component.scss'
 })
 export class SuperadminComponent {
-  displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'mobile', 'adonai', 'crm', 'action', 'view', 'edit' ];
+  displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'mobile', 'adonai', 'crm', 'action', 'view', 'edit', 'loginTime', 'logoutTime' ];
   displayAdonaiColumns: string[] = ['slNo', 'email', 'history'];
   displayCrmColumns: string[] = ['slNo', 'email', 'history'];
-  salesDisplayColumns: string[] = ['slNo', 'userName'];
+  salesDisplayColumns: string[] = ['slNo','email', 'roleId', 'subRole', 'status', 'userName', 'createdAt'];
   dataSource = new MatTableDataSource<any>(); 
   adonaiSource = new MatTableDataSource<any>(); 
   crmSource = new MatTableDataSource<any>();
@@ -635,7 +635,7 @@ chartOptions6:any= {
 
   ngOnInit(){
     this.getUsers(); this.getInfo();
-    this.getSalesUsers(this.adonaiEmail);  
+    this.getSalesUsers();  
 
 
 
@@ -919,22 +919,19 @@ chartOptions6:any= {
     });
   }
   
-
-  getSalesUsers(email: string = this.adonaiEmail) {
-    this.switchService.SalesUsers(email).subscribe({
+  
+  getSalesUsers() {
+    this.switchService.allSalesUsers().subscribe({
       next: (res: any) => {
-        this.salesDataSource.data = res || [];
-        if (this.salesPaginator) {
-          this.salesDataSource.paginator = this.salesPaginator;
-        }
+        this.salesDataSource.data = Array.isArray(res) ? res : [res];
+        if (this.salesPaginator) this.salesDataSource.paginator = this.salesPaginator;
       },
-      error: (error) => {
-        this.toastr.error("Error fetching product data");
+      error: () => {
+        this.toastr.error("Error fetching sales data");
         this.salesDataSource.data = [];
       }
     });
   }
-  
   
   
 

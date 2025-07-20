@@ -1,0 +1,33 @@
+.cu{
+    cursor: pointer;
+}
+.lt{
+    width: 20px;
+    height: 20px;
+    border-radius: 25%;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.kt{
+    cursor: pointer;
+}
+.fixed-height-card {
+  height: 375px; 
+  display: flex;
+  flex-direction: column;
+}
+
+.card-scroll {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.avatar {
+    position: relative;
+    height: 2rem;
+    width: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 500;
+}

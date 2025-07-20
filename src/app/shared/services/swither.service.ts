@@ -80,11 +80,12 @@ export class SwitherService {
   getProjEstimation(project_id:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/get_payment_details/${project_id}`); }
   saveProjEstimation(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/project_payment_history`, data); }
   generatedOutputJson(value:any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/generatedOutputJson/${value}`); }
+  quotationXl(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/generatePdf`, data); }
 
   //sales team
   saveSalesUsers(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/save_users_designation_sales`, data); }
   SalesUsers(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/get_user_sales_designation/${email}`); }
-
+  allSalesUsers(): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/get_sales_user_data`,); }
   ProjectList(): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjectList`,); }
   // ProjectById(): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjectById`,); }
   ProjFurniture(data : any): Observable<any> { return this.http.get(`${this.adonaiURL}enterprise/getProjFurniture?designId=${data}`); }
@@ -146,15 +147,46 @@ export class SwitherService {
   deleteEdgeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/delete_edge_content`, data); }
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
-  CrmLeads(): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData`); }  
+  CrmLeads(campaignId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData?campaignId=${campaignId}`); }  
+  FetchLeadData(entryBy:any, campaignId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data/${entryBy}?campaignId=${campaignId}`); }  
   AddCrmLeads(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/add_lead`, data); }
   UploadCrmLeads(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/upload_lead_sheet`, data); }
   CRMLeadSendMailFollowup(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/send_mail_followup`, data); }
-  // CrmGetLeads(lead_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_Lead_view_data/${lead_id}`); }  
   EditCrmLeads(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead`, data); }  
   ViewCrmLeads(leadId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/get_Lead_view_data/${leadId}`); }  
   CRMAddFollowupLead(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/add_followup_Lead`, data); }
   CRMAllocateLeadExecutive(data: any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/allocate_leads_to_executive`, data); }
-  
+  SaveCrmStatus(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_crm_status`, data); }  
+  CrmStatus(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_status`, data); }  
+  SaveCrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_crm_stages`, data); }  
+  CrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_stages`, data); }  
+  saveDesigCrm(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_desig_crm`, data); }  
+  designationCrmRloes(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_designation_roles`, data); }  
+  saveCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_campaign`, data); } 
+  displayCampaignData(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/list_campaigns`, data); }
+  deleteLeadStages(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/deleteStages`, data); }  
+  deleteLeadStatus(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/deleteStatus`, data); }    
+  StatusCount(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/get_count_Status`, data); }  
+  sepecificCampaign(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_campaign_specific`,data); } 
+  deleteCampaign(campaign_Id:any): Observable<any> { return this.http.get(`${this.apiUrl}designation/delete_campaign/${campaign_Id}`); }   
+  selectFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/create_crm_email_template`,data); }
+  listFormTemplate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_template_names`,data); }  
+  fetchFormTemplate(templateGenId :any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getTemplateOnTemplateGenId?templateGenId=${templateGenId }`); } 
+  deleteLeads(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/delete_lead`,data); }  
+  allEmailTemplates(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/get_all_email_templates`,data); } 
+  addLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/add_lead_entry_columns`,data); }  
+  listLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_lead_entry_columns`,data); }
+  editLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead_entry_columns`,data); }   
+  deleteLeadEntry(column_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead_column/${column_id}`); } 
+  fetchLeadsIndividual(entryBy:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual/${entryBy}`); } 
+  filterCrmLeads(data:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual`, data); } 
+
+  savedynamicMargins(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_dynamic_margins`, data); } 
+  fetchDynamicMargin(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_dynamic_margins`, data); } 
+
+  saveProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_project_conf`, data); } 
+  fetchProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_project_conf`, data); }
+  quotationHistory(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/getQuoteGenHistory`, data); }  
+
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }

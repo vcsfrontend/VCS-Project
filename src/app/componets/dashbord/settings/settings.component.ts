@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { ShowCodeContentDirective } from '../../../shared/directives/show-code-content.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { flatMap } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
@@ -34,7 +35,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgSelectModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss'
+  styleUrl: './settings.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class SettingsComponent extends BaseComponent implements OnInit {
   stockDisplayedColumn: string[] = ['slNo', 'name', 'l', 'w', 't', 'material', 'q', 'autoAdd', 'grain', 'allowExactFitShapes', 'cost', 'notes', 'trim'];
@@ -48,7 +50,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   sawDataSource = new MatTableDataSource<any>();
   partsDataSource = new MatTableDataSource<any>();
   selectedSawIdList: Set<any> = new Set<any>();
-  selectedSawRow: any = null;
+  selectedSawRow: any = null; topshowMore = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('stockPaginator') stockPaginator!: MatPaginator;
@@ -60,7 +62,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   // userForm!: FormGroup;
   cnfmPaswrd: any = ''; paswrd: any = '';
   adoanAiRole: any; todayDt = new Date();
-  crmRole: any; toolsList = [Tools.Adonai];
+  crmRole: any;
+  toolsList = Object.keys(Tools).map(key => ({
+    label: Tools[key as keyof typeof Tools],
+    value: key
+  }));
   passwordStrengthMessage: string = '';
   passwordStrengthColor: string = ''; // Control message color
   confirmPasswordStrengthMessage: string = '';
@@ -73,7 +79,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   private modalRef: any; noUsers: any = ''; users: any = ''; city: any = ''; selectedCountry: any = 'India';
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
-  isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any;
+  isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
+  projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
+  quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
+  quotationSubmitted = false; quotationmarginsubmit:boolean=false;projectconfigsubmit:boolean=false;
+  submittedQuotationNumber :any;addmargindisable:boolean=false; f1submitCount:number=0;
+  userEmail:any;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -97,13 +108,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   newItem: string = ''; newPmntItem: string = '';
   items: { label: string; checked: boolean }[] = [];
 
-  addMoreVisible: boolean = false; // Flag to toggle visibility
+  addMoreVisible: boolean = false; 
   addMorePmntVisible: boolean = false;
   searchUser: string = '';
   userDetails: any = {};
   public sawForm!: FormGroup;
   public sawSubmitted = false;
   public partsSubmitted = false;
+  public quoteSubmitted = false;
   public stockForm!: FormGroup;
   public partsForm!: FormGroup;
   StData: any;
@@ -192,7 +204,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
     const selectedSawRow = localStorage.getItem('selectedSawRow');
     this.selectedSawRow = selectedSawRow ? JSON.parse(selectedSawRow) : null;
-   
+
     this.formInit();
     this.productForm = this.fb.group({
       name: '',
@@ -229,10 +241,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
     this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
+    this.getProjectConfig();
+    
+    this.userEmail = JSON.parse(this.userData).email;
+
+    
     this.saveData = {
       id: 0,
       companyName: JSON.parse(this.userData).companyName,
@@ -330,12 +347,35 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
       type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
     });
+
     this.partsForm = this.fb.group({
       partList: this.fb.array([this.createPartGroup()]),
       companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
       email: [(JSON.parse(this.userData).email) ? JSON.parse(this.userData).email : ''],
       type: [(JSON.parse(this.userData).type) ? JSON.parse(this.userData).type : '']
     });
+
+    this.projectConfigForm = this.fb.group({
+      quotationNumber: [''],
+      configId:0,
+      companyName: [JSON.parse(this.userData)?.companyName,],
+      companyCode: [JSON.parse(this.userData)?.companyCode,],
+      email: [JSON.parse(this.userData)?.email,],
+      type: [JSON.parse(this.userData)?.type,],
+      updatedBy:[localStorage.getItem('username')] ,
+      updatedTime:[],
+      f1:['',Validators.required],
+      f2:[''],
+      f3:[''],
+      f4:[''],
+      f5:[''],
+      f6:[''],
+      f7:[''],
+      f8:[''],
+      f9:[''],
+      f10:['']
+    });
+
 
     // setTimeout(() => {
 
@@ -347,13 +387,56 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.checkPasswordMatch(value);
     });
 
+    this.quoteMarignForm = this.fb.group({
+      f1: ['', [Validators.required]],
+      f1Percent: [0, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      f2: [''],
+      f2Percent: [0],
+      f3: [''],
+      f3Percent: [0],
+      f4: [''],
+      f4Percent: [0],
+      f5: [''],
+      f5Percent: [0],
+      f6: [''],
+      f6Percent: [0],
+      f7: [''],
+      f7Percent: [0],
+      f8: [''],
+      f8Percent: [0],
+      f9: [''],
+      f9Percent: [0],
+      f10: [''],
+      f10Percent: [0],
+      f11: [''],
+      f11Percent: [0],
+      f12: [''],
+      f12Percent: [0],
+      f13: [''],
+      f13Percent: [0],
+      f14: [''],
+      f14Percent: [0],
+      f15: [''],
+      f15Percent: [0],
+      companyName: [JSON.parse(this.userData)?.companyName,],
+      companyCode: [JSON.parse(this.userData)?.companyCode,],
+      email: [JSON.parse(this.userData)?.email,],
+      type: [JSON.parse(this.userData)?.type,],
+      updatedBy:[localStorage.getItem('username')] ,
+      updatedTime:[],
+    });
+
+
+
+
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
-
+   
+    this.getMarginData();
+    
 
   }
-
   onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
     this.switchService.onAdonai(JSON.parse(this.userData)?.email).subscribe({
@@ -364,6 +447,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         } else {
           if (key == 'i') {
             this.roleid = res.roleId;
+           
           } else {
             window.open(res.newDesign, '_blank');
             this.toastr.success(res.message);
@@ -840,7 +924,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     const adonai = this.userForm.get('tools')?.value.includes('Adonai');
     let payload = this.userForm.getRawValue();
     payload.username = payload.firstName + ' ' + payload.lastName,
-      payload.type = 1,
+      payload.type = 2,
       payload.crm = crm,
       payload.adonai = adonai,
       payload.companyCode = JSON.parse(this.userData).companyCode,
@@ -1068,6 +1152,20 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.resetForm();
     this.offcanvasService.open(content, { position: 'end' });
   }
+  openRight4(content4: any) {
+    this.offcanvasService.open(content4, { position: 'end' });
+  }
+  openRight12(content12: any) {
+    this.offcanvasService.open(content12, { position: 'end' });
+  }
+  openRight13(content13: any) {
+    this.modalService.open(content13, { centered: true, });
+  }
+  openRight14(content14: any) {
+    this.modalService.open(content14, { centered: true, });
+  }
+
+
 
   // Resets the input and unselects the checkboxes
   resetForm() {
@@ -1237,18 +1335,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (res && res.length > 0) {
           this.stockDataSource.data = res;
-          
-
           if (this.stockPaginator) {
             this.stockDataSource.paginator = this.stockPaginator;
           }
-
         } else {
           this.stockDataSource.data = [];
         }
       },
       error: (error) => {
-        
         this.toastr.error("Error fetching stock data");
         this.stockDataSource.data = [];
       },
@@ -1261,18 +1355,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type
     };
-
     this.switchService.SawData(payload).subscribe({
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.sawDataSource.data = res;
-
-
-
-
           /*const sawArray = this.sawForm.get('sawList') as FormArray;
           sawArray.clear(); // Clear old values before adding new ones
-
           res.forEach((saw) => {
             sawArray.push(this.fb.group({
               bladeWidth: [saw.bladeWidth, Validators.required],
@@ -1294,18 +1382,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
               })
             }));
           });*/
-
-
           // Ensure paginator is set only if it exists
           if (this.sawPaginator) {
             this.sawDataSource.paginator = this.sawPaginator;
-          } 
+          }
         } else {
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
@@ -1313,7 +1398,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   onSawRowCheckboxChange(row: any, event: any) {
     if (event.checked) {
-      this.selectedSawRow = row;     
+      this.selectedSawRow = row;
       localStorage.setItem('selectedSawRow', JSON.stringify(this.selectedSawRow));
     } else {
       this.selectedSawRow = null;
@@ -1329,7 +1414,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   onSawSelectAllChange(event: any) {
     if (event.checked) {
       //this.selectedSawIdList = new Set(this.sawDataSource.data.map((row) => row));
-      
     } else {
       this.selectedSawIdList.clear();
     }
@@ -1347,7 +1431,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     return this.selectedSawIdList.has(data);
   }
 
-
   getPartsData() {
     let payload = {
       email: JSON.parse(this.userData)?.email,
@@ -1358,18 +1441,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res: any) => {
         if (Array.isArray(res) && res.length > 0) {
           this.partsDataSource.data = res;
-          
-
           // Ensure paginator is set only if it exists
           if (this.partsPaginator) {
             this.partsDataSource.paginator = this.partsPaginator;
-          } 
+          }
         } else {
           this.sawDataSource.data = [];
         }
       },
       error: (error) => {
-        
         this.toastr.error("Failed to fetch saw data.");
         this.sawDataSource.data = [];
       },
@@ -1388,7 +1468,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
-
           } else {
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -1412,7 +1491,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
-
           } else {
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -1422,7 +1500,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       })
       this.sawSubmitted = false;
     }
-
   }
 
   resetPartList() {
@@ -1440,7 +1517,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
             this.toastr.success(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
             });
-
           } else {
             this.toastr.error(res.message, 'optimizer', {
               timeOut: 3000, positionClass: 'toast-top-right'
@@ -1452,5 +1528,251 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
   }
 
+  toggleTopShowMore() {
+    this.topshowMore = !this.topshowMore;
+    if (this.topshowMore) {
+      setTimeout(() => {
+        const scrollContainer = document.querySelector('.scrollable-container');
+        if (scrollContainer) {
+          scrollContainer.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      }, 0);
+    }
+  }
 
+  getUserColor(contact: any): string {
+    const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+    if (contact && contact.email) {
+      const index = contact.email.charCodeAt(0) % colors.length;
+      return colors[index];
+    }
+    return 'bg-secondary';
+  }
+
+  quoteMarginSubmit(modal:any){
+    this.quotationmarginsubmit=true;
+    if (this.quoteMarignForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    const newMarginName = this.quoteMarignForm.get('f1')?.value || '';
+    const newMarginPercent = this.quoteMarignForm.get('f1Percent')?.value || 0;
+    let mergedMargins = this.previousMarginResponse ? { ...this.previousMarginResponse } : {};
+
+    let nextIndex = -1;
+    for (let i = 1; i <= 15; i++) {
+      if (!mergedMargins[`f${i}`]) {
+        nextIndex = i;
+        break;
+      }
+    }
+
+    if (nextIndex === -1) {
+      this.toastr.warning("Maximum 15 margin entries reached.");
+      return;
+    }
+
+    mergedMargins[`f${nextIndex}`] = newMarginName;
+    mergedMargins[`f${nextIndex}Percent`] = newMarginPercent;
+
+    // 5. Ensure all f1–f15 & f1Percent–f15Percent keys exist
+    for (let i = 1; i <= 15; i++) {
+      const fKey = `f${i}`;
+      const pKey = `f${i}Percent`;
+
+      if (!mergedMargins.hasOwnProperty(fKey)) {
+        mergedMargins[fKey] = '';
+      }
+
+      if (!mergedMargins.hasOwnProperty(pKey)) {
+        mergedMargins[pKey] = 0;
+      }
+    }
+
+
+    const companyInfo = {
+      companyName: JSON.parse(this.userData).companyName,
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type,
+      updatedBy: localStorage.getItem('username'),
+      updatedTime: new Date().toISOString(),
+    };
+    
+    const finalPayload = {
+  ...mergedMargins,
+  ...companyInfo
+    };
+    this.switchService.savedynamicMargins(finalPayload).subscribe({
+      next: (res: any) => {
+        if (res && res.marginId !== undefined) {
+          this.toastr.success('Margin Saved Successfully!');
+          this.quoteMarignForm.reset();
+          this.previousMarginResponse = res;
+          // localStorage.setItem('previousMarginResponse', JSON.stringify(res));
+          modal.close();
+
+          this.quoteMarignForm.reset({ f1: '', f1Percent: 0 });
+          this.getMarginData();
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  getMarginData(){
+    let payload = {
+      companycode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchDynamicMargin(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.marginId) {
+          this.previousMarginResponse = res;
+          const configs: { name: string, percent: number }[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const name = res[`f${i}`];
+            const percent = res[`f${i}Percent`];
+            if (name) {
+              configs.push({ name, percent: percent || 0 });
+            }
+          }
+          this.projectMarginList = configs;
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  onProjectConfigSubmit(modal:any){
+    this.projectconfigsubmit = true ;
+    this.quoteSubmitted = true;
+    const quotationValue = this.projectConfigForm.get('quotationNumber')?.value;
+    if (this.projectConfigForm.invalid) {
+      this.toastr.error("Please enter Project Configuration.");
+      return;
+    }
+    const rawQuote = this.projectConfigForm.get('quotationNumber')?.value || '';
+    
+    const newConfigValue = this.projectConfigForm.get('f1')?.value || '';
+
+    let mergedPayload = this.previousConfigResponse ? { ...this.previousConfigResponse } : {};
+
+    let nextIndex = -1;
+    for (let i = 1; i <= 10; i++) {
+      if (!mergedPayload[`f${i}`]) {
+        nextIndex = i;
+        break;
+      }
+    }
+
+    if (nextIndex === -1) {
+      this.toastr.warning("Maximum 10 Project Configurations reached.");
+      return;
+    }
+
+    mergedPayload[`f${nextIndex}`] = newConfigValue;
+
+    this.projectConfigForm.get('f1')?.reset();
+
+    for (let i = 1; i <= 10; i++) {
+      const key = `f${i}`;
+      if (!mergedPayload[key]) mergedPayload[key] = '';
+    }
+
+    const companyInfo: any = {
+      configId: 0,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      email: JSON.parse(this.userData)?.email,
+      type: JSON.parse(this.userData)?.type,
+      updatedBy: localStorage.getItem('username'),
+      updatedTime: new Date().toISOString()
+    };
+   
+    if (Object.keys(this.previousConfigResponse).length === 0 && rawQuote)  {
+      companyInfo.quotationNumber = rawQuote;
+    }
+    const finalPayload = {
+      ...companyInfo,
+      ...mergedPayload
+    };
+    if (this.quotationSubmitted && this.submittedQuotationNumber) {
+      finalPayload.quotationNumber = this.submittedQuotationNumber;
+    }
+    this.switchService.saveProjectConfig(finalPayload).subscribe({
+      next: (res: any) => {
+       if (res && res.configId !== undefined) {
+          this.toastr.success('Project Configuration saved!');
+          this.previousConfigResponse = res;
+          
+         const enteredQuotation = this.projectConfigForm.get('quotationNumber')?.value;
+          this.quotationSubmitted = true;
+          // localStorage.setItem('quotationSubmitted', 'true');
+          // localStorage.setItem('submittedQuotationNumber', enteredQuotation);
+          modal.close();
+          this.projectConfigForm.reset({
+            projectConfigs: [],
+          });
+          this.getProjectConfig();
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  getProjectConfig(){
+    let payload = {
+      companycode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchProjectConfig(payload).subscribe({
+      next: (res: any) => {
+        if (res && res.configId) {
+          this.previousConfigResponse = res;
+          this.quotationSubmitted = true;
+          this.submittedQuotationNumber = res.quotationNumber;
+           const configs: string[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const value = res[`f${i}`];
+            if (value) configs.push(value);
+          }
+          this.projectConfigList = configs;
+          this.quotationNumber = res.quotationNumber;
+        } 
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+ allowOnlynum(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    event.preventDefault();
+  }
+  }
+
+  get g() {
+    return this.quoteMarignForm.controls;
+  }
+
+  get h() {
+    return this.projectConfigForm.controls;
+  }
+  
 }

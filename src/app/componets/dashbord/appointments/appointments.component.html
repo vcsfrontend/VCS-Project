@@ -1,0 +1,107 @@
+<button class="btn btn-primary" (click)="openRight(content1)">Book a Demo</button>
+
+<div class="col-lg-12 bg-white">
+    <full-calendar [options]="calendarOptions">
+        <ng-template #eventContent let-arg>
+            <div class="custom-event" (click)="open(content7)">
+                <strong >{{ arg.event.title }}</strong>
+            </div>
+        </ng-template>
+    </full-calendar>
+</div>
+<ng-template #content7 let-c="close" let-d="dismiss">
+  <form [formGroup]="availabilityForm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 class="modal-title">Set Availability</h6>
+        <button type="button" class="btn-close" (click)="d('Cross click')" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body px-4">
+        <!-- Appointment Duration -->
+        <div class="col-xl-12">
+            <label for="deal-name" class="form-label">Appointment Name</label>
+            <input type="text" class="form-control" id="deal-name" placeholder="Campaign Name">
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Appointment duration</label>
+          <select formControlName="duration" class="form-select w-auto">
+            <option value="15">15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="60">1 hour</option>
+          </select>
+        </div>
+
+        <!-- General Availability -->
+        <div class="mb-3">
+          <label class="form-label fw-bold">General availability</label>
+          <div *ngFor="let day of weekdays; let i = index" class="d-flex align-items-center mb-2 gap-2">
+            <label class="form-label w-25 m-0">{{ day }}</label>
+            <input type="time" class="form-control w-25" [formControlName]="'start_' + i">
+            <span> - </span>
+            <input type="time" class="form-control w-25" [formControlName]="'end_' + i">
+            <i class="bi bi-ban"></i> 
+            <i class="bi bi-plus-circle"></i>
+            <i class="bi bi-copy"></i>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" (click)="submitAvailability()">Next</button>
+        <button type="button" class="btn btn-light" (click)="c('Cancel click')">Cancel</button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #content1 let-modal>
+  <div class="modal-header justify-content-center">
+    <h6 class="modal-title" id="staticBackdropLabel3">Add Product</h6>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+      aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-xl-12">
+      <div class="row gy-2">
+        <div class="col-xl-6">
+          <label for="code" class="form-label">Appointment type</label>
+          <input type="text" class="form-control" id="code" formControlName="appointmentType" placeholder="Enter Code">
+        </div>
+        <div class="col-xl-6">
+          <label for="name" class="form-label">Date</label>
+          <input type="datetime-local" class="form-control" id="name" formControlName="date" min="2025-07-19T09:00"
+            max="2025-07-19T17:00" step="1800" laceholder="Enter Name">
+        </div>
+        <div class="col-xl-6">
+          <label for="description" class="form-label">Description</label>
+          <input type="datetime-local"
+       class="form-control"
+       id="name"
+       formControlName="date"
+       min="2025-07-19T09:00"
+       max="2025-07-19T17:00"
+       step="1800" 
+       placeholder="Select Time">
+
+        </div>
+        <div class="row pt-2">
+          <div class="col-xl-12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="checkebox-sm" formControlName="isActive">
+              <label class="form-check-label" for="checkebox-sm">Is Active</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary"> Submit</button>
+    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+      data-bs-dismiss="modal">Close</button>
+  </div>
+</ng-template>
+

@@ -1,0 +1,19 @@
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%; 
+  max-width: 90px;
+}
+
+/* For small screens */
+@media (min-width: 480px) {
+  .stat-box {
+    width: 70px;
+  }
+}
+
+
+

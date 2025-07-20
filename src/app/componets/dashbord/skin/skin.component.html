@@ -90,9 +90,8 @@
                             </a>
                         </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="skinDisplayedColumn"></tr>
-                    <tr mat-row *matRowDef="let row; columns: skinDisplayedColumn">
-                    </tr>
+                    <tr mat-header-row *matHeaderRowDef="skinDisplayedColumn" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: skinDisplayedColumn" style="height:47px; vertical-align:middle;"></tr>
                 </table>
             </div>
             <mat-paginator #skinPaginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons>

@@ -1,16 +1,10 @@
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  Renderer2,
-  inject,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2, inject,} from '@angular/core';
 import { Menu, NavService } from '../../services/navservice';
 import { SwitcherComponent } from '../switcher/switcher.component';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AppStateService } from '../../services/app-state.service';
-import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
-import { filter } from 'rxjs';
+import { ActivatedRoute, NavigationEnd, Router, RouterModule ,UrlTree } from '@angular/router';
+import { filter ,interval,Subscription} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -36,9 +30,12 @@ export class HeaderComponent implements OnInit {
   cartItemCount: number = 5;
   notificationCount: number = 5;
   public isCollapsed = true;
-  collapse: any;
-  closeResult = '';
-  themeType: string | undefined; userName:any; userData:any;
+   public leadCount = 0;
+  collapse: any; userList: any; loggedInUser: any;
+  closeResult = ''; campaignId!: string; followUpCount: any; nextLeadStatus :any;
+  themeType: string | undefined; userName:any; userData:any;  userEmail :any
+  userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
+    'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'];
 
   selectedItem: string  | null ='selectedItem'
   isOpen: boolean = false; isCrm:boolean = false; isAdonai:boolean = false;
@@ -53,6 +50,7 @@ export class HeaderComponent implements OnInit {
   ) {this.localStorageBackUp()
     this.userData = localStorage.getItem('userDetails'),
     this.userName = JSON.parse(this.userData)?.username,
+    this.userEmail = JSON.parse(this.userData)?.email,
     this.isCrm = JSON.parse(this.userData)?.crm,
     this.isAdonai = JSON.parse(this.userData)?.adonai
   }
@@ -242,22 +240,31 @@ export class HeaderComponent implements OnInit {
   public menuItems!: Menu[];
   public items!: Menu[];
   public text!: string;
+    private routerSub!: Subscription;
+  private intervalSub!: Subscription;
   public SearchResultEmpty: boolean = false;
-
   ngOnInit(): void {
+    this.logRoute();
+    this.loadLeadData();
+    this.routerSub = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.loadLeadData();
+      }
+    });
+    this.loggedInUser = JSON.parse(this.userData);
+    this.userName = this.loggedInUser?.name || this.loggedInUser?.username;
+    this.intervalSub = interval(5000).subscribe(() => this.loadLeadData());
+    this.loadLeadData();
     const storedSelectedItem = localStorage.getItem('selectedItem');
-    // this.updateSelectedItem();
-  // If there's no selected item stored, set a default one
-  if (!storedSelectedItem) {
-    this.selectedItem = "Sales Dashboard"; // You can set any default item here
-    localStorage.setItem('selectedItem', this.selectedItem);
-  } else {
-    this.selectedItem = storedSelectedItem;
-  }
+    if (!storedSelectedItem) {
+      this.selectedItem = "Sales Dashboard"; // You can set any default item here
+      localStorage.setItem('selectedItem', this.selectedItem);
+    } else {
+      this.selectedItem = storedSelectedItem;
+    }
     this.navServices.items.subscribe((menuItems) => {
       this.items = menuItems;
     });
-    // To clear and close the search field by clicking on body
     document.querySelector('.main-content')?.addEventListener('click', () => {
       this.clearSearch();
     });
@@ -273,6 +280,8 @@ export class HeaderComponent implements OnInit {
     this.selectedItem = dashboard ? dashboard.charAt(0).toUpperCase() + dashboard.slice(1) + ' Dashboard' : this.selectedItem;
   }
   ngOnDestroy(): void {
+    this.routerSub.unsubscribe();
+    this.intervalSub.unsubscribe();
     const windowObject: any = window;
     let html = this.elementRef.nativeElement.ownerDocument.documentElement;
     if (windowObject.innerWidth <= '991') {
@@ -416,5 +425,34 @@ export class HeaderComponent implements OnInit {
   //   this.router.navigate(['/auth/login']);
     
   // }
+
+  loadLeadData() {
+    const storedDataRaw = localStorage.getItem('leadData');
+    const storedData = storedDataRaw ? JSON.parse(storedDataRaw) : {};
+    this.campaignId = storedData.campaignId || null;
+    this.followUpCount = storedData.followUpCount || 0;
+    this.nextLeadStatus = storedData.nextLeadStatus || 'No follow-up';
+  }
+
+  logRoute() {
+    const urlTree: UrlTree = this.router.createUrlTree(['/apps/crm/leads'], {
+      queryParams: { campaignId: this.campaignId }
+    });
+
+    const fullUrl = this.router.serializeUrl(urlTree);
+  }
+
+  private hashString(str: string): number {
+    let hash = 5381;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash * 33) ^ str.charCodeAt(i);
+    }
+    return hash >>> 0;
+  }
+
+  getUserColor(user: any): string {
+    const index = this.hashString(user.email) % this.userColors.length;
+    return this.userColors[index];
+  }
   
 }

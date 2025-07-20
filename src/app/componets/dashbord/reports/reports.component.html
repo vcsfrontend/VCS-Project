@@ -1,0 +1,585 @@
+<div class="col-xl-12 mt-3">
+    <div class="card custom-card">
+        <div class="card-header justify-content-between">
+            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                User Reports
+            </div>
+            <mat-form-field class="filter-field">
+                <mat-label>Seach</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <button type="button" class="btn btn-primary border-end border-light">Add New</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-container mat-elevation-z8">
+                <table mat-table [dataSource]="dataSources" matSort class="mat-table">
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="role">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+                        <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="number">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Number</th>
+                        <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                        <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totalCallsAttempted">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Attempted</th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalCallsAttempted}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totalCallsConnectd">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Connectd</th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalCallsConnectd}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totalCallsNotConnectd">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Not Connectd</th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalCallsNotConnectd}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totalInprogressLeads">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Inprogress Leads</th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalInprogressLeads}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totalConvertedLeads">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Converted Leads</th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalConvertedLeads}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="totalLostleads">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Lost Leads</th>
+                        <td mat-cell *matCellDef="let element"> {{element.totalLostleads}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="startcallingtime">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Start calling Tksime</th>
+                        <td mat-cell *matCellDef="let element"> {{element.startcallingtime}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
+                </table>
+            </div>
+            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-12">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card custom-card">
+                <div class="card-body p-0">
+                    <div class="d-flex p-3 align-items-center justify-content-between">
+                        <div>
+                            <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block" role="tablist">
+                                <li [ngbNavItem]="1" class="nav-item m-1">
+                                    <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                        aria-selected="true"><i class="las la-file me-2"></i>All Reports</a>
+                                        <ng-template ngbNavContent>
+                                            <div class=" p-0" id="all-tasks" role="tabpanel">
+                                                <div class="row" id="tasks-container">
+                                                    <div class="col-xl-12 ">
+                                                        <div class="card custom-card d-flex">
+                                                            <div>
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2 mt-4 ms-3" (click)="toggleDetails(1)">
+                                                                    <div>
+                                                                        <p class="fw-medium d-flex align-items-center">
+                                                                            <a href="javascript:void(0);">
+                                                                                </a>User Reports
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center">
+                                                                            <a href="javascript:void(0);">
+                                                                                <i class="ri-arrow-down-s-line fs-18 me-3"></i></a>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="row gx-3 gy-3">
+                                                            <div class="ms-2" *ngIf="showDetailsMap[1] && !showTable">
+                                                                <div class="d-flex gap-3">
+                                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                            <div class="card-body">
+                                                                                <div>
+                                                                                    <div class="justify-content-between d-flex">
+                                                                                        <p class="fs-14 fw-medium mb-2">User Report</p>
+                                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <p>Calls related data along with lost and converted count of leads</p>
+                                                                                    <div class="d-flex flex-wrap">
+                                                                                        <button class="btn btn-sm btn-primary-light btn-wave" (click)="showTable = !showTable">View All</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                            <div class="card-body">
+                                                                                <div>
+                                                                                    <div class="justify-content-between d-flex">
+                                                                                        <p class="fs-14 fw-medium mb-2">User Activity Report</p>
+                                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <p>Insights into Breaks information and calling metrics</p>
+                                                                                    <div class="d-flex flex-wrap">
+                                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                            <div class="card-body">
+                                                                                <div>
+                                                                                    <div class="justify-content-between d-flex">
+                                                                                        <p class="fs-14 fw-medium mb-2">Lead Disposition Report</p>
+                                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <p>Analysis of calls connected, not connected along with status wise count of leads</p>
+                                                                                    <div class="d-flex flex-wrap">
+                                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="d-flex gap-3">
+                                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                            <div class="card-body">
+                                                                                <div>
+                                                                                    <div class="justify-content-between d-flex">
+                                                                                        <p class="fs-14 fw-medium mb-2">User Stage Report</p>
+                                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <p>Analysis of calls connected, not connected along with status wise count of leads</p>
+                                                                                    <div class="d-flex flex-wrap">
+                                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                            <div class="card-body">
+                                                                                <div>
+                                                                                    <div class="justify-content-between d-flex">
+                                                                                        <p class="fs-14 fw-medium mb-2">User Call Report</p>
+                                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <p>Analysis of calls connected, not connected along with status wise count of leads</p>
+                                                                                    <div class="d-flex flex-wrap">
+                                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                            <div class="card-body">
+                                                                                <div>
+                                                                                    <div class="justify-content-between d-flex">
+                                                                                        <p class="fs-14 fw-medium mb-2">User Call Report</p>
+                                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <p>Analysis of calls connected, not connected along with status wise count of leads</p>
+                                                                                    <div class="d-flex flex-wrap">
+                                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-12 mt-3" *ngIf="showTable">
+                                                            <div class="card custom-card">
+                                                                <div class="card-header justify-content-between">
+                                                                    <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                                                                        User Reports
+                                                                    </div>
+                                                                    <mat-form-field class="filter-field">
+                                                                        <mat-label>Seach</mat-label>
+                                                                        <input matInput (keyup)="applyFilter($event)" #input>
+                                                                    </mat-form-field>
+                                                                    <div class="text-center">
+                                                                        <div class="btn-group" role="group" aria-label="Basic outlined example">
+                                                                            <button type="button" class="btn btn-primary border-end border-light">Add New</button>
+                                                                            <button type="button" class="btn btn-primary border-end border-light" (click)="showTable = false">Back</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card-body p-0">
+                                                                    <div class="table-container mat-elevation-z8">
+                                                                        <table mat-table [dataSource]="dataSources" matSort class="mat-table">
+                                                                            <ng-container matColumnDef="slNo">
+                                                                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                                                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="name">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="role">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.role}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="number">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Number</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.number}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="date">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="totalCallsAttempted">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Attempted</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.totalCallsAttempted}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="totalCallsConnectd">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Connectd</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.totalCallsConnectd}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="totalCallsNotConnectd">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Calls Not Connectd</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.totalCallsNotConnectd}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="totalInprogressLeads">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Inprogress Leads</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.totalInprogressLeads}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="totalConvertedLeads">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Converted Leads</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.totalConvertedLeads}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="totalLostleads">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Total Lost Leads</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.totalLostleads}} </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="startcallingtime">
+                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Start calling Tksime</th>
+                                                                                <td mat-cell *matCellDef="let element"> {{element.startcallingtime}} </td>
+                                                                            </ng-container>
+                                                                            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;">
+                                                                            </tr>
+                                                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                                                                                style="height:47px; vertical-align:middle;"></tr>
+                                                                        </table>
+                                                                    </div>
+                                                                    <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card custom-card d-flex">
+                                                            <div>
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2 mt-4 ms-3" (click)="toggleDetails(2)">
+                                                                    <div>
+                                                                        <p class="fw-medium d-flex align-items-center">
+                                                                            <a href="javascript:void(0);">
+                                                                                </a>Campaign Reports
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center">
+                                                                            <a href="javascript:void(0);">
+                                                                                <i class="ri-arrow-down-s-line fs-18 me-3"></i></a>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex gap-3 ms-2" *ngIf="showDetailsMap[2]">
+                                                            <div class="col-xl-3">
+                                                                <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                    <div class="card-body">
+                                                                        <div>
+                                                                            <div class="justify-content-between d-flex">
+                                                                                <p class="fs-14 fw-medium mb-2">Campaign Report</p>
+                                                                                <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                    <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                            <p>Calls related data along with lost and converted count of leads</p>
+                                                                            <div class="d-flex flex-wrap">
+                                                                                <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-3">
+                                                                <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                    <div class="card-body">
+                                                                        <div>
+                                                                            <div class="justify-content-between d-flex">
+                                                                                <p class="fs-14 fw-medium mb-2">campaign Lead Report</p>
+                                                                                <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                    <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                            <p>Insights into Breaks information and calling metrics</p>
+                                                                            <div class="d-flex flex-wrap">
+                                                                                <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-3">
+                                                                <div class="card custom-card border border-primary bg-primary-transparent">
+                                                                    <div class="card-body">
+                                                                        <div>
+                                                                            <div class="justify-content-between d-flex">
+                                                                                <p class="fs-14 fw-medium mb-2">Campaign Stage Report</p>
+                                                                                <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                                    <i class="ri-briefcase-2-line fs-16"></i>
+                                                                                </span>
+                                                                            </div>
+                                                                            <p>Analysis of calls connected, not connected along with status wise count of leads</p>
+                                                                            <div class="d-flex flex-wrap">
+                                                                                <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                </li>
+                                <li [ngbNavItem]="2" class="nav-item m-1">
+                                    <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                        aria-selected="true"><i class="las la-history me-2"></i>Recently Viewed</a>
+                                        <ng-template ngbNavContent>
+                                            <div class="p-0" id="pending" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                            <div class="card-body">
+                                                                <div>
+                                                                    <div class="justify-content-between d-flex">
+                                                                        <p class="fs-14 fw-medium mb-2">User Activity Report</p>
+                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                    <p>Insights into Breaks information and calling metrics</p>
+                                                                    <div class="d-flex flex-wrap">
+                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                            <div class="card-body">
+                                                                <div>
+                                                                    <div class="justify-content-between d-flex">
+                                                                        <p class="fs-14 fw-medium mb-2">User Activity Report</p>
+                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                    <p>Insights into Breaks information and calling metrics</p>
+                                                                    <div class="d-flex flex-wrap">
+                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                </li>
+                                <li [ngbNavItem]="3" class="nav-item m-1">
+                                    <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                        aria-selected="true"><i class="lar la-star me-2"></i>Favourites</a>
+                                        <ng-template ngbNavContent>
+                                            <div class="p-0" id="in-progress" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-xl-4">
+                                                        <div class="card custom-card task-inprogress-card">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                href="javascript:void(0);"><i
+                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Design
+                                                                            New Landing Pages </p>
+                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">21,Nov
+                                                                                2023</span></p>
+                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
+                                                                                2023</span></p>
+                                                                        <p class="mb-0">Assigned To :
+                                                                            <span class="avatar-list-stacked ms-1">
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/1.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/5.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/12.jpg" alt="img">
+                                                                                </span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="btn-list">
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                    class="ri-edit-line"></i></button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                    class="ri-delete-bin-line"></i></button>
+                                                                        </div>
+                                                                        <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <div class="card custom-card task-inprogress-card">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                href="javascript:void(0);"><i
+                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Designing
+                                                                            New Authentication Pages</p>
+                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">26,Nov
+                                                                                2023</span></p>
+                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">12,Dec
+                                                                                2023</span></p>
+                                                                        <p class="mb-0">Assigned To :
+                                                                            <span class="avatar-list-stacked ms-1">
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/6.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/15.jpg" alt="img">
+                                                                                </span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="btn-list">
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                    class="ri-edit-line"></i></button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                    class="ri-delete-bin-line"></i></button>
+                                                                        </div>
+                                                                        <span class="badge bg-success-transparent d-block">Low</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <div class="card custom-card task-inprogress-card">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                href="javascript:void(0);"><i
+                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Improving
+                                                                            Ui Of Updated Templates</p>
+                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">4,Dec
+                                                                                2023</span></p>
+                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Dec
+                                                                                2023</span></p>
+                                                                        <p class="mb-0">Assigned To :
+                                                                            <span class="avatar-list-stacked ms-1">
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/9.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/13.jpg" alt="img">
+                                                                                </span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="btn-list">
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                    class="ri-edit-line"></i></button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                    class="ri-delete-bin-line"></i></button>
+                                                                        </div>
+                                                                        <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="d-flex">
+                            <!-- <div ngbDropdown class="dropdown no-caret">
+                                <button ngbDropdownToggle
+                                    class="btn btn-icon btn-sm btn-light btn-wave waves-light waves-effect"
+                                    type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti ti-dots-vertical"></i>
+                                </button>
+                            </div> -->
+                            <div>
+                                <button class="btn btn-primary">Download Logs</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content task-tabs-container">
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+    </div>
+</div>
+
+

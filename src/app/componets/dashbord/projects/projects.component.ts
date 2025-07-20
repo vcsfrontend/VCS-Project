@@ -4,8 +4,8 @@ import {
   ApexYAxis, ApexTitleSubtitle, ApexLegend, ApexResponsive, NgApexchartsModule
 } from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient for making HTTP requests
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { FilePondOptions } from 'filepond';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
@@ -56,53 +56,59 @@ export type ChartOptions = {
 @Component({
   selector: 'app-projects',
   standalone: true,
-  // imports: [SharedModule, NgApexchartsModule, CommonModule, FormsModule,
-  //   NgbDropdownModule,MatDatepickerModule,MatInputModule,MatNativeDateModule,ReactiveFormsModule],
-  //   providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, DatePipe],
   imports: [RouterModule, NgbModule, FormsModule, ReactiveFormsModule, AngularFireModule,
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
     OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
     NgbDropdownModule, MatDatepickerModule, MatInputModule, MatNativeDateModule, NgSelectModule,],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
-
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
     'projectArea', 'projectStartDate', 'projectEndDate'];
-  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'specName', 'modifiedTime','designId', 'planId', 'status', 'quotation', 'view' ]; 
+  EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
-  pjData: any = {}; isSts: boolean = true; submitted: boolean = false; userData: any;
+  pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
   projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
-  action: string = ''; designId: string = ''; companyName: string = ''; matcardLst: any; addFilter: string = '1';
+  action: string = ''; designId: any; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
-  estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false;topDisplayedCards: any;
-  des: string = "3FO3LL66G60B";  adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
-  
+  estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false; topDisplayedCards: any;
+  des: string = "3FO3LL66G60B"; adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
+  selectedRow: any;userList: any; quotationHistoryVisible = false;
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userType: any = this.userData ? this.userData.type : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  userPhoneNumber: any ;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;
+  showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
+  projectConfigList: string[] = []; quotationHistoryList: any[] = [];
+  quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
+  projectMarginList:any; isLoading = false;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
   @ViewChild('myProjectPaginator') myProjectPaginator!: MatPaginator;
-@ViewChild('elitePaginator') elitePaginator!: MatPaginator;
-
-  //@ViewChild(MatPaginator) paginator!: MatPaginator;
-  //@ViewChild(MatPaginator) elitePaginator!: MatPaginator;
+  @ViewChild('elitePaginator') elitePaginator!: MatPaginator;
 
   pageSize = 5;
-  modal: any; ttlAmtToBeRcvd: any; projectLst: any=[]; userDetails: any; dateDiff: any;
-  roleid:any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
-  pondOptions: FilePondOptions; lastField: any; ProDataList: any;
+  modal: any; ttlAmtToBeRcvd: any; projectLst: any = []; userDetails: any; dateDiff: any;
+  roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
+  pondOptions: FilePondOptions; lastField: any; ProDataList: any; onQuotationSubmitted: boolean = false;
   spinnerLoading = false;
   pendingRequests = 0;
   adonaiURL: any;
   quotationForm!: FormGroup;
+  quoteForm!: FormGroup;
 
   updateDisplayedCards(): void {
     this.displayedCards = this.showMore ? this.matcardLst?.slice(0, 4) : this.matcardLst;
-  }  
+  }
 
   toggleShowMore(): void {
     this.showMore = !this.showMore;
@@ -138,18 +144,27 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   openLg2(content13: any) {
-    this.modalService.open(content13, { size: 'lg', centered: true },);
+    this.modalService.open(content13, { size: 'lg', centered: true });
   }
 
-  openLg3(content14: any) {
-    this.modalService.open(content14, { size: 'lg',centered: true },);
+
+  openLg3(content14: any, element: any) {
+    this.selectedRow = element;
+    this.modalService.open(content14, { centered: true },);
   }
+
   openLg4(content15: any) {
-    this.modalService.open(content15, { size: 'xl',centered: true },);
+    this.modalService.open(content15, { size: 'xl', centered: true },);
+  }
+  openLg5(content16: any) {
+    this.modalService.open(content16, { size: 'xl', centered: true },);
   }
 
   openRights(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
+  }
+   openNew(content40: any) {
+    this.offcanvasService.open(content40, { position: 'end', });
   }
 
   open(content11: any) {
@@ -170,23 +185,21 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     private router: Router,
     private offcanvasService: NgbOffcanvas
   ) {
-    // Initialize FilePond options if needed
     super();
     this.userDetails = localStorage.getItem('userDetails');
     this.pondOptions = {
       allowMultiple: true,
-      // other FilePond options here
     };
   }
 
   ngOnInit(): void {
     this.getAdonai();
     this.getProjectList();
-    this.getLst(); this.getMatCardLst();
+    this.getLst(); this.getMatCardLst();    this.getUsers();    this.getUserInfo(this.userEmail);
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
-    //this.getdesignData();
-    // this.fetchPaymentStages();
+    this.getProjectConfig();
+    this.getMarginData();
     this.createProjectForm = this.fb.group({
       projectName: ['', Validators.required],
       clientName: ['', Validators.required],
@@ -195,13 +208,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       state: ['', Validators.required],
       city: ['', Validators.required],
       projectState: [''],
-      projectEstimation: ['', [Validators.required, Validators.min(0)]], // Assuming estimation should be a positive number
-      projectArea: ['', [Validators.required, Validators.min(0)]], // Assuming area should be a positive number
+      projectEstimation: ['', [Validators.required, Validators.min(0)]],
+      projectArea: ['', [Validators.required, Validators.min(0)]],
       projectStartDate: ['', Validators.required],
       projectEndDate: ['', Validators.required],
       action: [''],
       companyName: [JSON.parse(this.userDetails)?.companyName],
-      attachments: [null], // Adjust based on your attachment handling
+      attachments: [null],
       email: [JSON.parse(this.userDetails)?.email],
       type: [JSON.parse(this.userDetails)?.type],
       username: [JSON.parse(this.userDetails)?.username],
@@ -212,49 +225,108 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
 
     this.quotationForm = this.fb.group({
-      clientName: ['', Validators.required],
-      clientAddress: ['', Validators.required],
-      projectName: ['', Validators.required],
-      designId: ['', Validators.required],
-      discount:['',Validators.required],
-      flatNo:['',Validators.required],
-      others:['',Validators.required],
-      projectConfig:['',Validators.required],
-      quotationNumber:['',Validators.required],
-      gMC:['',Validators.required],
-      gPA:['',Validators.required],
-      gSC:['',Validators.required],
-      tDMC:['',Validators.required],
-      tDPA:['',Validators.required],
-      tDSC:['',Validators.required],
-      dedEmail:['',Validators.required],
-      dedMobile:['',Validators.required],
-      dedName:['',Validators.required],
-      rmdEmail:['',Validators.required],
-      rmdMobile:['',Validators.required],
-      rmdName:['',Validators.required],
-      Optimizerprocess:['',Validators.required],
-      shutterList:['',Validators.required],
-      functionalList:['',Validators.required],
-      hardwareList:['',Validators.required],
-      email:['',Validators.required],
-      type:['',Validators.required],
+      clientName: ['',],
+      clientAddress: ['',],
+      clientEmail:[''],
+      clientMobileNumber:['',[Validators.pattern(/^[0-9]{10}$/)]],
+      projectName: [''],
+      designId: [this.designId],
+      discount: [0, [Validators.pattern(/^[0-9]+$/)]],
+      flatNo: [''],
+      others: [0, [Validators.pattern(/^[0-9]+$/)]],
+      projectConfig: [''],
+      margin:[''],
+      quotationNumber: [''],
+      dedEmail: [''],
+      dedMobile: [''],
+      dedName: [''],
+      rmdEmail: [''],
+      rmdMobile: [''],
+      rmdName: [''],
+      optimizerProcess: [false],
+      functionalList: [false],
+      shutterOptions: this.fb.group({
+        pannelList: [true],
+        groupPannelList: [true],
+        shutterList: [true],
+        hardwareList: [false],
+      }),
+      customizedOptions: this.fb.group({
+        bomRequired : [true],
+        kbRequired : [true],
+        wardrobeRequired :[true]
+      },),
+      email: [JSON.parse(this.userData).email],
+      type: [JSON.parse(this.userData).type,],
+      isFunctionalPartsAndDoorsRequired: [true],
+      kandbJsonLink:[""],
+      wardrobeJsonLink:[""],
+      tdmc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      gmc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      gsc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      tdsc: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      gpa: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      tdpa: [0.0, [Validators.pattern(/^\d+(\.\d+)?$/)]],
+      customizedQuotation:[true],
+      isDetailPannelRequired: [true],
+      productionList:[false],
+      otherDesignerName: [''],
+      otherDesignerEmail: [''],
+      otherDesignerPhone: [''],
+      otherRmdName:[''],
+      otherRmdEmail:[''],
+      otherRmdPhone:['']
+    },
+     {
+    validators: [this.atLeastOneCheckboxSelected()]
+    }
+  );
+    if (this.userType === 1) {
+      this.quotationForm.patchValue({
+      rmdEmail: this.userEmail,
+      rmdMobile: this.userPhoneNumber,
+      rmdName: this.userName,
+      dedEmail: this.userEmail,
+      dedMobile: this.userPhoneNumber,
+      dedName: this.userName,
+      });
+    }
+
+    const atLeastOneCheckboxInline = (group: AbstractControl): ValidationErrors | null => {
+      const controls = (group as FormGroup).controls;
+      const anyChecked = Object.values(controls).some(control => control.value === true);
+      return anyChecked ? null : { atLeastOneRequired: true };
+    };
+    this.quotationForm.get('isDetailPannelRequired')?.valueChanges.subscribe(checked => {
+      const group = this.quotationForm.get('shutterOptions');
+      if (checked) {
+        group?.setValidators(atLeastOneCheckboxInline);
+      } else {
+        group?.clearValidators();
+      }
+      group?.updateValueAndValidity();
     });
 
-
   }
+
+  atLeastOneSelectedValidator() {
+  return (group: FormGroup): { [key: string]: any } | null => {
+    const anySelected = Object.values(group.controls).some(control => control.value === true);
+    return anySelected ? null : { required: true };
+  };
+  }
+
 
   get f() {
     return this.createProjectForm.controls;
   }
-  
+
 
   minEndDate: string = '';
   onStartDateChange(event: Event): void {
     const startDate = (event.target as HTMLInputElement).value;
-    this.minEndDate = startDate; // Set the minimum end date
+    this.minEndDate = startDate;
     const endDate = this.createProjectForm.get('projectEndDate')?.value;
-    // Reset the end date if it is earlier than the new start date
     if (endDate && endDate < startDate) {
       this.createProjectForm.get('projectEndDate')?.setValue('');
     }
@@ -262,7 +334,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   dynamicFields: { value: string; percent: number; fieldNm: string; }[] = [];
   initializeDynamicFields() {
-    // Loop through f1 to f30 and add only those with non-empty values to dynamicFields
     for (let i = 1; i <= 30; i++) {
       const fieldName = `f${i}`;
       const percentName = `f${i}Percent`;
@@ -275,7 +346,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       }
     }
     this.lastField = this.dynamicFields[this.dynamicFields.length - 1].value;
-    console.log('Last Field:', this.lastField);
     this.getdesignData()
   }
 
@@ -362,14 +432,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
       },
       error: (err) => {
-        console.error('Error:', err);
         this.toastr.error('Something went wrong');
       }
     });
-  }  
-  
-  
-  viewSpecificUrl(data:any) {
+  }
+
+
+  viewSpecificUrl(data: any) {
     const userDetails = JSON.parse(this.userDetails);
     const userEmail = userDetails?.email;
     this.designId = data?.designId ? data.designId : '';
@@ -378,20 +447,17 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res.url) {
           window.open(res.url, '_blank');
         }
-        this.toastr.success("User available with this email!");
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error(error.statusText || "An error occurred while fetching design details.");
       },
     });
   }
-  
+
   onSubmit(): void {
     this.submitted = true;
     if (this.createProjectForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
-      // this.btnDisable = false;
       return;
     }
     else if (this.createProjectForm.valid) {
@@ -404,8 +470,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         projectData.companyCode = JSON.parse(this.userDetails)?.companyCode,
         projectData.projStatus = this.dynamicFields[0].value,
         projectData.percentage = this.dynamicFields[0].percent,
-        // projectData.projectStartDate = this.dp.transform(projectData.projectStartDate, 'dd-MM-yyyy'),
-        // projectData.projectEndDate = this.dp.transform(projectData.projectEndDate, 'dd-MM-yyyy'),
         this.switchService.saveProject(projectData).subscribe({
           next: (response) => {
             const parts = response.message.split('<>');
@@ -418,20 +482,16 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             this.btnDisable = false;
           },
           complete: () => {
-            console.log('Project creation process completed.');
-            this.resetForm(); // Optionally reset the form after submission
+            this.resetForm();
           },
         });
     } else {
-      // Mark all controls as touched to show validation errors
       this.createProjectForm.markAllAsTouched();
-      console.log('Form is invalid');
     }
   }
 
   onSubmitTaskDetails(id: any) {
     let payload = {
-      // "id": 0,
       "projectId": id,
       "heading": 'Project created',
       "projectStatus": this.dynamicFields[0].value,
@@ -454,16 +514,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     })
   }
 
-  // Optional: You can create a method to reset the form
   resetForm(): void {
     this.createProjectForm.reset();
     this.createProjectForm.get('businessCategory')?.setValue('');
   }
 
   ngAfterViewInit() {
-    
+
     this.myProjectDataSource.paginator = this.myProjectPaginator;
-    this.eliteDataSource.paginator = this.elitePaginator; 
+    this.eliteDataSource.paginator = this.elitePaginator;
     this.updateButtons();
   }
 
@@ -471,14 +530,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (this.myProjectPaginator && this.myProjectPaginator.pageIndex !== undefined && this.myProjectPaginator.pageSize !== undefined) {
       return this.myProjectPaginator.pageIndex * this.myProjectPaginator.pageSize + index + 1;
     }
-    return index + 1; // Default return if paginator is not yet defined
+    return index + 1;
   }
 
   EliteGetSNo(index: number): number {
     if (this.elitePaginator && this.elitePaginator.pageIndex !== undefined && this.elitePaginator.pageSize !== undefined) {
       return this.elitePaginator.pageIndex * this.elitePaginator.pageSize + index + 1;
     }
-    return index + 1; // Default return if paginator is not yet defined
+    return index + 1;
   }
 
   addDateDifference() {
@@ -502,9 +561,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       next: (res: any) => {
         if (res) {
           this.projectLst = res.projList;
-          this.myProjectDataSource.data = this.projectLst;          
-          // this.projectLst = this.projectLst.filter((e:any) => e.dateDifference >= 0);
-          // this.projectLst.sort((a:any, b:any) => a.dateDifference - b.dateDifference);
+          this.myProjectDataSource.data = this.projectLst;
         } else {
           this.toastr.error(res.message);
         }
@@ -513,7 +570,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     })
   }
   onFilterChange(id: any) {
-    // if(id=='2'){ this.projName = ''} else if (id=='3'){ this.projId = ''} else {this.projName = '', this.projId = '', this.getMatCardLst()}
     id === '2' ? this.projName = '' : id === '3' ? this.projId = '' :
       (this.projName = '', this.projId = '', this.getMatCardLst());
   }
@@ -525,7 +581,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.adonaiSubEndDate = res.subData.subEndDate || '';
           this.adonaiDaysLeft = this.calculateDateDiff(this.adonaiSubEndDate);
-         
+
         } else {
           this.toastr.error(res.message);
           return;
@@ -538,16 +594,18 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     const today = new Date();
     const end = new Date(endDate);
     if (isNaN(end.getTime())) return 'Invalid date';
-  
+
     const diffTime = end.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-  
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
     if (diffDays < 0) return 'Expired';
     if (diffDays === 0) return 'Last day';
-  
+    if(diffDays == 1) return 'Subscription ends in 1 day';
+
+
     return `Subscription ends in ${diffDays} days`;
   }
-  
+
 
   getMatCardLst() {
     this.startLoading();
@@ -566,7 +624,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         projectname: this.addFilter == '3' ? this.projName : '',
         filter: this.addFilter == '1' ? 'All' : (this.addFilter == '2' ? 'projectid' : 'projectname'),
       }
-
       this.switchService.projectLst(payload).subscribe({
         next: (res: any) => {
           if (res) {
@@ -577,22 +634,21 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
               const matchedProject = paymentLastLst.find((lastProject: any) => lastProject.projectId === project.projectId);
               if (matchedProject) {
                 project.paymentPercent = matchedProject.paymentPercent;
-                project.paymentStage = matchedProject.paymentStage  // Add projPercent to the project
+                project.paymentStage = matchedProject.paymentStage
               } else {
-                project.paymentPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
+                project.paymentPercent = 0;
               }
             });
             projLst?.forEach((e: any) => {
               const matchedProjectstg = proLastLst.find((lastStg: any) => lastStg.projectId === e.projectId);
               if (matchedProjectstg) {
                 e.projectPercent = matchedProjectstg.projectPercent;
-                e.projectStage = matchedProjectstg.projectStage  // Add projPercent to the project
+                e.projectStage = matchedProjectstg.projectStage
               } else {
-                e.projectPercent = 0;  // If no match, set projPercent to 0 (or handle accordingly)
+                e.projectPercent = 0;
               }
             });
             this.matcardLst = projLst;
-            // this.addDateDifference();
             this.matcardLst?.sort((a: any, b: any) => a.priorityDays - b.priorityDays);
             this.toggleShowMore();
             this.toggleTopShowMore();
@@ -601,7 +657,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           }
           this.stopLoading();
         }
-        
+
       })
     }
   }
@@ -660,9 +716,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   fetchPaymentStages(data: any) {
-    //   this.http.get('https://api.example.com/payment-stages').subscribe((data: any) => {
-    //     this.paymentStages = data.map((item: any) => ({ ...item, isNew: false }));
-    //   });
     this.estamount = data.projectEstimation;
     this.lstData = data
     this.switchService.getProjEstimation(data.projectId).subscribe({
@@ -670,8 +723,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.paymentStages = res.map((item: any) => ({ ...item, isNew: false }));
           this.paymentStages.forEach((e: any) => { e.updatedTime = this.convertToIST(e.updatedTime); });
-          // const lastElement = this.paymentStages[this.paymentStages.length - 1];
-          // this.lastPendingAmount = lastElement ? lastElement.pendingAmount : data.projectEstimation;
           this.calculateTotalReceivedAmount();
         } else {
           this.toastr.error(res.message);
@@ -690,15 +741,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       this.toastr.warning('Please fill all the fields before adding a new row.', 'Validation Error');
       return;
     } else {
-
-      // const totalPercentage = this.paymentStages.reduce((sum:any, payment:any) => {
-      //   return sum + (payment.percantage ? parseFloat(payment.percantage) : 0);
-      // }, 0);
-
-      // if (totalPercentage > 100) {
-      //   this.toastr.error('Total percentage cannot exceed 100. Please correct the values.', 'Validation Error');
-      //   return;
-      // }
       this.hasAddedRow = true;
       this.paymentStages.push({
         projectId: this.lstData?.projectId,
@@ -710,7 +752,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         receivedAmount: '',
         pendingAmount: '',
         amountToBeRecieved: '',
-        updatedBy: JSON.parse(this.userData)?.username,
+        updatedBy: this.userData?.username,
         updatedTime: '',
         isNew: true
       });
@@ -719,7 +761,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   convertToIST(utcDateString: string): Date {
     const utcDate = new Date(utcDateString);
-    const istOffset = 5.5 * 60 * 60 * 1000; // IST offset in milliseconds (5 hours 30 minutes)
+    const istOffset = 5.5 * 60 * 60 * 1000;
     return new Date(utcDate.getTime() + istOffset);
   }
 
@@ -744,25 +786,15 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       payment.amountToBeRecieved = '0';
     }
   }
-  // calculateAmountToBeReceived(payment: any): void {
-  //   if (this.estamount && payment.percantage) {
-  //     payment.amountToBeRecieved = (+this.estamount * parseFloat(payment.percantage) / 100).toFixed(0);
-  //   } else {
-  //     payment.amountToBeRecieved = '0';
-  //   }
-  // }
 
   onPercentageChange(payment: any): void {
-    // Calculate the total percentage excluding the current row
     const totalPercentageExcludingCurrent = this.paymentStages.reduce((sum: any, p: any) => {
       return sum + (p === payment || !p.percantage ? 0 : parseFloat(p.percantage));
     }, 0);
 
-    // Check if the new total exceeds 100
     const newTotalPercentage = totalPercentageExcludingCurrent + (payment.percantage ? parseFloat(payment.percantage) : 0);
 
     if (newTotalPercentage > 100) {
-      // Show error message and reset the value
       this.toastr.error('Total percentage cannot exceed 100. Please enter a valid value.', 'Validation Error');
       payment.percantage = ''; payment.amountToBeRecieved = '';
     }
@@ -839,9 +871,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       this.toastr.warning('Please fill all the fields before adding a new row.', 'Validation Error');
       return;
     } else {
-      // let totalPendingSum = this.paymentStages.reduce((sum: number, e: any) => {
-      //   return sum + (+e.pendingAmount || 0); 
-      // }, 0);
       let payload = this.paymentStages.map((e: any) => ({
         id: e.id || 0,
         projectId: e.projectId || "",
@@ -854,7 +883,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         updatedBy: e.updatedBy || "",
         projectEstimation: e.projectEstimation || "",
         totalAmount: e.totalAmount || "",
-        totalPending: '' //totalPendingSum
+        totalPending: ''
       }));
       this.switchService.saveProjEstimation(payload).subscribe({
         next: (response) => {
@@ -1356,7 +1385,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       offsetX: 110
     },
     xaxis: {
-      // categories: [2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
       categories: ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     },
     yaxis: [
@@ -1429,7 +1457,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     tooltip: {
       fixed: {
         enabled: true,
-        position: "topLeft", // topRight, topLeft, bottomRight, bottomLeft
+        position: "topLeft",
         offsetY: 30,
         offsetX: 60
       }
@@ -1442,16 +1470,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   ReadMore: boolean = true
 
-  //hiding info box
   visible: boolean = false
 
-
-  //onclick toggling both
   onclick() {
-    this.ReadMore = !this.ReadMore; //not equal to condition
+    this.ReadMore = !this.ReadMore;
     this.visible = !this.visible
   }
- 
+
 
   EliteApplyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -1487,7 +1512,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (input.files && input.files.length > 0) {
       this.fileName = input.files[0].name;
     } else {
-      this.fileName = null; // Reset if no file selected
+      this.fileName = null;
     }
   }
   fields: Array<{ value: string }> = [];
@@ -1533,6 +1558,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   updateButtons() {
+    if (!this.scrollContent?.nativeElement) {
+      return;
+    }
     const { scrollLeft, scrollWidth, clientWidth } = this.scrollContent.nativeElement;
     this.isAtStart = scrollLeft <= 0;
     this.isAtEnd = scrollLeft + clientWidth >= scrollWidth;
@@ -1548,7 +1576,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.spinnerLoading = true;
   }
 
-  // Stop loading: Decrease pending requests count and hide spinner when all requests complete
   stopLoading() {
     this.pendingRequests--;
     if (this.pendingRequests === 0) {
@@ -1583,21 +1610,20 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             tagId: project.tagId || "N/A",
             designPanoUrl: project.designPanoUrl || "N/A",
           }));
-          
+
           this.eliteDataSource.data = this.projectList;
-          this.elitePaginator.length=this.projectList.length; 
-        } 
+          this.elitePaginator.length = this.projectList.length;
+        }
         this.stopLoading();
       },
       error: (error) => {
-        console.error("API Error:", error);
         this.toastr.error(error.statusText || "An error occurred while fetching projects.");
         this.stopLoading();
       },
     });
   }
-  
-  
+
+
   get i() {
     return this.inventoryForm.controls;
   }
@@ -1627,68 +1653,444 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     }
   }
 
-  selectDesignId(data:any)
-  {
-    console.log(data);
+  selectDesignId(data: any) {
     this.inventoryForm.patchValue({ designId: data.designId });
   }
+  
 
   getTimeAgo(dateString: string): string {
-    if (!dateString) return 'Invalid date'; 
+    if (!dateString) return 'Invalid date';
     let fixedDateString = dateString;
     if (dateString.includes('/')) {
-        let parts = dateString.split(/[\s/:]+/); 
-        if (parts.length >= 3) {
-            fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
-        }
+      let parts = dateString.split(/[\s/:]+/);
+      if (parts.length >= 3) {
+        fixedDateString = `${parts[2]}-${parts[1]}-${parts[0]}T${parts[3] || '00'}:${parts[4] || '00'}:${parts[5] || '00'}`;
+      }
     }
-  
-    let modifiedDate = new Date(fixedDateString); 
-    if (isNaN(modifiedDate.getTime())) return 'Invalid date'; 
-  
+
+    let modifiedDate = new Date(fixedDateString);
+    if (isNaN(modifiedDate.getTime())) return 'Invalid date';
+
     let now = new Date();
     let differenceInMs = now.getTime() - modifiedDate.getTime();
     let differenceInMinutes = Math.floor(differenceInMs / (1000 * 60));
     let differenceInHours = Math.floor(differenceInMinutes / 60);
     let differenceInDays = Math.floor(differenceInHours / 24);
-  
+
     if (differenceInMinutes < 1) return 'Just now';
     if (differenceInMinutes < 60) return `${differenceInMinutes} min ago`;
     if (differenceInHours < 24) return `${differenceInHours} hours ago`;
     if (differenceInDays === 1) return 'Yesterday';
-  
+
     return `${differenceInDays} days ago`;
   }
 
-  onQuotationSubmit(modal: any) {
-    this.submitted = true;
-  
-    if (this.quotationForm?.valid) {
-      setTimeout(() => {
-        const mockResponse = { status: true, message: 'Quotation successfully created!' };
-  
-        if (mockResponse.status) {
-          modal.close(); // Close modal
-          this.submitted = false;
-          this.quotationForm.reset();
-          this.toastr.success(mockResponse.message, 'Quotation', {
-            timeOut: 3000, positionClass: 'toast-top-right'
-          });
-        } else {
-          this.toastr.error(mockResponse.message, 'Quotation', {
-            timeOut: 3000, positionClass: 'toast-top-right'
-          });
-        }
-      }, 1000);
-    } if (this.quotationForm.invalid) {
+  atLeastOneCheckboxChecked(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const controls = (group as FormGroup).controls;
+    const anyChecked = Object.values(controls).some(control => control.value === true);
+    return anyChecked ? null : { atLeastOneRequired: true };
+  };
+  }
+downloadButtons: { label: string; url: string }[] = [];
+
+  fileUrl: string = '';
+  onQuotationSubmit(modal: any, data: any) {
+    const dedSelected = this.quotationForm.value.dedEmail;
+    const rmdSelected = this.quotationForm.value.rmdEmail;
+    const margin = this.quotationForm.get('margin')?.value;
+    if (dedSelected?.email === 'Other' || dedSelected === 'Other') {
+      this.quotationForm.patchValue({
+        dedEmail: this.quotationForm.value.otherDesignerEmail,
+        dedMobile: this.quotationForm.value.otherDesignerPhone,
+        dedName: this.quotationForm.value.otherDesignerName
+      });
+    }
+    if (rmdSelected?.email === 'Other' || rmdSelected === 'Other') {
+      this.quotationForm.patchValue({
+        rmdEmail: this.quotationForm.value.otherRmdEmail,
+        rmdMobile: this.quotationForm.value.otherRmdPhone,
+        rmdName: this.quotationForm.value.otherRmdName
+      });
+    }
+    this.onQuotationSubmitted = true;
+    this.quotationForm.markAllAsTouched();
+    const shutterListChecked = this.quotationForm.get('isDetailPannelRequired')?.value;
+    const shutterOptionsGroup = this.quotationForm.get('shutterOptions') as FormGroup;
+    if (this.quotationForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
       return;
     }
-    
+    this.isLoading = true;
+    this.designId = this.selectedRow?.designId || '';
+    const { shutterOptions, customizedOptions, ...rawRest } = this.quotationForm.value;
+    const {
+      otherRmdEmail,
+      otherRmdName,
+      otherRmdPhone,
+      otherDesignerName,
+      otherDesignerEmail,
+      otherDesignerPhone,
+      ...rest
+    } = rawRest;
+    const opts = shutterOptions;
+    const cusOpts = customizedOptions;
+    const payload = {
+      ...rest,
+      margin: margin?.name || '',
+      marginPercent: margin?.percent || 0,
+      bomRequired: cusOpts.bomRequired,
+      kbRequired: cusOpts.kbRequired,
+      wardrobeRequired: cusOpts.wardrobeRequired,
+      designId: this.designId,
+      pannelList: opts.pannelList,
+      groupPannelList: opts.groupPannelList,
+      hardwareList: opts.hardwareList,
+      shutterList: opts.shutterList,
+      tdmc: parseFloat(rest.tdmc),
+      gmc: parseFloat(rest.gmc),
+      gsc: parseFloat(rest.gsc),
+      tdsc: parseFloat(rest.tdsc),
+      gpa: parseFloat(rest.gpa),
+      tdpa: parseFloat(rest.tdpa),
+    };
+    this.switchService.quotationXl(payload).subscribe({
+    next: (res) => {
+      if (res) {
+        this.toastr.success('Quotation Generated successfully!');
+        this.isLoading = false;
+
+        // Save main quotation file URL (if needed elsewhere)
+        this.fileUrl = res.url;
+
+        // Prepare download buttons based on valid URLs
+        this.downloadButtons = [
+          { label: 'Detailed Panel List', url: res.detiledPanelListUrl },
+          { label: 'Parts & Door List', url: res.functionalPartsListUrl },
+          { label: 'Production List', url: res.productionList },
+          { label: 'Customized Quote', url: res.customizedQuoteurl },
+          { label: 'Hardware List', url: res.hardwareListUrl }
+        ].filter(file => file.url?.trim() && file.url.startsWith('http'));
+
+        // Extract URLs for auto-download
+        const validFileUrls = this.downloadButtons.map(file => file.url);
+
+        if (validFileUrls.length > 0) {
+          this.downloadAllFiles(validFileUrls);
+        } else {
+          console.warn('No valid file URLs found for download.');
+        }
+
+        // Cleanup
+        modal.close();
+        this.onQuotationSubmitted = false;
+        this.quotationForm.reset();
+      }
+    },
+    error: (err) => {
+      this.toastr.error(err.statusText || 'Something went wrong');
+      this.isLoading = false;
+    }
+  });
   }
-  
-  
-  
+
+  get g() {
+    return this.quotationForm.controls;
+  }
+
+  allowOnlyNumbers(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '');
+  }
+  getUsers() {
+    if (this.userData.type == 2) {
+      let cn = this.userCompanyName;
+      let cc = this.userCompanyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.userList = res;
+            this.userList.push({
+              email: 'Other',
+              phoneNumber: null,
+              username: null
+            });
+            const matchedUser = this.userList.find((user: any) => user.email === this.userEmail);
+            if (matchedUser) {
+              this.userPhoneNumber = matchedUser.phoneNumber;
+              this.quotationForm.patchValue({
+                rmdMobile:  this.userPhoneNumber,
+                rmdName: matchedUser.username,
+              }); 
+              
+            } 
+
+          } else {
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+    }
+    else if (this.userData.type == 1) {
+      this.userList = [{
+        email: 'Other',
+        phoneNumber: null,
+        username: null
+      }];
+    }
+  }
+
+  getUserInfo(email: string) {
+    if (!email) {
+      return;
+    }
+    this.switchService.userInfo(email).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.userData = res;
+          this.userPhoneNumber = res.phoneNumber;
+          if (this.userType === 1) {
+            this.quotationForm.patchValue({
+              rmdEmail: this.userEmail,
+              rmdMobile: this.userPhoneNumber,
+              rmdName: this.userName,
+              dedEmail: this.userEmail,
+              dedMobile: this.userPhoneNumber,
+              dedName: this.userName,
+            });
+          }
+          else{
+            this.quotationForm.patchValue({
+              rmdEmail: '',
+              rmdMobile:'',
+              rmdName: ''
+            });
+          }
+
+
+        } else {
+          this.toastr.error("User not found.");
+        }
+      },
+      error: (err: any) => {
+        this.toastr.error("Failed to fetch user data. Please try again.");
+      }
+    });
+  }
+
+ onUserSelected(selectedUser: any): void {
+  if (selectedUser?.email === 'Other') {
+    this.showOtherRelationshipFields = true;
+
+    // Clear auto-fill fields
+    this.quotationForm.patchValue({
+      rmdMobile: '',
+      rmdName: ''
+    });
+    } else {
+      this.showOtherRelationshipFields = false;
+      if (selectedUser) {
+        this.quotationForm.patchValue({
+          rmdMobile: selectedUser.phoneNumber || '',
+          rmdName: selectedUser.username || ''
+        });
+      } else {
+        this.quotationForm.patchValue({
+          rmdMobile: '',
+          rmdName: ''
+        });
+      }
+  }
+  }
+
+  onDedSelected(selectedUser: any): void {
+    if (selectedUser?.email === 'Other') {
+    this.showOtherDesignerFields = true;
+
+    // Clear auto-fill fields
+    this.quotationForm.patchValue({
+      dedMobile: '',
+      dedName: ''
+    });
+    } else {
+    this.showOtherDesignerFields = false;
+    if (selectedUser) {
+      this.quotationForm.patchValue({
+        dedMobile: selectedUser.phoneNumber || '',
+        dedName: selectedUser.username || ''
+      });
+    } else {
+      this.quotationForm.patchValue({
+        dedMobile: '',
+        dedName: ''
+      });
+    }
+  }
+  }
+
+
+
+  toggleGraniteFields() {
+    this.graniteEnabled = !this.graniteEnabled;
+    if (!this.graniteEnabled) {
+      this.quotationForm.patchValue({ gpa: 0, gsc: 0,gmc:0 });
+    }
+  }
+  toggleTDMCFields() {
+    this.TDMCEnabled = !this.TDMCEnabled;
+    if (!this.TDMCEnabled) {
+      this.quotationForm.patchValue({ tdmc: 0, tdpa: 0,tdsc:0 });
+    }
+  }
+
+  getProjectConfig(){
+    let payload = {
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchProjectConfig(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+           const configs: string[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const value = res[`f${i}`];
+            if (value) configs.push(value);
+          }
+          this.projectConfigList = configs;
+          this.quotationForm.patchValue({
+            quotationNumber: res.quotationNumber
+          });
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+
+  allowOnlynum(event: KeyboardEvent) {
+    const allowedChars = '0123456789.';
+    const inputChar = event.key;
+
+    if (
+      ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
+    ) {
+      return;
+    }
+
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
+      event.preventDefault();
+    }
+  }
+  atLeastOneCheckboxSelected(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const formGroup = group as FormGroup;
+    const controls = formGroup.controls;
+    const isChecked = ['optimizerProcess', 'functionalList', 'customizedQuotation', 'isDetailPannelRequired']
+      .some(key => controls[key]?.value === true);
+    return isChecked ? null : { atLeastOneRequired: true };
+  };
+  }
+
+  nextStep() {
+  if (this.step === 1) {
+    this.submittedStep1 = true;
+    if (
+      this.quotationForm.get('clientName')?.invalid ||
+      this.quotationForm.get('clientAddress')?.invalid,
+      this.quotationForm.get('clientMobileNumber')?.invalid
+    ) {
+      return; // prevent going to step 2
+    }
+  }
+
+  if (this.step === 2) {
+    this.submittedStep2 = true;
+    if (
+      this.quotationForm.get('others')?.invalid
+      
+    ) {
+      return; // prevent going to step 3
+    }
+  }
+
+  if (this.step < 3) this.step++;
+  }
+
+
+  prevStep() {
+    if (this.step > 1) {
+      this.step--;
+    }
+  }
+
+  getQuotationHistory(selectedRow: any,) {
+    this.designId = selectedRow?.designId || '';
+    const payload = {
+      companyCode: this.userData.companyCode || '',
+      email: this.userData.email,
+      type: this.userData.type,
+      designId: this.designId
+    };
+    this.switchService.quotationHistory(payload).subscribe({
+      next: (res: any) => {
+        if (res ) {
+          selectedRow.quotationHistoryList = res;
+        } 
+        },
+      error: (error) => {
+        this.toastr.error(error.statusText || 'An error occurred while fetching the quotation history.');
+      }
+    });
+  }
+
+  downloadAllFiles(fileUrls: string[]) {
+    fileUrls.forEach((url, index) => {
+      const link = document.createElement('a');
+      link.href = url;
+      link.target = '_blank';
+      link.download = '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+
+  getMarginData(){
+    let payload = {
+      companycode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchDynamicMargin(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          const configs: { name: string, percent: number }[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const name = res[`f${i}`];
+            const percent = res[`f${i}Percent`];
+            if (name) {
+              configs.push({ name, percent: percent || 0 });
+            }
+          }
+          this.projectMarginList = configs;
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
 
 
 }

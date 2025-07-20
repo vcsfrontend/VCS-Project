@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { salesOnlyGuard } from '../../guards/sales-only.guard';
 
 export const admin: Routes = [
  {path:'dashboard',children:[
@@ -73,10 +74,17 @@ export const admin: Routes = [
     import('./projects/projects.component').then((m) => m.ProjectsComponent),
 },
 {
+  path: 'support',
+  loadComponent: () =>
+    import('./support/support.component').then((m) => m.SupportComponent),
+},
+{
   path: 'adonai-users',
   loadComponent: () =>
     import('./adonai-users/adonai-users.component').then((m) => m.AdonaiUsersComponent),
+  canActivate: [salesOnlyGuard],
 },
+
 {
   path: 'products',
   loadComponent: () =>
@@ -173,10 +181,24 @@ export const admin: Routes = [
     import('./org-settings/org-settings.component').then((m) => m.OrgSettingsComponent),
   },
   {
+    path: 'campaigns',
+    loadComponent: () =>
+    import('./campaigns/campaigns.component').then((m) => m.CampaignsComponent),
+  },
+  {
     path: 'leads',
     loadComponent: () =>
     import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
   },
+  
+  {
+    path: 'crm-settings',
+    loadComponent: () =>
+      import('./crm-settings/crm-settings.component').then((m) => m.CrmSettingsComponent),
+  },
+  
+  
+  
   // {
   //   path: 'contacts',
   //   loadComponent: () =>
@@ -187,6 +209,21 @@ export const admin: Routes = [
     path: 'deals',
     loadComponent: () =>
     import('../apps/crm/deals/deals.component').then((m) => m.DealsComponent),
+  },
+  {
+    path: 'reports',
+    loadComponent: () =>
+    import('./reports/reports.component').then((m) => m.ReportsComponent),
+  },
+  {
+    path: 'appointments',
+    loadComponent: () =>
+    import('./appointments/appointments.component').then((m) => m.AppointmentsComponent),
+  },
+  {
+    path: 'tasks',
+    loadComponent: () =>
+    import('./tasks/tasks.component').then((m) => m.TasksComponent),
   },
 {
   path: 'personal',
@@ -199,7 +236,7 @@ export const admin: Routes = [
     import('./users/users.component').then((m) => m.UsersComponent),
 },
 
-]}
+]},
 ];
 @NgModule({
   imports: [RouterModule.forChild(admin)],

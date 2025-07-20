@@ -1,0 +1,474 @@
+<div class="card custom-card mt-3">
+    <div class="card-header justify-content-between">
+        <div class="card-title">
+            CRM All UsersColumn
+        </div>
+        <div class="d-flex flex-wrap gap-3">
+            <!-- <mat-form-field class="filters-field-1">
+                <mat-label>Search Here</mat-label>
+                <input matInput (keyup)="crmApplyFilter($event)" #input>
+            </mat-form-field> -->
+            <button type="button" class="btn btn-primary">
+                <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Users</button>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="mat-elevation-z8">
+            <div class="table-responsive">
+                <table mat-table [dataSource]="crmAllDataSource" class="mat-table">
+                    <ng-container matColumnDef="slNo">
+                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{crmUsersgetSNo(i)}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="username">
+                        <th mat-header-cell *matHeaderCellDef> Username </th>
+                        <td mat-cell *matCellDef="let element">{{element.username }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="phone">
+                        <th mat-header-cell *matHeaderCellDef> Phone </th>
+                        <td mat-cell *matCellDef="let element">{{element.phoneNumber }} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef> Email </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.email }}
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="Role">
+                        <th mat-header-cell *matHeaderCellDef> Role </th>
+                        <td mat-cell *matCellDef="let element">
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"
+                                (click)="openLg3(content3)"><i class="ri-eye-line"></i>
+                            </a>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="edit">
+                        <th mat-header-cell *matHeaderCellDef> edit </th>
+                        <td mat-cell *matCellDef="let element"> <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                    class="ri-edit-line"></i></a> </td>
+                    </ng-container>
+                    <ng-container matColumnDef="delete">
+                        <th mat-header-cell *matHeaderCellDef> Delete </th>
+                        <td mat-cell *matCellDef="let element">
+                            <a aria-label="anchor" href="javascript:void(0);"
+                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle">
+                                <i class="ri-delete-bin-line"></i>
+                            </a>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="crmAllUsersColumn"></tr>
+                    <tr mat-row *matRowDef="let row; columns: crmAllUsersColumn">
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator #crmAllPaginator [pageSizeOptions]="[5, 20, 30]" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card custom-card mt-3">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    CRM Roles
+                </div>
+                <div class="d-flex flex-wrap gap-3">
+                    <!-- <mat-form-field class="filters-field-1">
+                <mat-label>Search Here</mat-label>
+                <input matInput (keyup)="crmApplyFilter($event)" #input>
+            </mat-form-field> -->
+                    <button type="button" class="btn btn-primary" (click)="openLg1(content1)">
+                        <i class="ri-add-line align-middle me-1 fw-medium"></i>Add Users</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="mat-elevation-z8">
+                    <div class="table-responsive">
+                        <table mat-table [dataSource]="crmDataSource" class="mat-table">
+                            <ng-container matColumnDef="slNo">
+                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="designNo">
+                                <th mat-header-cell *matHeaderCellDef> DesignNo </th>
+                                <td mat-cell *matCellDef="let element">{{element.designNo }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="desigRole">
+                                <th mat-header-cell *matHeaderCellDef> Design Role </th>
+                                <td mat-cell *matCellDef="let element">{{element.desigRole | titlecase }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="crmDesigRoleId">
+                                <th mat-header-cell *matHeaderCellDef> RoleId </th>
+                                <td mat-cell *matCellDef="let element"> {{element.crmDesigRoleId}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef> Email </th>
+                                <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="edit">
+                                <th mat-header-cell *matHeaderCellDef> edit </th>
+                                <td mat-cell *matCellDef="let element"> <a aria-label="anchor"
+                                        href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle"><i
+                                            class="ri-edit-line"></i></a> </td>
+                            </ng-container>
+                            <ng-container matColumnDef="delete">
+                                <th mat-header-cell *matHeaderCellDef> Delete </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a aria-label="anchor" href="javascript:void(0);"
+                                        class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </a>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="crmUsersColumn"></tr>
+                            <tr mat-row *matRowDef="let row; columns: crmUsersColumn">
+                            </tr>
+                        </table>
+                    </div>
+                    <mat-paginator #crmPaginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-lg-6">
+        <div class="card custom-card mt-3">
+            <form [formGroup]="companyForm">
+                <div class="card-header justify-content-between d-flex">
+                    <div class="card-title">Company Info</div>
+                    <div class="col-xl-4">
+                        <ng-select formControlName="companyinfo" [items]="companyinfo" bindLabel="label"
+                            bindValue="value">
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row gy-3 m-2">
+                        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer1'">
+                            <div [formGroup]="formDesigner1" class="d-flex gap-2">
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Company Name" />
+                                </div>
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="products" placeholder="Products" />
+                                </div>
+                                
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="companyForm.get('companyinfo')?.value === 'designer2'">
+                            <div *ngIf="!hasSubmitted && !fetchedData" [formGroup]="formDesigner2" class="row w-100">
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Enter custom value" 
+                                    [ngClass]="{ 'is-invalid': hasSubmitted && g['companyName'].errors }"/>
+                                    <div *ngIf="hasSubmitted && g['companyName'].errors" class="invalid-feedback">
+                                        <span *ngIf="g['companyName'].errors['required']">status is required.</span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 d-flex align-items-end">
+                                    <button class="btn btn-primary" type="button" (click)="addMore()">Add Custom</button>
+                                </div>
+                                <div class="col-xl-6 mt-2" *ngIf="showCustomInput">
+                                    <input type="text" class="form-control" formControlName="customValue" placeholder="Enter custom value" />
+                                </div>
+                                <div class="col-xl-6 d-flex align-items-end">
+                                    <button type="button" class="btn btn-primary mt-2" (click)="saveAddLeadEntry()" [disabled]="hasSubmitted">Save</button>
+                                </div>
+                            </div>
+
+                            <div *ngIf="isEditing" [formGroup]="formDesigner2" class="row w-100 mt-2">
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="companyName" placeholder="Edit company name" />                
+                                </div>
+                                <div class="col-xl-6">
+                                    <input type="text" class="form-control" formControlName="customValue" placeholder="Edit custom value" />
+                                </div>
+                                <div class="col-xl-12 d-flex gap-2 mt-3">
+                                    <button class="btn btn-success" (click)="editLeadEntry()">Save Changes</button>
+                                    <button class="btn btn-danger" (click)="cancelEdit()">Cancel</button>
+                                </div>
+                            </div>
+                      
+                            <table class="table table-striped mt-2">
+                                <tbody>
+                                    <div *ngIf="hasSubmitted && !isEditing">
+                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                            <div *ngFor="let field of editableFields">
+                                                <input class="form-control" type="text" [value]="fetchedData[field]" [disabled]="true" />
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-danger mt-2 ms-2" (click)="deleteLeadEntry()">Delete</button>
+                                        <button type="button" class="btn btn-secondary mt-2 ms-2" (click)="startEdit()">Edit</button>
+                                    </div>
+                                </tbody>
+                            </table>
+                        </ng-container>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<ng-template #content1 let-modal>
+    <form [formGroup]="designCrmForm" (ngSubmit)="desigCrmSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Add Crm User</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="code" class="form-label">desigRole</label>
+                        <input type="text" class="form-control" id="code" formControlName="desigRole"
+                            placeholder="Enter Code"
+                            [ngClass]="{ 'is-invalid': designCrmSubmitted && f['desigRole'].errors }">
+                        <div *ngIf="designCrmSubmitted && f['desigRole'].errors" class="invalid-feedback">
+                            <div *ngIf="f['desigRole'].errors['required']">desigRole is required</div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-12">
+                        <label for="name" class="form-label">crmDesigRoleId</label>
+                        <input type="text" class="form-control" id="name" formControlName="crmDesigRoleId"
+                            placeholder="Enter Name" (keypress)="allowOnlyNumbers($event)"
+                            [ngClass]="{ 'is-invalid': designCrmSubmitted && f['crmDesigRoleId'].errors }">
+                        <div *ngIf="designCrmSubmitted && f['crmDesigRoleId'].errors" class="invalid-feedback">
+                            <div *ngIf="f['crmDesigRoleId'].errors['required']">Name is required</div>
+                            <div *ngIf="f['crmDesigRoleId'].errors['pattern']">Only numbers are allowed</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+
+<ng-template #content3 let-modal>
+    <!-- <form [formGroup]="assignRoleForm" (ngSubmit)="assignRoleSubmit(modal)"> -->
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Select Designation</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="col-xl-12">
+            <div class="row gy-2">
+                <div class="col-xl-12">
+                    <ng-select [items]="usersList" bindLabel="name" bindValue="name" formControlName="stage"
+                        placeholder="Select an option" [clearable]="true" class="w-100">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+    <!-- </form> -->
+</ng-template>
+
+<!-- <div class="row mt-4">
+    <div class="col-xl-3">
+        <div class="card custom-card">
+          <div class="card-header justify-content-between d-flex">
+            <div class="card-title">Lead Stages</div>
+            <button class="btn btn-primary ms-auto" type="button" (click)="openRight4(content4)" >Add Stages</button>
+          </div>
+          <div class="card-body p-3" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
+            <div *ngFor="let stage of stageLst; let i = index" class="row mb-3 align-items-center">
+              <div class="col-sm-12">
+                <input type="text" class="form-control form-control-sm p-2 font-weight-bold border"
+                  [ngModel]="stage.stageName" [ngModelOptions]="{ standalone: true }" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-end">
+            <button type="button" class="btn btn-danger btn-sm">Delete</button>
+          </div>
+        </div>
+      </div>
+      
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between d-flex">
+                <div class="card-title">Lead Status</div>
+                <button class="btn btn-primary ms-auto" type="button" (click)="openRight12(content12)">Add
+                    Status</button>
+            </div>
+            <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                <div class="" *ngIf="statusLst">
+                    <ul class="list-unstyled">
+                        <li *ngFor="let status of statusLst" class="mb-3">
+                            <i class="bi bi-arrow-right-circle-fill text-info me-2 "></i>
+                            <strong>{{ status.stage }}</strong>
+                            <ul class="list-group mt-2">
+                                <li *ngFor="let field of status.fields" class="list-group-item">
+                                    <i class="bi bi-check-circle-fill text-info me-2"></i>
+                                    {{ field.name }}
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-footer text-end">
+                <button type="button" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Key Roles
+                </div>
+                <div class="d-flex float-end">
+                    <button class="btn btn-primary" type="button" (click)="openRight12(content12)">Add Status</button>
+                </div>
+            </div>
+            <div class="container mt-4 mb-4">
+                <div>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border"
+                            placeholder="Enter your Status">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">User Roles
+                </div>
+                <div class="d-flex float-end">
+                    <button class="btn btn-primary" type="button" (click)="openRight12(content12)">Add Status</button>
+                </div>
+            </div>
+            <div class="container mt-4 mb-4">
+                <div>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control form-control-sm p-2 font-weight-bold border"
+                            placeholder="Enter your Status">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger btn-sm mt-2 float-end">Delete</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+<ng-template #content4 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
+        <div class="mb-3">
+            <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush mb-0">
+            <li class="list-group-item">
+                <div class="container mt-3">
+                    <div class="col-12">
+                        <div *ngFor="let plan of crmStaticStages; let i = index"
+                            class="form-check mb-3 d-flex justify-content-start">
+                            <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="plan.checked"
+                                [id]="'plan-' + i">
+                            <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom"
+                                (click)="deleteLeadItem(i)">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container mt-3">
+                    <div *ngIf="addMoreVisible" class="col-12">
+                        <div class="row">
+                            <div class="col-xl-6 mb-3">
+                                <input type="text" class="form-control" placeholder="Enter value" [(ngModel)]="newItem">
+                            </div>
+                            <div class="col-xl-2 mb-3">
+                                <button class="btn btn-primary " type="button" (click)="addLeadItem()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
+                (click)="saveCrmStages()">Save Stages</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content12 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Status</strong></h5>
+        <div class="mb-3">
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
+            <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
+                bindValue="stageName" [multiple]="false" (change)="onStageChange()" required>
+            </ng-select>
+        </div>
+        <div *ngIf="selectedStage && checkboxStageOptions" class="container mt-3 ms-3">
+            <div class="col-12">
+                <div *ngFor="let option of checkboxStageOptions; let i = index" class="form-check mb-2 d-flex">
+                    <input class="form-check-input me-2 mt-1" type="checkbox" [(ngModel)]="option.checked"
+                        [id]="'checkbox-' + i" />
+                    <label class="form-check-label w-50" [for]="'checkbox-' + i">
+                        {{ option.name }}
+                    </label>
+                    <button class="btn btn-danger btn-sm ms-2" *ngIf="option.isCustom" (click)="deleteOption(i)">
+                        Delete
+                    </button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-xl-4 mb-3">
+                    <input [(ngModel)]="newOptionName" type="text" class="form-control"
+                        placeholder="Enter new status name" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <button class="btn btn-primary" (click)="addNewOption()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save
+                Status</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+
