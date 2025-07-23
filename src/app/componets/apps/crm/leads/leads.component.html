@@ -240,7 +240,7 @@
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
         <div class="d-flex mb-2 px-3 marge">
-            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
+            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
                     <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"

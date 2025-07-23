@@ -1,57 +1,264 @@
-<app-page-header title="Order-Details" title1="Dashboards" activeTitle="Order-Details"></app-page-header>
-<div class="btn-list">
-    <button class="btn btn-primary btn-wave me-2">
-         Create Quotation rule
-    </button>
+<div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h1 class="page-title fw-medium fs-18 mb-2">Quotation</h1>
+    <nav>
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Quotation</li>
+        </ol>
+    </nav>
 </div>
-<div class="row justify-content-center align-items-center pb-5">
-    <div class="col-xl-8 bg-white pb-2 pt-2 rounded">
-            <!-- <app-showcode-card [title]="'Form grid'" [prism]="prismCode.formlayouts10"> -->
-                <h6>BOM Details Export</h6>
-                <div class="row mt-3">
-                    <div class="col-xxl-6 col-xl-12 mb-3">Model Quotation Category
-                        <select id="inputState1" class="form-select">
-                            <option selected>Model Quotation Category</option>
-                            <option>...</option>
-                        </select>
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="row">
+            <div class="col-xl-4 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>Hi Sana</div>
+                            <div>INCO767815</div>
+                        </div>
+                        <p class="text-muted mb-0">
+                            Thanks for showing interest for your home decor. We have created a quote as requested by you in our
+                            previous
+                            communication. Please review and reach out to
+                            <strong>Salura Anuhya</strong> your personalized designer.
+                        </p>
                     </div>
-                    <div class="col-xxl-6 col-xl-12 mb-3">
-                        Quotation Mode Name
-                        <select id="inputState1" class="form-select">
-                            <option selected>Quotation Mode Name</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-                    
-                    <div class="col-xxl-6 col-xl-12 mb-3">
-                        Tool Line
-                        <select id="inputState1" class="form-select">
-                            <option selected>Tool Line</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-                    <div class="col-xxl-6 col-xl-12 mb-3">
-                        Design Id
-                        <select id="inputState1" class="form-select">
-                            <option selected>Design Id</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-                    <div class="col-xxl-6 col-xl-12 mb-3">
-                        <select id="inputState1" class="form-select">
-                            <option selected>State</option>
-                            <option>...</option>
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-12 justify-content-center">
-                        <button type="submit" class="btn btn-primary">Generate BOM List</button>
-                    </div>
-                    
                 </div>
-    
-            <!-- </app-showcode-card> -->
+            </div>
+            <div class="col-xl-4 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body">
+                        <div class="align-items-start mb-3">
+                            <div>J Jenny Rejlin</div>
+                            <div>(Relationship manager)</div>
+                        </div>
+                         <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div><strong> 9876543210 </strong></div>
+                            <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div><strong> test&#64;gmail.com </strong></div>
+                            <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           <div class="col-xl-4 col-sm-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body">
+                        <div class="align-items-start mb-3">
+                            <div>J Jenny Rejlin</div>
+                            <div>(Relationship manager)</div>
+                        </div>
+                         <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div><strong> 9876543210 </strong></div>
+                            <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div><strong> test&#64;gmail.com </strong></div>
+                            <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
+<div class="col-xl-12">
+    <div class="row">
+        <div class="col-xl-6">
+            <div class="card custom-card">
+                <div class="card-body p-0">
+                    <div class="d-flex p-3 align-items-center">
+                        <div>
+                            <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block justify-content-between" role="tablist">
+                                <li [ngbNavItem]="2" class="nav-item m-1 me-3  p-2 pe-4">
+                                    <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                        aria-selected="true"><i class="las la-history me-2"></i>Recently Viewed</a>
+                                        <ng-template ngbNavContent>
+                                            <div class="p-0" id="pending" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                            <div class="card-body">
+                                                                <div>
+                                                                    <div class="justify-content-between d-flex">
+                                                                        <p class="fs-14 fw-medium mb-2">User Activity Report</p>
+                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                    <p>Insights into Breaks information and calling metrics</p>
+                                                                    <div class="d-flex flex-wrap">
+                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-3" style="cursor: pointer;">
+                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                            <div class="card-body">
+                                                                <div>
+                                                                    <div class="justify-content-between d-flex">
+                                                                        <p class="fs-14 fw-medium mb-2">User Activity Report</p>
+                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
+                                                                            <i class="ri-briefcase-2-line fs-16"></i>
+                                                                        </span>
+                                                                    </div>
+                                                                    <p>Insights into Breaks information and calling metrics</p>
+                                                                    <div class="d-flex flex-wrap">
+                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                </li>
+                                <li [ngbNavItem]="3" class="nav-item m-1  p-2">
+                                    <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                        aria-selected="true"><i class="lar la-star me-2"></i>Favourites</a>
+                                        <ng-template ngbNavContent>
+                                            <div class="p-0" id="in-progress" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-xl-4">
+                                                        <div class="card custom-card task-inprogress-card">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                href="javascript:void(0);"><i
+                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Design
+                                                                            New Landing Pages </p>
+                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">21,Nov
+                                                                                2023</span></p>
+                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
+                                                                                2023</span></p>
+                                                                        <p class="mb-0">Assigned To :
+                                                                            <span class="avatar-list-stacked ms-1">
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/1.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/5.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/12.jpg" alt="img">
+                                                                                </span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="btn-list">
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                    class="ri-edit-line"></i></button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                    class="ri-delete-bin-line"></i></button>
+                                                                        </div>
+                                                                        <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <div class="card custom-card task-inprogress-card">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                href="javascript:void(0);"><i
+                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Designing
+                                                                            New Authentication Pages</p>
+                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">26,Nov
+                                                                                2023</span></p>
+                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">12,Dec
+                                                                                2023</span></p>
+                                                                        <p class="mb-0">Assigned To :
+                                                                            <span class="avatar-list-stacked ms-1">
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/6.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/15.jpg" alt="img">
+                                                                                </span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="btn-list">
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                    class="ri-edit-line"></i></button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                    class="ri-delete-bin-line"></i></button>
+                                                                        </div>
+                                                                        <span class="badge bg-success-transparent d-block">Low</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4">
+                                                        <div class="card custom-card task-inprogress-card">
+                                                            <div class="card-body">
+                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                    <div>
+                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
+                                                                                href="javascript:void(0);"><i
+                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Improving
+                                                                            Ui Of Updated Templates</p>
+                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">4,Dec
+                                                                                2023</span></p>
+                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Dec
+                                                                                2023</span></p>
+                                                                        <p class="mb-0">Assigned To :
+                                                                            <span class="avatar-list-stacked ms-1">
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/9.jpg" alt="img">
+                                                                                </span>
+                                                                                <span class="avatar avatar-sm avatar-rounded">
+                                                                                    <img src="./assets/images/faces/13.jpg" alt="img">
+                                                                                </span>
+                                                                            </span>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div class="btn-list">
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
+                                                                                    class="ri-edit-line"></i></button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
+                                                                                    class="ri-delete-bin-line"></i></button>
+                                                                        </div>
+                                                                        <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content task-tabs-container">
+            <hr style="border: none; border-top: 2px dashed #999; margin: 20px 0;">
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+    </div>
+</div>
 
-    

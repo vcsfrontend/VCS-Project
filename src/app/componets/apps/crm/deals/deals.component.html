@@ -384,7 +384,7 @@
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
         <div class="d-flex mb-2 px-3 marge">
-            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
+            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
                     <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
@@ -920,10 +920,19 @@
                                 <ul class="list-unstyled border border-dark rounded p-3" *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
                                         </span>{{followup.followupDate | date: 'dd-MMM-yyyy hh:mm:ss a'}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Stage :
-                                        </span>{{followup.stage}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Status :
-                                        </span>{{followup.status}}</li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Stage : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage || '') }"
+                                            [ngbTooltip]="(element.stage?.length || 0) > 18 ? element.stage : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.stage?.length || 0) > 18">...</ng-container></span>
+                                    </li>
+                                    <li class="mb-2"><span class="fw-semibold me-1">Status : </span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status || '') }"
+                                            [ngbTooltip]="(element.status?.length || 0) > 18 ? element.status : null" placement="top">
+                                            {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
+                                            <ng-container *ngIf="(element.status?.length || 0) > 18">...</ng-container>
+                                        </span>
+                                    </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
                                         </span>{{followup.followUpBy}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Comments :
@@ -1087,7 +1096,7 @@
 </ng-template>
 
 <div class="col-lg-12">
-    <div class="row">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
         <div class="col-lg-4">
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
@@ -1172,7 +1181,7 @@
 </div>
 
 <div class="col-lg-12">
-    <div class="row">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
