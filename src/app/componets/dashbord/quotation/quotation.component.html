@@ -79,37 +79,90 @@
                                         <ng-template ngbNavContent>
                                             <div class="p-0" id="pending" role="tabpanel">
                                                 <div class="row">
-                                                    <div class="col-xl-3" style="cursor: pointer;">
-                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                    <div class="col-xl-6 mb-4">
+                                                        <div class="card custom-card h-100">
+                                                            <div class="card-header">
+                                                                <div class="card-title">Cost Breakup By Rooms</div>
+                                                            </div>
                                                             <div class="card-body">
-                                                                <div>
-                                                                    <div class="justify-content-between d-flex">
-                                                                        <p class="fs-14 fw-medium mb-2">User Activity Report</p>
-                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
-                                                                            <i class="ri-briefcase-2-line fs-16"></i>
-                                                                        </span>
-                                                                    </div>
-                                                                    <p>Insights into Breaks information and calling metrics</p>
-                                                                    <div class="d-flex flex-wrap">
-                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
-                                                                    </div>
+                                                                <div id="timeline-grouped">
+                                                                    <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart" [stroke]="chartOptions4.stroke"
+                                                                        [dataLabels]="chartOptions4.dataLabels" [plotOptions]="chartOptions4.plotOptions"
+                                                                        [xaxis]="chartOptions4.xaxis" [colors]="chartOptions4.colors" [fill]="chartOptions4.fill"
+                                                                        [yaxis]="chartOptions4.yaxis" [legend]="chartOptions4.legend" [grid]="chartOptions4.grid"
+                                                                        [title]="chartOptions4.title" [colors]="chartOptions4.colors"></apx-chart>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3" style="cursor: pointer;">
-                                                        <div class="card custom-card border border-primary bg-primary-transparent">
+                                                    <div class="col-xl-6 mb-4">
+                                                        <div class="card custom-card h-100">
+                                                            <div class="card-header">
+                                                                <div class="card-title">Simple Donut Chart</div>
+                                                            </div>
                                                             <div class="card-body">
-                                                                <div>
-                                                                    <div class="justify-content-between d-flex">
-                                                                        <p class="fs-14 fw-medium mb-2">User Activity Report</p>
-                                                                        <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
-                                                                            <i class="ri-briefcase-2-line fs-16"></i>
-                                                                        </span>
+                                                                <div id="donut-simple">
+                                                                    <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart" [legend]="chartOptions1.legend"
+                                                                        [labels]="chartOptions1.labels" [responsive]="chartOptions1.responsive"
+                                                                        [colors]="chartOptions1.colors" [dataLabels]="chartOptions1.dataLabels"></apx-chart>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-xxl-12">
+                                                            <div class="row">
+                                                                <div class="col-xl-4 col-sm-6">
+                                                                    <div class="card custom-card overflow-hidden">
+                                                                        <div class="card-body">
+                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                <div>Hi Sana</div>
+                                                                                <div>INCO767815</div>
+                                                                            </div>
+                                                                            <p class="text-muted mb-0">
+                                                                                Thanks for showing interest for your home decor. We have created a quote as requested by you
+                                                                                in our
+                                                                                previous
+                                                                                communication. Please review and reach out to
+                                                                                <strong>Salura Anuhya</strong> your personalized designer.
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
-                                                                    <p>Insights into Breaks information and calling metrics</p>
-                                                                    <div class="d-flex flex-wrap">
-                                                                        <button class="btn btn-sm btn-primary-light btn-wave">View All</button>
+                                                                </div>
+                                                                <div class="col-xl-4 col-sm-6">
+                                                                    <div class="card custom-card overflow-hidden">
+                                                                        <div class="card-body">
+                                                                            <div class="align-items-start mb-3">
+                                                                                <div>J Jenny Rejlin</div>
+                                                                                <div>(Relationship manager)</div>
+                                                                            </div>
+                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                <div><strong> 9876543210 </strong></div>
+                                                                                <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
+                                                                            </div>
+                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                <div><strong> test&#64;gmail.com </strong></div>
+                                                                                <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xl-4 col-sm-6">
+                                                                    <div class="card custom-card overflow-hidden">
+                                                                        <div class="card-body">
+                                                                            <div class="align-items-start mb-3">
+                                                                                <div>J Jenny Rejlin</div>
+                                                                                <div>(Relationship manager)</div>
+                                                                            </div>
+                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                <div><strong> 9876543210 </strong></div>
+                                                                                <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
+                                                                            </div>
+                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                                <div><strong> test&#64;gmail.com </strong></div>
+                                                                                <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -262,3 +315,4 @@
     </div>
 </div>
 
+    

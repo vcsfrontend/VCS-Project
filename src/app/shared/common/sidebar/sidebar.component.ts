@@ -135,6 +135,9 @@ export class SidebarComponent implements AfterViewInit {
           case 'Tasks':
             item.isVisible = true;
             break;
+          case 'Quotation':
+            item.isVisible=true;
+            break;
         }
       })
       this.menuItems = items;

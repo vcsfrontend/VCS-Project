@@ -12,16 +12,18 @@ import { NgApexchartsModule } from 'ng-apexcharts';
   selector: 'app-quotation',
   standalone: true,
   imports: [SharedModule, NgSelectModule, NgbModule,
-    NgbNavModule,NgbDropdownModule,FlatpickrModule,FormsModule,ReactiveFormsModule],
-  providers: [NgbModalConfig, NgbModal,FlatpickrDefaults],
+    NgbNavModule,NgbDropdownModule,FlatpickrModule,FormsModule,ReactiveFormsModule,NgApexchartsModule],
+  providers: [NgbModalConfig, NgbModal,FlatpickrDefaults,],
   templateUrl: './quotation.component.html',
   styleUrl: './quotation.component.scss'
 })
 export class QuotationComponent {
   modal: any;  chartOptions4:any;
+  chartOptions1:any;
   constructor(// config: NgbModalConfig,
     private modalService: NgbModal) {
       this.chartOptions4 = {
+        
       series: [
         // George Washington
         {
@@ -261,6 +263,22 @@ export class QuotationComponent {
         }
     }
     };
+    this.chartOptions1={
+    series: [44, 55, 41, 17, 15],
+    chart: {
+        type: 'donut',
+        height: 290
+    },
+    legend: {
+        position: 'bottom'
+    },
+    colors: ["#845adf", "#23b7e5", "#f5b849", "#49b6f5", "#e6533c"],
+    dataLabels: {
+        dropShadow: {
+            enabled: false
+        }
+    },
+    }
     }
   
   open(content:any) {
