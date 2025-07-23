@@ -77,6 +77,7 @@ export class DealsComponent extends BaseComponent {
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
   shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any; individualEmail :any;
    phoneNumber: string = '';originalStatus: string = '';  notconnectedstatusClicked = false; hasSelectedInvalid = false;
+   adoanAiRole: any;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -169,6 +170,7 @@ export class DealsComponent extends BaseComponent {
     };
 
     this.userData = localStorage.getItem('userDetails');
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
     this.chartOptions={
       series: [44, 55, 13, 43, 22],
       chart: {
@@ -1939,6 +1941,10 @@ export class DealsComponent extends BaseComponent {
 
   getStatusCount(): void {
     this.selectedStatusCount = null;
+    const userType = this.userType;
+    this.campaignId = (userType == 1)
+      ? 'SINGLE9DD1748413866634'
+      : 'DUMMY9DD1748413866634';
     const payload = {
       companyCode: this.userCompanyCode,
       email: this.userEmail,

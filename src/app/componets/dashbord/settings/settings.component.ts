@@ -1553,7 +1553,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   quoteMarginSubmit(modal:any){
-    this.quotationmarginsubmit=true;
+    this.quotationmarginsubmit = true;
     if (this.quoteMarignForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
       return;
