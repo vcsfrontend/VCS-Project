@@ -532,6 +532,10 @@ export class BaseComponent {
       {"name" :"No"},
     ]
 
+    appointmentList = [{"name" : "Demo Booking"},
+      {"name" :"Designing Doubts"},
+    ]
+
 
 
     // SkinFinish = [{"name" : "test"},

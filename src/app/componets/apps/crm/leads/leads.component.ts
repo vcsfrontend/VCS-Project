@@ -116,14 +116,16 @@ export class LeadsComponent extends BaseComponent {
   public leadId = 0;
 
   public sendLeadForm!: FormGroup;
+  public filterForm!: FormGroup;
   public sendwhatsLeadForm!: FormGroup;
   public sendwhatsLeadFormSubmitted = false;
   public sendLeadSubmitted = false;
+  public filterLeadSubmitted = false;
 
   public followupName = '';
   public executiveName = '';
   public followupLeadForm!: FormGroup;
-  public FilterForm!:FormGroup;
+  public filterLeadForm!:FormGroup;
   public followupLeadSubmitted = false;
 
   public userList: any;
@@ -349,6 +351,19 @@ export class LeadsComponent extends BaseComponent {
         bcc: ['', [Validators.minLength(3)]],
         content: ['', [Validators.required]],
       });
+      this.filterLeadForm = this.fb.group({
+        stage: [''],
+        status: [''],
+        source: [''],
+        startDate: [''],
+        endDate: [''],
+        executive: [''],
+        city: [''],
+        campaignId: [''],
+        companyCode: this.userCompanyCode,
+        email: this.userEmail,
+        type: this.userType
+      });
 
       this.sendLeadForm.get('template')
         ?.valueChanges.subscribe((templateGenId) => {
@@ -396,19 +411,6 @@ export class LeadsComponent extends BaseComponent {
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
       executive: ['', [Validators.required]],
-    });
-
-     this.FilterForm = this.fb.group({
-      filterStage: [''],
-      filterStatus: [''],
-      filterSource: [''],
-      filterExecutive: [''],
-      filterCity: [''],
-      filterState: [''],
-      companyName: [this.userCompanyName],
-      companyCode: [this.userCompanyCode],
-      email: [this.userEmail],
-      type: [this.userType],
     });
 
     // lead Move to Campaign
@@ -750,27 +752,6 @@ export class LeadsComponent extends BaseComponent {
         },
       });
     }
-  }
-
-  submitFilter(){
-    let payload = {
-      ...this.FilterForm.value,
-      companyName: [this.userCompanyName],
-      companyCode: [this.userCompanyCode],
-      email: [this.userEmail],
-      type: [this.userType],
-    }
-    this.switchService.filterCrmLeads(payload).subscribe({
-      next : (res:any) => {
-        if (res.status === true)
-        this.toastr.success('filtered data successfully');
-        this.offcanvasService.dismiss();
-        this.FilterForm.reset();
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
-      }
-    })
   }
 
   editLeadSubmit(modal: any) {
@@ -1351,14 +1332,12 @@ export class LeadsComponent extends BaseComponent {
 
   onStatusChange(): void {
     const selectedStage = this.leadForm.get('stage')?.value;
-
     if (selectedStage === 'open') {
     this.checkboxStageOptions = this.openStage.map(opt => ({
       ...opt,
       checked: true,
       isCustom: false
     }));
-
     const firstStatus = this.checkboxStageOptions[0]?.name || null;
     this.leadForm.patchValue({ status: firstStatus });
     return;
@@ -1917,7 +1896,6 @@ export class LeadsComponent extends BaseComponent {
         bcc: this.sendLeadForm.get('bcc')?.value,
         content: this.sendLeadForm.get('content')?.value,
       };
-
       this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1941,6 +1919,47 @@ export class LeadsComponent extends BaseComponent {
       });
     }
   }
+
+  filterLeads() {
+    const formValue = this.filterLeadForm.value;
+    const startDate = formValue.startDate ? `${formValue.startDate}:00` : null;
+    const endDate = formValue.endDate ? `${formValue.endDate}:00` : null;
+    let payload = {
+      ...this.filterLeadForm.value,
+      startDate: startDate, 
+      endDate: endDate,
+      stage: Array.isArray(formValue.stage) ? formValue.stage.join(',') : formValue.stage || '',
+      status: Array.isArray(formValue.status) ? formValue.status.join(',') : formValue.status || '',
+      city: formValue.city?.join(',') || '',
+      source: formValue.source?.join(',') || '',
+      executive: formValue.executive?.join(',') || '',
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+    }
+    console.log(payload)
+    // this.switchService.filterLeads(payload).subscribe({
+    //   next: (res: payloadany) => {
+    //     if (res.status == true) {
+    //       this.submitted = false;
+    //       this.sendLeadForm.reset();
+    //       this.toastr.success(res.message, 'lead', {
+    //         timeOut: 3000,
+    //         positionClass: 'toast-top-right',
+    //       });
+    //     } else {
+    //       this.toastr.error(res.message, 'lead', {
+    //         timeOut: 3000,
+    //         positionClass: 'toast-top-right',
+    //       });
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.toastr.error(error.statusText);
+    //   },
+    // });
+  }
+
 
   get e() {
     return this.followupLeadForm.controls;

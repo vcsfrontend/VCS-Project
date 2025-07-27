@@ -801,8 +801,12 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <label for="input-text" class="form-label">Adonai Activity Status</label>
-                            <input type="text" class="form-control" id="input-text" 
+                            <select class="form-select form-select-lg" id="input-text" 
                             [(ngModel)]="adonaiActivitySts" [disabled]="isAdonaiView">
+                                <option value="" disabled selected>Select type</option>
+                                <option value="True">True</option>
+                                <option value="False">False</option>
+                            </select>
                             <!-- <div class="form-check form-check-inline">
                                 <input class="form-check-input me-2" type="radio" name="sts" (click)="adonaiActivitySts=true"
                                     [checked]="adonaiActivitySts==true"><label>true</label>
@@ -849,8 +853,9 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <label for="input-text" class="form-label">Sales Person</label>
-                            <input type="text" class="form-control" id="input-text" 
-                            [(ngModel)]="adonaiSalesPerson" [disabled]="isAdonaiView">
+                            <ng-select placeholder="Select any" [(ngModel)]="adonaiSalesPerson" [items]="salesOptions"
+                                bindLabel="userName" bindValue="userId" [disabled]="isAdonaiView">
+                            </ng-select>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <label for="input-text" class="form-label">Discount</label>
@@ -859,13 +864,15 @@
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <label for="input-text" class="form-label">Account Manager</label>
-                            <input type="text" class="form-control" id="input-text" 
-                            [(ngModel)]="adonaiAccountManager" [disabled]="isAdonaiView">
+                             <ng-select placeholder="Select any"[(ngModel)]="adonaiAccountManager" [disabled]="isAdonaiView" [items]="salesOptions"
+                                bindLabel="userName" bindValue="userId">
+                            </ng-select>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                             <label for="input-text" class="form-label">Manager</label>
-                            <input type="text" class="form-control" id="input-text" 
-                            [(ngModel)]="adonaiManager" [disabled]="isAdonaiView">
+                            <ng-select placeholder="Select any" [(ngModel)]="adonaiManager" [disabled]="isAdonaiView" [items]="salesOptions"
+                                bindLabel="userName" bindValue="userId">
+                            </ng-select>
                         </div>
                     </div>
                 </div>
