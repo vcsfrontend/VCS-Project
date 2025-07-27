@@ -235,15 +235,15 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/crm2',
     // },
-    // {
-    //   title: 'superadmin',
-    //   icon: 'bi bi-shield-lock',
-    //   dirchange: false,
-    //   type: 'link',
-    //   linkType : 'internal',
-    //   active: false,
-    //   path : "/dashboard/superadmin"
-    // },
+    {
+      title: 'superadmin',
+      icon: 'bi bi-shield-lock',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      active: false,
+      path : "/dashboard/superadmin"
+    },
     // {
     //   title: 'Dashboard2',
     //   icon: 'bi bi-shield-lock',

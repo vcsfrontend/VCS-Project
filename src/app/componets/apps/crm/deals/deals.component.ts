@@ -607,7 +607,7 @@ export class DealsComponent extends BaseComponent {
   }
 
   onSubmit(modal: any) {
-    this.leadForm.get('campaignId')?.setValue ((JSON.parse(this.userData)?.userType !== 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
+    this.leadForm.get('campaignId')?.setValue ((JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
     this.leadForm.get('executive')?.setValue('');
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
@@ -646,8 +646,16 @@ export class DealsComponent extends BaseComponent {
   }
 
   getfetchLeadsIndividual() {
-    const entryBy =  this.userEmail;
-    this.switchService.fetchLeadsIndividual(entryBy).subscribe({
+    const userType = this.userType;
+    this.campaignId = (userType == 1)
+      ? 'SINGLE9DD1748413866634'
+      : 'DUMMY9DD1748413866634';
+    const payload = {
+        currentUser : this.userEmail,
+        campaignId:this.campaignId
+
+    }
+    this.switchService.fetchLeadsIndividual(payload).subscribe({
       next: (res: any) => {
           const now = new Date();
           const executiveList = (res.executiveList || []).map((item: any) => ({
@@ -689,7 +697,7 @@ export class DealsComponent extends BaseComponent {
           this.getStatusCount();
         },
       error: (error) => {
-        this.toastr.error(error.statusText || 'Server Error');
+        // this.toastr.error(error.statusText || 'Server Error');
       },
     });
   }
@@ -992,7 +1000,7 @@ export class DealsComponent extends BaseComponent {
       formData.append('companyCode', JSON.parse(this.userData)?.companyCode || '');
       formData.append('email', JSON.parse(this.userData)?.email || '');
       formData.append('type', JSON.parse(this.userData)?.type || '');
-      formData.append('campaignId', (JSON.parse(this.userData)?.userType === 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
+      formData.append('campaignId', (JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
       formData.append('stage', this.defaultStageName || 'open');
       formData.append('status', this.defaultStatusName || 'active');
       const autoAllocate = this.uploadLead.get('autoAllocate')?.value;
@@ -1059,7 +1067,7 @@ export class DealsComponent extends BaseComponent {
       updatedTime: new Date().toISOString(),
       entryBy: element.entryBy ?? null,
       individualEmail:this.userEmail,
-      campaignId:((JSON.parse(this.userData)?.userType !== 2) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634'),
+      campaignId:((JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634'),
     };
     this.leadForm.patchValue(payload);
     this.modalService.open(Content14, {
@@ -1222,7 +1230,7 @@ export class DealsComponent extends BaseComponent {
           }
         },
         error: (error) => {
-          this.toastr.error(error.statusText);
+          // this.toastr.error(error.statusText);
         },
       })
     }
@@ -1591,7 +1599,7 @@ export class DealsComponent extends BaseComponent {
         }
       },
       error: (err) => {
-        this.toastr.error('Failed to fetch CRM stages.');
+        // this.toastr.error('Failed to fetch CRM stages.');
       },
     });
   }
@@ -1922,7 +1930,7 @@ export class DealsComponent extends BaseComponent {
         this.tempFormList = responses;
       },
       error: (err) => {
-        this.toastr.error('Error fetching template details');
+        // this.toastr.error('Error fetching template details');
       },
     });
   }
@@ -2100,7 +2108,7 @@ export class DealsComponent extends BaseComponent {
         this.tempFormList = res;
       },
       error: (err) => {
-        this.toastr.error('Error fetching template details');
+        // this.toastr.error('Error fetching template details');
       },
     });
   }
@@ -2195,7 +2203,7 @@ export class DealsComponent extends BaseComponent {
         this.companyLst = res;             
       },
       error: (error) => {
-        this.toastr.error(error.statusText);
+        // this.toastr.error(error.statusText);
       }
     });
   }

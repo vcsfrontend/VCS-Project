@@ -166,7 +166,7 @@
                                 type="button">
                                 <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
                             </button>
-                            <ng-template #followupPopoverTemplate>
+                             <ng-template #followupPopoverTemplate>
                                 <ng-container *ngIf="!!followUpDetails && followUpDetails.length > 0; else noData">
                                     <div style="max-height: 200px; overflow-y: auto;">
                                         <ul class="list-unstyled border-bottom" *ngFor="let followup of followUpDetails">
@@ -176,23 +176,24 @@
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Stage :</span>
-                                                <span class="badge me-1" type="button"
-                                                    [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
-                                                    [ngbTooltip]="element.stage.length > 25 ? element.stage : null" placement="top">
-                                                    {{ element.stage | slice: 0:25 }}
-                                                    <ng-container *ngIf="element.stage.length > 25">...</ng-container>
+                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
+                                                    [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null" placement="top">
+                                                    {{ followup.stage | slice: 0:18 }}
+                                                    <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
                                                 <span class="fw-semibold me-1">Status :</span>
-                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                                    [ngbTooltip]="element.status.length > 25 ? element.status : null" placement="top">
-                                                    {{ element.status | slice: 0:25 }}
-                                                    <ng-container *ngIf="element.status.length > 25">...</ng-container>
+                                                <span class="badge me-1" type="button"
+                                                    [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
+                                                    [ngbTooltip]="followup.status.length > 18 ? followup.status : null" placement="top">
+                                                    {{ followup.status | slice: 0:18 }}
+                                                    <ng-container *ngIf="followup.status.length > 18">...</ng-container>
                                                 </span>
                                             </li>
                                             <li class="mb-2">
-                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }}
+                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a'
+                                                }}
                                                 <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
                                             </li>
                                             <li class="mb-2">
@@ -644,12 +645,12 @@
                     </div>
                     <div class="col-xl-6">
                         <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
-                            bindValue="stageName"  (change)="onStatusChange()" placeholder="Select an Stage" [multiple]="true">
+                            bindValue="stageName"  (change)="onFilterStageChange()" placeholder="Select an Stage" >
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
                         <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
-                            placeholder="Select a status">
+                            placeholder="Select a status" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">

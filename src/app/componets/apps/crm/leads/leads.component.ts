@@ -985,7 +985,6 @@ export class LeadsComponent extends BaseComponent {
     let completedRequests = 0;
     const hasSavedStageStatuses: string[] = [];
 
-    // ❗ Important: Reset these before reloading data
     this.statusOptionsByStageforDisplay = {};
     this.statusLst = [];
 
@@ -2536,5 +2535,49 @@ export class LeadsComponent extends BaseComponent {
   const original = this.originalStatus?.toLowerCase().trim();
   return current === original;
   }
+
+  onFilterStageChange(): void {
+  const selectedStages: string[] = this.filterLeadForm.get('stage')?.value || [];
+
+  const selectedStage = Array.isArray(selectedStages) ? selectedStages[0] : selectedStages;
+
+  if (!selectedStage) {
+    this.checkboxStageOptions = [];
+    this.filterLeadForm.patchValue({ status: null });
+    return;
+  }
+
+  if (selectedStage === 'open') {
+    // Special logic for "open"
+    this.checkboxStageOptions = this.openStage.map(opt => ({
+      ...opt,
+      checked: true,
+      isCustom: false
+    }));
+
+    const firstStatus = this.checkboxStageOptions[0]?.name || null;
+    this.filterLeadForm.patchValue({ status: firstStatus });
+    return;
+  }
+
+  const matchedStatusList = this.statusOptionsByStageforDisplay[selectedStage];
+
+  if (matchedStatusList && matchedStatusList.length > 0) {
+    this.checkboxStageOptions = matchedStatusList;
+
+    // Set default status if current one is not in list
+    const currentStatus = this.filterLeadForm.get('status')?.value;
+    const exists = matchedStatusList.some((s:any) => s.name === currentStatus);
+
+    if (!exists) {
+      this.filterLeadForm.patchValue({ status: matchedStatusList[0].name });
+    }
+  } else {
+    // No status found for this stage
+    this.checkboxStageOptions = [];
+    this.filterLeadForm.patchValue({ status: null });
+  }
+  }
+
 
 }
