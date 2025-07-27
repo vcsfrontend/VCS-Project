@@ -369,7 +369,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       },
       error: (error) => {
         this.stopLoading();
-        this.toastr.error(error.statusText);
+        // this.toastr.error(error.statusText);
       },
     })
   }
@@ -408,7 +408,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       },
       error: (error) => {
         this.stopLoading();
-        this.toastr.error(error.statusText);
+        // this.toastr.error(error.statusText);
       },
     })
   }
@@ -1617,7 +1617,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         this.stopLoading();
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while fetching projects.");
+        // this.toastr.error(error.statusText || "An error occurred while fetching projects.");
         this.stopLoading();
       },
     });
@@ -1832,7 +1832,7 @@ downloadButtons: { label: string; url: string }[] = [];
           }
         },
         error: (error) => {
-          this.toastr.error(error.statusText);
+          // this.toastr.error(error.statusText);
         },
       })
     }
@@ -1878,7 +1878,7 @@ downloadButtons: { label: string; url: string }[] = [];
         }
       },
       error: (err: any) => {
-        this.toastr.error("Failed to fetch user data. Please try again.");
+        // this.toastr.error("Failed to fetch user data. Please try again.");
       }
     });
   }
@@ -1971,7 +1971,7 @@ downloadButtons: { label: string; url: string }[] = [];
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        // this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
@@ -2087,7 +2087,7 @@ downloadButtons: { label: string; url: string }[] = [];
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        // this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }

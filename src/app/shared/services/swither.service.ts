@@ -159,7 +159,6 @@ export class SwitherService {
   SaveCrmStatus(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_crm_status`, data); }  
   CrmStatus(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_status`, data); }  
   SaveCrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_crm_stages`, data); }  
-  filterLeads(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/filter_crm_data`, data); }  
   CrmStages(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_crm_stages`, data); }  
   saveDesigCrm(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/save_desig_crm`, data); }  
   designationCrmRloes(data: any): Observable<any> { return this.http.post(`${this.apiUrl}designation/get_designation_roles`, data); }  
@@ -179,7 +178,9 @@ export class SwitherService {
   listLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_lead_entry_columns`,data); }
   editLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead_entry_columns`,data); }   
   deleteLeadEntry(column_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead_column/${column_id}`); } 
-  fetchLeadsIndividual(entryBy:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual/${entryBy}`); } 
+  fetchLeadsIndividual(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/fetch_lead_data_individual`,data); } 
+  filterCrmLeads(data:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual`, data); } 
+
   savedynamicMargins(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_dynamic_margins`, data); } 
   fetchDynamicMargin(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_dynamic_margins`, data); } 
 
