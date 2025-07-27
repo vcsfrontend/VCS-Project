@@ -31,6 +31,7 @@ import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
 import { ThemeOption } from 'ngx-echarts';
 import * as echarts from 'echarts';
+import { NgSelectModule } from '@ng-select/ng-select';
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -73,7 +74,7 @@ curve:string
     AngularFireDatabaseModule, CommonModule,  MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule,ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
     OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgbTooltipModule,
-    NgbPopoverModule,NgApexchartsModule, NgbDropdownModule,MatCommonModule, NgxEchartsModule],
+    NgbPopoverModule,NgApexchartsModule, NgbDropdownModule,MatCommonModule, NgxEchartsModule,NgSelectModule],
   providers: [FirebaseService,{ provide: ToastrService, useClass: ToastrService }, 
     FlatpickrDefaults, DatePipe, NgbModalConfig, NgbModal,
     {
@@ -116,7 +117,7 @@ export class SuperadminComponent {
   userDataStorage = localStorage.getItem('userDetails');
   salesData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.salesData ? this.salesData.email : '';
-  userName: string = this.salesData ? this.salesData.username : '';
+  userName: string = this.salesData ? this.salesData.username : ''; salesOptions: any;
   totalUsers = 896; 
   newUser: string = '';
   chartOptions:any = {
@@ -925,6 +926,7 @@ chartOptions6:any= {
       next: (res: any) => {
         this.salesDataSource.data = Array.isArray(res) ? res : [res];
         if (this.salesPaginator) this.salesDataSource.paginator = this.salesPaginator;
+        this.salesOptions = Array.isArray(res) ? res : [res];
       },
       error: () => {
         this.toastr.error("Error fetching sales data");

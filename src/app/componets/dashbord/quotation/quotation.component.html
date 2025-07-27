@@ -18,7 +18,8 @@
                             <div>INCO767815</div>
                         </div>
                         <p class="text-muted mb-0">
-                            Thanks for showing interest for your home decor. We have created a quote as requested by you in our
+                            Thanks for showing interest for your home decor. We have created a quote as requested by you
+                            in our
                             previous
                             communication. Please review and reach out to
                             <strong>Salura Anuhya</strong> your personalized designer.
@@ -33,7 +34,7 @@
                             <div>J Jenny Rejlin</div>
                             <div>(Relationship manager)</div>
                         </div>
-                         <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
                             <div><strong> 9876543210 </strong></div>
                             <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
                         </div>
@@ -44,14 +45,14 @@
                     </div>
                 </div>
             </div>
-           <div class="col-xl-4 col-sm-6">
+            <div class="col-xl-4 col-sm-6">
                 <div class="card custom-card overflow-hidden">
                     <div class="card-body">
                         <div class="align-items-start mb-3">
                             <div>J Jenny Rejlin</div>
                             <div>(Relationship manager)</div>
                         </div>
-                         <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
                             <div><strong> 9876543210 </strong></div>
                             <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
                         </div>
@@ -70,98 +71,100 @@
         <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-body p-0">
-                    <div class="d-flex p-3 align-items-center">
+                    <div class="d-flex p-2 align-items-center">
                         <div>
-                            <ul ngbNav #nav="ngbNav" [activeId]="1" class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block justify-content-between" role="tablist">
-                                <li [ngbNavItem]="2" class="nav-item m-1 me-3  p-2 pe-4">
+                            <ul ngbNav #nav="ngbNav" [activeId]="1"
+                                class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block justify-content-between"
+                                role="tablist">
+                                <li [ngbNavItem]="2" class="nav-item m-1 me-3  p-1 pe-4">
                                     <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                        aria-selected="true"><i class="las la-history me-2"></i>Recently Viewed</a>
-                                        <ng-template ngbNavContent>
-                                            <div class="p-0" id="pending" role="tabpanel">
+                                        aria-selected="true"><i class="las la-history me-2"></i>Summary</a>
+                                    <ng-template ngbNavContent>
+                                        <div class="p-0" id="pending" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-xl-6 mb-4">
+                                                    <div class="card custom-card h-100">
+                                                        <div class="card-header">
+                                                            <div class="card-title">Cost Breakup By Rooms</div>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div id="timeline-grouped">
+                                                                <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart" [stroke]="chartOptions4.stroke"
+                                                                    [dataLabels]="chartOptions4.dataLabels" [plotOptions]="chartOptions4.plotOptions" [xaxis]="chartOptions4.xaxis"
+                                                                    [colors]="chartOptions4.colors" [fill]="chartOptions4.fill" [yaxis]="chartOptions4.yaxis"
+                                                                    [legend]="chartOptions4.legend" [grid]="chartOptions4.grid" [title]="chartOptions4.title"
+                                                                    [colors]="chartOptions4.colors"></apx-chart>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-6 mb-4">
+                                                    <div class="card custom-card h-100">
+                                                        <div class="card-header">
+                                                            <div class="card-title">Simple Donut Chart</div>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <div id="donut-simple">
+                                                                <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart" [legend]="chartOptions1.legend"
+                                                                    [labels]="chartOptions1.labels" [responsive]="chartOptions1.responsive" [colors]="chartOptions1.colors"
+                                                                    [dataLabels]="chartOptions1.dataLabels"></apx-chart>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="row">
-                                                    <div class="col-xl-6 mb-4">
-                                                        <div class="card custom-card h-100">
-                                                            <div class="card-header">
-                                                                <div class="card-title">Cost Breakup By Rooms</div>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <div id="timeline-grouped">
-                                                                    <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart" [stroke]="chartOptions4.stroke"
-                                                                        [dataLabels]="chartOptions4.dataLabels" [plotOptions]="chartOptions4.plotOptions"
-                                                                        [xaxis]="chartOptions4.xaxis" [colors]="chartOptions4.colors" [fill]="chartOptions4.fill"
-                                                                        [yaxis]="chartOptions4.yaxis" [legend]="chartOptions4.legend" [grid]="chartOptions4.grid"
-                                                                        [title]="chartOptions4.title" [colors]="chartOptions4.colors"></apx-chart>
+                                                    <div class="col-xxl-12">
+                                                        <div class="row">
+                                                            <div class="col-xl-4 col-sm-6">
+                                                                <div class="card custom-card overflow-hidden">
+                                                                    <div class="card-body">
+                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                            <div>Hi Sana</div>
+                                                                            <div>INCO767815</div>
+                                                                        </div>
+                                                                        <p class="text-muted mb-0">
+                                                                            Thanks for showing interest for your home
+                                                                            decor. We have created a quote as requested
+                                                                            by you in our previous communication. Please review and reach out
+                                                                            to <strong>Salura Anuhya</strong> your personalized designer.
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-6 mb-4">
-                                                        <div class="card custom-card h-100">
-                                                            <div class="card-header">
-                                                                <div class="card-title">Simple Donut Chart</div>
-                                                            </div>
-                                                            <div class="card-body">
-                                                                <div id="donut-simple">
-                                                                    <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart" [legend]="chartOptions1.legend"
-                                                                        [labels]="chartOptions1.labels" [responsive]="chartOptions1.responsive"
-                                                                        [colors]="chartOptions1.colors" [dataLabels]="chartOptions1.dataLabels"></apx-chart>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-xxl-12">
-                                                            <div class="row">
-                                                                <div class="col-xl-4 col-sm-6">
-                                                                    <div class="card custom-card overflow-hidden">
-                                                                        <div class="card-body">
-                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                                <div>Hi Sana</div>
-                                                                                <div>INCO767815</div>
+                                                            <div class="col-xl-4 col-sm-6">
+                                                                <div class="card custom-card overflow-hidden">
+                                                                    <div class="card-body">
+                                                                        <div class="align-items-start mb-3">
+                                                                            <div>J Jenny Rejlin</div>
+                                                                            <div>(Relationship manager)</div>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                            <div><strong> 9876543210 </strong></div>
+                                                                            <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                            <div><strong> test&#64;gmail.com </strong>
                                                                             </div>
-                                                                            <p class="text-muted mb-0">
-                                                                                Thanks for showing interest for your home decor. We have created a quote as requested by you
-                                                                                in our
-                                                                                previous
-                                                                                communication. Please review and reach out to
-                                                                                <strong>Salura Anuhya</strong> your personalized designer.
-                                                                            </p>
+                                                                            <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-xl-4 col-sm-6">
-                                                                    <div class="card custom-card overflow-hidden">
-                                                                        <div class="card-body">
-                                                                            <div class="align-items-start mb-3">
-                                                                                <div>J Jenny Rejlin</div>
-                                                                                <div>(Relationship manager)</div>
-                                                                            </div>
-                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                                <div><strong> 9876543210 </strong></div>
-                                                                                <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
-                                                                            </div>
-                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                                <div><strong> test&#64;gmail.com </strong></div>
-                                                                                <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
-                                                                            </div>
+                                                            </div>
+                                                            <div class="col-xl-4 col-sm-6">
+                                                                <div class="card custom-card overflow-hidden">
+                                                                    <div class="card-body">
+                                                                        <div class="align-items-start mb-3">
+                                                                            <div>J Jenny Rejlin</div>
+                                                                            <div>(Relationship manager)</div>
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-xl-4 col-sm-6">
-                                                                    <div class="card custom-card overflow-hidden">
-                                                                        <div class="card-body">
-                                                                            <div class="align-items-start mb-3">
-                                                                                <div>J Jenny Rejlin</div>
-                                                                                <div>(Relationship manager)</div>
+                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                            <div><strong> 9876543210 </strong></div>
+                                                                            <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
+                                                                        </div>
+                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                            <div><strong> test&#64;gmail.com </strong>
                                                                             </div>
-                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                                <div><strong> 9876543210 </strong></div>
-                                                                                <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
-                                                                            </div>
-                                                                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                                <div><strong> test&#64;gmail.com </strong></div>
-                                                                                <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
-                                                                            </div>
+                                                                            <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -170,137 +173,783 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </ng-template>
+                                        </div>
+                                    </ng-template>
                                 </li>
                                 <li [ngbNavItem]="3" class="nav-item m-1  p-2">
                                     <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                        aria-selected="true"><i class="lar la-star me-2"></i>Favourites</a>
-                                        <ng-template ngbNavContent>
-                                            <div class="p-0" id="in-progress" role="tabpanel">
-                                                <div class="row">
-                                                    <div class="col-xl-4">
-                                                        <div class="card custom-card task-inprogress-card">
-                                                            <div class="card-body">
-                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                    <div>
-                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                href="javascript:void(0);"><i
-                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Design
-                                                                            New Landing Pages </p>
-                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">21,Nov
-                                                                                2023</span></p>
-                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
-                                                                                2023</span></p>
-                                                                        <p class="mb-0">Assigned To :
-                                                                            <span class="avatar-list-stacked ms-1">
-                                                                                <span class="avatar avatar-sm avatar-rounded">
-                                                                                    <img src="./assets/images/faces/1.jpg" alt="img">
-                                                                                </span>
-                                                                                <span class="avatar avatar-sm avatar-rounded">
-                                                                                    <img src="./assets/images/faces/5.jpg" alt="img">
-                                                                                </span>
-                                                                                <span class="avatar avatar-sm avatar-rounded">
-                                                                                    <img src="./assets/images/faces/12.jpg" alt="img">
-                                                                                </span>
-                                                                            </span>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div>
-                                                                        <div class="btn-list">
-                                                                            <button
-                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                    class="ri-edit-line"></i></button>
-                                                                            <button
-                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                    class="ri-delete-bin-line"></i></button>
-                                                                        </div>
-                                                                        <span class="badge bg-primary-transparent d-block">Medium</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <div class="card custom-card task-inprogress-card">
-                                                            <div class="card-body">
-                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                    <div>
-                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                href="javascript:void(0);"><i
-                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Designing
-                                                                            New Authentication Pages</p>
-                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">26,Nov
-                                                                                2023</span></p>
-                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">12,Dec
-                                                                                2023</span></p>
-                                                                        <p class="mb-0">Assigned To :
-                                                                            <span class="avatar-list-stacked ms-1">
-                                                                                <span class="avatar avatar-sm avatar-rounded">
-                                                                                    <img src="./assets/images/faces/6.jpg" alt="img">
-                                                                                </span>
-                                                                                <span class="avatar avatar-sm avatar-rounded">
-                                                                                    <img src="./assets/images/faces/15.jpg" alt="img">
-                                                                                </span>
-                                                                            </span>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div>
-                                                                        <div class="btn-list">
-                                                                            <button
-                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                    class="ri-edit-line"></i></button>
-                                                                            <button
-                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                    class="ri-delete-bin-line"></i></button>
-                                                                        </div>
-                                                                        <span class="badge bg-success-transparent d-block">Low</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-4">
-                                                        <div class="card custom-card task-inprogress-card">
-                                                            <div class="card-body">
-                                                                <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                    <div>
-                                                                        <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                href="javascript:void(0);"><i
-                                                                                    class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Improving
-                                                                            Ui Of Updated Templates</p>
-                                                                        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">4,Dec
-                                                                                2023</span></p>
-                                                                        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Dec
-                                                                                2023</span></p>
-                                                                        <p class="mb-0">Assigned To :
-                                                                            <span class="avatar-list-stacked ms-1">
-                                                                                <span class="avatar avatar-sm avatar-rounded">
-                                                                                    <img src="./assets/images/faces/9.jpg" alt="img">
-                                                                                </span>
-                                                                                <span class="avatar avatar-sm avatar-rounded">
-                                                                                    <img src="./assets/images/faces/13.jpg" alt="img">
-                                                                                </span>
-                                                                            </span>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div>
-                                                                        <div class="btn-list">
-                                                                            <button
-                                                                                class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                    class="ri-edit-line"></i></button>
-                                                                            <button
-                                                                                class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                    class="ri-delete-bin-line"></i></button>
-                                                                        </div>
-                                                                        <span class="badge bg-primary-transparent d-block">Medium</span>
-                                                                    </div>
+                                        aria-selected="true"><i class="lar la-star me-2"></i>Rooms</a>
+                                    <ng-template ngbNavContent>
+                                        <div class="col-xl-12">
+                                            <div class="row">
+                                                <div class="col-xl-6">
+                                                    <div class="card custom-card">
+                                                        <div class="card-body p-0">
+                                                            <div class="d-flex p-2 align-items-center">
+                                                                <div>
+                                                                    <ul ngbNav #nav="ngbNav" [activeId]="1"
+                                                                        class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block justify-content-between"
+                                                                        role="tablist">
+                                                                        <li [ngbNavItem]="2"
+                                                                            class="nav-item m-1 me-3  p-1 pe-4">
+                                                                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="true"><i
+                                                                                    class="las la-history me-2"></i>Drawing Room</a>
+                                                                            <ng-template ngbNavContent>
+                                                                                <div class="p-0" id="pending"
+                                                                                    role="tabpanel">
+                                                                                    <div class="col-xl-12 mmt">
+                                                                                        <div class="card custom-card overflow-hidden">
+                                                                                            <div class="card-header justify-content-between">
+                                                                                                <div class="card-title">
+                                                                                                    Custom Works
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="card-body px-0 pt-2 pb-0">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table text-nowrap">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th scope="col">
+                                                                                                                    S.No
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Image
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Item
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Description
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Quantity
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Unit
+                                                                                                                    Price
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Amount
+                                                                                                                </th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-12 mmt mt-1">
+                                                                                        <div class="card custom-card overflow-hidden">
+                                                                                            <div class="card-header justify-content-between">
+                                                                                                <div class="card-title">
+                                                                                                    Onsite Services
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="card-body px-0 pt-2 pb-0">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table text-nowrap">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th scope="col">
+                                                                                                                    S.No
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Image
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Item
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Description
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Quantity
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Unit
+                                                                                                                    Price
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Amount
+                                                                                                                </th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-12 mmt mt-1">
+                                                                                        <div class="card custom-card overflow-hidden">
+                                                                                            <div class="card-header justify-content-between">
+                                                                                                <div class="card-title">
+                                                                                                    Modular
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="card-body px-0 pt-2 pb-0">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table text-nowrap">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th scope="col"> S.No </th>
+                                                                                                                <th scope="col"> Image </th>
+                                                                                                                <th scope="col"> Item </th>
+                                                                                                                <th scope="col"> Description </th>
+                                                                                                                <th scope="col"> Quantity </th>
+                                                                                                                <th scope="col"> Unit Price </th>
+                                                                                                                <th scope="col"> Amount </th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td>1 </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS (Client Site) </td>
+                                                                                                                <td> OS9003-3 </td>
+                                                                                                                <td> 4 </td>
+                                                                                                                <td> INR 1,770.00 </td>
+                                                                                                                <td> INR 7,080.00 </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1 </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS (Client Site)</td>
+                                                                                                                <td> OS9003-3 </td>
+                                                                                                                <td> 4</td>
+                                                                                                                <td>INR 1,770.00 </td>
+                                                                                                                <td>INR7,080.00 </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                     <div class="col-xl-12 mmt mt-1">
+                                                                                        <div class="card custom-card overflow-hidden">
+                                                                                            <div class="card-header justify-content-between">
+                                                                                                <div class="card-title">
+                                                                                                    Sub Total
+                                                                                                </div>
+                                                                                                <h6>INR 1,80,065.43</h6>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </ng-template>
+                                                                        </li>
+                                                                        <li [ngbNavItem]="3"
+                                                                            class="nav-item m-1 me-3  p-1 pe-4">
+                                                                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="true"><i
+                                                                                    class="las la-history me-2"></i>Kitchen
+                                                                                Room</a>
+                                                                            <ng-template ngbNavContent>
+                                                                                <div class="p-0" id="pending"
+                                                                                    role="tabpanel">
+                                                                                    <div class="col-xl-12 mmt">
+                                                                                        <div class="card custom-card overflow-hidden">
+                                                                                            <div class="card-header justify-content-between">
+                                                                                                <div class="card-title">
+                                                                                                    Custom Works
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="card-body px-0 pt-2 pb-0">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table text-nowrap">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th scope="col">
+                                                                                                                    S.No
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Image
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Item
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Description
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Quantity
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Unit
+                                                                                                                    Price
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Amount
+                                                                                                                </th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-12 mmt mt-1">
+                                                                                        <div class="card custom-card overflow-hidden">
+                                                                                            <div class="card-header justify-content-between">
+                                                                                                <div class="card-title">
+                                                                                    
+                                                                                                    Onsite Services
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="card-body px-0 pt-2 pb-0">
+                                                                                                <div class="table-responsive">
+                                                                                                    <table class="table text-nowrap">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th scope="col">
+                                                                                                                    S.No
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Image
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Item
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Description
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Quantity
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Unit
+                                                                                                                    Price
+                                                                                                                </th>
+                                                                                                                <th scope="col">
+                                                                                                                    Amount
+                                                                                                                </th>
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tbody>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                            <tr>
+                                                                                                                <td>1
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    <div>
+                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
+                                                                                                                    </div>
+                                                                                                                </td>
+                                                                                                                <td>LOUVERS
+                                                                                                                    (Client
+                                                                                                                    Site)
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    OS9003-3
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    4
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    1,770.00
+                                                                                                                </td>
+                                                                                                                <td>
+                                                                                                                    INR
+                                                                                                                    7,080.00
+                                                                                                                </td>
+                                                                                                            </tr>
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </ng-template>
+                                                                        </li>
+                                                                        <li [ngbNavItem]="4" class="nav-item m-1  p-2">
+                                                                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="true"><i
+                                                                                    class="lar la-star me-2"></i>Dining Rooms</a>
+                                                                            <ng-template ngbNavContent>
+                                                                            </ng-template>
+                                                                        </li>
+                                                                    </ul>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div [ngbNavOutlet]="nav" class="mt-2"></div>
                                             </div>
-                                        </ng-template>
+                                        </div>
+                                    </ng-template>
                                 </li>
                             </ul>
                         </div>
@@ -310,9 +959,7 @@
         </div>
         <div class="tab-content task-tabs-container">
             <hr style="border: none; border-top: 2px dashed #999; margin: 20px 0;">
-            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            <div [ngbNavOutlet]="nav" class=""></div>
         </div>
     </div>
 </div>
-
-    

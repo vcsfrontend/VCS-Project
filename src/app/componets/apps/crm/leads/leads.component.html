@@ -624,7 +624,7 @@
 </ng-template>
 
 <ng-template #Content1 let-offcanvas>
-    <form [formGroup]="FilterForm" (ngSubmit)="submitFilter()">
+    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads()">
         <div class="offcanvas-header border-bottom border-block-end-dashed">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
@@ -634,27 +634,36 @@
             <div class="col-xl-12 pt-3">
                 <div class="row gy-3 p-4">
                     <div class="col-xl-6">
-                        <ng-select formControlName="filterStage" [items]="stageLst" bindLabel="stageName"
+                        <label for="name" class="form-label">Start Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder="" formControlName="startDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">End Date</label>
+                        <input type="date" class="form-control" id="date" placeholder=""
+                        formControlName="endDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
                             bindValue="stageName"  (change)="onStatusChange()" placeholder="Select an Stage" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <ng-select formControlName="filterStatus" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
                             placeholder="Select a status">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <ng-select formControlName="filterSource" [items]="pipeLine" bindLabel="name" bindValue="name"
+                        <ng-select formControlName="source" [items]="pipeLine" bindLabel="name" bindValue="name"
                             placeholder="Select an Source" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <ng-select formControlName="filterExecutive" [items]="agentUsers" bindLabel="email" bindValue="email"
-                            placeholder="Select an Executive">
+                        <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
+                            placeholder="Select an Executive" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <ng-select formControlName="filterCity" [items]="pipeLine" bindLabel="name" bindValue="name"
+                        <ng-select formControlName="city" [items]="pipeLine" bindLabel="name" bindValue="name"
                             placeholder="Select an City" [multiple]="true">
                         </ng-select>
                     </div>
