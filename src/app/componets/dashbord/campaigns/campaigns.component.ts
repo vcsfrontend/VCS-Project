@@ -175,7 +175,7 @@ export class CampaignsComponent extends BaseComponent {
         this.isStagesLoading = false;
       },
       error: (error) => {
-        this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
+        // this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
       },
     });
   }
@@ -246,7 +246,7 @@ export class CampaignsComponent extends BaseComponent {
         }
       },
       error: (err) => {
-        this.toastr.error(err.statusText || "An error occurred while fetching data.");
+        // this.toastr.error(err.statusText || "An error occurred while fetching data.");
       }
     });
   }
@@ -262,7 +262,7 @@ export class CampaignsComponent extends BaseComponent {
         this.listNew = res;
       },
       error: (err) => {
-        this.toastr.error(err.statusText || "An error occurred while fetching data.");
+        // this.toastr.error(err.statusText || "An error occurred while fetching data.");
       }
     });
   }
@@ -282,7 +282,7 @@ export class CampaignsComponent extends BaseComponent {
           }
         },
         error: (error) => {
-          this.toastr.error(error.statusText);
+          // this.toastr.error(error.statusText);
         },
       })
     }
