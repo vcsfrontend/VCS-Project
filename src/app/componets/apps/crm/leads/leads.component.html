@@ -91,6 +91,13 @@
                                     </li>
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="appointmentModal(appointment1)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
                                             (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
@@ -640,7 +647,7 @@
                     </div>
                     <div class="col-xl-6">
                         <label for="name" class="form-label">End Date</label>
-                        <input type="date" class="form-control" id="date" placeholder=""
+                        <input type="datetime-local" class="form-control" id="date" placeholder=""
                         formControlName="endDate">
                     </div>
                     <div class="col-xl-6">
@@ -1404,38 +1411,51 @@
     </form>
 </ng-template>
 
-
-<!-- <div class="btn-group dropend my-1" ngbDropdown placement="right-top">
-<button type="button" class="btn btn-primary dropdown-toggle"
-ngbDropdownToggle   data-bs-toggle="dropdown" aria-expanded="false">
-    Dropright
-</button>
-<ul class="dropdown-menu" ngbDropdownMenu>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
-    <li>
-        <hr class="dropdown-divider">
-    </li>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
-</ul>
-</div>
-<div class="btn-group dropend my-1" ngbDropdown placement="right-top">
-<button type="button" class="btn btn-info">
-    Split dropend
-</button>
-<button type="button"
-    class="btn btn-info dropdown-toggle dropdown-toggle-split"
-    ngbDropdownToggle  data-bs-toggle="dropdown" aria-expanded="false">
-    <span class="visually-hidden">Toggle Dropright</span>
-</button>
-<ul class="dropdown-menu" ngbDropdownMenu>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
-    <li>
-        <hr class="dropdown-divider">
-    </li>
-    <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Separated link</a></li>
-</ul>
-</div> -->
+<ng-template #appointment1 let-modal>
+    <form [formGroup]="appointmentForm" (ngSubmit)="appointmentFormSubmit(modal)">
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Book a Demo</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="col-xl-12">
+            <div class="row gy-2">
+                <div class="col-xl-6">
+                    <label for="code" class="form-label">Appointment type</label>
+                    <ng-select formControlName="appointmenType" [items]="appointmentList" bindLabel="name"
+                        bindValue="name" placeholder="Select Project">
+                    </ng-select>
+                </div>
+                <div class="col-xl-6">
+                    <label for="name" class="form-label">Date</label>
+                    <input type="datetime-local" class="form-control" id="name" formControlName="date">
+                    <!-- min="2025-07-19T09:00"
+            max="2025-07-19T17:00" step="1800" laceholder="Enter Name" -->
+                </div>
+                <div class="col-xl-6">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your Description"
+                        formControlName="description">
+                </div>
+                <div class="col-xl-6">
+                    <label for="duration" class="form-label">duration</label>
+                    <input type="number" class="form-control" id="name" placeholder="Enter your duration"
+                        formControlName="duration">
+                </div>
+                <div class="col-xl-6">
+                    <label for="code" class="form-label">assignedDesigner</label>
+                    <ng-select formControlName="assignedDesigner" [items]="agentUsers" bindLabel="email"
+                        bindValue="email" placeholder="Select Project">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+    </form>
+</ng-template>

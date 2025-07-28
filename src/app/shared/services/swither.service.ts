@@ -179,7 +179,7 @@ export class SwitherService {
   editLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead_entry_columns`,data); }   
   deleteLeadEntry(column_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead_column/${column_id}`); } 
   fetchLeadsIndividual(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/fetch_lead_data_individual`,data); } 
-  filterCrmLeads(data:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual`, data); } 
+  filterLeads(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/filter_crm_data`, data); } 
 
   savedynamicMargins(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_dynamic_margins`, data); } 
   fetchDynamicMargin(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_dynamic_margins`, data); } 
