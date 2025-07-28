@@ -118,6 +118,7 @@ export class LeadsComponent extends BaseComponent {
   public sendLeadForm!: FormGroup;
   public filterForm!: FormGroup;
   public sendwhatsLeadForm!: FormGroup;
+  public appointmentForm!: FormGroup;
   public sendwhatsLeadFormSubmitted = false;
   public sendLeadSubmitted = false;
   public filterLeadSubmitted = false;
@@ -184,6 +185,9 @@ export class LeadsComponent extends BaseComponent {
         },
       },
     };
+  }
+  appointmentModal(appointment1: any) {
+    this.modalService.open(appointment1, { centered: true });
   }
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
@@ -335,12 +339,39 @@ export class LeadsComponent extends BaseComponent {
       }
 
       //Send Email
-      this.sendwhatsLeadForm = this.fb.group({
-        template: ['', [Validators.required]],
-        subject: ['', [Validators.required, Validators.minLength(3)]],
-        content: ['', [Validators.required]],
-        file: [''],
-      });
+      this.appointmentForm = this.fb.group({
+        appointmenType: [''],
+        date: [''],
+        description: [''],
+        duration: [''],
+        currentUser: this.userEmail,
+        assignedDesigner:[''],
+        leadEntry: this.fb.group({
+          leadId: [0],
+          name: [''],
+          companyName: [''],
+          executive: [''],
+          products: [''],
+          stage: [''],
+          leadSource: [''],
+          zipCode: [''],
+          followUpDate: [''],
+          state: [''],
+          city: [''],
+          address: [''],
+          contact: [''],
+          email: [''],
+          currentStage: [''],
+          updatedBy: [''],
+          updatedTime: [''],
+          entryBy: [''],
+          campaignId: [''],
+          companyCode: [''],
+          individualEmail: [''],
+          type: 0
+        }),
+        createdTime:['']
+        });
 
       //Send Email
       this.sendLeadForm = this.fb.group({
@@ -351,6 +382,8 @@ export class LeadsComponent extends BaseComponent {
         bcc: ['', [Validators.minLength(3)]],
         content: ['', [Validators.required]],
       });
+
+      // filterLeadForm
       this.filterLeadForm = this.fb.group({
         stage: [''],
         status: [''],
@@ -786,6 +819,13 @@ export class LeadsComponent extends BaseComponent {
         },
       });
     }
+  }
+
+  appointmentFormSubmit(modal: any) {
+    const payload = {
+      ...this.appointmentForm.value
+    };
+    console.log(payload);
   }
 
   selectFormTemplateSubmit() {
@@ -1921,44 +1961,42 @@ export class LeadsComponent extends BaseComponent {
 
   filterLeads() {
     const formValue = this.filterLeadForm.value;
-    const startDate = formValue.startDate ? `${formValue.startDate}:00` : null;
-    const endDate = formValue.endDate ? `${formValue.endDate}:00` : null;
-    let payload = {
+    const ensureSeconds = (value: string | null): string | null => {
+      if (!value) return null;
+      return value.length === 16 ? `${value}:00` : value;
+    };
+    const startDate = ensureSeconds(formValue.startDate);
+    const endDate = ensureSeconds(formValue.endDate);
+    const payload = {
       ...this.filterLeadForm.value,
-      startDate: startDate, 
-      endDate: endDate,
-      stage: Array.isArray(formValue.stage) ? formValue.stage.join(',') : formValue.stage || '',
-      status: Array.isArray(formValue.status) ? formValue.status.join(',') : formValue.status || '',
-      city: formValue.city?.join(',') || '',
-      source: formValue.source?.join(',') || '',
-      executive: formValue.executive?.join(',') || '',
+      startDate,
+      endDate,
+      stage: Array.isArray(formValue.stage) ? formValue.stage.join(',') : formValue.stage || null,
+      status: Array.isArray(formValue.status) ? formValue.status.join(',') : formValue.status || null,
+      city: Array.isArray(formValue.city) ? formValue.city.join(',') : formValue.city || null,
+      source: Array.isArray(formValue.source) ? formValue.source.join(',') : formValue.source || null,
+      executive: Array.isArray(formValue.executive) ? formValue.executive.join(',') : formValue.executive || null,
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
-    }
-    console.log(payload)
-    // this.switchService.filterLeads(payload).subscribe({
-    //   next: (res: payloadany) => {
-    //     if (res.status == true) {
-    //       this.submitted = false;
-    //       this.sendLeadForm.reset();
-    //       this.toastr.success(res.message, 'lead', {
-    //         timeOut: 3000,
-    //         positionClass: 'toast-top-right',
-    //       });
-    //     } else {
-    //       this.toastr.error(res.message, 'lead', {
-    //         timeOut: 3000,
-    //         positionClass: 'toast-top-right',
-    //       });
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.toastr.error(error.statusText);
-    //   },
-    // });
+      campaignId: this.campaignId
+    };
+    console.log(payload);
+    this.switchService.filterLeads(payload).subscribe({
+      next: (res) => {
+        if (res.status === true) {
+          this.submitted = false;
+          this.sendLeadForm.reset();
+          this.toastr.success(res.message, 'Lead');
+        } else {
+          this.toastr.error(res.message, 'Lead');
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || 'Something went wrong', 'Error');
+      }
+    });
   }
-
 
   get e() {
     return this.followupLeadForm.controls;
@@ -2519,64 +2557,51 @@ export class LeadsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType
     };
-
     this.switchService.listLeadEntry(payload).subscribe({
       next: (res: any) => {
-        this.companyLst = res;             
+        this.companyLst = res;
       },
       error: (error) => {
         this.toastr.error(error.statusText);
       }
     });
   }
-
   get isStatusUnchanged(): boolean {
-  const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
-  const original = this.originalStatus?.toLowerCase().trim();
-  return current === original;
+    const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
+    const original = this.originalStatus?.toLowerCase().trim();
+    return current === original;
   }
 
   onFilterStageChange(): void {
-  const selectedStages: string[] = this.filterLeadForm.get('stage')?.value || [];
-
-  const selectedStage = Array.isArray(selectedStages) ? selectedStages[0] : selectedStages;
-
-  if (!selectedStage) {
-    this.checkboxStageOptions = [];
-    this.filterLeadForm.patchValue({ status: null });
-    return;
-  }
-
-  if (selectedStage === 'open') {
-    // Special logic for "open"
-    this.checkboxStageOptions = this.openStage.map(opt => ({
-      ...opt,
-      checked: true,
-      isCustom: false
-    }));
-
-    const firstStatus = this.checkboxStageOptions[0]?.name || null;
-    this.filterLeadForm.patchValue({ status: firstStatus });
-    return;
-  }
-
-  const matchedStatusList = this.statusOptionsByStageforDisplay[selectedStage];
-
-  if (matchedStatusList && matchedStatusList.length > 0) {
-    this.checkboxStageOptions = matchedStatusList;
-
-    // Set default status if current one is not in list
-    const currentStatus = this.filterLeadForm.get('status')?.value;
-    const exists = matchedStatusList.some((s:any) => s.name === currentStatus);
-
-    if (!exists) {
-      this.filterLeadForm.patchValue({ status: matchedStatusList[0].name });
+    const selectedStages: string[] = this.filterLeadForm.get('stage')?.value || [];
+    const selectedStage = Array.isArray(selectedStages) ? selectedStages[0] : selectedStages;
+    if (!selectedStage) {
+      this.checkboxStageOptions = [];
+      this.filterLeadForm.patchValue({ status: null });
+      return;
     }
-  } else {
-    // No status found for this stage
-    this.checkboxStageOptions = [];
-    this.filterLeadForm.patchValue({ status: null });
-  }
+    if (selectedStage === 'open') {
+      this.checkboxStageOptions = this.openStage.map(opt => ({
+        ...opt,
+        checked: true,
+        isCustom: false
+      }));
+      const firstStatus = this.checkboxStageOptions[0]?.name || null;
+      this.filterLeadForm.patchValue({ status: firstStatus });
+      return;
+    }
+    const matchedStatusList = this.statusOptionsByStageforDisplay[selectedStage];
+    if (matchedStatusList && matchedStatusList.length > 0) {
+      this.checkboxStageOptions = matchedStatusList;
+      const currentStatus = this.filterLeadForm.get('status')?.value;
+      const exists = matchedStatusList.some((s: any) => s.name === currentStatus);
+      if (!exists) {
+        this.filterLeadForm.patchValue({ status: matchedStatusList[0].name });
+      }
+    } else {
+      this.checkboxStageOptions = [];
+      this.filterLeadForm.patchValue({ status: null });
+    }
   }
 
 
