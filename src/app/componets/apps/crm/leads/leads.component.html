@@ -15,6 +15,8 @@
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                         Filter 
                     </button>
+                    <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="resetFilterForm()">Reset</button>
                     <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
@@ -244,6 +246,10 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
                 </table>
+                <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
+                    <p class="text-muted mb-0">No data found</p>
+                </div>
+
             </div>
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
@@ -278,6 +284,7 @@
                     <div *ngIf="a['executive'].errors['required']">Executive is required</div>
                 </div>
             </form> -->
+
             <div class="text-center ms-3 ">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
@@ -632,7 +639,7 @@
 </ng-template>
 
 <ng-template #Content1 let-offcanvas>
-    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads()">
+    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)">
         <div class="offcanvas-header border-bottom border-block-end-dashed">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
@@ -671,7 +678,7 @@
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <ng-select formControlName="city" [items]="pipeLine" bindLabel="name" bindValue="name"
+                        <ng-select formControlName="city" [items]="cityList" bindLabel="name" bindValue="name"
                             placeholder="Select an City" [multiple]="true">
                         </ng-select>
                     </div>

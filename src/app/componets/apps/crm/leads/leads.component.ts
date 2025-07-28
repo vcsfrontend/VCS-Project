@@ -84,7 +84,8 @@ export class LeadsComponent extends BaseComponent {
   selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
   fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
-  notconnectedstatusClicked = false; adoanAiRole: any;
+  notconnectedstatusClicked = false; adoanAiRole: any;leadList :any;filteredLeadList: any[] = [];   // holds filtered leads
+  displayedLeads: any[] = []; override cityList:any[]=[];
 
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
@@ -1583,6 +1584,15 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.FetchLeadData(this.userEmail, this.campaignId)
       .subscribe({
         next: (res: any) => {
+          if (res.entryList) {
+            this.leadList = res.entryList; 
+            this.dataSource = new MatTableDataSource(res.entryList);
+            const cities = res.entryList
+              .map((lead: any) => lead.city?.trim())
+              .filter((city: any) => !!city); 
+            const uniqueCities = [...new Set(cities)];
+            this.cityList = uniqueCities.map(city => ({ name: city }));
+          }
           const now = new Date();
           const executiveList = (res.executiveList || []).map((item: any) => ({
             ...item,
@@ -1959,7 +1969,7 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-  filterLeads() {
+  filterLeads(modal:any) {
     const formValue = this.filterLeadForm.value;
     const ensureSeconds = (value: string | null): string | null => {
       if (!value) return null;
@@ -1981,10 +1991,12 @@ export class LeadsComponent extends BaseComponent {
       type: this.userType,
       campaignId: this.campaignId
     };
-    console.log(payload);
     this.switchService.filterLeads(payload).subscribe({
       next: (res) => {
-        if (res.status === true) {
+        if (res) {
+          this.dataSource = new MatTableDataSource(res);
+          this.leadCount = res.length;
+          modal.close();
           this.submitted = false;
           this.sendLeadForm.reset();
           this.toastr.success(res.message, 'Lead');
@@ -2096,8 +2108,6 @@ export class LeadsComponent extends BaseComponent {
     this.selectedLeadId = this.selectedLeadData.leadId;
     const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
     this.campaignId = selectedCampaignId;
-    console.log('Lead ID:', this.selectedLeadId);
-    console.log('Campaign ID:', this.campaignId);
     const data = {
       leadId: this.selectedLeadId,
       campaignId: this.campaignId,
@@ -2133,7 +2143,6 @@ export class LeadsComponent extends BaseComponent {
         idList: [...this.selectedLeads],
         executive: selectedExecutive,
       };
-      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2604,5 +2613,8 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
+  resetFilterForm() {
+    this.getFetchLeadData(); 
+  }
 
 }
