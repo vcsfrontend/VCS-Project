@@ -18,7 +18,6 @@
       </div>
 
       <div class="modal-body px-4">
-        <!-- Appointment Duration -->
         <div class="col-xl-12">
             <label for="deal-name" class="form-label">Appointment Name</label>
             <input type="text" class="form-control" id="deal-name" placeholder="Campaign Name">
@@ -32,8 +31,6 @@
             <option value="60">1 hour</option>
           </select>
         </div>
-
-        <!-- General Availability -->
         <div class="mb-3">
           <label class="form-label fw-bold">General availability</label>
           <div *ngFor="let day of weekdays; let i = index" class="d-flex align-items-center mb-2 gap-2">
@@ -45,7 +42,6 @@
             <i class="bi bi-plus-circle"></i>
             <i class="bi bi-copy"></i>
           </div>
-          
         </div>
       </div>
 
@@ -91,3 +87,14 @@
   </div>
 </ng-template>
 
+<div *ngIf="appointmentData" class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">Appointment Details</h5>
+    <p><strong>Type:</strong> {{ appointmentData.appointmenType }}</p>
+    <p><strong>Date:</strong> {{ appointmentData.date | date: 'short' }}</p>
+    <p><strong>Description:</strong> {{ appointmentData.description }}</p>
+    <p><strong>Duration:</strong> {{ appointmentData.duration }} minutes</p>
+    <p><strong>Current User:</strong> {{ appointmentData.currentUser }}</p>
+    <p><strong>Assigned Designer:</strong> {{ appointmentData.assignedDesigner }}</p>
+  </div>
+</div>

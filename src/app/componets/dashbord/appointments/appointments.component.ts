@@ -11,19 +11,23 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SwitherService } from '../../../shared/services/swither.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
   imports: [CommonModule, FullCalendarModule,SharedModule,NgSelectModule,FormsModule,ReactiveFormsModule,MatTooltipModule],
+  providers:[{ provide: ToastrService, useClass: ToastrService }],
   templateUrl: './appointments.component.html',
   styleUrl: './appointments.component.scss'
 })
 export class AppointmentsComponent extends BaseComponent {
   campaignForm! : FormGroup;
   weekdays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-  availabilityForm !: FormGroup;
-  constructor(private modalService: NgbModal,private fb: FormBuilder ) {
+  availabilityForm !: FormGroup; leadId :any;
+  constructor(private modalService: NgbModal,private fb: FormBuilder,
+     public switchService: SwitherService, private toastr: ToastrService,) {
       super()
      
   }
@@ -44,8 +48,8 @@ export class AppointmentsComponent extends BaseComponent {
     },
     events: [
       { title: 'All-day Event', date: '2025-07-01' },
-      { title: 'Meeting', date: '2025-07-09T10:30:00' },
-      { title: 'Lunch', date: '2025-07-09T12:00:00' },
+      { title: 'Demo', date: '2025-07-09T10:30:00' },
+      { title: 'Design Doubts', date: '2025-07-09T12:00:00' },
       { title: 'Birthday', date: '2025-07-13T07:00:00' }
     ],
     selectable: true,
@@ -87,5 +91,24 @@ export class AppointmentsComponent extends BaseComponent {
       // Add your logic here
     }
   }
+
+  appointmentData: any;
+
+getAppointment() {
+  const lead_id = this.leadId;
+  console.log('Fetching appointment for lead ID:', lead_id);
+
+  this.switchService.fetchAppointment(lead_id).subscribe({
+    next: (res) => {
+      this.appointmentData = res; // store the appointment data
+      this.toastr.success('Appointment fetched successfully');
+    },
+    error: (err) => {
+      console.error('Failed to fetch appointment', err);
+      this.toastr.error('Failed to fetch appointment');
+    }
+  });
+}
+
   
 }

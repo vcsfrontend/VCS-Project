@@ -49,7 +49,7 @@ export class LeadsComponent extends BaseComponent {
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
-  pageSize = 10;
+  pageSize = 10; appointmentDataList: any[] = [];selectedAppointment: any = null; selectedLead: any;
   Crmusers: any[] = []; selectedLeads: number[] = [];
   CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
   stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
@@ -187,9 +187,12 @@ export class LeadsComponent extends BaseComponent {
       },
     };
   }
-  appointmentModal(appointment1: any) {
+  appointmentModal(appointment1: any, element: any) {
+    this.selectedLead = element;
+    this.appointmentForm.reset();
     this.modalService.open(appointment1, { centered: true });
   }
+
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
   }
@@ -345,7 +348,7 @@ export class LeadsComponent extends BaseComponent {
         date: [''],
         description: [''],
         duration: [''],
-        currentUser: this.userEmail,
+        currentUser: [this.userEmail],
         assignedDesigner:[''],
         leadEntry: this.fb.group({
           leadId: [0],
@@ -823,10 +826,63 @@ export class LeadsComponent extends BaseComponent {
   }
 
   appointmentFormSubmit(modal: any) {
+    const formData = this.appointmentForm.value;
     const payload = {
-      ...this.appointmentForm.value
+      appointmenType: formData.appointmenType,
+      date: formData.date,
+      description: formData.description,
+      duration: formData.duration,
+      currentUser: this.userEmail,
+      assignedDesigner: formData.assignedDesigner,
+      leadEntry: {
+        leadId: this.selectedLead.leadId,
+        name: this.selectedLead.name,
+        companyName: this.selectedLead.companyName,
+        executive: this.selectedLead.executive,
+        products: this.selectedLead.products,
+        country: this.selectedLead.country,
+        stage: this.selectedLead.stage,
+        status: this.selectedLead.status,
+        leadSource: this.selectedLead.leadSource,
+        zipCode: this.selectedLead.zipCode,
+        followUpDate: this.selectedLead.followUpDate,
+        state: this.selectedLead.state,
+        city: this.selectedLead.city,
+        address: this.selectedLead.address,
+        contact: this.selectedLead.contact,
+        email: this.selectedLead.email,
+        currentStage: this.selectedLead.currentStage,
+        updatedBy: this.selectedLead.updatedBy,
+        updatedTime: this.selectedLead.updatedTime,
+        entryBy: this.selectedLead.entryBy,
+        campaignId: this.selectedLead.campaignId,
+        companyCode: this.selectedLead.companyCode,
+        individualEmail: this.selectedLead.individualEmail,
+        type: this.selectedLead.type
+      }
     };
-    console.log(payload);
+    console.log('Final Payload:', payload);
+    this.switchService.saveAppointment(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Appointment Created ');
+        modal.close();
+      },
+      error: (err) => {
+        console.error('Failed to save appointment', err);
+      }
+    });
+  }
+
+  getAppointment(element: any) {
+    const leadId = element.leadId;
+    this.switchService.fetchAppointment(leadId).subscribe({
+      next: (res) => {
+        this.appointmentDataList = res; 
+      },
+      error: (err) => {
+        this.toastr.error('Failed to fetch appointment');
+      }
+    });
   }
 
   selectFormTemplateSubmit() {

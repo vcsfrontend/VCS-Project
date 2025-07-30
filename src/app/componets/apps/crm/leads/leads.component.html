@@ -93,7 +93,7 @@
                                     </li>
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="appointmentModal(appointment1)" data-bs-target="#offcanvasRight"
+                                            (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                         </button>
@@ -238,10 +238,36 @@
                     </ng-container>
                     <ng-container matColumnDef="city">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
-                        <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''" matTooltipPosition="above"
-                            matTooltipClass="custom-tooltip"> {{element.city ?.length > 20 
-                             ? (capitalizeFirstLetter(element.city).slice(0, 20))
-                            : capitalizeFirstLetter(element.city)}} </td>
+                        <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''"
+                            matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.city ?.length > 20
+                            ? (capitalizeFirstLetter(element.city).slice(0, 20))
+                            : capitalizeFirstLetter(element.city)}}
+                            <button class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="appointmentPopoverTemplate"
+                                popoverTitle="Appointment Details" [autoClose]="'outside'" placement="bottom" (click)="getAppointment(element)"
+                                type="button">
+                                <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
+                            </button>
+                            <ng-template #appointmentPopoverTemplate>
+                                <ng-container *ngIf="appointmentDataList.length > 0; else noData">
+                                    <div style="max-height: 200px; overflow-y: auto;">
+                                        <div *ngFor="let appointment of appointmentDataList">
+                                            <ul class="list-unstyled border-bottom pb-2 mb-2">
+                                                <li><strong>Appointment Type:</strong> {{ appointment.appointmenType }}</li>
+                                                <li><strong>Date:</strong> {{ appointment.date | date: 'dd-MMM-yyyy hh:mm a' }}</li>
+                                                <li><strong>Description:</strong> {{ appointment.description }}</li>
+                                                <li><strong>Duration:</strong> {{ appointment.duration }} mins</li>
+                                                <li><strong>Current User:</strong> {{ appointment.currentUser }}</li>
+                                                <li><strong>Assigned Designer:</strong> {{ appointment.assignedDesigner }}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                        
+                                <ng-template #noData>
+                                    <p class="text-muted">No appointment data found.</p>
+                                </ng-template>
+                            </ng-template>
+                        </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
@@ -1447,7 +1473,7 @@
                 </div>
                 <div class="col-xl-6">
                     <label for="duration" class="form-label">duration</label>
-                    <input type="number" class="form-control" id="name" placeholder="Enter your duration"
+                    <input type="text" class="form-control" id="name" placeholder="Enter your duration"
                         formControlName="duration">
                 </div>
                 <div class="col-xl-6">

@@ -180,10 +180,11 @@ export class SwitherService {
   deleteLeadEntry(column_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead_column/${column_id}`); } 
   fetchLeadsIndividual(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/fetch_lead_data_individual`,data); } 
   filterLeads(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/filter_crm_data`, data); } 
+  saveAppointment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/schedule_appointment`, data); } 
+  fetchAppointment(lead_id:any): Observable<any> { return this.http.get(`${this.apiUrl}designation/fetch_scheduled_appointments?lead_id=${lead_id}`); } 
 
   savedynamicMargins(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_dynamic_margins`, data); } 
   fetchDynamicMargin(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_dynamic_margins`, data); } 
-
   saveProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_project_conf`, data); } 
   fetchProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_project_conf`, data); }
   quotationHistory(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/getQuoteGenHistory`, data); }  
