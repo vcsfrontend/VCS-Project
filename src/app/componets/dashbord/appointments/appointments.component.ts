@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -13,25 +13,32 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MaterialModuleModule } from '../../../material-module/material-module.module';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule,SharedModule,NgSelectModule,FormsModule,ReactiveFormsModule,MatTooltipModule],
+  imports: [CommonModule, FullCalendarModule,SharedModule,NgSelectModule,FormsModule,ReactiveFormsModule,MatTooltipModule,MaterialModuleModule],
   providers:[{ provide: ToastrService, useClass: ToastrService }],
   templateUrl: './appointments.component.html',
   styleUrl: './appointments.component.scss'
 })
 export class AppointmentsComponent extends BaseComponent {
+  displayedColumns: string[] = [ 'slNo','Appointment','Date','Description','Duration','Current','assigned'];
+  appointmentDataSource = new MatTableDataSource<any>();
   campaignForm! : FormGroup;
   weekdays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   availabilityForm !: FormGroup; leadId :any;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
       super()
      
   }
   ngOnInit() {
+    this.getAppointment();
   this.availabilityForm = this.fb.group({
     duration: ['30'],
     ...this.createWeekControls()
@@ -94,21 +101,37 @@ export class AppointmentsComponent extends BaseComponent {
 
   appointmentData: any;
 
-getAppointment() {
-  const lead_id = this.leadId;
-  console.log('Fetching appointment for lead ID:', lead_id);
-
-  this.switchService.fetchAppointment(lead_id).subscribe({
-    next: (res) => {
-      this.appointmentData = res; // store the appointment data
-      this.toastr.success('Appointment fetched successfully');
-    },
-    error: (err) => {
-      console.error('Failed to fetch appointment', err);
-      this.toastr.error('Failed to fetch appointment');
+  ngAfterViewInit() {
+    this.appointmentDataSource.paginator = this.paginator;
+   
+  }
+  getSNo(index: number): number {
+    if (
+      this.paginator &&
+      this.paginator.pageIndex !== undefined &&
+      this.paginator.pageSize !== undefined
+    ) {
+      return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
     }
-  });
-}
+    return index + 1;
+  }
+
+  getAppointment() {
+    const lead_id = this.leadId;
+    console.log('Fetching appointment for lead ID:', lead_id);
+
+    this.switchService.fetchAppointment(1716).subscribe({
+      next: (res) => {
+        this.appointmentData = res;
+        this.appointmentDataSource = res;
+        this.toastr.success('Appointment fetched successfully');
+      },
+      error: (err) => {
+        console.error('Failed to fetch appointment', err);
+        this.toastr.error('Failed to fetch appointment');
+      }
+    });
+  }
 
   
 }
