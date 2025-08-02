@@ -16,7 +16,7 @@
                         Filter 
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="resetFilterForm()">Reset</button>
+                        data-bs-target="#exampleModalLg" (click)="resetFilterForm()" *ngIf="filterApplied">Reset</button>
                     <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
@@ -998,17 +998,20 @@
                                     *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
                                         </span>{{followup.followupDate | date: 'dd-MMM-yyyy hh:mm:ss a'}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Stage : </span>
-                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage || '') }"
-                                            [ngbTooltip]="(element.stage?.length || 0) > 18 ? element.stage : null" placement="top">
-                                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
-                                            <ng-container *ngIf="(element.stage?.length || 0) > 18">...</ng-container></span>
+                                    <li class="mb-2">
+                                        <span class="fw-semibold me-1">Stage :</span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
+                                            [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null" placement="top">
+                                            {{ followup.stage | slice: 0:18 }}
+                                            <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
+                                        </span>
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Status : </span>
-                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status || '') }"
-                                            [ngbTooltip]="(element.status?.length || 0) > 18 ? element.status : null" placement="top">
-                                            {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
-                                            <ng-container *ngIf="(element.status?.length || 0) > 18">...</ng-container>
+                                    <li class="mb-2">
+                                        <span class="fw-semibold me-1">Status :</span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
+                                            [ngbTooltip]="followup.status.length > 18 ? followup.status : null" placement="top">
+                                            {{ followup.status | slice: 0:18 }}
+                                            <ng-container *ngIf="followup.status.length > 18">...</ng-container>
                                         </span>
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
@@ -1418,7 +1421,7 @@
 </ng-template>
 
 <ng-template #content31 id="addtask" let-modal>
-    <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit()">
+    <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>

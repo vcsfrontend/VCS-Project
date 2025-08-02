@@ -86,6 +86,7 @@ export class LeadsComponent extends BaseComponent {
   fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
   notconnectedstatusClicked = false; adoanAiRole: any;leadList :any;filteredLeadList: any[] = [];   // holds filtered leads
   displayedLeads: any[] = []; override cityList:any[]=[];
+  filterApplied: boolean = false;
 
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
@@ -1699,6 +1700,9 @@ export class LeadsComponent extends BaseComponent {
             })
           );
           this.getStatusCount();
+           if (this.paginator) {
+          this.dataSource.paginator = this.paginator;
+          }
         },
         error: (error) => {
           this.toastr.error(error.statusText || 'Server Error');
@@ -2056,8 +2060,10 @@ export class LeadsComponent extends BaseComponent {
           this.submitted = false;
           this.sendLeadForm.reset();
           this.toastr.success(res.message, 'Lead');
+          this.filterApplied = true;
         } else {
           this.toastr.error(res.message, 'Lead');
+          this.filterApplied = false;
         }
       },
       error: (error) => {
@@ -2160,20 +2166,17 @@ export class LeadsComponent extends BaseComponent {
     return this.LeadToCampaignForm.controls;
   }
 
-  leadToCampaignSubmit() {
+  leadToCampaignSubmit(modal:any) {
     this.selectedLeadId = this.selectedLeadData.leadId;
     const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
     this.campaignId = selectedCampaignId;
-    const data = {
-      leadId: this.selectedLeadId,
+    const payload  = {
+      leadId: this.selectedLeadId.toString(),
       campaignId: this.campaignId,
     };
-    this.editLeadSubmit(data);
+    this.moveLeadToAnotherCampaign(payload ,modal);
+    
   }
-
-
-
-
 
 
   onAllocateSubmit() {
@@ -2673,4 +2676,32 @@ export class LeadsComponent extends BaseComponent {
     this.getFetchLeadData(); 
   }
 
+  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string },modal:any) {
+  this.switchService.ViewCrmLeads(data.leadId).subscribe(
+    (res) => {
+      const leadsEntry = res.leadsEntry;
+      leadsEntry.campaignId = data.campaignId;
+      leadsEntry.updatedBy = JSON.parse(this.userData).email;
+      leadsEntry.updatedTime = new Date().toISOString();
+      this.switchService.EditCrmLeads(leadsEntry).subscribe(
+        (res) => {
+          modal.close();
+            this.submitted = false;
+            this.leadForm.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          this.leadList = this.leadList.filter(
+          (lead: any) => lead.leadId !== leadsEntry.leadId
+          );
+          this.getFetchLeadData();
+        },
+        (err) => {
+          
+        }
+      );
+    },
+  );
+  }
 }
