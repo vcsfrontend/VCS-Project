@@ -267,13 +267,14 @@ export class CampaignsComponent extends BaseComponent {
     });
   }
   getUsers() {
-    if (this.userData.type == 2) {
+   if (JSON.parse(this.userData).type == 2) {
       let cn = this.userCompanyName;
       let cc = this.userCompanyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
             this.userList = res;
+            
           } else {
             this.toastr.error(res.message, 'signup', {
               timeOut: 3000,
