@@ -146,6 +146,13 @@
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-primary border-end border-light"
+                        (click)="openRight(Content1)" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        Filter 
+                    </button>
+                    <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="resetFilterForm()" *ngIf="filterApplied">Reset</button>
+                    <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                         Bulk Upload
@@ -211,6 +218,13 @@
                                             (click)="openRight(Content113); currentPhoneNumber = element.phoneNumber.toString()" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                        </button>
+                                    </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                         </button>
                                     </li>
                                    <li class="m-2">
@@ -380,6 +394,9 @@
                     <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
                 </table>
+                <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
+                    <p class="text-muted mb-0">No data found</p>
+                </div>
             </div>
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
@@ -920,17 +937,20 @@
                                 <ul class="list-unstyled border border-dark rounded p-3" *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
                                         </span>{{followup.followupDate | date: 'dd-MMM-yyyy hh:mm:ss a'}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Stage : </span>
-                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage || '') }"
-                                            [ngbTooltip]="(element.stage?.length || 0) > 18 ? element.stage : null" placement="top">
-                                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
-                                            <ng-container *ngIf="(element.stage?.length || 0) > 18">...</ng-container></span>
+                                    <li class="mb-2">
+                                        <span class="fw-semibold me-1">Stage :</span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
+                                            [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null" placement="top">
+                                            {{ followup.stage | slice: 0:18 }}
+                                            <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
+                                        </span>
                                     </li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Status : </span>
-                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status || '') }"
-                                            [ngbTooltip]="(element.status?.length || 0) > 18 ? element.status : null" placement="top">
-                                            {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
-                                            <ng-container *ngIf="(element.status?.length || 0) > 18">...</ng-container>
+                                    <li class="mb-2">
+                                        <span class="fw-semibold me-1">Status :</span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
+                                            [ngbTooltip]="followup.status.length > 18 ? followup.status : null" placement="top">
+                                            {{ followup.status | slice: 0:18 }}
+                                            <ng-container *ngIf="followup.status.length > 18">...</ng-container>
                                         </span>
                                     </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
@@ -946,13 +966,6 @@
                     <div [ngbNavOutlet]="nav24" class="mt-2"></div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary mr-3" type="submit">Filter</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Reset
-                Filters</button>
         </div>
     </div>
 </ng-template>
@@ -1495,5 +1508,108 @@
                     type="button">Cancel</button>
             </div>
         </div>
+    </form>
+</ng-template>
+<ng-template #Content1 let-offcanvas>
+    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)">
+        <div class="offcanvas-header border-bottom border-block-end-dashed">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0"> 
+            <div class="col-xl-12 pt-3">
+                <div class="row gy-3 p-4">
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Start Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder="" formControlName="startDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">End Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder=""
+                        formControlName="endDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
+                            bindValue="stageName"  (change)="onFilterStageChange()" placeholder="Select an Stage" >
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                            placeholder="Select a status" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="source" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select an Source" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                            placeholder="Select an Executive" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="city" [items]="cityList" bindLabel="name" bindValue="name"
+                            placeholder="Select an City" [multiple]="true">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3" type="submit">Filter</button>
+                <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #appointment1 let-modal>
+    <form [formGroup]="appointmentForm" (ngSubmit)="appointmentFormSubmit(modal)">
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Book a Demo</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="col-xl-12">
+            <div class="row gy-2">
+                <div class="col-xl-6">
+                    <label for="code" class="form-label">Appointment type</label>
+                    <ng-select formControlName="appointmenType" [items]="appointmentList" bindLabel="name"
+                        bindValue="name" placeholder="Select Project">
+                    </ng-select>
+                </div>
+                <div class="col-xl-6">
+                    <label for="name" class="form-label">Date</label>
+                    <input type="datetime-local" class="form-control" id="name" formControlName="date">
+                    <!-- min="2025-07-19T09:00"
+            max="2025-07-19T17:00" step="1800" laceholder="Enter Name" -->
+                </div>
+                <div class="col-xl-6">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your Description"
+                        formControlName="description">
+                </div>
+                <div class="col-xl-6">
+                    <label for="duration" class="form-label">duration</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your duration"
+                        formControlName="duration">
+                </div>
+                <div class="col-xl-6">
+                    <label for="code" class="form-label">assignedDesigner</label>
+                    <ng-select formControlName="assignedDesigner" [items]="userList" bindLabel="email"
+                        bindValue="email" placeholder="Select Project">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
     </form>
 </ng-template>

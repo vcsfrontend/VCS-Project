@@ -76,8 +76,10 @@ export class DealsComponent extends BaseComponent {
   selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
   shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any; individualEmail :any;
-   phoneNumber: string = '';originalStatus: string = '';  notconnectedstatusClicked = false; hasSelectedInvalid = false;
-   adoanAiRole: any;
+  phoneNumber: string = '';originalStatus: string = '';  notconnectedstatusClicked = false; hasSelectedInvalid = false;
+  adoanAiRole: any;public filterLeadForm!:FormGroup; filterApplied :boolean = false;
+  selectedLead: any;  public appointmentForm!: FormGroup;appointmentDataList :any;
+  isChecked = false;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -100,7 +102,9 @@ export class DealsComponent extends BaseComponent {
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('sort2') sort2!: MatSort;
-  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  
+  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
+  @ViewChild('followupModal') followupModal!: TemplateRef<any>;
+  
 
   public leadForm!: FormGroup;
   public submitted = false;
@@ -398,6 +402,21 @@ export class DealsComponent extends BaseComponent {
       followUpBy: [''],
     });
 
+    this.filterLeadForm = this.fb.group({
+      stage: [''],
+      status: [''],
+      source: [''],
+      startDate: [''],
+      endDate: [''],
+      executive: [''],
+      city: [''],
+      campaignId: [''],
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
+    });
+
+
     this.sendwhatsLeadForm = this.fb.group({
       template: ['', [Validators.required]],
       subject: ['', [Validators.required, Validators.minLength(3)]],
@@ -422,6 +441,40 @@ export class DealsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType,
     });
+
+     this.appointmentForm = this.fb.group({
+        appointmenType: [''],
+        date: [''],
+        description: [''],
+        duration: [''],
+        currentUser: [this.userEmail],
+        assignedDesigner:[''],
+        leadEntry: this.fb.group({
+          leadId: [0],
+          name: [''],
+          companyName: [''],
+          executive: [''],
+          products: [''],
+          stage: [''],
+          leadSource: [''],
+          zipCode: [''],
+          followUpDate: [''],
+          state: [''],
+          city: [''],
+          address: [''],
+          contact: [''],
+          email: [''],
+          currentStage: [''],
+          updatedBy: [''],
+          updatedTime: [''],
+          entryBy: [''],
+          campaignId: [''],
+          companyCode: [''],
+          individualEmail: [''],
+          type: 0
+        }),
+        createdTime:['']
+      });
 
     this.getUsers();
     // Filter options as the user types in the search bar
@@ -567,9 +620,14 @@ export class DealsComponent extends BaseComponent {
     this.updateColumns();
   }
   updateColumns() {
-    this.showSourceFlagColumn = this.dataSource.data.some(element => element.source === 'executive');
-    if (!this.showSourceFlagColumn) {
-      this.displayedColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
+    const hasExecutiveLead = this.dataSource.data.some(element => element.source === 'executive');
+
+    const newColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
+
+    if (hasExecutiveLead) {
+      this.displayedColumns = ['sourceFlag', ...newColumns]; 
+    } else {
+      this.displayedColumns = [...newColumns];  
     }
   }
 
@@ -622,6 +680,11 @@ export class DealsComponent extends BaseComponent {
     if (this.leadForm?.valid) {
       this.switchService.AddCrmLeads(payload).subscribe({
         next: (res: any) => {
+          const followUpDate = this.leadForm.get('followUpDate')?.value;
+          console.log('Follow-up Date:', followUpDate);
+          if (followUpDate) {
+            this.followupLeadSubmit(modal); 
+          }
           if (res.status) {
             modal.close();
             this.submitted = false;
@@ -693,7 +756,7 @@ export class DealsComponent extends BaseComponent {
           const nextLead = sortedByFollowUpDate.length
             ? sortedByFollowUpDate[0]
             : null;
-          
+           this.updateColumns();
           this.getStatusCount();
         },
       error: (error) => {
@@ -991,6 +1054,11 @@ export class DealsComponent extends BaseComponent {
 
   
   uploadLeadSubmit(modal: any) {
+    const selectedAgents = this.uploadLead.get('agents')?.value;
+    if (!selectedAgents || selectedAgents.length === 0) {
+      this.toastr.warning('Please select at least one user before importing.');
+      return;
+    }
     this.uploadSubmitted = true;
     if (this.uploadLead.valid) {
       this.uploadSpinner = true;
@@ -2214,5 +2282,147 @@ export class DealsComponent extends BaseComponent {
   return current === original;
   }
 
+  filterLeads(modal:any) {
+    const formValue = this.filterLeadForm.value;
+    const ensureSeconds = (value: string | null): string | null => {
+      if (!value) return null;
+      return value.length === 16 ? `${value}:00` : value;
+    };
+    const startDate = ensureSeconds(formValue.startDate);
+    const endDate = ensureSeconds(formValue.endDate);
+    const payload = {
+      ...this.filterLeadForm.value,
+      startDate,
+      endDate,
+      stage: Array.isArray(formValue.stage) ? formValue.stage.join(',') : formValue.stage || null,
+      status: Array.isArray(formValue.status) ? formValue.status.join(',') : formValue.status || null,
+      city: Array.isArray(formValue.city) ? formValue.city.join(',') : formValue.city || null,
+      source: Array.isArray(formValue.source) ? formValue.source.join(',') : formValue.source || null,
+      executive: Array.isArray(formValue.executive) ? formValue.executive.join(',') : formValue.executive || null,
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      campaignId: this.campaignId
+    };
+    this.switchService.filterLeads(payload).subscribe({
+      next: (res) => {
+        if (res) {
+          this.dataSource = new MatTableDataSource(res);
+          this.leadCount = res.length;
+          modal.close();
+          this.submitted = false;
+          this.sendLeadForm.reset();
+          this.toastr.success(res.message, 'Lead');
+          this.filterApplied = true;
+        } else {
+          this.toastr.error(res.message, 'Lead');
+          this.filterApplied = false;
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || 'Something went wrong', 'Error');
+      }
+    });
+  }
+  onFilterStageChange(): void {
+    const selectedStages: string[] = this.filterLeadForm.get('stage')?.value || [];
+    const selectedStage = Array.isArray(selectedStages) ? selectedStages[0] : selectedStages;
+    if (!selectedStage) {
+      this.checkboxStageOptions = [];
+      this.filterLeadForm.patchValue({ status: null });
+      return;
+    }
+    if (selectedStage === 'open') {
+      this.checkboxStageOptions = this.openStage.map(opt => ({
+        ...opt,
+        checked: true,
+        isCustom: false
+      }));
+      const firstStatus = this.checkboxStageOptions[0]?.name || null;
+      this.filterLeadForm.patchValue({ status: firstStatus });
+      return;
+    }
+    const matchedStatusList = this.statusOptionsByStageforDisplay[selectedStage];
+    if (matchedStatusList && matchedStatusList.length > 0) {
+      this.checkboxStageOptions = matchedStatusList;
+      const currentStatus = this.filterLeadForm.get('status')?.value;
+      const exists = matchedStatusList.some((s: any) => s.name === currentStatus);
+      if (!exists) {
+        this.filterLeadForm.patchValue({ status: matchedStatusList[0].name });
+      }
+    } else {
+      this.checkboxStageOptions = [];
+      this.filterLeadForm.patchValue({ status: null });
+    }
+  }
+  resetFilterForm() {
+    this.getfetchLeadsIndividual(); 
+  }
+
+  appointmentModal(appointment1: any, element: any) {
+    this.selectedLead = element;
+    this.appointmentForm.reset();
+    this.modalService.open(appointment1, { centered: true });
+  }
+
+   appointmentFormSubmit(modal: any) {
+    const formData = this.appointmentForm.value;
+    const payload = {
+      appointmenType: formData.appointmenType,
+      date: formData.date,
+      description: formData.description,
+      duration: formData.duration,
+      currentUser: this.userEmail,
+      assignedDesigner: formData.assignedDesigner,
+      leadEntry: {
+        leadId: this.selectedLead.leadId,
+        name: this.selectedLead.name,
+        companyName: this.selectedLead.companyName,
+        executive: this.selectedLead.executive,
+        products: this.selectedLead.products,
+        country: this.selectedLead.country,
+        stage: this.selectedLead.stage,
+        status: this.selectedLead.status,
+        leadSource: this.selectedLead.leadSource,
+        zipCode: this.selectedLead.zipCode,
+        followUpDate: this.selectedLead.followUpDate,
+        state: this.selectedLead.state,
+        city: this.selectedLead.city,
+        address: this.selectedLead.address,
+        contact: this.selectedLead.contact,
+        email: this.selectedLead.email,
+        currentStage: this.selectedLead.currentStage,
+        updatedBy: this.selectedLead.updatedBy,
+        updatedTime: this.selectedLead.updatedTime,
+        entryBy: this.selectedLead.entryBy,
+        campaignId: this.selectedLead.campaignId,
+        companyCode: this.selectedLead.companyCode,
+        individualEmail: this.selectedLead.individualEmail,
+        type: this.selectedLead.type
+      }
+    };
+    console.log('Final Payload:', payload);
+    this.switchService.saveAppointment(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Appointment Created ');
+        modal.close();
+      },
+      error: (err) => {
+        console.error('Failed to save appointment', err);
+      }
+    });
+  }
+
+  getAppointment(element: any) {
+    const leadId = element.leadId;
+    this.switchService.fetchAppointment(leadId).subscribe({
+      next: (res) => {
+        this.appointmentDataList = res; 
+      },
+      error: (err) => {
+        this.toastr.error('Failed to fetch appointment');
+      }
+    });
+  }
   
 }
