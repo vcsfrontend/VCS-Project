@@ -77,7 +77,7 @@
                                             Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
-                                    <li class="m-2">
+                                    <!-- <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="openRight(Content113)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
@@ -90,7 +90,7 @@
                                             aria-controls="offcanvasRight">
                                             Create Task<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                         </button>
-                                    </li>
+                                    </li> -->
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
@@ -249,7 +249,7 @@
                             matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.city ?.length > 20
                             ? (capitalizeFirstLetter(element.city).slice(0, 20))
                             : capitalizeFirstLetter(element.city)}}
-                            <button class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="appointmentPopoverTemplate"
+                            <!-- <button class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="appointmentPopoverTemplate"
                                 popoverTitle="Appointment Details" [autoClose]="'outside'" placement="bottom" (click)="getAppointment(element)"
                                 type="button">
                                 <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
@@ -273,7 +273,7 @@
                                 <ng-template #noData>
                                     <p class="text-muted">No appointment data found.</p>
                                 </ng-template>
-                            </ng-template>
+                            </ng-template> -->
                         </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
@@ -322,7 +322,8 @@
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-outline-primary btn-wave"><i
                             class="ri-alarm-line"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave"><i
+                    <button type="button" class="btn btn-outline-primary btn-wave" 
+                    (click)="openBulkMailOffcanvas(offcanvasTemplate)"><i
                             class="ri-mail-line bt-icon"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()" *ngIf="adoanAiRole== 'ADMIN' || userType== 1"><i
                             class="ri-delete-bin-line"></i></button>
@@ -910,7 +911,7 @@
                                     <input type="checkbox" class="form-check-input" id="allocateExecutive"
                                         formControlName="autoAllocate" style="cursor: pointer;" />
                                     <label class="form-check-label" for="allocateExecutive">
-                                        Allocate Executive
+                                        Auto Allocate to Executive
                                     </label>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12">
@@ -1511,4 +1512,66 @@
             data-bs-dismiss="modal">Close</button>
     </div>
     </form>
+</ng-template>
+
+<ng-template #offcanvasTemplate let-offcanvasRef="offcanvasRef">
+  <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Bulk Email</strong></h5>
+    <button (click)="offcanvasRef.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+      aria-label="Close"></button>
+  </div>
+
+  <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailToMultipleLeads(offcanvasRef)" class="d-flex flex-column h-100">
+    <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+      <div class="mb-4">
+        <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+          bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['template'].errors }">
+        </ng-select>
+        <div *ngIf="sendMultiMailSubmitted && s['template'].errors" class="invalid-feedback">
+          <div *ngIf="s['template'].errors['required']">Template is required</div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['email'].errors }">
+        <div *ngIf="sendMultiMailSubmitted && s['email'].errors" class="invalid-feedback">
+          <div *ngIf="s['email'].errors['required']">Email is required</div>
+        </div>
+      </div>
+
+      <!-- CC -->
+      <div class="mb-4">
+        <input type="text" class="form-control" id="cc" placeholder="CC" formControlName="cc"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['cc'].errors }">
+        <div *ngIf="sendMultiMailSubmitted && s['cc'].errors" class="invalid-feedback">
+          <span *ngIf="s['cc'].errors['required']">CC is required.</span>
+          <span *ngIf="s['cc'].errors['email']">Invalid email address.</span>
+        </div>
+      </div>
+
+      <!-- Subject -->
+      <div class="mb-4">
+        <textarea class="form-control" id="subject" rows="4" placeholder="Subject" formControlName="subject"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['subject'].errors }"></textarea>
+        <div *ngIf="sendMultiMailSubmitted && s['subject'].errors" class="invalid-feedback">
+          <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
+          <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="mb-4">
+        <textarea class="form-control" id="description" rows="4" placeholder="Description"
+          formControlName="content"></textarea>
+      </div>
+    </div>
+    <div class="p-4 border-top">
+      <div class="d-flex justify-content-end gap-3">
+        <button class="btn btn-primary w-50" type="submit"
+          >Send Mail</button>
+        <button (click)="offcanvasRef.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
+      </div>
+    </div>
+  </form>
 </ng-template>
