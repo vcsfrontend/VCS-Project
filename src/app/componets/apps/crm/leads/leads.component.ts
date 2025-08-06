@@ -86,7 +86,8 @@ export class LeadsComponent extends BaseComponent {
   fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
   notconnectedstatusClicked = false; adoanAiRole: any;leadList :any;filteredLeadList: any[] = [];   // holds filtered leads
   displayedLeads: any[] = []; override cityList:any[]=[];
-  filterApplied: boolean = false;
+  filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
+  appointmentId: number | null = null;
 
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
@@ -188,11 +189,37 @@ export class LeadsComponent extends BaseComponent {
       },
     };
   }
-  appointmentModal(appointment1: any, element: any) {
-    this.selectedLead = element;
-    this.appointmentForm.reset();
-    this.modalService.open(appointment1, { centered: true });
+  appointmentModal(appointment1: any, element: any, appointmentData: any = null) {
+  this.selectedLead = element;
+  this.appointmentForm.reset();
+
+  if (appointmentData) {
+    // Edit mode
+    this.editMode = true;
+    this.selectedAppointment = appointmentData;
+
+    // Patch form values
+    this.appointmentForm.patchValue({
+      appointmentId : 0,
+      appointmenType: appointmentData.appointmenType,
+      date: appointmentData.date,
+      description: appointmentData.description,
+      duration: appointmentData.duration,
+      assignedDesigner: appointmentData.assignedDesigner
+    });
+
+    // Save appointment ID for edit API payload
+    this.appointmentId = appointmentData.id;
+  } else {
+    // Create mode
+    this.editMode = false;
+    this.selectedAppointment = null;
+    this.appointmentId = 0;
   }
+
+  this.modalService.open(appointment1, { centered: true });
+  }
+
 
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
@@ -755,6 +782,10 @@ export class LeadsComponent extends BaseComponent {
   }
 
   onSubmit(modal: any) {
+    const followUpDate = this.leadForm.get('followUpDate')?.value;
+    if (followUpDate) {
+      this.followupLeadSubmit(modal); // pass only what's needed
+    }
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
     this.leadForm.get('executive')?.setValue('');
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
@@ -826,7 +857,7 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-  appointmentFormSubmit(modal: any) {
+  appointmentFormSubmit(modal: any) {   
     const formData = this.appointmentForm.value;
     const payload = {
       appointmenType: formData.appointmenType,
@@ -835,6 +866,7 @@ export class LeadsComponent extends BaseComponent {
       duration: formData.duration,
       currentUser: this.userEmail,
       assignedDesigner: formData.assignedDesigner,
+          ...(this.appointmentId ? { appointmentId: this.appointmentId } : {}),
       leadEntry: {
         leadId: this.selectedLead.leadId,
         name: this.selectedLead.name,
@@ -859,9 +891,12 @@ export class LeadsComponent extends BaseComponent {
         campaignId: this.selectedLead.campaignId,
         companyCode: this.selectedLead.companyCode,
         individualEmail: this.selectedLead.individualEmail,
-        type: this.selectedLead.type
+        type: this.selectedLead.type,
       }
+      
     };
+    
+   
     console.log('Final Payload:', payload);
     this.switchService.saveAppointment(payload).subscribe({
       next: (res) => {
@@ -869,16 +904,24 @@ export class LeadsComponent extends BaseComponent {
         modal.close();
       },
       error: (err) => {
-        console.error('Failed to save appointment', err);
       }
     });
   }
 
   getAppointment(element: any) {
+    this.leadId = element.leadId;
     const leadId = element.leadId;
     this.switchService.fetchAppointment(leadId).subscribe({
       next: (res) => {
-        this.appointmentDataList = res; 
+        this.appointmentDataList = res;
+        if (res.length > 0) {
+          const selectedAppointment = res[0]; // or find(x => x.appointmentId === someId)
+          this.appointmentId = selectedAppointment.appointmentId;
+          this.appointmentForm.patchValue(selectedAppointment);
+        }
+        console.log('selected appointmentId:', this.appointmentId);
+        this.appointmentId= res.appointmentId;
+        
       },
       error: (err) => {
         this.toastr.error('Failed to fetch appointment');
@@ -1637,7 +1680,7 @@ export class LeadsComponent extends BaseComponent {
   //   });
   // }
 
-  getFetchLeadData() {
+  getFetchLeadData(customPayload?: any) {
     this.switchService.FetchLeadData(this.userEmail, this.campaignId)
       .subscribe({
         next: (res: any) => {
@@ -2167,6 +2210,7 @@ export class LeadsComponent extends BaseComponent {
   }
 
   leadToCampaignSubmit(modal:any) {
+    this.moveCampaign = this.campaignId
     this.selectedLeadId = this.selectedLeadData.leadId;
     const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
     this.campaignId = selectedCampaignId;
@@ -2174,8 +2218,11 @@ export class LeadsComponent extends BaseComponent {
       leadId: this.selectedLeadId.toString(),
       campaignId: this.campaignId,
     };
+    console.log(payload)
     this.moveLeadToAnotherCampaign(payload ,modal);
-    
+    console.log(this.moveCampaign);
+    this.getFetchLeadData(this.moveCampaign);
+
   }
 
 
@@ -2677,10 +2724,11 @@ export class LeadsComponent extends BaseComponent {
   }
 
   moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string },modal:any) {
-  this.switchService.ViewCrmLeads(data.leadId).subscribe(
+    this.switchService.ViewCrmLeads(data.leadId).subscribe(
     (res) => {
       const leadsEntry = res.leadsEntry;
       leadsEntry.campaignId = data.campaignId;
+      // moveCampaign = data.campaignId;
       leadsEntry.updatedBy = JSON.parse(this.userData).email;
       leadsEntry.updatedTime = new Date().toISOString();
       this.switchService.EditCrmLeads(leadsEntry).subscribe(
@@ -2695,13 +2743,43 @@ export class LeadsComponent extends BaseComponent {
           this.leadList = this.leadList.filter(
           (lead: any) => lead.leadId !== leadsEntry.leadId
           );
-          this.getFetchLeadData();
         },
         (err) => {
           
         }
       );
+      
     },
   );
   }
+  onAppointmentSelect(selectedAppointment: any) {
+  console.log('Selected appointment:', selectedAppointment);
+
+  if (selectedAppointment) {
+    this.appointmentForm.patchValue({
+      appointmenType: selectedAppointment.appointmenType,
+      date: selectedAppointment.date,
+      description: selectedAppointment.description,
+      duration: selectedAppointment.duration,
+      assignedDesigner: selectedAppointment.assignedDesigner
+    });
+
+    // Store for edit API
+    this.appointmentId = selectedAppointment.appointmentId;
+    console.log('hello', this.appointmentId);
+  }
+  }
+
+  openEditAppointment(template: any, element: any) {
+  this.switchService.fetchAppointment(element.leadId).subscribe(res => {
+    if (res && res.length > 0) {
+      const latestAppointment = res[res.length - 1]; // or pick the one you want
+      this.appointmentModal(template, element, latestAppointment);
+    } else {
+      // No appointments found → maybe still open in create mode
+      this.appointmentModal(template, element);
+    }
+  });
+  }
+
 }
