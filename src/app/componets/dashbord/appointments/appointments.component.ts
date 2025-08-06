@@ -26,22 +26,34 @@ import { MaterialModuleModule } from '../../../material-module/material-module.m
   styleUrl: './appointments.component.scss'
 })
 export class AppointmentsComponent extends BaseComponent {
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userType: any = this.userData ? this.userData.type : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
   displayedColumns: string[] = [ 'slNo','Appointment','Date','Description','Duration','Current','assigned'];
   appointmentDataSource = new MatTableDataSource<any>();
   campaignForm! : FormGroup;
   weekdays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
-  availabilityForm !: FormGroup; leadId :any;
+  availabilityForm !: FormGroup; leadId :any; appointmentForm!: FormGroup;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
       super()
-     
   }
   ngOnInit() {
-    this.getAppointment();
-  this.availabilityForm = this.fb.group({
-    duration: ['30'],
-    ...this.createWeekControls()
+    this.availabilityForm = this.fb.group({
+      duration: ['30'],
+      ...this.createWeekControls()
+    });
+    this.appointmentForm = this.fb.group({
+      startDate: [''],
+      endDate: [''],
+      companyCode: this.userCompanyCode,
+      emial: this.userEmail,
+      type: this.userType,
     });
   }
   
@@ -54,10 +66,52 @@ export class AppointmentsComponent extends BaseComponent {
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
     events: [
-      { title: 'All-day Event', date: '2025-07-01' },
-      { title: 'Demo', date: '2025-07-09T10:30:00' },
-      { title: 'Design Doubts', date: '2025-07-09T12:00:00' },
-      { title: 'Birthday', date: '2025-07-13T07:00:00' }
+      {
+        title: 'Client Meeting - John',
+        start: '2025-08-05T10:00:00',
+        end: '2025-08-05T11:00:00'
+      },
+      {
+        title: 'Team Sync',
+        start: '2025-08-07T09:00:00',
+        end: '2025-08-07T09:30:00'
+      },
+      {
+        title: 'Project Review',
+        start: '2025-08-10T15:00:00',
+        end: '2025-08-10T16:00:00'
+      },
+      {
+        title: 'On-site Visit',
+        start: '2025-08-11',
+        allDay: true
+      },
+      {
+        title: 'Doctor Appointment',
+        start: '2025-08-15T08:30:00',
+        end: '2025-08-15T09:00:00'
+      },
+      {
+        title: 'Interview with Candidate',
+        start: '2025-08-18T14:00:00',
+        end: '2025-08-18T14:45:00'
+      },
+      {
+        title: 'Release Planning',
+        start: '2025-08-20T11:00:00',
+        end: '2025-08-20T12:30:00'
+      },
+      {
+        title: 'Annual Leave - Ram',
+        start: '2025-08-21',
+        end: '2025-08-23',
+        allDay: true
+      },
+      {
+        title: 'Birthday Celebration - Priya',
+        start: '2025-08-25T17:00:00',
+        end: '2025-08-25T18:00:00'
+      }
     ],
     selectable: true,
     dateClick: this.onDateClick.bind(this),
@@ -116,22 +170,22 @@ export class AppointmentsComponent extends BaseComponent {
     return index + 1;
   }
 
-  getAppointment() {
-    const lead_id = this.leadId;
-    console.log('Fetching appointment for lead ID:', lead_id);
-
-    this.switchService.fetchAppointment(1716).subscribe({
-      next: (res) => {
-        this.appointmentData = res;
-        this.appointmentDataSource = res;
-        this.toastr.success('Appointment fetched successfully');
-      },
-      error: (err) => {
-        console.error('Failed to fetch appointment', err);
-        this.toastr.error('Failed to fetch appointment');
-      }
-    });
+  getAppointment(modal:any) {
+    const payload = this.appointmentForm.value;
+    console.log(payload)
+    // this.switchService.fetchAppointment(payload).subscribe({
+    //   next: (res) => {
+    //     this.appointmentData = res;
+    //     this.appointmentDataSource = res;
+    //   },
+    //   error: (err) => {
+    //     console.error('Error fetching appointment:', err);
+    //     this.toastr.error('Failed to fetch appointment');
+    //   }
+    // });
   }
+
+
 
   
 }
