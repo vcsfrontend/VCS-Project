@@ -98,6 +98,13 @@
                                             Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                         </button>
                                     </li>
+                                <!-- This ensures a button appears for each appointment -->
+                                <li class="m-2">
+                                    <button class="btn btn-success label-btn label-end w-100" (click)="openEditAppointment(appointment1, element)"
+                                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                        Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                    </button>
+                                </li>
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
@@ -1457,6 +1464,16 @@
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
+                <!-- Show only if we are editing and have multiple appointments -->
+                <div class="col-xl-6" *ngIf="editMode && appointmentDataList?.length">
+                    <label class="form-label">Select Appointment</label>
+                    <ng-select [items]="appointmentDataList" bindLabel="appointmenType" placeholder="Select Appointment"
+                        (change)="onAppointmentSelect($event)">
+                    </ng-select>
+                </div>
+
+
+                <!-- Inside your form -->
                 <div class="col-xl-6">
                     <label for="code" class="form-label">Appointment type</label>
                     <ng-select formControlName="appointmenType" [items]="appointmentList" bindLabel="name"
