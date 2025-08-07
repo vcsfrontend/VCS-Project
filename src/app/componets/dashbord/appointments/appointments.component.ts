@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild , TemplateRef} from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/core';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { FormGroup,FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { BaseComponent } from '../../../shared/base/base.component';
-import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas ,NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SwitherService } from '../../../shared/services/swither.service';
@@ -35,10 +35,11 @@ export class AppointmentsComponent extends BaseComponent {
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   displayedColumns: string[] = [ 'slNo','Appointment','Date','Description','Duration','Current','assigned'];
   appointmentDataSource = new MatTableDataSource<any>();
-  campaignForm! : FormGroup;
+  campaignForm! : FormGroup; appointmentData: any[] = [];
   weekdays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   availabilityForm !: FormGroup; leadId :any; appointmentForm!: FormGroup;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('newAppointmentModal') newAppointmentModal!: TemplateRef<any>;
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
       super()
@@ -57,67 +58,33 @@ export class AppointmentsComponent extends BaseComponent {
     });
   }
   
-  calendarOptions: CalendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-    initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
-    events: [
-      {
-        title: 'Client Meeting - John',
-        start: '2025-08-05T10:00:00',
-        end: '2025-08-05T11:00:00'
-      },
-      {
-        title: 'Team Sync',
-        start: '2025-08-07T09:00:00',
-        end: '2025-08-07T09:30:00'
-      },
-      {
-        title: 'Project Review',
-        start: '2025-08-10T15:00:00',
-        end: '2025-08-10T16:00:00'
-      },
-      {
-        title: 'On-site Visit',
-        start: '2025-08-11',
-        allDay: true
-      },
-      {
-        title: 'Doctor Appointment',
-        start: '2025-08-15T08:30:00',
-        end: '2025-08-15T09:00:00'
-      },
-      {
-        title: 'Interview with Candidate',
-        start: '2025-08-18T14:00:00',
-        end: '2025-08-18T14:45:00'
-      },
-      {
-        title: 'Release Planning',
-        start: '2025-08-20T11:00:00',
-        end: '2025-08-20T12:30:00'
-      },
-      {
-        title: 'Annual Leave - Ram',
-        start: '2025-08-21',
-        end: '2025-08-23',
-        allDay: true
-      },
-      {
-        title: 'Birthday Celebration - Priya',
-        start: '2025-08-25T17:00:00',
-        end: '2025-08-25T18:00:00'
+ calendarOptions: CalendarOptions = {
+  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+  initialView: 'dayGridMonth',
+  headerToolbar: {
+    left: 'prev,next today',
+    center: 'title',
+    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+  },
+  selectable: false,
+  editable: false,
+  navLinks: false,
+  eventDisplay: 'block',
+  events: [
+    {
+      title: `Appointment #47 • Demo Booking • mahima@designadonai.com`,
+      start: '2025-08-06T12:21:00',
+      extendedProps: {
+        appointmentId: 47,
+        appointmenType: 'Demo Booking',
+        description: 'demo',
+        duration: '30 mins',
+        currentUser: 'sriharshini@designadonai.com',
+        assignedDesigner: 'mahima@designadonai.com'
       }
-    ],
-    selectable: true,
-    dateClick: this.onDateClick.bind(this),
-    eventClick: this.onEventClick.bind(this),
-    eventContent: this.renderEventContent.bind(this)
-  };
+    }
+  ]
+};
 
   onDateClick(arg: any) {
     alert('Date clicked: ' + arg.dateStr);
@@ -153,11 +120,8 @@ export class AppointmentsComponent extends BaseComponent {
     }
   }
 
-  appointmentData: any;
-
   ngAfterViewInit() {
     this.appointmentDataSource.paginator = this.paginator;
-   
   }
   getSNo(index: number): number {
     if (
@@ -170,22 +134,39 @@ export class AppointmentsComponent extends BaseComponent {
     return index + 1;
   }
 
-  getAppointment(modal:any) {
-    const payload = this.appointmentForm.value;
-    console.log(payload)
-    // this.switchService.fetchAppointment(payload).subscribe({
-    //   next: (res) => {
-    //     this.appointmentData = res;
-    //     this.appointmentDataSource = res;
-    //   },
-    //   error: (err) => {
-    //     console.error('Error fetching appointment:', err);
-    //     this.toastr.error('Failed to fetch appointment');
-    //   }
-    // });
+  getAppointment(currentModalRef: NgbModalRef) {
+  const payload = {
+    ...this.appointmentForm.value,
+    startDate: this.formatDateOnly(this.appointmentForm.get('startDate')?.value),
+    endDate: this.formatDateOnly(this.appointmentForm.get('endDate')?.value),
+    companyCode: this.userCompanyCode,
+    email: this.userEmail,
+    type: this.userType,
+  };
+
+  this.switchService.fetchAppointment(payload).subscribe({
+    next: (res) => {
+      this.appointmentData = res || [];
+      currentModalRef.close();
+
+      // Open the new modal with the fetched data
+      this.modalService.open(this.newAppointmentModal, {
+        size: 'lg',
+        centered: true,
+      });
+    },
+    error: () => {
+      this.toastr.error('Failed to fetch appointment');
+    }
+  });
+}
+
+  openFirstModal(template: TemplateRef<any>) {
+    const modalRef = this.modalService.open(template, { size: 'lg', centered: true });
   }
 
+  formatDateOnly(dateTimeString: string): string {
+    return dateTimeString ? dateTimeString.split('T')[0] : '';
+  }
 
-
-  
 }

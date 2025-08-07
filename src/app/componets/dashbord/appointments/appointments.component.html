@@ -8,36 +8,60 @@
     </full-calendar>
 </div>
 
+<!-- Book a Demo Modal -->
 <ng-template #content1 let-modal>
-  <div class="modal-header justify-content-center">
-    <h6 class="modal-title" id="staticBackdropLabel3">Book a Demo</h6>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
-      aria-label="Close"></button>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="appointmentForm" (ngSubmit)="getAppointment(modal)">
-      <div class="col-xl-12">
-        <div class="row gy-2">
-          <div class="col-xl-6">
-            <label for="name" class="form-label">Start Date</label>
-            <input type="datetime-local" class="form-control" id="name" formControlName="startDate"
-              placeholder="Enter Name">
-          </div>
-          <div class="col-xl-6">
-            <label for="description" class="form-label">End Date</label>
-            <input type="datetime-local" class="form-control" id="name" placeholder="Enter your endDate"
-              formControlName="endDate">
-          </div>
+  <form [formGroup]="appointmentForm" (ngSubmit)="getAppointment(modal)">
+    <div class="modal-header justify-content-center">
+      <h6 class="modal-title">Book a Demo</h6>
+      <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row gy-2">
+        <div class="col-xl-6">
+          <label for="startDate" class="form-label">Start Date</label>
+          <input type="datetime-local" class="form-control" id="startDate" formControlName="startDate" />
+        </div>
+        <div class="col-xl-6">
+          <label for="endDate" class="form-label">End Date</label>
+          <input type="datetime-local" class="form-control" id="endDate" formControlName="endDate" />
         </div>
       </div>
-    </form>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="appointmentForm.invalid">Submit</button>
+      <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Appointment Data Modal -->
+<ng-template #newAppointmentModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Appointment Details</h5>
+    <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
   </div>
-  <div class="modal-footer">
-    <button type="submit" class="btn btn-primary"> Submit</button>
-    <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-      data-bs-dismiss="modal">Close</button>
+  <div class="modal-body">
+    <div *ngIf="appointmentData.length > 0; else noData">
+      <div *ngFor="let item of appointmentData" class="mb-3 p-2 border rounded">
+        <p><strong>Appointment ID:</strong> {{ item.appointmentId }}</p>
+        <p><strong>Type:</strong> {{ item.appointmenType }}</p>
+        <p><strong>Date:</strong> {{ item.date | date: 'medium' }}</p>
+        <p><strong>Description:</strong> {{ item.description }}</p>
+        <p><strong>Duration:</strong> {{ item.duration }} mins</p>
+        <p><strong>Assigned Designer:</strong> {{ item.assignedDesigner }}</p>
+        <p><strong>Booked By:</strong> {{ item.currentUser }}</p>
+      </div>
+    </div>
+    <ng-template #noData>
+      <p>No appointment data found.</p>
+    </ng-template>
   </div>
 </ng-template>
+
+
+
+
+
 
 
 
