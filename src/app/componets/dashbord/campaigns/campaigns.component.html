@@ -102,7 +102,7 @@
         </div>
       </div>
       <div class="text-center">
-        <button type="button" class="btn btn-primary btn-wave" (click)="open(content7)">Create Campaign</button>
+        <button type="button" class="btn btn-primary btn-wave" (click)="openCreateModal(content7)">Create Campaign</button>
         <button class="btn btn-primary ms-2"> Show More </button>
       </div>
     </div>
@@ -186,6 +186,10 @@
             <button class="btn btn-sm btn-primary btn-wave ms-3" (click)="viewCampaignLeads(campaign)">
               <i class="ri-eye-line me-2"></i> View
             </button>
+            <button type="button" class="btn btn-sm btn-primary btn-wave" (click)="openEditModal(content7, campaign.campgnId)">edit</button>
+            <!-- <button class="btn btn-sm btn-primary btn-wave me-3">
+              <i class="ri-delete-bin-line me-2"></i> edit
+            </button> -->
             <button class="btn btn-sm btn-primary btn-wave me-3" (click)="deleteCampaignById(campaign)">
               <i class="ri-delete-bin-line me-2"></i> Delete
             </button>
