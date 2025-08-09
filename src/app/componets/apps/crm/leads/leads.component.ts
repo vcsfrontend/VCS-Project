@@ -896,9 +896,6 @@ export class LeadsComponent extends BaseComponent {
       }
       
     };
-    
-   
-    console.log('Final Payload:', payload);
     this.switchService.saveAppointment(payload).subscribe({
       next: (res) => {
         this.toastr.success('Appointment Created ');
@@ -920,7 +917,6 @@ export class LeadsComponent extends BaseComponent {
           this.appointmentId = selectedAppointment.appointmentId;
           this.appointmentForm.patchValue(selectedAppointment);
         }
-        console.log('selected appointmentId:', this.appointmentId);
         this.appointmentId= res.appointmentId;
         
       },
@@ -2210,28 +2206,28 @@ export class LeadsComponent extends BaseComponent {
     return this.LeadToCampaignForm.controls;
   }
 
-  leadToCampaignSubmit(modal:any) {
-    this.moveCampaign = this.campaignId
-    this.selectedLeadId = this.selectedLeadData.leadId;
-    const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
-    this.campaignId = selectedCampaignId;
-    const payload  = {
-      leadId: this.selectedLeadId.toString(),
-      campaignId: this.campaignId,
-    };
-    console.log(payload)
-    this.moveLeadToAnotherCampaign(payload ,modal);
-    console.log(this.moveCampaign);
-    this.getFetchLeadData(this.moveCampaign);
+  leadToCampaignSubmit(modal: any) {
+  const currentCampaignId = this.campaignId; 
 
+  this.selectedLeadId = this.selectedLeadData.leadId;
+  const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+
+  const payload = {
+    leadId: this.selectedLeadId.toString(),
+    campaignId: selectedCampaignId, 
+  };
+  this.moveLeadToAnotherCampaign(payload, modal);
+  this.getFetchLeadData(currentCampaignId); 
+  this.campaignId = selectedCampaignId;
+  
   }
+
 
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
     const selectedExecutive = this.allocateForm.get('executive')?.value;
     const hasSelectedLeads = this.selectedLeads.length > 0;
-    console.log('Selected Executive:', selectedExecutive); 
     if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
       this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
@@ -2749,13 +2745,10 @@ export class LeadsComponent extends BaseComponent {
           
         }
       );
-      
     },
   );
   }
   onAppointmentSelect(selectedAppointment: any) {
-  console.log('Selected appointment:', selectedAppointment);
-
   if (selectedAppointment) {
     this.appointmentForm.patchValue({
       appointmenType: selectedAppointment.appointmenType,
@@ -2767,7 +2760,6 @@ export class LeadsComponent extends BaseComponent {
 
     // Store for edit API
     this.appointmentId = selectedAppointment.appointmentId;
-    console.log('hello', this.appointmentId);
   }
   }
 

@@ -39,7 +39,7 @@ export class CampaignsComponent extends BaseComponent {
   fetchCrmLeadsList: any[] = [];
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
-  dataSource = new MatTableDataSource<any>();  campaignId!: string;
+  dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
 
   displayedColumns: string[] = [
     'sourceFlag',
@@ -106,6 +106,7 @@ export class CampaignsComponent extends BaseComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    
     this.isSubmitting = true;
     let agents = this.campaignForm.get('agents')?.value;
     if (Array.isArray(agents)) {
@@ -118,6 +119,10 @@ export class CampaignsComponent extends BaseComponent {
       type: this.userType,
       agents: agents,
     };
+    if (this.selectedCampgnId && this.selectedCampaignId) {
+      payload.campgnId = this.selectedCampgnId;
+      payload.campaignId = this.selectedCampaignId;
+    }
     this.switchService.saveCampaignData(payload).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;
@@ -134,6 +139,8 @@ export class CampaignsComponent extends BaseComponent {
           });
           this.getLeadCountForCampaign(res.campgnId)
           this.getCampaignData();
+          this.selectedCampgnId = null;
+          this.selectedCampaignId = null;
         } else {
           this.toastr.error(res.message || "Something went wrong while creating the campaign.");
         }
@@ -358,5 +365,45 @@ export class CampaignsComponent extends BaseComponent {
       });
     }
   }
+  openEditModal(content: any, campgnId: string) {
+  // this.selectedCampaignId = campgnId;  
+  console.log('Editing campaign ID:', this.selectedCampaignId);
+
+  const campaignData = this.campaignList.find(
+    (item: any) => item.campgnId === campgnId
+  );
+    console.log('campaign data',campaignData)
+  if (campaignData) {
+    this.selectedCampgnId = campaignData.campgnId;   // short ID
+    this.selectedCampaignId = campaignData.campaignId; // long ID
+
+    console.log('Editing campgnId:', this.selectedCampgnId);
+    console.log('Editing campaignId:', this.selectedCampaignId);
+    this.campaignForm.patchValue({
+      campaignName: campaignData.campaignName,
+      pipeline: campaignData.pipeline,
+      campaignPoc: campaignData.campaignPoc,
+      agents: (Array.isArray(campaignData.agents)
+             ? campaignData.agents
+             : campaignData.agents?.split(',') ?? []),
+      campaignPriority: campaignData.campaignPriority,
+      leadDuplicacy: campaignData.leadDuplicacy
+    });
+  }
+  this.open(content);
+  }
+  openCreateModal(content: any) {
+  // Clear previously selected campaign IDs
+  this.selectedCampgnId = null;
+  this.selectedCampaignId = null;
+
+  // Reset the form completely
+  this.campaignForm.reset();
+
+  // Open the modal using your existing open method
+  this.open(content);
+  }
+
+
 
 }

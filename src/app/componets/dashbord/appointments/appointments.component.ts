@@ -38,13 +38,15 @@ export class AppointmentsComponent extends BaseComponent {
   campaignForm! : FormGroup; appointmentData: any[] = [];
   weekdays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   availabilityForm !: FormGroup; leadId :any; appointmentForm!: FormGroup;
+  appointmentsList : any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild('newAppointmentModal') newAppointmentModal!: TemplateRef<any>;
+  @ViewChild('newAppointmentModal') newAppointmentModal!: TemplateRef<any>;userList:any;
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
       super()
   }
   ngOnInit() {
+    this.getUsers();
     this.availabilityForm = this.fb.group({
       duration: ['30'],
       ...this.createWeekControls()
@@ -66,25 +68,11 @@ export class AppointmentsComponent extends BaseComponent {
     center: 'title',
     right: 'dayGridMonth,timeGridWeek,timeGridDay'
   },
-  selectable: false,
-  editable: false,
-  navLinks: false,
-  eventDisplay: 'block',
-  events: [
-    {
-      title: `Appointment #47 • Demo Booking • mahima@designadonai.com`,
-      start: '2025-08-06T12:21:00',
-      extendedProps: {
-        appointmentId: 47,
-        appointmenType: 'Demo Booking',
-        description: 'demo',
-        duration: '30 mins',
-        currentUser: 'sriharshini@designadonai.com',
-        assignedDesigner: 'mahima@designadonai.com'
-      }
-    }
-  ]
-};
+  events: [ /* your events */ ],
+  dayCellContent: this.renderDayCellContent.bind(this) // 👈 USE THIS
+  };
+
+
 
   onDateClick(arg: any) {
     alert('Date clicked: ' + arg.dateStr);
@@ -122,6 +110,16 @@ export class AppointmentsComponent extends BaseComponent {
 
   ngAfterViewInit() {
     this.appointmentDataSource.paginator = this.paginator;
+  setTimeout(() => {
+    const buttons = document.querySelectorAll('.calendar-btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', (event: any) => {
+        const date = event.target.getAttribute('data-date');
+        this.getAppointment(date);
+      });
+    });
+  }, 500);
+
   }
   getSNo(index: number): number {
     if (
@@ -134,11 +132,11 @@ export class AppointmentsComponent extends BaseComponent {
     return index + 1;
   }
 
-  getAppointment(currentModalRef: NgbModalRef) {
+  getAppointment(date: string) {
   const payload = {
     ...this.appointmentForm.value,
-    startDate: this.formatDateOnly(this.appointmentForm.get('startDate')?.value),
-    endDate: this.formatDateOnly(this.appointmentForm.get('endDate')?.value),
+    startDate: this.formatDateOnly(date),
+    endDate: this.formatDateOnly(date),
     companyCode: this.userCompanyCode,
     email: this.userEmail,
     type: this.userType,
@@ -147,19 +145,20 @@ export class AppointmentsComponent extends BaseComponent {
   this.switchService.fetchAppointment(payload).subscribe({
     next: (res) => {
       this.appointmentData = res || [];
-      currentModalRef.close();
-
-      // Open the new modal with the fetched data
+      this.appointmentsList = res;
       this.modalService.open(this.newAppointmentModal, {
-        size: 'lg',
-        centered: true,
+        backdrop: 'static',
+      keyboard: false,
+      scrollable: true,
+      centered: true,
+      size: 'lg',
       });
     },
     error: () => {
       this.toastr.error('Failed to fetch appointment');
     }
   });
-}
+  }
 
   openFirstModal(template: TemplateRef<any>) {
     const modalRef = this.modalService.open(template, { size: 'lg', centered: true });
@@ -168,5 +167,67 @@ export class AppointmentsComponent extends BaseComponent {
   formatDateOnly(dateTimeString: string): string {
     return dateTimeString ? dateTimeString.split('T')[0] : '';
   }
+ 
+  renderDayCellContent(args: any): { html: string } {
+  const dateStr = args.date.toISOString().split('T')[0]; 
+  return {
+    html: `
+      <div class="fc-day-number">${args.dayNumberText}</div>
+      <button 
+        class="btn btn-sm btn-primary calendar-btn" 
+        data-date="${dateStr}" 
+        style="margin-top: 4px; font-size: 10px; padding: 10px 10px;">
+        view Demo
+      </button>
+    `
+  };
+  }
+  getUsers() {
+    let cn = this.userCompanyName;
+    let cc = this.userCompanyCode;
+    this.switchService.cmpnyUsers(cn, cc).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.userList = res;
+          console.log('userlst',this.userList);
+        } else {
+          this.toastr.error(res.message, 'signup', {
+            timeOut: 3000,
+            positionClass: 'toast-top-right',
+          });
+        }
+      },
+      error: (error) => {
+        // this.toastr.error(error.statusText);
+      },
+    })
+  }
+ getDesignerColor(emailOrName: string): string {
+  const user = this.userList.find(
+    (u:any) => u.email?.trim().toLowerCase() === emailOrName.trim().toLowerCase()
+  );
+  if (user?.color) return user.color;
+
+  // fallback color based on hash of name/email
+  return this.getDefaultColor(emailOrName);
+  }
+  getDesignerLetter(emailOrName: string): string {
+  // Prefer user name first letter if available
+  const user = this.userList.find(
+    (u:any) => u.email?.trim().toLowerCase() === emailOrName.trim().toLowerCase()
+  );
+  const nameSource = user?.name || emailOrName;
+  return nameSource.trim().charAt(0).toUpperCase();
+}
+
+private getDefaultColor(str: string): string {
+  // deterministic pastel colors
+  const colors = ['#F39C12', '#3498DB', '#9B59B6', '#E67E22', '#1ABC9C'];
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return colors[Math.abs(hash) % colors.length];
+}
 
 }
