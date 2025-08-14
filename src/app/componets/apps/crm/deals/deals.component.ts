@@ -122,7 +122,7 @@ export class DealsComponent extends BaseComponent {
 
   public sendLeadForm!: FormGroup;
   public sendLeadSubmitted = false;
-
+  public sendMultiMailSubmitted = false;
 
   public followupName = '';
   public executiveName = '';
@@ -682,10 +682,12 @@ export class DealsComponent extends BaseComponent {
         next: (res: any) => {
           const followUpDate = this.leadForm.get('followUpDate')?.value;
           console.log('Follow-up Date:', followUpDate);
-          if (followUpDate) {
-            this.followupLeadSubmit(modal); 
-          }
+          // if (followUpDate) {
+          //   this.followupLeadSubmit(modal); 
+          // }
           if (res.status) {
+            const followUpDate = this.leadForm.get('followUpDate')?.value;
+          console.log('Follow-up Date:', followUpDate);
             modal.close();
             this.submitted = false;
             this.leadForm.reset();
@@ -694,6 +696,9 @@ export class DealsComponent extends BaseComponent {
               timeOut: 3000,
               positionClass: 'toast-top-right',
             });
+            if (followUpDate) {
+            this.followupLeadSubmit(modal); 
+            }
           } else {
             this.toastr.error(res.message, 'lead', {
               timeOut: 3000,
@@ -2359,7 +2364,7 @@ export class DealsComponent extends BaseComponent {
     this.getfetchLeadsIndividual(); 
   }
 
-  appointmentModal(appointment1: any, element: any) {
+  appointmentModal(appointment1: any, element: any,appointmentData: any = null) {
     this.selectedLead = element;
     this.appointmentForm.reset();
     this.modalService.open(appointment1, { centered: true });
@@ -2424,5 +2429,78 @@ export class DealsComponent extends BaseComponent {
       }
     });
   }
+  openEditAppointment(template: any, element: any) {
+    this.switchService.fetchAppointment(element.leadId).subscribe(res => {
+      if (res && res.length > 0) {
+        const latestAppointment = res[res.length - 1]; 
+        this.appointmentModal(template, element, latestAppointment);
+      } else {
+        this.appointmentModal(template, element);
+      }
+    });
+  }
+
+   openBulkMailOffcanvas(templateRef: TemplateRef<any>) {
+    if (!this.selectedLeads.length) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+
+    const selectedLeadObjects = this.dataSource.data.filter((lead: any) =>
+      this.selectedLeads.includes(lead.leadId)
+    );
+    const emailList = selectedLeadObjects.map((lead: any) => lead.email).filter(Boolean);
+    const emailString = emailList.join(', ');
+
+    this.sendLeadForm.patchValue({
+      email: emailString
+    });
+
+    this.offcanvasService.open(templateRef, { position: 'end' });
+  }
   
+  sendMailToMultipleLeads(offcanvasRef: any) {
+    this.sendMultiMailSubmitted = true;
+    if (!this.selectedLeads.length) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    if (this.sendLeadForm.invalid) {
+      this.toastr.warning('Fill in all required fields.');
+      return;
+    }
+    const selectedLeadsData = this.dataSource.data.filter((lead: any) =>
+      this.selectedLeads.includes(lead.leadId)
+    );
+    const emailList = selectedLeadsData.map((lead: any) => lead.email).filter(Boolean);
+    if (!emailList.length) {
+      this.toastr.warning('No valid emails found in selected leads.');
+      return;
+    }
+    const templateValue = this.sendLeadForm.get('template')?.value;
+    const payload = {
+      email: emailList.join(','),
+      template: typeof templateValue === 'object' ? templateValue.templateGenId : templateValue,
+      cc: this.sendLeadForm.get('cc')?.value,
+      bcc: this.sendLeadForm.get('bcc')?.value,
+      subject: this.sendLeadForm.get('subject')?.value,
+      content: this.sendLeadForm.get('content')?.value
+    };
+    this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message, 'Mail Sent');
+          offcanvasRef.close();
+          this.sendLeadForm.reset();
+          this.sendMultiMailSubmitted = false;
+          this.selectedLeads = []; 
+        } else {
+          this.toastr.error(res.message || 'Mail sending failed.');
+        }
+      },
+      error: () => {
+        this.toastr.error('An error occurred while sending mail.');
+      }
+    });
+  }
 }

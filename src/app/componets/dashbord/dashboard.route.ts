@@ -221,6 +221,11 @@ export const admin: Routes = [
     import('./appointments/appointments.component').then((m) => m.AppointmentsComponent),
   },
   {
+    path: 'chatbot',
+    loadComponent: () =>
+    import('./chatbot/chatbot.component').then((m) => m.ChatbotComponent),
+  },
+  {
     path: 'tasks',
     loadComponent: () =>
     import('./tasks/tasks.component').then((m) => m.TasksComponent),
