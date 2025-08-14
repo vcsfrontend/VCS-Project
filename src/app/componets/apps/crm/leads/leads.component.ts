@@ -785,7 +785,7 @@ export class LeadsComponent extends BaseComponent {
   onSubmit(modal: any) {
     const followUpDate = this.leadForm.get('followUpDate')?.value;
     if (followUpDate) {
-      this.followupLeadSubmit(modal); // pass only what's needed
+      this.followupLeadSubmit(modal);
     }
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
     this.leadForm.get('executive')?.setValue('');
@@ -1972,10 +1972,7 @@ export class LeadsComponent extends BaseComponent {
         },
         error: (err: any) => {
           this.uploadSpinner = false;
-          this.toastr.error('Error fetching CRM Bulkupload leads', 'lead', {
-            timeOut: 3000,
-            positionClass: 'toast-top-right',
-          });
+          this.toastr.error('Error fetching CRM Bulkupload leads', 'lead', );
         },
       });
     }
@@ -2190,13 +2187,13 @@ export class LeadsComponent extends BaseComponent {
   }
 
   @ViewChild('followUpPond') followUpPond!: FilePondComponent;
-  followUpPondHandleInit() {}
+  followUpPondHandleInit() { }
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     this.imageFileSrcData = files;
   }
-  followUpPondHandleActivateFile(event: any) {}
+  followUpPondHandleActivateFile(event: any) { }
 
   get a() {
     return this.allocateForm.controls;
@@ -2207,22 +2204,17 @@ export class LeadsComponent extends BaseComponent {
   }
 
   leadToCampaignSubmit(modal: any) {
-  const currentCampaignId = this.campaignId; 
-
-  this.selectedLeadId = this.selectedLeadData.leadId;
-  const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
-
-  const payload = {
-    leadId: this.selectedLeadId.toString(),
-    campaignId: selectedCampaignId, 
-  };
-  this.moveLeadToAnotherCampaign(payload, modal);
-  this.getFetchLeadData(currentCampaignId); 
-  this.campaignId = selectedCampaignId;
-  
+    const currentCampaignId = this.campaignId;
+    this.selectedLeadId = this.selectedLeadData.leadId;
+    const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+    const payload = {
+      leadId: this.selectedLeadId.toString(),
+      campaignId: selectedCampaignId,
+    };
+    this.moveLeadToAnotherCampaign(payload, modal);
+    this.getFetchLeadData(currentCampaignId);
+    this.campaignId = selectedCampaignId;
   }
-
-
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
