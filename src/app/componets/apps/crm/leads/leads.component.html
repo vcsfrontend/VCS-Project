@@ -571,8 +571,7 @@
                         </ng-container>
                         <ng-template #defaultLabel1>Company Name</ng-template>
                     </label>
-                    <input type="email" class="form-control" id="contact-mail" placeholder="companyName"
-                        formControlName="companyName" >
+                    <input type="email" class="form-control" id="contact-mail" placeholder="companyName" formControlName="companyName">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">
@@ -585,9 +584,8 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="company-name" class="form-label">Country</label>
-                    <ng-select name="choices-multiple-remove-button3" placeholder="Select"
-                        id="choices-multiple-remove-button3" formControlName="country"
-                        (change)="onCountryChange($any($event.target).value)"
+                    <ng-select name="choices-multiple-remove-button3" placeholder="Select" id="choices-multiple-remove-button3"
+                        formControlName="country" (change)="onCountryChange($any($event.target).value)"
                         [ngClass]="{ 'is-invalid': submitted && f['country'].errors }" class="border rounded">
                         <ng-option *ngFor="let c of countryLst" [value]="c.country">{{ c.country }}</ng-option>
                     </ng-select>
@@ -619,8 +617,7 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="zipCode" class="form-label">Zip Code</label>
-                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code"
-                        formControlName="zipCode"
+                    <input type="text" class="form-control" id="zipCode" placeholder="Enter Your Zip Code" formControlName="zipCode"
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
@@ -630,23 +627,20 @@
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="state" class="form-label">State</label>
-                    <input type="text" class="form-control" id="state" placeholder="Enter Your State"
-                        formControlName="state">
+                    <input type="text" class="form-control" id="state" placeholder="Enter Your State" formControlName="state">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="city" class="form-label">City</label>
-                    <input type="text" class="form-control" id="city" placeholder="Enter City Name"
-                        formControlName="city">
+                    <input type="text" class="form-control" id="city" placeholder="Enter City Name" formControlName="city">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" placeholder="Enter Your Address"
-                        formControlName="address">
+                    <input type="text" class="form-control" id="address" placeholder="Enter Your Address" formControlName="address">
                 </div>
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="contact" class="form-label">Contact</label>
-                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number"
-                        formControlName="contact" [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
+                    <input type="text" class="form-control" id="contact" placeholder="Enter Phone Number" formControlName="contact"
+                        [ngClass]="{ 'is-invalid': submitted && f['contact'].errors }"
                         onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)"
                         (copy)="preventCopyPaste($event)" (cut)="preventCopyPaste($event)" maxlength="10"
                         (paste)="preventCopyPaste($event)">
@@ -658,8 +652,8 @@
                 <div class="col-xl-3 col-lg-3 col-md-3">
                     <label for="email" class="form-label">E-mail</label>
                     <input type="text" class="form-control  " id="email" placeholder="Enter your email" onkeypress='return ((event.charCode >= 48 && event.charCode <= 57) || 
-                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
-                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
+                                        (event.charCode >= 64 && event.charCode <= 90) || (event.charCode >= 97 && 
+                                        event.charCode <= 122) || event.charCode == 8 || event.charCode == 46 || event.charCode == 95)'
                         formControlName="email">
                 </div>
             </div>
