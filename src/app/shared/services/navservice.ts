@@ -506,6 +506,15 @@ export class NavService implements OnDestroy {
       path: '/dashboard/appointments'
     },
     {
+      title: 'Chatbot',
+      icon: 'bi-layout-text-window side-menu__icon',
+      dirchange: false,
+      type: 'link',
+      linkType: 'internal',
+      active: false,
+      path: '/dashboard/chatbot'
+    },
+    {
       title: 'Quotation',
       dirchange: false,
       type: 'link',
