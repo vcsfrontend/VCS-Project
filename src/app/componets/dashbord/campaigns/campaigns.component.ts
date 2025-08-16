@@ -36,7 +36,8 @@ export class CampaignsComponent extends BaseComponent {
   anyChecked: any; stageLst: any; crmStatusData: any; showValidationError = false; showCheckboxError = false; showNameError = false;
   isStagesLoading: boolean = true; statusLst: any;  public leadCounts: { [campaignId: string]: number } = {};
   stageCounts: { [campaignId: string]: { [stage: string]: number } } = {}; campaignCount: any; totalLeadCount: any;
-  fetchCrmLeadsList: any[] = [];
+  fetchCrmLeadsList: any[] = [];topshowMore = false;showMore = true;
+  matcardLst: any; topDisplayedCards: any;
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
   dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
@@ -403,7 +404,20 @@ export class CampaignsComponent extends BaseComponent {
   // Open the modal using your existing open method
   this.open(content);
   }
-
+  toggleTopShowMore() {
+    this.topshowMore = !this.topshowMore;
+    if (this.topshowMore) {
+      setTimeout(() => {
+        const scrollContainer = document.querySelector('.scrollable-container');
+        if (scrollContainer) {
+          scrollContainer.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      }, 0);
+    }
+  }
 
 
 }
