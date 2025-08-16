@@ -1,4 +1,4 @@
-<div class="col-lg-12 bg-white">
+<div class="col-lg-12 bg-white m-1">
     <full-calendar [options]="calendarOptions">
         <ng-template #eventContent let-arg>
             <div class="custom-event" (click)="open(content1)">
@@ -10,7 +10,7 @@
 
 <!-- Book a Demo Modal -->
 <ng-template #content1 let-modal>
-  <form [formGroup]="appointmentForm" (ngSubmit)="getAppointment(modal)">
+  <form [formGroup]="appointmentForm">
     <div class="modal-header justify-content-center">
       <h6 class="modal-title">Book a Demo</h6>
       <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
@@ -43,8 +43,8 @@
   <div class="modal-body">
     <div *ngIf="appointmentData.length > 0; else noData">
       <div *ngFor="let item of appointmentData" class="mb-3 p-2 border rounded">
-        <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1 text-warning"></i>Appointment ID:</strong> {{ item.appointmentId }}</p>
-        <p><strong>Type:</strong> {{ item.appointmenType }}</p>
+        <!-- <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1 text-warning"></i>Appointment ID:</strong> {{ item.appointmentId }}</p> -->
+        <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1 text-warning"></i>Type:</strong> {{ item.appointmenType }}</p>
         <p><strong>Date:</strong> {{ item.date | date: 'medium' }}</p>
         <p><strong>Description:</strong> {{ item.description }}</p>
         <p><strong>Duration:</strong> {{ item.duration }} mins</p>
@@ -60,46 +60,7 @@
     </div>
   </div>
 </ng-template>
-<div class="card custom-card task-pending-card">
-  <div class="card-body">
-    <div class="d-flex justify-content-between flex-wrap gap-2">
-      <div>
-        <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
-              class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
-          Project Blueprint</p>
-        <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">13,Nov
-            2023</span></p>
-        <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Nov
-            2023</span></p>
-        <p class="mb-0">Assigned To :
-          <span class="avatar-list-stacked ms-1">
-            <span class="avatar avatar-sm avatar-rounded">
-              <img src="./assets/images/faces/2.jpg" alt="img">
-            </span>
-            <span class="avatar avatar-sm avatar-rounded">
-              <img src="./assets/images/faces/8.jpg" alt="img">
-            </span>
-            <span class="avatar avatar-sm avatar-rounded">
-              <img src="./assets/images/faces/2.jpg" alt="img">
-            </span>
-            <span class="avatar avatar-sm avatar-rounded">
-              <img src="./assets/images/faces/10.jpg" alt="img">
-            </span>
-          </span>
-        </p>
-      </div>
-      <div>
-        <div class="btn-list">
-          <button class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-              class="ri-edit-line"></i></button>
-          <button class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-              class="ri-delete-bin-line"></i></button>
-        </div>
-        <span class="badge bg-warning-transparent d-block">High</span>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 
 

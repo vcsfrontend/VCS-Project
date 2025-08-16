@@ -38,8 +38,11 @@ export class AppointmentsComponent extends BaseComponent {
   campaignForm! : FormGroup; appointmentData: any[] = [];
   weekdays: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   availabilityForm !: FormGroup; leadId :any; appointmentForm!: FormGroup;
-  appointmentsList : any;
+  appointmentsList : any;appointments: any[] = [];
+  monthlyAppointments: any[] = []; 
+  appointmentDates: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  
   @ViewChild('newAppointmentModal') newAppointmentModal!: TemplateRef<any>;userList:any;
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
@@ -58,21 +61,20 @@ export class AppointmentsComponent extends BaseComponent {
       emial: this.userEmail,
       type: this.userType,
     });
+    // this.getAppointment();
   }
   
- calendarOptions: CalendarOptions = {
-  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
-  initialView: 'dayGridMonth',
-  headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-  },
-  events: [ /* your events */ ],
-  dayCellContent: this.renderDayCellContent.bind(this) // 👈 USE THIS
+  
+  calendarOptions: CalendarOptions = {
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    datesSet: () => this.getAppointment(),
   };
-
-
 
   onDateClick(arg: any) {
     alert('Date clicked: ' + arg.dateStr);
@@ -109,18 +111,40 @@ export class AppointmentsComponent extends BaseComponent {
   }
 
   ngAfterViewInit() {
-    this.appointmentDataSource.paginator = this.paginator;
-  setTimeout(() => {
-    const buttons = document.querySelectorAll('.calendar-btn');
-    buttons.forEach(btn => {
-      btn.addEventListener('click', (event: any) => {
-        const date = event.target.getAttribute('data-date');
-        this.getAppointment(date);
-      });
+  const calendarEl = document.querySelector('.fc');
+  if (calendarEl) {
+    calendarEl.addEventListener('click', (event: any) => {
+      const target = event.target as HTMLElement;
+      if (target.classList.contains('calendar-btn')) {
+        const date = target.getAttribute('data-date');
+        const type = target.getAttribute('data-type'); // or data-index if using index
+        if (date && type) {
+          this.showAppointmentsByType(date, type); // make sure this function exists
+        }
+      }
     });
-  }, 500);
-
   }
+  }
+
+  showAppointmentsByType(date: string, type: string) {
+    this.appointmentData = this.monthlyAppointments.filter(
+      a => this.formatDateOnly(a.date) === date && a.appointmenType === type
+    );
+
+    if (this.appointmentData.length > 0) {
+      this.modalService.open(this.newAppointmentModal, {
+        backdrop: 'static',
+        keyboard: false,
+        scrollable: true,
+        centered: true,
+        size: 'lg',
+      });
+    } else {
+      this.toastr.info('No appointments found');
+    }
+  }
+
+
   getSNo(index: number): number {
     if (
       this.paginator &&
@@ -132,56 +156,77 @@ export class AppointmentsComponent extends BaseComponent {
     return index + 1;
   }
 
-  getAppointment(date: string) {
-  const payload = {
+  onDatesSet(arg: any) {
+  const startDate = this.formatDateOnly(arg.start);
+  const endDate = this.formatDateOnly(arg.end);
+
+  this.switchService.fetchAppointment({
     ...this.appointmentForm.value,
-    startDate: this.formatDateOnly(date),
-    endDate: this.formatDateOnly(date),
+    startDate,
+    endDate,
     companyCode: this.userCompanyCode,
     email: this.userEmail,
     type: this.userType,
-  };
-
-  this.switchService.fetchAppointment(payload).subscribe({
+  }).subscribe({
     next: (res) => {
-      this.appointmentData = res || [];
-      this.appointmentsList = res;
-      this.modalService.open(this.newAppointmentModal, {
-        backdrop: 'static',
-      keyboard: false,
-      scrollable: true,
-      centered: true,
-      size: 'lg',
-      });
+      this.appointments = res || [];
     },
-    error: () => {
-      this.toastr.error('Failed to fetch appointment');
-    }
+    error: () => this.toastr.error('Failed to fetch month appointments')
   });
   }
 
+
+  // getAppointment(date: string) {
+  // const payload = {
+  //   ...this.appointmentForm.value,
+  //   startDate: this.formatDateOnly(date),
+  //   endDate: this.formatDateOnly(date),
+  //   companyCode: this.userCompanyCode,
+  //   email: this.userEmail,
+  //   type: this.userType,
+  // };
+
+  // this.switchService.fetchAppointment(payload).subscribe({
+  //   next: (res) => {
+  //     this.appointmentData = res || [];
+  //     if (this.appointmentData.length > 0) {
+  //       this.modalService.open(this.newAppointmentModal, {
+  //         backdrop: 'static',
+  //         keyboard: false,
+  //         scrollable: true,
+  //         centered: true,
+  //         size: 'lg',
+  //       });
+  //     } else {
+  //       this.toastr.info('No appointments found for this date');
+  //     }
+  //   },
+  //   error: () => {
+  //     this.toastr.error('Failed to fetch appointment');
+  //   }
+  // });
+  // }
   openFirstModal(template: TemplateRef<any>) {
     const modalRef = this.modalService.open(template, { size: 'lg', centered: true });
   }
 
-  formatDateOnly(dateTimeString: string): string {
-    return dateTimeString ? dateTimeString.split('T')[0] : '';
+  formatDateOnly(dateInput: string | Date): string {
+  let date: Date;
+
+  if (typeof dateInput === 'string') {
+    date = new Date(dateInput);
+  } else {
+    date = dateInput;
   }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+  }
+
  
-  renderDayCellContent(args: any): { html: string } {
-  const dateStr = args.date.toISOString().split('T')[0]; 
-  return {
-    html: `
-      <div class="fc-day-number">${args.dayNumberText}</div>
-      <button 
-        class="btn btn-sm btn-primary calendar-btn" 
-        data-date="${dateStr}" 
-        style="margin-top: 4px; font-size: 10px; padding: 10px 10px;">
-        view Demo
-      </button>
-    `
-  };
-  }
   getUsers() {
     let cn = this.userCompanyName;
     let cc = this.userCompanyCode;
@@ -229,5 +274,67 @@ private getDefaultColor(str: string): string {
   }
   return colors[Math.abs(hash) % colors.length];
 }
+
+  getAppointment() {
+  const startOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const endOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+
+  const payload = {
+    ...this.appointmentForm.value,
+    startDate: startOfMonth,
+    endDate: endOfMonth,
+    companyCode: this.userCompanyCode,
+    email: this.userEmail,
+    type: this.userType,
+  };
+
+  this.switchService.fetchAppointment(payload).subscribe({
+    next: (res) => {
+      this.appointmentData = res || [];
+      this.monthlyAppointments = res || [];
+      this.appointmentDates = new Set(
+        this.appointmentData.map((item: any) => this.formatDateOnly(item.date))
+      );
+
+      this.calendarOptions = {
+        ...this.calendarOptions,
+        dayCellContent: this.renderDayCellContent.bind(this)
+      };
+    },
+    error: () => this.toastr.error('Failed to fetch appointments')
+  });
+  }
+
+  renderDayCellContent(args: any): { html: string } {
+  // Format date as YYYY-MM-DD (local)
+  const dateStr = `${args.date.getFullYear()}-${('0'+(args.date.getMonth()+1)).slice(-2)}-${('0'+args.date.getDate()).slice(-2)}`;
+
+  // Get all appointments for this day
+  const appointmentsForDay = this.monthlyAppointments?.filter(
+    a => this.formatDateOnly(a.date) === dateStr
+  ) || [];
+
+  if (appointmentsForDay.length) {
+    const uniqueTypes = Array.from(new Set(appointmentsForDay.map(a => a.appointmenType)));
+    const buttonsHtml = uniqueTypes.map((type, index) => `
+      <button
+        class="btn btn-sm btn-primary calendar-btn"
+        data-date="${dateStr}"
+        data-type="${type}"
+        style="margin: 2px 0; font-size: 10px; padding: 4px 6px; display: block; width: 100%; height: 25px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        ${type}
+      </button>
+    `).join('');
+
+    return {
+      html: `
+        <div class="fc-day-number">${args.dayNumberText}</div>
+        ${buttonsHtml}
+      `
+    };
+  }
+
+  return { html: `<div class="fc-day-number">${args.dayNumberText}</div>` };
+  }
 
 }
