@@ -1,38 +1,159 @@
 import { Component } from '@angular/core';
 import flatpickr from 'flatpickr';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgbDropdownModule,NgbNavModule,NgbModal, NgbModalConfig, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
+import { NgbDropdownModule, NgbNavModule, NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
+import { SwitherService } from '../../../shared/services/swither.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [SharedModule, NgSelectModule, NgbModule, NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule],
+  imports: [SharedModule, NgSelectModule, NgbModule, NgbNavModule, NgbDropdownModule, FlatpickrModule,
+    FormsModule, ReactiveFormsModule, CommonModule],
   providers: [NgbModalConfig, NgbModal, FlatpickrDefaults],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss'
 })
 export class TasksComponent {
-modal: any;
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  userType: any = this.userData ? this.userData.type : ''; campaignName: any; taskForm!: FormGroup;
+  taskList: any;  agentUsers: any[] = []; campaignList: any[] = [];
+  modal: any;
+  selectedCampaign: any;
   constructor(
-    private modalService: NgbModal,
+    private modalService: NgbModal, public switchService: SwitherService,
+    private toastr: ToastrService, private fb: FormBuilder,
   ) {
   }
-  open(content:any) {
-    this.modalService.open(content,{ centered: true });
+  open(content: any) {
+    this.modalService.open(content, { centered: true });
   }
   flatpickrOptions: any = {
     inline: true,
   };
   ngOnInit(): void {
+    this.fetchTasks();
+
+    this.taskForm = this.fb.group({
+      deadline: ['',],
+      taskName: ['',],
+      assignedTo: ['',],
+      priority: ['',],
+      description: ['',],
+      currentStatus: [''],
+      leadIdList: [''],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType]
+    });
     // this.flatpickrOptions = {
     //   enableTime: true,
     //   noCalendar: true,
     //   dateFormat: 'H:i',
-  
+
     // };
     // flatpickr('#addignedDate', this.flatpickrOptions);
+  }
+
+  openEditTaskModal(task: any, modalContent: any) {
+    this.taskForm.patchValue({
+      taskName: task.taskName,
+      assignedTo: task.assignedTo,
+      deadline: task.deadline ? task.deadline.split('T')[0] : '',
+      priority: task.priority,
+      description: task.description
+    });
+    this.modalService.open(modalContent, { backdrop: 'static' });
+  }
+
+
+  fetchTasks() {
+    let payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    this.switchService.fetchTasks(payload).subscribe({
+      next: (res) => {
+        this.taskList = res;
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  updateTaskSubmit(modal: any) {
+    if (this.taskForm.invalid) {
+      return;
+    }
+    const payload = this.taskForm.value;
+    console.log(payload)
+    this.switchService.updateTasks(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Task updated successfully!');
+        modal.close();
+        this.fetchTasks();
+      },
+      error: (err) => {
+        this.toastr.error('Failed to update task!');
+      }
+    });
+  }
+  getAgentUsers(agentEmails: string[]) {
+    const cn = JSON.parse(this.userData).companyName;
+    const cc = JSON.parse(this.userData).companyCode;
+    this.switchService.cmpnyUsers(cn, cc).subscribe({
+      next: (users: any[]) => {
+        if (Array.isArray(users)) {
+          this.agentUsers = users
+            .filter((user) => agentEmails.includes(user.email))
+            .map((user) => ({
+              email: user.email,
+              name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email
+            }));
+
+          console.log('Agent Users (for dropdown):', this.agentUsers);
+        } else {
+          this.toastr.error('Unexpected user data format.');
+        }
+      },
+      error: (err) => {
+        this.toastr.error(err.statusText || 'Error while fetching users.');
+      },
+    });
+  }
+
+  getAgentColor(agent: string): string {
+    const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info'];
+    const index = agent.trim().charCodeAt(0) % colors.length;
+    return colors[index];
+  }
+
+  getPriorityBadge(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'critical':
+        return 'badge bg-danger';
+      case 'high':
+        return 'badge bg-warning';
+      case 'medium':
+        return 'badge bg-info';
+      case 'low':
+        return 'badge bg-success';
+      default:
+        return 'badge bg-secondary';
+    }
+  }
+
+
 }
-}
+

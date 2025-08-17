@@ -234,12 +234,8 @@ export class AppointmentsComponent extends BaseComponent {
       next: (res: any) => {
         if (res) {
           this.userList = res;
-          console.log('userlst',this.userList);
         } else {
-          this.toastr.error(res.message, 'signup', {
-            timeOut: 3000,
-            positionClass: 'toast-top-right',
-          });
+          this.toastr.error(res.message, 'signup',);
         }
       },
       error: (error) => {

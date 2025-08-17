@@ -30,6 +30,13 @@
         <div class="card-body p-0">
             <div class="table-container mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+                    <ng-container matColumnDef="taskGenId">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element">
+                            <i *ngIf="element.taskGenId && element.taskGenId !== ''" class="ri-check-double-line text-success me-1"
+                                title="Task Generated"></i>
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="sourceFlag">
                         <th mat-header-cell *matHeaderCellDef></th>
                         <td mat-cell *matCellDef="let element">
@@ -65,10 +72,10 @@
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-eye-line"></i>
                             </a>
-                            <span ngbDropdown placement="right-top">
+                            <span ngbDropdown placement="right-top" container="body">
                                 <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
                                     ngbDropdownToggle></i>
-                                <ul class="dropdown-menu z-1" ngbDropdownMenu>
+                                <ul class="dropdown-menu z-1" ngbDropdownMenu >
                                     <li class="m-2">
                                         <button class="btn btn-warning label-btn label-end w-100"
                                             (click)="sendEmail(element)" data-bs-toggle="offcanvas"
@@ -83,19 +90,19 @@
                                             aria-controls="offcanvasRight">
                                             Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
                                         </button>
-                                    </li>
+                                    </li> -->
                                     <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100"
+                                        <button class="btn btn-info-gradient label-btn label-end w-100"
                                             (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
-                                            Create Task<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                            Create Task<i class="ri-task-line bt-icon label-btn-icon"></i>
                                         </button>
-                                    </li> -->
+                                    </li>
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
-                                            Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                            Appointment<i class="ri-calendar-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
                                 <!-- This ensures a button appears for each appointment -->
@@ -325,8 +332,11 @@
                     <button type="button" class="btn btn-outline-primary btn-wave" 
                     (click)="openBulkMailOffcanvas(offcanvasTemplate)"><i
                             class="ri-mail-line bt-icon"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)" *ngIf="adoanAiRole== 'ADMIN' || userType== 1"><i
+                            class="ri-calendar-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()" *ngIf="adoanAiRole== 'ADMIN' || userType== 1"><i
                             class="ri-delete-bin-line"></i></button>
+                            
                 </div>
             </div>
         </div>
@@ -1364,62 +1374,63 @@
 
 
 <ng-template #content30 id="addtask" let-modal>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Create Task</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
-                aria-label="Close"></button>
-        </div>
-        <div class="modal-body px-4">
-            <div class="row gy-2">
-                <div class="col-xl-12">
-                    <label for="task-name" class="form-label">Task Name</label>
-                    <input type="text" class="form-control" id="task-name" placeholder="Task Name">
-                </div>
-                <div class="col-xl-12">
-                    <label class="form-label">Assigned To</label>
-                    <ng-select class="ti-form-select  !rounded-s-none" name="choices-multiple-remove-button"
-                        placeholder="select" id="choices-multiple-remove-button" [multiple]="true">
-                        <ng-option value="Choice 1" selected>Angelina May</ng-option>
-                        <ng-option value="Choice 2">Kiara advain</ng-option>
-                        <ng-option value="Choice 3">Hercules Jhon</ng-option>
-                        <ng-option value="Choice 4">Mayor Kim</ng-option>
-                    </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label class="form-label">Deadline (Optional)</label>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-text text-muted modal-calender"> <i class="ri-calendar-line"></i>
+    <form [formGroup]="taskForm" (ngSubmit)="createTaskSubmit(modal)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Create Task</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="task-name" class="form-label">Task Name</label>
+                        <input type="text" class="form-control" id="task-name" placeholder="Task Name"
+                            formControlName="taskName">
+                    </div>
+                    <div class="col-xl-12">
+                        <label class="form-label">Assigned To</label>
+                        <ng-select formControlName="assignedTo" [items]="agentUsers" bindLabel="email" bindValue="email"
+                            placeholder="Select Project">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Deadline (Optional)</label>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-text text-muted modal-calender"> <i
+                                        class="ri-calendar-line"></i>
+                                </div>
+                                <input type="date" class="form-control w-full !rounded-s-none" id="addignedDate"
+                                    placeholder="Choose date and time" formControlName="deadline">
                             </div>
-                            <input type="date" class="form-control w-full !rounded-s-none" id="addignedDate"
-                                placeholder="Choose date and time">
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-6">
-                    <label class="form-label">Priority</label>
-                    <ng-select data-trigger name="choices-single-default" placeholder="select"
-                        id="choices-single-default">
-                        <ng-option value="" selected>Select</ng-option>
-                        <ng-option value="Critical">Critical</ng-option>
-                        <ng-option value="High">High</ng-option>
-                        <ng-option value="Medium">Medium</ng-option>
-                        <ng-option value="Low">Low</ng-option>
-                    </ng-select>
-                </div>
-                <div class="col-xl-12">
-                    <label class="form-label">Remarks</label>
-                    <input type="text" class="form-control" id="task-name" placeholder="Task Name">
+                    <div class="col-xl-6">
+                        <label class="form-label">Priority</label>
+                        <ng-select data-trigger name="choices-single-default" placeholder="select"
+                            id="choices-single-default" formControlName="priority">
+                            <ng-option value="" selected>Select</ng-option>
+                            <ng-option value="Critical">Critical</ng-option>
+                            <ng-option value="High">High</ng-option>
+                            <ng-option value="Medium">Medium</ng-option>
+                            <ng-option value="Low">Low</ng-option>
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-12">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" id="task-name" placeholder="Task Name"
+                            formControlName="description">
+                    </div>
                 </div>
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
-                (click)="modal.close('Cross click')">Cancel</button>
-            <button type="button" class="btn btn-primary">Create</button>
-        </div>
-    </div>
+    </form>
 </ng-template>
 
 <ng-template #content31 id="addtask" let-modal>
@@ -1459,16 +1470,12 @@
     <div class="modal-body">
         <div class="col-xl-12">
             <div class="row gy-2">
-                <!-- Show only if we are editing and have multiple appointments -->
                 <div class="col-xl-6" *ngIf="editMode && appointmentDataList?.length">
                     <label class="form-label">Select Appointment</label>
                     <ng-select [items]="appointmentDataList" bindLabel="appointmenType" placeholder="Select Appointment"
                         (change)="onAppointmentSelect($event)">
                     </ng-select>
                 </div>
-
-
-                <!-- Inside your form -->
                 <div class="col-xl-6">
                     <label for="code" class="form-label">Appointment type</label>
                     <ng-select formControlName="appointmenType" [items]="appointmentList" bindLabel="name"

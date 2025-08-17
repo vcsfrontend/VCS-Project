@@ -129,9 +129,9 @@ export class SidebarComponent implements AfterViewInit {
           case 'Appointment':
             item.isVisible = true;
             break;
-          case 'Chatbot':
-            item.isVisible = true;
-            break;
+          // case 'Chatbot':
+          //   item.isVisible = true;
+          //   break;
           case 'Settings':
             this.checkAdminRole(item);
             break;
@@ -180,9 +180,6 @@ export class SidebarComponent implements AfterViewInit {
     });
   }
   
-  
-  
-
   checkAdminRole(item: any) {
     let adonaiRole;
     let crmRole;

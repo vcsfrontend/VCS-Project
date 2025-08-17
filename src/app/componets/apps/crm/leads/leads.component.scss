@@ -223,3 +223,7 @@ table.mat-mdc-table {
   background-color: #000000 !important;
   cursor: pointer;
 }
+
+.dropdown-menu {
+  z-index: 2000 !important; 
+}
