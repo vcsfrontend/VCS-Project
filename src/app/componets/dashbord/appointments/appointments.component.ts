@@ -40,9 +40,11 @@ export class AppointmentsComponent extends BaseComponent {
   availabilityForm !: FormGroup; leadId :any; appointmentForm!: FormGroup;
   appointmentsList : any;appointments: any[] = [];
   monthlyAppointments: any[] = []; 
+  editMode = false; saving = false;                 
+  selectedAppointment: any = null;
   appointmentDates: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  
+  @ViewChild('appointment1') appointment1!: TemplateRef<any>;
   @ViewChild('newAppointmentModal') newAppointmentModal!: TemplateRef<any>;userList:any;
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
@@ -55,11 +57,37 @@ export class AppointmentsComponent extends BaseComponent {
       ...this.createWeekControls()
     });
     this.appointmentForm = this.fb.group({
-      startDate: [''],
-      endDate: [''],
-      companyCode: this.userCompanyCode,
-      emial: this.userEmail,
-      type: this.userType,
+        appointmenType: [''],
+        date: [''],
+        description: [''],
+        duration: [''],
+        currentUser: [this.userEmail],
+        assignedDesigner:[''],
+        leadEntry: this.fb.group({
+          leadId: [0],
+          name: [''],
+          companyName: [''],
+          executive: [''],
+          products: [''],
+          stage: [''],
+          leadSource: [''],
+          zipCode: [''],
+          followUpDate: [''],
+          state: [''],
+          city: [''],
+          address: [''],
+          contact: [''],
+          email: [''],
+          currentStage: [''],
+          updatedBy: [''],
+          updatedTime: [''],
+          entryBy: [''],
+          campaignId: [''],
+          companyCode: [''],
+          individualEmail: [''],
+          type: 0
+        }),
+        createdTime:['']
     });
     // this.getAppointment();
   }
@@ -286,6 +314,7 @@ private getDefaultColor(str: string): string {
 
   this.switchService.fetchAppointment(payload).subscribe({
     next: (res) => {
+      this.selectedAppointment = res;
       this.appointmentData = res || [];
       this.monthlyAppointments = res || [];
       this.appointmentDates = new Set(
@@ -302,10 +331,7 @@ private getDefaultColor(str: string): string {
   }
 
   renderDayCellContent(args: any): { html: string } {
-  // Format date as YYYY-MM-DD (local)
   const dateStr = `${args.date.getFullYear()}-${('0'+(args.date.getMonth()+1)).slice(-2)}-${('0'+args.date.getDate()).slice(-2)}`;
-
-  // Get all appointments for this day
   const appointmentsForDay = this.monthlyAppointments?.filter(
     a => this.formatDateOnly(a.date) === dateStr
   ) || [];
@@ -332,5 +358,71 @@ private getDefaultColor(str: string): string {
 
   return { html: `<div class="fc-day-number">${args.dayNumberText}</div>` };
   }
+
+  
+  openEditModal(appointmentObj: any) {
+    this.editMode = true;
+    this.selectedAppointment = appointmentObj; // keep full object (includes leads/extra fields)
+
+    this.appointmentForm.patchValue({
+      appointmentId: appointmentObj.appointmentId ?? appointmentObj.id ?? null,
+      appointmenType: appointmentObj.appointmenType,
+      date: this.toDatetimeLocalInputString(appointmentObj.date),
+      description: appointmentObj.description,
+      duration: appointmentObj.duration,
+      assignedDesigner: appointmentObj.assignedDesigner,
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    });
+    this.modalService.dismissAll();
+    this.modalService.open(this.appointment1, {
+      backdrop: 'static',
+      keyboard: false,
+      centered: true,
+      size: 'lg',
+    });
+  }
+  toDatetimeLocalInputString(dateLike: any): string {
+    const d = new Date(dateLike);
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const mm = pad(d.getMonth() + 1);
+    const dd = pad(d.getDate());
+    const hh = pad(d.getHours());
+    const min = pad(d.getMinutes());
+    return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+  }
+
+  toIsoString(datetimeLocal: string): string {
+    return new Date(datetimeLocal).toISOString();
+  }
+  onSubmit(modal: any) {
+  if (this.appointmentForm.invalid) return;
+
+  let payload: any;
+
+  if (this.editMode && this.selectedAppointment) {
+     payload = { ...this.selectedAppointment };
+    payload.appointmenType = this.appointmentForm.value.appointmenType;
+    payload.date = this.appointmentForm.value.date;
+    payload.description = this.appointmentForm.value.description;
+    payload.duration = this.appointmentForm.value.duration;
+    payload.assignedDesigner = this.appointmentForm.value.assignedDesigner;
+    payload.leadEntry = this.selectedAppointment.leadEntry;
+  } else {
+    payload = this.appointmentForm.value;
+  }
+  this.switchService.saveAppointment(payload).subscribe({
+    next: (res) => {
+      this.toastr.success(this.editMode ? 'Appointment updated' : 'Appointment created');
+      modal.close();
+      this.getAppointment();
+    },
+    error: () => this.toastr.error('Failed to save appointment'),
+  });
+}
+
+
 
 }

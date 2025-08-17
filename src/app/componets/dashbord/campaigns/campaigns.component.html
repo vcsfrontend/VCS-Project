@@ -112,9 +112,9 @@
   <div class="col-xxl-12" [ngStyle]="{
         'max-height': topshowMore ? '330px' : '400px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
-        'transition': 'max-height 0.5s ease' }" *ngIf="campaignList.length > 0">
+        'transition': 'max-height 0.5s ease' }" *ngIf="(adoanAiRole === 'ADMIN' ? campaignList.length : listNew.length) > 0">
     <div class="row">
-      <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let campaign of campaignList">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"  *ngFor="let campaign of (adoanAiRole === 'ADMIN' ? campaignList : listNew)">
         <div class="card custom-card fixed-height-card">
           <div class="card-header d-flex align-items-start justify-content-between">
             <div class="align-items-center">
@@ -191,7 +191,7 @@
             <button class="btn btn-primary-light btn-sm btn-wave ms-3 w-100 me-2" (click)="viewCampaignLeads(campaign)">
               <i class="ri-eye-line me-2"></i> View Leads
             </button>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center" *ngIf="adoanAiRole== 'ADMIN'">
               <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-2"
               (click)="openEditModal(content7, campaign.campgnId)"><i class="ri-pencil-line"></i></a>
               <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave me-3"

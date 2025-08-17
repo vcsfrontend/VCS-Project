@@ -73,7 +73,10 @@ export class CampaignsComponent extends BaseComponent {
   ngOnInit(): void {
     this.getCrmStages();
     this.getUsers();
-    this.getCampaignData();
+    if(this.adoanAiRole == 'ADMIN'){
+      this.getCampaignData();
+    }
+    // this.getCampaignData();
     this.getCampaignSecific();
     this.campaignList.forEach(campaign => {
       this.getLeadCountForCampaign(campaign.campgnId);
@@ -268,6 +271,9 @@ export class CampaignsComponent extends BaseComponent {
     this.switchService.sepecificCampaign(payload).subscribe({
       next: (res: any) => {
         this.listNew = res;
+        this.listNew.forEach((campaign:any) => {
+          this.getLeadCountForCampaign(campaign.campgnId);
+      });
       },
       error: (err) => {
         // this.toastr.error(err.statusText || "An error occurred while fetching data.");

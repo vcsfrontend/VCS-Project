@@ -50,6 +50,9 @@
         <p><strong>Duration:</strong> {{ item.duration }} mins</p>
         <p ><strong>Assigned Designer:</strong> {{ item.assignedDesigner }}</p>
         <p><strong>Booked By:</strong> {{ item.currentUser }}</p>
+        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-2"
+          data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
+              (click)="openEditModal(item)"><i class="ri-pencil-line"></i></a>
       </div>
     </div>
     <ng-template #noData>
@@ -59,6 +62,65 @@
       <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
     </div>
   </div>
+</ng-template>
+<ng-template #appointment1 let-modal>
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit(modal)">
+    <div class="modal-header justify-content-center">
+      <h6 class="modal-title" id="staticBackdropLabel3">
+        {{ editMode ? 'Edit Appointment' : 'Book a Demo' }}
+      </h6>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+    </div>
+
+    <div class="modal-body">
+      <div class="col-xl-12">
+        <div class="row gy-2">
+          <div class="col-xl-6">
+            <label class="form-label">Appointment type</label>
+            <ng-select
+              formControlName="appointmenType"
+              [items]="appointmentList"
+              bindLabel="name"
+              bindValue="name"
+              placeholder="Select Project">
+            </ng-select>
+          </div>
+          <div class="col-xl-6">
+            <label class="form-label">Date</label>
+            <input type="datetime-local" class="form-control" formControlName="date">
+          </div>
+
+          <div class="col-xl-6">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" placeholder="Enter your Description" formControlName="description">
+          </div>
+
+          <div class="col-xl-6">
+            <label class="form-label">Duration</label>
+            <input type="text" class="form-control" placeholder="Enter your duration" formControlName="duration">
+          </div>
+
+          <div class="col-xl-6">
+            <label class="form-label">assignedDesigner</label>
+            <ng-select
+              formControlName="assignedDesigner"
+              [items]="userList"
+              bindLabel="email"
+              bindValue="email"
+              placeholder="Select Project">
+            </ng-select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary" [disabled]="appointmentForm.invalid || saving">
+        {{ saving ? 'Saving...' : 'Submit' }}
+      </button>
+      <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </form>
 </ng-template>
 
 
