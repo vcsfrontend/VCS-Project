@@ -184,6 +184,7 @@ export class SwitherService {
   fetchAppointment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_scheduled_appointments`, data); } 
   createTask(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_task`, data); } 
   fetchTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks`, data); } 
+  fetchTasksCreatedBy(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks_created_by`, data); } 
   updateTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/edit_task`, data); } 
 
   savedynamicMargins(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_dynamic_margins`, data); } 

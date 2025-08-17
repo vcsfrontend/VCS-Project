@@ -182,10 +182,10 @@
                                             <ng-template ngbNavContent>
                                                 <div class=" p-0" id="all-tasks" role="tabpanel">
                                                     <div class="row" id="tasks-container">
-                                                        <div class="col-xl-4 task-card">
+                                                        <div class="col-xl-4 task-card" *ngFor="let task of taskList">
                                                             <div class="card custom-card task-pending-card">
                                                                 <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2" *ngFor="let task of taskList">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
                                                                         <div>
                                                                             <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
                                                                                 class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>TaskName: {{ task.taskName }}</p>
@@ -212,8 +212,9 @@
                                                                         </div>
                                                                         <div>
                                                                             <div class="btn-list">
-                                                                                <button class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"><i class="ri-edit-line"
-                                                                                        (click)="openEditTaskModal(task,editTaskModal)"></i></button>
+                                                                                <button class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
+                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
+                                                                                 <i class="ri-edit-line"></i></button>
                                                                             </div>
                                                                             <span class="d-block" [ngClass]="getPriorityBadge(task.priority)" >{{task.priority}}</span>
                                                                         </div>
@@ -663,20 +664,29 @@
     <form [formGroup]="taskForm" (ngSubmit)="updateTaskSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="mail-ComposeLabel">Create Task</h6>
+                <h6 class="modal-title" id="mail-ComposeLabel">Edit Task</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body px-4">
                 <div class="row gy-2">
-                    <div class="col-xl-12">
+                    <div class="col-xl-6">
                         <label for="task-name" class="form-label">Task Name</label>
                         <input type="text" class="form-control" id="task-name" placeholder="Task Name"
                             formControlName="taskName">
                     </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Status</label>
+                        <ng-select data-trigger name="choices-single-default" placeholder="select"
+                            id="choices-single-default" formControlName="currentStatus">
+                            <ng-option value="Inprogress">Inprogress</ng-option>
+                            <ng-option value="At to erify">At to erify</ng-option>
+                            <ng-option value="Completed">Completed</ng-option>
+                        </ng-select>
+                    </div>
                     <div class="col-xl-12">
                         <label class="form-label">Assigned To</label>
-                        <ng-select formControlName="assignedTo" [items]="agentUsers" bindLabel="name" bindValue="email"
+                        <ng-select formControlName="assignedTo" [items]="agentUsers" bindLabel="email" bindValue="email"
                             placeholder="Select User">
                         </ng-select>
                     </div>

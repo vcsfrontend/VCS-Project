@@ -536,7 +536,10 @@ export class BaseComponent {
       {"name" :"Designing Doubts"},
     ]
 
-
+    taskStatus = [{"name" : "Inprogress"},
+      {"name" :"At to Verify"},
+      {"name" :"Completed"},
+    ]
 
     // SkinFinish = [{"name" : "test"},
     // ]
