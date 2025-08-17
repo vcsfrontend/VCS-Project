@@ -485,7 +485,8 @@ export class LeadsComponent extends BaseComponent {
       leadIdList: [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
-      type: [this.userType]
+      type: [this.userType],
+      taskCreatedBy : [this.userEmail]
     });
 
     //Send Email
@@ -651,11 +652,10 @@ export class LeadsComponent extends BaseComponent {
     };
     this.updateColumns();
   }
+
   updateColumns() {
     const hasExecutiveLead = this.dataSource.data.some(element => element.source === 'executive');
-
     const newColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
-
     if (hasExecutiveLead) {
       this.displayedColumns = ['sourceFlag', ...newColumns]; 
     } else {
@@ -663,25 +663,20 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-
   addLeadItem() {
     const newItemName = this.newItem?.trim();
     const selectedColor = this.newItemColor?.toLowerCase();
-
     if (!newItemName) {
       this.toastr.warning('Please enter a lead Stage.');
       return;
     }
-
     const itemExists = this.crmStaticStages.some(
       (plan) => plan.name.toLowerCase() === newItemName.toLowerCase()
     );
-
     if (itemExists) {
       this.toastr.warning('This item already exists!');
       return;
     }
-
     if (
       !selectedColor ||
       selectedColor === '#000000' ||
@@ -690,7 +685,6 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select a  color');
       return;
     }
-
     this.crmStaticStages.push({
       name: newItemName,
       checked: false,
@@ -698,10 +692,9 @@ export class LeadsComponent extends BaseComponent {
       isCustom: true,
       color: selectedColor,
     });
-
     this.toastr.info('Item added Successfully');
     this.newItem = '';
-    this.newItemColor = '#000000'; // Reset color picker
+    this.newItemColor = '#000000';
   }
 
   deleteLeadItem(index: number) {
@@ -2854,8 +2847,6 @@ export class LeadsComponent extends BaseComponent {
     });
   }
 
-
-
   createTaskSubmit(modal: any) {
     this.taskSubmitted = true;
     if (!this.selectedLeads || this.selectedLeads.length === 0) {
@@ -2866,6 +2857,9 @@ export class LeadsComponent extends BaseComponent {
     payload.leadIdList = this.selectedLeads
       .filter((id: any) => id !== '' && id !== null && id !== undefined)
       .map((id: any) => Number(id));
+    if (Array.isArray(payload.assignedTo)) {
+      payload.assignedTo = payload.assignedTo.join(',');
+    }
     this.switchService.createTask(payload).subscribe({
       next: (res) => {
         this.toastr.success('Task created successfully!');
@@ -2879,9 +2873,20 @@ export class LeadsComponent extends BaseComponent {
     });
   }
 
-  
-
-  
+  getTaskStatusColor(status: string): string {
+    switch (status) {
+      case 'completed':
+        return 'bg-success-transparent'; 
+      case 'pending':
+        return 'bg-warning-transparent'; 
+      case 'in_progress':
+        return 'bg-info-transparent';     
+      case 'cancelled':
+        return 'bg-danger-transparent'; 
+      default:
+        return 'bg-success-transparent'; 
+    }
+  }
 
 
 

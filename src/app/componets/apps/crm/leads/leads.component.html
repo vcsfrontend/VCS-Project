@@ -30,13 +30,6 @@
         <div class="card-body p-0">
             <div class="table-container mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort class="mat-table">
-                    <ng-container matColumnDef="taskGenId">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let element">
-                            <i *ngIf="element.taskGenId && element.taskGenId !== ''" class="ri-check-double-line text-success me-1"
-                                title="Task Generated"></i>
-                        </td>
-                    </ng-container>
                     <ng-container matColumnDef="sourceFlag">
                         <th mat-header-cell *matHeaderCellDef></th>
                         <td mat-cell *matCellDef="let element">
@@ -132,6 +125,11 @@
                                     </li>
                                 </ul>
                             </span>
+                            <a *ngIf="element.taskGenId" href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-wave waves-effect waves-light m-1 fw-semibold task-text-primary"
+                                [ngClass]="getTaskStatusColor(element.completionStatus)">
+                                21
+                            </a>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="name">
@@ -294,7 +292,7 @@
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
         <div class="d-flex mb-2 px-3 marge">
-            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
                     <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
@@ -1391,7 +1389,7 @@
                     <div class="col-xl-12">
                         <label class="form-label">Assigned To</label>
                         <ng-select formControlName="assignedTo" [items]="agentUsers" bindLabel="email" bindValue="email"
-                            placeholder="Select Project">
+                            placeholder="Select Project" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">

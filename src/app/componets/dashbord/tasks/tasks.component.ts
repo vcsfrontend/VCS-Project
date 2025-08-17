@@ -28,7 +28,7 @@ export class TasksComponent {
   userType: any = this.userData ? this.userData.type : ''; campaignName: any; taskForm!: FormGroup;
   taskList: any;  agentUsers: any[] = []; campaignList: any[] = [];
   modal: any;
-  selectedCampaign: any;
+  selectedCampaign: any; currentUser: any;
   constructor(
     private modalService: NgbModal, public switchService: SwitherService,
     private toastr: ToastrService, private fb: FormBuilder,
@@ -76,21 +76,36 @@ export class TasksComponent {
   }
 
 
+  // fetchTasks() {
+  //   let payload = {
+  //     email: this.userEmail,
+  //     companyCode: this.userCompanyCode,
+  //     type: this.userType,
+  //   };
+  //   this.switchService.fetchTasks(payload).subscribe({
+  //     next: (res) => {
+  //       this.taskList = res;
+  //     },
+  //     error: (err) => {
+  //       this.toastr.error('Something went wrong!');
+  //     }
+  //   });
+  // }
+
   fetchTasks() {
-    let payload = {
-      email: this.userEmail,
-      companyCode: this.userCompanyCode,
-      type: this.userType,
+    const payload = {
+      currentUser: this.userEmail 
     };
-    this.switchService.fetchTasks(payload).subscribe({
+    this.switchService.fetchTasksCreatedBy(payload).subscribe({
       next: (res) => {
-        this.taskList = res;
+        this.taskList = res.data || res;
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
       }
     });
   }
+
 
   updateTaskSubmit(modal: any) {
     if (this.taskForm.invalid) {
