@@ -77,7 +77,7 @@ export class LeadsComponent extends BaseComponent {
   leadStatusitems: { checked: boolean; label: string }[] = []; selectedProgressLeads: any[] = [];
   selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
   newItemColor: string = '#000000'; newOptionColor: any; showMore = true; topshowMore = false;
-  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
+  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup; taskForm!: FormGroup;
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any[] = [];
   imageFileSrcData: any; followUpDetails: any[] = []; nextLeadStatus: any; minDateTime: string = '';
@@ -102,13 +102,14 @@ export class LeadsComponent extends BaseComponent {
   matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
   allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;  hasSelectedInvalid = false;
   @ViewChild(MatPaginator) paginator!: MatPaginator; LeadToCampaignForm!: FormGroup;
-  @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
+  @ViewChild(MatPaginator) usersPaginator!: MatPaginator; 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('sort2') sort2!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
 
   public leadForm!: FormGroup;
   public sendMultiMailSubmitted = false;
+  public taskSubmitted = false;
   public submitted = false;
   selectedCountry: string = 'India';
   public leadDetails: any = {};
@@ -228,6 +229,15 @@ export class LeadsComponent extends BaseComponent {
   openModal(content1: any) {
     this.modalService.open(content1, { centered: true });
   }
+
+  openTaskModal(content: any) {
+    if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    this.modalService.open(content, { backdrop: 'static' });
+  }
+  
   offcanvasRef: any;
   openRight(content: any) {
     this.offcanvasRef = this.offcanvasService.open(content, {
@@ -462,6 +472,20 @@ export class LeadsComponent extends BaseComponent {
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
+    });
+
+    //Create Task
+    this.taskForm = this.fb.group({
+      deadline: ['',],
+      taskName: ['',],
+      assignedTo: ['', ],
+      priority: ['', ],
+      description: ['', ],
+      currentStatus: [''],
+      leadIdList: [''],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType]
     });
 
     //Send Email
@@ -2829,5 +2853,36 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
+
+
+
+  createTaskSubmit(modal: any) {
+    this.taskSubmitted = true;
+    if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    let payload = { ...this.taskForm.value };
+    payload.leadIdList = this.selectedLeads
+      .filter((id: any) => id !== '' && id !== null && id !== undefined)
+      .map((id: any) => Number(id));
+    this.switchService.createTask(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Task created successfully!');
+        this.taskForm.reset();
+        this.selectedLeads = [];
+        modal.close();
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  
+
+  
+
+
 
 }
