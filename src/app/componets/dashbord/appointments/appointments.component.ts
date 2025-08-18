@@ -46,6 +46,13 @@ export class AppointmentsComponent extends BaseComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('appointment1') appointment1!: TemplateRef<any>;
   @ViewChild('newAppointmentModal') newAppointmentModal!: TemplateRef<any>;userList:any;
+  typeColors: { [key: string]: string } = {
+    "Designing Doubts": 'btn-primary',  
+    "Demo Booking": 'btn-success',   
+    "Follow Up": 'btn-warning',  
+    "Interview": 'btn-info',   
+    "Default": 'btn-secondary'
+  };
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
       super()
@@ -189,7 +196,7 @@ export class AppointmentsComponent extends BaseComponent {
   const endDate = this.formatDateOnly(arg.end);
 
   this.switchService.fetchAppointment({
-    ...this.appointmentForm.value,
+    // ...this.appointmentForm.value,
     startDate,
     endDate,
     companyCode: this.userCompanyCode,
@@ -304,7 +311,7 @@ private getDefaultColor(str: string): string {
   const endOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
 
   const payload = {
-    ...this.appointmentForm.value,
+    // ...this.appointmentForm.value,
     startDate: startOfMonth,
     endDate: endOfMonth,
     companyCode: this.userCompanyCode,
@@ -331,22 +338,35 @@ private getDefaultColor(str: string): string {
   }
 
   renderDayCellContent(args: any): { html: string } {
-  const dateStr = `${args.date.getFullYear()}-${('0'+(args.date.getMonth()+1)).slice(-2)}-${('0'+args.date.getDate()).slice(-2)}`;
+  const dateStr = `${args.date.getFullYear()}-${('0' + (args.date.getMonth() + 1)).slice(-2)}-${('0' + args.date.getDate()).slice(-2)}`;
+
   const appointmentsForDay = this.monthlyAppointments?.filter(
     a => this.formatDateOnly(a.date) === dateStr
   ) || [];
 
   if (appointmentsForDay.length) {
-    const uniqueTypes = Array.from(new Set(appointmentsForDay.map(a => a.appointmenType)));
-    const buttonsHtml = uniqueTypes.map((type, index) => `
-      <button
-        class="btn btn-sm btn-primary calendar-btn"
-        data-date="${dateStr}"
-        data-type="${type}"
-        style="margin: 2px 0; font-size: 10px; padding: 4px 6px; display: block; width: 100%; height: 25px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-        ${type}
-      </button>
-    `).join('');
+    // Group by appointmentType and count
+    const typeCounts: { [key: string]: number } = {};
+    appointmentsForDay.forEach(a => {
+      const type = a.appointmenType;
+      typeCounts[type] = (typeCounts[type] || 0) + 1;
+    });
+
+    // Build buttons
+    const buttonsHtml = Object.keys(typeCounts).map(type => {
+      const count = typeCounts[type];
+      const btnClass = this.typeColors[type] || this.typeColors['Default'];
+
+      return `
+        <button
+          class="btn btn-sm ${btnClass} calendar-btn"
+          data-date="${dateStr}"
+          data-type="${type}"
+          style="margin: 2px 0; font-size: 10px; padding: 4px 6px; display: block; width: 100%; height: 25px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          ${type} (${count})
+        </button>
+      `;
+    }).join('');
 
     return {
       html: `
@@ -357,12 +377,13 @@ private getDefaultColor(str: string): string {
   }
 
   return { html: `<div class="fc-day-number">${args.dayNumberText}</div>` };
-  }
+}
+
 
   
   openEditModal(appointmentObj: any) {
     this.editMode = true;
-    this.selectedAppointment = appointmentObj; // keep full object (includes leads/extra fields)
+    this.selectedAppointment = appointmentObj;
 
     this.appointmentForm.patchValue({
       appointmentId: appointmentObj.appointmentId ?? appointmentObj.id ?? null,
