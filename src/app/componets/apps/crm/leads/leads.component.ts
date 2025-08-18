@@ -87,7 +87,7 @@ export class LeadsComponent extends BaseComponent {
   notconnectedstatusClicked = false; adoanAiRole: any;leadList :any;filteredLeadList: any[] = [];   // holds filtered leads
   displayedLeads: any[] = []; override cityList:any[]=[];
   filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
-  appointmentId: number | null = null;
+  appointmentId: number | null = null; taskPriorityList :any;
 
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
@@ -486,7 +486,8 @@ export class LeadsComponent extends BaseComponent {
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
-      taskCreatedBy : [this.userEmail]
+      taskCreatedBy : [this.userEmail],
+      leadEntry : [this.userEmail]
     });
 
     //Send Email
@@ -1757,8 +1758,9 @@ export class LeadsComponent extends BaseComponent {
             })
           );
           this.getStatusCount();
-           if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
+          if (this.paginator) {
+            this.taskPriorityList = res.taskPriorityList || [];
+            this.dataSource.paginator = this.paginator;
           }
         },
         error: (error) => {
@@ -1766,6 +1768,11 @@ export class LeadsComponent extends BaseComponent {
         },
       });
   }
+  
+//   getTaskForLead(leadId: number) {
+//   return this.taskPriorityList.find(task => task.leadId === leadId);
+// }
+
 
   getStatusCount(): void {
     this.selectedStatusCount = null;
@@ -2885,6 +2892,66 @@ export class LeadsComponent extends BaseComponent {
         return 'bg-danger-transparent'; 
       default:
         return 'bg-success-transparent'; 
+    }
+  }
+
+  today: Date = new Date();
+  getTaskColor(task: any): string {
+    if (!task.deadline) return 'btn-secondary-transparent';
+    const deadlineDate = new Date(task.deadline);
+    if (deadlineDate < this.today) {
+      return 'btn-danger-transparent';
+    }
+    if (deadlineDate.toDateString() === this.today.toDateString()) {
+      return 'btn-warning-transparent';
+    }
+    return 'btn-success-transparent';
+  }
+
+  getPriorityBadge(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'critical':
+        return 'badge bg-danger-transparent';
+      case 'high':
+        return 'badge bg-warning-transparent';
+      case 'medium':
+        return 'badge bg-info-transparent';
+      case 'low':
+        return 'badge bg-success-transparent';
+      default:
+        return 'badge bg-secondary-transparent';
+    }
+  }
+
+  getDaysLeft(deadline: string | Date): string {
+    const today = new Date();
+    const dueDate = new Date(deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) {
+      return `${diffDays} `;
+    } else if (diffDays === 0) {
+      return ``;
+    } else {
+      return ` ${Math.abs(diffDays)}`;
+    }
+  }
+
+  getDayLeft(deadline: string | Date): string {
+    const today = new Date();
+    const dueDate = new Date(deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) {
+      return `${diffDays} days left`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `Expired ${Math.abs(diffDays)} days ago`;
     }
   }
 

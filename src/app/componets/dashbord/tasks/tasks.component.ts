@@ -98,7 +98,7 @@ export class TasksComponent {
     };
     this.switchService.fetchTasksCreatedBy(payload).subscribe({
       next: (res) => {
-        this.taskList = res.data || res;
+        this.taskList = res.createdTaskList || [];
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -157,15 +157,15 @@ export class TasksComponent {
   getPriorityBadge(priority: string): string {
     switch (priority?.toLowerCase()) {
       case 'critical':
-        return 'badge bg-danger';
+        return 'badge bg-danger-transparent';
       case 'high':
-        return 'badge bg-warning';
+        return 'badge bg-warning-transparent';
       case 'medium':
-        return 'badge bg-info';
+        return 'badge bg-info-transparent';
       case 'low':
-        return 'badge bg-success';
+        return 'badge bg-success-transparent';
       default:
-        return 'badge bg-secondary';
+        return 'badge bg-secondary-transparent';
     }
   }
 
