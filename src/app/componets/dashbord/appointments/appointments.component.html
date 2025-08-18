@@ -42,17 +42,32 @@
   </div>
   <div class="modal-body">
     <div *ngIf="appointmentData.length > 0; else noData">
-      <div *ngFor="let item of appointmentData" class="mb-3 p-2 border rounded">
-        <!-- <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1 text-warning"></i>Appointment ID:</strong> {{ item.appointmentId }}</p> -->
-        <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1 text-warning"></i>Type:</strong> {{ item.appointmenType }}</p>
-        <p><strong>Date:</strong> {{ item.date | date: 'medium' }}</p>
-        <p><strong>Description:</strong> {{ item.description }}</p>
-        <p><strong>Duration:</strong> {{ item.duration }} mins</p>
-        <p ><strong>Assigned Designer:</strong> {{ item.assignedDesigner }}</p>
-        <p><strong>Booked By:</strong> {{ item.currentUser }}</p>
-        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-2"
-          data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"
-              (click)="openEditModal(item)"><i class="ri-pencil-line"></i></a>
+      <div class="row g-3">
+        <div *ngFor="let item of appointmentData" class="col-xl-6 col-lg-6 col-md-12 mb-3 task-card">
+          <div class="card custom-card h-100 border rounded">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <div>
+                  <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1 text-warning"></i> Type:</strong> {{ item.appointmenType
+                    }}</p>
+                  <p><strong>Date:</strong> {{ item.date | date: 'medium' }}</p>
+                  <p><strong>Description:</strong> {{ item.description }}</p>
+                  <p><strong>Duration:</strong> {{ item.duration }} mins</p>
+                  <p><strong>Assigned Designer:</strong> {{ item.assignedDesigner }}</p>
+                  <p><strong>Booked By:</strong> {{ item.currentUser }}</p>
+                </div>
+                <div>
+                  <div class="btn-list">
+                    <button class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
+                      (click)="openEditModal(item)" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                      <i class="ri-edit-line"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <ng-template #noData>
