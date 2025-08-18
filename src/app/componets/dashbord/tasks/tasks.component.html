@@ -183,18 +183,18 @@
                                                 <div class=" p-0" id="all-tasks" role="tabpanel">
                                                     <div class="row" id="tasks-container">
                                                         <div class="col-xl-4 task-card" *ngFor="let task of taskList">
-                                                            <div class="card custom-card task-pending-card">
+                                                            <div class="card custom-card task-pending-card" [ngClass]="getPriorityBadgeBorder(task.priority)">
                                                                 <div class="card-body">
                                                                     <div class="d-flex justify-content-between flex-wrap gap-2">
                                                                         <div>
                                                                             <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
-                                                                                class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>TaskName: {{ task.taskName }}</p>
+                                                                                class="ri-star-s-fill fs-16 op-5 me-1 text-muted" [ngClass]="getPriorityIconColor(task.priority)"></i></a>TaskName: {{ task.taskName }}</p>
+                                                                            <p class="">Description: <span class="fs-12 mb-1 text-muted">{{ task.description}}</span></p>
                                                                             <p class="mb-3">Deadline : <span class="badges bg-success-transparent">{{task.deadline}}</span></p>
-                                                                            <p class="mb-3">Description: <span class="fs-12 mb-1 text-muted">{{ task.description}}</span></p>
-                                                                            <p class="mb-3">Created On : <span class="fs-12 mb-1 text-muted">{{ task.taskCreationDate | date:'dd, MMM yyyy' }}</span></p>
+                                                                            <p class="mb-3">Status : <span class="badges bg-success-transparent">{{task.currentStatus}}</span></p>
                                                                             <ng-container *ngIf="task.assignedTo?.split(',') as agentList">
                                                                                 <div class="d-flex align-items-center">
-                                                                                    <span class="me-2 fw-medium text-muted">Task assignedTo:</span>
+                                                                                    <span class="me-2 fw-medium text-muted ">Task assignedTo:</span>
                                                                                     <ng-container *ngFor="let agent of agentList.slice(0, 3)">
                                                                                         <span
                                                                                             class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
@@ -209,6 +209,15 @@
                                                                                     </a>
                                                                                 </div>
                                                                             </ng-container>
+                                                                            <p class="mt-3">
+                                                                                Created On :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreationDate | date:'dd MMM yyyy' }}
+                                                                                </span>By :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreatedBy }}
+                                                                                </span>
+                                                                            </p>
                                                                         </div>
                                                                         <div>
                                                                             <div class="btn-list">
@@ -216,7 +225,7 @@
                                                                                  (click)="openEditTaskModal(task,editTaskModal)">
                                                                                  <i class="ri-edit-line"></i></button>
                                                                             </div>
-                                                                            <span class="d-block" [ngClass]="getPriorityBadge(task.priority)" >{{task.priority}}</span>
+                                                                            <span class="d-block" [ngClass]="getPriorityBadge(task.priority)">{{task.priority}}</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>

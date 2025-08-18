@@ -98,7 +98,10 @@ export class TasksComponent {
     };
     this.switchService.fetchTasksCreatedBy(payload).subscribe({
       next: (res) => {
-        this.taskList = res.createdTaskList || [];
+        this.taskList = [
+          ...(res.createdTaskList || []),
+          ...(res.assignedTaskList || [])
+        ];
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -168,6 +171,37 @@ export class TasksComponent {
         return 'badge bg-secondary-transparent';
     }
   }
+
+  getPriorityBadgeBorder(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'critical':
+        return 'border border-danger';
+      case 'high':
+        return 'border border-warning';
+      case 'medium':
+        return 'border border-info';
+      case 'low':
+        return 'border border-success';
+      default:
+        return 'border border-secondary';
+    }
+  }
+
+  getPriorityIconColor(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'critical':
+        return 'text-danger';
+      case 'high':
+        return 'text-warning';
+      case 'medium':
+        return 'text-info';
+      case 'low':
+        return 'text-success';
+      default:
+        return 'text-secondary';
+    }
+  }
+
 
 
 }
