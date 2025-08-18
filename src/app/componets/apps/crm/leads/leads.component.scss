@@ -232,3 +232,23 @@ table.mat-mdc-table {
   color: #fff !important;
 }
 
+.popover.wide-popover {
+  max-width: 200px !important;
+  width: 200px !important;
+}
+
+::ng-deep .popover.wide-popover {
+  max-width: 200px !important;
+  width: 200px !important;
+}
+
+.header-info .popover-header {
+  font-size: 14px;        
+  font-weight: 600;        
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #ffffff;         
+  background-color: #006699;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.5rem 0.75rem;
+}
+
