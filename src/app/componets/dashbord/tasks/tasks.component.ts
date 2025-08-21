@@ -27,12 +27,18 @@ export class TasksComponent {
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : ''; campaignName: any; taskForm!: FormGroup;
   taskList: any;  agentUsers: any[] = []; campaignList: any[] = [];
-  modal: any;
+  modal: any;selectedTaskId: string = '';
   selectedCampaign: any; currentUser: any;
+  adoanAiRole: any;
+  inprogressTasks: any[] = [];
+  verifyTasks: any[] = [];
+  completedTasks: any[] = [];
   constructor(
     private modalService: NgbModal, public switchService: SwitherService,
     private toastr: ToastrService, private fb: FormBuilder,
   ) {
+    this.userData = localStorage.getItem('userDetails');
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
   }
   open(content: any) {
     this.modalService.open(content, { centered: true });
@@ -55,6 +61,13 @@ export class TasksComponent {
       email: [this.userEmail],
       type: [this.userType]
     });
+    if (this.adoanAiRole !== 'ADMIN') {
+    Object.keys(this.taskForm.controls).forEach(control => {
+      if (control !== 'currentStatus') {
+        this.taskForm.get(control)?.disable();
+      }
+    });
+  }
     // this.flatpickrOptions = {
     //   enableTime: true,
     //   noCalendar: true,
@@ -65,6 +78,7 @@ export class TasksComponent {
   }
 
   openEditTaskModal(task: any, modalContent: any) {
+     this.selectedTaskId = task.taskGenId; 
     this.taskForm.patchValue({
       taskName: task.taskName,
       assignedTo: task.assignedTo,
@@ -102,6 +116,20 @@ export class TasksComponent {
           ...(res.createdTaskList || []),
           ...(res.assignedTaskList || [])
         ];
+        const tasks = [...(res.createdTaskList || []), ...(res.assignedTaskList || [])];
+
+        this.inprogressTasks = tasks.filter((t: any) => t.currentStatus === 'Inprogress');
+        this.verifyTasks = tasks.filter((t: any) => t.currentStatus === 'At to erify');
+        this.completedTasks = tasks.filter((t: any) => t.currentStatus === 'Completed');
+        console.log('in progress leads',this.inprogressTasks);
+
+        if (this.adoanAiRole !== 'ADMIN') {
+          Object.keys(this.taskForm.controls).forEach(control => {
+            if (control !== 'currentStatus') {
+              this.taskForm.get(control)?.disable();
+            }
+          });
+        }
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -114,7 +142,10 @@ export class TasksComponent {
     if (this.taskForm.invalid) {
       return;
     }
-    const payload = this.taskForm.value;
+    const payload = {
+    ...this.taskForm.getRawValue(),
+    taskGenId: this.selectedTaskId   
+  };
     console.log(payload)
     this.switchService.updateTasks(payload).subscribe({
       next: (res) => {
@@ -202,6 +233,28 @@ export class TasksComponent {
     }
   }
 
+ updateLocalTask(payload: any) {
+    // Remove task from all arrays
+    this.inprogressTasks = this.inprogressTasks.filter(t => t.id !== payload.id);
+    this.verifyTasks = this.verifyTasks.filter(t => t.id !== payload.id);
+    this.completedTasks = this.completedTasks.filter(t => t.id !== payload.id);
+
+    // Add task into correct array
+    if (payload.currentStatus === 'Inprogress') {
+      this.inprogressTasks.push(payload);
+    } else if (payload.currentStatus === 'At to erify') {
+      this.verifyTasks.push(payload);
+    } else if (payload.currentStatus === 'Completed') {
+      this.completedTasks.push(payload);
+    }
+  }
+onStatusChange(task: any, newStatus: string) {
+    task.currentStatus = newStatus;
+    this.updateLocalTask(task);
+
+    // save to API
+    this.switchService.updateTasks(task).subscribe();
+  }
 
 
 }

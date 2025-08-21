@@ -188,6 +188,66 @@
                                                                     <div class="d-flex justify-content-between flex-wrap gap-2">
                                                                         <div>
                                                                             <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
+                                                                                class="ri-star-s-fill fs-16 op-5 me-1 text-muted" [ngClass]="getPriorityIconColor(task.priority)"></i></a>TaskName: {{ task.taskName | slice:0:15 }}</p>
+                                                                            <p class="">Description: <span class="fs-12 mb-1 text-muted">{{ task.description | slice:0:15 }}</span></p>
+                                                                            <p class="mb-3">Deadline : <span class="badges bg-success-transparent">{{task.deadline}}</span></p>
+                                                                            <p class="mb-3">Status : <span class="badges bg-success-transparent">{{task.currentStatus}}</span></p>
+                                                                            <ng-container *ngIf="task.assignedTo?.split(',') as agentList">
+                                                                                <div class="d-flex align-items-center">
+                                                                                    <span class="me-2 fw-medium text-muted ">Task assignedTo:</span>
+                                                                                    <ng-container *ngFor="let agent of agentList.slice(0, 3)">
+                                                                                        <span
+                                                                                            class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                                            [ngClass]="getAgentColor(agent)" tabindex="0" role="button">
+                                                                                            {{ agent.trim().charAt(0) | uppercase }}
+                                                                                        </span>
+                                                                                    </ng-container>
+                                                                                    <a *ngIf="agentList.length > 3"
+                                                                                        class="avatar avatar-xs avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary cu"
+                                                                                        href="javascript:void(0);">
+                                                                                        +{{ agentList.length - 3 }}
+                                                                                    </a>
+                                                                                </div>
+                                                                            </ng-container>
+                                                                            <p class="mt-3">
+                                                                                Created On :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreationDate | date:'dd MMM yyyy' }}
+                                                                                </span><br>
+                                                                                By :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreatedBy  }}
+                                                                                </span>
+                                                                            </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <div class="btn-list">
+                                                                                <button class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
+                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
+                                                                                 <i class="ri-edit-line"></i></button>
+                                                                            </div>
+                                                                            <span class="d-block" [ngClass]="getPriorityBadge(task.priority)">{{task.priority}}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="2" class="nav-item m-1">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                            aria-selected="true">Verify Tasks</a>
+                                            <ng-template ngbNavContent>
+                                                <div class="p-0" id="pending" role="tabpanel">
+                                                    <div class="row">
+                                                        <div class="col-xl-4 task-card" *ngFor="let task of verifyTasks">
+                                                            <div class="card custom-card task-pending-card" [ngClass]="getPriorityBadgeBorder(task.priority)">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
+                                                                        <div>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
                                                                                 class="ri-star-s-fill fs-16 op-5 me-1 text-muted" [ngClass]="getPriorityIconColor(task.priority)"></i></a>TaskName: {{ task.taskName }}</p>
                                                                             <p class="">Description: <span class="fs-12 mb-1 text-muted">{{ task.description}}</span></p>
                                                                             <p class="mb-3">Deadline : <span class="badges bg-success-transparent">{{task.deadline}}</span></p>
@@ -235,228 +295,56 @@
                                                 </div>
                                             </ng-template>
                                     </li>
-                                    <li [ngbNavItem]="2" class="nav-item m-1">
-                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                            aria-selected="true">Pending</a>
-                                            <ng-template ngbNavContent>
-                                                <div class="p-0" id="pending" role="tabpanel">
-                                                    <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-pending-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
-                                                                                Project Blueprint</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">13,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-warning-transparent d-block">High</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-pending-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
-                                                                                <a href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Updating
-                                                                                Old Ui
-                                                                            </p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">30,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">05,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/14.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/21.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/16.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-warning-transparent d-block">High</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </ng-template>
-                                    </li>
                                     <li [ngbNavItem]="3" class="nav-item m-1">
                                         <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
                                             aria-selected="true">In Progress</a>
                                             <ng-template ngbNavContent>
                                                 <div class="p-0" id="in-progress" role="tabpanel">
                                                     <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-inprogress-card">
+                                                       <div class="col-xl-4 task-card" *ngFor="let task of inprogressTasks">
+                                                            <div class="card custom-card task-pending-card" [ngClass]="getPriorityBadgeBorder(task.priority)">
                                                                 <div class="card-body">
                                                                     <div class="d-flex justify-content-between flex-wrap gap-2">
                                                                         <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Design
-                                                                                New Landing Pages </p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">21,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/12.jpg" alt="img">
-                                                                                    </span>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
+                                                                                class="ri-star-s-fill fs-16 op-5 me-1 text-muted" [ngClass]="getPriorityIconColor(task.priority)"></i></a>TaskName: {{ task.taskName }}</p>
+                                                                            <p class="">Description: <span class="fs-12 mb-1 text-muted">{{ task.description}}</span></p>
+                                                                            <p class="mb-3">Deadline : <span class="badges bg-success-transparent">{{task.deadline}}</span></p>
+                                                                            <p class="mb-3">Status : <span class="badges bg-success-transparent">{{task.currentStatus}}</span></p>
+                                                                            <ng-container *ngIf="task.assignedTo?.split(',') as agentList">
+                                                                                <div class="d-flex align-items-center">
+                                                                                    <span class="me-2 fw-medium text-muted ">Task assignedTo:</span>
+                                                                                    <ng-container *ngFor="let agent of agentList.slice(0, 3)">
+                                                                                        <span
+                                                                                            class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                                            [ngClass]="getAgentColor(agent)" tabindex="0" role="button">
+                                                                                            {{ agent.trim().charAt(0) | uppercase }}
+                                                                                        </span>
+                                                                                    </ng-container>
+                                                                                    <a *ngIf="agentList.length > 3"
+                                                                                        class="avatar avatar-xs avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary cu"
+                                                                                        href="javascript:void(0);">
+                                                                                        +{{ agentList.length - 3 }}
+                                                                                    </a>
+                                                                                </div>
+                                                                            </ng-container>
+                                                                            <p class="mt-3">
+                                                                                Created On :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreationDate | date:'dd MMM yyyy' }}
+                                                                                </span>By :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreatedBy }}
                                                                                 </span>
                                                                             </p>
                                                                         </div>
                                                                         <div>
                                                                             <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                                <button class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
+                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
+                                                                                 <i class="ri-edit-line"></i></button>
                                                                             </div>
-                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-inprogress-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Designing
-                                                                                New Authentication Pages</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">26,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">12,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/15.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-success-transparent d-block">Low</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-inprogress-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Improving
-                                                                                Ui Of Updated Templates</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">4,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
+                                                                            <span class="d-block" [ngClass]="getPriorityBadge(task.priority)">{{task.priority}}</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -472,170 +360,50 @@
                                             <ng-template ngbNavContent>
                                                 <div class="p-0" id="completed" role="tabpanel">
                                                     <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
+                                                        <div class="col-xl-4 task-card" *ngFor="let task of completedTasks">
+                                                            <div class="card custom-card task-pending-card" [ngClass]="getPriorityBadgeBorder(task.priority)">
                                                                 <div class="card-body">
                                                                     <div class="d-flex justify-content-between flex-wrap gap-2">
                                                                         <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
-                                                                                Plugin Development</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">28,Oct
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
-                                                                                    </span>
+                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a href="javascript:void(0);"><i
+                                                                                class="ri-star-s-fill fs-16 op-5 me-1 text-muted" [ngClass]="getPriorityIconColor(task.priority)"></i></a>TaskName: {{ task.taskName }}</p>
+                                                                            <p class="">Description: <span class="fs-12 mb-1 text-muted">{{ task.description}}</span></p>
+                                                                            <p class="mb-3">Deadline : <span class="badges bg-success-transparent">{{task.deadline}}</span></p>
+                                                                            <p class="mb-3">Status : <span class="badges bg-success-transparent">{{task.currentStatus}}</span></p>
+                                                                            <ng-container *ngIf="task.assignedTo?.split(',') as agentList">
+                                                                                <div class="d-flex align-items-center">
+                                                                                    <span class="me-2 fw-medium text-muted ">Task assignedTo:</span>
+                                                                                    <ng-container *ngFor="let agent of agentList.slice(0, 3)">
+                                                                                        <span
+                                                                                            class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                                            [ngClass]="getAgentColor(agent)" tabindex="0" role="button">
+                                                                                            {{ agent.trim().charAt(0) | uppercase }}
+                                                                                        </span>
+                                                                                    </ng-container>
+                                                                                    <a *ngIf="agentList.length > 3"
+                                                                                        class="avatar avatar-xs avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary cu"
+                                                                                        href="javascript:void(0);">
+                                                                                        +{{ agentList.length - 3 }}
+                                                                                    </a>
+                                                                                </div>
+                                                                            </ng-container>
+                                                                            <p class="mt-3">
+                                                                                Created On :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreationDate | date:'dd MMM yyyy' }}
+                                                                                </span>By :
+                                                                                <span class="fs-12 mb-1 text-muted">
+                                                                                    {{ task.taskCreatedBy }}
                                                                                 </span>
                                                                             </p>
                                                                         </div>
                                                                         <div>
                                                                             <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
+                                                                                <button class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
+                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
+                                                                                 <i class="ri-edit-line"></i></button>
                                                                             </div>
-                                                                            <span class="badge bg-success-transparent d-block">Low</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Documentation
-                                                                                For New Template</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">25,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-danger-transparent d-block">Critical</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
-                                                                                <a href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Developing
-                                                                                New Events in Plugin
-                                                                            </p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">5,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Designing
-                                                                                Of New Ecommerce Pages</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">1,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">15,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-success-transparent d-block">Low</span>
+                                                                            <span class="d-block" [ngClass]="getPriorityBadge(task.priority)">{{task.priority}}</span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -682,7 +450,7 @@
                     <div class="col-xl-6">
                         <label for="task-name" class="form-label">Task Name</label>
                         <input type="text" class="form-control" id="task-name" placeholder="Task Name"
-                            formControlName="taskName">
+                            formControlName="taskName" [disabled]="adoanAiRole !== 'ADMIN'">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Status</label>
@@ -696,7 +464,7 @@
                     <div class="col-xl-12">
                         <label class="form-label">Assigned To</label>
                         <ng-select formControlName="assignedTo" [items]="agentUsers" bindLabel="email" bindValue="email"
-                            placeholder="Select User">
+                            placeholder="Select User" [disabled]="adoanAiRole !== 'ADMIN'">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
@@ -707,14 +475,14 @@
                                         class="ri-calendar-line"></i>
                                 </div>
                                 <input type="date" class="form-control w-full !rounded-s-none" id="addignedDate"
-                                    placeholder="Choose date and time" formControlName="deadline">
+                                    placeholder="Choose date and time" formControlName="deadline" [disabled]="adoanAiRole !== 'ADMIN'">
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Priority</label>
                         <ng-select data-trigger name="choices-single-default" placeholder="select"
-                            id="choices-single-default" formControlName="priority">
+                            id="choices-single-default" formControlName="priority" [disabled]="adoanAiRole !== 'ADMIN'">
                             <ng-option value="" selected>Select</ng-option>
                             <ng-option value="Critical">Critical</ng-option>
                             <ng-option value="High">High</ng-option>
@@ -725,7 +493,7 @@
                     <div class="col-xl-12">
                         <label class="form-label">Description</label>
                         <input type="text" class="form-control" id="task-name" placeholder="Task Name"
-                            formControlName="description">
+                            formControlName="description" [disabled]="adoanAiRole !== 'ADMIN'">
                     </div>
                 </div>
             </div>
