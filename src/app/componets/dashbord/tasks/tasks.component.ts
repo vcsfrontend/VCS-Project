@@ -233,7 +233,7 @@ export class TasksComponent {
     }
   }
 
- updateLocalTask(payload: any) {
+  updateLocalTask(payload: any) {
     // Remove task from all arrays
     this.inprogressTasks = this.inprogressTasks.filter(t => t.id !== payload.id);
     this.verifyTasks = this.verifyTasks.filter(t => t.id !== payload.id);
@@ -248,12 +248,41 @@ export class TasksComponent {
       this.completedTasks.push(payload);
     }
   }
-onStatusChange(task: any, newStatus: string) {
+  onStatusChange(task: any, newStatus: string) {
     task.currentStatus = newStatus;
     this.updateLocalTask(task);
 
     // save to API
     this.switchService.updateTasks(task).subscribe();
+  }
+
+  getDayLeft(deadline: string | Date): string {
+    const today = new Date();
+    const dueDate = new Date(deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) {
+      return `${diffDays} days left`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `Expired ${Math.abs(diffDays)} days ago`;
+    }
+  }
+
+  today: Date = new Date();
+  getTaskColor(task: any): string {
+    if (!task.deadline) return 'btn-secondary-transparent';
+    const deadlineDate = new Date(task.deadline);
+    if (deadlineDate < this.today) {
+      return 'btn-danger-transparent';
+    }
+    if (deadlineDate.toDateString() === this.today.toDateString()) {
+      return 'btn-warning-transparent';
+    }
+    return 'btn-success-transparent';
   }
 
 
