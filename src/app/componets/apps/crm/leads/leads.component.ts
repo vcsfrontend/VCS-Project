@@ -911,8 +911,7 @@ export class LeadsComponent extends BaseComponent {
         companyCode: this.selectedLead.companyCode,
         individualEmail: this.selectedLead.individualEmail,
         type: this.selectedLead.type,
-      }
-      
+      }    
     };
     this.switchService.saveAppointment(payload).subscribe({
       next: (res) => {
@@ -2899,14 +2898,18 @@ export class LeadsComponent extends BaseComponent {
   getTaskColor(task: any): string {
     if (!task.deadline) return 'btn-secondary-transparent';
     const deadlineDate = new Date(task.deadline);
-    if (deadlineDate < this.today) {
-      return 'btn-danger-transparent';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    if (deadlineDate < today) {
+      return 'btn btn-danger-transparent';
     }
-    if (deadlineDate.toDateString() === this.today.toDateString()) {
-      return 'btn-warning-transparent';
+    if (deadlineDate.getTime() === today.getTime()) {
+      return 'btn btn-warning-transparent';
     }
-    return 'btn-success-transparent';
+    return 'btn btn-success-transparent';
   }
+
 
   getPriorityBadge(priority: string): string {
     switch (priority?.toLowerCase()) {
@@ -2930,14 +2933,9 @@ export class LeadsComponent extends BaseComponent {
     dueDate.setHours(0, 0, 0, 0);
     const diffTime = dueDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays > 0) {
-      return `${diffDays} `;
-    } else if (diffDays === 0) {
-      return ``;
-    } else {
-      return ` ${Math.abs(diffDays)}`;
-    }
+    return diffDays.toString();
   }
+
 
   getDayLeft(deadline: string | Date): string {
     const today = new Date();
@@ -2946,14 +2944,11 @@ export class LeadsComponent extends BaseComponent {
     dueDate.setHours(0, 0, 0, 0);
     const diffTime = dueDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays > 0) {
-      return `${diffDays} days left`;
-    } else if (diffDays === 0) {
-      return `Due today`;
-    } else {
-      return `Expired ${Math.abs(diffDays)} days ago`;
-    }
+    if (diffDays > 0) return `${diffDays} days left`;
+    if (diffDays === 0) return `Due today`;
+    return `Expired ${Math.abs(diffDays)} days ago`;
   }
+
 
 
 

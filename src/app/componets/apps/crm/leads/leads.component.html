@@ -90,21 +90,21 @@
                                                                 Create Task<i class="ri-task-line bt-icon label-btn-icon"></i>
                                                             </button>
                                                         </li> -->
-                                    <li class="m-2">
+                                    <!-- <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Appointment<i class="ri-calendar-line bt-icon label-btn-icon"></i>
                                         </button>
-                                    </li>
+                                    </li> -->
                                     <!-- This ensures a button appears for each appointment -->
-                                    <li class="m-2">
+                                    <!-- <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="openEditAppointment(appointment1, element)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                         </button>
-                                    </li>
+                                    </li> -->
                                     <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100" (click)="openRight3(content31, element)"
                                             data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
@@ -143,7 +143,7 @@
                                         </p>
                                         <p class="fw-medium mb-2 d-flex align-items-center">
                                             Deadline : &nbsp;
-                                            <span class="badge px-2 py-1" [ngClass]="getTaskColor(task)"> {{ task.deadline | date:'dd, MMM yyyy' }}
+                                            <span class="badge" [ngClass]="getTaskColor(task)"> {{ task.deadline | date:'dd, MMM yyyy' }}
                                             </span>
                                         </p>
                                     </div>
@@ -303,13 +303,16 @@
             </form>
             <div class="text-center ms-3 ">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-primary btn-wave"><i class="ri-alarm-line"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave"
-                        (click)="openBulkMailOffcanvas(offcanvasTemplate)"><i class="ri-mail-line bt-icon"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="tooltip" placement="top"
+                        ngbTooltip="Follow up"><i class="ri-alarm-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMailOffcanvas(offcanvasTemplate)"
+                        data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Mail"><i class="ri-mail-line bt-icon"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1"><i class="ri-calendar-line"></i></button>
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="appointmentModal(appointment1, element)"
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1"><i class="ri-delete-bin-line"></i></button>
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Delete"><i class="ri-delete-bin-line"></i></button>
                 </div>
             </div>
         </div>
