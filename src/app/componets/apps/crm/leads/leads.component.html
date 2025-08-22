@@ -143,7 +143,8 @@
                                         </p>
                                         <p class="fw-medium mb-2 d-flex align-items-center">
                                             Deadline : &nbsp;
-                                            <span class="badge" [ngClass]="getTaskColor(task)"> {{ task.deadline | date:'dd, MMM yyyy' }}
+                                            <span class="badge" [ngClass]="getTaskBgColor(task)"> {{task.deadline | date:'dd, MMM yyyy' }},
+                                                ({{getfullDaysLeft(task) }})
                                             </span>
                                         </p>
                                     </div>

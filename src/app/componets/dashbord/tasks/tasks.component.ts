@@ -26,7 +26,7 @@ export class TasksComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : ''; campaignName: any; taskForm!: FormGroup;
-  taskList: any;  agentUsers: any[] = []; campaignList: any[] = [];
+  taskList: any[] | null = null;  agentUsers: any[] = []; campaignList: any[] = [];
   modal: any;selectedTaskId: string = '';
   selectedCampaign: any; currentUser: any;
   adoanAiRole: any;
@@ -108,7 +108,7 @@ export class TasksComponent {
 
   fetchTasks() {
     const payload = {
-      currentUser: this.userEmail 
+      currentUser: this.userEmail
     };
     this.switchService.fetchTasksCreatedBy(payload).subscribe({
       next: (res) => {
@@ -117,12 +117,9 @@ export class TasksComponent {
           ...(res.assignedTaskList || [])
         ];
         const tasks = [...(res.createdTaskList || []), ...(res.assignedTaskList || [])];
-
         this.inprogressTasks = tasks.filter((t: any) => t.currentStatus === 'Inprogress');
         this.verifyTasks = tasks.filter((t: any) => t.currentStatus === 'At to erify');
         this.completedTasks = tasks.filter((t: any) => t.currentStatus === 'Completed');
-        console.log('in progress leads',this.inprogressTasks);
-
         if (this.adoanAiRole !== 'ADMIN') {
           Object.keys(this.taskForm.controls).forEach(control => {
             if (control !== 'currentStatus') {
@@ -137,16 +134,14 @@ export class TasksComponent {
     });
   }
 
-
   updateTaskSubmit(modal: any) {
     if (this.taskForm.invalid) {
       return;
     }
     const payload = {
-    ...this.taskForm.getRawValue(),
-    taskGenId: this.selectedTaskId   
-  };
-    console.log(payload)
+      ...this.taskForm.getRawValue(),
+      taskGenId: this.selectedTaskId
+    };
     this.switchService.updateTasks(payload).subscribe({
       next: (res) => {
         this.toastr.success('Task updated successfully!');
@@ -158,6 +153,7 @@ export class TasksComponent {
       }
     });
   }
+
   getAgentUsers(agentEmails: string[]) {
     const cn = JSON.parse(this.userData).companyName;
     const cc = JSON.parse(this.userData).companyCode;
@@ -170,8 +166,6 @@ export class TasksComponent {
               email: user.email,
               name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email
             }));
-
-          console.log('Agent Users (for dropdown):', this.agentUsers);
         } else {
           this.toastr.error('Unexpected user data format.');
         }
@@ -234,12 +228,9 @@ export class TasksComponent {
   }
 
   updateLocalTask(payload: any) {
-    // Remove task from all arrays
     this.inprogressTasks = this.inprogressTasks.filter(t => t.id !== payload.id);
     this.verifyTasks = this.verifyTasks.filter(t => t.id !== payload.id);
     this.completedTasks = this.completedTasks.filter(t => t.id !== payload.id);
-
-    // Add task into correct array
     if (payload.currentStatus === 'Inprogress') {
       this.inprogressTasks.push(payload);
     } else if (payload.currentStatus === 'At to erify') {
@@ -248,11 +239,10 @@ export class TasksComponent {
       this.completedTasks.push(payload);
     }
   }
+
   onStatusChange(task: any, newStatus: string) {
     task.currentStatus = newStatus;
     this.updateLocalTask(task);
-
-    // save to API
     this.switchService.updateTasks(task).subscribe();
   }
 
@@ -274,16 +264,52 @@ export class TasksComponent {
 
   today: Date = new Date();
   getTaskColor(task: any): string {
-    if (!task.deadline) return 'btn-secondary-transparent';
+    if (!task.deadline) return 'bg-secondary-transparent';
     const deadlineDate = new Date(task.deadline);
-    if (deadlineDate < this.today) {
-      return 'btn-danger-transparent';
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    if (deadlineDate < today) {
+      return 'bg-danger-transparent';
     }
-    if (deadlineDate.toDateString() === this.today.toDateString()) {
-      return 'btn-warning-transparent';
+    if (deadlineDate.getTime() === today.getTime()) {
+      return 'bg-warning-transparent';
     }
-    return 'btn-success-transparent';
+    return 'bg-success-transparent';
   }
+
+  getfullDaysLeft(task: any): string {
+    if (!task.deadline) return '';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return `${Math.abs(diffDays)} day's Due`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `${diffDays} day's left`;
+    }
+  }
+
+  getStatusBadge(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'Begin':
+        return 'badges bg-danger-transparent';
+      case 'At to erify':
+        return 'badges bg-info-transparent';
+      case 'Inprogress':
+        return 'badges bg-warning-transparent';
+      case 'Completed':
+        return 'badges bg-secondary-transparent';
+      default:
+        return 'badges bg-secondary-transparent';
+    }
+  }
+
 
 
 }
