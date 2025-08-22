@@ -118,7 +118,7 @@ export class TasksComponent {
         ];
         const tasks = [...(res.createdTaskList || []), ...(res.assignedTaskList || [])];
         this.inprogressTasks = tasks.filter((t: any) => t.currentStatus === 'Inprogress');
-        this.verifyTasks = tasks.filter((t: any) => t.currentStatus === 'At to erify');
+        this.verifyTasks = tasks.filter((t: any) => t.currentStatus === 'At to Verify');
         this.completedTasks = tasks.filter((t: any) => t.currentStatus === 'Completed');
         if (this.adoanAiRole !== 'ADMIN') {
           Object.keys(this.taskForm.controls).forEach(control => {
@@ -233,7 +233,7 @@ export class TasksComponent {
     this.completedTasks = this.completedTasks.filter(t => t.id !== payload.id);
     if (payload.currentStatus === 'Inprogress') {
       this.inprogressTasks.push(payload);
-    } else if (payload.currentStatus === 'At to erify') {
+    } else if (payload.currentStatus === 'At to Verify') {
       this.verifyTasks.push(payload);
     } else if (payload.currentStatus === 'Completed') {
       this.completedTasks.push(payload);
@@ -296,19 +296,38 @@ export class TasksComponent {
   }
 
   getStatusBadge(status: string): string {
-    switch (status?.toLowerCase()) {
+    switch (status?.trim()) { 
       case 'Begin':
-        return 'badges bg-danger-transparent';
-      case 'At to erify':
-        return 'badges bg-info-transparent';
+        return 'badgess bg-secondary-transparent';
       case 'Inprogress':
-        return 'badges bg-warning-transparent';
+        return 'badgess bg-warning-transparent';
+      case 'At to Verify':
+        return 'badgess bg-info-transparent';
       case 'Completed':
-        return 'badges bg-secondary-transparent';
+        return 'badgess bg-success-transparent';
       default:
-        return 'badges bg-secondary-transparent';
+        return 'badgess bg-danger-transparent';
     }
   }
+
+
+
+
+
+
+  getOverdueTasks(): any[] {
+    if (!this.taskList) return [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return this.taskList.filter(task => {
+      if (!task.deadline) return false;
+      const deadlineDate = new Date(task.deadline);
+      deadlineDate.setHours(0, 0, 0, 0);
+      return deadlineDate < today;
+    });
+  }
+
+
 
 
 
