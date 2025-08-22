@@ -87,7 +87,7 @@ export class LeadsComponent extends BaseComponent {
   notconnectedstatusClicked = false; adoanAiRole: any;leadList :any;filteredLeadList: any[] = [];   // holds filtered leads
   displayedLeads: any[] = []; override cityList:any[]=[];
   filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
-  appointmentId: number | null = null; taskPriorityList :any;
+  appointmentId: number | null = null; taskPriorityList :any;taskList:any;
 
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
@@ -235,6 +235,7 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
+    this.fetchTasks();
     this.modalService.open(content, { backdrop: 'static' });
   }
   
@@ -2859,6 +2860,14 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
+    const duplicateLead = this.selectedLeads.find((lead: any) =>
+    this.taskList.some((task: any) => task.leadId === lead.id)
+  );
+
+    if (duplicateLead) {
+      this.toastr.warning(`Task already created for lead`);
+      return; 
+    }
     let payload = { ...this.taskForm.value };
     payload.leadIdList = this.selectedLeads
       .filter((id: any) => id !== '' && id !== null && id !== undefined)
@@ -2990,6 +2999,22 @@ export class LeadsComponent extends BaseComponent {
     return `Expired ${Math.abs(diffDays)} days ago`;
   }
 
+  fetchTasks() {
+    const payload = {
+      currentUser: this.userEmail
+    };
+    this.switchService.fetchTasksCreatedBy(payload).subscribe({
+      next: (res) => {
+        this.taskList = [
+          ...(res.createdTaskList || []),
+          ...(res.assignedTaskList || [])
+        ];
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
 
 
 

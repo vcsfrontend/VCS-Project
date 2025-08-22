@@ -44,17 +44,33 @@
     <div *ngIf="appointmentData.length > 0; else noData">
       <div class="row g-3">
         <div *ngFor="let item of appointmentData" class="col-xl-6 col-lg-6 col-md-12 mb-3 task-card">
-          <div class="card custom-card h-100 border rounded">
+          <div class="card custom-card h-100 border rounded" [ngClass]="getPriorityBadgeBorder(item.appointmenType)">
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div>
-                  <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1 text-warning"></i> Type:</strong> {{ item.appointmenType
+                  <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1" [ngClass]="getPriorityIconColor(item.appointmenType)"></i> Type:</strong> {{ item.appointmenType
                     }}</p>
                   <p><strong>Date:</strong> {{ item.date | date: 'medium' }}</p>
                   <p><strong>Description:</strong> {{ item.description }}</p>
-                  <p><strong>Duration:</strong> {{ item.duration }} mins</p>
-                  <p><strong>Assigned Designer:</strong> {{ item.assignedDesigner }}</p>
-                  <p><strong>Booked By:</strong> {{ item.currentUser }}</p>
+                  <p><strong >Duration:</strong><span class="ms-3" [ngClass]="getTaskColor(item)">{{ item.duration }} mins</span></p>
+                  <ng-container *ngIf="item.assignedDesigner?.split(',') as agentList">
+                    <div class="d-flex align-items-center">
+                      <span class="me-2"><strong>Assigned Designer:</strong></span>
+                      <ng-container *ngFor="let agent of agentList.slice(0, 3)">
+                        <span
+                          class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                          [ngClass]="getAgentColor(agent)" tabindex="0" role="button">
+                          {{ agent.trim().charAt(0) | uppercase }}
+                        </span>
+                      </ng-container>
+                      <a *ngIf="agentList.length > 3"
+                        class="avatar avatar-xs avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary cu"
+                        href="javascript:void(0);">
+                        +{{ agentList.length - 3 }}
+                      </a>
+                    </div>
+                  </ng-container>
+                  <p class="mt-3"><strong>Booked By:</strong> {{ item.currentUser }}</p>
                 </div>
                 <div>
                   <div class="btn-list">

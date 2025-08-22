@@ -47,8 +47,8 @@ export class AppointmentsComponent extends BaseComponent {
   @ViewChild('appointment1') appointment1!: TemplateRef<any>;
   @ViewChild('newAppointmentModal') newAppointmentModal!: TemplateRef<any>;userList:any;
   typeColors: { [key: string]: string } = {
-    "Designing Doubts": 'btn-primary',  
-    "Demo Booking": 'btn-success',   
+    "Designing Doubts": 'btn-warning',  
+    "Demo Booking": 'btn-info',   
     "Follow Up": 'btn-warning',  
     "Interview": 'btn-info',   
     "Default": 'btn-secondary'
@@ -443,7 +443,51 @@ private getDefaultColor(str: string): string {
     error: () => this.toastr.error('Failed to save appointment'),
   });
 }
+  getPriorityBadgeBorder(appointmenType: string): string {
+    switch (appointmenType) {
+      case 'Designing Doubts':
+        return 'border border-warning';
+      case 'Demo Booking':
+        return 'border border-info';
+      case 'medium':
+        return 'border border-info';
+      case 'low':
+        return 'border border-success';
+      default:
+        return 'border border-secondary';
+    }
+  }
+ getPriorityIconColor(appointmenType: string): string {
+    switch (appointmenType) {
+      case 'Designing Doubts':
+        return 'text-warning';
+      case 'Demo Booking':
+        return 'text-info';
+      default:
+        return 'text-secondary';
+    }
+  }
 
+  getAgentColor(agent: string): string {
+    const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info'];
+    const index = agent.trim().charCodeAt(0) % colors.length;
+    return colors[index];
+  }
+ getTaskColor(task: any): string {
+  if (!task.deadline) return 'btn-secondary-transparent';
+
+  const deadline = new Date(task.deadline);   // assuming API gives a deadline datetime
+  const now = new Date();
+  const diffMinutes = (deadline.getTime() - now.getTime()) / (1000 * 60);
+  if (diffMinutes <= 0) {
+    return 'btn-danger-transparent';
+  }
+
+  if (diffMinutes <= 30) {
+    return 'btn-warning-transparent';
+  }
+  return 'btn-success-transparent';
+}
 
 
 }
