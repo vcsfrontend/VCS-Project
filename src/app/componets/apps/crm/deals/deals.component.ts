@@ -52,7 +52,7 @@ export class DealsComponent extends BaseComponent {
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
-
+  taskSubmitted : boolean = false;
   displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
@@ -79,7 +79,8 @@ export class DealsComponent extends BaseComponent {
   phoneNumber: string = '';originalStatus: string = '';  notconnectedstatusClicked = false; hasSelectedInvalid = false;
   adoanAiRole: any;public filterLeadForm!:FormGroup; filterApplied :boolean = false;
   selectedLead: any;  public appointmentForm!: FormGroup;appointmentDataList :any;
-  isChecked = false;
+  isChecked = false;taskPriorityList :any;
+  taskForm ! :FormGroup;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -288,6 +289,14 @@ export class DealsComponent extends BaseComponent {
     this.ViewCrmLeads(element);
     
   }
+  
+  openTaskModal(content: any) {
+    if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    this.modalService.open(content, { backdrop: 'static' });
+  }
 
   openFollowup(element: any, content1: any) {
     this.followupName = element.name;
@@ -475,6 +484,20 @@ export class DealsComponent extends BaseComponent {
         }),
         createdTime:['']
       });
+      this.taskForm = this.fb.group({
+      deadline: ['',],
+      taskName: ['',],
+      assignedTo: ['', ],
+      priority: ['', ],
+      description: ['', ],
+      currentStatus: [''],
+      leadIdList: [''],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
+      taskCreatedBy : [this.userEmail],
+      leadEntry : [this.userEmail]
+    });
 
     this.getUsers();
     // Filter options as the user types in the search bar
@@ -763,6 +786,7 @@ export class DealsComponent extends BaseComponent {
             : null;
            this.updateColumns();
           this.getStatusCount();
+          this.taskPriorityList = res.taskPriorityList || [];
         },
       error: (error) => {
         // this.toastr.error(error.statusText || 'Server Error');
@@ -1143,6 +1167,7 @@ export class DealsComponent extends BaseComponent {
       campaignId:((JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634'),
     };
     this.leadForm.patchValue(payload);
+    this.leadForm.get('followUpDate')?.disable();
     this.modalService.open(Content14, {
       scrollable: true,
       centered: true,
@@ -2138,7 +2163,7 @@ export class DealsComponent extends BaseComponent {
 
   deleteSelectedLeads() {
     if (!this.selectedLeads.length) {
-      this.toastr.error('Please select at least one lead');
+      this.toastr.warning('Please select at least one lead');
       return;
     }
     if (confirm('Are you sure you want to delete the selected leads?')) {
@@ -2287,7 +2312,7 @@ export class DealsComponent extends BaseComponent {
   return current === original;
   }
 
-  filterLeads(modal:any) {
+   filterLeads(modal:any) {
     const formValue = this.filterLeadForm.value;
     const ensureSeconds = (value: string | null): string | null => {
       if (!value) return null;
@@ -2502,5 +2527,107 @@ export class DealsComponent extends BaseComponent {
         this.toastr.error('An error occurred while sending mail.');
       }
     });
+  }
+
+  
+  createTaskSubmit(modal: any) {
+    this.taskSubmitted = true;
+    if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    let payload = { ...this.taskForm.value };
+    payload.leadIdList = this.selectedLeads
+      .filter((id: any) => id !== '' && id !== null && id !== undefined)
+      .map((id: any) => Number(id));
+    if (Array.isArray(payload.assignedTo)) {
+      payload.assignedTo = payload.assignedTo.join(',');
+    }
+    this.switchService.createTask(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Task created successfully!');
+        this.taskForm.reset();
+        this.selectedLeads = [];
+        modal.close();
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  getTaskStatusColor(status: string): string {
+    switch (status) {
+      case 'completed':
+        return 'bg-success-transparent'; 
+      case 'pending':
+        return 'bg-warning-transparent'; 
+      case 'in_progress':
+        return 'bg-info-transparent';     
+      case 'cancelled':
+        return 'bg-danger-transparent'; 
+      default:
+        return 'bg-success-transparent'; 
+    }
+  }
+
+  today: Date = new Date();
+  getTaskColor(task: any): string {
+    if (!task.deadline) return 'btn-secondary-transparent';
+    const deadlineDate = new Date(task.deadline);
+    if (deadlineDate < this.today) {
+      return 'btn-danger-transparent';
+    }
+    if (deadlineDate.toDateString() === this.today.toDateString()) {
+      return 'btn-warning-transparent';
+    }
+    return 'btn-success-transparent';
+  }
+
+  getPriorityBadge(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'critical':
+        return 'badge bg-danger-transparent';
+      case 'high':
+        return 'badge bg-warning-transparent';
+      case 'medium':
+        return 'badge bg-info-transparent';
+      case 'low':
+        return 'badge bg-success-transparent';
+      default:
+        return 'badge bg-secondary-transparent';
+    }
+  }
+
+  getDaysLeft(deadline: string | Date): string {
+    const today = new Date();
+    const dueDate = new Date(deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) {
+      return `${diffDays} `;
+    } else if (diffDays === 0) {
+      return ``;
+    } else {
+      return ` ${Math.abs(diffDays)}`;
+    }
+  }
+
+  getDayLeft(deadline: string | Date): string {
+    const today = new Date();
+    const dueDate = new Date(deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) {
+      return `${diffDays} days left`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `Expired ${Math.abs(diffDays)} days ago`;
+    }
   }
 }
