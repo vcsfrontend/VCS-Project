@@ -2872,6 +2872,7 @@ export class LeadsComponent extends BaseComponent {
         this.taskForm.reset();
         this.selectedLeads = [];
         modal.close();
+        this.getFetchLeadData();
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -2897,19 +2898,43 @@ export class LeadsComponent extends BaseComponent {
   today: Date = new Date();
   getTaskColor(task: any): string {
     if (!task.deadline) return 'btn-secondary-transparent';
+    const today = new Date();
+    const dueDate = new Date(task.deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return 'btn-danger-transparent';
+    }
+    if (diffDays === 0) {
+      return 'btn-warning-transparent';
+    }
+    if (diffDays <= 2) {
+      return 'btn-warning-transparent';
+    }
+    return 'btn-success-transparent';
+  }
+
+  getTaskBgColor(task: any): string {
+    if (!task.deadline) return 'bg-secondary-transparent';
     const deadlineDate = new Date(task.deadline);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     deadlineDate.setHours(0, 0, 0, 0);
     if (deadlineDate < today) {
-      return 'btn btn-danger-transparent';
+      return 'bg-danger-transparent';
     }
     if (deadlineDate.getTime() === today.getTime()) {
-      return 'btn btn-warning-transparent';
+      return 'bg-warning-transparent';
     }
-    return 'btn btn-success-transparent';
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 2) {
+      return 'bg-warning-transparent';
+    }
+    return 'bg-success-transparent';
   }
-
 
   getPriorityBadge(priority: string): string {
     switch (priority?.toLowerCase()) {
@@ -2936,6 +2961,22 @@ export class LeadsComponent extends BaseComponent {
     return diffDays.toString();
   }
 
+  getfullDaysLeft(task: any): string {
+    if (!task.deadline) return '';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return `${Math.abs(diffDays)} day's Due`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `${diffDays} day's left`;
+    }
+  }
 
   getDayLeft(deadline: string | Date): string {
     const today = new Date();
