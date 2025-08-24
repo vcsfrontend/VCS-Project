@@ -193,5 +193,8 @@ export class SwitherService {
   fetchProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_project_conf`, data); }
   quotationHistory(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/getQuoteGenHistory`, data); }  
 
+  // Boq
+  fetchBoqData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/genrate_bom_data`, data); }  
+
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }

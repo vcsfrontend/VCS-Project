@@ -46,26 +46,38 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   margin-left: 0% !important;
 }
 
-.dropdown-menu {
-  z-index: 1000 !important;
+.btn-group .dropdown-menu.show {
+  z-index: 3000 !important;
+}
+// :host ::ng-deep .dropdown-menu.show {
+//   z-index: 3000 !important;
+// }
+
+.custom-btn::after {
+  display: none !important;
 }
 
-:host ::ng-deep .dropdown-menu {
-  z-index: 2000 !important;
+.custom-btn {
+  color: inherit;
+  border: 1px solid transparent;
+  background-color: transparent;
+  transition: all 0.3s ease;
 }
 
-.hover-caret::after {
-  display: inline-block;
+.custom-btn:hover,
+.custom-btn:focus {
+  color: #000000;
+  border: 1px solid hsl(0, 0%, 0%);
+  background-color: transparent;
+}
+
+.custom-btn:hover::after,
+.custom-btn:focus::after {
+  display: inline-block !important;
   margin-left: 0.5rem;
   vertical-align: middle;
   content: "";
-  border-top: 0.4em solid;
+  border-top: 0.4em solid;              
   border-right: 0.4em solid transparent;
   border-left: 0.4em solid transparent;
-  opacity: 0;             /* hidden initially */
-  transition: opacity 0.2s;
-}
-
-.hover-caret:hover::after {
-  opacity: 1;
 }

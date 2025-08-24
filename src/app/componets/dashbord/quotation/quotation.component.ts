@@ -14,55 +14,34 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { SwitherService } from '../../../shared/services/swither.service';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-quotation',
     standalone: true,
     imports: [SharedModule, NgSelectModule, NgbModule,
         NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule,
-        NgApexchartsModule, MatPaginatorModule,MaterialModuleModule,CommonModule],
+        NgApexchartsModule, MatPaginatorModule,MaterialModuleModule,CommonModule,ToastrModule,],
     providers: [NgbModalConfig, NgbModal, FlatpickrDefaults,],
     templateUrl: './quotation.component.html',
     styleUrl: './quotation.component.scss'
 }) 
 export class QuotationComponent {
-    displayedColumns: string[] = ['slNo', 'elementNameDescription', 'codeCategory', 'orderStatus', 'itemType', 'source', 'status', 'length','breadth','quantity','UOM','draftQuantity','clientRate','finalAmount'];
+    displayedColumns: string[] = ['slNo','elementUrl', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length','breadth','height','quantity','uom','draftQuantity','clientRate','finalAmount'];
+    userDataStorage = localStorage.getItem('userDetails');
+    userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+    userEmail: string = this.userData ? this.userData.email : '';
+    userName: string = this.userData ? this.userData.username : '';
+    userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+    userCompanyName: string = this.userData ? this.userData.companyName : '';
+    userType: any = this.userData ? this.userData.type : ''; campaignName :any;
+    dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    dataSource = new MatTableDataSource<any>([
-        {
-            slNo: 1,
-            elementNameDescription: 'Ceiling Fan',
-            codeCategory: 'Furniture',
-            orderStatus: 'Delivered',
-            itemType: 'Electrical',
-            source: 'Vendor',
-            status: 'Closed',
-            length: 120,
-            breadth: 120,
-            quantity: 4,
-            UOM: 'pcs',
-            draftQuantity: 0,
-            clientRate: 2200,
-            finalAmount: 8800
-        },
-         {
-            slNo: 2,
-            elementNameDescription: 'Ceiling Fan - White',
-            codeCategory: 'ELC-045',
-            orderStatus: 'Delivered',
-            itemType: 'Electrical',
-            source: 'Vendor',
-            status: 'Closed',
-            length: 120,
-            breadth: 120,
-            quantity: 4,
-            UOM: 'pcs',
-            draftQuantity: 0,
-            clientRate: 2200,
-            finalAmount: 8800
-        }
-    ]);
-    selectedCategory: any; editIndex: number | null = null; 
+    @ViewChild(MatSort) sort!: MatSort;
+
+    selectedCategory: any; editIndex: number | null = null;  designId : any; 
+    boqList: any;
     categories = [
         { id: 1, name: 'Acoustic', code: 'AT' },
         { id: 2, name: 'BMS', code: 'BM' },
@@ -74,7 +53,8 @@ export class QuotationComponent {
     modal: any; chartOptions4: any;
     chartOptions1: any;
     constructor(// config: NgbModalConfig,
-        private modalService: NgbModal) {
+        private modalService: NgbModal, public switchService: SwitherService,
+        private toastr: ToastrService,) {
         this.chartOptions4 = {
 
             series: [
@@ -343,6 +323,7 @@ export class QuotationComponent {
     };
 
     ngOnInit(): void {
+        this.boqData();
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
@@ -366,6 +347,29 @@ export class QuotationComponent {
             return this.paginator.pageIndex * this.paginator.pageSize + index + 1;
         }
         return index + 1;
+    }
+
+    boqData() {
+        const payload = {
+            email: this.userEmail,
+            designId: "3FO3EWPJHYSK",
+            bomRequired: true,
+            wardrobeRequired: true,
+            kbRequired: true
+        };
+        console.log(payload);
+        this.switchService.fetchBoqData(payload).subscribe({
+            next: (res) => {
+                const kitchenData = res?.boqData?.KITCHEN || [];
+                this.dataSource.data = kitchenData.map((item: any, index: number) => ({
+                    slNo: index + 1,
+                    ...item
+                }));
+            },
+            error: () => {
+                this.toastr.error('Something went wrong!');
+            }
+        });
     }
 
     

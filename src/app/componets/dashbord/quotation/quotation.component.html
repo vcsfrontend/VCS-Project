@@ -113,36 +113,39 @@
                                                                     <th mat-header-cell *matHeaderCellDef> S.No. </th>
                                                                     <td mat-cell *matCellDef="let element; let i = index"> {{i + 1}} </td>
                                                                 </ng-container>
-                                                                <ng-container matColumnDef="elementNameDescription">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                                        Element Name & Description
-                                                                    </th>
+                                                                <ng-container matColumnDef="elementUrl">
+                                                                    <th mat-header-cell *matHeaderCellDef> Item </th>
                                                                     <td mat-cell *matCellDef="let element">
-                                                                        <div class="d-flex align-items-center justify-content-between w-100">
-                                                                            <div class="d-flex align-items-center">
-                                                                                <span class="avatar avatar-xl me-3">
-                                                                                    <img src="./assets/images/media/media-54.jpg" class="img-thumbnail" alt="Project Image">
-                                                                                </span>
-                                                                                <div>
-                                                                                    <span class="fw-medium">{{ element.elementNameDescription }}</span>
-                                                                                    <p class="mb-0 text-muted">Product Description</p>
-                                                                                </div>
-                                                                            </div>
+                                                                        <div class="d-flex align-items-start">
+                                                                            <!-- Image -->
+                                                                            <span class="avatar avatar-xl me-3">
+                                                                                <img [src]="element.elementUrl" class="img-thumbnail rounded" alt="Project Image" width="60"
+                                                                                    height="60">
+                                                                            </span>
+                                                                
+                                                                            <!-- Full Description -->
                                                                             <div>
-                                                                                <i class="las la-comment-medical fs-4 m-4 text-primary"></i>
+                                                                                <span class="fw-medium d-block">
+                                                                                    {{ element.elementNameAndDescription.split('\n')[0] }}
+                                                                                </span>
+                                                                                <div class="text-muted small">
+                                                                                    <div *ngFor="let line of element.elementNameAndDescription.split('\n').slice(1)">
+                                                                                        {{ line }}
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </td>
                                                                 </ng-container>
-                                                                <ng-container matColumnDef="codeCategory">
+                                                                <ng-container matColumnDef="codeAndCategory">
                                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Code & Category </th>
                                                                     <td mat-cell *matCellDef="let element let i = index">
                                                                         <div class="btn-group" ngbDropdown>
-                                                                            <button type="button" class="btn btn-outline-primary dropdown-toggle" ngbDropdownToggle data-bs-toggle="dropdown"
-                                                                                aria-expanded="false">
-                                                                                Furniture
+                                                                            <button type="button" class="btn custom-btn" ngbDropdownToggle data-bs-toggle="dropdown"
+                                                                                aria-expanded="false">Furniture
+                                                                                {{element.codeAndCategory}}
                                                                             </button>
-                                                                            <ul class="dropdown-menu" ngbDropdownMenu>
+                                                                            <ul class="dropdown-menu " ngbDropdownMenu>
                                                                                 <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
                                                                                 <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
                                                                                 <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a></li>
@@ -195,16 +198,20 @@
                                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Breadth </th>
                                                                     <td mat-cell *matCellDef="let element"> {{element.breadth}} </td>
                                                                 </ng-container>
+                                                                <ng-container matColumnDef="height">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Height </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{element.height}} </td>
+                                                                </ng-container>
                                                                 <ng-container matColumnDef="quantity">
                                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity </th>
                                                                     <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
                                                                 </ng-container>
-                                                                <ng-container matColumnDef="UOM">
+                                                                <ng-container matColumnDef="uom">
                                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> UOM </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{element.UOM}} </td>
+                                                                    <td mat-cell *matCellDef="let element"> {{element.uom}} </td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="draftQuantity">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> DraftQuantity </th>
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft Quantity </th>
                                                                     <td mat-cell *matCellDef="let element"> {{element.draftQuantity}} </td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="clientRate">
