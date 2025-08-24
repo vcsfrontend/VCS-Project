@@ -234,4 +234,6 @@ table.mat-mdc-table .mdc-data-table__header-cell:first-child {
   height: 500px;
   overflow-y: auto;
 }
-
+.dropdown-menu {
+  z-index: 2000 !important; 
+}

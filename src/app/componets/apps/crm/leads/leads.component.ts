@@ -87,8 +87,8 @@ export class LeadsComponent extends BaseComponent {
   notconnectedstatusClicked = false; adoanAiRole: any;leadList :any;filteredLeadList: any[] = [];   // holds filtered leads
   displayedLeads: any[] = []; override cityList:any[]=[];
   filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
-  appointmentId: number | null = null; taskPriorityList :any;taskList:any;
-
+  appointmentId: number | null = null; taskPriorityList :any;taskList:any; appointmentFormSubmitted : boolean = false;
+  selectedLeadForAppointment:any;selectedLeadForAppointmentObject:any
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -192,7 +192,12 @@ export class LeadsComponent extends BaseComponent {
     };
   }
   appointmentModal(appointment1: any, element: any, appointmentData: any = null) {
-  this.selectedLead = element;
+   this.selectedLeadForAppointmentObject = element; // full lead object
+  console.log('Selected for appointment:', this.selectedLeadForAppointmentObject);
+  if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+  }
   this.appointmentForm.reset();
 
   if (appointmentData) {
@@ -235,7 +240,6 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    this.fetchTasks();
     this.modalService.open(content, { backdrop: 'static' });
   }
   
@@ -384,12 +388,12 @@ export class LeadsComponent extends BaseComponent {
 
       //Send Email
       this.appointmentForm = this.fb.group({
-        appointmenType: [''],
-        date: [''],
+        appointmenType: ['',Validators.required],
+        date: ['', Validators.required],
         description: [''],
-        duration: [''],
+        duration: ['', Validators.required],
         currentUser: [this.userEmail],
-        assignedDesigner:[''],
+        assignedDesigner:['',Validators.required],
         leadEntry: this.fb.group({
           leadId: [0],
           name: [''],
@@ -477,12 +481,12 @@ export class LeadsComponent extends BaseComponent {
 
     //Create Task
     this.taskForm = this.fb.group({
-      deadline: ['',],
-      taskName: ['',],
-      assignedTo: ['', ],
-      priority: ['', ],
-      description: ['', ],
-      currentStatus: [''],
+      deadline: ['',Validators.required],
+      taskName: ['',Validators.required],
+      assignedTo: ['', Validators.required],
+      priority: ['',Validators.required ],
+      description: ['',Validators.required ],
+      currentStatus: ['',Validators.required],
       leadIdList: [''],
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
@@ -800,6 +804,12 @@ export class LeadsComponent extends BaseComponent {
   get f() {
     return this.leadForm.controls;
   }
+  get g() {
+    return this.taskForm.controls;
+  }
+  get h() {
+    return this.appointmentForm.controls;
+  }
 
   onSubmit(modal: any) {
     const followUpDate = this.leadForm.get('followUpDate')?.value;
@@ -877,8 +887,9 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-  appointmentFormSubmit(modal: any) {   
+  appointmentFormSubmit(modal: any) {  
     const formData = this.appointmentForm.value;
+    console.log('the',this.leadId)
     const payload = {
       appointmenType: formData.appointmenType,
       date: formData.date,
@@ -887,41 +898,46 @@ export class LeadsComponent extends BaseComponent {
       currentUser: this.userEmail,
       assignedDesigner: formData.assignedDesigner,
           ...(this.appointmentId ? { appointmentId: this.appointmentId } : {}),
-      leadEntry: {
-        leadId: this.selectedLead.leadId,
-        name: this.selectedLead.name,
-        companyName: this.selectedLead.companyName,
-        executive: this.selectedLead.executive,
-        products: this.selectedLead.products,
-        country: this.selectedLead.country,
-        stage: this.selectedLead.stage,
-        status: this.selectedLead.status,
-        leadSource: this.selectedLead.leadSource,
-        zipCode: this.selectedLead.zipCode,
-        followUpDate: this.selectedLead.followUpDate,
-        state: this.selectedLead.state,
-        city: this.selectedLead.city,
-        address: this.selectedLead.address,
-        contact: this.selectedLead.contact,
-        email: this.selectedLead.email,
-        currentStage: this.selectedLead.currentStage,
-        updatedBy: this.selectedLead.updatedBy,
-        updatedTime: this.selectedLead.updatedTime,
-        entryBy: this.selectedLead.entryBy,
-        campaignId: this.selectedLead.campaignId,
-        companyCode: this.selectedLead.companyCode,
-        individualEmail: this.selectedLead.individualEmail,
-        type: this.selectedLead.type,
-      }    
+      leadEntry:this.selectedLeadForAppointment ? {
+        leadId: this.selectedLeadForAppointment.leadId,
+        name: this.selectedLeadForAppointment.name,
+        companyName: this.selectedLeadForAppointment.companyName,
+        executive: this.selectedLeadForAppointment.executive,
+        products: this.selectedLeadForAppointment.products,
+        country: this.selectedLeadForAppointment.country,
+        stage: this.selectedLeadForAppointment.stage,
+        status: this.selectedLeadForAppointment.status,
+        leadSource: this.selectedLeadForAppointment.leadSource,
+        zipCode: this.selectedLeadForAppointment.zipCode,
+        followUpDate: this.selectedLeadForAppointment.followUpDate,
+        state: this.selectedLeadForAppointment.state,
+        city: this.selectedLeadForAppointment.city,
+        address: this.selectedLeadForAppointment.address,
+        contact: this.selectedLeadForAppointment.contact,
+        email: this.selectedLeadForAppointment.email,
+        currentStage: this.selectedLeadForAppointment.currentStage,
+        updatedBy: this.selectedLeadForAppointment.updatedBy,
+        updatedTime: this.selectedLeadForAppointment.updatedTime,
+        entryBy: this.selectedLeadForAppointment.entryBy,
+        campaignId: this.selectedLeadForAppointment.campaignId,
+        companyCode: this.selectedLeadForAppointment.companyCode,
+        individualEmail: this.selectedLeadForAppointment.individualEmail,
+        type: this.selectedLeadForAppointment.type,
+      }  : null  
     };
-    this.switchService.saveAppointment(payload).subscribe({
-      next: (res) => {
-        this.toastr.success('Appointment Created ');
-        modal.close();
-      },
-      error: (err) => {
-      }
-    });
+    console.log('payload',payload);
+    this.appointmentFormSubmitted = true;
+    if(this.appointmentForm?.valid){
+      this.switchService.saveAppointment(payload).subscribe({
+        next: (res) => {
+          this.toastr.success('Appointment Created ');
+          this.appointmentFormSubmitted = false;
+          modal.close();
+        },
+        error: (err) => {
+        }
+      });
+    }
   }
 
   getAppointment(element: any) {
@@ -2346,14 +2362,17 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
-
-  onRowCheckboxChange(leadId: number, event: any) {
+    onRowCheckboxChange(lead: any, event: any) {
     if (event.checked) {
-      if (!this.selectedLeads.includes(leadId)) {
-        this.selectedLeads.push(leadId);
+      if (!this.selectedLeads.includes(lead.leadId)) {
+        this.selectedLeads.push(lead.leadId);
       }
+      this.selectedLeadForAppointment = lead;
     } else {
-      this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
+      this.selectedLeads = this.selectedLeads.filter(id => id !== lead.leadId);
+      if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
+        this.selectedLeadForAppointment = null;
+      }
     }
   }
 
@@ -2396,6 +2415,7 @@ export class LeadsComponent extends BaseComponent {
         type: 'local',
       },
     },
+    
   ];
   pondHandleInit() {}
   pondHandleAddFile(event: any) {}
@@ -2855,38 +2875,39 @@ export class LeadsComponent extends BaseComponent {
   }
 
   createTaskSubmit(modal: any) {
-    this.taskSubmitted = true;
     if (!this.selectedLeads || this.selectedLeads.length === 0) {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    const duplicateLead = this.selectedLeads.find((lead: any) =>
-    this.taskList.some((task: any) => task.leadId === lead.id)
-  );
+    // const duplicateLead = this.selectedLeads.find((lead: any) =>
+    //   this.taskList.some((task: any) => task.leadId === lead.id)
+    // );
 
-    if (duplicateLead) {
-      this.toastr.warning(`Task already created for lead`);
-      return; 
-    }
+    // if (duplicateLead) {
+    //   this.toastr.warning(`Task already created for lead`);
+    //   return; 
+    // }
     let payload = { ...this.taskForm.value };
+    this.taskSubmitted = true;
     payload.leadIdList = this.selectedLeads
       .filter((id: any) => id !== '' && id !== null && id !== undefined)
       .map((id: any) => Number(id));
     if (Array.isArray(payload.assignedTo)) {
       payload.assignedTo = payload.assignedTo.join(',');
     }
-    this.switchService.createTask(payload).subscribe({
-      next: (res) => {
-        this.toastr.success('Task created successfully!');
-        this.taskForm.reset();
-        this.selectedLeads = [];
-        modal.close();
-        this.getFetchLeadData();
-      },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
-      }
-    });
+      this.switchService.createTask(payload).subscribe({
+        next: (res) => {
+          this.toastr.success('Task created successfully!');
+          this.taskForm.reset();
+          this.selectedLeads = [];
+          this.taskSubmitted = false;
+          modal.close();
+          this.getFetchLeadData();
+        },
+        error: (err) => {
+          this.toastr.error('Something went wrong!');
+        }
+      });
   }
 
   getTaskStatusColor(status: string): string {

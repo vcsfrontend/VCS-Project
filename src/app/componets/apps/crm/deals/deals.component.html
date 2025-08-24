@@ -178,7 +178,7 @@
                                 (change)="onSelectAllChange($event)"></mat-checkbox>
                         </th>
                         <td mat-cell *matCellDef="let element">
-                            <mat-checkbox (change)="onRowCheckboxChange(element.leadId, $event)"
+                            <mat-checkbox (change)="onRowCheckboxChange(element, $event)"
                                 [checked]="isSelected(element.leadId)" class="custom-checkbox"></mat-checkbox>
                         </td>
                     </ng-container>
@@ -201,7 +201,7 @@
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-eye-line"></i>
                             </a>
-                            <span ngbDropdown placement="right-top">
+                            <span ngbDropdown placement="right-top" container="body">
                                 <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
                                     ngbDropdownToggle></i>
                                 <ul class="dropdown-menu z-1" ngbDropdownMenu>
@@ -1614,12 +1614,19 @@
                 <div class="col-xl-6">
                     <label for="code" class="form-label">Appointment type</label>
                     <ng-select formControlName="appointmenType" [items]="appointmentList" bindLabel="name"
-                        bindValue="name" placeholder="Select Project">
+                        bindValue="name" placeholder="Select Project" [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['appointmenType'].errors }">
                     </ng-select>
+                    <div *ngIf="appointmentFormSubmitted && h['appointmenType'].errors" class="invalid-feedback">
+                        <span *ngIf="h['appointmenType'].errors['required']">Appointment type is required.</span>
+                    </div>
                 </div>
                 <div class="col-xl-6">
                     <label for="name" class="form-label">Date</label>
-                    <input type="datetime-local" class="form-control" id="name" formControlName="date">
+                    <input type="datetime-local" class="form-control" id="name" formControlName="date" 
+                    [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['date'].errors }" [min]="minDateTime">
+                    <div *ngIf="appointmentFormSubmitted && h['date'].errors" class="invalid-feedback">
+                        <span *ngIf="h['date'].errors['required']">Date is required.</span>
+                    </div>
                     <!-- min="2025-07-19T09:00"
             max="2025-07-19T17:00" step="1800" laceholder="Enter Name" -->
                 </div>
@@ -1631,13 +1638,19 @@
                 <div class="col-xl-6">
                     <label for="duration" class="form-label">duration</label>
                     <input type="text" class="form-control" id="name" placeholder="Enter your duration"
-                        formControlName="duration">
+                        formControlName="duration" [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['duration'].errors }">
+                    <div *ngIf="appointmentFormSubmitted && h['duration'].errors" class="invalid-feedback">
+                        <span *ngIf="h['duration'].errors['required']">duration is required.</span>
+                    </div>
                 </div>
                 <div class="col-xl-6">
                     <label for="code" class="form-label">assignedDesigner</label>
                     <ng-select formControlName="assignedDesigner" [items]="userList" bindLabel="email"
-                        bindValue="email" placeholder="Select Project">
+                        bindValue="email" placeholder="Select Project" [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['assignedDesigner'].errors }">
                     </ng-select>
+                    <div *ngIf="appointmentFormSubmitted && h['assignedDesigner'].errors" class="invalid-feedback">
+                        <span *ngIf="h['assignedDesigner'].errors['required']">Please select one designer</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1724,36 +1737,50 @@
                     <div class="col-xl-12">
                         <label for="task-name" class="form-label">Task Name</label>
                         <input type="text" class="form-control" id="task-name" placeholder="Task Name"
-                            formControlName="taskName">
+                            formControlName="taskName" [ngClass]="{ 'is-invalid': taskSubmitted && g['taskName'].errors }">
+                        <div *ngIf="taskSubmitted && g['taskName'].errors" class="invalid-feedback">
+                            <span *ngIf="g['taskName'].errors['required']">Task Name is required.</span>
+                            <span *ngIf="g['taskName'].errors['minlength']">Task Name must be at least 3 characters long.</span>
+                        </div>
                     </div>
                     <div class="col-xl-12">
                         <label class="form-label">Assigned To</label>
                         <ng-select formControlName="assignedTo" [items]="userList" bindLabel="email" bindValue="email"
-                            placeholder="Select Project" [multiple]="true">
+                            placeholder="Select Project" [multiple]="true" [ngClass]="{ 'is-invalid': taskSubmitted && g['assignedTo'].errors }">
                         </ng-select>
+                        <div *ngIf="taskSubmitted && g['assignedTo'].errors" class="invalid-feedback">
+                            <span *ngIf="g['assignedTo'].errors['required']">Assigned to is required.</span>
+                        </div>
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">Deadline (Optional)</label>
+                        <label class="form-label">Deadline</label>
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-text text-muted modal-calender"> <i
                                         class="ri-calendar-line"></i>
                                 </div>
                                 <input type="date" class="form-control w-full !rounded-s-none" id="addignedDate"
-                                    placeholder="Choose date and time" formControlName="deadline">
+                                    placeholder="Choose date and time" formControlName="deadline" [ngClass]="{ 'is-invalid': taskSubmitted && g['deadline'].errors }" [min]="minDateTime">
+                                
                             </div>
+                        </div>
+                        <div *ngIf="taskSubmitted && g['deadline'].errors" class="invalid-feedback">
+                            <span *ngIf="g['deadline'].errors['required']">Deadline is required.</span>
                         </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Priority</label>
                         <ng-select data-trigger name="choices-single-default" placeholder="select"
-                            id="choices-single-default" formControlName="priority">
+                            id="choices-single-default" formControlName="priority" [ngClass]="{ 'is-invalid': taskSubmitted && g['priority'].errors }">
                             <ng-option value="" selected>Select</ng-option>
                             <ng-option value="Critical">Critical</ng-option>
                             <ng-option value="High">High</ng-option>
                             <ng-option value="Medium">Medium</ng-option>
                             <ng-option value="Low">Low</ng-option>
                         </ng-select>
+                        <div *ngIf="taskSubmitted && g['priority'].errors" class="invalid-feedback">
+                            <span *ngIf="g['priority'].errors['required']">priority is required.</span>
+                        </div>
                     </div>
                     <div class="col-xl-12">
                         <label class="form-label">Description</label>
