@@ -404,7 +404,12 @@ export class QuotationComponent {
             }
         });
     }
-
+    setPaginatorAndSort(key: string) {
+        if (this.boqDataSources[key]) {
+        this.boqDataSources[key].paginator = this.paginator;
+        this.boqDataSources[key].sort = this.sort;
+        }
+    }
     
 
 }
