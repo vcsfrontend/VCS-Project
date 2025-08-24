@@ -4,7 +4,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
 import { SharedModule } from '../../../../app/shared/common/sharedmodule';
-import { NgbDropdownModule, NgbNavModule, NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbNavModule, NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { MatCommonModule } from '@angular/material/core';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatTableDataSource } from '@angular/material/table';
@@ -29,13 +29,15 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 }) 
 export class QuotationComponent {
     displayedColumns: string[] = ['slNo','elementUrl', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length','breadth','height','quantity','uom','draftQuantity','clientRate','finalAmount'];
+    displayedClientProposal: string[] = ['slNo','ReferenceNo','ProposalRequestType', 'ProposalFor','CreatedBy','CreatedDate','Status', 'amount'];
+
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
     userEmail: string = this.userData ? this.userData.email : '';
     userName: string = this.userData ? this.userData.username : '';
     userCompanyCode: string = this.userData ? this.userData.companyCode : '';
     userCompanyName: string = this.userData ? this.userData.companyName : '';
-    userType: any = this.userData ? this.userData.type : ''; campaignName :any;
+    userType: any = this.userData ? this.userData.type : ''; campaignName :any;selectedItem: any;
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -49,12 +51,34 @@ export class QuotationComponent {
         { id: 4, name: 'Carpentry', code: 'CR' },
         { id: 5, name: 'CCTV & IT', code: 'IT' }
     ];
+    prposaldataSource = new MatTableDataSource<any>([
+    {
+        slNo: 1,
+        ReferenceNo: 'AD0001',
+        ProposalRequestType: 'Proposal For New Order',
+        ProposalFor: 'Sunil',
+        CreatedBy: 'N. Bhavani Shankar',
+        CreatedDate: '17 Nov 2024',
+        Status: 'Approved',
+        amount: 1200000
+    },
+    {
+        slNo: 2,
+        ReferenceNo: 'AD0002',
+        ProposalRequestType: 'Proposal For Renovation',
+        ProposalFor: 'Rajesh',
+        CreatedBy: 'Admin',
+        CreatedDate: '20 Nov 2024',
+        Status: 'Pending',
+        amount: 850000
+    }
+    ]);
 
     modal: any; chartOptions4: any;
     chartOptions1: any;
     constructor(// config: NgbModalConfig,
         private modalService: NgbModal, public switchService: SwitherService,
-        private toastr: ToastrService,) {
+        private toastr: ToastrService,private offcanvasService: NgbOffcanvas) {
         this.chartOptions4 = {
 
             series: [
@@ -317,6 +341,10 @@ export class QuotationComponent {
     open(content: any) {
         this.modalService.open(content, { centered: true });
     }
+    openDetails(content: any, element: any) {
+    this.selectedItem = element;
+    this.offcanvasService.open(content, { position: 'end', backdrop: true });
+    }
 
     flatpickrOptions: any = {
         inline: true
@@ -365,6 +393,9 @@ export class QuotationComponent {
                     slNo: index + 1,
                     ...item
                 }));
+                if (this.paginator) {
+                    this.dataSource.paginator = this.paginator;
+                }
             },
             error: () => {
                 this.toastr.error('Something went wrong!');

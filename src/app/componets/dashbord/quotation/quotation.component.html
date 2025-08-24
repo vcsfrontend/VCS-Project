@@ -45,6 +45,55 @@
                                     <ng-container [ngbNavItem]="1">
                                         <a ngbNavLink class="nav-link">Proposal For Client</a>
                                         <ng-template ngbNavContent>
+                                            <div class="col-xl-12 mt-2">
+                                                <div class="card custom-card bg-light">
+                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                        <h5 class="mb-0">Proposal For Client</h5>
+                                                        <button type="button" class="btn btn-primary">Add New</button>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <div class="table-container mat-elevation-z8">
+                                                            <table mat-table [dataSource]="prposaldataSource" matSort class="mat-table w-100">
+                                                                <ng-container matColumnDef="slNo">
+                                                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                                                    <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="ReferenceNo">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference No </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.ReferenceNo }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="ProposalRequestType">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal Request Type </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.ProposalRequestType }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="ProposalFor">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal For </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.ProposalFor }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="CreatedBy">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.CreatedBy }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="CreatedDate">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.CreatedDate }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="Status">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.Status }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="amount">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.amount }} </td>
+                                                                </ng-container>
+                                                                <tr mat-header-row *matHeaderRowDef="displayedClientProposal"></tr>
+                                                                <tr mat-row *matRowDef="let row; columns: displayedClientProposal;"></tr>
+                                                            </table>
+                                                        </div>
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </ng-template>
                                     </ng-container>
                                     <ng-container [ngbNavItem]="2">
@@ -108,15 +157,15 @@
                                                     </div>
                                                     <div class="card-body p-0">
                                                         <div class="table-container mat-elevation-z8">
-                                                            <table mat-table [dataSource]="dataSource" matSort class="mat-table w-100">
+                                                            <table mat-table [dataSource]="dataSource" matSort class="mat-table1 w-100">
                                                                 <ng-container matColumnDef="slNo">
                                                                     <th mat-header-cell *matHeaderCellDef> S.No. </th>
                                                                     <td mat-cell *matCellDef="let element; let i = index"> {{i + 1}} </td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="elementUrl">
-                                                                    <th mat-header-cell *matHeaderCellDef> Item </th>
-                                                                    <td mat-cell *matCellDef="let element">
-                                                                        <div class="d-flex align-items-start">
+                                                                    <th mat-header-cell *matHeaderCellDef class="description-cell"> Item </th>
+                                                                    <td mat-cell *matCellDef="let element" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 750px; display: inline-block;">
+                                                                        <div class="d-flex align-items-start" (click)="openDetails(detailsOffcanvas, element)" style="cursor: pointer;" >
                                                                             <!-- Image -->
                                                                             <span class="avatar avatar-xl me-3">
                                                                                 <img [src]="element.elementUrl" class="img-thumbnail rounded" alt="Project Image" width="60"
@@ -126,14 +175,17 @@
                                                                             <!-- Full Description -->
                                                                             <div>
                                                                                 <span class="fw-medium d-block">
-                                                                                    {{ element.elementNameAndDescription.split('\n')[0] }}
+                                                                                    {{
+                                                                                    element.elementNameAndDescription.split('\n')[0].length > 30
+                                                                                    ? (element.elementNameAndDescription.split('\n')[0] | slice:0:30) + '...'
+                                                                                    : element.elementNameAndDescription.split('\n')[0]
+                                                                                    }}
                                                                                 </span>
                                                                                 <div class="text-muted small">
-                                                                                    <div *ngFor="let line of element.elementNameAndDescription.split('\n').slice(1)">
-                                                                                        {{ line }}
-                                                                                    </div>
+                                                                                    {{ element.elementNameAndDescription.split('\n')[1] }}
                                                                                 </div>
                                                                             </div>
+
                                                                         </div>
                                                                     </td>
                                                                 </ng-container>
@@ -223,11 +275,11 @@
                                                                     </th>
                                                                     <td mat-cell *matCellDef="let element"> {{element.finalAmount}} </td>
                                                                 </ng-container>
-                                                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                                                <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
                                                                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                                                             </table>
                                                         </div>
-                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                                        <mat-paginator [pageSizeOptions]="[10, 20,30]" showFirstLastButtons></mat-paginator>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1268,3 +1320,81 @@
         </div>
     </div>
 </div>
+<ng-template #detailsOffcanvas let-offcanvas>
+  <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <h5 class="offcanvas-title"><strong>Element Details</strong></h5>
+    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+      aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body p-3">
+    <div *ngIf="selectedItem" class="container-fluid">
+        <div class="row">
+         <div class="col-md-4 text-center">
+        <div class="border d-flex align-items-center justify-content-center" style="height: 250px; overflow: hidden;">
+          <img *ngIf="selectedItem?.elementUrl; else noImage"
+               [src]="selectedItem.elementUrl"
+               class="img-fluid rounded"
+               alt="Project Image"
+               style="max-height: 100%; max-width: 100%; object-fit: contain;">
+          <ng-template #noImage>
+            <p class="text-muted">No Preview Image to show</p>
+          </ng-template>
+        </div>
+      </div>
+        <div class="col-md-8">
+            <div class="row mb-2">
+                <div class="col-6"><strong>Name:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[0] }}</div>
+                <div class="col-6"><strong>Carcass Material:</strong><br>{{
+                    selectedItem.elementNameAndDescription.split('\n')[1] }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Carcass Finish:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[2]
+                    }}</div>
+                <div class="col-6"><strong>Shutter Material:</strong><br>{{
+                    selectedItem.elementNameAndDescription.split('\n')[3] }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Shutter Finish:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[4]
+                    }}</div>
+                <div class="col-6"><strong>Code & Category:</strong><br>{{ selectedItem.codeAndCategory }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Order Status:</strong><br>{{ selectedItem.orderStatus }}</div>
+                <div class="col-6"><strong>Item Type:</strong><br>{{ selectedItem.itemType }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Source:</strong><br>{{ selectedItem.source }}</div>
+                <div class="col-6"><strong>Status:</strong><br>{{ selectedItem.status }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Length:</strong><br>{{ selectedItem.length }}</div>
+                <div class="col-6"><strong>Breadth:</strong><br>{{ selectedItem.breadth }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Height:</strong><br>{{ selectedItem.height }}</div>
+                <div class="col-6"><strong>Quantity:</strong><br>{{ selectedItem.quantity }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>UOM:</strong><br>{{ selectedItem.uom }}</div>
+                <div class="col-6"><strong>Client Rate:</strong><br>{{ selectedItem.clientRate }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Final Amount:</strong><br>{{ selectedItem.finalAmount }}</div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+   </div>
+
+
+</ng-template>

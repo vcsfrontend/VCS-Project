@@ -81,3 +81,18 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   border-right: 0.4em solid transparent;
   border-left: 0.4em solid transparent;
 }
+
+
+.mat-table1 {
+  max-height: 600px; 
+  overflow: auto;
+  display: block;
+}
+.mat-table1 th, 
+.mat-table1 td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+}
+
