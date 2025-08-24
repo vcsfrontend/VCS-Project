@@ -40,8 +40,8 @@ export class QuotationComponent {
     userType: any = this.userData ? this.userData.type : ''; campaignName :any;selectedItem: any;
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild(MatSort) sort!: MatSort;
-
+    @ViewChild(MatSort) sort!: MatSort; 
+    tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null;  designId : any; 
     boqList: any;
     categories = [
@@ -385,17 +385,19 @@ export class QuotationComponent {
             wardrobeRequired: true,
             kbRequired: true
         };
-        console.log(payload);
         this.switchService.fetchBoqData(payload).subscribe({
             next: (res) => {
-                const kitchenData = res?.boqData?.KITCHEN || [];
-                this.dataSource.data = kitchenData.map((item: any, index: number) => ({
-                    slNo: index + 1,
-                    ...item
-                }));
-                if (this.paginator) {
-                    this.dataSource.paginator = this.paginator;
-                }
+                const boqData = res?.boqData || {};
+                this.tabKeys = Object.keys(boqData);
+                this.tabKeys.forEach((key) => {
+                    const items = boqData[key] || [];
+                    this.boqDataSources[key] = new MatTableDataSource(
+                        items.map((item: any, index: number) => ({
+                            slNo: index + 1,
+                            ...item
+                        }))
+                    );
+                });
             },
             error: () => {
                 this.toastr.error('Something went wrong!');
