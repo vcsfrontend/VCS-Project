@@ -1,0 +1,98 @@
+.whatsapp{
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+.mmt{
+    margin-top: -30px;
+}
+.vertical-line{
+    border-left: 1px solid #717171;
+  height: 50px; 
+  margin: 0 20px;
+}
+
+table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky !important;
+  z-index: 2 !important;
+  top: 0px;
+  background-color: #006699 !important;
+  color: white !important;
+  border-right: none;
+}
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+}
+
+.mat-column-elementNameDescription {
+  width: 70% !important;   
+  max-width: 70% !important;
+  min-width: 70% !important;
+}
+
+.filter-field-1 {
+  margin-top: -5px !important;
+  margin-bottom: -45px !important;
+  width: 45%; 
+  max-height: 72px !important;
+  margin-left: 0% !important;
+}
+
+.btn-group .dropdown-menu.show {
+  z-index: 3000 !important;
+}
+// :host ::ng-deep .dropdown-menu.show {
+//   z-index: 3000 !important;
+// }
+
+.custom-btn::after {
+  display: none !important;
+}
+
+.custom-btn {
+  color: inherit;
+  border: 1px solid transparent;
+  background-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.custom-btn:hover,
+.custom-btn:focus {
+  color: #000000;
+  border: 1px solid hsl(0, 0%, 0%);
+  background-color: transparent;
+}
+
+.custom-btn:hover::after,
+.custom-btn:focus::after {
+  display: inline-block !important;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  content: "";
+  border-top: 0.4em solid;              
+  border-right: 0.4em solid transparent;
+  border-left: 0.4em solid transparent;
+}
+
+
+.mat-table1 {
+  max-height: 600px; 
+  overflow: auto;
+  display: block;
+}
+.mat-table1 th, 
+.mat-table1 td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+}
+

@@ -1,1 +1,408 @@
-<p>boq works!</p>
+<div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
+    <h1 class="page-title fw-medium fs-18 mb-2">BOQ</h1>
+    <nav>
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">BOQ</li>
+        </ol>
+    </nav>
+</div>
+<div class="col-xxl-12 col-xl-6">
+    <div class="card custom-card">
+        <div class="card-body">
+            <ul ngbNav #nav13="ngbNav" [activeId]="1" class="nav nav-tabs justify-content-center tab-style-3 bg-light p-5"
+                id="myTab2" role="tablist">
+                <li [ngbNavItem]="1" class="nav-item me-0" role="presentation">
+                    <button ngbNavLink class="nav-link  home py-1" id="home-tab" data-bs-toggle="tab"
+                        data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                        aria-selected="true">Recce</button>
+                    <ng-template ngbNavContent>
+                        <p>Many desktop publishing packages as their default model text, and a search for 'lorem ipsum' will over the years.</p>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2" class="nav-item me-0" role="presentation">
+                    <button ngbNavLink class="nav-link about py-1" id="profile-tab" data-bs-toggle="tab"
+                        data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                        aria-selected="false">Design</button>
+                    <ng-template ngbNavContent>
+                        <div class="p-3 border br-7 text-muted" id="profile-tab-pane" role="tabpanel"
+                            aria-labelledby="profile-tab" tabindex="0">Many desktop
+                            publishing packages as their default model text, and a search for <b>'lorem ipsum'</b> will
+                            over the
+                            years.</div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="3" class="nav-item me-0" role="presentation">
+                    <button ngbNavLink class="nav-link services py-1" id="contact-tab" data-bs-toggle="tab"
+                        data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane"
+                        aria-selected="false">BOQ</button>
+                    <ng-template ngbNavContent>
+                        <div class="" id="contact-tab-pane" role="tabpanel"
+                            aria-labelledby="contact-tab" tabindex="0">
+                            <div class="row">
+                                <nav ngbNav #nav2="ngbNav" [activeId]="2" class="nav nav-style-1 nav-pills bg-light p-2" role="tablist">
+                                    <ng-container [ngbNavItem]="1">
+                                        <a ngbNavLink class="nav-link">Proposal For Client</a>
+                                        <ng-template ngbNavContent>
+                                            <div class="col-xl-12 mt-2">
+                                                <div class="card custom-card bg-light">
+                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                        <h5 class="mb-0">Proposal For Client</h5>
+                                                        <button type="button" class="btn btn-primary">Add New</button>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <div class="table-container mat-elevation-z8">
+                                                            <table mat-table [dataSource]="prposaldataSource" matSort class="mat-table w-100">
+                                                                <ng-container matColumnDef="slNo">
+                                                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                                                    <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="ReferenceNo">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference No </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.ReferenceNo }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="ProposalRequestType">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal Request Type </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.ProposalRequestType }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="ProposalFor">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal For </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.ProposalFor }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="CreatedBy">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.CreatedBy }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="CreatedDate">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.CreatedDate }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="Status">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.Status }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="amount">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{ element.amount }} </td>
+                                                                </ng-container>
+                                                                <tr mat-header-row *matHeaderRowDef="displayedClientProposal"></tr>
+                                                                <tr mat-row *matRowDef="let row; columns: displayedClientProposal;"></tr>
+                                                            </table>
+                                                        </div>
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </ng-container>
+                                    <ng-container [ngbNavItem]="2">
+                                        <a ngbNavLink class="nav-link " data-bs-toggle="tab" role="tab" aria-selected="true">Client Orders
+                                            <span class="badge bg-secondary ms-1 rounded-pill">32</span></a>
+                                        <ng-template class="tab-content " ngbNavContent>
+                                            <div class=" show active text-muted" id="nav-cart" role="tabpanel">
+                                                How hotel deals can help you live a better life. <b>How celebrity cruises</b>
+                                                aren't as bad as you think. How cultural solutions can help you predict the
+                                                future. How to cheat at dog friendly hotels and get away with it. 17 problems
+                                                with summer activities. How to cheat at travel agents and get away with it. How
+                                                not knowing family trip ideas makes you a rookie. What everyone is saying about
+                                                daily deals. How twitter can teach you about carnival cruises. How to start
+                                                using cultural solutions.
+                                            </div>
+                                        </ng-template>
+                                    </ng-container>
+                                    <ng-container [ngbNavItem]="3">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-selected="false">Client Invoices
+                                            <span class="badge bg-success ms-1 rounded-pill">4</span></a>
+                                        <ng-template class="tab-content" ngbNavContent>
+                                            <div class=" text-muted" id="nav-orders" role="tabpanel">
+                                                Unbelievable healthy snack success stories. 12 facts about safe food handling
+                                                tips that will impress your friends. Restaurant weeks by the numbers. Will
+                                                mexican food ever rule the world? The 10 best thai restaurant youtube videos.
+                                                How restaurant weeks can make you sick. The complete beginner's guide to cooking
+                                                healthy food. Unbelievable food stamp success stories. How whole foods markets
+                                                are making the world a better place. 16 things that won't happen in dish
+                                                reviews.
+                                            </div>
+                            
+                                        </ng-template>
+                                    </ng-container>
+                                    <ng-container ngbNavItem="4">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-selected="false">Payments From
+                                            Client</a>
+                                        <ng-template class="tab-content" ngbNavContent>
+                                            <div class=" text-muted" id="nav-offers" role="tabpanel">
+                                                Why delicious magazines are killing you. Why our world would end if restaurants
+                                                disappeared. Why restaurants are on crack about restaurants. How restaurants are
+                                                making the world a better place. 8 great articles about minute meals. Why our
+                                                world would end if healthy snacks disappeared. Why the world would end without
+                                                mexican food. The evolution of chef uniforms. How not knowing food processors
+                                                makes you a rookie. Why whole foods markets beat peanut butter on pancakes.
+                                            </div>
+                            
+                                        </ng-template>
+                                    </ng-container>
+                                    <ng-container ngbNavItem="5">
+                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-selected="false">My Scope</a>
+                                        <ng-template class="tab-content" ngbNavContent>
+                                            <div class="row">
+                                                <div class="col-xl-12">
+                                                    <div class="card custom-card">
+                                                        <div class="card-body">
+                                                            <nav ngbNav #nav2="ngbNav" [activeId]="1" class="nav nav-style-1 nav-pills mb-3" role="tablist">
+                                                
+                                                                <ng-container *ngFor="let key of tabKeys; let i = index">
+                                                                    <ng-container [ngbNavItem]="i+1">
+                                                                        <a ngbNavLink class="nav-link">{{ key | titlecase }}</a>
+                                                                        <ng-template ngbNavContent>
+                                                                            <div class="col-xl-12 mt-2">
+                                                                                <div class="card custom-card bg-light">
+                                                                                    <div
+                                                                                        class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                                                        <h5 class="mb-0">Proposal For Client ({{ key | titlecase }})</h5>
+                                                                                        <button type="button" class="btn btn-primary">Add New</button>
+                                                                                    </div>
+                                                                                    <div class="card-body p-0">
+                                                                                        <div class="table-container mat-elevation-z8">
+                                                                                            <table mat-table [dataSource]="boqDataSources[key]" matSort
+                                                                                                class="mat-table1 w-100">
+                                                
+                                                                                                <!-- S.No -->
+                                                                                                <ng-container matColumnDef="slNo">
+                                                                                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                                                                                    <td mat-cell *matCellDef="let element; let i = index">{{ i+1 }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Item -->
+                                                                                                 <ng-container matColumnDef="elementUrl">
+                                                                                                    <th mat-header-cell *matHeaderCellDef class="description-cell"> Item </th>
+                                                                                                    <td mat-cell *matCellDef="let element"
+                                                                                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 750px; display: inline-block;">
+                                                                                                        <div class="d-flex align-items-start"
+                                                                                                            (click)="openDetails(detailsOffcanvas, element)"
+                                                                                                            style="cursor: pointer;">
+                                                                                                            <span class="avatar avatar-xl me-3">
+                                                                                                                <img [src]="element.elementUrl" class="img-thumbnail rounded"
+                                                                                                                    alt="Project Image" width="60" height="60">
+                                                                                                            </span>
+                                                                                                            <div>
+                                                                                                                <span class="fw-medium d-block">
+                                                                                                                    {{
+                                                                                                                    element.elementNameAndDescription.split('\n')[0].length > 30
+                                                                                                                    ? (element.elementNameAndDescription.split('\n')[0] |
+                                                                                                                    slice:0:30) + '...'
+                                                                                                                    : element.elementNameAndDescription.split('\n')[0]
+                                                                                                                    }}
+                                                                                                                </span>
+                                                                                                                <div class="text-muted small">
+                                                                                                                    {{ element.elementNameAndDescription.split('\n')[1] }}
+                                                                                                                </div>
+                                                                                                            </div>
+                                                            
+                                                                                                        </div>
+                                                                                                    </td>
+                                                                                                </ng-container>
+                                                                                                <!-- Code & Category -->
+                                                                                                <ng-container matColumnDef="codeAndCategory">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Code &
+                                                                                                        Category </th>
+                                                                                                    <td mat-cell *matCellDef="let element">
+                                                                                                        {{ element.codeAndCategory }}
+                                                                                                    </td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Order Status -->
+                                                                                                <ng-container matColumnDef="orderStatus">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status
+                                                                                                    </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.orderStatus }}
+                                                                                                    </td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Item Type -->
+                                                                                                <ng-container matColumnDef="itemType">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Type
+                                                                                                    </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.itemType }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Source -->
+                                                                                                <ng-container matColumnDef="source">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Source </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.source }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Status -->
+                                                                                                <ng-container matColumnDef="status">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Length -->
+                                                                                                <ng-container matColumnDef="length">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Length </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.length }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Breadth -->
+                                                                                                <ng-container matColumnDef="breadth">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Breadth </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.breadth }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Height -->
+                                                                                                <ng-container matColumnDef="height">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Height </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.height }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Quantity -->
+                                                                                                <ng-container matColumnDef="quantity">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity
+                                                                                                    </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- UOM -->
+                                                                                                <ng-container matColumnDef="uom">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> UOM </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.uom }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Draft Quantity -->
+                                                                                                <ng-container matColumnDef="draftQuantity">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft
+                                                                                                        Quantity </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.draftQuantity }}
+                                                                                                    </td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Client Rate -->
+                                                                                                <ng-container matColumnDef="clientRate">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Rate
+                                                                                                        (₹) </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.clientRate }}</td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Final Amount -->
+                                                                                                <ng-container matColumnDef="finalAmount">
+                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Final Amount
+                                                                                                        (₹) </th>
+                                                                                                    <td mat-cell *matCellDef="let element">{{ element.finalAmount }}
+                                                                                                    </td>
+                                                                                                </ng-container>
+                                                
+                                                                                                <!-- Table Rows -->
+                                                                                                <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true">
+                                                                                                </tr>
+                                                                                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                        <mat-paginator [pageSizeOptions]="[10,20,30]"
+                                                                                            showFirstLastButtons></mat-paginator>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ng-template>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                
+                                                            </nav>
+                                                
+                                                            <div [ngbNavOutlet]="nav2" class="mt-2"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </ng-template>
+                                    </ng-container>
+                                </nav>
+                                <div [ngbNavOutlet]="nav2" class=""></div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent1">
+                <div [ngbNavOutlet]="nav13" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #detailsOffcanvas let-offcanvas>
+  <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <h5 class="offcanvas-title"><strong>Element Details</strong></h5>
+    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+      aria-label="Close"></button>
+  </div>
+
+  <div class="offcanvas-body p-3">
+    <div *ngIf="selectedItem" class="container-fluid">
+        <div class="row">
+         <div class="col-md-4 text-center">
+        <div class="border d-flex align-items-center justify-content-center" style="height: 250px; overflow: hidden;">
+          <img *ngIf="selectedItem?.elementUrl; else noImage"
+               [src]="selectedItem.elementUrl"
+               class="img-fluid rounded"
+               alt="Project Image"
+               style="max-height: 100%; max-width: 100%; object-fit: contain;">
+          <ng-template #noImage>
+            <p class="text-muted">No Preview Image to show</p>
+          </ng-template>
+        </div>
+      </div>
+        <div class="col-md-8">
+            <div class="row mb-2">
+                <div class="col-6"><strong>Name:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[0] }}</div>
+                <div class="col-6"><strong>Carcass Material:</strong><br>{{
+                    selectedItem.elementNameAndDescription.split('\n')[1] }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Carcass Finish:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[2]
+                    }}</div>
+                <div class="col-6"><strong>Shutter Material:</strong><br>{{
+                    selectedItem.elementNameAndDescription.split('\n')[3] }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Shutter Finish:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[4]
+                    }}</div>
+                <div class="col-6"><strong>Code & Category:</strong><br>{{ selectedItem.codeAndCategory }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Order Status:</strong><br>{{ selectedItem.orderStatus }}</div>
+                <div class="col-6"><strong>Item Type:</strong><br>{{ selectedItem.itemType }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Source:</strong><br>{{ selectedItem.source }}</div>
+                <div class="col-6"><strong>Status:</strong><br>{{ selectedItem.status }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Length:</strong><br>{{ selectedItem.length }}</div>
+                <div class="col-6"><strong>Breadth:</strong><br>{{ selectedItem.breadth }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Height:</strong><br>{{ selectedItem.height }}</div>
+                <div class="col-6"><strong>Quantity:</strong><br>{{ selectedItem.quantity }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>UOM:</strong><br>{{ selectedItem.uom }}</div>
+                <div class="col-6"><strong>Client Rate:</strong><br>{{ selectedItem.clientRate }}</div>
+            </div>
+        
+            <div class="row mb-2">
+                <div class="col-6"><strong>Final Amount:</strong><br>{{ selectedItem.finalAmount }}</div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+   </div>
+
+</ng-template>
