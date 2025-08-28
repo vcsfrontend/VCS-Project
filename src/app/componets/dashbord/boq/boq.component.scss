@@ -14,9 +14,9 @@
 
 table.mat-mdc-table .mdc-data-table__header-cell {
   position: sticky !important;
-  z-index: 2 !important;
-  top: 0px;
-  background-color: #006699 !important;
+  top: 0;
+  z-index: 12 !important; 
+  background-color: #006699 !important; 
   color: white !important;
   border-right: none;
 }
@@ -32,11 +32,16 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   max-width: 200px; 
 }
 
-.mat-column-elementNameDescription {
-  width: 70% !important;   
-  max-width: 70% !important;
-  min-width: 70% !important;
+.mdc-checkbox__background {
+  width: 11px !important;
+  height: 11px !important;
 }
+
+// .mat-column-elementNameDescription {
+//   width: 70% !important;   
+//   max-width: 70% !important;
+//   min-width: 70% !important;
+// }
 
 .filter-field-1 {
   margin-top: -5px !important;
@@ -62,6 +67,7 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   border: 1px solid transparent;
   background-color: transparent;
   transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .custom-btn:hover,
@@ -83,16 +89,100 @@ table.mat-mdc-table .mdc-data-table__header-cell {
 }
 
 
-.mat-table1 {
-  max-height: 600px; 
-  overflow: auto;
-  display: block;
+.img-thumbnail {
+    border-radius: 9px;
+    max-width: 70px;
+    max-height: 55px;
 }
-.mat-table1 th, 
+ul.dropdown-menu.cuw{
+  min-width: 250px;
+  min-height: 250px;
+}
+
+.sticky-col-left {
+  position: sticky !important;
+  left: 0;
+  z-index: 10; 
+}
+
+.sticky-col-right {
+  position: sticky !important;
+  right: 0;
+  z-index: 11;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.cuu{
+  min-width: 250px;
+  min-height: 250px;
+  z-index: 30;
+}
+
+.dropdown-item{
+  cursor: pointer;
+}
+
+.dropdown-item:active {
+  background-color: #006699 !important;
+  color: #fff !important;
+}
+
+.dropdown-item:hover {
+  background-color: #006699 !important;
+  color: #fff !important;
+}
+
+ul.dropdown-menu.cuw.show ~ .table-container {
+  overflow: hidden !important;
+}
+
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #fff;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
+}
+
+
+.mat-table1 {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mat-table1 th,
 .mat-table1 td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px; 
+  max-width: 200px;
+}
+
+.offcanvas.custom-offcanvas {
+  --bs-offcanvas-width: 1300px; 
+}
+.offcanvas.custom-offcanvas.show:not(.hiding),
+.offcanvas.custom-offcanvas.showing {
+  transform: none !important;
+  min-width: 1300px !important;
 }
 

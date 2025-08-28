@@ -544,4 +544,91 @@ export class BaseComponent {
     // SkinFinish = [{"name" : "test"},
     // ]
 
+  codeAndCategory = [
+    { name: "Acoustic", code: "AT" },
+    { name: "BMS", code: "BM", },
+    { name: "Branding", code: "BR", },
+    { name: "Carpentry", code: "CR", },
+    { name: "CCTV&IT", code: "IT", },
+    { name: "Civil", code: "CL", },
+    { name: "Cladding", code: "CD", },
+    { name: "Design Service", code: "DS", },
+    { name: "Dismantling", code: "DG", },
+    { name: "Doors", code: "DR", },
+    { name: "Electrical", code: "EL", },
+    { name: "Excavation", code: "EX", },
+    { name: "External Development", code: "ED", },
+    { name: "False Ceiling", code: "FC", },
+    { name: "Fire Alarm System", code: "FA", },
+    { name: "Fire Fighting", code: "FF", },
+    { name: "Flooring", code: "Fl", },
+    { name: "Furniture", code: "FR", },
+    { name: "Glass Works", code: "GL", },
+    { name: "Housekeeping", code: "HK", },
+    { name: "HVAC", code: "AC", },
+    { name: "Interior", code: "IR", },
+    { name: "Landscaping", code: "LD", },
+    { name: "Lighting Fixtures", code: "LF", },
+    { name: "Masonry", code: "MS", },
+    { name: "MEP", code: "ME", },
+    { name: "Metal Fabrication", code: "MF", },
+    { name: "Miscellaneous", code: "MI", },
+    { name: "Networking", code: "NW", },
+    { name: "Non-Tender", code: "NT", },
+    { name: "PA System", code: "SY", },
+    { name: "Painting", code: "PT", },
+    { name: "Panelling Work", code: "PW", },
+    { name: "Partition", code: "PN", },
+    { name: "Pest Control", code: "PO", },
+    { name: "Plumbing", code: "PO", },
+    { name: "PoP", code: "PP", },
+    { name: "Recce Service", code: "RS", },
+    { name: "Signage", code: "SG", },
+    { name: "Tile", code: "TE", },
+    { name: "Wall Finish", code: "WF", },
+  ];
+
+  orderStatus = [
+    { "name": "Yet to Order"},
+    { "name": "Ordered"},
+    { "name": "Order Created"},
+  ];
+
+  itemType = [
+    { "name": "Labour"},
+    { "name": "Raw Material"},
+    { "name": "TransPortation"},
+    { "name": "Consulting"},
+    { "name": "Bought Out"},
+    { "name": "Production"},
+    { "name": "Site Work"},
+  ];
+
+  boqStatus = [
+    { "name": "Draft"},
+    { "name": "Confirmed"},
+    { "name": "Cancelled"},
+    { "name": "Requested"},
+    { "name": "Change Requested"},
+    { "name": "Cancellation Requested"},
+  ];
+
+  UOM = [
+    { "name": "SQFT"},
+    { "name": "Lumpsum"},
+    { "name": "Nos"},
+    { "name": "RFT"},
+  ];
+
+  GST = [
+    { "name": "1%"},
+    { "name": "2%"},
+    { "name": "3%"},
+    { "name": "4%"},
+    { "name": "5%"},
+    { "name": "6%"},
+    { "name": "7%"},
+  ];
+
+
 }
