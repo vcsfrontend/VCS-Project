@@ -31,9 +31,14 @@ import { BaseComponent } from '../../../shared/base/base.component';
 export class BoqComponent extends BaseComponent {
     displayedColumns: string[] = ['slNo', 'elementUrl', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'finalAmount'];
     displayedClientProposal: string[] = ['slNo', 'ReferenceNo', 'ProposalRequestType', 'ProposalFor', 'CreatedBy', 'CreatedDate', 'Status', 'amount'];
+    displayedClientOrder: string[] = ['slNo','orderNo','ordertType', 'orderFrom','issuedBy','issueDate','dueDate', 'orderStatus','poStatus','progress','amount'];
+    displayedClientInvoices: string[] = ['slNo','invoiceNo','invoiceType','orderNo','orderAmount','invoiceDate','uploadedBy','status','invoiceAmount','creditNoteAmount'];
+    displayedClientCredit: string[] = [ 'slNo', 'creditnoteNo', 'refInvoiceNo', 'createdBy', 'orderAmount','attachments', 'verificationStatus', 'status', 'remark', 'amount'];
+    poNumbers: string[] = ['PO-001', 'PO-002', 'PO-003'];
+    footerColumns: string[] = ['totals'];
     libraryData: string[] = ['slNo', 'libraryName', 'typeofLibrary', 'createdBy', 'lastUpdated', 'sections', 'elements'];
     detailsColumns: string[] = ['sectionName', 'books'];
-
+     invoiceForm! :FormGroup;
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
     userEmail: string = this.userData ? this.userData.email : '';
@@ -41,6 +46,7 @@ export class BoqComponent extends BaseComponent {
     userCompanyCode: string = this.userData ? this.userData.companyCode : '';
     userCompanyName: string = this.userData ? this.userData.companyName : '';
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
+    innerActive = 1;
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -127,6 +133,53 @@ export class BoqComponent extends BaseComponent {
             elements: 10000
         }
     ]);
+     clientOrdersDataSource = new MatTableDataSource<any>([
+    {
+        slNo: 1,
+        orderNo: 'AD0001',
+        ordertType: 'Regular',
+        orderFrom: 'Sunil',
+        issuedBy: 'N. Bhavani Shankar',
+        issueDate: '17 Nov 2024',
+        dueDate: '25 Nov 2024',
+        orderStatus: 'confirmed',
+        poStatus: 'pending',
+        progress: '1%',
+        amount:120000,
+        
+       
+    },
+    {
+        slNo: 2,
+        orderNo: 'AD0002',
+        ordertType: 'Proposal For Repeat Order',
+        orderFrom: 'Ravi',
+        issuedBy: 'N. Bhavani Shankar',
+        issueDate: '18 Nov 2024',
+        dueDate: '27 Nov 2024',
+        orderStatus: 'Pending',
+        poStatus: 'Not Generated',
+        progress: '10%',
+        amount: 30000,
+        }
+    ]);
+    clientInvoicesDataSource = new MatTableDataSource<any>([
+        {
+        invoiceNo: 'INV-001',
+        invoiceType: 'Tax Invoice',
+        orderNo: 'ORD-101',
+        orderAmount: 5000,
+        invoiceDate: new Date(),
+        uploadedBy: 'Admin',
+        status: 'Approved',
+        invoiceAmount: 5500,
+        creditNoteAmount: 200
+        },
+
+    ]);
+    clientCreditDataSource = new MatTableDataSource<any>([
+        
+    ])
 
     modal: any;
     selectedLibrary: any;
@@ -139,6 +192,9 @@ export class BoqComponent extends BaseComponent {
 
     open(content: any) {
         this.modalService.open(content, { centered: true });
+    }
+    openRights(content: any) {
+    this.offcanvasService.open(content, { position: 'end' });
     }
 
     openDetails(content: any, element: any) {
@@ -274,6 +330,19 @@ export class BoqComponent extends BaseComponent {
 
     backToLibrary() {
         this.selectedLibrary = null; 
+    }
+    get totalWithoutGST() {
+    return this.clientOrdersDataSource.data
+        .map(t => t.amount)
+        .reduce((acc, val) => acc + val, 0);
+    }
+
+    get totalGST() {
+    return 0; // change if needed
+    }
+
+    get totalAmount() {
+    return this.totalWithoutGST + this.totalGST;
     }
 
 
