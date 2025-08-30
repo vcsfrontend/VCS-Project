@@ -32,13 +32,14 @@ interface Plan {
     imports: [SharedModule, NgSelectModule, NgbModule,
         NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule,
         NgApexchartsModule, MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,
-    NgbOffcanvasModule],
+        NgbOffcanvasModule],
     providers: [NgbModalConfig, NgbModal, FlatpickrDefaults,],
     templateUrl: './boq.component.html',
     styleUrl: './boq.component.scss'
 })
 export class BoqComponent extends BaseComponent {
-    displayedColumns: string[] = ['select', 'slNo', 'elementUrl', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'finalAmount'];
+    displayedColumns: string[] = ['select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
+    // optionalColumns: string[] = ['brandOrMake', 'discount', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gst', 'amountWithoutGST'];
     displayedClientProposal: string[] = ['slNo', 'ReferenceNo', 'ProposalRequestType', 'ProposalFor', 'CreatedBy', 'CreatedDate', 'Status', 'amount'];
     displayedClientOrder: string[] = ['slNo', 'orderNo', 'ordertType', 'orderFrom', 'issuedBy', 'issueDate', 'dueDate', 'orderStatus', 'poStatus', 'progress', 'amount'];
     displayedClientInvoices: string[] = ['slNo', 'invoiceNo', 'invoiceType', 'orderNo', 'orderAmount', 'invoiceDate', 'uploadedBy', 'status', 'invoiceAmount', 'creditNoteAmount'];
@@ -58,16 +59,18 @@ export class BoqComponent extends BaseComponent {
     innerActive = 1;
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
+    // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
-    boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup;
+    boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
-    newItem: string = ''; isEditMode = false; selectedLibrary: any; modal:any;
+    newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any;
 
 
     public elementFormSubmitted = false;
+    public proposalFormSubmitted = false;
 
     boqStaticFields = [
         { name: 'Branding', checked: false, isDefault: true, },
@@ -197,7 +200,7 @@ export class BoqComponent extends BaseComponent {
     clientCreditDataSource = new MatTableDataSource<any>([
 
     ])
-    
+
     constructor(
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
@@ -214,10 +217,21 @@ export class BoqComponent extends BaseComponent {
     openRights2(content3: any) {
         this.offcanvasService.open(content3, { position: 'end' });
     }
+    openRights4(content4: any) {
+        this.modalService.open(content4, { centered: true, size: 'lg' });
+    }
 
     openDetails(content: any, element: any) {
         this.selectedItem = element;
         this.offcanvasService.open(content, { position: 'end', backdrop: true, });
+    }
+
+    onSubmit() {
+        if (this.isEditMode) {
+            this.editElement();
+        } else {
+            this.elementSubmit();
+        }
     }
 
     openEditFromSelected(content: any) {
@@ -232,26 +246,29 @@ export class BoqComponent extends BaseComponent {
         this.openEditForm(element, content);
     }
 
-    openEditForm(element: any, content: any) {
-        this.elementForm.patchValue({
-            elementName: element.elementNameAndDescription?.split('\n')[0] || '',
-            elementDescription: element.elementNameAndDescription?.split('\n')[1] || '',
-            brandOrMake: element.brandOrMake,
-            length: element.length,
-            breadth: element.breadth,
-            height: element.height,
-            codeAndCategory: element.codeAndCategory,
-            uom: element.uom,
-            quantity: element.quantity,
-            itemType: element.itemType,
-            clientRate: element.clientRate,
-            budgetRate: element.budgetRate,
-            hsn: element.hsn,
-            gstPrecent: element.gstPrecent,
-            // elementUrl: element.elementUrl
-        });
+
+
+    openCreateForm(content: any) {
+        this.isEditMode = false; // 👈
+        this.elementForm.reset();
         this.offcanvasService.open(content, { position: 'end', scroll: true });
     }
+
+
+    openEditForm(element: any, content: any) {
+  this.isEditMode = true;
+  this.elementForm.patchValue({
+    elementUrl: element.elementUrl,
+    elementName: element.elementName,
+    elementDescription: element.elementDescription,
+    codeAndCategory: element.codeAndCategory,
+    orderStatus: element.orderStatus,
+    // ...
+  });
+  this.offcanvasService.open(content, { position: 'end', scroll: true });
+}
+
+
 
     resetForm() {
         this.elementForm.reset();
@@ -303,9 +320,19 @@ export class BoqComponent extends BaseComponent {
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType
+        });
+        this.proposalForm = this.fb.group({
+            executionStartDate: [''],
+            executionEndDate: [''],
+            shippingAddress: [''],
+            recipientsEmail: [''],
+            subject: [''],
+            customMessage: [''],
         }
         );
     }
+
+
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -371,50 +398,71 @@ export class BoqComponent extends BaseComponent {
     }
 
     elementSubmit() {
-        const formValue = { ...this.elementForm.value };
-        delete formValue.elementName;
-        delete formValue.elementDescription;
+  const formValue = { ...this.elementForm.value };
+
+  // Remove raw name/description from payload
+  delete formValue.elementName;
+  delete formValue.elementDescription;
+
+  const payload = {
+    ...formValue,
+    elementNameAndDescription: `${this.elementForm.value.elementName || ''}`
+      + `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}`
+      + `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`, // 👈 embed brand
+    budgetRate: Number(this.elementForm.value.budgetRate),
+    clientRate: Number(this.elementForm.value.clientRate),
+    gstPrecent: Number(this.elementForm.value.gstPrecent),
+    hsn: Number(this.elementForm.value.hsn),
+    breadth: Number(this.elementForm.value.breadth),
+    height: Number(this.elementForm.value.height),
+    length: Number(this.elementForm.value.length),
+    quantity: Number(this.elementForm.value.quantity),
+    codeAndCategory: formValue.codeAndCategory?.name,
+    brandOrMake: this.elementForm.value.brandOrMake || ''  // 👈 also send directly
+  };
+
+  console.log('Final Payload save api:', payload);
+
+  this.switchService.saveElementData(payload).subscribe({
+    next: (res: any) => {
+      if (res?.status === true) {
+        this.toastr.success(res.message || 'Data Saved Successfully');
+        this.elementForm.reset();
+        this.elementFormSubmitted = false;
+      } else {
+        this.toastr.error(res?.message || 'Something went wrong.');
+      }
+    },
+    error: (err) => {
+      console.error('API Error:', err);
+      this.toastr.error('An error occurred while saving the element.');
+    },
+  });
+}
+
+
+    proposalFormSubmit(modal: any) {
+        const formValue = { ...this.proposalForm.value };
         const payload = {
             ...formValue,
-            elementNameAndDescription: `${this.elementForm.value.elementName}${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}`,
-            budgetRate: Number(this.elementForm.value.budgetRate),
-            clientRate: Number(this.elementForm.value.clientRate),
-            gstPrecent: Number(this.elementForm.value.gstPrecent),
-            hsn: Number(this.elementForm.value.hsn),
-            breadth: Number(this.elementForm.value.breadth),
-            height: Number(this.elementForm.value.height),
-            length: Number(this.elementForm.value.length),
-            quantity: Number(this.elementForm.value.quantity),
-            codeAndCategory: formValue.codeAndCategory?.name
         };
         console.log('Final Payload:', payload);
-        this.switchService.saveElementData(payload).subscribe({
-            next: (res: any) => {
-                if (res?.status === true) {
-                    this.toastr.success(res.message || 'Data Saved Successfully');
-                    this.elementForm.reset();
-                    this.elementFormSubmitted = false;
-                } else {
-                    this.toastr.error(res?.message || 'Something went wrong.');
-                }
-            },
-            error: (err) => {
-                console.error('API Error:', err);
-                this.toastr.error('An error occurred while sending mail.');
-            },
-        });
     }
 
-    elementEdit() {
+    editElement() {
         if (!this.selectedElement) {
             this.toastr.warning('No element selected for editing.');
             return;
         }
+
         const formValue = { ...this.elementForm.value };
+
         const payload = {
             boqId: this.selectedElement,
             elementUrl: formValue.elementUrl || '',
-            elementNameAndDescription: `${formValue.elementName || ''}${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}`,
+            elementNameAndDescription: `${formValue.elementName || ''}`
+                + `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}`
+                + `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`, // 👈 embed brand
             codeAndCategory: formValue.codeAndCategory?.name || '',
             orderStatus: formValue.orderStatus || '',
             itemType: formValue.itemType || '',
@@ -428,7 +476,7 @@ export class BoqComponent extends BaseComponent {
             draftQuantity: Number(formValue.draftQuantity) || 0,
             clientRate: Number(formValue.clientRate) || 0,
             finalAmount: Number(formValue.finalAmount) || 0,
-            brandOrMake: formValue.brandOrMake || '',
+            brandOrMake: formValue.brandOrMake || '',   // ✅ direct field
             discount: Number(formValue.discount) || 0,
             serviceCharge: Number(formValue.serviceCharge) || 0,
             baseAmount: Number(formValue.baseAmount) || 0,
@@ -443,23 +491,25 @@ export class BoqComponent extends BaseComponent {
             email: formValue.email || '',
             type: Number(formValue.type) || 0
         };
+
         console.log('Update Payload:', payload);
-        // this.switchService.updateElementData(payload).subscribe({
-        //     next: (res: any) => {
-        //         if (res?.status === true) {
-        //             this.toastr.success(res.message || 'Data Updated Successfully');
-        //             this.elementForm.reset();
-        //             this.elementFormSubmitted = false;
-        //             this.selectedElement = null; 
-        //         } else {
-        //             this.toastr.error(res?.message || 'Something went wrong.');
-        //         }
-        //     },
-        //     error: (err) => {
-        //         console.error('API Error:', err);
-        //         this.toastr.error('An error occurred while updating the element.');
-        //     },
-        // });
+
+        this.switchService.updateElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status === true) {
+                    this.toastr.success(res.message || 'Data Updated Successfully');
+                    this.elementForm.reset();
+                    this.elementFormSubmitted = false;
+                    this.selectedElement = null;
+                } else {
+                    this.toastr.error(res?.message || 'Something went wrong.');
+                }
+            },
+            error: (err) => {
+                console.error('API Error:', err);
+                this.toastr.error('An error occurred while updating the element.');
+            },
+        });
     }
 
     onLibraryClick(library: any) {
@@ -584,6 +634,14 @@ export class BoqComponent extends BaseComponent {
         dataSource._updateChangeSubscription();
     }
 
+    // toggleColumn(columnKey: string, event: any) {
+    //     if (event.target.checked) {
+    //         this.selectedColumns.add(columnKey);
+    //     } else {
+    //         this.selectedColumns.delete(columnKey);
+    //     }
+    //     this.displayedColumns = ['select', 'slNo', 'elementUrl', ...Array.from(this.selectedColumns)];
+    // }
 
 
 }
