@@ -30,125 +30,168 @@
         <li [ngbNavItem]="3" class="nav-item me-0" role="presentation">
             <button ngbNavLink class="nav-link services py-1" id="contact-tab" data-bs-toggle="tab"
                 data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane"
-                aria-selected="false">BOQ</button>
+                aria-selected="false" (click)="boqData()">BOQ</button>
             <ng-template ngbNavContent>
                 <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                    <nav ngbNav #nav2="ngbNav" [activeId]="2" class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom"
-                        role="tablist">
+                    <nav ngbNav #nav2="ngbNav" [activeId]="2"
+                        class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom" role="tablist">
                         <ng-container [ngbNavItem]="1">
                             <a ngbNavLink class="nav-link border-end border-dark">Proposal For Client</a>
                             <ng-template ngbNavContent>
                                 <div class="col-xl-12 mt-2">
                                     <div class="card custom-card bg-light">
-                                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                        <div
+                                            class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                             <h5 class="mb-0">Proposal For Client</h5>
-                                            <button type="button" class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle">
+                                            <button type="button"
+                                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle">
                                                 <i class="ri-edit-line"></i>
                                             </button>
                                         </div>
                                         <div class="card-body p-0">
                                             <div class="table-container mat-elevation-z8">
-                                                <table mat-table [dataSource]="prposaldataSource" matSort class="mat-table w-100">
+                                                <table mat-table [dataSource]="prposaldataSource" matSort
+                                                    class="mat-table w-100">
+
                                                     <ng-container matColumnDef="slNo">
                                                         <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                        <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+                                                        <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1
+                                                            }} </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="ReferenceNo">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reference No </th>
-                                                        <td mat-cell *matCellDef="let element"> {{ element.ReferenceNo }} </td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reference
+                                                            No </th>
+                                                        <td mat-cell *matCellDef="let element"> {{ element.ReferenceNo
+                                                            }} </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="ProposalRequestType">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal Request Type </th>
-                                                        <td mat-cell *matCellDef="let element"> {{element.ProposalRequestType }} </td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal
+                                                            Request Type </th>
+                                                        <td mat-cell *matCellDef="let element">
+                                                            {{element.ProposalRequestType }} </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="ProposalFor">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal For </th>
-                                                        <td mat-cell *matCellDef="let element"> {{ element.ProposalFor }} </td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal
+                                                            For </th>
+                                                        <td mat-cell *matCellDef="let element"> {{ element.ProposalFor
+                                                            }} </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="CreatedBy">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
-                                                        <td mat-cell *matCellDef="let element"> {{ element.CreatedBy }} </td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created
+                                                            By </th>
+                                                        <td mat-cell *matCellDef="let element"> {{ element.CreatedBy }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="CreatedDate">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
-                                                        <td mat-cell *matCellDef="let element"> {{ element.CreatedDate }} </td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created
+                                                            Date </th>
+                                                        <td mat-cell *matCellDef="let element"> {{ element.CreatedDate
+                                                            }} </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="Status">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                                                        <td mat-cell *matCellDef="let element"> {{ element.Status }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Status
+                                                        </th>
+                                                        <td mat-cell *matCellDef="let element"> {{ element.Status }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="amount">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount </th>
-                                                        <td mat-cell *matCellDef="let element"> {{ element.amount }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount
+                                                        </th>
+                                                        <td mat-cell *matCellDef="let element"> {{ element.amount }}
+                                                        </td>
                                                     </ng-container>
                                                     <tr mat-header-row *matHeaderRowDef="displayedClientProposal"></tr>
-                                                    <tr mat-row *matRowDef="let row; columns: displayedClientProposal;"></tr>
+                                                    <tr mat-row *matRowDef="let row; columns: displayedClientProposal;">
+                                                    </tr>
                                                 </table>
                                             </div>
-                                            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                                                showFirstLastButtons></mat-paginator>
                                         </div>
                                     </div>
                                 </div>
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="2">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab" aria-selected="true">Client Orders
+                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                                aria-selected="true">Client Orders
                                 <span class="badge bg-secondary ms-1 rounded-pill">32</span></a>
                             <ng-template class="tab-content bg-white" ngbNavContent>
                                 <div class="col-xl-12 mt-2 show active text-muted">
                                     <div class="card custom-card bg-light">
-                                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                        <div
+                                            class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                             <h5 class="mb-0">Client Orders</h5>
                                             <button type="button" class="btn btn-primary">Add New</button>
                                         </div>
                                         <div class="card-body p-0">
                                             <div class="table-container mat-elevation-z8">
-                                                <table mat-table [dataSource]="clientOrdersDataSource" matSort class="mat-table w-100">
+                                                <table mat-table [dataSource]="clientOrdersDataSource" matSort
+                                                    class="mat-table w-100">
                                                     <ng-container matColumnDef="slNo">
                                                         <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                        <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+                                                        <td mat-cell *matCellDef="let element; let i = index">{{ i + 1
+                                                            }}</td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="orderNo">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order No </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.orderNo }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order No
+                                                        </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.orderNo }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="ordertType">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Type </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.ordertType }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order
+                                                            Type </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.ordertType }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="orderFrom">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order From </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.orderFrom }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order
+                                                            From </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.orderFrom }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="issuedBy">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Issued By </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.issuedBy }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Issued By
+                                                        </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.issuedBy }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="issueDate">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Issue Date </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.issueDate | date }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Issue
+                                                            Date </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.issueDate |
+                                                            date }}</td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="dueDate">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.dueDate | date }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date
+                                                        </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.dueDate | date
+                                                            }}</td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="orderStatus">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.orderStatus }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order
+                                                            Status </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.orderStatus }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="poStatus">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> PO Status </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.poStatus }}</td>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> PO Status
+                                                        </th>
+                                                        <td mat-cell *matCellDef="let element">{{ element.poStatus }}
+                                                        </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="progress">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress(%) </th>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                            Progress(%) </th>
                                                         <td mat-cell *matCellDef="let element">
                                                             {{ element.progress }}
                                                             <!-- <mat-progress-bar mode="determinate" [value]="element.progress"></mat-progress-bar> -->
                                                         </td>
                                                     </ng-container>
                                                     <ng-container matColumnDef="amount">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> amount </th>
+                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> amount
+                                                        </th>
                                                         <td mat-cell *matCellDef="let element">
                                                             {{ element.amount }}
                                                             <!-- <mat-progress-bar mode="determinate" [value]="element.progress"></mat-progress-bar> -->
@@ -165,26 +208,30 @@
                                                         </td>
                                                     </ng-container>
                                                     <tr mat-header-row *matHeaderRowDef="displayedClientOrder"></tr>
-                                                    <tr mat-row *matRowDef="let row; columns: displayedClientOrder;"></tr>
+                                                    <tr mat-row *matRowDef="let row; columns: displayedClientOrder;">
+                                                    </tr>
                                                     <tr mat-footer-row *matFooterRowDef="footerColumns"></tr>
-                        
-                        
+
+
                                                 </table>
                                             </div>
-                        
-                                            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-                        
+
+                                            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                                                showFirstLastButtons></mat-paginator>
+
                                         </div>
                                     </div>
                                 </div>
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="3">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab" aria-selected="true">Client Invoices
+                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                                aria-selected="true">Client Invoices
                                 <span class="badge bg-secondary ms-1 rounded-pill">32</span></a>
                             <!-- Outer Tab Content -->
                             <ng-template class="tab-content bg-white" ngbNavContent>
-                                <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive" class="nav nav-pills m-3 show active text-muted">
+                                <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
+                                    class="nav nav-pills m-3 show active text-muted">
                                     <li [ngbNavItem]="1">
                                         <button ngbNavLink class="btn  btn-outline-primary">Invoices</button>
                                         <ng-template ngbNavContent>
@@ -229,88 +276,98 @@
                                             </div>
                                             <div class="col-xl-12 mt-2">
                                                 <div class="card custom-card bg-light">
-                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                    <div
+                                                        class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                         <h5 class="mb-0">Client Invoices</h5>
                                                         <button type="button" class="btn btn-primary">Add New</button>
                                                     </div>
-                        
+
                                                     <div class="card-body p-0">
                                                         <div class="table-container mat-elevation-z8">
-                                                            <table mat-table [dataSource]="clientInvoicesDataSource" matSort
-                                                                class="mat-table w-100">
-                        
+                                                            <table mat-table [dataSource]="clientInvoicesDataSource"
+                                                                matSort class="mat-table w-100">
+
                                                                 <!-- S.No -->
                                                                 <ng-container matColumnDef="slNo">
                                                                     <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                                    <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let element; let i = index">{{ i +
+                                                                        1 }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Invoice No -->
                                                                 <ng-container matColumnDef="invoiceNo">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice No </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceNo }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Invoice No </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceNo }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Invoice Type -->
                                                                 <ng-container matColumnDef="invoiceType">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Type </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceType }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Invoice Type </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceType }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Order No -->
                                                                 <ng-container matColumnDef="orderNo">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Order No </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.orderNo }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order No </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderNo }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Order Amount -->
                                                                 <ng-container matColumnDef="orderAmount">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Amount </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.orderAmount }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order Amount </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderAmount }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Invoice Date -->
                                                                 <ng-container matColumnDef="invoiceDate">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Date </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceDate | date }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Invoice Date </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceDate | date }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Uploaded By -->
                                                                 <ng-container matColumnDef="uploadedBy">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Uploaded By </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.uploadedBy }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Uploaded By </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.uploadedBy }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Status -->
                                                                 <ng-container matColumnDef="status">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Status </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.status }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Invoice Amount -->
                                                                 <ng-container matColumnDef="invoiceAmount">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Amount </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceAmount }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Invoice Amount </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceAmount }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Credit Note Amount -->
                                                                 <ng-container matColumnDef="creditNoteAmount">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Credit Note Amount
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Credit Note Amount
                                                                     </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.creditNoteAmount }}</td>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.creditNoteAmount }}</td>
                                                                 </ng-container>
-                        
-                                                                <!-- Header / Row -->
-                                                                <tr mat-header-row *matHeaderRowDef="displayedClientInvoices"></tr>
-                                                                <tr mat-row *matRowDef="let row; columns: displayedClientInvoices;"></tr>
-                        
+                                                                <tr mat-header-row
+                                                                    *matHeaderRowDef="displayedClientInvoices"></tr>
+                                                                <tr mat-row
+                                                                    *matRowDef="let row; columns: displayedClientInvoices;">
+                                                                </tr>
                                                             </table>
                                                         </div>
-                        
-                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                                                            showFirstLastButtons></mat-paginator>
                                                         <div class="text-start p-2">
-                                                            <button type="button" class="btn btn-link text-danger fw-bold"
-                                                                (click)="openRights(content12)" data-bs-target="#offcanvasRight"
+                                                            <button type="button"
+                                                                class="btn btn-link text-danger fw-bold"
+                                                                (click)="openRights(content12)"
+                                                                data-bs-target="#offcanvasRight"
                                                                 aria-controls="offcanvasRight">
                                                                 + Add New Invoice
                                                             </button>
@@ -320,93 +377,120 @@
                                             </div>
                                         </ng-template>
                                     </li>
-                        
+
                                     <li [ngbNavItem]="2">
                                         <button ngbNavLink class="btn btn-outline-secondary">Credit Note</button>
                                         <ng-template ngbNavContent>
                                             <div class="col-xl-12 mt-2">
                                                 <div class="card custom-card bg-light">
-                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                    <div
+                                                        class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                         <h5 class="mb-0">Credit Note</h5>
                                                         <button type="button" class="btn btn-primary">Add New</button>
                                                     </div>
                                                     <div class="card-body p-0">
                                                         <div class="table-container mat-elevation-z8">
-                                                            <table mat-table [dataSource]="clientCreditDataSource" matSort
-                                                                class="mat-table w-100">
-                        
+                                                            <table mat-table [dataSource]="clientCreditDataSource"
+                                                                matSort class="mat-table w-100">
+
                                                                 <!-- S.No -->
                                                                 <ng-container matColumnDef="slNo">
                                                                     <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                                    <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let element; let i = index">{{ i +
+                                                                        1 }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Invoice No -->
                                                                 <ng-container matColumnDef="creditnoteNo">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> creditnoteNo </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceNo }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> creditnoteNo </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceNo }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Invoice Type -->
                                                                 <ng-container matColumnDef="refInvoiceNo">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> refInvoiceNo</th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceType }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> refInvoiceNo</th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceType }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Order No -->
                                                                 <ng-container matColumnDef="createdBy">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> createdBy </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.orderNo }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> createdBy </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderNo }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Order Amount -->
                                                                 <ng-container matColumnDef="orderAmount">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> orderAmount</th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.orderAmount }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> orderAmount</th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderAmount }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Invoice Date -->
                                                                 <ng-container matColumnDef="attachments">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> attachments </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceDate | date }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> attachments </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceDate | date }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Uploaded By -->
                                                                 <ng-container matColumnDef="verificationStatus">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> verificationStatus
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> verificationStatus
                                                                     </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.uploadedBy }}</td>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.uploadedBy }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Status -->
                                                                 <ng-container matColumnDef="status">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.status }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Status </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.status }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Invoice Amount -->
                                                                 <ng-container matColumnDef="remark">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> remark </th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.invoiceAmount }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> remark </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceAmount }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Credit Note Amount -->
                                                                 <ng-container matColumnDef="amount">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> amount</th>
-                                                                    <td mat-cell *matCellDef="let element">{{ element.creditNoteAmount }}</td>
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> amount</th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.creditNoteAmount }}</td>
                                                                 </ng-container>
-                        
+
                                                                 <!-- Header / Row -->
-                                                                <tr mat-header-row *matHeaderRowDef="displayedClientCredit"></tr>
-                                                                <tr mat-row *matRowDef="let row; columns: displayedClientCredit;"></tr>
-                        
+                                                                <tr mat-header-row
+                                                                    *matHeaderRowDef="displayedClientCredit"></tr>
+                                                                <tr mat-row
+                                                                    *matRowDef="let row; columns: displayedClientCredit;">
+                                                                </tr>
+
                                                             </table>
                                                         </div>
-                        
-                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                                                            showFirstLastButtons></mat-paginator>
                                                         <div class="text-start p-2">
-                                                            <button type="button" class="btn btn-link text-danger fw-bold"
-                                                                (click)="openRights(content12)" data-bs-target="#offcanvasRight"
+                                                            <button type="button"
+                                                                class="btn btn-link text-danger fw-bold"
+                                                                (click)="openRights(content12)"
+                                                                data-bs-target="#offcanvasRight"
                                                                 aria-controls="offcanvasRight">
                                                                 + Add New Invoice
                                                             </button>
@@ -417,13 +501,12 @@
                                         </ng-template>
                                     </li>
                                 </ul>
-                        
-                                <!-- Place the outlet for nested nav -->
                                 <div [ngbNavOutlet]="innerNav"></div>
                             </ng-template>
                         </ng-container>
                         <ng-container ngbNavItem="4">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab" aria-selected="false">Payments From
+                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                                aria-selected="false">Payments From
                                 Client</a>
                             <ng-template class="tab-content bg-white" ngbNavContent>
                                 <div class=" text-muted" id="nav-offers" role="tabpanel">
@@ -432,46 +515,66 @@
                             </ng-template>
                         </ng-container>
                         <ng-container ngbNavItem="5">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab" aria-selected="false">My
-                                Scope</a>
+                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                                aria-selected="false">Project Scope</a>
                             <ng-template class="tab-content" ngbNavContent>
                                 <div class="row">
                                     <div class="col-xl-12 bg-light">
-                                        <nav ngbNav #nav2="ngbNav" [activeId]="1" class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
+                                        <nav ngbNav #nav2="ngbNav" [activeId]="1"
+                                            class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
+                                            <button class="btn btn-primary me-2" (click)="openRights2(content3)"><i
+                                                    class="ri-add-line"></i></button>
                                             <ng-container *ngFor="let key of tabKeys; let i = index">
                                                 <ng-container [ngbNavItem]="i+1">
-                                                    <a ngbNavLink class="nav-link" >{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{ boqDataSources[key].data.length }}</span></a>
+                                                    <a ngbNavLink class="nav-link">{{ key | titlecase }}<span
+                                                            class="badge bg-white text-dark ms-1">{{
+                                                            boqDataSources[key].data.length }}</span></a>
                                                     <ng-template ngbNavContent>
                                                         <div class="col-xl-12 mt-2">
-                                                            <div class="card custom-card bg-white"> 
-                                                                <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                                    <h5 class="modal-title">Proposal For Client ({{ key | titlecase }})</h5>
+                                                            <div class="card custom-card bg-white">
+                                                                <div
+                                                                    class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                                    <h5 class="modal-title">Proposal For Client ({{ key
+                                                                        | titlecase }})</h5>
                                                                     <div class="dropdown" ngbDropdown>
                                                                         <button type="button" class="btn btn-primary" ngbDropdownToggle type="button" aria-expanded="false">
-                                                                            <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Add New</button>
+                                                                            <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Add
+                                                                            New</button>
                                                                         <ul class="dropdown-menu cuu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border"(click)="openLg1(content1)">Add Custom Element</a></li>
-                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border"
-                                                                                (click)="openLg2(content2)">Import Items From</a></li>
-                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">Something else here</a></li>
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">Add
+                                                                                    Custom Element</a></li>
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2)">Import
+                                                                                    Items From</a></li>
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">Something     else here</a></li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
                                                                 <div class="table-container mat-elevation-z8">
-                                                                    <table mat-table [dataSource]="boqDataSources[key]" matSort
-                                                                        class="mat-table1 w-100">
+                                                                    <table mat-table [dataSource]="boqDataSources[key]"
+                                                                        matSort class="mat-table1 w-100">
+                                                                        <ng-container matColumnDef="select">
+                                                                            <th mat-header-cell *matHeaderCellDef>
+                                                                                <mat-checkbox [checked]="isAllSelected(key)" [indeterminate]="isIndeterminate(key)"
+                                                                                    (change)="onSelectAllChange($event, key)">
+                                                                                </mat-checkbox>
+                                                                            </th>
+                                                                            <td mat-cell *matCellDef="let element">
+                                                                                <mat-checkbox [checked]="selectedElement?.includes(element.boqId) ?? false"
+                                                                                    (change)="onRowCheckboxChange(element, $event)" class="custom-checkbox">
+                                                                                </mat-checkbox>
+                                                                            </td>
+                                                                        </ng-container>
                                                                         <ng-container matColumnDef="slNo">
-                                                                            <th mat-header-cell *matHeaderCellDef> S.No.</th>
-                                                                            <td mat-cell *matCellDef="let element; let i = index"> {{ i+1 }}</td>
+                                                                            <th mat-header-cell *matHeaderCellDef> S.No.
+                                                                            </th>
+                                                                            <td mat-cell *matCellDef="let element; let i = index">
+                                                                                {{ i+1 }}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="elementUrl">
                                                                             <th mat-header-cell *matHeaderCellDef class="sticky-col-left"> Element
                                                                                 Name & Description </th>
-                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left"
-                                                                                style="max-width: 750px;">
-                                                                                <div class="d-flex align-items-center"
-                                                                                    (click)="openDetails(detailsOffcanvas, element)"
-                                                                                    style="cursor: pointer;">
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
+                                                                                <div class="d-flex align-items-center" (click)="openDetails(detailsOffcanvas, element)" style="cursor: pointer;">
                                                                                     <span class="avatar avatar-xl me-3">
                                                                                         <img [src]="element.elementUrl" class="img-thumbnail" alt="Project Image">
                                                                                     </span>
@@ -504,19 +607,23 @@
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Furniture {{ element.codeAndCategory }}
+                                                                                        Furniture {{
+                                                                                        element.codeAndCategory }}
                                                                                     </button>
                                                                                     <small class="text-muted ms-2">CXRDASCR00001/1</small>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
                                                                                         <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select">
                                                                                             <ng-template ng-option-tmp let-item="item">
                                                                                                 <div class="d-flex justify-content-between align-items-center w-100">
-                                                                                                    <span>{{ item.name }}</span>
-                                                                                                    <span>{{ item.code }}</span>
+                                                                                                    <span>{{ item.name
+                                                                                                        }}</span>
+                                                                                                    <span>{{ item.code
+                                                                                                        }}</span>
                                                                                                 </div>
                                                                                             </ng-template>
                                                                                             <ng-template ng-label-tmp let-item="item">
-                                                                                                {{ item.name }} ({{ item.code }})
+                                                                                                {{ item.name }} ({{
+                                                                                                item.code }})
                                                                                             </ng-template>
                                                                                         </ng-select>
                                                                                     </ul>
@@ -529,7 +636,8 @@
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Yet to Order {{ element.orderStatus }}
+                                                                                        Yet to Order {{
+                                                                                        element.orderStatus }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
                                                                                         <ng-select [items]="orderStatus" bindLabel="name" bindValue="name" placeholder="Select any">
@@ -539,7 +647,8 @@
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="itemType">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Type </th>
+                                                                            <th mat-header-cell *matHeaderCellDef
+                                                                                mat-sort-header> Item Type </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
@@ -553,11 +662,14 @@
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="source">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Source </th>
-                                                                            <td mat-cell *matCellDef="let element">{{ element.source }}</td>
+                                                                            <th mat-header-cell *matHeaderCellDef
+                                                                                mat-sort-header> Source </th>
+                                                                            <td mat-cell *matCellDef="let element">{{
+                                                                                element.source }}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="status">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                                                            <th mat-header-cell *matHeaderCellDef
+                                                                                mat-sort-header> Status </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
@@ -617,7 +729,8 @@
                                                                         <ng-container matColumnDef="draftQuantity">
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft
                                                                                 Quantity </th>
-                                                                            <td mat-cell *matCellDef="let element"> 14.5{{element.draftQuantity}}</td>
+                                                                            <td mat-cell *matCellDef="let element">
+                                                                                14.5{{element.draftQuantity}}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="clientRate">
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Client
@@ -636,12 +749,22 @@
                                                                                 }}
                                                                             </td>
                                                                         </ng-container>
-                                                                        <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true">
-                                                                        </tr>
-                                                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                                                        <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
+                                                                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"> </tr>
                                                                     </table>
                                                                 </div>
-                                                                <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <div class="btn-group ms-5" role="group" aria-label="Basic outlined example">
+                                                                        <button type="button" class="btn btn-outline-primary btn-wave"
+                                                                        (click)="openEditFromSelected(content1)" ngbTooltip="Edit" placement="top">
+                                                                            <i class="ri-edit-line" ></i>
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-outline-primary btn-wave" ngbTooltip="Bulk Mail" placement="top">
+                                                                            <i class="ri-mail-line bt-icon"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </ng-template>
@@ -734,87 +857,110 @@
 
 <ng-template #content1 let-offcanvas>
     <form [formGroup]="elementForm" (ngSubmit)="elementSubmit()">
-    <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel">Create Element</h5>
-        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
-            aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body p-4">
-        <div class="col-xl-12">
-            <div class="row gy-1">
-                <div class="col-xl-6">
-                    <label for="elementName" class="form-label">Element Name</label>
-                    <input type="text" class="form-control" id="code" formControlName="elementName">
-                </div>
-                <div class="col-xl-6">
-                    <label for="elementDescription" class="form-label">Element Description</label>
-                    <input type="text" class="form-control" id="name" formControlName="elementDescription">
-                </div>
-                <div class="col-xl-6">
-                    <label for="brandMake" class="form-label">Brand/Make</label>
-                    <input type="text" class="form-control" id="description" formControlName="brandMake"
-                        placeholder="Enter Description">
-                </div>
-                <div class="col-xl-6">
-                    <label for="brandMake" class="form-label">Element Category</label>
-                    <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select" formControlName="elementCategory">
-                        <ng-template ng-option-tmp let-item="item">
-                            <div class="d-flex justify-content-between align-items-center w-100">
-                                <span>{{ item.name }}</span>
-                                <span>{{ item.code }}</span>
-                            </div>
-                        </ng-template>
-                        <ng-template ng-label-tmp let-item="item">
-                            {{ item.name }} ({{ item.code }})
-                        </ng-template>
-                    </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="uom" class="form-label">UOM</label>
-                    <ng-select [items]="UOM" bindLabel="name" bindValue="name" placeholder="Select any"
-                        formControlName="uom">
-                    </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="text" class="form-control" id="description" formControlName="quantity"
-                        placeholder="Enter Quantity">
-                </div>
-                <div class="col-xl-6">
-                    <label for="uom" class="form-label">Item Type</label>
-                    <ng-select [items]="itemType" bindLabel="name" bindValue="name" placeholder="Select any"
-                        formControlName="itemType">
-                    </ng-select>
-                </div>
-                <div class="col-xl-6">
-                    <label for="clientRate" class="form-label">Client Rate (₹)</label>
-                    <input type="text" class="form-control" id="description" formControlName="clientRate"
-                        placeholder="Enter Client Rate">
-                </div>
-                <div class="col-xl-6">
-                    <label for="budgetRate" class="form-label">Budget Rate (₹)</label>
-                    <input type="text" class="form-control" id="description" formControlName="budgetRate"
-                        placeholder="Enter Budget Rate">
-                </div>
-                <div class="col-xl-6">
-                    <label for="budgetRate" class="form-label">HSN</label>
-                    <input type="text" class="form-control" id="description" formControlName="HSN"
-                        placeholder="Enter HSN">
-                </div>
-                <div class="col-xl-6">
-                    <label for="budgetRate" class="form-label">GST %</label>
-                    <ng-select [items]="GST" bindLabel="name" bindValue="name" placeholder="Select any"
-                        formControlName="GST">
-                    </ng-select>
+        <div class="offcanvas-header border-bottom border-block-end-dashed">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ isEditMode ? 'Edit Element' : 'Create Element' }}</h5>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-4">
+            <div class="col-xl-12">
+                <div class="row gy-1">
+                    <div class="col-xl-6">
+                        <label for="elementName" class="form-label">Element Name</label>
+                        <input type="text" class="form-control" id="code" formControlName="elementName">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="elementDescription" class="form-label">Element Description</label>
+                        <input type="text" class="form-control" id="name" formControlName="elementDescription">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="brandMake" class="form-label">Brand/Make</label>
+                        <input type="text" class="form-control" id="description" formControlName="brandOrMake"
+                            placeholder="Enter Description">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="budgetRate" class="form-label">Length</label>
+                        <input type="text" class="form-control" id="description" formControlName="length"
+                            placeholder="Enter Length">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="budgetRate" class="form-label">Breadth</label>
+                        <input type="text" class="form-control" id="description" formControlName="breadth"
+                            placeholder="Enter Breadth">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="budgetRate" class="form-label">height</label>
+                        <input type="text" class="form-control" id="description" formControlName="height"
+                            placeholder="Enter height">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="brandMake" class="form-label">Element Category</label>
+                        <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select"
+                            formControlName="codeAndCategory">
+                            <ng-template ng-option-tmp let-item="item">
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <span>{{ item.name }}</span>
+                                    <span>{{ item.code }}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template ng-label-tmp let-item="item">
+                                {{ item.name }} ({{ item.code }})
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="uom" class="form-label">UOM</label>
+                        <ng-select [items]="UOM" bindLabel="name" bindValue="name" placeholder="Select any"
+                            formControlName="uom">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="text" class="form-control" id="description" formControlName="quantity"
+                            placeholder="Enter Quantity">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="uom" class="form-label">Item Type</label>
+                        <ng-select [items]="itemType" bindLabel="name" bindValue="name" placeholder="Select any"
+                            formControlName="itemType">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="clientRate" class="form-label">Client Rate (₹)</label>
+                        <input type="text" class="form-control" id="description" formControlName="clientRate"
+                            placeholder="Enter Client Rate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="budgetRate" class="form-label">Budget Rate (₹)</label>
+                        <input type="text" class="form-control" id="description" formControlName="budgetRate"
+                            placeholder="Enter Budget Rate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="budgetRate" class="form-label">HSN</label>
+                        <input type="text" class="form-control" id="description" formControlName="hsn"
+                            placeholder="Enter HSN">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="budgetRate" class="form-label">GST %</label>
+                        <ng-select [items]="GST" bindLabel="name" bindValue="name" placeholder="Select any"
+                            formControlName="gstPrecent">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="formFile" class="form-label">Upload Image</label>
+                        <input class="form-control" type="file" id="formFile" formControlName="elementUrl">
+                    </div>
+                    <div *ngIf="elementForm.value.elementUrl">
+                        <img [src]="elementForm.value.elementUrl" alt="Existing Image" class="img-thumbnail mt-2" width="100">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary me-3"> Submit</button>
-        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-            data-bs-dismiss="modal">Close</button>
-    </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary me-3"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
     </form>
 </ng-template>
 
@@ -869,7 +1015,8 @@
                             <tr mat-row *matRowDef="let row; columns: libraryData;"></tr>
                         </table>
                     </div>
-                    <mat-paginator *ngIf="!selectedLibrary" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                    <mat-paginator *ngIf="!selectedLibrary" [pageSizeOptions]="[5, 10, 20]"
+                        showFirstLastButtons></mat-paginator>
                     <div *ngIf="selectedLibrary">
                         <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
                             <h6>Details of {{ selectedLibrary.libraryName }}</h6>
@@ -902,10 +1049,8 @@
     <div class="offcanvas-body">
         <div class="card custom-card border">
             <div class="card-body">
-                <form [formGroup]="invoiceForm" >
+                <form [formGroup]="invoiceForm">
                     <div class="row g-3">
-        
-                        <!-- Invoice Number -->
                         <div class="col-md-6">
                             <label class="form-label">Invoice Number </label>
                             <input type="text" class="form-control" formControlName="invoiceNo"
@@ -916,8 +1061,6 @@
                             <input type="text" class="form-control" formControlName="invoiceNo"
                                 placeholder="Enter Invoice Number">
                         </div>
-        
-                        <!-- Invoice Type -->
                         <div class="col-md-6">
                             <label class="form-label">Invoice Type </label>
                             <select class="form-select" formControlName="invoiceType">
@@ -937,28 +1080,20 @@
                             <label class="form-label">Order Amount</label>
                             <input type="text" class="form-control">
                         </div>
-        
-                        <!-- Amount without GST -->
                         <div class="col-md-6">
                             <label class="form-label">Amount without GST (₹) </label>
                             <input type="number" class="form-control" formControlName="amountWithoutGST"
                                 placeholder="Enter Amount">
                         </div>
-        
-                        <!-- GST Amount -->
                         <div class="col-md-6">
                             <label class="form-label">GST Amount </label>
                             <input type="number" class="form-control" formControlName="gstAmount"
                                 placeholder="Enter GST Amount">
                         </div>
-        
-                        <!-- Total Amount (calculated) -->
                         <div class="col-md-6">
                             <label class="form-label">Total Amount (₹)</label>
                             <input type="text" class="form-control" [value]="totalAmount" readonly>
                         </div>
-        
-                        <!-- Invoice Date -->
                         <div class="col-md-6">
                             <label class="form-label">Invoice Date</label>
                             <input type="date" class="form-control" formControlName="invoiceDate">
@@ -967,19 +1102,18 @@
                             <label for="formFile" class="form-label">Invoice Preview</label>
                             <input class="form-control" type="file" id="formFile">
                         </div>
-                        <!-- Supporting Documents -->
                         <div class="col-12 mt-3">
                             <h6 class="fw-bold">Supporting Documents</h6>
-                            <button type="button" class="btn btn-link text-danger p-0">+ Add Supporting Document</button>
+                            <button type="button" class="btn btn-link text-danger p-0">+ Add Supporting
+                                Document</button>
                         </div>
-        
-                        <!-- Confirmation Checkbox -->
                         <div class="col-12 mt-2">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" formControlName="confirmation"
                                     id="confirmCheck">
                                 <label class="form-check-label" for="confirmCheck">
-                                    I, <b>CH TARUN</b>, hereby certify that the work against this invoice has been completed and
+                                    I, <b>CH TARUN</b>, hereby certify that the work against this invoice has been
+                                    completed and
                                     the invoice is applicable for payment.
                                 </label>
                             </div>
@@ -988,12 +1122,56 @@
                 </form>
             </div>
         </div>
-
-
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
             <button type="submit" class="btn btn-primary me-2">Add</button>
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content3 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title"><strong>Add Rooms</strong></h5>
+        <div class="mb-3">
+            <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="list-group list-group-flush mb-0">
+            <li class="list-group-item">
+                <div class="container mt-3">
+                    <div class="col-12">
+                        <div *ngFor="let plan of boqStaticFields; let i = index"
+                            class="form-check mb-3 d-flex align-items-center">
+                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked">
+                            <label class="form-check-label w-50">{{ plan.name }}</label>
+                            <button *ngIf="!plan.isDefault" class="btn btn-danger btn-sm ms-2"
+                                (click)="deleteLeadItem(i)">
+                                Delete
+                            </button>
+                        </div>
+                        <div *ngIf="addMoreVisible" class="row mb-3">
+                            <div class="col-xl-6">
+                                <input type="text" class="form-control" placeholder="Enter room name"
+                                    [(ngModel)]="newItem" (keyup.enter)="addLeadItem()">
+                            </div>
+                            <div class="col-xl-2">
+                                <button class="btn btn-primary" type="button" (click)="addLeadItem()">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3">
+            <button class="btn btn-primary btn-wave waves-effect waves-light" type="button">Save</button>
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>

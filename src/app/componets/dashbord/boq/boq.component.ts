@@ -17,28 +17,37 @@ import { CommonModule } from '@angular/common';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
+import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
+
+interface Plan {
+    name: string;
+    checked: boolean;
+    isDefault: boolean;
+    isCustom?: boolean;   // optional flag for custom items
+}
 
 @Component({
     selector: 'app-boq',
     standalone: true,
     imports: [SharedModule, NgSelectModule, NgbModule,
         NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule,
-        NgApexchartsModule, MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,],
+        NgApexchartsModule, MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,
+    NgbOffcanvasModule],
     providers: [NgbModalConfig, NgbModal, FlatpickrDefaults,],
     templateUrl: './boq.component.html',
     styleUrl: './boq.component.scss'
 })
 export class BoqComponent extends BaseComponent {
-    displayedColumns: string[] = ['slNo', 'elementUrl', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'finalAmount'];
+    displayedColumns: string[] = ['select', 'slNo', 'elementUrl', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'finalAmount'];
     displayedClientProposal: string[] = ['slNo', 'ReferenceNo', 'ProposalRequestType', 'ProposalFor', 'CreatedBy', 'CreatedDate', 'Status', 'amount'];
-    displayedClientOrder: string[] = ['slNo','orderNo','ordertType', 'orderFrom','issuedBy','issueDate','dueDate', 'orderStatus','poStatus','progress','amount'];
-    displayedClientInvoices: string[] = ['slNo','invoiceNo','invoiceType','orderNo','orderAmount','invoiceDate','uploadedBy','status','invoiceAmount','creditNoteAmount'];
-    displayedClientCredit: string[] = [ 'slNo', 'creditnoteNo', 'refInvoiceNo', 'createdBy', 'orderAmount','attachments', 'verificationStatus', 'status', 'remark', 'amount'];
+    displayedClientOrder: string[] = ['slNo', 'orderNo', 'ordertType', 'orderFrom', 'issuedBy', 'issueDate', 'dueDate', 'orderStatus', 'poStatus', 'progress', 'amount'];
+    displayedClientInvoices: string[] = ['slNo', 'invoiceNo', 'invoiceType', 'orderNo', 'orderAmount', 'invoiceDate', 'uploadedBy', 'status', 'invoiceAmount', 'creditNoteAmount'];
+    displayedClientCredit: string[] = ['slNo', 'creditnoteNo', 'refInvoiceNo', 'createdBy', 'orderAmount', 'attachments', 'verificationStatus', 'status', 'remark', 'amount'];
     poNumbers: string[] = ['PO-001', 'PO-002', 'PO-003'];
     footerColumns: string[] = ['totals'];
     libraryData: string[] = ['slNo', 'libraryName', 'typeofLibrary', 'createdBy', 'lastUpdated', 'sections', 'elements'];
     detailsColumns: string[] = ['sectionName', 'books'];
-     invoiceForm! :FormGroup;
+    invoiceForm!: FormGroup;
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
     userEmail: string = this.userData ? this.userData.email : '';
@@ -54,6 +63,17 @@ export class BoqComponent extends BaseComponent {
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
     boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup;
+    addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
+    newItem: string = ''; isEditMode = false; selectedLibrary: any; modal:any;
+
+
+    public elementFormSubmitted = false;
+
+    boqStaticFields = [
+        { name: 'Branding', checked: false, isDefault: true, },
+        { name: 'Civil', checked: false, isDefault: true, },
+        { name: 'Electrical', checked: false, isDefault: true }
+    ];
     categories = [
         { id: 1, name: 'Acoustic', code: 'AT' },
         { id: 2, name: 'BMS', code: 'BM' },
@@ -61,7 +81,6 @@ export class BoqComponent extends BaseComponent {
         { id: 4, name: 'Carpentry', code: 'CR' },
         { id: 5, name: 'CCTV & IT', code: 'IT' }
     ];
-
 
     prposaldataSource = new MatTableDataSource<any>([
         {
@@ -133,57 +152,53 @@ export class BoqComponent extends BaseComponent {
             elements: 10000
         }
     ]);
-     clientOrdersDataSource = new MatTableDataSource<any>([
-    {
-        slNo: 1,
-        orderNo: 'AD0001',
-        ordertType: 'Regular',
-        orderFrom: 'Sunil',
-        issuedBy: 'N. Bhavani Shankar',
-        issueDate: '17 Nov 2024',
-        dueDate: '25 Nov 2024',
-        orderStatus: 'confirmed',
-        poStatus: 'pending',
-        progress: '1%',
-        amount:120000,
-        
-       
-    },
-    {
-        slNo: 2,
-        orderNo: 'AD0002',
-        ordertType: 'Proposal For Repeat Order',
-        orderFrom: 'Ravi',
-        issuedBy: 'N. Bhavani Shankar',
-        issueDate: '18 Nov 2024',
-        dueDate: '27 Nov 2024',
-        orderStatus: 'Pending',
-        poStatus: 'Not Generated',
-        progress: '10%',
-        amount: 30000,
+    clientOrdersDataSource = new MatTableDataSource<any>([
+        {
+            slNo: 1,
+            orderNo: 'AD0001',
+            ordertType: 'Regular',
+            orderFrom: 'Sunil',
+            issuedBy: 'N. Bhavani Shankar',
+            issueDate: '17 Nov 2024',
+            dueDate: '25 Nov 2024',
+            orderStatus: 'confirmed',
+            poStatus: 'pending',
+            progress: '1%',
+            amount: 120000,
+        },
+        {
+            slNo: 2,
+            orderNo: 'AD0002',
+            ordertType: 'Proposal For Repeat Order',
+            orderFrom: 'Ravi',
+            issuedBy: 'N. Bhavani Shankar',
+            issueDate: '18 Nov 2024',
+            dueDate: '27 Nov 2024',
+            orderStatus: 'Pending',
+            poStatus: 'Not Generated',
+            progress: '10%',
+            amount: 30000,
         }
     ]);
     clientInvoicesDataSource = new MatTableDataSource<any>([
         {
-        invoiceNo: 'INV-001',
-        invoiceType: 'Tax Invoice',
-        orderNo: 'ORD-101',
-        orderAmount: 5000,
-        invoiceDate: new Date(),
-        uploadedBy: 'Admin',
-        status: 'Approved',
-        invoiceAmount: 5500,
-        creditNoteAmount: 200
+            invoiceNo: 'INV-001',
+            invoiceType: 'Tax Invoice',
+            orderNo: 'ORD-101',
+            orderAmount: 5000,
+            invoiceDate: new Date(),
+            uploadedBy: 'Admin',
+            status: 'Approved',
+            invoiceAmount: 5500,
+            creditNoteAmount: 200
         },
 
     ]);
     clientCreditDataSource = new MatTableDataSource<any>([
-        
-    ])
 
-    modal: any;
-    selectedLibrary: any;
-    constructor(// config: NgbModalConfig,
+    ])
+    
+    constructor(
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
         private fb: FormBuilder,) {
@@ -194,7 +209,10 @@ export class BoqComponent extends BaseComponent {
         this.modalService.open(content, { centered: true });
     }
     openRights(content: any) {
-    this.offcanvasService.open(content, { position: 'end' });
+        this.offcanvasService.open(content, { position: 'end' });
+    }
+    openRights2(content3: any) {
+        this.offcanvasService.open(content3, { position: 'end' });
     }
 
     openDetails(content: any, element: any) {
@@ -202,12 +220,52 @@ export class BoqComponent extends BaseComponent {
         this.offcanvasService.open(content, { position: 'end', backdrop: true, });
     }
 
+    openEditFromSelected(content: any) {
+        if (!this.selectedElement?.length) {
+            this.toastr.warning('Please select an element to edit');
+            return;
+        }
+        const elementId = this.selectedElement[0];
+        const allData = Object.values(this.boqDataSources).flatMap(ds => ds.data);
+        const element = allData.find((e: any) => e.boqId === elementId);
+        if (!element) return;
+        this.openEditForm(element, content);
+    }
+
+    openEditForm(element: any, content: any) {
+        this.elementForm.patchValue({
+            elementName: element.elementNameAndDescription?.split('\n')[0] || '',
+            elementDescription: element.elementNameAndDescription?.split('\n')[1] || '',
+            brandOrMake: element.brandOrMake,
+            length: element.length,
+            breadth: element.breadth,
+            height: element.height,
+            codeAndCategory: element.codeAndCategory,
+            uom: element.uom,
+            quantity: element.quantity,
+            itemType: element.itemType,
+            clientRate: element.clientRate,
+            budgetRate: element.budgetRate,
+            hsn: element.hsn,
+            gstPrecent: element.gstPrecent,
+            // elementUrl: element.elementUrl
+        });
+        this.offcanvasService.open(content, { position: 'end', scroll: true });
+    }
+
+    resetForm() {
+        this.elementForm.reset();
+        this.isEditMode = false;
+        this.selectedElement = null;
+    }
+
+
+
     flatpickrOptions: any = {
         inline: true
     };
 
     ngOnInit(): void {
-        this.boqData();
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
@@ -215,17 +273,36 @@ export class BoqComponent extends BaseComponent {
         };
         flatpickr('#addignedDate', this.flatpickrOptions);
         this.elementForm = this.fb.group({
-            elementName: ['',],
-            elementDescription: ['',],
-            brandMake: [''],
-            elementCategory: ['',],
-            uom: ['',],
-            quantity: [''],
-            itemType: ['',],
-            clientRate: ['',],
-            budgetRate: [''],
-            HSN: [''],
-            GST: ['']
+            elementUrl: [''],
+            elementName: [''],
+            elementDescription: [''],
+            codeAndCategory: [''],
+            orderStatus: [''],
+            itemType: [''],
+            source: [''],
+            status: [''],
+            length: [0],
+            breadth: [0],
+            height: [0],
+            quantity: [0],
+            uom: [''],
+            draftQuantity: [0],
+            clientRate: [0],
+            finalAmount: [0],
+            brandOrMake: [''],
+            discount: [0],
+            serviceCharge: [0],
+            baseAmount: [0],
+            budgetRate: [0],
+            hsn: [0],
+            gstPrecent: [0],
+            amountWithoutGst: [0],
+            designId: [''],
+            roomName: [''],
+            itemCode: [''],
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType
         }
         );
     }
@@ -255,26 +332,20 @@ export class BoqComponent extends BaseComponent {
             wardrobeRequired: true,
             kbRequired: true
         };
-
         this.switchService.fetchBoqData(payload).subscribe({
             next: (res) => {
                 const boqData = res?.boqData || {};
                 this.tabKeys = Object.keys(boqData);
                 this.boqDataSources = {};
                 this.tabCounts = {};
-
                 this.tabKeys.forEach((key) => {
                     const items = boqData[key] || [];
-
-                    // Table data
                     this.boqDataSources[key] = new MatTableDataSource(
                         items.map((item: any, index: number) => ({
                             slNo: index + 1,
                             ...item
                         }))
                     );
-
-                    // Count per tab (no optional chain needed)
                     this.tabCounts[key] = items.length;
                 });
             },
@@ -300,11 +371,95 @@ export class BoqComponent extends BaseComponent {
     }
 
     elementSubmit() {
-        if (this.elementForm.valid) {
-            console.log("Form submitted:", this.elementForm.value);
-        } else {
-            console.log("Form is invalid");
+        const formValue = { ...this.elementForm.value };
+        delete formValue.elementName;
+        delete formValue.elementDescription;
+        const payload = {
+            ...formValue,
+            elementNameAndDescription: `${this.elementForm.value.elementName}${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}`,
+            budgetRate: Number(this.elementForm.value.budgetRate),
+            clientRate: Number(this.elementForm.value.clientRate),
+            gstPrecent: Number(this.elementForm.value.gstPrecent),
+            hsn: Number(this.elementForm.value.hsn),
+            breadth: Number(this.elementForm.value.breadth),
+            height: Number(this.elementForm.value.height),
+            length: Number(this.elementForm.value.length),
+            quantity: Number(this.elementForm.value.quantity),
+            codeAndCategory: formValue.codeAndCategory?.name
+        };
+        console.log('Final Payload:', payload);
+        this.switchService.saveElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status === true) {
+                    this.toastr.success(res.message || 'Data Saved Successfully');
+                    this.elementForm.reset();
+                    this.elementFormSubmitted = false;
+                } else {
+                    this.toastr.error(res?.message || 'Something went wrong.');
+                }
+            },
+            error: (err) => {
+                console.error('API Error:', err);
+                this.toastr.error('An error occurred while sending mail.');
+            },
+        });
+    }
+
+    elementEdit() {
+        if (!this.selectedElement) {
+            this.toastr.warning('No element selected for editing.');
+            return;
         }
+        const formValue = { ...this.elementForm.value };
+        const payload = {
+            boqId: this.selectedElement,
+            elementUrl: formValue.elementUrl || '',
+            elementNameAndDescription: `${formValue.elementName || ''}${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}`,
+            codeAndCategory: formValue.codeAndCategory?.name || '',
+            orderStatus: formValue.orderStatus || '',
+            itemType: formValue.itemType || '',
+            source: formValue.source || '',
+            status: formValue.status || '',
+            length: Number(formValue.length) || 0,
+            breadth: Number(formValue.breadth) || 0,
+            height: Number(formValue.height) || 0,
+            quantity: Number(formValue.quantity) || 0,
+            uom: formValue.uom || '',
+            draftQuantity: Number(formValue.draftQuantity) || 0,
+            clientRate: Number(formValue.clientRate) || 0,
+            finalAmount: Number(formValue.finalAmount) || 0,
+            brandOrMake: formValue.brandOrMake || '',
+            discount: Number(formValue.discount) || 0,
+            serviceCharge: Number(formValue.serviceCharge) || 0,
+            baseAmount: Number(formValue.baseAmount) || 0,
+            budgetRate: Number(formValue.budgetRate) || 0,
+            hsn: Number(formValue.hsn) || 0,
+            gstPrecent: Number(formValue.gstPrecent) || 0,
+            amountWithoutGst: Number(formValue.amountWithoutGst) || 0,
+            designId: formValue.designId || '',
+            roomName: formValue.roomName || '',
+            itemCode: formValue.itemCode || '',
+            companyCode: formValue.companyCode || '',
+            email: formValue.email || '',
+            type: Number(formValue.type) || 0
+        };
+        console.log('Update Payload:', payload);
+        // this.switchService.updateElementData(payload).subscribe({
+        //     next: (res: any) => {
+        //         if (res?.status === true) {
+        //             this.toastr.success(res.message || 'Data Updated Successfully');
+        //             this.elementForm.reset();
+        //             this.elementFormSubmitted = false;
+        //             this.selectedElement = null; 
+        //         } else {
+        //             this.toastr.error(res?.message || 'Something went wrong.');
+        //         }
+        //     },
+        //     error: (err) => {
+        //         console.error('API Error:', err);
+        //         this.toastr.error('An error occurred while updating the element.');
+        //     },
+        // });
     }
 
     onLibraryClick(library: any) {
@@ -329,21 +484,106 @@ export class BoqComponent extends BaseComponent {
     }
 
     backToLibrary() {
-        this.selectedLibrary = null; 
+        this.selectedLibrary = null;
     }
     get totalWithoutGST() {
-    return this.clientOrdersDataSource.data
-        .map(t => t.amount)
-        .reduce((acc, val) => acc + val, 0);
+        return this.clientOrdersDataSource.data
+            .map(t => t.amount)
+            .reduce((acc, val) => acc + val, 0);
     }
 
     get totalGST() {
-    return 0; // change if needed
+        return 0;
     }
 
     get totalAmount() {
-    return this.totalWithoutGST + this.totalGST;
+        return this.totalWithoutGST + this.totalGST;
     }
+
+    deleteLeadItem(index: number): void {
+        if (!this.boqStaticFields[index].isDefault) {
+            this.boqStaticFields.splice(index, 1);
+        }
+    }
+
+    toggleAddMore(): void {
+        this.addMoreVisible = !this.addMoreVisible;
+    }
+
+    addLeadItem(): void {
+        if (this.newItem.trim()) {
+            this.boqStaticFields.push({
+                name: this.newItem,
+                checked: false,
+                isDefault: false
+            });
+            this.newItem = '';
+            this.addMoreVisible = false;
+        }
+    }
+
+
+    isAllSelected(key: string): boolean {
+        const data = this.boqDataSources?.[key]?.data ?? [];
+        if (!data.length || !this.selectedElement?.length) return false;
+
+        const selectedInThisTable = data.filter(row => this.selectedElement?.includes(row.boqId) ?? false);
+        return selectedInThisTable.length === data.length;
+    }
+
+
+    isIndeterminate(key: string): boolean {
+        const data = this.boqDataSources?.[key]?.data ?? [];
+        if (!data.length || !this.selectedElement?.length) return false;
+
+        const selectedInThisTable = data.filter(row => this.selectedElement?.includes(row.boqId) ?? false);
+        return selectedInThisTable.length > 0 && selectedInThisTable.length < data.length;
+    }
+
+    onSelectAllChange(event: any, key: string): void {
+        const data = this.boqDataSources?.[key]?.data ?? [];
+        if (!data.length) return;
+
+        if (event.checked) {
+            this.selectedElement = data.map((row: any) => row.boqId);
+        } else {
+            this.selectedElement = [];
+        }
+    }
+
+    onRowCheckboxChange(element: any, event: any) {
+        if (!this.selectedElement) this.selectedElement = [];
+
+        const boqId = element.boqId;
+        if (event.checked) {
+            if (!this.selectedElement.includes(boqId)) {
+                this.selectedElement.push(boqId);
+            }
+        } else {
+            const index = this.selectedElement.indexOf(boqId);
+            if (index > -1) this.selectedElement.splice(index, 1);
+        }
+    }
+
+    isSelected(boqId: number): boolean {
+        return this.selectedElement?.includes(boqId) ?? false;
+    }
+
+    updateBoqElement(key: string, updatedElement: any) {
+        const dataSource = this.boqDataSources?.[key];
+        if (!dataSource || !dataSource.data?.length) return;
+        const index = dataSource.data.findIndex(item => item.boqId === updatedElement.boqId);
+        if (index === -1) {
+            console.warn(`BOQ element with id ${updatedElement.boqId} not found in tab ${key}`);
+            return;
+        }
+        dataSource.data[index] = {
+            ...dataSource.data[index],
+            ...updatedElement
+        };
+        dataSource._updateChangeSubscription();
+    }
+
 
 
 }
