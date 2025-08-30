@@ -43,16 +43,11 @@
                                         <div
                                             class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                             <h5 class="mb-0">Proposal For Client</h5>
-                                            <button type="button"
-                                                class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-primary-light rounded-circle">
-                                                <i class="ri-edit-line"></i>
-                                            </button>
                                         </div>
                                         <div class="card-body p-0">
                                             <div class="table-container mat-elevation-z8">
                                                 <table mat-table [dataSource]="prposaldataSource" matSort
                                                     class="mat-table w-100">
-
                                                     <ng-container matColumnDef="slNo">
                                                         <th mat-header-cell *matHeaderCellDef> S.No. </th>
                                                         <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1
@@ -211,14 +206,9 @@
                                                     <tr mat-row *matRowDef="let row; columns: displayedClientOrder;">
                                                     </tr>
                                                     <tr mat-footer-row *matFooterRowDef="footerColumns"></tr>
-
-
                                                 </table>
                                             </div>
-
-                                            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                                                showFirstLastButtons></mat-paginator>
-
+                                            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                                         </div>
                                     </div>
                                 </div>
@@ -228,7 +218,6 @@
                             <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
                                 aria-selected="true">Client Invoices
                                 <span class="badge bg-secondary ms-1 rounded-pill">32</span></a>
-                            <!-- Outer Tab Content -->
                             <ng-template class="tab-content bg-white" ngbNavContent>
                                 <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
                                     class="nav nav-pills m-3 show active text-muted">
@@ -241,8 +230,7 @@
                                                         <div class="col-xl-4 col-sm-6">
                                                             <div class="card custom-card overflow-hidden">
                                                                 <div class="card-body">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-start mb-2 border p-3">
+                                                                    <div class="d-flex justify-content-between align-items-start mb-2 border p-3">
                                                                         <div>Invoice Uploaded(0)</div>
                                                                         <div>0</div>
                                                                     </div>
@@ -263,8 +251,7 @@
                                                         <div class="col-xl-4 col-sm-6">
                                                             <div class="card custom-card overflow-hidden">
                                                                 <div class="card-body">
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-start mb-2 border p-3">
+                                                                    <div class="d-flex justify-content-between align-items-start mb-2 border p-3">
                                                                         <div>Pending Approval(0)</div>
                                                                         <div>0</div>
                                                                     </div>
@@ -276,34 +263,25 @@
                                             </div>
                                             <div class="col-xl-12 mt-2">
                                                 <div class="card custom-card bg-light">
-                                                    <div
-                                                        class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                         <h5 class="mb-0">Client Invoices</h5>
                                                         <button type="button" class="btn btn-primary">Add New</button>
                                                     </div>
-
                                                     <div class="card-body p-0">
                                                         <div class="table-container mat-elevation-z8">
                                                             <table mat-table [dataSource]="clientInvoicesDataSource"
                                                                 matSort class="mat-table w-100">
-
-                                                                <!-- S.No -->
                                                                 <ng-container matColumnDef="slNo">
                                                                     <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                                    <td mat-cell
-                                                                        *matCellDef="let element; let i = index">{{ i +
+                                                                    <td mat-cell *matCellDef="let element; let i = index">{{ i +
                                                                         1 }}</td>
                                                                 </ng-container>
-
-                                                                <!-- Invoice No -->
                                                                 <ng-container matColumnDef="invoiceNo">
                                                                     <th mat-header-cell *matHeaderCellDef
                                                                         mat-sort-header> Invoice No </th>
                                                                     <td mat-cell *matCellDef="let element">{{
                                                                         element.invoiceNo }}</td>
                                                                 </ng-container>
-
-                                                                <!-- Invoice Type -->
                                                                 <ng-container matColumnDef="invoiceType">
                                                                     <th mat-header-cell *matHeaderCellDef
                                                                         mat-sort-header> Invoice Type </th>
@@ -335,40 +313,30 @@
                                                                         element.uploadedBy }}</td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="status">
-                                                                    <th mat-header-cell *matHeaderCellDef
-                                                                        mat-sort-header> Status </th>
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
                                                                     <td mat-cell *matCellDef="let element">{{
                                                                         element.status }}</td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="invoiceAmount">
-                                                                    <th mat-header-cell *matHeaderCellDef
-                                                                        mat-sort-header> Invoice Amount </th>
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Amount </th>
                                                                     <td mat-cell *matCellDef="let element">{{
                                                                         element.invoiceAmount }}</td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="creditNoteAmount">
-                                                                    <th mat-header-cell *matHeaderCellDef
-                                                                        mat-sort-header> Credit Note Amount
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Credit Note Amount
                                                                     </th>
                                                                     <td mat-cell *matCellDef="let element">{{
                                                                         element.creditNoteAmount }}</td>
                                                                 </ng-container>
-                                                                <tr mat-header-row
-                                                                    *matHeaderRowDef="displayedClientInvoices"></tr>
-                                                                <tr mat-row
-                                                                    *matRowDef="let row; columns: displayedClientInvoices;">
+                                                                <tr mat-header-row *matHeaderRowDef="displayedClientInvoices"></tr>
+                                                                <tr mat-row *matRowDef="let row; columns: displayedClientInvoices;">
                                                                 </tr>
                                                             </table>
                                                         </div>
-
-                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                                                            showFirstLastButtons></mat-paginator>
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                                                         <div class="text-start p-2">
-                                                            <button type="button"
-                                                                class="btn btn-link text-danger fw-bold"
-                                                                (click)="openRights(content12)"
-                                                                data-bs-target="#offcanvasRight"
-                                                                aria-controls="offcanvasRight">
+                                                            <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
+                                                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                                                 + Add New Invoice
                                                             </button>
                                                         </div>
@@ -480,18 +448,12 @@
                                                                 <tr mat-row
                                                                     *matRowDef="let row; columns: displayedClientCredit;">
                                                                 </tr>
-
                                                             </table>
                                                         </div>
-
-                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                                                            showFirstLastButtons></mat-paginator>
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                                                         <div class="text-start p-2">
-                                                            <button type="button"
-                                                                class="btn btn-link text-danger fw-bold"
-                                                                (click)="openRights(content12)"
-                                                                data-bs-target="#offcanvasRight"
-                                                                aria-controls="offcanvasRight">
+                                                            <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
+                                                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                                                 + Add New Invoice
                                                             </button>
                                                         </div>
@@ -522,27 +484,25 @@
                                     <div class="col-xl-12 bg-light">
                                         <nav ngbNav #nav2="ngbNav" [activeId]="1"
                                             class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
-                                            <button class="btn btn-primary me-2" (click)="openRights2(content3)"><i
-                                                    class="ri-add-line"></i></button>
+                                            <!-- <button class="btn btn-primary me-2" (click)="openRights2(content3)"><i class="ri-add-line"></i></button> -->
                                             <ng-container *ngFor="let key of tabKeys; let i = index">
                                                 <ng-container [ngbNavItem]="i+1">
-                                                    <a ngbNavLink class="nav-link">{{ key | titlecase }}<span
-                                                            class="badge bg-white text-dark ms-1">{{
+                                                    <a ngbNavLink class="nav-link">{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{
                                                             boqDataSources[key].data.length }}</span></a>
                                                     <ng-template ngbNavContent>
                                                         <div class="col-xl-12 mt-2">
                                                             <div class="card custom-card bg-white">
-                                                                <div
-                                                                    class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                                    <h5 class="modal-title">Proposal For Client ({{ key
-                                                                        | titlecase }})</h5>
+                                                                <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                                    <h5 class="modal-title">Proposal For Client ({{ key | titlecase }})</h5>
                                                                     <div class="dropdown" ngbDropdown>
                                                                         <button type="button" class="btn btn-primary" ngbDropdownToggle type="button" aria-expanded="false">
-                                                                            <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Add
-                                                                            New</button>
+                                                                            <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Add New
+                                                                        </button>
                                                                         <ul class="dropdown-menu cuu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">Add
-                                                                                    Custom Element</a></li>
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openRights4(content4)">
+                                                                                Create/Edit Proposal</a></li>
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">
+                                                                                Add Custom Element</a></li>
                                                                             <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2)">Import
                                                                                     Items From</a></li>
                                                                             <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">Something     else here</a></li>
@@ -564,12 +524,12 @@
                                                                                 </mat-checkbox>
                                                                             </td>
                                                                         </ng-container>
-                                                                        <ng-container matColumnDef="slNo">
+                                                                        <!-- <ng-container matColumnDef="slNo">
                                                                             <th mat-header-cell *matHeaderCellDef> S.No.
                                                                             </th>
                                                                             <td mat-cell *matCellDef="let element; let i = index">
                                                                                 {{ i+1 }}</td>
-                                                                        </ng-container>
+                                                                        </ng-container> -->
                                                                         <ng-container matColumnDef="elementUrl">
                                                                             <th mat-header-cell *matHeaderCellDef class="sticky-col-left"> Element
                                                                                 Name & Description </th>
@@ -601,16 +561,24 @@
                                                                                 </div>
                                                                             </td>
                                                                         </ng-container>
+                                                                        <ng-container matColumnDef="brandOrMake">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                                Brand Or Make
+                                                                            </th>
+                                                                            <td mat-cell *matCellDef="let element">
+                                                                                {{ element.elementNameAndDescription.split('\n')[1]?.split(':')[1]?.trim() }}
+                                                                            </td>
+                                                                        </ng-container>
                                                                         <ng-container matColumnDef="codeAndCategory">
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Code & Category
                                                                             </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Furniture {{
+                                                                                         {{
                                                                                         element.codeAndCategory }}
                                                                                     </button>
-                                                                                    <small class="text-muted ms-2">CXRDASCR00001/1</small>
+                                                                                    <!-- <small class="text-muted ms-2">CXRDASCR00001/1</small> -->
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
                                                                                         <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select">
                                                                                             <ng-template ng-option-tmp let-item="item">
@@ -636,7 +604,7 @@
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Yet to Order {{
+                                                                                        {{
                                                                                         element.orderStatus }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
@@ -651,8 +619,7 @@
                                                                                 mat-sort-header> Item Type </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                    <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Labour {{ element.itemType }}
+                                                                                    <button type="button" class="btn custom-btn" ngbDropdownToggle> {{ element.itemType }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
                                                                                         <ng-select [items]="itemType" bindLabel="name" bindValue="name" placeholder="Select any">
@@ -662,10 +629,8 @@
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="source">
-                                                                            <th mat-header-cell *matHeaderCellDef
-                                                                                mat-sort-header> Source </th>
-                                                                            <td mat-cell *matCellDef="let element">{{
-                                                                                element.source }}</td>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Source </th>
+                                                                            <td mat-cell *matCellDef="let element">{{ element.source }}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="status">
                                                                             <th mat-header-cell *matHeaderCellDef
@@ -673,7 +638,7 @@
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Cancelled {{ element.status }}
+                                                                                        {{ element.status }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
                                                                                         <ng-select [items]="boqStatus" bindLabel="name" bindValue="name" placeholder="Select any">
@@ -717,7 +682,7 @@
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        SQFT {{ element.uom }}
+                                                                                         {{ element.uom }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
                                                                                         <ng-select [items]="UOM" bindLabel="name" bindValue="name" placeholder="Select any">
@@ -727,26 +692,46 @@
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="draftQuantity">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft
-                                                                                Quantity </th>
-                                                                            <td mat-cell *matCellDef="let element">
-                                                                                14.5{{element.draftQuantity}}</td>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft  Quantity </th>
+                                                                            <td mat-cell *matCellDef="let element">{{element.draftQuantity}}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="clientRate">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Client
-                                                                                Rate
-                                                                                (₹) </th>
-                                                                            <td mat-cell *matCellDef="let element">
-                                                                                {{ element.clientRate }}
-                                                                            </td>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Rate (₹) </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.clientRate }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="serviceCharge">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Charge </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.serviceCharge }}</td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="baseAmount">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Base Amount </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.baseAmount }}</td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="budgetRate">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Budget Rate </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.budgetRate }}</td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="hsn">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> HSN </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.hsn }}</td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="gstPrecent">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> GST Precent </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.gstPrecent }}</td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="amountWithoutGst">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount Without Gst </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.amountWithoutGst }}</td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="discount">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Discount </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.discount }}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="finalAmount">
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-right"> Final
-                                                                                Amount
-                                                                                (₹) </th>
+                                                                                Amount (₹) </th>
                                                                             <td mat-cell *matCellDef="let element" class="sticky-col-right">
-                                                                                {{ element.finalAmount
-                                                                                }}
+                                                                                {{ element.finalAmount }}
                                                                             </td>
                                                                         </ng-container>
                                                                         <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
@@ -856,49 +841,49 @@
 </ng-template>
 
 <ng-template #content1 let-offcanvas>
-    <form [formGroup]="elementForm" (ngSubmit)="elementSubmit()">
+    <form [formGroup]="elementForm" (ngSubmit)="onSubmit()">
         <div class="offcanvas-header border-bottom border-block-end-dashed">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">{{ isEditMode ? 'Edit Element' : 'Create Element' }}</h5>
+            <h5 class="offcanvas-title">
+                {{ isEditMode ? 'Edit Element' : 'Create Element' }}
+            </h5>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
-                data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                data-bs-dismiss="offcanvas" aria-label="Close">
+            </button>
         </div>
         <div class="offcanvas-body p-4">
             <div class="col-xl-12">
                 <div class="row gy-1">
                     <div class="col-xl-6">
-                        <label for="elementName" class="form-label">Element Name</label>
-                        <input type="text" class="form-control" id="code" formControlName="elementName">
+                        <label class="form-label">Element Name</label>
+                        <input type="text" class="form-control" formControlName="elementName">
                     </div>
                     <div class="col-xl-6">
-                        <label for="elementDescription" class="form-label">Element Description</label>
-                        <input type="text" class="form-control" id="name" formControlName="elementDescription">
+                        <label class="form-label">Element Description</label>
+                        <input type="text" class="form-control" formControlName="elementDescription">
                     </div>
                     <div class="col-xl-6">
-                        <label for="brandMake" class="form-label">Brand/Make</label>
-                        <input type="text" class="form-control" id="description" formControlName="brandOrMake"
+                        <label class="form-label">Brand/Make</label>
+                        <input type="text" class="form-control" formControlName="brandOrMake"
                             placeholder="Enter Description">
                     </div>
                     <div class="col-xl-6">
-                        <label for="budgetRate" class="form-label">Length</label>
-                        <input type="text" class="form-control" id="description" formControlName="length"
-                            placeholder="Enter Length">
+                        <label class="form-label">Length</label>
+                        <input type="number" class="form-control" formControlName="length" placeholder="Enter Length">
                     </div>
                     <div class="col-xl-6">
-                        <label for="budgetRate" class="form-label">Breadth</label>
-                        <input type="text" class="form-control" id="description" formControlName="breadth"
-                            placeholder="Enter Breadth">
+                        <label class="form-label">Breadth</label>
+                        <input type="number" class="form-control" formControlName="breadth" placeholder="Enter Breadth">
                     </div>
                     <div class="col-xl-6">
-                        <label for="budgetRate" class="form-label">height</label>
-                        <input type="text" class="form-control" id="description" formControlName="height"
-                            placeholder="Enter height">
+                        <label class="form-label">Height</label>
+                        <input type="number" class="form-control" formControlName="height" placeholder="Enter Height">
                     </div>
                     <div class="col-xl-6">
-                        <label for="brandMake" class="form-label">Element Category</label>
+                        <label class="form-label">Element Category</label>
                         <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select"
                             formControlName="codeAndCategory">
                             <ng-template ng-option-tmp let-item="item">
-                                <div class="d-flex justify-content-between align-items-center w-100">
+                                <div class="d-flex justify-content-between w-100">
                                     <span>{{ item.name }}</span>
                                     <span>{{ item.code }}</span>
                                 </div>
@@ -909,60 +894,64 @@
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <label for="uom" class="form-label">UOM</label>
+                        <label class="form-label">UOM</label>
                         <ng-select [items]="UOM" bindLabel="name" bindValue="name" placeholder="Select any"
                             formControlName="uom">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <label for="quantity" class="form-label">Quantity</label>
-                        <input type="text" class="form-control" id="description" formControlName="quantity"
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-control" formControlName="quantity"
                             placeholder="Enter Quantity">
                     </div>
                     <div class="col-xl-6">
-                        <label for="uom" class="form-label">Item Type</label>
+                        <label class="form-label">Item Type</label>
                         <ng-select [items]="itemType" bindLabel="name" bindValue="name" placeholder="Select any"
                             formControlName="itemType">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <label for="clientRate" class="form-label">Client Rate (₹)</label>
-                        <input type="text" class="form-control" id="description" formControlName="clientRate"
+                        <label class="form-label">Client Rate (₹)</label>
+                        <input type="number" class="form-control" formControlName="clientRate"
                             placeholder="Enter Client Rate">
                     </div>
                     <div class="col-xl-6">
-                        <label for="budgetRate" class="form-label">Budget Rate (₹)</label>
-                        <input type="text" class="form-control" id="description" formControlName="budgetRate"
+                        <label class="form-label">Budget Rate (₹)</label>
+                        <input type="number" class="form-control" formControlName="budgetRate"
                             placeholder="Enter Budget Rate">
                     </div>
                     <div class="col-xl-6">
-                        <label for="budgetRate" class="form-label">HSN</label>
-                        <input type="text" class="form-control" id="description" formControlName="hsn"
-                            placeholder="Enter HSN">
+                        <label class="form-label">HSN</label>
+                        <input type="text" class="form-control" formControlName="hsn" placeholder="Enter HSN">
                     </div>
                     <div class="col-xl-6">
-                        <label for="budgetRate" class="form-label">GST %</label>
+                        <label class="form-label">GST %</label>
                         <ng-select [items]="GST" bindLabel="name" bindValue="name" placeholder="Select any"
                             formControlName="gstPrecent">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <label for="formFile" class="form-label">Upload Image</label>
-                        <input class="form-control" type="file" id="formFile" formControlName="elementUrl">
+                        <label class="form-label">Upload Image</label>
+                        <input class="form-control" type="file" formControlName="elementUrl">
                     </div>
                     <div *ngIf="elementForm.value.elementUrl">
-                        <img [src]="elementForm.value.elementUrl" alt="Existing Image" class="img-thumbnail mt-2" width="100">
+                        <img [src]="elementForm.value.elementUrl" alt="Existing Image" class="img-thumbnail mt-2"
+                            width="100">
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary me-3"> Submit</button>
-            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-                data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary me-3">
+                {{ isEditMode ? 'Update' : 'Save' }}
+            </button>
+            <button type="button" class="btn btn-danger" (click)="offcanvas.dismiss('Close click')">
+                Close
+            </button>
         </div>
     </form>
 </ng-template>
+
 
 <ng-template #content2 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
@@ -1175,4 +1164,55 @@
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
+</ng-template>
+
+<ng-template #content4 let-modal>
+    <form [formGroup]="proposalForm" (ngSubmit)="proposalFormSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Create Proposal</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="Execution Start Date" class="form-label">Execution Start Date</label>
+                        <input type="date" class="form-control" id="projectAddress" formControlName="executionStartDate"
+                            placeholder="Enter Execution Start Date">
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="Execution End Date" class="form-label">Execution End Date</label>
+                         <input type="date" class="form-control" id="projectAddress" formControlName="executionEndDate"
+                            placeholder="Enter Execution End Date">
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="Shipping Address" class="form-label">Shipping Address</label>
+                         <input type="text" class="form-control" id="projectAddress" formControlName="shippingAddress"
+                            placeholder="Enter Shipping Address">
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="Recipient's Email" class="form-label">Recipient's Email</label>
+                         <input type="text" class="form-control" id="projectAddress" formControlName="recipientsEmail"
+                            placeholder="Enter Recipient's Email">
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="Subject" class="form-label">Subject</label>
+                         <input type="text" class="form-control" id="projectAddress" formControlName="subject"
+                            placeholder="Enter Subject">
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="Custom Message" class="form-label">Custom Message</label>
+                         <input type="text" class="form-control" id="projectAddress" formControlName="customMessage"
+                            placeholder="Enter Custom Message">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
 </ng-template>

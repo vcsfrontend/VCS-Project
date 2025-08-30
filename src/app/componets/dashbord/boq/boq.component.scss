@@ -99,12 +99,14 @@ ul.dropdown-menu.cuw{
   position: sticky !important;
   left: 0;
   z-index: 10; 
+  // border-right: 1px solid black;
 }
 
 .sticky-col-right {
   position: sticky !important;
   right: 0;
   z-index: 11;
+  // border-left: 1px solid black;
 }
 
 .dropdown-toggle::after {
