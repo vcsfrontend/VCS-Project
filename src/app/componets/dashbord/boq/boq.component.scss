@@ -32,10 +32,6 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   max-width: 200px; 
 }
 
-.mdc-checkbox__background {
-  width: 11px !important;
-  height: 11px !important;
-}
 
 // .mat-column-elementNameDescription {
 //   width: 70% !important;   
@@ -186,3 +182,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   min-width: 1300px !important;
 }
 
+.kt {
+  cursor: pointer;
+}

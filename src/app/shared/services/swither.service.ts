@@ -195,6 +195,8 @@ export class SwitherService {
 
   // Boq
   fetchBoqData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/genrate_bom_data`, data); }  
+  saveElementData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/item_custom_addition`, data); }  
+  updateElementData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/item_custom_addition`, data); }  
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
