@@ -60,6 +60,7 @@ export class BoqComponent extends BaseComponent {
     userCompanyName: string = this.userData ? this.userData.companyName : '';
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
+    itemId :any; currentSection :any;
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
@@ -197,6 +198,8 @@ export class BoqComponent extends BaseComponent {
 
     openEditForm(element: any, content: any) {
         this.isEditMode = true;
+        this.itemId = element.boqId;
+        console.log('Clicked item boqId:', this.itemId);
 
         let elementName = '';
         let brandOrMake = '';
@@ -237,7 +240,8 @@ export class BoqComponent extends BaseComponent {
             itemCode: element.itemCode,
             companyCode: element.companyCode,
             email: element.email,
-            type: element.type
+            type: element.type,
+
         });
 
         this.previewUrl = element.elementUrl || null;
@@ -526,9 +530,10 @@ export class BoqComponent extends BaseComponent {
 
      editElement() {
         const formValue = { ...this.elementForm.value };
+        console.log('id',this.itemId);
         const payload = [
             {
-                boqId: Number(this.selectedElement) || 0,
+                boqId: Number(this.itemId) || 0,
                 elementUrl: formValue.elementUrl || '',
                 elementNameAndDescription:
                     `${formValue.elementName || ''}` +
@@ -558,16 +563,18 @@ export class BoqComponent extends BaseComponent {
                 designId: formValue.designId || '',
                 roomName: formValue.roomName || '',
                 itemCode: formValue.itemCode || '',
-                companyCode: formValue.companyCode || '',
-                email: formValue.email || '',
-                type: Number(formValue.type) || 0,
+                companyCode: this.userCompanyCode,
+                email: this.userEmail,
+                type:this.userType,
             },
         ];
+        console.log('Update Payload:', payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
                     this.toastr.success(res.message || 'Data Updated Successfully');
                     this.elementForm.reset();
+                    this.offcanvasService.dismiss();
                     this.elementFormSubmitted = false;
                     this.selectedElement = null;
                 } else {
