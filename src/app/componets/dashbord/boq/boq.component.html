@@ -770,14 +770,9 @@
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                    <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        {{ element.orderStatus }}
-                                                                                    </button>
-                                                                                    <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="orderStatus" bindLabel="name" bindValue="name" [ngModel]="element.orderStatus"
-                                                                                            (change)="updateDropdownField('orderStatus', $event, element)" placeholder="Select Status">
-                                                                                        </ng-select>
-                                                                                    </ul>
+                                                                                    <ng-select [items]="orderStatus" bindLabel="name" bindValue="name" [ngModel]="element.orderStatus"
+                                                                                        (change)="updateDropdownField('orderStatus', $event, element)" placeholder="Select Status">
+                                                                                    </ng-select>
                                                                                 </div>
                                                                             </td>
                                                                         </ng-container>
@@ -785,14 +780,9 @@
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Type </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                    <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        {{ element.itemType }}
-                                                                                    </button>
-                                                                                    <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="itemType" bindLabel="name" bindValue="name" [ngModel]="element.itemType"
-                                                                                            (change)="updateDropdownField('itemType', $event, element)">
-                                                                                        </ng-select>
-                                                                                    </ul>
+                                                                                    <ng-select [items]="itemType" bindLabel="name" bindValue="name" [ngModel]="element.itemType"
+                                                                                        (change)="updateDropdownField('itemType', $event, element)">
+                                                                                    </ng-select>
                                                                                 </div>
                                                                             </td>
                                                                         </ng-container>
@@ -804,14 +794,9 @@
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                    <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        {{ element.status || 'Select Status' }}
-                                                                                    </button>
-                                                                                    <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="boqStatus" bindLabel="name" bindValue="name" [ngModel]="element.status"
-                                                                                            (change)="updateDropdownField('status', $event, element)" placeholder="Select Status">
-                                                                                        </ng-select>
-                                                                                    </ul>
+                                                                                    <ng-select [items]="boqStatus" bindLabel="name" bindValue="name" [ngModel]="element.status"
+                                                                                        (change)="updateDropdownField('status', $event, element)" placeholder="Select Status">
+                                                                                    </ng-select>
                                                                                 </div>
                                                                             </td>
                                                                         </ng-container>
