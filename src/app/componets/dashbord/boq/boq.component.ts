@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
@@ -63,6 +63,8 @@ export class BoqComponent extends BaseComponent {
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
+    @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
     @ViewChild(MatSort) sort!: MatSort;
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
@@ -70,6 +72,8 @@ export class BoqComponent extends BaseComponent {
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null;
+    activeId:any =0;  highlightedTabIndex = 0;
+
 
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
@@ -797,6 +801,32 @@ export class BoqComponent extends BaseComponent {
     clientCreditDataSource = new MatTableDataSource<any>([
 
     ])
+
+    onScroll(event: any) {
+  const sections = this.scrollContainer.nativeElement.querySelectorAll('.card');
+  const scrollTop = this.scrollContainer.nativeElement.scrollTop;
+
+  for (let i = 0; i < sections.length; i++) {
+    const sectionTop = sections[i].offsetTop;
+    const sectionHeight = sections[i].offsetHeight;
+
+    // check if scrollTop is inside the section
+    if (scrollTop >= sectionTop - 50 && scrollTop < sectionTop + sectionHeight) {
+      this.activeId = i;
+      break;
+    }
+  }
+}
+
+    onTabClick(index: number, key: string) {
+    this.activeId = index; // highlight correct tab
+    const el = document.getElementById(key);
+    if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    }
+
+
 
 
 
