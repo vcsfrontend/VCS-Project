@@ -630,5 +630,10 @@ export class BaseComponent {
     { "name": "7%"},
   ];
 
+   desicion = [
+    { "name": "Pending"},
+    { "name": "Rejected"},
+  ];
+
 
 }

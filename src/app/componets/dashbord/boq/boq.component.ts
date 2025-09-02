@@ -48,7 +48,9 @@ export class BoqComponent extends BaseComponent {
     poNumbers: string[] = ['PO-001', 'PO-002', 'PO-003'];
     footerColumns: string[] = ['totals'];
     libraryData: string[] = ['slNo', 'libraryName', 'typeofLibrary', 'createdBy', 'lastUpdated', 'sections', 'elements'];
-    detailsColumns: string[] = ['sectionName', 'books'];
+    detailsColumns: string[] = [ 'propasalContentId', 'jobId', 'orderNo', 'orderFrom', 'orderFor', 'createdBy', 'vendorId', 'shippingAddress', 'startDate', 'dueDate', 'gstNo'];
+    proposalContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount" ];
+
     invoiceForm!: FormGroup;
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -57,26 +59,29 @@ export class BoqComponent extends BaseComponent {
     userCompanyCode: string = this.userData ? this.userData.companyCode : '';
     userCompanyName: string = this.userData ? this.userData.companyName : '';
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
-    innerActive = 1;
+    innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+    proposalContentDetailsDataSource = new MatTableDataSource<any>([]);
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
-    @ViewChild(MatSort) sort!: MatSort;
+    @ViewChild(MatSort) sort!: MatSort; 
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
     boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
+    proposalApproval!: FormGroup
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
-    selectedFile: File | null = null;
+    selectedFile: File | null = null; 
     activeId:any =0;  highlightedTabIndex = 0;
 
 
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
+    public proposalApprovalSubmitted = false;
 
     boqStaticFields = [
         { name: 'Branding', checked: false, isDefault: true, },
@@ -166,9 +171,18 @@ export class BoqComponent extends BaseComponent {
             companyCode:this.userCompanyCode,
             email: this.userEmail,
             type: this.userType,
-            updatedBy: this.userEmail,
-            createdBy: this.userEmail,
+            updatedBy: this.userName,
+	        currentAmount:[0],
+            createdBy: this.userName,
             updatedTime: new Date().toISOString(),
+        }
+        );
+        this.proposalApproval = this.fb.group({
+            proposalContentId:[''],
+            designId:[''],
+            orderNo:[''],
+            desicion:[''],
+            updatedBy: this.userName,
         }
         );
     }
@@ -292,9 +306,6 @@ export class BoqComponent extends BaseComponent {
             email: element.email ?? '',
             type: element.type ?? 0
         }];
-
-        console.log(`Payload for ${field}:`, payload);
-
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status) {
@@ -306,10 +317,31 @@ export class BoqComponent extends BaseComponent {
                 }
             },
             error: (err) => {
-                console.error('API Error:', err);
                 this.toastr.error(`Error while updating ${field}`);
             },
         });
+    }
+
+    onProposalApprovalSubmit(modal: any) {
+        if (this.proposalApproval.invalid) {
+            this.toastr.warning('Please select a decision before submitting.');
+            return;
+        }
+        const payload = {
+            decision: this.proposalApproval.value.brand,
+            proposalId: this.selectedProposalContent?.proposalId 
+        };
+        console.log(payload);
+        // this.switchService.approveProposal(payload).subscribe({
+        //     next: (res) => {
+        //         this.toastr.success('Proposal updated successfully!');
+        //         modal.close();
+        //         this.proposalApproval.reset();
+        //     },
+        //     error: (err) => {
+        //         this.toastr.error('Failed to update proposal. Please try again.');
+        //     }
+        // });
     }
 
     resetForm() {
@@ -317,6 +349,10 @@ export class BoqComponent extends BaseComponent {
         this.isEditMode = false;
         this.selectedElement = null;
     }
+    toggleCollapse() {
+        this.isCollapsed = !this.isCollapsed;
+    }
+
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -367,36 +403,57 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-    getProposals() {
+    getProposal() {
+        const payload = {
+            designId: "3FO3EWPJHYSK",
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+        };
+        this.switchService.fetchProposal(payload).subscribe({
+            next: (res: any) => {
+                this.proposaldataSource = new MatTableDataSource<any>(res.boqProposalList || []);
+                setTimeout(() => {
+                    if (this.paginator) this.proposaldataSource.paginator = this.paginator;
+                    if (this.sort) this.proposaldataSource.sort = this.sort;
+                });
+            },
+            error: (err) => {
+                this.toastr.error('Failed to fetch proposals');
+            }
+        });
+    }
+
+    getProposalContent() {
   const payload = {
     designId: "3FO3EWPJHYSK",
-    companyCode: this.userCompanyCode,
-    email: this.userEmail,
-    type: this.userType,
+    proposalContentId: "PROPAFD0"
   };
 
-  console.log("Fetching proposals with payload:", payload);
-
-  this.switchService.fetchProposal(payload).subscribe({
+  this.switchService.fetchProposalContent(payload).subscribe({
     next: (res: any) => {
-      // Initialize the table data source
-      this.proposaldataSource = new MatTableDataSource<any>(res.boqProposalList || []);
+      this.selectedProposalContent = res; // for card
 
-      // Assign paginator and sort after view has initialized
-      setTimeout(() => {
-        if (this.paginator) this.proposaldataSource.paginator = this.paginator;
-        if (this.sort) this.proposaldataSource.sort = this.sort;
-      });
+      try {
+        const parsedContent = JSON.parse(res.contentJs || "{}");
+        const flattened = Object.values(parsedContent).flat();
 
-      // Optional: Log data to verify
-      console.log("Proposal data loaded:", this.proposaldataSource.data);
+        this.proposalContentDetailsDataSource =
+          new MatTableDataSource<any>(flattened);
+      } catch (e) {
+        console.error("Failed to parse contentJs", e);
+        this.proposalContentDetailsDataSource =
+          new MatTableDataSource<any>([]);
+      }
     },
     error: (err) => {
-      console.error('Error fetching proposals:', err);
-      this.toastr.error('Failed to fetch proposals');
+      this.toastr.error("Failed to fetch proposal details");
+      console.error(err);
     }
   });
 }
+
+
 
 
 
@@ -414,6 +471,9 @@ export class BoqComponent extends BaseComponent {
     openLg2(content2: any) {
         this.offcanvasService.open(content2, { position: 'end', panelClass: 'custom-offcanvas' });
     }
+    openLg5(content5: any) {
+        this.modalService.open(content5, { centered: true });
+    }
 
     openCreateForm(content: any) {
         this.isEditMode = false;
@@ -428,12 +488,10 @@ export class BoqComponent extends BaseComponent {
         this.openEditForm(element, content);
     }
 
-
     elementSubmit() {
         const formValue = { ...this.elementForm.value };
         delete formValue.elementName;
         delete formValue.elementDescription;
-
         const payload = {
             ...formValue,
             elementNameAndDescription: `${this.elementForm.value.elementName || ''}`
@@ -450,9 +508,6 @@ export class BoqComponent extends BaseComponent {
             codeAndCategory: formValue.codeAndCategory?.name,
             brandOrMake: this.elementForm.value.brandOrMake || ''
         };
-
-        console.log('Final Payload save api:', payload);
-
         this.switchService.saveElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -464,7 +519,6 @@ export class BoqComponent extends BaseComponent {
                 }
             },
             error: (err) => {
-                console.error('API Error:', err);
                 this.toastr.error('An error occurred while saving the element.');
             },
         });
@@ -509,7 +563,6 @@ export class BoqComponent extends BaseComponent {
                 type: Number(formValue.type) || 0,
             },
         ];
-        console.log('Update Payload:', payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -522,13 +575,10 @@ export class BoqComponent extends BaseComponent {
                 }
             },
             error: (err) => {
-                console.error('API Error:', err);
                 this.toastr.error('An error occurred while updating the element.');
             },
         });
     }
-
-
 
     proposalFormSubmit(modal: any) {
         if (this.proposalForm.invalid) {
@@ -537,32 +587,43 @@ export class BoqComponent extends BaseComponent {
         }
         const formValue = this.proposalForm.value;
         const selectedData: any = {};
+        let totalAmount = 0;
+        const seenBoqIds = new Set<number>(); 
         for (const key in this.boqDataSources) {
             if (this.boqDataSources[key] && this.boqDataSources[key].data) {
-                selectedData[key] = this.boqDataSources[key].data.filter((item: any) =>
+                const filtered = this.boqDataSources[key].data.filter((item: any) =>
                     this.selectedElement?.includes(item.boqId)
                 );
+                if (filtered.length > 0) {
+                    selectedData[key] = filtered;
+                    filtered.forEach((item: any) => {
+                        if (item.clientRate && !seenBoqIds.has(item.boqId)) {
+                            totalAmount += Number(item.clientRate);
+                            seenBoqIds.add(item.boqId);
+                        }
+                    });
+                }
             }
         }
         const payload = {
             ...formValue,
+            shippingAddress: Number(formValue.shippingAddress),
             contentJs: JSON.stringify(selectedData),
+            currentAmount: totalAmount,
             designId: "3FO3EWPJHYSK"
         };
         console.log('Final Payload:', payload);
         this.switchService.createProposal(payload).subscribe({
-            next: (res) => {
-                this.toastr.success("Proposal created successfully");
-                modal.close();
-            },
-            error: (err) => {
-                this.toastr.error("Failed to create proposal");
-                console.error(err);
-            }
+          next: (res) => {
+            this.toastr.success("Proposal created successfully");
+            modal.close();
+          },
+          error: (err) => {
+            this.toastr.error("Failed to create proposal");
+          }
         });
     }
 
-   
 
     onLibraryClick(library: any) {
         this.selectedLibrary = library;
