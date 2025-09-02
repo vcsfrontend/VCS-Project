@@ -18,6 +18,7 @@ import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
+import { emptyDoc } from 'ngx-editor';
 
 interface Plan {
     name: string;
@@ -40,9 +41,9 @@ interface Plan {
 export class BoqComponent extends BaseComponent {
     displayedColumns: string[] = ['select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
     // optionalColumns: string[] = ['brandOrMake', 'discount', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gst', 'amountWithoutGST'];
-    displayedClientProposal: string[] = ['slNo', 'ReferenceNo', 'ProposalRequestType', 'ProposalFor', 'CreatedBy', 'CreatedDate', 'Status', 'amount'];
+    displayedClientProposal: string[] = ['slNo', 'referenceNo', 'proposalRequestType', 'proposalFor', 'createdBy', 'createdDate', 'status', 'amount'];
     displayedClientOrder: string[] = ['slNo', 'orderNo', 'ordertType', 'orderFrom', 'issuedBy', 'issueDate', 'dueDate', 'orderStatus', 'poStatus', 'progress', 'amount'];
-    displayedClientInvoices: string[] = ['slNo', 'invoiceNo', 'invoiceType', 'orderNo', 'orderAmount', 'invoiceDate', 'uploadedBy', 'status', 'invoiceAmount', 'creditNoteAmount'];
+    displayedClientInvoices: string[] = ['slNo', 'invoiceNo', 'invoprposaldataSourceiceType', 'orderNo', 'orderAmount', 'invoiceDate', 'uploadedBy', 'status', 'invoiceAmount', 'creditNoteAmount'];
     displayedClientCredit: string[] = ['slNo', 'creditnoteNo', 'refInvoiceNo', 'createdBy', 'orderAmount', 'attachments', 'verificationStatus', 'status', 'remark', 'amount'];
     poNumbers: string[] = ['PO-001', 'PO-002', 'PO-003'];
     footerColumns: string[] = ['totals'];
@@ -59,6 +60,7 @@ export class BoqComponent extends BaseComponent {
     innerActive = 1;
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
+    proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
@@ -66,8 +68,8 @@ export class BoqComponent extends BaseComponent {
     selectedCategory: any; editIndex: number | null = null; designId: any;
     boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
-    newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any;
-
+    newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
+    selectedFile: File | null = null;
 
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
@@ -77,129 +79,6 @@ export class BoqComponent extends BaseComponent {
         { name: 'Civil', checked: false, isDefault: true, },
         { name: 'Electrical', checked: false, isDefault: true }
     ];
-    categories = [
-        { id: 1, name: 'Acoustic', code: 'AT' },
-        { id: 2, name: 'BMS', code: 'BM' },
-        { id: 3, name: 'Branding', code: 'BR' },
-        { id: 4, name: 'Carpentry', code: 'CR' },
-        { id: 5, name: 'CCTV & IT', code: 'IT' }
-    ];
-
-    prposaldataSource = new MatTableDataSource<any>([
-        {
-            slNo: 1,
-            ReferenceNo: 'AD0001',
-            ProposalRequestType: 'Proposal For New Order',
-            ProposalFor: 'Sunil',
-            CreatedBy: 'N. Bhavani Shankar',
-            CreatedDate: '17 Nov 2024',
-            Status: 'Approved',
-            amount: 1200000
-        },
-        {
-            slNo: 2,
-            ReferenceNo: 'AD0002',
-            ProposalRequestType: 'Proposal For Renovation',
-            ProposalFor: 'Rajesh',
-            CreatedBy: 'Admin',
-            CreatedDate: '20 Nov 2024',
-            Status: 'Pending',
-            amount: 850000
-        }
-    ]);
-
-    libraryDataSource = new MatTableDataSource<any>([
-        {
-            slNo: 1,
-            libraryName: 'Central Library',
-            typeofLibrary: 'Public',
-            createdBy: 'Admin',
-            lastUpdated: '2025-08-20',
-            sections: 12,
-            elements: 2500
-        },
-        {
-            slNo: 2,
-            libraryName: 'City Knowledge Hub',
-            typeofLibrary: 'Community',
-            createdBy: 'Manager',
-            lastUpdated: '2025-08-22',
-            sections: 8,
-            elements: 1200
-        },
-        {
-            slNo: 3,
-            libraryName: 'Tech Research Library',
-            typeofLibrary: 'Private',
-            createdBy: 'Researcher',
-            lastUpdated: '2025-08-25',
-            sections: 15,
-            elements: 5000
-        },
-        {
-            slNo: 4,
-            libraryName: 'School Library',
-            typeofLibrary: 'Educational',
-            createdBy: 'Teacher',
-            lastUpdated: '2025-08-26',
-            sections: 6,
-            elements: 800
-        },
-        {
-            slNo: 5,
-            libraryName: 'Digital Archive',
-            typeofLibrary: 'Online',
-            createdBy: 'System',
-            lastUpdated: '2025-08-27',
-            sections: 20,
-            elements: 10000
-        }
-    ]);
-    clientOrdersDataSource = new MatTableDataSource<any>([
-        {
-            slNo: 1,
-            orderNo: 'AD0001',
-            ordertType: 'Regular',
-            orderFrom: 'Sunil',
-            issuedBy: 'N. Bhavani Shankar',
-            issueDate: '17 Nov 2024',
-            dueDate: '25 Nov 2024',
-            orderStatus: 'confirmed',
-            poStatus: 'pending',
-            progress: '1%',
-            amount: 120000,
-        },
-        {
-            slNo: 2,
-            orderNo: 'AD0002',
-            ordertType: 'Proposal For Repeat Order',
-            orderFrom: 'Ravi',
-            issuedBy: 'N. Bhavani Shankar',
-            issueDate: '18 Nov 2024',
-            dueDate: '27 Nov 2024',
-            orderStatus: 'Pending',
-            poStatus: 'Not Generated',
-            progress: '10%',
-            amount: 30000,
-        }
-    ]);
-    clientInvoicesDataSource = new MatTableDataSource<any>([
-        {
-            invoiceNo: 'INV-001',
-            invoiceType: 'Tax Invoice',
-            orderNo: 'ORD-101',
-            orderAmount: 5000,
-            invoiceDate: new Date(),
-            uploadedBy: 'Admin',
-            status: 'Approved',
-            invoiceAmount: 5500,
-            creditNoteAmount: 200
-        },
-
-    ]);
-    clientCreditDataSource = new MatTableDataSource<any>([
-
-    ])
 
     constructor(
         private modalService: NgbModal, public switchService: SwitherService,
@@ -225,58 +104,6 @@ export class BoqComponent extends BaseComponent {
         this.selectedItem = element;
         this.offcanvasService.open(content, { position: 'end', backdrop: true, });
     }
-
-    onSubmit() {
-        if (this.isEditMode) {
-            this.editElement();
-        } else {
-            this.elementSubmit();
-        }
-    }
-
-    openEditFromSelected(content: any) {
-        if (!this.selectedElement?.length) {
-            this.toastr.warning('Please select an element to edit');
-            return;
-        }
-        const elementId = this.selectedElement[0];
-        const allData = Object.values(this.boqDataSources).flatMap(ds => ds.data);
-        const element = allData.find((e: any) => e.boqId === elementId);
-        if (!element) return;
-        this.openEditForm(element, content);
-    }
-
-
-
-    openCreateForm(content: any) {
-        this.isEditMode = false; // 👈
-        this.elementForm.reset();
-        this.offcanvasService.open(content, { position: 'end', scroll: true });
-    }
-
-
-    openEditForm(element: any, content: any) {
-  this.isEditMode = true;
-  this.elementForm.patchValue({
-    elementUrl: element.elementUrl,
-    elementName: element.elementName,
-    elementDescription: element.elementDescription,
-    codeAndCategory: element.codeAndCategory,
-    orderStatus: element.orderStatus,
-    // ...
-  });
-  this.offcanvasService.open(content, { position: 'end', scroll: true });
-}
-
-
-
-    resetForm() {
-        this.elementForm.reset();
-        this.isEditMode = false;
-        this.selectedElement = null;
-    }
-
-
 
     flatpickrOptions: any = {
         inline: true
@@ -322,20 +149,174 @@ export class BoqComponent extends BaseComponent {
             type: this.userType
         });
         this.proposalForm = this.fb.group({
-            executionStartDate: [''],
-            executionEndDate: [''],
-            shippingAddress: [''],
-            recipientsEmail: [''],
-            subject: [''],
-            customMessage: [''],
+            orderFrom:[''],
+            orderFor:[''],
+            vendorId:[''],
+            shippingAddress:[0],
+            startDate: [''],
+            dueDate: [''],
+            gstNo:[''],
+            contentJs:[''],
+            proposalContId:['101'],
+            designId: [''],
+            companyCode:this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+            updatedBy: this.userEmail,
+            createdBy: this.userEmail,
+            updatedTime: new Date().toISOString(),
         }
         );
     }
 
+    onSubmit() {
+        if (this.isEditMode) {
+            this.editElement();
+        } else {
+            this.elementSubmit();
+        }
+    }
 
+    openEditForm(element: any, content: any) {
+        this.isEditMode = true;
+
+        let elementName = '';
+        let brandOrMake = '';
+        let elementDescription = '';
+
+        if (element.elementNameAndDescription) {
+            const parts: string[] = element.elementNameAndDescription.split('\n');
+            const namePart = parts.find((p: string) => p.startsWith('Name :'));
+            elementName = namePart ? namePart.replace('Name :', '').trim() : '';
+
+            const brandPart = parts.find((p: string) => p.startsWith('Brand :'));
+            brandOrMake = brandPart ? brandPart.replace('Brand :', '').trim() : '';
+
+            // Capture the description: any lines that are not Name or Brand
+            elementDescription = parts
+                .filter(p => !p.startsWith('Name :') && !p.startsWith('Brand :'))
+                .join('\n')
+                .trim();
+        }
+
+        this.elementForm.patchValue({
+            elementUrl: element.elementUrl || '',
+            elementName: elementName,
+            elementDescription: elementDescription,
+            brandOrMake: brandOrMake || element.brandOrMake || '',
+            length: element.length || 0,
+            breadth: element.breadth || 0,
+            height: element.height || 0,
+            codeAndCategory: element.codeAndCategory,
+            uom: element.uom,
+            quantity: element.quantity,
+            itemType: element.itemType,
+            clientRate: element.clientRate,
+            budgetRate: element.budgetRate,
+            hsn: element.hsn,
+            gstPrecent: element.gstPrecent,
+            roomName: element.roomName,
+            itemCode: element.itemCode,
+            companyCode: element.companyCode,
+            email: element.email,
+            type: element.type
+        });
+
+        this.previewUrl = element.elementUrl || null;
+
+        // Open offcanvas and reset form when closed/dismissed
+        const ref = this.offcanvasService.open(content, { position: 'end', scroll: true });
+        ref.closed.subscribe(() => this.resetForm());
+        ref.dismissed.subscribe(() => this.resetForm());
+    }
+
+    updateDropdownField(
+        field: 'itemType' | 'orderStatus' | 'uom' | 'status' | 'codeAndCategory',
+        selectedValue: string | { name?: string, code?: string },
+        element: any
+    ) {
+        if (!element?.boqId) {
+            this.toastr.warning('Invalid element selected');
+            return;
+        }
+        let fieldValue: string;
+        if (typeof selectedValue === 'string') {
+            fieldValue = selectedValue;
+        } else if (field === 'codeAndCategory') {
+            fieldValue = selectedValue?.code || '';
+        } else {
+            fieldValue = selectedValue?.name || '';
+        }
+        this.elementForm.patchValue({ [field]: fieldValue });
+        let brandOrMake = element.brandOrMake;
+        if (field === 'itemType' && !brandOrMake && element.elementNameAndDescription) {
+            const brandLine = element.elementNameAndDescription.split('\n')[1];
+            if (brandLine?.includes(':')) {
+                brandOrMake = brandLine.split(':')[1]?.trim() || '';
+            }
+        }
+
+        const payload = [{
+            boqId: element.boqId ?? 0,
+            elementUrl: element.elementUrl ?? '',
+            elementNameAndDescription: element.elementNameAndDescription ?? '',
+            codeAndCategory: field === 'codeAndCategory' ? fieldValue : element.codeAndCategory ?? '',
+            orderStatus: field === 'orderStatus' ? fieldValue : element.orderStatus ?? '',
+            itemType: field === 'itemType' ? fieldValue : element.itemType ?? '',
+            uom: field === 'uom' ? fieldValue : element.uom ?? '',
+            status: field === 'status' ? fieldValue : element.status ?? '',
+            source: element.source ?? '',
+            length: element.length ?? 0,
+            breadth: element.breadth ?? 0,
+            height: element.height ?? 0,
+            quantity: element.quantity ?? 0,
+            draftQuantity: element.draftQuantity ?? 0,
+            clientRate: element.clientRate ?? 0,
+            finalAmount: element.finalAmount ?? 0,
+            brandOrMake: brandOrMake ?? element.brandOrMake ?? '',
+            discount: element.discount ?? 0,
+            serviceCharge: element.serviceCharge ?? 0,
+            baseAmount: element.baseAmount ?? 0,
+            budgetRate: element.budgetRate ?? 0,
+            hsn: element.hsn ?? 0,
+            gstPrecent: element.gstPrecent ?? 0,
+            amountWithoutGst: element.amountWithoutGst ?? 0,
+            designId: element.designId ?? '',
+            roomName: element.roomName ?? '',
+            itemCode: element.itemCode ?? '',
+            companyCode: element.companyCode ?? '',
+            email: element.email ?? '',
+            type: element.type ?? 0
+        }];
+
+        console.log(`Payload for ${field}:`, payload);
+
+        this.switchService.updateElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status) {
+                    this.toastr.success(`${field} updated successfully`);
+                    element[field] = fieldValue;
+                    if (field === 'itemType') element.brandOrMake = brandOrMake;
+                } else {
+                    this.toastr.error(res?.message || `Failed to update ${field}`);
+                }
+            },
+            error: (err) => {
+                console.error('API Error:', err);
+                this.toastr.error(`Error while updating ${field}`);
+            },
+        });
+    }
+
+    resetForm() {
+        this.elementForm.reset();
+        this.isEditMode = false;
+        this.selectedElement = null;
+    }
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
+        this.proposaldataSource.paginator = this.paginator;
         // this.dataSource.sort = this.sort;
     }
 
@@ -382,6 +363,39 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
+    getProposals() {
+  const payload = {
+    designId: "3FO3EWPJHYSK",
+    companyCode: this.userCompanyCode,
+    email: this.userEmail,
+    type: this.userType,
+  };
+
+  console.log("Fetching proposals with payload:", payload);
+
+  this.switchService.fetchProposal(payload).subscribe({
+    next: (res: any) => {
+      // Initialize the table data source
+      this.proposaldataSource = new MatTableDataSource<any>(res.boqProposalList || []);
+
+      // Assign paginator and sort after view has initialized
+      setTimeout(() => {
+        if (this.paginator) this.proposaldataSource.paginator = this.paginator;
+        if (this.sort) this.proposaldataSource.sort = this.sort;
+      });
+
+      // Optional: Log data to verify
+      console.log("Proposal data loaded:", this.proposaldataSource.data);
+    },
+    error: (err) => {
+      console.error('Error fetching proposals:', err);
+      this.toastr.error('Failed to fetch proposals');
+    }
+  });
+}
+
+
+
     setPaginatorAndSort(key: string) {
         if (this.boqDataSources[key]) {
             this.boqDataSources[key].paginator = this.paginator;
@@ -397,103 +411,101 @@ export class BoqComponent extends BaseComponent {
         this.offcanvasService.open(content2, { position: 'end', panelClass: 'custom-offcanvas' });
     }
 
-    elementSubmit() {
-  const formValue = { ...this.elementForm.value };
-
-  // Remove raw name/description from payload
-  delete formValue.elementName;
-  delete formValue.elementDescription;
-
-  const payload = {
-    ...formValue,
-    elementNameAndDescription: `${this.elementForm.value.elementName || ''}`
-      + `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}`
-      + `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`, // 👈 embed brand
-    budgetRate: Number(this.elementForm.value.budgetRate),
-    clientRate: Number(this.elementForm.value.clientRate),
-    gstPrecent: Number(this.elementForm.value.gstPrecent),
-    hsn: Number(this.elementForm.value.hsn),
-    breadth: Number(this.elementForm.value.breadth),
-    height: Number(this.elementForm.value.height),
-    length: Number(this.elementForm.value.length),
-    quantity: Number(this.elementForm.value.quantity),
-    codeAndCategory: formValue.codeAndCategory?.name,
-    brandOrMake: this.elementForm.value.brandOrMake || ''  // 👈 also send directly
-  };
-
-  console.log('Final Payload save api:', payload);
-
-  this.switchService.saveElementData(payload).subscribe({
-    next: (res: any) => {
-      if (res?.status === true) {
-        this.toastr.success(res.message || 'Data Saved Successfully');
+    openCreateForm(content: any) {
+        this.isEditMode = false;
         this.elementForm.reset();
-        this.elementFormSubmitted = false;
-      } else {
-        this.toastr.error(res?.message || 'Something went wrong.');
-      }
-    },
-    error: (err) => {
-      console.error('API Error:', err);
-      this.toastr.error('An error occurred while saving the element.');
-    },
-  });
-}
-
-
-    proposalFormSubmit(modal: any) {
-        const formValue = { ...this.proposalForm.value };
-        const payload = {
-            ...formValue,
-        };
-        console.log('Final Payload:', payload);
+        const ref = this.offcanvasService.open(content, { position: 'end', scroll: true });
+        ref.closed.subscribe(() => this.resetForm());
+        ref.dismissed.subscribe(() => this.resetForm());
     }
 
-    editElement() {
-        if (!this.selectedElement) {
-            this.toastr.warning('No element selected for editing.');
-            return;
-        }
+    openEditFromSelected(element: any, content: any) {
+        this.isEditMode = true; 
+        this.openEditForm(element, content);
+    }
 
+
+    elementSubmit() {
         const formValue = { ...this.elementForm.value };
+        delete formValue.elementName;
+        delete formValue.elementDescription;
 
         const payload = {
-            boqId: this.selectedElement,
-            elementUrl: formValue.elementUrl || '',
-            elementNameAndDescription: `${formValue.elementName || ''}`
-                + `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}`
-                + `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`, // 👈 embed brand
-            codeAndCategory: formValue.codeAndCategory?.name || '',
-            orderStatus: formValue.orderStatus || '',
-            itemType: formValue.itemType || '',
-            source: formValue.source || '',
-            status: formValue.status || '',
-            length: Number(formValue.length) || 0,
-            breadth: Number(formValue.breadth) || 0,
-            height: Number(formValue.height) || 0,
-            quantity: Number(formValue.quantity) || 0,
-            uom: formValue.uom || '',
-            draftQuantity: Number(formValue.draftQuantity) || 0,
-            clientRate: Number(formValue.clientRate) || 0,
-            finalAmount: Number(formValue.finalAmount) || 0,
-            brandOrMake: formValue.brandOrMake || '',   // ✅ direct field
-            discount: Number(formValue.discount) || 0,
-            serviceCharge: Number(formValue.serviceCharge) || 0,
-            baseAmount: Number(formValue.baseAmount) || 0,
-            budgetRate: Number(formValue.budgetRate) || 0,
-            hsn: Number(formValue.hsn) || 0,
-            gstPrecent: Number(formValue.gstPrecent) || 0,
-            amountWithoutGst: Number(formValue.amountWithoutGst) || 0,
-            designId: formValue.designId || '',
-            roomName: formValue.roomName || '',
-            itemCode: formValue.itemCode || '',
-            companyCode: formValue.companyCode || '',
-            email: formValue.email || '',
-            type: Number(formValue.type) || 0
+            ...formValue,
+            elementNameAndDescription: `${this.elementForm.value.elementName || ''}`
+                + `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}`
+                + `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`, // 👈 embed brand
+            budgetRate: Number(this.elementForm.value.budgetRate),
+            clientRate: Number(this.elementForm.value.clientRate),
+            gstPrecent: Number(this.elementForm.value.gstPrecent),
+            hsn: Number(this.elementForm.value.hsn),
+            breadth: Number(this.elementForm.value.breadth),
+            height: Number(this.elementForm.value.height),
+            length: Number(this.elementForm.value.length),
+            quantity: Number(this.elementForm.value.quantity),
+            codeAndCategory: formValue.codeAndCategory?.name,
+            brandOrMake: this.elementForm.value.brandOrMake || ''
         };
 
-        console.log('Update Payload:', payload);
+        console.log('Final Payload save api:', payload);
 
+        this.switchService.saveElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status === true) {
+                    this.toastr.success(res.message || 'Data Saved Successfully');
+                    this.elementForm.reset();
+                    this.elementFormSubmitted = false;
+                } else {
+                    this.toastr.error(res?.message || 'Something went wrong.');
+                }
+            },
+            error: (err) => {
+                console.error('API Error:', err);
+                this.toastr.error('An error occurred while saving the element.');
+            },
+        });
+    }
+
+     editElement() {
+        const formValue = { ...this.elementForm.value };
+        const payload = [
+            {
+                boqId: Number(this.selectedElement) || 0,
+                elementUrl: formValue.elementUrl || '',
+                elementNameAndDescription:
+                    `${formValue.elementName || ''}` +
+                    `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
+                    `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`,
+                codeAndCategory: formValue.codeAndCategory?.name || '',
+                orderStatus: formValue.orderStatus || '',
+                itemType: formValue.itemType || '',
+                source: formValue.source || '',
+                status: formValue.status || '',
+                length: Number(formValue.length) || 0,
+                breadth: Number(formValue.breadth) || 0,
+                height: Number(formValue.height) || 0,
+                quantity: Number(formValue.quantity) || 0,
+                uom: formValue.uom || '',
+                draftQuantity: Number(formValue.draftQuantity) || 0,
+                clientRate: Number(formValue.clientRate) || 0,
+                finalAmount: Number(formValue.finalAmount) || 0,
+                brandOrMake: formValue.brandOrMake || '',
+                discount: Number(formValue.discount) || 0,
+                serviceCharge: Number(formValue.serviceCharge) || 0,
+                baseAmount: Number(formValue.baseAmount) || 0,
+                budgetRate: Number(formValue.budgetRate) || 0,
+                hsn: Number(formValue.hsn) || 0,
+                gstPrecent: Number(formValue.gstPrecent) || 0,
+                amountWithoutGst: Number(formValue.amountWithoutGst) || 0,
+                designId: formValue.designId || '',
+                roomName: formValue.roomName || '',
+                itemCode: formValue.itemCode || '',
+                companyCode: formValue.companyCode || '',
+                email: formValue.email || '',
+                type: Number(formValue.type) || 0,
+            },
+        ];
+        console.log('Update Payload:', payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -511,6 +523,42 @@ export class BoqComponent extends BaseComponent {
             },
         });
     }
+
+
+
+    proposalFormSubmit(modal: any) {
+        if (this.proposalForm.invalid) {
+            this.toastr.warning("Please fill all required fields");
+            return;
+        }
+        const formValue = this.proposalForm.value;
+        const selectedData: any = {};
+        for (const key in this.boqDataSources) {
+            if (this.boqDataSources[key] && this.boqDataSources[key].data) {
+                selectedData[key] = this.boqDataSources[key].data.filter((item: any) =>
+                    this.selectedElement?.includes(item.boqId)
+                );
+            }
+        }
+        const payload = {
+            ...formValue,
+            contentJs: JSON.stringify(selectedData),
+            designId: "3FO3EWPJHYSK"
+        };
+        console.log('Final Payload:', payload);
+        this.switchService.createProposal(payload).subscribe({
+            next: (res) => {
+                this.toastr.success("Proposal created successfully");
+                modal.close();
+            },
+            error: (err) => {
+                this.toastr.error("Failed to create proposal");
+                console.error(err);
+            }
+        });
+    }
+
+   
 
     onLibraryClick(library: any) {
         this.selectedLibrary = library;
@@ -642,6 +690,114 @@ export class BoqComponent extends BaseComponent {
     //     }
     //     this.displayedColumns = ['select', 'slNo', 'elementUrl', ...Array.from(this.selectedColumns)];
     // }
+
+    onFileChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+            this.selectedFile = input.files[0];
+
+            // show preview
+            const reader = new FileReader();
+            reader.onload = () => {
+                this.previewUrl = reader.result;
+            };
+            reader.readAsDataURL(this.selectedFile);
+        }
+    }
+
+    libraryDataSource = new MatTableDataSource<any>([
+        {
+            slNo: 1,
+            libraryName: 'Central Library',
+            typeofLibrary: 'Public',
+            createdBy: 'Admin',
+            lastUpdated: '2025-08-20',
+            sections: 12,
+            elements: 2500
+        },
+        {
+            slNo: 2,
+            libraryName: 'City Knowledge Hub',
+            typeofLibrary: 'Community',
+            createdBy: 'Manager',
+            lastUpdated: '2025-08-22',
+            sections: 8,
+            elements: 1200
+        },
+        {
+            slNo: 3,
+            libraryName: 'Tech Research Library',
+            typeofLibrary: 'Private',
+            createdBy: 'Researcher',
+            lastUpdated: '2025-08-25',
+            sections: 15,
+            elements: 5000
+        },
+        {
+            slNo: 4,
+            libraryName: 'School Library',
+            typeofLibrary: 'Educational',
+            createdBy: 'Teacher',
+            lastUpdated: '2025-08-26',
+            sections: 6,
+            elements: 800
+        },
+        {
+            slNo: 5,
+            libraryName: 'Digital Archive',
+            typeofLibrary: 'Online',
+            createdBy: 'System',
+            lastUpdated: '2025-08-27',
+            sections: 20,
+            elements: 10000
+        }
+    ]);
+    clientOrdersDataSource = new MatTableDataSource<any>([
+        {
+            slNo: 1,
+            orderNo: 'AD0001',
+            ordertType: 'Regular',
+            orderFrom: 'Sunil',
+            issuedBy: 'N. Bhavani Shankar',
+            issueDate: '17 Nov 2024',
+            dueDate: '25 Nov 2024',
+            orderStatus: 'confirmed',
+            poStatus: 'pending',
+            progress: '1%',
+            amount: 120000,
+        },
+        {
+            slNo: 2,
+            orderNo: 'AD0002',
+            ordertType: 'Proposal For Repeat Order',
+            orderFrom: 'Ravi',
+            issuedBy: 'N. Bhavani Shankar',
+            issueDate: '18 Nov 2024',
+            dueDate: '27 Nov 2024',
+            orderStatus: 'Pending',
+            poStatus: 'Not Generated',
+            progress: '10%',
+            amount: 30000,
+        }
+    ]);
+    clientInvoicesDataSource = new MatTableDataSource<any>([
+        {
+            invoiceNo: 'INV-001',
+            invoiceType: 'Tax Invoice',
+            orderNo: 'ORD-101',
+            orderAmount: 5000,
+            invoiceDate: new Date(),
+            uploadedBy: 'Admin',
+            status: 'Approved',
+            invoiceAmount: 5500,
+            creditNoteAmount: 200
+        },
+
+    ]);
+    clientCreditDataSource = new MatTableDataSource<any>([
+
+    ])
+
 
 
 }
