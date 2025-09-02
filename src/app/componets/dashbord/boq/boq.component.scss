@@ -98,9 +98,17 @@ ul.dropdown-menu.cuw{
 .sticky-col-left {
   position: sticky !important;
   left: 0;
-  z-index: 10; 
-  // border-right: 1px solid black;
+  z-index: 9;
+  background: #fff; 
 }
+
+.sticky-col-left-2 {
+  position: sticky !important;
+  left: 50px; 
+  z-index: 9;
+  background: #fff;
+}
+
 
 .sticky-col-right {
   position: sticky !important;
