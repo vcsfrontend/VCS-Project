@@ -802,32 +802,4 @@ export class BoqComponent extends BaseComponent {
 
     ])
 
-    onScroll(event: any) {
-  const sections = this.scrollContainer.nativeElement.querySelectorAll('.card');
-  const scrollTop = this.scrollContainer.nativeElement.scrollTop;
-
-  for (let i = 0; i < sections.length; i++) {
-    const sectionTop = sections[i].offsetTop;
-    const sectionHeight = sections[i].offsetHeight;
-
-    // check if scrollTop is inside the section
-    if (scrollTop >= sectionTop - 50 && scrollTop < sectionTop + sectionHeight) {
-      this.activeId = i;
-      break;
-    }
-  }
-}
-
-    onTabClick(index: number, key: string) {
-    this.activeId = index; // highlight correct tab
-    const el = document.getElementById(key);
-    if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    }
-
-
-
-
-
 }

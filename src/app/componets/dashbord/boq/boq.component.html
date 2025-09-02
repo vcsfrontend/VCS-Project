@@ -435,34 +435,25 @@
                                 </div>
                             </ng-template>
                         </ng-container>
-                       <ng-container ngbNavItem="5">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab" aria-selected="false">Project
-                                Scope</a>
+                        <ng-container ngbNavItem="5">
+                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                                aria-selected="false">Project Scope</a>
                             <ng-template class="tab-content" ngbNavContent>
                                 <div class="row">
                                     <div class="col-xl-12 bg-light">
-                                        <nav ngbNav #nav2="ngbNav" [(activeId)]="activeId" class="nav nav-style-1 nav-pills border-bottom p-2 bg-white"
-                                            role="tablist">
-                                            <!-- Tabs -->
+                                        <nav ngbNav #nav2="ngbNav" [activeId]="1"
+                                            class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
+                                            <!-- <button class="btn btn-primary me-2" (click)="openRights2(content3)"><i class="ri-add-line"></i></button> -->
                                             <ng-container *ngFor="let key of tabKeys; let i = index">
-                                                <ng-container [ngbNavItem]="i">
-                                                    <a ngbNavLink class="nav-link" [class.active]="activeId === i" (click)="onTabClick(i, key)" [id]="'tab-' + key">
-                                                        {{ key | titlecase }}
-                                                        <span class="badge bg-white text-dark ms-1">
-                                                            {{ boqDataSources[key].data.length }}
-                                                        </span>
-                                                    </a>
+                                                <ng-container [ngbNavItem]="i+1">
+                                                    <a ngbNavLink class="nav-link">{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{
+                                                            boqDataSources[key].data.length }}</span></a>
                                                     <ng-template ngbNavContent>
-                                        
-                                                        <!-- First tab = shows all sections together -->
-                                                        <div *ngIf="activeId === 0" class="all-tabs-container mt-2" #scrollContainer (scroll)="onScroll($event)"
-                                                            style="max-height: 500px; overflow-y: auto;">
-                                        
-                                                            <ng-container *ngFor="let sectionKey of tabKeys; let j = index">
-                                                                <div class="card custom-card bg-white mb-4" [id]="'section-' + sectionKey">
-                                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                                        <h5 class="modal-title">Proposal For Client ({{ sectionKey | titlecase }})</h5>
-                                                                        <div class="dropdown" ngbDropdown>
+                                                        <div class="col-xl-12 mt-2">
+                                                            <div class="card custom-card bg-white">
+                                                                <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                                    <h5 class="modal-title">Proposal For Client ({{ key | titlecase }})</h5>
+                                                                    <div class="dropdown" ngbDropdown>
                                                                         <button type="button" class="btn btn-primary" ngbDropdownToggle type="button" aria-expanded="false">
                                                                             <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Add New
                                                                         </button>
@@ -476,35 +467,33 @@
                                                                             <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">Something     else here</a></li>
                                                                         </ul>
                                                                     </div>
-
-                                                                    </div>
-                                        
-                                                                    <div class="table-container mat-elevation-z8">
-                                                                    <table mat-table [dataSource]="boqDataSources[sectionKey]"
+                                                                </div>
+                                                                <div class="table-container mat-elevation-z8">
+                                                                    <table mat-table [dataSource]="boqDataSources[key]"
                                                                         matSort class="mat-table1 w-100">
                                                                         <ng-container matColumnDef="select">
-                                                                            <th mat-header-cell *matHeaderCellDef>
+                                                                            <th mat-header-cell *matHeaderCellDef class="sticky-col-left" style="max-width: 750px;">
                                                                                 <mat-checkbox [checked]="isAllSelected(key)" [indeterminate]="isIndeterminate(key)"
                                                                                     (change)="onSelectAllChange($event, key)">
                                                                                 </mat-checkbox>
                                                                             </th>
-                                                                            <td mat-cell *matCellDef="let element">
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
                                                                                 <mat-checkbox [checked]="selectedElement?.includes(element.boqId) ?? false"
                                                                                     (change)="onRowCheckboxChange(element, $event)" class="custom-checkbox">
                                                                                 </mat-checkbox>
                                                                             </td>
                                                                         </ng-container>
-                                                                        <ng-container matColumnDef="slNo">
+                                                                        <!-- <ng-container matColumnDef="slNo">
                                                                             <th mat-header-cell *matHeaderCellDef> S.No.
                                                                             </th>
                                                                             <td mat-cell *matCellDef="let element; let i = index">
                                                                                 {{ i+1 }}</td>
-                                                                        </ng-container>
+                                                                        </ng-container> -->
                                                                         <ng-container matColumnDef="elementUrl">
-                                                                            <th mat-header-cell *matHeaderCellDef class="sticky-col-left"> Element
+                                                                            <th mat-header-cell *matHeaderCellDef class="sticky-col-left-2" style="max-width: 750px;"> Element
                                                                                 Name & Description </th>
-                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
-                                                                                <div class="d-flex align-items-center" (click)="openDetails(detailsOffcanvas, element)" style="cursor: pointer;">
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left-2" style="max-width: 750px;">
+                                                                                <div class="d-flex align-items-center" (click)="openEditFromSelected(element, content1)" style="cursor: pointer;">
                                                                                     <span class="avatar avatar-xl me-3">
                                                                                         <img [src]="element.elementUrl" class="img-thumbnail" alt="Project Image">
                                                                                     </span>
@@ -545,12 +534,13 @@
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Furniture {{
+                                                                                         {{
                                                                                         element.codeAndCategory }}
                                                                                     </button>
-                                                                                    <small class="text-muted ms-2">CXRDASCR00001/1</small>
+                                                                                    <!-- <small class="text-muted ms-2">CXRDASCR00001/1</small> -->
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select">
+                                                                                        <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select"
+                                                                                        [ngModel]="element.codeAndCategory" (change)="updateDropdownField('codeAndCategory', $event, element)" >
                                                                                             <ng-template ng-option-tmp let-item="item">
                                                                                                 <div class="d-flex justify-content-between align-items-center w-100">
                                                                                                     <span>{{ item.name
@@ -569,52 +559,49 @@
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="orderStatus">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status
-                                                                            </th>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Yet to Order {{
-                                                                                        element.orderStatus }}
+                                                                                        {{ element.orderStatus }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="orderStatus" bindLabel="name" bindValue="name" placeholder="Select any">
+                                                                                        <ng-select [items]="orderStatus" bindLabel="name" bindValue="name" [ngModel]="element.orderStatus"
+                                                                                            (change)="updateDropdownField('orderStatus', $event, element)" placeholder="Select Status">
                                                                                         </ng-select>
                                                                                     </ul>
                                                                                 </div>
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="itemType">
-                                                                            <th mat-header-cell *matHeaderCellDef
-                                                                                mat-sort-header> Item Type </th>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Type </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Labour {{ element.itemType }}
+                                                                                        {{ element.itemType }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="itemType" bindLabel="name" bindValue="name" placeholder="Select any">
+                                                                                        <ng-select [items]="itemType" bindLabel="name" bindValue="name" [ngModel]="element.itemType"
+                                                                                            (change)="updateDropdownField('itemType', $event, element)">
                                                                                         </ng-select>
                                                                                     </ul>
                                                                                 </div>
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="source">
-                                                                            <th mat-header-cell *matHeaderCellDef
-                                                                                mat-sort-header> Source </th>
-                                                                            <td mat-cell *matCellDef="let element">{{
-                                                                                element.source }}</td>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Source </th>
+                                                                            <td mat-cell *matCellDef="let element">{{ element.source }}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="status">
-                                                                            <th mat-header-cell *matHeaderCellDef
-                                                                                mat-sort-header> Status </th>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        Cancelled {{ element.status }}
+                                                                                        {{ element.status || 'Select Status' }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="boqStatus" bindLabel="name" bindValue="name" placeholder="Select any">
+                                                                                        <ng-select [items]="boqStatus" bindLabel="name" bindValue="name" [ngModel]="element.status"
+                                                                                            (change)="updateDropdownField('status', $event, element)" placeholder="Select Status">
                                                                                         </ng-select>
                                                                                     </ul>
                                                                                 </div>
@@ -650,33 +637,27 @@
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="uom">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> UOM
-                                                                            </th>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> UOM </th>
                                                                             <td mat-cell *matCellDef="let element">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                        SQFT {{ element.uom }}
+                                                                                        {{ element.uom }}
                                                                                     </button>
                                                                                     <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                        <ng-select [items]="UOM" bindLabel="name" bindValue="name" placeholder="Select any">
+                                                                                        <ng-select [items]="UOM" bindLabel="name" bindValue="name" [ngModel]="element.uom"
+                                                                                            (change)="updateDropdownField('uom', $event, element)" placeholder="Select UOM">
                                                                                         </ng-select>
                                                                                     </ul>
                                                                                 </div>
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="draftQuantity">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft
-                                                                                Quantity </th>
-                                                                            <td mat-cell *matCellDef="let element">
-                                                                                14.5{{element.draftQuantity}}</td>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft  Quantity </th>
+                                                                            <td mat-cell *matCellDef="let element">{{element.draftQuantity}}</td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="clientRate">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Client
-                                                                                Rate
-                                                                                (₹) </th>
-                                                                            <td mat-cell *matCellDef="let element">
-                                                                                {{ element.clientRate }}
-                                                                            </td>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Rate (₹) </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.clientRate }} </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="serviceCharge">
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Charge </th>
@@ -706,29 +687,30 @@
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Discount </th>
                                                                             <td mat-cell *matCellDef="let element"> {{ element.discount }}</td>
                                                                         </ng-container>
-
                                                                         <ng-container matColumnDef="finalAmount">
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-right"> Final
-                                                                                Amount
-                                                                                (₹) </th>
+                                                                                Amount (₹) </th>
                                                                             <td mat-cell *matCellDef="let element" class="sticky-col-right">
-                                                                                {{ element.finalAmount
-                                                                                }}
+                                                                                {{ element.finalAmount }}
                                                                             </td>
                                                                         </ng-container>
                                                                         <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
                                                                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"> </tr>
                                                                     </table>
                                                                 </div>
-                                        
-                                                                    <div class="d-flex justify-content-between align-items-center">
-                                                                        <div class="btn-group ms-5" role="group">
-                                                                            <!-- action buttons -->
-                                                                        </div>
-                                                                        <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <div class="btn-group ms-5" role="group" aria-label="Basic outlined example">
+                                                                        <button type="button" class="btn btn-outline-primary btn-wave"
+                                                                         ngbTooltip="Edit" placement="top">
+                                                                            <i class="ri-edit-line" ></i>
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-outline-primary btn-wave" ngbTooltip="Bulk Mail" placement="top">
+                                                                            <i class="ri-mail-line bt-icon"></i>
+                                                                        </button>
                                                                     </div>
+                                                                    <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator>
                                                                 </div>
-                                                            </ng-container>
+                                                            </div>
                                                         </div>
                                                     </ng-template>
                                                 </ng-container>
