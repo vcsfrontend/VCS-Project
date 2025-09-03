@@ -50,7 +50,7 @@ export class BoqComponent extends BaseComponent {
     libraryData: string[] = ['slNo', 'libraryName', 'typeofLibrary', 'createdBy', 'lastUpdated', 'sections', 'elements'];
     detailsColumns: string[] = [ 'propasalContentId', 'jobId', 'orderNo', 'orderFrom', 'orderFor', 'createdBy', 'vendorId', 'shippingAddress', 'startDate', 'dueDate', 'gstNo'];
     proposalContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount" ];
-
+    userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
     invoiceForm!: FormGroup;
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -77,7 +77,7 @@ export class BoqComponent extends BaseComponent {
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null; 
-    activeId:any =0;  highlightedTabIndex = 0;
+    activeId:any =0;  highlightedTabIndex = 0; selectedProposal: any;
 
 
     public elementFormSubmitted = false;
@@ -194,6 +194,19 @@ export class BoqComponent extends BaseComponent {
         } else {
             this.elementSubmit();
         }
+    }
+
+    getAgentColor(name: string): string {
+        const index = Math.abs(this.hashString(name.trim())) % this.userColors.length;
+        return this.userColors[index];
+    }
+
+    private hashString(str: string): number {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return hash;
     }
 
     openEditForm(element: any, content: any) {
@@ -328,25 +341,29 @@ export class BoqComponent extends BaseComponent {
 
     onProposalApprovalSubmit(modal: any) {
         if (this.proposalApproval.invalid) {
-            this.toastr.warning('Please select a decision before submitting.');
+            this.toastr.warning("Please select a decision");
             return;
         }
         const payload = {
-            decision: this.proposalApproval.value.brand,
-            proposalId: this.selectedProposalContent?.proposalId 
+            ...this.proposalApproval.value,
+            proposalContentId: this.selectedProposal?.proposalContentId ?? this.selectedProposal?.propasalContentId ?? '',
+            orderNo: this.selectedProposal?.orderNo ?? this.selectedProposal?.referenceNo ?? '',
+            designId: this.selectedProposal?.designId ?? '',
+            jobId: this.selectedProposal?.jobId ?? '',
+            updatedBy: this.userName
         };
-        console.log(payload);
-        // this.switchService.approveProposal(payload).subscribe({
-        //     next: (res) => {
-        //         this.toastr.success('Proposal updated successfully!');
-        //         modal.close();
-        //         this.proposalApproval.reset();
-        //     },
-        //     error: (err) => {
-        //         this.toastr.error('Failed to update proposal. Please try again.');
-        //     }
-        // });
+        console.log("Approval Payload ===>", payload);
+        this.switchService.approveProposal(payload).subscribe({
+          next: () => {
+            this.toastr.success("Proposal approved successfully");
+            modal.close();
+          },
+          error: () => {
+            this.toastr.error("Failed to approve proposal");
+          }
+        });
     }
+
 
     resetForm() {
         this.elementForm.reset();
@@ -384,14 +401,21 @@ export class BoqComponent extends BaseComponent {
             wardrobeRequired: true,
             kbRequired: true
         };
+
         this.switchService.fetchBoqData(payload).subscribe({
             next: (res) => {
                 const boqData = res?.boqData || {};
                 this.tabKeys = Object.keys(boqData);
+
                 this.boqDataSources = {};
                 this.tabCounts = {};
+
+                let allItems: any[] = [];  // collect all room data here
+
                 this.tabKeys.forEach((key) => {
                     const items = boqData[key] || [];
+
+                    // assign data source per room
                     this.boqDataSources[key] = new MatTableDataSource(
                         items.map((item: any, index: number) => ({
                             slNo: index + 1,
@@ -399,7 +423,24 @@ export class BoqComponent extends BaseComponent {
                         }))
                     );
                     this.tabCounts[key] = items.length;
+
+                    // merge into allItems with roomName
+                    allItems = [
+                        ...allItems,
+                        ...items.map((item: any, index: number) => ({
+                            slNo: index + 1,
+                            roomName: key,   // 👈 keep track of room name
+                            ...item
+                        }))
+                    ];
                 });
+
+                // ✅ Create All tab only once
+                this.boqDataSources['All'] = new MatTableDataSource(allItems);
+                this.tabCounts['All'] = allItems.length;
+
+                // Insert All tab at first
+                this.tabKeys = ['All', ...this.tabKeys];
             },
             error: () => {
                 this.toastr.error('Something went wrong!');
@@ -428,38 +469,33 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-    getProposalContent() {
-  const payload = {
-    designId: "3FO3EWPJHYSK",
-    proposalContentId: "PROPAFD0"
-  };
-
-  this.switchService.fetchProposalContent(payload).subscribe({
-    next: (res: any) => {
-      this.selectedProposalContent = res; // for card
-
-      try {
-        const parsedContent = JSON.parse(res.contentJs || "{}");
-        const flattened = Object.values(parsedContent).flat();
-
-        this.proposalContentDetailsDataSource =
-          new MatTableDataSource<any>(flattened);
-      } catch (e) {
-        console.error("Failed to parse contentJs", e);
-        this.proposalContentDetailsDataSource =
-          new MatTableDataSource<any>([]);
-      }
-    },
-    error: (err) => {
-      this.toastr.error("Failed to fetch proposal details");
-      console.error(err);
+    getProposalContent(element: any) {
+        if (!element?.proposalContentId || !element?.designId) {
+            this.toastr.warning('Invalid proposal data');
+            return;
+        }
+        const payload = {
+            designId: element.designId,
+            proposalContentId: element.proposalContentId
+        };
+        this.switchService.fetchProposalContent(payload).subscribe({
+            next: (res: any) => {
+                this.selectedProposalContent = res;
+                try {
+                    const parsedContent = JSON.parse(res.contentJs || "{}");
+                    const flattened = Object.values(parsedContent).flat();
+                    this.proposalContentDetailsDataSource =
+                        new MatTableDataSource<any>(flattened);
+                } catch (e) {
+                    this.proposalContentDetailsDataSource =
+                        new MatTableDataSource<any>([]);
+                }
+            },
+            error: () => {
+                this.toastr.error("Failed to fetch proposal details");
+            }
+        });
     }
-  });
-}
-
-
-
-
 
     setPaginatorAndSort(key: string) {
         if (this.boqDataSources[key]) {
@@ -476,9 +512,9 @@ export class BoqComponent extends BaseComponent {
         this.offcanvasService.open(content2, { position: 'end', panelClass: 'custom-offcanvas' });
     }
     openLg5(content5: any) {
+        this.selectedProposal = this.selectedProposalContent;
         this.modalService.open(content5, { centered: true });
     }
-
     openCreateForm(content: any) {
         this.isEditMode = false;
         this.elementForm.reset();
@@ -869,5 +905,7 @@ export class BoqComponent extends BaseComponent {
     clientCreditDataSource = new MatTableDataSource<any>([
 
     ])
+
+    
 
 }
