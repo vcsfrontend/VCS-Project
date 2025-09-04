@@ -87,7 +87,7 @@ export class CampaignsComponent extends BaseComponent {
       campaignId: [0],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
       pipeline: ['', Validators.required],
-      campaignPoc: [''],
+      campaignPoc: [this.userEmail],
       agents: [[]],
       campaignPriority: [''],
       leadDuplicacy: [''],
@@ -118,6 +118,7 @@ export class CampaignsComponent extends BaseComponent {
     }
     let payload = {
       ...this.campaignForm.value,
+      campaignPoc : this.userEmail,
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType,
@@ -127,6 +128,7 @@ export class CampaignsComponent extends BaseComponent {
       payload.campgnId = this.selectedCampgnId;
       payload.campaignId = this.selectedCampaignId;
     }
+    console.log(payload);
     this.switchService.saveCampaignData(payload).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;

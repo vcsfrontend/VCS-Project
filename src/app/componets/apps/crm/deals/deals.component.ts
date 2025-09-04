@@ -1088,9 +1088,11 @@ export class DealsComponent extends BaseComponent {
   
   uploadLeadSubmit(modal: any) {
     const selectedAgents = this.uploadLead.get('agents')?.value;
-    if (!selectedAgents || selectedAgents.length === 0) {
-      this.toastr.warning('Please select at least one user before importing.');
-      return;
+    if (this.userType !== 1) {
+      if (!selectedAgents || selectedAgents.length === 0) {
+        this.toastr.warning('Please select at least one user before importing.');
+        return;
+      }
     }
     this.uploadSubmitted = true;
     if (this.uploadLead.valid) {
@@ -1101,7 +1103,7 @@ export class DealsComponent extends BaseComponent {
       formData.append('companyCode', JSON.parse(this.userData)?.companyCode || '');
       formData.append('email', JSON.parse(this.userData)?.email || '');
       formData.append('type', JSON.parse(this.userData)?.type || '');
-      formData.append('campaignId', (JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
+      formData.append('campaignId', (JSON.parse(this.userData)?.userType !== 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
       formData.append('stage', this.defaultStageName || 'open');
       formData.append('status', this.defaultStatusName || 'active');
       const autoAllocate = this.uploadLead.get('autoAllocate')?.value;
