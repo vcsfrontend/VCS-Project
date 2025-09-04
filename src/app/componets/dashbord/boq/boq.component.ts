@@ -905,7 +905,6 @@ export class BoqComponent extends BaseComponent {
     clientCreditDataSource = new MatTableDataSource<any>([
 
     ])
-
-    
-
+   sectionName = 'Unsectioned (12)';
+sectionTotal = 10000;
 }

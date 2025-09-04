@@ -196,3 +196,11 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   cursor: pointer;
 }
 
+.static-row {
+  background: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}

@@ -231,12 +231,12 @@
             </ng-select>
 
           </div>
-          <div class="col-xl-12" *ngIf="userType !== 1">
+          <!-- <div class="col-xl-12" *ngIf="userType !== 1">
             <label for="deal-name" class="form-label">Who will manage this Campaign</label>
             <ng-select formControlName="campaignPoc" [items]="userList" bindLabel="email" bindValue="email"
               placeholder="Select an Manager">
             </ng-select>
-          </div>
+          </div> -->
           <div class="col-xl-12" *ngIf="userType !== 1">
             <label for="deal-name" class="form-label">Select Agents</label>
             <ng-select formControlName="agents" [items]="userList" bindLabel="email" bindValue="email"
