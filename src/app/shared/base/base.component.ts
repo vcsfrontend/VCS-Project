@@ -631,7 +631,7 @@ export class BaseComponent {
   ];
 
    desicion = [
-    { "name": "Approve"},
+    { "name": "Approved"},
     { "name": "Rejected"},
   ];
 
