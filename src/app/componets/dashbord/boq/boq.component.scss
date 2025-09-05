@@ -107,6 +107,7 @@ ul.dropdown-menu.cuw{
   left: 50px; 
   z-index: 9;
   background: #fff;
+  border-right: 1px solid black;
 }
 
 
@@ -114,7 +115,7 @@ ul.dropdown-menu.cuw{
   position: sticky !important;
   right: 0;
   z-index: 11;
-  // border-left: 1px solid black;
+  border-left: 1px solid black;
 }
 
 .dropdown-toggle::after {
