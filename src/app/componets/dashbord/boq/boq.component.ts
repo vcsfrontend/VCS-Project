@@ -80,7 +80,8 @@ export class BoqComponent extends BaseComponent {
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null; 
-    activeId:any =0;  highlightedTabIndex = 0; selectedProposal: any;
+    activeId:any =0;  highlightedTabIndex = 0; selectedProposal: any;          // raw API data
+  filteredProposals: any[] = [];
 
 
     public elementFormSubmitted = false;
@@ -441,100 +442,92 @@ export class BoqComponent extends BaseComponent {
             }
         });
     }
+    
 
     getProposal() {
-        const payload = {
-            designId: "3FO3EWPJHYSK",
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
-        };
-        this.switchService.fetchProposal(payload).subscribe({
-            next: (res: any) => {
-                this.proposals = res.boqProposalList || [];
-                this.proposaldataSource = new MatTableDataSource<any>(this.proposals);
-                setTimeout(() => {
-                    if (this.paginator) {
-                        this.proposaldataSource.paginator = this.paginator;
-                    }
-                    if (this.sort) {
-                        this.proposaldataSource.sort = this.sort;
-                    }
-                });
-            },
-            error: () => {
-                this.toastr.error('Failed to fetch proposals');
-            }
-        });
-    }
+    const payload = {
+      designId: "3FO3EWPJHYSK",
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+    };
 
+    this.switchService.fetchProposal(payload).subscribe({
+      next: (res: any) => {
+        this.proposals = res.boqProposalList || [];
+        this.filteredProposals = [...this.proposals]; // use this for table
+      },
+      error: () => {
+        this.toastr.error('Failed to fetch proposals');
+      }
+    });
+  }
+
+  getTotalAmount(): number {
+    return this.filteredProposals?.reduce(
+      (sum, item) => sum + (item.amount || 0),
+      0
+    ) || 0;
+  }
 
     getProposalContent(element: any) {
-        if (!element?.proposalContentId || !element?.designId) {
-            this.toastr.warning('Invalid proposal data');
-            return;
+  if (!element?.proposalContentId || !element?.designId) {
+    this.toastr.warning('Invalid proposal data');
+    return;
+  }
+
+  const payload = {
+    designId: element.designId,
+    proposalContentId: element.proposalContentId
+  };
+
+  this.switchService.fetchProposalContent(payload).subscribe({
+    next: (res: any) => {
+      this.selectedProposalContent = res;
+      try {
+        const parsedContent = JSON.parse(res.contentJs || "{}");
+        const flattened = Object.values(parsedContent).flat();
+        const uniqueFlattened = Array.from(
+          new Map(flattened.map((item: any) => [item.boqId, item])).values()
+        );
+        this.proposalContentDataSources = {};
+        this.proposalTabCounts = {};
+        this.proposalContentDataSources["All"] = new MatTableDataSource<any>(uniqueFlattened);
+        this.proposalTabCounts["All"] = uniqueFlattened.length;
+
+        if (this.paginator) {
+          this.proposalContentDataSources["All"].paginator = this.paginator;
         }
-
-        const payload = {
-            designId: element.designId,
-            proposalContentId: element.proposalContentId
-        };
-
-        this.switchService.fetchProposalContent(payload).subscribe({
-            next: (res: any) => {
-                this.selectedProposalContent = res;
-                try {
-                    const parsedContent = JSON.parse(res.contentJs || "{}");
-                    const flattened = Object.values(parsedContent).flat();
-
-                    // Reset before filling
-                    this.proposalContentDataSources = {};
-                    this.proposalTabCounts = {};
-
-                    // Always add All tab first
-                    this.proposalContentDataSources["All"] = new MatTableDataSource<any>(flattened);
-                    this.proposalTabCounts["All"] = flattened.length;
-
-                    // Assign paginator & sort for All tab
-                    if (this.paginator) {
-                        this.proposalContentDataSources["All"].paginator = this.paginator;
-                    }
-                    if (this.sort) {
-                        this.proposalContentDataSources["All"].sort = this.sort;
-                    }
-
-                    // Add room-specific tabs (excluding duplicate All)
-                    const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
-                    roomKeys.forEach(room => {
-                        const roomData = parsedContent[room] || [];
-                        this.proposalContentDataSources[room] = new MatTableDataSource<any>(roomData);
-                        this.proposalTabCounts[room] = roomData.length;
-
-                        // Attach paginator & sort
-                        if (this.paginator) {
-                            this.proposalContentDataSources[room].paginator = this.paginator;
-                        }
-                        if (this.sort) {
-                            this.proposalContentDataSources[room].sort = this.sort;
-                        }
-                    });
-
-                    // Final tab order
-                    this.proposalTabKeys = ["All", ...roomKeys];
-
-                } catch (e) {
-                    this.proposalContentDataSources = {
-                        All: new MatTableDataSource<any>([])
-                    };
-                    this.proposalTabKeys = ["All"];
-                    this.proposalTabCounts = { All: 0 };
-                }
-            },
-            error: () => {
-                this.toastr.error("Failed to fetch proposal details");
-            }
+        if (this.sort) {
+          this.proposalContentDataSources["All"].sort = this.sort;
+        }
+        const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
+        roomKeys.forEach(room => {
+          const roomData = parsedContent[room] || [];
+          this.proposalContentDataSources[room] = new MatTableDataSource<any>(roomData);
+          this.proposalTabCounts[room] = roomData.length;
+          if (this.paginator) {
+            this.proposalContentDataSources[room].paginator = this.paginator;
+          }
+          if (this.sort) {
+            this.proposalContentDataSources[room].sort = this.sort;
+          }
         });
+        this.proposalTabKeys = ["All", ...roomKeys];
+
+      } catch (e) {
+        this.proposalContentDataSources = {
+          All: new MatTableDataSource<any>([])
+        };
+        this.proposalTabKeys = ["All"];
+        this.proposalTabCounts = { All: 0 };
+      }
+    },
+    error: () => {
+      this.toastr.error("Failed to fetch proposal details");
     }
+  });
+}
 
 
     setPaginatorAndSort(key: string) {
