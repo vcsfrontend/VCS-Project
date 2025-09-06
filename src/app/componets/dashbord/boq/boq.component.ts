@@ -67,6 +67,7 @@ export class BoqComponent extends BaseComponent {
     proposalContentDetailsDataSource = new MatTableDataSource<any>([]);
     proposalTabKeys: string[] = [];
     proposalTabCounts: { [key: string]: number } = {};
+    itemCodeLst:any;
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -433,6 +434,10 @@ export class BoqComponent extends BaseComponent {
                         }))
                     ];
                 });
+                 this.itemCodeLst = Array.from(
+                    new Set(allItems.map(item => item.itemCode)) // unique codes
+                ).map(code => ({ code }));
+
                 this.boqDataSources['All'] = new MatTableDataSource(allItems);
                 this.tabCounts['All'] = allItems.length;
                 this.tabKeys = ['All', ...this.tabKeys];
@@ -597,45 +602,54 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-     editElement() {
+     editElement(element?: any) {
         const formValue = { ...this.elementForm.value };
         const payload = [
             {
-                boqId: Number(this.itemId) || 0,
-                elementUrl: formValue.elementUrl || '',
-                elementNameAndDescription:
-                    `${formValue.elementName || ''}` +
-                    `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
-                    `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`,
-                codeAndCategory: formValue.codeAndCategory?.name || '',
-                orderStatus: formValue.orderStatus || '',
-                itemType: formValue.itemType || '',
-                source: formValue.source || '',
-                status: formValue.status || '',
-                length: Number(formValue.length) || 0,
-                breadth: Number(formValue.breadth) || 0,
-                height: Number(formValue.height) || 0,
-                quantity: Number(formValue.quantity) || 0,
-                uom: formValue.uom || '',
-                draftQuantity: Number(formValue.draftQuantity) || 0,
-                clientRate: Number(formValue.clientRate) || 0,
-                finalAmount: Number(formValue.finalAmount) || 0,
-                brandOrMake: formValue.brandOrMake || '',
-                discount: Number(formValue.discount) || 0,
-                serviceCharge: Number(formValue.serviceCharge) || 0,
-                baseAmount: Number(formValue.baseAmount) || 0,
-                budgetRate: Number(formValue.budgetRate) || 0,
-                hsn: Number(formValue.hsn) || 0,
-                gstPrecent: Number(formValue.gstPrecent) || 0,
-                amountWithoutGst: Number(formValue.amountWithoutGst) || 0,
-                designId: formValue.designId || '',
-                roomName: formValue.roomName || '',
-                itemCode: formValue.itemCode || '',
-                companyCode: this.userCompanyCode,
-                email: this.userEmail,
-                type:this.userType,
+            boqId: element?.boqId || Number(this.itemId) || 0,
+            elementUrl: element?.elementUrl || formValue.elementUrl || '',
+            elementNameAndDescription:
+                element?.elementNameAndDescription ||
+                (
+                `${formValue.elementName || ''}` +
+                `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
+                `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
+                ),
+            codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
+            orderStatus: element?.orderStatus || formValue.orderStatus || '',
+            itemType: element?.itemType || formValue.itemType || '',
+            source: element?.source || formValue.source || '',
+            status: element?.status || formValue.status || '',
+            length: Number(element?.length ?? formValue.length) || 0,
+            breadth: Number(element?.breadth ?? formValue.breadth) || 0,
+            height: Number(element?.height ?? formValue.height) || 0,
+            quantity: Number(element?.quantity ?? formValue.quantity) || 0,
+            uom: element?.uom || formValue.uom || '',
+
+            // 🔹 Draft Quantity from table row
+            draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
+
+            clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
+            finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
+            brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+            discount: Number(element?.discount ?? formValue.discount) || 0,
+            serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
+            baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
+            budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
+            hsn: Number(element?.hsn ?? formValue.hsn) || 0,
+            gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
+            amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
+
+            designId: "3FO3EWPJHYSK",
+            roomName: element?.roomName || formValue.roomName || '',
+            itemCode: element?.itemCode || formValue.itemCode || '',
+
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
             },
         ];
+        console.log(payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -644,6 +658,7 @@ export class BoqComponent extends BaseComponent {
                     this.offcanvasService.dismiss();
                     this.elementFormSubmitted = false;
                     this.selectedElement = null;
+                    this.boqData();
                 } else {
                     this.toastr.error(res?.message || 'Something went wrong.');
                 }
@@ -653,6 +668,7 @@ export class BoqComponent extends BaseComponent {
             },
         });
     }
+
 
     proposalFormSubmit(modal: any) {
         if (this.proposalForm.invalid) {

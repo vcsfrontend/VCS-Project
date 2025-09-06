@@ -246,4 +246,23 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   background-color: #333;
 }
 
+/* hide input by default */
+.editable-cell .cell-input {
+  display: none;
+  width: 100%;
+  border: 1px solid #d60606;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 13px;
+}
+.editable-cell .cell-text {
+  display: inline-block;
+}
+.editable-cell:hover .cell-input {
+  display: inline-block;
+}
+
+.editable-cell:hover .cell-text {
+  display: none;
+}
 
