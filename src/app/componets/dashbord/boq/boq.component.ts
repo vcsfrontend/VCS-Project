@@ -39,7 +39,7 @@ interface Plan {
     styleUrl: './boq.component.scss'
 })
 export class BoqComponent extends BaseComponent {
-    displayedColumns: string[] = ['select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
+    displayedColumns: string[] = ['sourceFlag', 'select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
     // optionalColumns: string[] = ['brandOrMake', 'discount', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gst', 'amountWithoutGST'];
     displayedClientProposal: string[] = ['slNo', 'referenceNo', 'proposalRequestType', 'proposalFor', 'createdBy', 'createdDate', 'status', 'amount'];
     displayedClientOrder: string[] = ['slNo', 'orderNo', 'ordertType', 'orderFrom', 'issuedBy', 'issueDate', 'dueDate', 'orderStatus', 'poStatus', 'progress', 'amount'];
@@ -60,7 +60,7 @@ export class BoqComponent extends BaseComponent {
     userCompanyName: string = this.userData ? this.userData.companyName : '';
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
-    itemId :any; currentSection :any; proposals: any[] = [];
+    itemId :any; currentSection :any; proposals: any[] = []; clientOrders: any[] = [];
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
@@ -77,12 +77,12 @@ export class BoqComponent extends BaseComponent {
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
     boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
-    proposalApproval!: FormGroup; extraContentProposalForm!: FormGroup
+    proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null; 
     activeId:any =0;  highlightedTabIndex = 0; selectedProposal: any;          // raw API data
-  filteredProposals: any[] = [];
+    filteredProposals: any[] = [];  filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
 
 
     public elementFormSubmitted = false;
@@ -111,6 +111,14 @@ export class BoqComponent extends BaseComponent {
     openRights2(content3: any) {
         this.offcanvasService.open(content3, { position: 'end' });
     }
+    onCreateProposalClick(content: any) {
+        if (!this.selectedElement || this.selectedElement.length === 0) {
+            this.toastr.warning("Please select at least one Element");
+            return;
+        }
+        this.openRights4(content);
+    }
+
     openRights4(content4: any) {
         this.modalService.open(content4, { centered: true, size: 'lg' });
     }
@@ -194,12 +202,19 @@ export class BoqComponent extends BaseComponent {
             updatedTime: new Date().toISOString(),
         }
         );
-        this.proposalApproval = this.fb.group({
+        this.proposalApprovalForm = this.fb.group({
             proposalContentId:[''],
             designId:[''],
             orderNo:[''],
             desicion:[''],
             updatedBy: this.userName,
+            startDate:[''],
+            endDate:[''],
+            shippingAddress:[''],
+            amount:[0],
+            companyCode:this.userCompanyCode,
+            email:this.userEmail,
+            type:this.userType
         });
         this.extraContentProposalForm = this.fb.group({
             orderNo:[''],
@@ -353,13 +368,13 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-    onProposalApprovalSubmit(modal: any) {
-        if (this.proposalApproval.invalid) {
+    proposalApprovalSubmit(modal: any) {
+        if (this.proposalApprovalForm.invalid) {
             this.toastr.warning("Please select a decision");
             return;
         }
         const payload = {
-            ...this.proposalApproval.value,
+            ...this.proposalApprovalForm.value,
             proposalContentId: this.selectedProposal?.proposalContentId ?? this.selectedProposal?.propasalContentId ?? '',
             orderNo: this.selectedProposal?.orderNo ?? this.selectedProposal?.referenceNo ?? '',
             designId: this.selectedProposal?.designId ?? '',
@@ -368,11 +383,12 @@ export class BoqComponent extends BaseComponent {
         };
         this.switchService.approveProposal(payload).subscribe({
           next: () => {
-            this.toastr.success("Proposal Updated successfully");
+            this.toastr.success("Proposal Created successfully");
             modal.close();
           },
         });
     }
+
 
     resetForm() {
         this.elementForm.reset();
@@ -415,7 +431,8 @@ export class BoqComponent extends BaseComponent {
                 this.tabKeys = Object.keys(boqData);
                 this.boqDataSources = {};
                 this.tabCounts = {};
-                let allItems: any[] = [];  
+                this.tabTotals = {};
+                let allItems: any[] = [];
                 this.tabKeys.forEach((key) => {
                     const items = boqData[key] || [];
                     this.boqDataSources[key] = new MatTableDataSource(
@@ -425,21 +442,22 @@ export class BoqComponent extends BaseComponent {
                         }))
                     );
                     this.tabCounts[key] = items.length;
+                    const total = items.reduce((sum: number, item: any) => {
+                        return sum + (item.clientRate || 0);
+                    }, 0);
+                    this.tabTotals[key] = total;
                     allItems = [
                         ...allItems,
                         ...items.map((item: any, index: number) => ({
                             slNo: index + 1,
-                            roomName: key,  
+                            roomName: key,
                             ...item
                         }))
                     ];
                 });
-                 this.itemCodeLst = Array.from(
-                    new Set(allItems.map(item => item.itemCode)) // unique codes
-                ).map(code => ({ code }));
-
                 this.boqDataSources['All'] = new MatTableDataSource(allItems);
                 this.tabCounts['All'] = allItems.length;
+                this.tabTotals['All'] = allItems.reduce((sum, item) => sum + (item.clientRate || 0), 0);
                 this.tabKeys = ['All', ...this.tabKeys];
             },
             error: () => {
@@ -447,93 +465,113 @@ export class BoqComponent extends BaseComponent {
             }
         });
     }
-    
+
 
     getProposal() {
-    const payload = {
-      designId: "3FO3EWPJHYSK",
-      companyCode: this.userCompanyCode,
-      email: this.userEmail,
-      type: this.userType,
-    };
+        const payload = {
+            designId: "3FO3EWPJHYSK",
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+        };
+        this.switchService.fetchProposal(payload).subscribe({
+            next: (res: any) => {
+                this.proposals = res.boqProposalList || [];
+                this.filteredProposals = [...this.proposals];
+            },
+            error: () => {
+                this.toastr.error('Failed to fetch proposals');
+            }
+        });
+    }
 
-    this.switchService.fetchProposal(payload).subscribe({
-      next: (res: any) => {
-        this.proposals = res.boqProposalList || [];
-        this.filteredProposals = [...this.proposals]; // use this for table
-      },
-      error: () => {
-        this.toastr.error('Failed to fetch proposals');
-      }
-    });
-  }
+    getTotalAmount(): number {
+        return this.filteredProposals?.reduce(
+            (sum, item) => sum + (item.amount || 0),
+            0
+        ) || 0;
+    }
 
-  getTotalAmount(): number {
-    return this.filteredProposals?.reduce(
-      (sum, item) => sum + (item.amount || 0),
-      0
-    ) || 0;
-  }
+    getClientOrders() {
+        const payload = {
+            designId: "3FO3EWPJHYSK",
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+        };
+        this.switchService.fetchClientOrder(payload).subscribe({
+            next: (res: any) => {
+                this.clientOrders = res.boqClinetOrderList || [];
+                this.filteredClientOrders = [...this.clientOrders];
+            },
+            error: () => {
+                this.toastr.error('Failed to fetch clientOrders');
+            }
+        });
+    }
 
     getProposalContent(element: any) {
-  if (!element?.proposalContentId || !element?.designId) {
-    this.toastr.warning('Invalid proposal data');
-    return;
-  }
-
-  const payload = {
-    designId: element.designId,
-    proposalContentId: element.proposalContentId
-  };
-
-  this.switchService.fetchProposalContent(payload).subscribe({
-    next: (res: any) => {
-      this.selectedProposalContent = res;
-      try {
-        const parsedContent = JSON.parse(res.contentJs || "{}");
-        const flattened = Object.values(parsedContent).flat();
-        const uniqueFlattened = Array.from(
-          new Map(flattened.map((item: any) => [item.boqId, item])).values()
-        );
-        this.proposalContentDataSources = {};
-        this.proposalTabCounts = {};
-        this.proposalContentDataSources["All"] = new MatTableDataSource<any>(uniqueFlattened);
-        this.proposalTabCounts["All"] = uniqueFlattened.length;
-
-        if (this.paginator) {
-          this.proposalContentDataSources["All"].paginator = this.paginator;
+        if (!element?.proposalContentId || !element?.designId) {
+            this.toastr.warning('Invalid proposal data');
+            return;
         }
-        if (this.sort) {
-          this.proposalContentDataSources["All"].sort = this.sort;
-        }
-        const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
-        roomKeys.forEach(room => {
-          const roomData = parsedContent[room] || [];
-          this.proposalContentDataSources[room] = new MatTableDataSource<any>(roomData);
-          this.proposalTabCounts[room] = roomData.length;
-          if (this.paginator) {
-            this.proposalContentDataSources[room].paginator = this.paginator;
-          }
-          if (this.sort) {
-            this.proposalContentDataSources[room].sort = this.sort;
-          }
-        });
-        this.proposalTabKeys = ["All", ...roomKeys];
-
-      } catch (e) {
-        this.proposalContentDataSources = {
-          All: new MatTableDataSource<any>([])
+        const payload = {
+            designId: element.designId,
+            proposalContentId: element.proposalContentId
         };
-        this.proposalTabKeys = ["All"];
-        this.proposalTabCounts = { All: 0 };
-      }
-    },
-    error: () => {
-      this.toastr.error("Failed to fetch proposal details");
-    }
-  });
-}
+        this.switchService.fetchProposalContent(payload).subscribe({
+            next: (res: any) => {
+                this.selectedProposalContent = res;
+                try {
+                    const parsedContent = JSON.parse(res.contentJs || "{}");
+                    const flattened = Object.values(parsedContent).flat();
+                    const uniqueFlattened = Array.from(
+                        new Map(flattened.map((item: any) => [item.boqId, item])).values()
+                    );
+                    const totalAmount = uniqueFlattened.reduce(
+                        (sum: number, item: any) => sum + (item.clientRate || 0),
+                        0
+                    );
+                    this.proposalApprovalForm.patchValue({ amount: totalAmount });
+                    this.proposalContentDataSources = {};
+                    this.proposalTabCounts = {};
+                    this.proposalContentDataSources["All"] = new MatTableDataSource<any>(uniqueFlattened);
+                    this.proposalTabCounts["All"] = uniqueFlattened.length;
+                    if (this.paginator) {
+                        this.proposalContentDataSources["All"].paginator = this.paginator;
+                    }
+                    if (this.sort) {
+                        this.proposalContentDataSources["All"].sort = this.sort;
+                    }
+                    const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
+                    roomKeys.forEach(room => {
+                        const roomData = parsedContent[room] || [];
+                        this.proposalContentDataSources[room] = new MatTableDataSource<any>(roomData);
+                        this.proposalTabCounts[room] = roomData.length;
+                        if (this.paginator) {
+                            this.proposalContentDataSources[room].paginator = this.paginator;
+                        }
+                        if (this.sort) {
+                            this.proposalContentDataSources[room].sort = this.sort;
+                        }
+                    });
 
+                    this.proposalTabKeys = ["All", ...roomKeys];
+
+                } catch (e) {
+                    this.proposalContentDataSources = {
+                        All: new MatTableDataSource<any>([])
+                    };
+                    this.proposalTabKeys = ["All"];
+                    this.proposalTabCounts = { All: 0 };
+                    this.proposalApprovalForm.patchValue({ amount: 0 });
+                }
+            },
+            error: () => {
+                this.toastr.error("Failed to fetch proposal details");
+            }
+        });
+    }
 
     setPaginatorAndSort(key: string) {
         if (this.boqDataSources[key]) {
@@ -553,6 +591,7 @@ export class BoqComponent extends BaseComponent {
         this.selectedProposal = this.selectedProposalContent;
         this.modalService.open(content5, { centered: true });
     }
+
     openCreateForm(content: any) {
         this.isEditMode = false;
         this.elementForm.reset();
@@ -602,54 +641,48 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-     editElement(element?: any) {
+    editElement(element?: any) {
         const formValue = { ...this.elementForm.value };
         const payload = [
             {
-            boqId: element?.boqId || Number(this.itemId) || 0,
-            elementUrl: element?.elementUrl || formValue.elementUrl || '',
-            elementNameAndDescription:
-                element?.elementNameAndDescription ||
-                (
-                `${formValue.elementName || ''}` +
-                `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
-                `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
-                ),
-            codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
-            orderStatus: element?.orderStatus || formValue.orderStatus || '',
-            itemType: element?.itemType || formValue.itemType || '',
-            source: element?.source || formValue.source || '',
-            status: element?.status || formValue.status || '',
-            length: Number(element?.length ?? formValue.length) || 0,
-            breadth: Number(element?.breadth ?? formValue.breadth) || 0,
-            height: Number(element?.height ?? formValue.height) || 0,
-            quantity: Number(element?.quantity ?? formValue.quantity) || 0,
-            uom: element?.uom || formValue.uom || '',
-
-            // 🔹 Draft Quantity from table row
-            draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
-
-            clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
-            finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
-            brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
-            discount: Number(element?.discount ?? formValue.discount) || 0,
-            serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
-            baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
-            budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
-            hsn: Number(element?.hsn ?? formValue.hsn) || 0,
-            gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
-            amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-
-            designId: "3FO3EWPJHYSK",
-            roomName: element?.roomName || formValue.roomName || '',
-            itemCode: element?.itemCode || formValue.itemCode || '',
-
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
+                boqId: element?.boqId || Number(this.itemId) || 0,
+                elementUrl: element?.elementUrl || formValue.elementUrl || '',
+                elementNameAndDescription:
+                    element?.elementNameAndDescription ||
+                    (
+                        `${formValue.elementName || ''}` +
+                        `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
+                        `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
+                    ),
+                codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
+                orderStatus: element?.orderStatus || formValue.orderStatus || '',
+                itemType: element?.itemType || formValue.itemType || '',
+                source: element?.source || formValue.source || '',
+                status: element?.status || formValue.status || '',
+                length: Number(element?.length ?? formValue.length) || 0,
+                breadth: Number(element?.breadth ?? formValue.breadth) || 0,
+                height: Number(element?.height ?? formValue.height) || 0,
+                quantity: Number(element?.quantity ?? formValue.quantity) || 0,
+                uom: element?.uom || formValue.uom || '',
+                draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
+                clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
+                finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
+                brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+                discount: Number(element?.discount ?? formValue.discount) || 0,
+                serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
+                baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
+                budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
+                hsn: Number(element?.hsn ?? formValue.hsn) || 0,
+                gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
+                amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
+                designId: "3FO3EWPJHYSK",
+                roomName: element?.roomName || formValue.roomName || '',
+                itemCode: element?.itemCode || formValue.itemCode || '',
+                companyCode: this.userCompanyCode,
+                email: this.userEmail,
+                type: this.userType,
             },
         ];
-        console.log(payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -669,16 +702,11 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-
     proposalFormSubmit(modal: any) {
-        if (this.proposalForm.invalid) {
-            this.toastr.warning("Please fill all required fields");
-            return;
-        }
         const formValue = this.proposalForm.value;
         const selectedData: any = {};
         let totalAmount = 0;
-        const seenBoqIds = new Set<number>(); 
+        const seenBoqIds = new Set<number>();
         for (const key in this.boqDataSources) {
             if (this.boqDataSources[key] && this.boqDataSources[key].data) {
                 const filtered = this.boqDataSources[key].data.filter((item: any) =>
@@ -695,29 +723,107 @@ export class BoqComponent extends BaseComponent {
                 }
             }
         }
-        const payload = {
+        const proposalPayload = {
             ...formValue,
             shippingAddress: Number(formValue.shippingAddress),
             contentJs: JSON.stringify(selectedData),
             currentAmount: totalAmount,
             designId: "3FO3EWPJHYSK"
         };
-        this.switchService.createProposal(payload).subscribe({
-          next: (res) => {
-            this.toastr.success("Proposal created successfully");
-            modal.close();
-          },
-          error: (err) => {
-            this.toastr.error("Failed to create proposal");
-          }
+        this.updateElementsAndCreateProposal(proposalPayload, modal);
+    }
+
+    private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
+        if (!this.selectedElement || this.selectedElement.length === 0) return;
+        const formValue = this.elementForm?.value ?? {};
+        const payloads = this.selectedElement.map((boqId: number) => {
+            let element: any = null;
+            for (const key of this.tabKeys) {
+                const dataSource = this.boqDataSources[key];
+                if (dataSource) {
+                    const found = dataSource.data.find((item: any) => item.boqId === boqId);
+                    if (found) {
+                        element = found;
+                        break;
+                    }
+                }
+            }
+            return {
+                boqId: element?.boqId || boqId,
+                elementUrl: element?.elementUrl || formValue.elementUrl || '',
+                elementNameAndDescription:
+                    element?.elementNameAndDescription ||
+                    (
+                        `${formValue.elementName || ''}` +
+                        `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
+                        `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
+                    ),
+                codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
+                orderStatus: element?.orderStatus || formValue.orderStatus || '',
+                itemType: element?.itemType || formValue.itemType || '',
+                source: element?.source || formValue.source || '',
+                status: element?.status || formValue.status || '',
+                length: Number(element?.length ?? formValue.length) || 0,
+                breadth: Number(element?.breadth ?? formValue.breadth) || 0,
+                height: Number(element?.height ?? formValue.height) || 0,
+                quantity: Number(element?.quantity ?? formValue.quantity) || 0,
+                uom: element?.uom || formValue.uom || '',
+                draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
+                clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
+                finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
+                brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+                discount: Number(element?.discount ?? formValue.discount) || 0,
+                serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
+                baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
+                budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
+                hsn: Number(element?.hsn ?? formValue.hsn) || 0,
+                gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
+                amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
+                designId: "3FO3EWPJHYSK",
+                roomName: element?.roomName || formValue.roomName || '',
+                itemCode: element?.itemCode || formValue.itemCode || '',
+                companyCode: this.userCompanyCode,
+                email: this.userEmail,
+                type: this.userType,
+                inProposal: "inprop",
+            };
+        });
+        this.switchService.updateElementData(payloads).subscribe({
+            next: () => {
+                this.createProposal(proposalPayload, modal);
+            },
+            error: (err) => {
+                this.toastr.error("Failed to update elements");
+            }
         });
     }
+
+    private createProposal(proposalPayload: any, modal: any) {
+        this.switchService.createProposal(proposalPayload).subscribe({
+            next: (res: any) => {
+                if (res?.status === true) {
+                    this.toastr.success(res.message || "Proposal created successfully");
+                    modal.close();
+                    this.boqData(); 
+                } else {
+                    this.toastr.error(res?.message || "Something went wrong while creating proposal");
+                }
+            },
+            error: (err) => {
+                this.toastr.error("Failed to create proposal");
+                console.error(err);
+            }
+        });
+    }
+
+
+
+
  
     extraContentProposalSubmit(modal: any) {
         if (this.extraContentProposalForm.invalid) {
             return;
         }
-
         const formValue = this.extraContentProposalForm.value;
         const selectedData: any = {};
 
@@ -736,8 +842,6 @@ export class BoqComponent extends BaseComponent {
             ...formValue,
             contentJs: JSON.stringify(selectedData)  
         };
-
-        console.log("Final Payload:", payload);
         this.switchService.extraContentProposal(payload).subscribe({
             next: (res) => {
                 this.toastr.success("Proposal updated successfully");

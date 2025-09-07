@@ -323,97 +323,63 @@
                         </ng-container>
                         <ng-container [ngbNavItem]="2">
                             <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
-                                aria-selected="true">Client Orders
-                                <span class="badge bg-secondary ms-1 rounded-pill">32</span></a>
+                                aria-selected="true" (click)="getClientOrders()">Client Orders
+                                <!-- <span class="badge bg-secondary ms-1 rounded-pill">32</span> -->
+                            </a>
                             <ng-template class="tab-content bg-white" ngbNavContent>
-                                <div class="col-xl-12 mt-2 show active text-muted">
+                                <div class="col-xl-12">
                                     <div class="card custom-card">
                                         <div class="card-body p-0">
-                                            <div class="table-container mat-elevation-z8">
-                                                <table mat-table [dataSource]="clientOrdersDataSource" matSort
-                                                    class="mat-table w-100">
-                                                    <ng-container matColumnDef="slNo">
-                                                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                        <td mat-cell *matCellDef="let element; let i = index">{{ i + 1
-                                                            }}</td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="orderNo">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order No
-                                                        </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.orderNo }}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="ordertType">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order
-                                                            Type </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.ordertType }}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="orderFrom">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order
-                                                            From </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.orderFrom }}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="issuedBy">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Issued By
-                                                        </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.issuedBy }}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="issueDate">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Issue Date </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.issueDate | date }}</td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="dueDate">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.dueDate | date
-                                                            }}</td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="orderStatus">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.orderStatus }}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="poStatus">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> PO Status
-                                                        </th>
-                                                        <td mat-cell *matCellDef="let element">{{ element.poStatus }}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="progress">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                            Progress(%) </th>
-                                                        <td mat-cell *matCellDef="let element">
-                                                            {{ element.progress }}
-                                                            <!-- <mat-progress-bar mode="determinate" [value]="element.progress"></mat-progress-bar> -->
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="amount">
-                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> amount
-                                                        </th>
-                                                        <td mat-cell *matCellDef="let element">
-                                                            {{ element.amount }}
-                                                            <!-- <mat-progress-bar mode="determinate" [value]="element.progress"></mat-progress-bar> -->
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container matColumnDef="totals">
-                                                        <td mat-footer-cell *matFooterCellDef colspan="12"
-                                                            style="text-align:right; font-weight:bold;border-top: 1px solid gray;">
-                                                            Total (w/o GST): {{ totalWithoutGST }}
-                                                            &nbsp;&nbsp; | &nbsp;&nbsp;
-                                                            Total GST: {{ totalGST }}
-                                                            &nbsp;&nbsp; | &nbsp;&nbsp;
-                                                            Total Amount: {{ totalAmount }}
-                                                        </td>
-                                                    </ng-container>
-                                                    <tr mat-header-row *matHeaderRowDef="displayedClientOrder"></tr>
-                                                    <tr mat-row *matRowDef="let row; columns: displayedClientOrder;">
-                                                    </tr>
-                                                    <tr mat-footer-row *matFooterRowDef="footerColumns"></tr>
+                                            <div class="table-container">
+                                                <table class="table table-hover text-nowrap my-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>S.No.</th>
+                                                            <th>Order No</th>
+                                                            <th>Order Type</th>
+                                                            <th>Order From</th>
+                                                            <th>Issued By</th>
+                                                            <th>Issue Date</th>
+                                                            <th>Due Date</th>
+                                                            <th>Order Status</th>
+                                                            <th>PO Status</th>
+                                                            <th>Progress %</th>
+                                                            <th>Amount (₹)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let element of filteredClientOrders; let i = index">
+                                                            <td>{{ i + 1 }}</td>
+                                                            <td>{{ element.orderReferenceNo }}</td>
+                                                            <td>{{ element.orderType }}</td>
+                                                            <td>{{ element.orderFrom }}</td>
+                                                            <td>{{ element.issuedBy }}</td>
+                                                            <td>{{ element.issueDate | date:'dd-MMM-yyyy hh:mm a' }}</td>
+                                                            <td>{{ element.dueDate | date:'dd-MMM-yyyy hh:mm a' }}</td>
+                                                            <td>
+                                                                <span class="badge" [ngClass]="{
+                                                                    'bg-warning': element.orderStatus === 'Pending for Approval',
+                                                                    'bg-success': element.orderStatus === 'Confirmed',
+                                                                    'bg-danger': element.orderStatus === 'Rejected'
+                                                                    }">
+                                                                    {{ element.orderStatus }}
+                                                                </span>
+                                                                <div *ngIf="element?.orderStatus && element.updatedBy" class="d-flex align-items-center mt-1">
+                                                                    <span
+                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                        [ngClass]="getAgentColor(element.updatedBy)">
+                                                                        {{ element.updatedBy.trim().charAt(0) | uppercase }}
+                                                                    </span>
+                                                                    <span class="small ms-2">{{ element.updatedBy }}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{element.poStatus}}</td>
+                                                            <td>{{element.progressPercent}}</td>
+                                                            <td>{{ element.amount | number }}</td>
+                                                        </tr>
+                                                    </tbody>
                                                 </table>
                                             </div>
-                                            <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
                                         </div>
                                     </div>
                                 </div>
@@ -667,9 +633,10 @@
                                                                     <div class="dropdown" ngbDropdown>
                                                                         <div class="d-flex justify-content-end gap-3">
                                                                         <div ngbDropdown class="d-inline-block">
-                                                                            <button type="button" class="btn btn-outline-primary btn-wave"
+                                                                          <button type="button" class="btn btn-outline-primary btn-wave me-2">({{ key | titlecase }}): {{ tabTotals[key] | number:'1.0-2' }}</button>
+                                                                            <button type="button" class="btn btn-primary"
                                                                             (click)="getProposal()" ngbDropdownToggle>
-                                                                                <i class="ri-edit-line"></i>
+                                                                                <i class="ri-edit-line me-2"></i>Edit Proposal
                                                                             </button>
                                                                             <ul ngbDropdownMenu class="dropdown-menu cuu">
                                                                                 <li *ngFor="let proposal of proposals">
@@ -692,7 +659,7 @@
                                                                             <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Actions
                                                                         </button>
                                                                         <ul class="dropdown-menu cuu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openRights4(content4)">
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="onCreateProposalClick(content4)">
                                                                                 Create Proposal</a></li>
                                                                             <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">
                                                                                 Add Custom Element</a></li>
@@ -705,6 +672,14 @@
                                                                 <div class="table-container mat-elevation-z8">
                                                                     <table mat-table [dataSource]="boqDataSources[key]"
                                                                         matSort class="mat-table1 w-100">
+                                                                        <ng-container matColumnDef="sourceFlag">
+                                                                            <th mat-header-cell *matHeaderCellDef></th>
+                                                                            <td mat-cell *matCellDef="let element">
+                                                                                <i *ngIf="element.inProposal === 'inprop'" class="ri-flag-2-line text-warning me-1"
+                                                                                    title="This element is already in a proposal">
+                                                                                </i>
+                                                                            </td>
+                                                                        </ng-container>
                                                                         <ng-container matColumnDef="select">
                                                                             <th mat-header-cell *matHeaderCellDef class="sticky-col-left" style="max-width: 750px;">
                                                                                 <mat-checkbox [checked]="isAllSelected(key)" [indeterminate]="isIndeterminate(key)"
@@ -1392,7 +1367,7 @@
 
 
 <ng-template #content5 let-modal>
-    <form [formGroup]="proposalApproval" (ngSubmit)="onProposalApprovalSubmit(modal)">
+    <form [formGroup]="proposalApprovalForm" (ngSubmit)="proposalApprovalSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title" id="staticBackdropLabel3">Approve Proposal</h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
@@ -1401,7 +1376,19 @@
         <div class="modal-body overflowImportant">
             <div class="col-xl-12">
                 <div class="row gy-2">
-                    <div class="col-xl-12">
+                    <div class="col-xl-6">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control" formControlName="startDate" placeholder="Enter Start Date">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control" formControlName="endDate" placeholder="Enter End Date">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Shipping Address</label>
+                        <input type="text" class="form-control" formControlName="shippingAddress" placeholder="Enter Shipping Address">
+                    </div>
+                    <div class="col-xl-6">
                         <label for="projectAddress" class="form-label">Desicion</label>
                         <ng-select formControlName="desicion" [items]="desicion" bindLabel="name" bindValue="name"
                             placeholder="Select Skin Brand">
