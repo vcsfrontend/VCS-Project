@@ -292,6 +292,11 @@ export class BoqComponent extends BaseComponent {
         const ref = this.offcanvasService.open(content, { position: 'end', scroll: true });
         ref.closed.subscribe(() => this.resetForm());
         ref.dismissed.subscribe(() => this.resetForm());
+        if (this.isEditMode) {
+            this.elementForm.disable();
+            this.elementForm.get('quantity')?.enable();
+        }
+
     }
 
     updateDropdownField(
@@ -581,8 +586,12 @@ export class BoqComponent extends BaseComponent {
     }
 
     openLg1(content1: any) {
+        this.isEditMode = false;           
+        this.elementForm.reset();        
+        this.elementForm.enable();  
         this.offcanvasService.open(content1, { position: 'end', });
     }
+
 
     openLg2(content2: any) {
         this.offcanvasService.open(content2, { position: 'end', panelClass: 'custom-offcanvas' });
@@ -645,44 +654,52 @@ export class BoqComponent extends BaseComponent {
         const formValue = { ...this.elementForm.value };
         const payload = [
             {
-                boqId: element?.boqId || Number(this.itemId) || 0,
-                elementUrl: element?.elementUrl || formValue.elementUrl || '',
-                elementNameAndDescription:
-                    element?.elementNameAndDescription ||
-                    (
-                        `${formValue.elementName || ''}` +
-                        `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
-                        `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
-                    ),
-                codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
-                orderStatus: element?.orderStatus || formValue.orderStatus || '',
-                itemType: element?.itemType || formValue.itemType || '',
-                source: element?.source || formValue.source || '',
-                status: element?.status || formValue.status || '',
-                length: Number(element?.length ?? formValue.length) || 0,
-                breadth: Number(element?.breadth ?? formValue.breadth) || 0,
-                height: Number(element?.height ?? formValue.height) || 0,
-                quantity: Number(element?.quantity ?? formValue.quantity) || 0,
-                uom: element?.uom || formValue.uom || '',
-                draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
-                clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
-                finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
-                brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
-                discount: Number(element?.discount ?? formValue.discount) || 0,
-                serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
-                baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
-                budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
-                hsn: Number(element?.hsn ?? formValue.hsn) || 0,
-                gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
-                amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-                designId: "3FO3EWPJHYSK",
-                roomName: element?.roomName || formValue.roomName || '',
-                itemCode: element?.itemCode || formValue.itemCode || '',
-                companyCode: this.userCompanyCode,
-                email: this.userEmail,
-                type: this.userType,
+            boqId: element?.boqId || Number(this.itemId) || 0,
+            elementUrl: element?.elementUrl || formValue.elementUrl || '',
+           elementNameAndDescription: (
+            `Name : ${formValue.elementName || ''}\n` +
+            `Carcass Material : ${formValue.carcassMaterial || ''}\n` +
+            `Carcass Finish : ${formValue.carcassFinish || ''}\n` +
+            `Shutter Material : ${formValue.shutterMaterial || ''}\n` +
+            `Shutter Finish : ${formValue.shutterFinish || ''}\n` +
+            `Brand : ${formValue.brandOrMake || ''}`
+            ).trim(),
+
+            codeAndCategory: formValue.codeAndCategory || element?.codeAndCategory || '',
+            orderStatus: formValue.orderStatus || element?.orderStatus || '',
+            itemType: formValue.itemType || element?.itemType ||  '',
+            source: formValue.source || element?.source ||  '',
+            status:formValue.status ||  element?.status || '',
+            length: Number(element?.length ?? formValue.length) || 0,
+            breadth: Number(element?.breadth ?? formValue.breadth) || 0,
+            height: Number(element?.height ?? formValue.height) || 0,
+            quantity: Number(element?.quantity ?? formValue.quantity) || 0,
+            uom: formValue.uom || element?.uom || '',
+
+            // 🔹 Draft Quantity from table row
+            draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
+
+            clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
+            finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
+            brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+            discount: Number(element?.discount ?? formValue.discount) || 0,
+            serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
+            baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
+            budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
+            hsn: Number(element?.hsn ?? formValue.hsn) || 0,
+            gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
+            amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
+
+            designId: "3FO3EWPJHYSK",
+            roomName: element?.roomName || formValue.roomName || '',
+            itemCode: element?.itemCode || formValue.itemCode || '',
+
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
             },
         ];
+        console.log(payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
