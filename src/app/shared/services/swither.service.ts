@@ -204,5 +204,6 @@ export class SwitherService {
   approveProposal(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/proposal_approval`, data); } 
   extraContentProposal(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/extra_contnet_proposal`, data); } 
   fetchClientOrder(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_client_order_data`, data); }
+  fetchClientOrderContent(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_client_order_content`, data); }
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
