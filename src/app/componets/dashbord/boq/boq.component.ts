@@ -50,6 +50,7 @@ export class BoqComponent extends BaseComponent {
     libraryData: string[] = ['slNo', 'libraryName', 'typeofLibrary', 'createdBy', 'lastUpdated', 'sections', 'elements'];
     detailsColumns: string[] = [ 'propasalContentId', 'jobId', 'orderNo', 'orderFrom', 'orderFor', 'createdBy', 'vendorId', 'shippingAddress', 'startDate', 'dueDate', 'gstNo'];
     proposalContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount" ];
+    orderContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount" ];
     userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
     invoiceForm!: FormGroup; extraContentProposal!: FormGroup
     userDataStorage = localStorage.getItem('userDetails');
@@ -60,6 +61,7 @@ export class BoqComponent extends BaseComponent {
     userCompanyName: string = this.userData ? this.userData.companyName : '';
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
+    selectedOrderContent: any = null;
     itemId :any; currentSection :any; proposals: any[] = []; clientOrders: any[] = [];
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
@@ -83,7 +85,8 @@ export class BoqComponent extends BaseComponent {
     selectedFile: File | null = null; 
     activeId:any =0;  highlightedTabIndex = 0; selectedProposal: any;          // raw API data
     filteredProposals: any[] = [];  filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
-
+    orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
+    orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
 
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
@@ -125,7 +128,6 @@ export class BoqComponent extends BaseComponent {
     openRights5(content6: any, proposal: any) {
         this.extraContentProposalForm.patchValue({
             orderNo: proposal?.orderNo || '',
-            proposalContId: proposal?.proposalContentId || '',
             startDate: proposal?.startDate || '',
             endDate: proposal?.dueDate || '',
             shippingAdddress: proposal?.shippingAdddress || '',
@@ -203,7 +205,6 @@ export class BoqComponent extends BaseComponent {
         }
         );
         this.proposalApprovalForm = this.fb.group({
-            proposalContentId:[''],
             designId:[''],
             orderNo:[''],
             desicion:[''],
@@ -380,12 +381,13 @@ export class BoqComponent extends BaseComponent {
         }
         const payload = {
             ...this.proposalApprovalForm.value,
-            proposalContentId: this.selectedProposal?.proposalContentId ?? this.selectedProposal?.propasalContentId ?? '',
+            proposalContentId: this.selectedProposal?.proposalContId ?? this.selectedProposal?.proposalContentId ?? '',
             orderNo: this.selectedProposal?.orderNo ?? this.selectedProposal?.referenceNo ?? '',
             designId: this.selectedProposal?.designId ?? '',
             jobId: this.selectedProposal?.jobId ?? '',
             updatedBy: this.userName
         };
+        console.log(payload)
         this.switchService.approveProposal(payload).subscribe({
           next: () => {
             this.toastr.success("Proposal Created successfully");
@@ -393,7 +395,6 @@ export class BoqComponent extends BaseComponent {
           },
         });
     }
-
 
     resetForm() {
         this.elementForm.reset();
@@ -471,7 +472,6 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-
     getProposal() {
         const payload = {
             designId: "3FO3EWPJHYSK",
@@ -486,31 +486,6 @@ export class BoqComponent extends BaseComponent {
             },
             error: () => {
                 this.toastr.error('Failed to fetch proposals');
-            }
-        });
-    }
-
-    getTotalAmount(): number {
-        return this.filteredProposals?.reduce(
-            (sum, item) => sum + (item.amount || 0),
-            0
-        ) || 0;
-    }
-
-    getClientOrders() {
-        const payload = {
-            designId: "3FO3EWPJHYSK",
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
-        };
-        this.switchService.fetchClientOrder(payload).subscribe({
-            next: (res: any) => {
-                this.clientOrders = res.boqClinetOrderList || [];
-                this.filteredClientOrders = [...this.clientOrders];
-            },
-            error: () => {
-                this.toastr.error('Failed to fetch clientOrders');
             }
         });
     }
@@ -577,6 +552,105 @@ export class BoqComponent extends BaseComponent {
             }
         });
     }
+
+    getTotalAmount(): number {
+        return this.filteredProposals?.reduce(
+            (sum, item) => sum + (item.amount || 0),
+            0
+        ) || 0;
+    }
+
+    getClientOrders() {
+        const payload = {
+            designId: "3FO3EWPJHYSK",
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+        };
+        this.switchService.fetchClientOrder(payload).subscribe({
+            next: (res: any) => {
+                this.clientOrders = res.boqClinetOrderList || [];
+                this.filteredClientOrders = [...this.clientOrders];
+            },
+            error: () => {
+                this.toastr.error('Failed to fetch clientOrders');
+            }
+        });
+    }
+
+    getClientOrdersContent(element: any) {
+        if (!element?.proposalContentId || !element?.designId) {
+            this.toastr.warning('Invalid order data');
+            return;
+        }
+
+        const payload = {
+            designId: element.designId,
+            proposalContentId: element.proposalContentId
+        };
+
+        this.switchService.fetchClientOrderContent(payload).subscribe({
+            next: (res: any) => {
+                this.selectedOrderContent = res;
+
+                try {
+                    const parsedContent = JSON.parse(res.contentJs || "{}");
+                    const flattened = Object.values(parsedContent).flat();
+                    const uniqueFlattened = Array.from(
+                        new Map(flattened.map((item: any) => [item.boqId, item])).values()
+                    );
+
+                    const totalAmount = uniqueFlattened.reduce(
+                        (sum: number, item: any) => sum + (item.clientRate || 0),
+                        0
+                    );
+
+                    this.proposalApprovalForm.patchValue({ amount: totalAmount });
+
+                    // 👇 Use *separate* state for orders
+                    this.orderContentDataSources = {};
+                    this.orderTabCounts = {};
+                    this.orderContentDataSources["All"] = new MatTableDataSource<any>(uniqueFlattened);
+                    this.orderTabCounts["All"] = uniqueFlattened.length;
+
+                    if (this.paginator) {
+                        this.orderContentDataSources["All"].paginator = this.paginator;
+                    }
+                    if (this.sort) {
+                        this.orderContentDataSources["All"].sort = this.sort;
+                    }
+
+                    const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
+                    roomKeys.forEach(room => {
+                        const roomData = parsedContent[room] || [];
+                        this.orderContentDataSources[room] = new MatTableDataSource<any>(roomData);
+                        this.orderTabCounts[room] = roomData.length;
+
+                        if (this.paginator) {
+                            this.orderContentDataSources[room].paginator = this.paginator;
+                        }
+                        if (this.sort) {
+                            this.orderContentDataSources[room].sort = this.sort;
+                        }
+                    });
+
+                    this.orderTabKeys = ["All", ...roomKeys];
+                } catch (e) {
+                    this.orderContentDataSources = {
+                        All: new MatTableDataSource<any>([])
+                    };
+                    this.orderTabKeys = ["All"];
+                    this.orderTabCounts = { All: 0 };
+                    this.proposalApprovalForm.patchValue({ amount: 0 });
+                }
+            },
+            error: () => {
+                this.toastr.error("Failed to fetch order details");
+            }
+        });
+    }
+
+
 
     setPaginatorAndSort(key: string) {
         if (this.boqDataSources[key]) {
@@ -896,6 +970,13 @@ export class BoqComponent extends BaseComponent {
         this.proposalContentDataSources = {}; 
         this.proposalTabKeys = [];
         this.proposalTabCounts = {};
+    }
+
+    backToOrders() {
+        this.selectedOrderContent = null;
+        this.orderContentDataSources = {}; 
+        this.orderTabKeys = [];
+        this.orderTabCounts = {};
     }
 
     get totalWithoutGST() {
