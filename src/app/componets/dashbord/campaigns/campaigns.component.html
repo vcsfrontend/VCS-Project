@@ -96,10 +96,10 @@
     <div class="card-header justify-content-between">
       <div class="card-title col-lg-4">All Campaigns</div>
       <div class="col-md-4 col-xl-4 col-xxl-4 col-lg-4 col-sm-6 d-flex">
-        <div class="input-group custom-input-group">
+        <!-- <div class="input-group custom-input-group">
           <input type="text" class="form-control">
-          <!-- <button class="btn btn-ghost-light border" type="button"><i class="ri-search-line text-muted"></i></button> -->
-        </div>
+          <button class="btn btn-ghost-light border" type="button"><i class="ri-search-line text-muted"></i></button>
+        </div> -->
       </div>
       <div class="text-center">
         <button type="button" class="btn btn-primary btn-wave" (click)="openCreateModal(content7)" *ngIf="adoanAiRole== 'ADMIN' || userType==1">Create Campaign</button>
@@ -169,12 +169,12 @@
             <div class="mb-1">Total Leads : <span class="badge bg-info-transparent">{{ leadCounts[campaign.campgnId] ||
                 0 }}</span></div>
             <div>
-              <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80" aria-valuemin="0"
+              <!-- <div class="progress progress-xs progress-animate" role="progressbar" aria-valuenow="80" aria-valuemin="0"
                 aria-valuemax="100">
                 <div class="progress-bar bg-primary" style="width: 80%"></div>
-              </div>
-              <div class="mt-1"><span class="text-primary fw-medium">{{ leadCounts[campaign.campgnId] ||
-                0 }}%</span> Completed</div>
+              </div> -->
+              <!-- <div class="mt-1"><span class="text-primary fw-medium">{{ leadCounts[campaign.campgnId] ||
+                0 }}%</span> Completed</div> -->
             </div>
             <div *ngFor="let stage of stageCounts[campaign.campgnId] | keyvalue">
               <div class="mb-1 pt-3">

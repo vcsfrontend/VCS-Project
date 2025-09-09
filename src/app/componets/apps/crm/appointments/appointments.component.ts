@@ -488,6 +488,9 @@ private getDefaultColor(str: string): string {
   }
   return 'btn-success-transparent';
 }
-
+ formatMobileNumber(mobile: any): string {
+    if (!mobile) return "";
+    return Number(mobile).toFixed(0); // Convert to normal number
+  }
 
 }

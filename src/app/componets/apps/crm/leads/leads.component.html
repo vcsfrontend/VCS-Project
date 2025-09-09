@@ -400,7 +400,7 @@
                     <button class="btn btn-primary ms-auto" type="button" (click)="openRight13(content13)">Add Mail
                         Template</button>
                 </div>
-                <div class="card-body " style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                <div class="card-body " style="min-height: 398px; max-height: 400px; overflow-y: auto;">
                     <div *ngFor="let template of tempFormList" class="card custom-card card-bg-light mb-3">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-3">{{ capitalizeFirstLetter (template.templateName) }}</h5>
@@ -1564,16 +1564,60 @@
     </ng-container>
     <ng-container *ngIf="currentStep === 3" [formGroup]="completionForm">
         <div class="row gy-3 scrollable-content">
-    
             <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="clientName" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="clientName" placeholder="Enter Client Name"
+                    formControlName="clientName" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['clientName'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['clientName'].errors" class="invalid-feedback">
+                    <span *ngIf="j['clientName'].errors['required']">
+                        clientName  is required.
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter Username"
+                    formControlName="username" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['username'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['username'].errors" class="invalid-feedback">
+                    <span *ngIf="j['username'].errors['required']">
+                        username  is required.
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="contact" class="form-label">Contact</label>
+                <input type="text" class="form-control" id="contact" placeholder="Enter Contact Number"
+                    formControlName="mobileNumber" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['mobileNumber'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['mobileNumber'].errors" class="invalid-feedback">
+                    <span *ngIf="j['mobileNumber'].errors['required']">
+                        client Mobile number is required.
+                    </span>
+                </div>
+            </div>
+             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="projectName" class="form-label">Project Name</label>
                 <input type="text" class="form-control" id="projectName" placeholder="Enter Project Name"
-                    formControlName="projectName">
+                    formControlName="projectName" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['projectName'].errors }">
+        
+                <div *ngIf="leadCompletionsubmitted && j['projectName'].errors" class="invalid-feedback">
+                    <span *ngIf="j['projectName'].errors['required']">
+                        Project Name is required.
+                    </span>
+                    <span *ngIf="j['projectName'].errors['minlength']">
+                        Project Name must be at least 3 characters long.
+                    </span>
+                </div>
             </div>
-    
             <div class="col-xl-6">
                 <label for="businessCategory" class="form-label">Business Category:</label>
-                <select class="form-select" aria-label="Default select example" formControlName='businessCategory'>
+                <select class="form-select" aria-label="Default select example" formControlName='businessCategory'
+                [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['businessCategory'].errors }">
+        
+                <div *ngIf="leadCompletionsubmitted && j['businessCategory'].errors" class="invalid-feedback">
+                    <span *ngIf="j['businessCategory'].errors['required']">
+                        businessCategory Name is required.
+                    </span>
+                </div>
                     <option value="" disabled selected>select type</option>
                     <option value="Commercial">Commercial</option>
                     <option value="Residential">Residential</option>
@@ -1582,30 +1626,24 @@
     
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="address" class="form-label">Address</label>
-                <input type="text" class="form-control" id="address" placeholder="Enter Address" formControlName="address">
+                <input type="text" class="form-control" id="address" placeholder="Enter Address" formControlName="address"
+                [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['address'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['address'].errors" class="invalid-feedback">
+                    <span *ngIf="j['address'].errors['required']">
+                        address  is required.
+                    </span>
+                </div>
             </div>
-    
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter Username"
-                    formControlName="username">
-            </div>
-    
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <label for="clientName" class="form-label">Client Name</label>
-                <input type="text" class="form-control" id="clientName" placeholder="Enter Client Name"
-                    formControlName="clientName">
-            </div>
-    
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <label for="contact" class="form-label">Contact</label>
-                <input type="text" class="form-control" id="contact" placeholder="Enter Contact Number"
-                    formControlName="mobileNumber">
-            </div>
+            
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="contact" class="form-label">End Date</label>
                 <input type="date" class="form-control" id="contact" placeholder="Enter Contact Number"
-                    formControlName="endDate">
+                    formControlName="endDate" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback">
+                    <span *ngIf="j['endDate'].errors['required']">
+                        endDate  is required.
+                    </span>
+                </div>
             </div>
     
         </div>

@@ -1038,8 +1038,11 @@ export class BoqComponent extends BaseComponent {
         if (!data.length) return;
 
         if (event.checked) {
-            this.selectedElement = data.map((row: any) => row.boqId);
-        } else {
+             this.selectedElement = data
+        .filter((row: any) => row.inProposal !== 'inprop')  
+        .map((row: any) => row.boqId);
+        } 
+        else {
             this.selectedElement = [];
         }
     }
