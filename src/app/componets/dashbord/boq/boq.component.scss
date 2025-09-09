@@ -317,3 +317,23 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .my-table tbody tr {
     height: 35px;
 }
+.table-container {
+  max-height: 400px; /* set scrollable height */
+  overflow-y: auto;
+  position: relative;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;   /* white background to cover rows */
+  z-index: 10;        /* make sure it stays above rows */
+}
+
+.table tfoot td {
+  position: sticky;
+  bottom: 0;
+  background: #fff;   /* footer background */
+  font-weight: bold;
+  z-index: 10;
+}

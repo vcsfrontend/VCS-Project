@@ -33,9 +33,9 @@
                 aria-selected="false" (click)="boqData()">BOQ</button>
             <ng-template ngbNavContent>
                 <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                    <nav ngbNav #nav2="ngbNav" [activeId]="2"
+                    <nav ngbNav #nav2="ngbNav" [activeId]="5"
                         class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom" role="tablist">
-                        <ng-container [ngbNavItem]="1">
+                        <ng-container ngbNavItem="1">
                             <a ngbNavLink class="nav-link border-end border-dark" (click)="getProposal()">Proposal For Client</a>
                             <ng-template ngbNavContent>
                                 <div class="col-xl-12">
@@ -43,7 +43,7 @@
                                         <div class="card-body p-0" *ngIf="!selectedProposalContent">
                                             <div class="table-container">
                                                 <table class="table table-hover text-nowrap my-table">
-                                                    <thead>
+                                                    <thead class="sticky: true">
                                                         <tr>
                                                             <th>S.No.</th>
                                                             <th>Reference No</th>
@@ -56,34 +56,83 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr *ngFor="let element of filteredProposals; let i = index">
-                                                            <td>{{ i + 1 }}</td>
-                                                            <td>{{ element.referenceNo }}</td>
-                                                            <td><a href="javascript:void(0)" (click)="getProposalContent(element)">
-                                                                    {{ element.proposalRequestType }}</a></td>
-                                                            <td>{{ element.proposalFor }}</td>
-                                                            <td>{{ element.createdBy }}</td>
-                                                            <td>{{ element.createdDate | date:'dd-MMM-yyyy hh:mm a' }}</td>
-                                                            <td>
-                                                                <span class="badge" [ngClass]="{
-                                                                                                    'bg-warning': element.status === 'Pending for Approval',
-                                                                                                    'bg-success': element.status === 'Approve',
-                                                                                                    'bg-danger': element.status === 'Rejected'
-                                                                                                    }">
-                                                                    {{ element.status }}
-                                                                </span>
-                                                                <div *ngIf="element?.status && element.updatedBy"
-                                                                    class="d-flex align-items-center mt-1">
-                                                                    <span
-                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
-                                                                        [ngClass]="getAgentColor(element.updatedBy)">
-                                                                        {{ element.updatedBy.trim().charAt(0) | uppercase }}
+                                                        <ng-container *ngFor="let element of filteredProposals; let i = index">
+                                                            <tr>
+                                                                <td>{{ i + 1 }}</td>
+                                                                <td>{{ element.referenceNo }}</td>
+                                                                <td><a href="javascript:void(0)" (click)="getProposalContent(element)">
+                                                                        {{ element.proposalRequestType }}</a></td>
+                                                                <td>{{ element.proposalFor }}</td>
+                                                                <td>{{ element.createdBy }}</td>
+                                                                <td>{{ element.createdDate | date:'dd-MMM-yyyy hh:mm a' }}</td>
+                                                                <td>
+                                                                    <span class="badge" [ngClass]="{
+                                                                                                        'bg-warning': element.status === 'Pending for Approval',
+                                                                                                        'bg-success': element.status === 'Approve',
+                                                                                                        'bg-danger': element.status === 'Rejected'
+                                                                                                        }">
+                                                                        {{ element.status }}
                                                                     </span>
-                                                                    <span class="small ms-2">{{ element.updatedBy }}</span>
-                                                                </div>
-                                                            </td>
-                                                            <td>{{ element.amount | number }}</td>
-                                                        </tr>
+                                                                    <div *ngIf="element?.status && element.updatedBy"
+                                                                        class="d-flex align-items-center mt-1">
+                                                                        <span
+                                                                            class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                            [ngClass]="getAgentColor(element.updatedBy)">
+                                                                            {{ element.updatedBy.trim().charAt(0) | uppercase }}
+                                                                        </span>
+                                                                        <span class="small ms-2">{{ element.updatedBy }}</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td>{{ element.amount | number }}</td>
+                                                            </tr>
+                                                            <tr class="table-footer-row bg-light">
+                                                                <td colspan="8" style="padding:4px 8px; border-top:none; font-size:12px; line-height:1.2;">
+                                                                    <div class="d-flex align-items-center justify-content-between flex-wrap small text-muted">
+                                                            
+                                                                        <!-- Left side: items & tags -->
+                                                                        <div class="d-flex align-items-center">
+                                                            
+                                                                            <i class="bi bi-plus-circle me-2 text-success " style="cursor: pointer;"></i>
+                                                                            {{ proposalTabCounts[element.proposalFor] || 0 }} Items
+                                                                            <span *ngIf="element.tags?.length">
+                                                                                <span *ngFor="let tag of element.tags" class="badge rounded-pill border me-1 px-2 py-1 text-dark">
+                                                                                    {{ tag }}
+                                                                                </span>
+                                                                            </span>
+                                                                            <div>
+                                                                                Proposal Status:
+                                                                                <span class="badge" [ngClass]="{
+                                                                                                                                                'bg-warning': element.status === 'Pending for Approval',
+                                                                                                                                                'bg-success': element.status === 'Approved',
+                                                                                                                                                'bg-danger': element.status === 'Rejected'
+                                                                                                                                            }">
+                                                                                    {{ element.status }}
+                                                                                </span>
+                                                                            </div>
+                                                                            <div *ngIf="selectedProposalContent?.createdBy" class="d-flex align-items-center mt-1">
+                                                                                <span class="me-2">Created By:</span>
+                                                                                <div class="d-flex align-items-center flex-wrap avatar-list-stacked">
+                                                                                    <span
+                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                                        [ngClass]="getAgentColor(selectedProposalContent.createdBy)">
+                                                                                        {{ selectedProposalContent.createdBy.trim().charAt(0) | uppercase }}
+                                                                                    </span>
+                                                                                    <span class="small ms-3">{{ selectedProposalContent.createdBy }}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Right side: updated info -->
+                                                                        <div>
+                                                                            Last Updated On {{ element.updatedDate | date:'dd MMM yyyy' }}
+                                                                            by
+                                                                            <span class="fw-bold">
+                                                                                {{ element.updatedBy }}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-container>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr class="fw-bold">
@@ -887,7 +936,7 @@
                                 </div>
                             </ng-template>
                         </ng-container>
-                        <ng-container ngbNavItem="5">
+                        <ng-container [ngbNavItem]="5">
                             <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
                                 aria-selected="false">Project Scope</a>
                             <ng-template class="tab-content" ngbNavContent>
@@ -963,7 +1012,8 @@
                                                                             </th>
                                                                             <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
                                                                                 <mat-checkbox [checked]="selectedElement?.includes(element.boqId) ?? false"
-                                                                                    (change)="onRowCheckboxChange(element, $event)" class="custom-checkbox">
+                                                                                    (change)="onRowCheckboxChange(element, $event)"
+                                                                                    [disabled]="element.inProposal === 'inprop'" class="custom-checkbox">
                                                                                 </mat-checkbox>
                                                                             </td>
                                                                         </ng-container>
@@ -1289,7 +1339,7 @@
                 data-bs-dismiss="offcanvas" aria-label="Close">
             </button>
         </div>
-        <div class="offcanvas-body p-4">
+        <div class="offcanvas-body p-4 overflow-auto" style="max-height: 80vh;">
             <div class="col-xl-12">
                 <div class="row gy-1">
                     <div class="col-xl-6">
@@ -1385,7 +1435,7 @@
                 </div>
             </div>
         </div>
-        <div class="">
+        <div class="m-3">
             <button type="submit" class="btn btn-primary me-3">
                 {{ isEditMode ? 'Update' : 'Save' }}
             </button>

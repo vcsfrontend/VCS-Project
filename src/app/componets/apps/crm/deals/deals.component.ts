@@ -83,7 +83,7 @@ export class DealsComponent extends BaseComponent {
   taskForm ! :FormGroup; appointmentFormSubmitted: boolean = false;currentStep = 1;
   completionForm!:FormGroup;
   selectedLeadForAppointment:any;appointmentId: number | null = null;selectedLeadForAppointmentObject:any;
-  filteredUserList: any[] = [];
+  filteredUserList: any[] = [];leadCompletionsubmitted : boolean = false;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -502,13 +502,14 @@ export class DealsComponent extends BaseComponent {
       leadEntry : [this.userEmail]
     });
 
-    this.completionForm = this.fb.group({
-      projectName: [''],
-      businessCategory: [''],
-      address: [''],
-      username: [''],
-      clientName: [''],
-      mobileNumber: ['']
+     this.completionForm = this.fb.group({
+      projectName: ['', [Validators.required, Validators.minLength(3)]],
+      businessCategory: ['' , Validators.required],
+      address: ['' , Validators.required],
+      username: ['',Validators.required],
+      clientName: ['',Validators.required],
+      mobileNumber: ['',Validators.required],
+      endDate : ['',Validators.required]
     });
 
     this.getUsers();
@@ -703,6 +704,9 @@ export class DealsComponent extends BaseComponent {
   }
    get h() {
     return this.appointmentForm.controls;
+  }
+  get j() {
+    return this.completionForm.controls;
   }
 
   onSubmit(modal: any) {
@@ -2677,13 +2681,18 @@ export class DealsComponent extends BaseComponent {
   }
 
 
-   updateCompletionStatus() {
+  updateCompletionStatus(modal: any) {
+    this.leadCompletionsubmitted = true;
+    if (this.completionForm.invalid) {
+      return; 
+    }
     const payload = {
       ...this.completionForm.value,
       status : "completed",
       completedBy: this.userName,
       leadId: this.leadId,
       companyCode:this.userCompanyCode,
+      companyName: this.userCompanyName,
       email: this.userEmail,
       type: this.userType
     };
@@ -2691,9 +2700,11 @@ export class DealsComponent extends BaseComponent {
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {
         this.toastr.success('lead completed successfully');
+            this.leadCompletionsubmitted = true;
         if (this.selectedLead) {
-          this.selectedLead.completionStatus = "completed"; // <-- update status
+          this.selectedLead.completionStatus = "completed"; 
         }
+        modal.close();
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -2705,8 +2716,11 @@ export class DealsComponent extends BaseComponent {
     this.currentStep = step;
   }
   submitClose(modal: any) {
-    
-    this.updateCompletionStatus();
+    this.leadCompletionsubmitted = true;
+    if (this.completionForm.invalid) {
+      return; 
+    }
+    this.updateCompletionStatus(modal);
 
     modal.close();
     this.currentStep = 1;

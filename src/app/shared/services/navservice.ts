@@ -129,16 +129,7 @@ export class NavService implements OnDestroy {
     //   // path : `https://crmexpert.vcs.plus/auth/access_account/${JSON.parse(this.userData).encodeEmail}`
     //   path: '/dashboard/crm'
     // }, 
-    {
-      title: 'Projects',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: ' bi-layers side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/projects',
-    },
+    
     // {
     //   title: 'Products',
     //   dirchange: false,
@@ -479,15 +470,15 @@ export class NavService implements OnDestroy {
         //   active: false,
         //   path: '/dashboard/reports'
         // },
-        {
-          title: 'CRM Settings',
-          icon: 'bi-layout-text-window side-menu__icon',
-          dirchange: false,
-          type: 'link',
-          linkType: 'internal',
-          active: false,
-          path: '/dashboard/crm-settings'
-        },
+        // {
+        //   title: 'CRM Settings',
+        //   icon: 'bi-layout-text-window side-menu__icon',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType: 'internal',
+        //   active: false,
+        //   path: '/dashboard/crm-settings'
+        // },
         // {
         //   title: 'Support',
         //   icon: 'bi-layout-text-window side-menu__icon',
@@ -518,7 +509,16 @@ export class NavService implements OnDestroy {
               
       ],
     },
-    
+    {
+      title: 'Projects',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: ' bi-layers side-menu__icon',
+      active: false,
+      selected: false,
+      path: '/dashboard/projects',
+    },
     // {
     //   title: 'Chatbot',
     //   icon: 'bi-layout-text-window side-menu__icon',
