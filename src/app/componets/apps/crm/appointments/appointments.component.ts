@@ -5,17 +5,17 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from '../../../shared/common/sharedmodule';
+import { SharedModule } from '../../../../shared/common/sharedmodule';
 import { FormGroup,FormBuilder, FormsModule, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
-import { BaseComponent } from '../../../shared/base/base.component';
+import { BaseComponent } from '../../../../shared/base/base.component';
 import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas ,NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SwitherService } from '../../../shared/services/swither.service';
+import { SwitherService } from '../../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MaterialModuleModule } from '../../../material-module/material-module.module';
+import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 
 @Component({
   selector: 'app-appointments',

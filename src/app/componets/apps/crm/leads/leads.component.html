@@ -19,7 +19,7 @@
                         data-bs-target="#exampleModalLg" (click)="resetFilterForm()" *ngIf="filterApplied">Reset</button>
                     <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" *ngIf="adoanAiRole== 'ADMIN'|| userType ==1">
                         Bulk Upload 
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
@@ -43,7 +43,7 @@
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <mat-checkbox (change)="onRowCheckboxChange(element, $event)"
-                                [checked]="isSelected(element.leadId)" class="custom-checkbox"></mat-checkbox>
+                                [checked]="isSelected(element.leadId)" [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="slNo">
@@ -90,13 +90,13 @@
                                                                 Create Task<i class="ri-task-line bt-icon label-btn-icon"></i>
                                                             </button>
                                                         </li> -->
-                                    <li class="m-2">
+                                    <!-- <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Appointment<i class="ri-calendar-line bt-icon label-btn-icon"></i>
                                         </button>
-                                    </li>
+                                    </li> -->
                                     <!-- This ensures a button appears for each appointment -->
                                     <!-- <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
@@ -276,8 +276,22 @@
                             : capitalizeFirstLetter(element.city)}}
                         </td>
                     </ng-container>
+                    <ng-container matColumnDef="completionStatus">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
+                        <td mat-cell *matCellDef="let element">
+                            <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm w-100"
+                                (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal" data-bs-target="#completionModal">
+                                Close Lead
+                            </button>
+                            <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm w-100" disabled>
+                                Closed
+                            </button>
+                        </td>
+                    </ng-container>
+
                     <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
+                    [class.disabled-row]="row.completionStatus === 'completed'"></tr>
                 </table>
                 <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
                     <p class="text-muted mb-0">No data found</p>
@@ -304,15 +318,15 @@
             </form>
             <div class="text-center ms-3 ">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="tooltip" placement="top"
-                        ngbTooltip="Follow up"><i class="ri-alarm-line"></i></button>
+                    <!-- <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="tooltip" placement="top"
+                        ngbTooltip="Follow up"><i class="ri-alarm-line"></i></button> -->
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMailOffcanvas(offcanvasTemplate)"
                         data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Mail"><i class="ri-mail-line bt-icon"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)"
                         *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
                     
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="appointmentModal(appointment1, element)"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
+                        *ngIf="adoanAiRole !== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"
                         *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Delete"><i class="ri-delete-bin-line"></i></button>
                 </div>
@@ -398,9 +412,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer text-end">
+                <!-- <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -465,12 +479,12 @@
                                     <span class="fs-14">{{ user.email }}</span>
                                     <div class="fs-12 text-muted">{{ user.username }}</div>
                                 </div>
-                                <div class="d-flex align-items-center">
+                                <!-- <div class="d-flex align-items-center">
                                     <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"><i
                                             class="ri-pencil-line"></i></a>
                                     <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave "><i
                                             class="ri-delete-bin-line"></i></a>
-                                </div>
+                                </div> -->
                             </div>
                         </li>
                     </ul>
@@ -1129,7 +1143,7 @@
     </div>
     <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
         <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
-            <div class="offcanvas-body p-0 m-4 ">
+            <div class="offcanvas-body p-0 m-4 overflow-auto" style="max-height: 60vh;">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label for="followupDate" class="form-label">Next Follow up date</label>
@@ -1531,12 +1545,86 @@
   </form>
 </ng-template>
 
-<div class="col-xl-12">
-    <div class="card custom-card">
-        <div class="card-header">
-            <div class="card-title">
-                Dropzone
+<ng-template #completionModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Close Lead</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Step 1 -->
+    <ng-container *ngIf="currentStep === 1">
+      Do you want to close the lead <strong>{{ selectedLead?.name }}</strong>?
+    </ng-container>
+
+    <!-- Step 2 -->
+    <ng-container *ngIf="currentStep === 2">
+      <p>Do  you want to Proceed to the Project</p>
+      
+    </ng-container>
+    <ng-container *ngIf="currentStep === 3" [formGroup]="completionForm">
+        <div class="row gy-3 scrollable-content">
+    
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="projectName" class="form-label">Project Name</label>
+                <input type="text" class="form-control" id="projectName" placeholder="Enter Project Name"
+                    formControlName="projectName">
             </div>
+    
+            <div class="col-xl-6">
+                <label for="businessCategory" class="form-label">Business Category:</label>
+                <select class="form-select" aria-label="Default select example" formControlName='businessCategory'>
+                    <option value="" disabled selected>select type</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Residential">Residential</option>
+                </select>
+            </div>
+    
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" placeholder="Enter Address" formControlName="address">
+            </div>
+    
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter Username"
+                    formControlName="username">
+            </div>
+    
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="clientName" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="clientName" placeholder="Enter Client Name"
+                    formControlName="clientName">
+            </div>
+    
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="contact" class="form-label">Contact</label>
+                <input type="text" class="form-control" id="contact" placeholder="Enter Contact Number"
+                    formControlName="mobileNumber">
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="contact" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="contact" placeholder="Enter Contact Number"
+                    formControlName="endDate">
+            </div>
+    
         </div>
-    </div>
-</div>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+
+    <!-- Step 1 actions -->
+    <ng-container *ngIf="currentStep === 1">
+      <button type="button" class="btn btn-danger" (click)="goToStep(2)">Yes, Close</button>
+    </ng-container>
+    <ng-container *ngIf="currentStep === 2">
+      <button type="button" class="btn btn-danger" (click)="goToStep(3)">Yes, Proceed</button>
+    </ng-container>
+    <!-- Step 2 actions -->
+    <ng-container *ngIf="currentStep === 3">
+      <button type="button" class="btn btn-primary" (click)="submitClose(modal);">Submit</button>
+    </ng-container>
+  </div>
+</ng-template>

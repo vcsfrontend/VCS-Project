@@ -53,7 +53,7 @@ export class DealsComponent extends BaseComponent {
   userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
   taskSubmitted : boolean = false;
-  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city'];
+  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city',];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -80,8 +80,10 @@ export class DealsComponent extends BaseComponent {
   adoanAiRole: any;public filterLeadForm!:FormGroup; filterApplied :boolean = false;
   selectedLead: any;  public appointmentForm!: FormGroup;appointmentDataList :any;
   isChecked = false;taskPriorityList :any;
-  taskForm ! :FormGroup; appointmentFormSubmitted: boolean = false;
-   selectedLeadForAppointment:any;appointmentId: number | null = null;selectedLeadForAppointmentObject:any;
+  taskForm ! :FormGroup; appointmentFormSubmitted: boolean = false;currentStep = 1;
+  completionForm!:FormGroup;
+  selectedLeadForAppointment:any;appointmentId: number | null = null;selectedLeadForAppointmentObject:any;
+  filteredUserList: any[] = [];
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -498,6 +500,15 @@ export class DealsComponent extends BaseComponent {
       type: [this.userType],
       taskCreatedBy : [this.userEmail],
       leadEntry : [this.userEmail]
+    });
+
+    this.completionForm = this.fb.group({
+      projectName: [''],
+      businessCategory: [''],
+      address: [''],
+      username: [''],
+      clientName: [''],
+      mobileNumber: ['']
     });
 
     this.getUsers();
@@ -1103,7 +1114,7 @@ export class DealsComponent extends BaseComponent {
       formData.append('companyCode', JSON.parse(this.userData)?.companyCode || '');
       formData.append('email', JSON.parse(this.userData)?.email || '');
       formData.append('type', JSON.parse(this.userData)?.type || '');
-      formData.append('campaignId', (JSON.parse(this.userData)?.userType !== 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
+      formData.append('campaignId', (JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
       formData.append('stage', this.defaultStageName || 'open');
       formData.append('status', this.defaultStatusName || 'active');
       const autoAllocate = this.uploadLead.get('autoAllocate')?.value;
@@ -1326,6 +1337,9 @@ export class DealsComponent extends BaseComponent {
         next: (res: any) => {
           if (res) {
             this.userList = res;
+             this.filteredUserList = this.userList.filter(
+              (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
+            );
           } else {
             this.toastr.error(res.message, 'signup', {
               timeOut: 3000,
@@ -1401,7 +1415,9 @@ export class DealsComponent extends BaseComponent {
 
   onSelectAllChange(event: any) {
     if (event.checked) {
-      this.selectedLeads = this.dataSource.data.map((row: any) => row.leadId);
+      this.selectedLeads = this.dataSource.data
+        .filter((row: any) => row.completionStatus !== 'completed') // ✅ exclude closed
+        .map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
     }
@@ -2651,4 +2667,50 @@ export class DealsComponent extends BaseComponent {
       return `Expired ${Math.abs(diffDays)} days ago`;
     }
   }
+  
+  openCompletionModal(content: any, lead: any) {
+    this.selectedLead = lead;
+    this.leadId = lead.leadId;
+    console.log(this.leadId);
+    this.currentStep = 1;  
+    this.modalService.open(content, { centered: true });
+  }
+
+
+   updateCompletionStatus() {
+    const payload = {
+      ...this.completionForm.value,
+      status : "completed",
+      completedBy: this.userName,
+      leadId: this.leadId,
+      companyCode:this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
+    };
+    console.log('status',payload);
+    this.switchService.updateLeadCompletion(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('lead completed successfully');
+        if (this.selectedLead) {
+          this.selectedLead.completionStatus = "completed"; // <-- update status
+        }
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  goToStep(step: number) {
+    this.currentStep = step;
+  }
+  submitClose(modal: any) {
+    
+    this.updateCompletionStatus();
+
+    modal.close();
+    this.currentStep = 1;
+  }
+
+
 }

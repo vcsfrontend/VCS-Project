@@ -6,9 +6,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   AfterViewInit,
+  
 } from '@angular/core';
 import { Menu, NavService } from '../../services/navservice';
-import { Subscription, fromEvent } from 'rxjs';
+import { Subscription, fromEvent,combineLatest  } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { checkHoriMenu } from './sidebar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -26,6 +27,8 @@ export class SidebarComponent implements AfterViewInit {
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
   eventTriggered: boolean = false;
+  adonaiRole: string='';
+  crmRole: string = '';
   screenWidth!: number;
   public windowSubscribe$!: Subscription;
   options = { autoHide: false, scrollbarMinSize: 100 };
@@ -54,100 +57,24 @@ export class SidebarComponent implements AfterViewInit {
       });
     });
   }
-  ngOnInit() {
-    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
-      items.forEach((item) => {
-        switch (item.title) {
-          case 'Adonai':
-            this.navServices.isAdonaiApplicable$.subscribe(val => {
-              item.isVisible = val
-            });
-            break;
-          case 'CRM':
-            // this.navServices.isCRMApplicable$.subscribe(val => {
-            //   item.isVisible = val
-            // });
-            item.isVisible=true;
-            break;
-          case 'Dashboard':
-            item.isVisible = true;
-            break;
-          case 'Projects':
-            item.isVisible = true;
-            break;
-          case 'To-Do-List':
-            item.isVisible = true;
-            break;
-          case 'HRM':
-            item.isVisible = true;
-            break;
-          case 'Analytics':
-            item.isVisible = true;
-            break;
-          case 'Customer':
-            item.isVisible = true;
-            break;
-          // case 'Crm':
-          //   item.isVisible = true;
-          //   break;
-          case 'Adonai Users':
-            this.getSalesUsers(this.userEmail, item);
-            break;
-          // case 'bom':
-          //   item.isVisible = true;
-          //   break;
-          // case 'enterprise':
-          //   item.isVisible = true;
-          //   break;
-          // case 'leads':
-          //   item.isVisible = true;
-          //   break;
-          case 'Deals':
-            item.isVisible = true;
-            break;
-          case 'users':
-            item.isVisible = true;
-            break;
-          case 'Reports':
-            item.isVisible = true;
-            break;
-          case 'support':
-            item.isVisible = true;
-            break;
-          case 'optimizer':
-            item.isVisible = true;
-            break;
-          case 'Optimization':
-            item.isVisible=true;
-            break;
-          case 'proposal':
-            item.isVisible = true;
-            break;
-          case 'clients':
-            item.isVisible = true;
-            break;
-          case 'Appointment':
-            item.isVisible = true;
-            break;
-          // case 'Chatbot':
-          //   item.isVisible = true;
-          //   break;
-          case 'Settings':
-            this.checkAdminRole(item);
-            break;
-          case 'Tasks':
-            item.isVisible = true;
-            break;
-          case 'Quotation':
-            item.isVisible=true;
-            break;
-          case 'Boq':
-            item.isVisible = true;
-            break;
-        }
-      })
-      this.menuItems = items;
+  ngOnInit():void {
+    this.navServices.adonaiRole$.subscribe(val => {
+      this.adonaiRole = val;
     });
+
+    this.navServices.crmRole$.subscribe(val => {
+      this.crmRole = val;
+    });
+     combineLatest([
+    this.navServices.adonaiRole$,
+    this.navServices.crmRole$
+    ]).subscribe(([adonaiRole, crmRole]: [string, string]) => {
+      this.adonaiRole = adonaiRole;
+      this.crmRole = crmRole;
+      this.buildMenu();
+    });
+
+  
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.setNavActive(null, this.router.url);
@@ -168,6 +95,64 @@ export class SidebarComponent implements AfterViewInit {
 
   }
 
+  buildMenu(): void {
+    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
+      items.forEach((item) => {
+      switch (item.title) {
+        case 'Adonai':
+          item.isVisible = this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER';
+          break;
+
+        case 'CRM':
+        // case 'Customer':
+        case 'Deals':
+        // case 'clients':
+        case 'Appointment':
+        // case 'proposal':
+          item.isVisible = this.crmRole === 'ADMIN' || this.crmRole === 'USER';
+          break;
+
+        case 'Quotation':
+        case 'Optimization':
+        case 'Projects':
+          item.isVisible = this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER';
+          break;
+
+        case 'Dashboard':
+        // case 'To-Do-List':
+        // case 'HRM':
+        // case 'Analytics':
+        // case 'users':
+        // case 'Reports':
+        // case 'support':
+        case 'optimizer':
+        
+        case 'Tasks':
+        case 'Boq':
+          item.isVisible = true;
+          break;
+
+        case 'Adonai Users':
+          this.getSalesUsers(this.userEmail, item);
+          break;
+
+        case 'Settings':
+          // 🔹 use external method here
+          this.checkAdminRole(item);
+          break;
+
+        default:
+          item.isVisible = false;
+      }
+      if ((this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER') &&
+        (this.crmRole === 'ADMIN' || this.crmRole === 'USER')) {
+      item.isVisible = true;
+    }
+      });
+      this.menuItems = items;
+    });
+  }
+ 
   getSalesUsers(email: string = this.userEmail, item: any) {
     this.switchService.SalesUsers(email).subscribe({
       next: (res: any) => {
@@ -447,11 +432,17 @@ export class SidebarComponent implements AfterViewInit {
     this.cd.detectChanges();
   }
   ngOnDestroy() {
-    this.menuitemsSubscribe$.unsubscribe();
-    this.windowSubscribe$.unsubscribe();
+    if (this.menuitemsSubscribe$) {
+      this.menuitemsSubscribe$.unsubscribe();
+    }
+    if (this.windowSubscribe$) {
+      this.windowSubscribe$.unsubscribe();
+    }
+
     document.querySelector('html')?.setAttribute('data-vertical-style', 'overlay');
     document.querySelector('html')?.setAttribute('data-nav-layout', 'vertical');
   }
+
 
 
   leftArrowFn() {

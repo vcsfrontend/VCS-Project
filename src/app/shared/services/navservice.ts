@@ -56,8 +56,17 @@ export class NavService implements OnDestroy {
   active: any;
   public isAdonaiApplicable$ = new BehaviorSubject<boolean>(false);
   public isCRMApplicable$ = new BehaviorSubject<boolean>(false);
-  public adonaiRole$ = new BehaviorSubject<string>("USER");
-  public crmRole$ = new BehaviorSubject<string>("USER");
+  // public adonaiRole$ = new BehaviorSubject<string>("USER");
+  // public crmRole$ = new BehaviorSubject<string>("USER");
+  public adonaiRole$ = new BehaviorSubject<string>(
+    localStorage.getItem('adonaiRole') || ''
+  );
+
+  public crmRole$ = new BehaviorSubject<string>(
+    localStorage.getItem('crmRole') || ''
+  );
+
+  
 
   constructor(private router: Router) {
      this.setScreenWidth(window.innerWidth);
@@ -82,6 +91,11 @@ export class NavService implements OnDestroy {
         this.levelMenu = false;
       });
     }
+    const savedAdonaiRole = localStorage.getItem('adonaiRole');
+    const savedCrmRole = localStorage.getItem('crmRole');
+
+    if (savedAdonaiRole) this.adonaiRole$.next(savedAdonaiRole);
+    if (savedCrmRole) this.crmRole$.next(savedCrmRole);
   }
 
   ngOnDestroy() {
@@ -125,26 +139,26 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/projects',
     },
-    {
-      title: 'Products',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: ' bi-layers side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/products',
-    },
-    {
-      title: 'enterprise',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: 'bi-file-earmark',
-      active: false,
-      selected: false,
-      path: '/dashboard/enterprise',
-    },
+    // {
+    //   title: 'Products',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: ' bi-layers side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/products',
+    // },
+    // {
+    //   title: 'enterprise',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: 'bi-file-earmark',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/enterprise',
+    // },
     {
       title: 'Adonai Users',
       dirchange: false,
@@ -155,16 +169,16 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/adonai-users',
     },
-    {
-      title: 'bom',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: 'bi bi-graph-up',
-      active: false,
-      selected: false,
-      path: '/dashboard/bom',
-    },
+    // {
+    //   title: 'bom',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: 'bi bi-graph-up',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/bom',
+    // },
     
     // {
     //   title: 'Adonai',
@@ -235,15 +249,15 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/crm2',
     // },
-    {
-      title: 'superadmin',
-      icon: 'bi bi-shield-lock',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path : "/dashboard/superadmin"
-    },
+    // {
+    //   title: 'superadmin',
+    //   icon: 'bi bi-shield-lock',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path : "/dashboard/superadmin"
+    // },
     // {
     //   title: 'Dashboard2',
     //   icon: 'bi bi-shield-lock',
@@ -296,15 +310,15 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/projects',
     // },
-    {
-      title: 'leads',
-      icon: 'bi-layout-text-window side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path: '/apps/crm/leads'
-    },
+    // {
+    //   title: 'leads',
+    //   icon: 'bi-layout-text-window side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path: '/apps/crm/leads'
+    // },
     
     
     // {
@@ -325,15 +339,15 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/designers',
     // },
-    {
-      title: 'my-Tasks',
-      dirchange: false,
-      type: 'link',
-      icon: 'bi-layout-text-window side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/mytask',
-    },
+    // {
+    //   title: 'my-Tasks',
+    //   dirchange: false,
+    //   type: 'link',
+    //   icon: 'bi-layout-text-window side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/mytask',
+    // },
     // {
     //   title: 'users',
     //   dirchange: false,
@@ -353,74 +367,74 @@ export class NavService implements OnDestroy {
     //   active: false,
     //   path : "/dashboard/optimizer"
     // },
-    {
-      title: 'Optimization',
-      icon: 'bi bi-grid side-menu__icon',
-      dirchange: false,
-      type: 'sub',
-      active: false,
-      children: [
-        // {
-        //   title: 'optimizer',
-        //   icon: 'bi-file-earmark',
-        //   dirchange: false,
-        //   type: 'link',
-        //   linkType : 'internal',
-        //   active: false,
-        //   path : "/dashboard/optimizer"
-        // },        
-        {
-          title: 'Products',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          icon: ' bi-layers side-menu__icon',
-          active: false,
-          selected: false,
-          path: '/dashboard/products',
-        },
-        {
-          title: 'Panel',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          icon: ' bi-layers side-menu__icon',
-          active: false,
-          selected: false,
-          path: '/dashboard/panel',
-        },
-        {
-          title: 'Skin',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          icon: ' bi-layers side-menu__icon',
-          active: false,
-          selected: false,
-          path: '/dashboard/skin',
-        },
-        {
-          title: 'Edgeband',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          icon: ' bi-layers side-menu__icon',
-          active: false,
-          selected: false,
-          path: '/dashboard/edgeband',
-        },
-        {
-          title: 'Process Panel',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          icon: ' bi-layers side-menu__icon',
-          active: false,
-          selected: false,
-          path: '/dashboard/processPanel',
-        },
-      ],
-    },
+    // {
+    //   title: 'Optimization',
+    //   icon: 'bi bi-grid side-menu__icon',
+    //   dirchange: false,
+    //   type: 'sub',
+    //   active: false,
+    //   children: [
+    //     {
+    //       title: 'optimizer',
+    //       icon: 'bi-file-earmark',
+    //       dirchange: false,
+    //       type: 'link',
+    //       linkType : 'internal',
+    //       active: false,
+    //       path : "/dashboard/optimizer"
+    //     },        
+    //     {
+    //       title: 'Products',
+    //       dirchange: false,
+    //       type: 'link',
+    //       linkType : 'internal',
+    //       icon: ' bi-layers side-menu__icon',
+    //       active: false,
+    //       selected: false,
+    //       path: '/dashboard/products',
+    //     },
+    //     {
+    //       title: 'Panel',
+    //       dirchange: false,
+    //       type: 'link',
+    //       linkType : 'internal',
+    //       icon: ' bi-layers side-menu__icon',
+    //       active: false,
+    //       selected: false,
+    //       path: '/dashboard/panel',
+    //     },
+    //     {
+    //       title: 'Skin',
+    //       dirchange: false,
+    //       type: 'link',
+    //       linkType : 'internal',
+    //       icon: ' bi-layers side-menu__icon',
+    //       active: false,
+    //       selected: false,
+    //       path: '/dashboard/skin',
+    //     },
+    //     {
+    //       title: 'Edgeband',
+    //       dirchange: false,
+    //       type: 'link',
+    //       linkType : 'internal',
+    //       icon: ' bi-layers side-menu__icon',
+    //       active: false,
+    //       selected: false,
+    //       path: '/dashboard/edgeband',
+    //     },
+    //     {
+    //       title: 'Process Panel',
+    //       dirchange: false,
+    //       type: 'link',
+    //       linkType : 'internal',
+    //       icon: ' bi-layers side-menu__icon',
+    //       active: false,
+    //       selected: false,
+    //       path: '/dashboard/processPanel',
+    //     },
+    //   ],
+    // },
     {
       title: 'CRM',
       icon: 'bi bi-file-earmark side-menu__icon',
@@ -456,15 +470,15 @@ export class NavService implements OnDestroy {
           active: false,
           path: '/dashboard/tasks'
         },
-        {
-          title: 'Reports',
-          icon: 'bi-layout-text-window side-menu__icon',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          active: false,
-          path: '/dashboard/reports'
-        },
+        // {
+        //   title: 'Reports',
+        //   icon: 'bi-layout-text-window side-menu__icon',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType : 'internal',
+        //   active: false,
+        //   path: '/dashboard/reports'
+        // },
         {
           title: 'CRM Settings',
           icon: 'bi-layout-text-window side-menu__icon',
@@ -483,47 +497,47 @@ export class NavService implements OnDestroy {
         //   active: false,
         //   path: 'pages/chat'
         // },
+        // {
+        //   title: 'Support',
+        //   icon: 'bi-layout-text-window side-menu__icon',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType: 'internal',
+        //   active: false,
+        //   path: '/dashboard/support'
+        // },
         {
-          title: 'Support',
-          icon: 'bi-layout-text-window side-menu__icon',
-          dirchange: false,
-          type: 'link',
-          linkType: 'internal',
-          active: false,
-          path: '/dashboard/support'
+        title: 'Appointment',
+        icon: 'bi-layout-text-window side-menu__icon',
+        dirchange: false,
+        type: 'link',
+        linkType: 'internal',
+        active: false,
+        path: '/dashboard/appointments'
         },
-        
               
       ],
     },
-    {
-      title: 'Appointment',
-      icon: 'bi-layout-text-window side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType: 'internal',
-      active: false,
-      path: '/dashboard/appointments'
-    },
-    {
-      title: 'Chatbot',
-      icon: 'bi-layout-text-window side-menu__icon',
-      dirchange: false,
-      type: 'link',
-      linkType: 'internal',
-      active: false,
-      path: '/dashboard/chatbot'
-    },
-    {
-      title: 'Quotation',
-      dirchange: false,
-      type: 'link',
-      icon: ' bi-file-earmark-text side-menu__icon',
-      linkType: 'internal',
-      active: false,
-      selected: false,
-      path: '/dashboard/quotation',
-    },
+    
+    // {
+    //   title: 'Chatbot',
+    //   icon: 'bi-layout-text-window side-menu__icon',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType: 'internal',
+    //   active: false,
+    //   path: '/dashboard/chatbot'
+    // },
+    // {
+    //   title: 'Quotation',
+    //   dirchange: false,
+    //   type: 'link',
+    //   icon: ' bi-file-earmark-text side-menu__icon',
+    //   linkType: 'internal',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/quotation',
+    // },
     {
       title: 'Boq',
       dirchange: false,
@@ -739,4 +753,14 @@ export class NavService implements OnDestroy {
  
   // Array
   items = new BehaviorSubject<Menu[]>(this.MENUITEMS);
+  setAdonaiRole(role: string): void {
+    localStorage.setItem('adonaiRole', role);
+    this.adonaiRole$.next(role);
+  }
+
+  setCrmRole(role: string): void {
+    localStorage.setItem('crmRole', role);
+    this.crmRole$.next(role);
+  }
+
 }
