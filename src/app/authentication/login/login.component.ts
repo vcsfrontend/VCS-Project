@@ -138,6 +138,8 @@ login() {
         });
         localStorage.setItem("username",res.username);
         localStorage.setItem("email",res.email);
+        localStorage.setItem("adonaiRole", res.adonaiRole);
+      localStorage.setItem("crmRole", res.crmRole);
           this.navSvc.isAdonaiApplicable$.next(res.adonai);
           this.navSvc.isCRMApplicable$.next(res.crm);
           this.navSvc.adonaiRole$.next(res.adonaiRole);

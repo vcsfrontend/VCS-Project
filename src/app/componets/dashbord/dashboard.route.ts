@@ -48,11 +48,11 @@ export const admin: Routes = [
   loadComponent: () =>
     import('./hrm/hrm.component').then((m) => m.HrmComponent),
 },
-{
-  path: 'superadmin',
-  loadComponent: () =>
-    import('./superadmin/superadmin.component').then((m) => m.SuperadminComponent),
-},
+// {
+//   path: 'superadmin',
+//   loadComponent: () =>
+//     import('./superadmin/superadmin.component').then((m) => m.SuperadminComponent),
+// },
 {
   path: 'nft',
   loadComponent: () =>
@@ -223,7 +223,7 @@ export const admin: Routes = [
   {
     path: 'appointments',
     loadComponent: () =>
-    import('./appointments/appointments.component').then((m) => m.AppointmentsComponent),
+    import('../apps/crm/appointments/appointments.component').then((m) => m.AppointmentsComponent),
   },
   {
     path: 'chatbot',

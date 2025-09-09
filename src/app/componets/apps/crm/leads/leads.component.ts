@@ -45,7 +45,7 @@ import { errorRoutingModule } from '../../../error/error.route';
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city',];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','completionStatus'];
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -101,6 +101,7 @@ export class LeadsComponent extends BaseComponent {
   selectedType: string = ''; dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
   matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
   allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;  hasSelectedInvalid = false;
+  completionForm !:FormGroup;currentStep = 1;
   @ViewChild(MatPaginator) paginator!: MatPaginator; LeadToCampaignForm!: FormGroup;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator; 
   @ViewChild(MatSort) sort!: MatSort;
@@ -516,6 +517,15 @@ export class LeadsComponent extends BaseComponent {
       campaignId: [this.campaignId,],
     });
 
+    this.completionForm = this.fb.group({
+      projectName: ['', Validators.required],
+      businessCategory: ['' , Validators.required],
+      address: ['' , Validators.required],
+      username: ['',Validators.required],
+      clientName: ['',Validators.required],
+      mobileNumber: ['',Validators.required],
+      endDate : ['',Validators.required]
+    });
 
     this.getUsers();
     this.searchControl.valueChanges.subscribe((searchText) => {
@@ -2378,11 +2388,14 @@ export class LeadsComponent extends BaseComponent {
 
   onSelectAllChange(event: any) {
     if (event.checked) {
-      this.selectedLeads = this.dataSource.data.map((row: any) => row.leadId);
+      this.selectedLeads = this.dataSource.data
+        .filter((row: any) => row.completionStatus !== 'completed') // ✅ exclude closed
+        .map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
     }
   }
+
 
   isSelected(leadId: number): boolean {
     return this.selectedLeads.includes(leadId);
@@ -3036,7 +3049,49 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
+  openCompletionModal(content: any, lead: any) {
+    this.selectedLead = lead;
+    this.leadId = lead.leadId;
+    console.log(this.leadId);
+    this.currentStep = 1;  
+    this.modalService.open(content, { centered: true });
+  }
 
 
+   updateCompletionStatus() {
+    const payload = {
+      ...this.completionForm.value,
+      status : "completed",
+      completedBy: this.userName,
+      leadId: this.leadId,
+      companyCode:this.userCompanyCode,
+      companyName: this.userCompanyName,
+      email: this.userEmail,
+      type: this.userType
+    };
+    console.log('status',payload);
+    this.switchService.updateLeadCompletion(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('lead completed successfully');
+        if (this.selectedLead) {
+          this.selectedLead.completionStatus = "completed"; // <-- update status
+        }
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  goToStep(step: number) {
+    this.currentStep = step;
+  }
+  submitClose(modal: any) {
+
+    this.updateCompletionStatus();
+
+    modal.close();
+    this.currentStep = 1;
+  }
 
 }

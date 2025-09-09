@@ -237,3 +237,8 @@ table.mat-mdc-table .mdc-data-table__header-cell:first-child {
 .dropdown-menu {
   z-index: 2000 !important; 
 }
+.disabled-row {
+  pointer-events: none;   
+  opacity: 0.6;          
+  background-color: #f5f5f5; 
+}

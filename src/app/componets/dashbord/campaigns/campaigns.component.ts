@@ -37,7 +37,7 @@ export class CampaignsComponent extends BaseComponent {
   isStagesLoading: boolean = true; statusLst: any;  public leadCounts: { [campaignId: string]: number } = {};
   stageCounts: { [campaignId: string]: { [stage: string]: number } } = {}; campaignCount: any; totalLeadCount: any;
   fetchCrmLeadsList: any[] = [];topshowMore = false;showMore = true;
-  matcardLst: any; topDisplayedCards: any;
+  matcardLst: any; topDisplayedCards: any;filteredUserList: any[] = [];
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
   dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
@@ -73,11 +73,14 @@ export class CampaignsComponent extends BaseComponent {
   ngOnInit(): void {
     this.getCrmStages();
     this.getUsers();
-    if(this.adoanAiRole == 'ADMIN'){
+    if(this.adoanAiRole == 'ADMIN'|| this.userType == 1){
       this.getCampaignData();
     }
     // this.getCampaignData();
-    this.getCampaignSecific();
+    if(this.userType == 2){
+      this.getCampaignSecific();
+    }
+    
     this.campaignList.forEach(campaign => {
       this.getLeadCountForCampaign(campaign.campgnId);
     });
@@ -87,7 +90,7 @@ export class CampaignsComponent extends BaseComponent {
       campaignId: [0],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
       pipeline: ['', Validators.required],
-      campaignPoc: [this.userEmail],
+      campaignPoc: [''],
       agents: [[]],
       campaignPriority: [''],
       leadDuplicacy: [''],
@@ -273,9 +276,11 @@ export class CampaignsComponent extends BaseComponent {
     this.switchService.sepecificCampaign(payload).subscribe({
       next: (res: any) => {
         this.listNew = res;
+        if(this.userType == 2){
         this.listNew.forEach((campaign:any) => {
           this.getLeadCountForCampaign(campaign.campgnId);
       });
+      }
       },
       error: (err) => {
         // this.toastr.error(err.statusText || "An error occurred while fetching data.");
@@ -290,7 +295,9 @@ export class CampaignsComponent extends BaseComponent {
         next: (res: any) => {
           if (res) {
             this.userList = res;
-            
+             this.filteredUserList = this.userList.filter(
+              (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
+            );
           } else {
             this.toastr.error(res.message, 'signup', {
               timeOut: 3000,
@@ -305,10 +312,14 @@ export class CampaignsComponent extends BaseComponent {
     }
   }
 
-  getAgentColor(name: string): string {
+  getAgentColor(name: string | null | undefined): string {
+    if (!name || !name.trim()) {
+      return this.userColors[0]; // fallback color (pick index 0 or any default)
+    }
     const index = Math.abs(this.hashString(name.trim())) % this.userColors.length;
     return this.userColors[index];
   }
+
 
   private hashString(str: string): number {
     let hash = 0;
