@@ -18,7 +18,7 @@ import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
-import { emptyDoc } from 'ngx-editor';
+import { emptyDoc, Validators } from 'ngx-editor';
 import { ActivatedRoute } from '@angular/router';
 
 interface Plan {
@@ -66,13 +66,13 @@ export class BoqComponent extends BaseComponent {
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
     selectedOrderContent: any = null; actstatus: any;
     itemId :any; currentSection :any; proposals: any[] = []; clientOrders: any[] = [];
-    dataSource = new MatTableDataSource<any>();
+    dataSource = new MatTableDataSource<any>(); projectId:any; projectName!: any;
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     proposalContentDetailsDataSource = new MatTableDataSource<any>([]);
     designerDataSource = new MatTableDataSource<any>();
     proposalTabKeys: string[] = []; dateDiff: any; roleid: any;
-    proposalTabCounts: { [key: string]: number } = {};
+    proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
     itemCodeLst:any; public userList: any; filteredUserList: any[] = [];
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     // selectedColumns: Set<string> = new Set();
@@ -232,9 +232,27 @@ export class BoqComponent extends BaseComponent {
             contentJs:[''],
             // designId:['3FO3EWPJHYSK']
         });
+        this.flatpickrOptions = {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: 'H:i',
+        };
+        this.route.queryParams.subscribe(params => {
+            this.projectId = params['projectId'];
+            this.projectName = params['projectName'];
+            this.buildRecceForm();
+            this.recceForm.patchValue({
+                projectId: this.projectId,
+                projectName: this.projectName
+            });
+        });
+        flatpickr('#addignedDate', this.flatpickrOptions);
+    }
+
+    buildRecceForm() {
         this.recceForm = this.fb.group({
-            projectName:['Project Testing'],
-            projectId:['SHIV43561757396915624'],
+            projectName:[''],
+            projectId:[''],
             recceName:[''],
             recceStage:[''],
             recceDueDate:[''],
@@ -248,30 +266,21 @@ export class BoqComponent extends BaseComponent {
             type:this.userType,
             createdBy:this.userName
         });
-        this.flatpickrOptions = {
-          enableTime: true,
-          noCalendar: true,
-          dateFormat: 'H:i',
-        };
-        // this.route.queryParams.subscribe(params => {
-        //     console.log('boq queryParams:', params); 
-        //     const projectId = params['projectId'] ?? '';
-        //     const projectname = params['projectname'] ?? '';
-        //     if (projectId || projectname) {
-        //         this.boqproject(projectId, projectname);
-        //     }
-        // });
-        flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
     getUsers() {
-        if (this.userType==2) {
+        if (this.userType == 2) {
             let cn = this.userCompanyName;
             let cc = this.userCompanyCode;
             this.switchService.cmpnyUsers(cn, cc).subscribe({
                 next: (res: any) => {
                     if (res) {
-                        this.userList = res;
+                        this.userList = res.map((user: any) => ({
+                            email: user.email,
+                            username: user.username,
+                            adonaiRole: user.adonaiRole
+                        }));
+
                         this.filteredUserList = this.userList.filter(
                             (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
                         );
@@ -283,11 +292,11 @@ export class BoqComponent extends BaseComponent {
                     }
                 },
                 error: (error) => {
-                    // this.toastr.error(error.statusText);
                 },
-            })
+            });
         }
     }
+
 
     onSubmit() {
         if (this.isEditMode) {
@@ -1290,7 +1299,6 @@ export class BoqComponent extends BaseComponent {
       myFileClick() {
         const fileManagerFolders = document.querySelector('.file-manager-folders');
         const fileManagerNavigation = document.querySelector('.file-manager-navigation');
-    
         if (window.innerWidth <= 992) {
           if (fileManagerFolders) {
             fileManagerFolders.classList.add('open');
@@ -1313,7 +1321,6 @@ export class BoqComponent extends BaseComponent {
         if (window.innerWidth <= 1180 && selectedFileDetails) {
           selectedFileDetails.classList.add('open');
         } else {
-          // Close the details when the window width is greater than 992
           if (selectedFileDetails) {
             selectedFileDetails.classList.remove('open');
           }
@@ -1387,23 +1394,31 @@ export class BoqComponent extends BaseComponent {
             this.toastr.warning('Please fill all required fields');
             return;
         }
+        const formValue = this.recceForm.value;
         const payload = {
-            ...this.recceForm.value,
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
-            createdBy: this.userName
+            ...formValue,
+            recceAssigne: formValue.recceAssigne
+                ? `${formValue.recceAssigne.email},${formValue.recceAssigne.username}`
+                : '',
+            recceStakeHolders: formValue.recceStakeHolders
+                ? `${formValue.recceStakeHolders.email},${formValue.recceStakeHolders.username}`
+                : '',
+            recceClientPoc: formValue.recceClientPoc
+                ? `${formValue.recceClientPoc.email},${formValue.recceClientPoc.username}`
+                : '',
+            files: this.files.value
         };
-        console.log(payload)
-        // this.switchService.createRecce(payload).subscribe({
-        //     next: () => {
-        //         this.toastr.success("Recce created successfully!");
-        //         modal.close();
-        //         this.recceForm.reset();
-        //     },
-        //     error: () => this.toastr.error("Failed to create recce")
-        // });
+        console.log('Recce Payload:', payload);
+        this.switchService.createRecce(payload).subscribe({
+            next: () => {
+                this.toastr.success('Recce created successfully!');
+                modal.close();
+                this.recceForm.reset();
+            },
+            error: () => this.toastr.error('Failed to create recce'),
+        });
     }
+
 
     get files(): FormArray {
         return this.recceForm.get('files') as FormArray;
@@ -1416,18 +1431,54 @@ export class BoqComponent extends BaseComponent {
         this.files.clear();
 
         Array.from(input.files).forEach(file => {
-            this.files.push(this.fb.control(file.name)); // or push the uploaded file / URL
+            this.files.push(this.fb.control(file)); 
         });
+    }
 
-        console.log("Selected files:", this.recceForm.value.files);
+    recceList: any[] = [];
+    filteredRecce: any[] = [];
+
+    getRecceData() {
+        const payload = {
+            email: this.userEmail,
+            companyCode: this.userCompanyCode,
+            type: this.userType,
+            projectId: this.projectId
+        };
+
+        this.switchService.fetchRecceData(payload).subscribe({
+            next: (res: any) => {
+                if (res && res.length > 0) {
+                    this.recceList = res.map((recce: any) => ({
+                        ...recce,
+                        imageList: recce.imageUrls
+                            ? recce.imageUrls.split(',').map((url: string) => url.trim())
+                            : [],
+                        recceAssigneEmail: recce.recceAssigne
+                            ? recce.recceAssigne.split(',')[0].trim(): '',
+                        recceStakeHoldersEmail: recce.recceStakeHolders
+                            ? recce.recceStakeHolders.split(',')[0].trim(): '',
+                        recceClientPocEmail: recce.recceClientPoc
+                            ? recce.recceClientPoc.split(',')[0].trim(): '',   
+                    }));
+
+                    this.filterRecceByStage('Recce Details');
+                } else {
+                    this.toastr.warning('No recce data found');
+                }
+            },
+            error: (err) => {
+                console.error(err);
+                this.toastr.error('Something went wrong');
+            }
+        });
+    }
+
+    filterRecceByStage(stage: string) {
+        this.filteredRecce = this.recceList.filter(r => r.recceStage === stage);
     }
 
 
-
-
-    
-
-    
 
     
 }
