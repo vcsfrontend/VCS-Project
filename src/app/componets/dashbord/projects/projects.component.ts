@@ -2099,7 +2099,12 @@ downloadButtons: { label: string; url: string }[] = [];
   goToBoq(element: any) {
     this.router.navigate(
       ['/dashboard/boq'],
-      { queryParams: { projectId: element.projectId, projectName: element.projectName } }
+      {
+        queryParams: {
+          projectId: element.projectId,
+          projectName: element.projectName
+        }
+      }
     );
   }
 
