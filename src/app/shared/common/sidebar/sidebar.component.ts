@@ -128,9 +128,9 @@ export class SidebarComponent implements AfterViewInit {
         case 'optimizer':
         
         case 'Tasks':
-        case 'Boq':
-          item.isVisible = true;
-          break;
+        // case 'Boq':
+        //   item.isVisible = true;
+        //   break;
 
         // case 'Adonai Users':
         //   this.getSalesUsers(this.userEmail, item);

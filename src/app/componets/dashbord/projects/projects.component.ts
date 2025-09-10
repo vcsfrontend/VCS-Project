@@ -66,8 +66,8 @@ export type ChartOptions = {
   styleUrl: './projects.component.scss',
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate',  'Quotation' ];
+  displayedColumns: string[] = ['sourceFlag','slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
+    'projectArea', 'projectStartDate', 'projectEndDate',   ];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
