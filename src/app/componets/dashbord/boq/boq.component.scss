@@ -1,0 +1,352 @@
+.whatsapp{
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+.mmt{
+    margin-top: -30px;
+}
+.vertical-line{
+    border-left: 1px solid #717171;
+  height: 50px; 
+  margin: 0 20px;
+}
+
+table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky !important;
+  top: 0;
+  z-index: 12 !important; 
+  background-color: #006699 !important; 
+  color: white !important;
+  border-right: none;
+}
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+}
+
+
+// .mat-column-elementNameDescription {
+//   width: 70% !important;   
+//   max-width: 70% !important;
+//   min-width: 70% !important;
+// }
+
+.filter-field-1 {
+  margin-top: -5px !important;
+  margin-bottom: -45px !important;
+  width: 45%; 
+  max-height: 72px !important;
+  margin-left: 0% !important;
+}
+
+.btn-group .dropdown-menu.show {
+  z-index: 3000 !important;
+}
+// :host ::ng-deep .dropdown-menu.show {
+//   z-index: 3000 !important;
+// }
+
+.custom-btn::after {
+  display: none !important;
+}
+
+.custom-btn {
+  color: inherit;
+  border: 1px solid transparent;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.custom-btn:hover,
+.custom-btn:focus {
+  color: #000000;
+  border: 1px solid hsl(0, 0%, 0%);
+  background-color: transparent;
+}
+
+.custom-btn:hover::after,
+.custom-btn:focus::after {
+  display: inline-block !important;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  content: "";
+  border-top: 0.4em solid;              
+  border-right: 0.4em solid transparent;
+  border-left: 0.4em solid transparent;
+}
+
+
+.img-thumbnail {
+    border-radius: 9px;
+    max-width: 70px;
+    max-height: 55px;
+}
+ul.dropdown-menu.cuw{
+  min-width: 250px;
+  min-height: 250px;
+}
+
+.sticky-col-left {
+  position: sticky !important;
+  left: 0;
+  z-index: 9;
+  background: #fff; 
+}
+
+.sticky-col-left-2 {
+  position: sticky !important;
+  left: 50px; 
+  z-index: 9;
+  background: #fff;
+  border-right: 1px solid black;
+}
+
+
+.sticky-col-right {
+  position: sticky !important;
+  right: 0;
+  z-index: 11;
+  border-left: 1px solid black;
+}
+
+.dropdown-toggle::after {
+  display: none !important;
+}
+
+.cuu{
+  min-width: 250px;
+  min-height: 250px;
+  z-index: 30;
+}
+
+.dropdown-item{
+  cursor: pointer;
+}
+
+.dropdown-item:active {
+  background-color: #006699 !important;
+  color: #fff !important;
+}
+
+.dropdown-item:hover {
+  background-color: #006699 !important;
+  color: #fff !important;
+}
+
+ul.dropdown-menu.cuw.show ~ .table-container {
+  overflow: hidden !important;
+}
+
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #fff;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
+}
+
+
+.mat-table1 {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mat-table1 th,
+.mat-table1 td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.offcanvas.custom-offcanvas {
+  --bs-offcanvas-width: 1300px; 
+}
+.offcanvas.custom-offcanvas.show:not(.hiding),
+.offcanvas.custom-offcanvas.showing {
+  transform: none !important;
+  min-width: 1300px !important;
+}
+
+.kt {
+  cursor: pointer;
+}
+
+.static-row {
+  background: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-link.m-2.active {
+  background-color: 006699 !important;
+  color: #000000 !important;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.table thead th {
+  background-color: #006699 !important;
+  color: white !important;
+}
+
+/* fix row height */
+.my-table tbody tr {
+  height: 48px;       /* adjust until it fits your design */
+}
+
+.table-container {
+  max-height: calc(80px * 5);
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #fff;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
+}
+
+/* hide input by default */
+.editable-cell .cell-input {
+  display: none;
+  width: 100%;
+  border: 1px solid #d60606;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 13px;
+}
+.editable-cell .cell-text {
+  display: inline-block;
+}
+.editable-cell:hover .cell-input {
+  display: inline-block;
+}
+
+.editable-cell:hover .cell-text {
+  display: none;
+}
+.table-footer-row td {
+  border-top: none !important;             
+  background-color: #f8f8f8;        
+  padding: 2px 8px !important;             
+  box-shadow: inset 0 1px 2px rgba(240, 231, 231, 0.08); 
+  font-size: 12px;              
+  line-height: 1.2;    
+  border-bottom: 1px solid black;                     
+}
+
+/* + button smaller and neat */
+.table-footer-row .btn {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-size: 11px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #28a745;
+  color: #28a745;
+}
+
+/* Badge (tags) */
+.table-footer-row .badge {
+  font-size: 11px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ccc;
+  padding: 3px 7px;
+}
+
+/* Avatar */
+.table-footer-row .avatar {
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  border-radius: 50%;
+  background-color: #0d6efd;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+}
+.table-hover > tbody > tr:hover > * {
+  background-color: transparent !important;
+}
+.my-table tbody tr {
+    height: 35px;
+}
+.table-container {
+  max-height: 400px; /* set scrollable height */
+  overflow-y: auto;
+  position: relative;
+}
+
+.table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;   /* white background to cover rows */
+  z-index: 10;        /* make sure it stays above rows */
+}
+
+.table tfoot td {
+  position: sticky;
+  bottom: 0;
+  background: #fff; 
+  font-weight: bold;
+  z-index: 10;
+}
+.scrollable-body {
+  max-height: 70vh;  
+  overflow-y: auto;
+}
+
+.filter-field {
+  margin-top: -3px !important;
+  margin-bottom: -45px !important;
+  width: 35%; 
+  max-height: 72px !important;
+  margin-left: -1% !important;
+  
+}

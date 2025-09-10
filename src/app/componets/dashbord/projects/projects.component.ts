@@ -66,8 +66,8 @@ export type ChartOptions = {
   styleUrl: './projects.component.scss',
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate'];
+  displayedColumns: string[] = ['sourceFlag','slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
+    'projectArea', 'projectStartDate', 'projectEndDate',   ];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
@@ -103,7 +103,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   spinnerLoading = false;
   pendingRequests = 0;
   adonaiURL: any;
-  quotationForm!: FormGroup;
+  quotationForm!: FormGroup; boqForm!: FormGroup;
   quoteForm!: FormGroup;
 
   updateDisplayedCards(): void {
@@ -141,6 +141,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
   openLg1(content4: any) {
     this.modalService.open(content4, { size: 'sm', centered: true },);
+  }
+
+  boqmodal(content17: any) {
+    this.modalService.open(content17, { size: 'sm', centered: true },);
   }
 
   openLg2(content13: any) {
@@ -369,7 +373,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       },
       error: (error) => {
         this.stopLoading();
-        this.toastr.error(error.statusText);
+        // this.toastr.error(error.statusText);
       },
     })
   }
@@ -408,7 +412,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       },
       error: (error) => {
         this.stopLoading();
-        this.toastr.error(error.statusText);
+        // this.toastr.error(error.statusText);
       },
     })
   }
@@ -1617,7 +1621,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         this.stopLoading();
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while fetching projects.");
+        // this.toastr.error(error.statusText || "An error occurred while fetching projects.");
         this.stopLoading();
       },
     });
@@ -1832,7 +1836,7 @@ downloadButtons: { label: string; url: string }[] = [];
           }
         },
         error: (error) => {
-          this.toastr.error(error.statusText);
+          // this.toastr.error(error.statusText);
         },
       })
     }
@@ -1878,7 +1882,7 @@ downloadButtons: { label: string; url: string }[] = [];
         }
       },
       error: (err: any) => {
-        this.toastr.error("Failed to fetch user data. Please try again.");
+        // this.toastr.error("Failed to fetch user data. Please try again.");
       }
     });
   }
@@ -1971,7 +1975,7 @@ downloadButtons: { label: string; url: string }[] = [];
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        // this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
@@ -2087,10 +2091,19 @@ downloadButtons: { label: string; url: string }[] = [];
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        // this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
+
+  goToBoq(element: any) {
+    this.router.navigate(
+      ['/dashboard/boq'],
+      { queryParams: { projectId: element.projectId, projectName: element.projectName } }
+    );
+  }
+
+
 
 
 }

@@ -45,11 +45,11 @@ import { errorRoutingModule } from '../../../error/error.route';
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city',];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','completionStatus'];
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
-  pageSize = 10;
+  pageSize = 10; appointmentDataList: any[] = [];selectedAppointment: any = null; selectedLead: any;
   Crmusers: any[] = []; selectedLeads: number[] = [];
   CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
   stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
@@ -77,15 +77,19 @@ export class LeadsComponent extends BaseComponent {
   leadStatusitems: { checked: boolean; label: string }[] = []; selectedProgressLeads: any[] = [];
   selectedLostLeads: any[] = []; selectedConvertedLeads: any[] = [];
   newItemColor: string = '#000000'; newOptionColor: any; showMore = true; topshowMore = false;
-  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup;
+  campaignList: any[] = []; agentUsers: any[] = []; selectedCampaign: any; selectTemplateForm!: FormGroup; taskForm!: FormGroup;
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any[] = [];
   imageFileSrcData: any; followUpDetails: any[] = []; nextLeadStatus: any; minDateTime: string = '';
   selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
   fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
-  notconnectedstatusClicked = false; adoanAiRole: any;
-
+  notconnectedstatusClicked = false; adoanAiRole: any;leadList :any;filteredLeadList: any[] = [];   // holds filtered leads
+  displayedLeads: any[] = []; override cityList:any[]=[];
+  filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
+  appointmentId: number | null = null; taskPriorityList :any;taskList:any; appointmentFormSubmitted : boolean = false;
+  selectedLeadForAppointment:any;selectedLeadForAppointmentObject:any;
+  leadCompletionsubmitted : boolean = false;
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -98,13 +102,16 @@ export class LeadsComponent extends BaseComponent {
   selectedType: string = ''; dynamicFields: { value: string }[] = []; showSourceFlagColumn: boolean = false;
   matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
   allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;  hasSelectedInvalid = false;
+  completionForm !:FormGroup;currentStep = 1;
   @ViewChild(MatPaginator) paginator!: MatPaginator; LeadToCampaignForm!: FormGroup;
-  @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
+  @ViewChild(MatPaginator) usersPaginator!: MatPaginator; 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('sort2') sort2!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
 
   public leadForm!: FormGroup;
+  public sendMultiMailSubmitted = false;
+  public taskSubmitted = false;
   public submitted = false;
   selectedCountry: string = 'India';
   public leadDetails: any = {};
@@ -116,14 +123,17 @@ export class LeadsComponent extends BaseComponent {
   public leadId = 0;
 
   public sendLeadForm!: FormGroup;
+  public filterForm!: FormGroup;
   public sendwhatsLeadForm!: FormGroup;
+  public appointmentForm!: FormGroup;
   public sendwhatsLeadFormSubmitted = false;
   public sendLeadSubmitted = false;
+  public filterLeadSubmitted = false;
 
   public followupName = '';
   public executiveName = '';
   public followupLeadForm!: FormGroup;
-  public FilterForm!:FormGroup;
+  public filterLeadForm!:FormGroup;
   public followupLeadSubmitted = false;
 
   public userList: any;
@@ -183,12 +193,58 @@ export class LeadsComponent extends BaseComponent {
       },
     };
   }
+  appointmentModal(appointment1: any, element: any, appointmentData: any = null) {
+   this.selectedLeadForAppointmentObject = element; // full lead object
+  console.log('Selected for appointment:', this.selectedLeadForAppointmentObject);
+  if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+  }
+  this.appointmentForm.reset();
+
+  if (appointmentData) {
+    // Edit mode
+    this.editMode = true;
+    this.selectedAppointment = appointmentData;
+
+    // Patch form values
+    this.appointmentForm.patchValue({
+      appointmentId : 0,
+      appointmenType: appointmentData.appointmenType,
+      date: appointmentData.date,
+      description: appointmentData.description,
+      duration: appointmentData.duration,
+      assignedDesigner: appointmentData.assignedDesigner
+    });
+
+    // Save appointment ID for edit API payload
+    this.appointmentId = appointmentData.id;
+  } else {
+    // Create mode
+    this.editMode = false;
+    this.selectedAppointment = null;
+    this.appointmentId = 0;
+  }
+
+  this.modalService.open(appointment1, { centered: true });
+  }
+
+
   open(content7: any) {
     this.modalService.open(content7, { centered: true });
   }
   openModal(content1: any) {
     this.modalService.open(content1, { centered: true });
   }
+
+  openTaskModal(content: any) {
+    if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    this.modalService.open(content, { backdrop: 'static' });
+  }
+  
   offcanvasRef: any;
   openRight(content: any) {
     this.offcanvasRef = this.offcanvasService.open(content, {
@@ -333,12 +389,39 @@ export class LeadsComponent extends BaseComponent {
       }
 
       //Send Email
-      this.sendwhatsLeadForm = this.fb.group({
-        template: ['', [Validators.required]],
-        subject: ['', [Validators.required, Validators.minLength(3)]],
-        content: ['', [Validators.required]],
-        file: [''],
-      });
+      this.appointmentForm = this.fb.group({
+        appointmenType: ['',Validators.required],
+        date: ['', Validators.required],
+        description: [''],
+        duration: ['', Validators.required],
+        currentUser: [this.userEmail],
+        assignedDesigner:['',Validators.required],
+        leadEntry: this.fb.group({
+          leadId: [0],
+          name: [''],
+          companyName: [''],
+          executive: [''],
+          products: [''],
+          stage: [''],
+          leadSource: [''],
+          zipCode: [''],
+          followUpDate: [''],
+          state: [''],
+          city: [''],
+          address: [''],
+          contact: [''],
+          email: [''],
+          currentStage: [''],
+          updatedBy: [''],
+          updatedTime: [''],
+          entryBy: [''],
+          campaignId: [''],
+          companyCode: [''],
+          individualEmail: [''],
+          type: 0
+        }),
+        createdTime:['']
+        });
 
       //Send Email
       this.sendLeadForm = this.fb.group({
@@ -348,6 +431,21 @@ export class LeadsComponent extends BaseComponent {
         cc: ['', [Validators.required]],
         bcc: ['', [Validators.minLength(3)]],
         content: ['', [Validators.required]],
+      });
+
+      // filterLeadForm
+      this.filterLeadForm = this.fb.group({
+        stage: [''],
+        status: [''],
+        source: [''],
+        startDate: [''],
+        endDate: [''],
+        executive: [''],
+        city: [''],
+        campaignId: [''],
+        companyCode: this.userCompanyCode,
+        email: this.userEmail,
+        type: this.userType
       });
 
       this.sendLeadForm.get('template')
@@ -383,6 +481,22 @@ export class LeadsComponent extends BaseComponent {
       type: this.userType,
     });
 
+    //Create Task
+    this.taskForm = this.fb.group({
+      deadline: ['',Validators.required],
+      taskName: ['',Validators.required],
+      assignedTo: ['', Validators.required],
+      priority: ['',Validators.required ],
+      description: ['',Validators.required ],
+      currentStatus: ['',Validators.required],
+      leadIdList: [''],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
+      taskCreatedBy : [this.userEmail],
+      leadEntry : [this.userEmail]
+    });
+
     //Send Email
     this.followupLeadForm = this.fb.group({
       followupDate: ['', [Validators.required]],
@@ -398,25 +512,21 @@ export class LeadsComponent extends BaseComponent {
       executive: ['', [Validators.required]],
     });
 
-     this.FilterForm = this.fb.group({
-      filterStage: [''],
-      filterStatus: [''],
-      filterSource: [''],
-      filterExecutive: [''],
-      filterCity: [''],
-      filterState: [''],
-      companyName: [this.userCompanyName],
-      companyCode: [this.userCompanyCode],
-      email: [this.userEmail],
-      type: [this.userType],
-    });
-
     // lead Move to Campaign
 
     this.LeadToCampaignForm = this.fb.group({
       campaignId: [this.campaignId,],
     });
 
+    this.completionForm = this.fb.group({
+      projectName: ['', [Validators.required, Validators.minLength(3)]],
+      businessCategory: ['' , Validators.required],
+      address: ['' , Validators.required],
+      username: ['',Validators.required],
+      clientName: ['',Validators.required],
+      mobileNumber: ['',Validators.required],
+      endDate : ['',Validators.required]
+    });
 
     this.getUsers();
     this.searchControl.valueChanges.subscribe((searchText) => {
@@ -559,11 +669,10 @@ export class LeadsComponent extends BaseComponent {
     };
     this.updateColumns();
   }
+
   updateColumns() {
     const hasExecutiveLead = this.dataSource.data.some(element => element.source === 'executive');
-
     const newColumns = this.displayedColumns.filter(col => col !== 'sourceFlag');
-
     if (hasExecutiveLead) {
       this.displayedColumns = ['sourceFlag', ...newColumns]; 
     } else {
@@ -571,25 +680,20 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-
   addLeadItem() {
     const newItemName = this.newItem?.trim();
     const selectedColor = this.newItemColor?.toLowerCase();
-
     if (!newItemName) {
       this.toastr.warning('Please enter a lead Stage.');
       return;
     }
-
     const itemExists = this.crmStaticStages.some(
       (plan) => plan.name.toLowerCase() === newItemName.toLowerCase()
     );
-
     if (itemExists) {
       this.toastr.warning('This item already exists!');
       return;
     }
-
     if (
       !selectedColor ||
       selectedColor === '#000000' ||
@@ -598,7 +702,6 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select a  color');
       return;
     }
-
     this.crmStaticStages.push({
       name: newItemName,
       checked: false,
@@ -606,10 +709,9 @@ export class LeadsComponent extends BaseComponent {
       isCustom: true,
       color: selectedColor,
     });
-
     this.toastr.info('Item added Successfully');
     this.newItem = '';
-    this.newItemColor = '#000000'; // Reset color picker
+    this.newItemColor = '#000000';
   }
 
   deleteLeadItem(index: number) {
@@ -713,8 +815,22 @@ export class LeadsComponent extends BaseComponent {
   get f() {
     return this.leadForm.controls;
   }
+  get g() {
+    return this.taskForm.controls;
+  }
+  get h() {
+    return this.appointmentForm.controls;
+  }
+  get j() {
+    return this.completionForm.controls;
+  }
+
 
   onSubmit(modal: any) {
+    const followUpDate = this.leadForm.get('followUpDate')?.value;
+    if (followUpDate) {
+      this.followupLeadSubmit(modal);
+    }
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
     this.leadForm.get('executive')?.setValue('');
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
@@ -752,27 +868,6 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-  submitFilter(){
-    let payload = {
-      ...this.FilterForm.value,
-      companyName: [this.userCompanyName],
-      companyCode: [this.userCompanyCode],
-      email: [this.userEmail],
-      type: [this.userType],
-    }
-    this.switchService.filterCrmLeads(payload).subscribe({
-      next : (res:any) => {
-        if (res.status === true)
-        this.toastr.success('filtered data successfully');
-        this.offcanvasService.dismiss();
-        this.FilterForm.reset();
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
-      }
-    })
-  }
-
   editLeadSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
     this.leadForm.get('executive')?.setValue(this.element.executive ?? null);
@@ -805,6 +900,79 @@ export class LeadsComponent extends BaseComponent {
         },
       });
     }
+  }
+
+  appointmentFormSubmit(modal: any) {  
+    const formData = this.appointmentForm.value;
+    console.log('the',this.leadId)
+    const payload = {
+      appointmenType: formData.appointmenType,
+      date: formData.date,
+      description: formData.description,
+      duration: formData.duration,
+      currentUser: this.userEmail,
+      assignedDesigner: formData.assignedDesigner,
+          ...(this.appointmentId ? { appointmentId: this.appointmentId } : {}),
+      leadEntry:this.selectedLeadForAppointment ? {
+        leadId: this.selectedLeadForAppointment.leadId,
+        name: this.selectedLeadForAppointment.name,
+        companyName: this.selectedLeadForAppointment.companyName,
+        executive: this.selectedLeadForAppointment.executive,
+        products: this.selectedLeadForAppointment.products,
+        country: this.selectedLeadForAppointment.country,
+        stage: this.selectedLeadForAppointment.stage,
+        status: this.selectedLeadForAppointment.status,
+        leadSource: this.selectedLeadForAppointment.leadSource,
+        zipCode: this.selectedLeadForAppointment.zipCode,
+        followUpDate: this.selectedLeadForAppointment.followUpDate,
+        state: this.selectedLeadForAppointment.state,
+        city: this.selectedLeadForAppointment.city,
+        address: this.selectedLeadForAppointment.address,
+        contact: this.selectedLeadForAppointment.contact,
+        email: this.selectedLeadForAppointment.email,
+        currentStage: this.selectedLeadForAppointment.currentStage,
+        updatedBy: this.selectedLeadForAppointment.updatedBy,
+        updatedTime: this.selectedLeadForAppointment.updatedTime,
+        entryBy: this.selectedLeadForAppointment.entryBy,
+        campaignId: this.selectedLeadForAppointment.campaignId,
+        companyCode: this.selectedLeadForAppointment.companyCode,
+        individualEmail: this.selectedLeadForAppointment.individualEmail,
+        type: this.selectedLeadForAppointment.type,
+      }  : null  
+    };
+    console.log('payload',payload);
+    this.appointmentFormSubmitted = true;
+    if(this.appointmentForm?.valid){
+      this.switchService.saveAppointment(payload).subscribe({
+        next: (res) => {
+          this.toastr.success('Appointment Created ');
+          this.appointmentFormSubmitted = false;
+          modal.close();
+        },
+        error: (err) => {
+        }
+      });
+    }
+  }
+
+  getAppointment(element: any) {
+    this.leadId = element.leadId;
+    const leadId = element.leadId;
+    this.switchService.fetchAppointment(leadId).subscribe({
+      next: (res) => {
+        this.appointmentDataList = res;
+        if (res.length > 0) {
+          const selectedAppointment = res[0]; // or find(x => x.appointmentId === someId)
+          this.appointmentId = selectedAppointment.appointmentId;
+          this.appointmentForm.patchValue(selectedAppointment);
+        }
+        this.appointmentId= res.appointmentId;
+        
+      },
+      error: (err) => {
+        this.toastr.error('Failed to fetch appointment');
+      }
+    });
   }
 
   selectFormTemplateSubmit() {
@@ -1004,7 +1172,6 @@ export class LeadsComponent extends BaseComponent {
     let completedRequests = 0;
     const hasSavedStageStatuses: string[] = [];
 
-    // ❗ Important: Reset these before reloading data
     this.statusOptionsByStageforDisplay = {};
     this.statusLst = [];
 
@@ -1351,14 +1518,12 @@ export class LeadsComponent extends BaseComponent {
 
   onStatusChange(): void {
     const selectedStage = this.leadForm.get('stage')?.value;
-
     if (selectedStage === 'open') {
     this.checkboxStageOptions = this.openStage.map(opt => ({
       ...opt,
       checked: true,
       isCustom: false
     }));
-
     const firstStatus = this.checkboxStageOptions[0]?.name || null;
     this.leadForm.patchValue({ status: firstStatus });
     return;
@@ -1561,10 +1726,19 @@ export class LeadsComponent extends BaseComponent {
   //   });
   // }
 
-  getFetchLeadData() {
+  getFetchLeadData(customPayload?: any) {
     this.switchService.FetchLeadData(this.userEmail, this.campaignId)
       .subscribe({
         next: (res: any) => {
+          if (res.entryList) {
+            this.leadList = res.entryList; 
+            this.dataSource = new MatTableDataSource(res.entryList);
+            const cities = res.entryList
+              .map((lead: any) => lead.city?.trim())
+              .filter((city: any) => !!city); 
+            const uniqueCities = [...new Set(cities)];
+            this.cityList = uniqueCities.map(city => ({ name: city }));
+          }
           const now = new Date();
           const executiveList = (res.executiveList || []).map((item: any) => ({
             ...item,
@@ -1615,12 +1789,21 @@ export class LeadsComponent extends BaseComponent {
             })
           );
           this.getStatusCount();
+          if (this.paginator) {
+            this.taskPriorityList = res.taskPriorityList || [];
+            this.dataSource.paginator = this.paginator;
+          }
         },
         error: (error) => {
           this.toastr.error(error.statusText || 'Server Error');
         },
       });
   }
+  
+//   getTaskForLead(leadId: number) {
+//   return this.taskPriorityList.find(task => task.leadId === leadId);
+// }
+
 
   getStatusCount(): void {
     this.selectedStatusCount = null;
@@ -1844,10 +2027,7 @@ export class LeadsComponent extends BaseComponent {
         },
         error: (err: any) => {
           this.uploadSpinner = false;
-          this.toastr.error('Error fetching CRM Bulkupload leads', 'lead', {
-            timeOut: 3000,
-            positionClass: 'toast-top-right',
-          });
+          this.toastr.error('Error fetching CRM Bulkupload leads', 'lead', );
         },
       });
     }
@@ -1917,7 +2097,6 @@ export class LeadsComponent extends BaseComponent {
         bcc: this.sendLeadForm.get('bcc')?.value,
         content: this.sendLeadForm.get('content')?.value,
       };
-
       this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1940,6 +2119,49 @@ export class LeadsComponent extends BaseComponent {
         },
       });
     }
+  }
+
+  filterLeads(modal:any) {
+    const formValue = this.filterLeadForm.value;
+    const ensureSeconds = (value: string | null): string | null => {
+      if (!value) return null;
+      return value.length === 16 ? `${value}:00` : value;
+    };
+    const startDate = ensureSeconds(formValue.startDate);
+    const endDate = ensureSeconds(formValue.endDate);
+    const payload = {
+      ...this.filterLeadForm.value,
+      startDate,
+      endDate,
+      stage: Array.isArray(formValue.stage) ? formValue.stage.join(',') : formValue.stage || null,
+      status: Array.isArray(formValue.status) ? formValue.status.join(',') : formValue.status || null,
+      city: Array.isArray(formValue.city) ? formValue.city.join(',') : formValue.city || null,
+      source: Array.isArray(formValue.source) ? formValue.source.join(',') : formValue.source || null,
+      executive: Array.isArray(formValue.executive) ? formValue.executive.join(',') : formValue.executive || null,
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      campaignId: this.campaignId
+    };
+    this.switchService.filterLeads(payload).subscribe({
+      next: (res) => {
+        if (res) {
+          this.dataSource = new MatTableDataSource(res);
+          this.leadCount = res.length;
+          modal.close();
+          this.submitted = false;
+          this.sendLeadForm.reset();
+          this.toastr.success(res.message, 'Lead');
+          this.filterApplied = true;
+        } else {
+          this.toastr.error(res.message, 'Lead');
+          this.filterApplied = false;
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || 'Something went wrong', 'Error');
+      }
+    });
   }
 
   get e() {
@@ -2020,13 +2242,13 @@ export class LeadsComponent extends BaseComponent {
   }
 
   @ViewChild('followUpPond') followUpPond!: FilePondComponent;
-  followUpPondHandleInit() {}
+  followUpPondHandleInit() { }
   followUpPondHandleAddFile(event: any) {
     this.imageFileSrcData = '';
     const files = event.target.files[0];
     this.imageFileSrcData = files;
   }
-  followUpPondHandleActivateFile(event: any) {}
+  followUpPondHandleActivateFile(event: any) { }
 
   get a() {
     return this.allocateForm.controls;
@@ -2036,29 +2258,23 @@ export class LeadsComponent extends BaseComponent {
     return this.LeadToCampaignForm.controls;
   }
 
-  leadToCampaignSubmit() {
+  leadToCampaignSubmit(modal: any) {
+    const currentCampaignId = this.campaignId;
     this.selectedLeadId = this.selectedLeadData.leadId;
     const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
-    this.campaignId = selectedCampaignId;
-    console.log('Lead ID:', this.selectedLeadId);
-    console.log('Campaign ID:', this.campaignId);
-    const data = {
-      leadId: this.selectedLeadId,
-      campaignId: this.campaignId,
+    const payload = {
+      leadId: this.selectedLeadId.toString(),
+      campaignId: selectedCampaignId,
     };
-    this.editLeadSubmit(data);
+    this.moveLeadToAnotherCampaign(payload, modal);
+    this.getFetchLeadData(currentCampaignId);
+    this.campaignId = selectedCampaignId;
   }
-
-
-
-
-
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
     const selectedExecutive = this.allocateForm.get('executive')?.value;
     const hasSelectedLeads = this.selectedLeads.length > 0;
-    console.log('Selected Executive:', selectedExecutive); 
     if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
       this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
       return;
@@ -2077,7 +2293,6 @@ export class LeadsComponent extends BaseComponent {
         idList: [...this.selectedLeads],
         executive: selectedExecutive,
       };
-      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2162,24 +2377,30 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
-
-  onRowCheckboxChange(leadId: number, event: any) {
+    onRowCheckboxChange(lead: any, event: any) {
     if (event.checked) {
-      if (!this.selectedLeads.includes(leadId)) {
-        this.selectedLeads.push(leadId);
+      if (!this.selectedLeads.includes(lead.leadId)) {
+        this.selectedLeads.push(lead.leadId);
       }
+      this.selectedLeadForAppointment = lead;
     } else {
-      this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
+      this.selectedLeads = this.selectedLeads.filter(id => id !== lead.leadId);
+      if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
+        this.selectedLeadForAppointment = null;
+      }
     }
   }
 
   onSelectAllChange(event: any) {
     if (event.checked) {
-      this.selectedLeads = this.dataSource.data.map((row: any) => row.leadId);
+      this.selectedLeads = this.dataSource.data
+        .filter((row: any) => row.completionStatus !== 'completed') // ✅ exclude closed
+        .map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
     }
   }
+
 
   isSelected(leadId: number): boolean {
     return this.selectedLeads.includes(leadId);
@@ -2212,6 +2433,7 @@ export class LeadsComponent extends BaseComponent {
         type: 'local',
       },
     },
+    
   ];
   pondHandleInit() {}
   pondHandleAddFile(event: any) {}
@@ -2501,21 +2723,391 @@ export class LeadsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType
     };
-
     this.switchService.listLeadEntry(payload).subscribe({
       next: (res: any) => {
-        this.companyLst = res;             
+        this.companyLst = res;
       },
       error: (error) => {
         this.toastr.error(error.statusText);
       }
     });
   }
-
   get isStatusUnchanged(): boolean {
-  const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
-  const original = this.originalStatus?.toLowerCase().trim();
-  return current === original;
+    const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
+    const original = this.originalStatus?.toLowerCase().trim();
+    return current === original;
+  }
+
+  onFilterStageChange(): void {
+    const selectedStages: string[] = this.filterLeadForm.get('stage')?.value || [];
+    const selectedStage = Array.isArray(selectedStages) ? selectedStages[0] : selectedStages;
+    if (!selectedStage) {
+      this.checkboxStageOptions = [];
+      this.filterLeadForm.patchValue({ status: null });
+      return;
+    }
+    if (selectedStage === 'open') {
+      this.checkboxStageOptions = this.openStage.map(opt => ({
+        ...opt,
+        checked: true,
+        isCustom: false
+      }));
+      const firstStatus = this.checkboxStageOptions[0]?.name || null;
+      this.filterLeadForm.patchValue({ status: firstStatus });
+      return;
+    }
+    const matchedStatusList = this.statusOptionsByStageforDisplay[selectedStage];
+    if (matchedStatusList && matchedStatusList.length > 0) {
+      this.checkboxStageOptions = matchedStatusList;
+      const currentStatus = this.filterLeadForm.get('status')?.value;
+      const exists = matchedStatusList.some((s: any) => s.name === currentStatus);
+      if (!exists) {
+        this.filterLeadForm.patchValue({ status: matchedStatusList[0].name });
+      }
+    } else {
+      this.checkboxStageOptions = [];
+      this.filterLeadForm.patchValue({ status: null });
+    }
+  }
+
+  resetFilterForm() {
+    this.getFetchLeadData(); 
+  }
+
+  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string },modal:any) {
+    this.switchService.ViewCrmLeads(data.leadId).subscribe(
+    (res) => {
+      const leadsEntry = res.leadsEntry;
+      leadsEntry.campaignId = data.campaignId;
+      // moveCampaign = data.campaignId;
+      leadsEntry.updatedBy = JSON.parse(this.userData).email;
+      leadsEntry.updatedTime = new Date().toISOString();
+      this.switchService.EditCrmLeads(leadsEntry).subscribe(
+        (res) => {
+          modal.close();
+            this.submitted = false;
+            this.leadForm.reset();
+            this.toastr.success(res.message, 'lead', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          this.leadList = this.leadList.filter(
+          (lead: any) => lead.leadId !== leadsEntry.leadId
+          );
+        },
+        (err) => {
+          
+        }
+      );
+    },
+  );
+  }
+  onAppointmentSelect(selectedAppointment: any) {
+  if (selectedAppointment) {
+    this.appointmentForm.patchValue({
+      appointmenType: selectedAppointment.appointmenType,
+      date: selectedAppointment.date,
+      description: selectedAppointment.description,
+      duration: selectedAppointment.duration,
+      assignedDesigner: selectedAppointment.assignedDesigner
+    });
+
+    // Store for edit API
+    this.appointmentId = selectedAppointment.appointmentId;
+  }
+  }
+
+  openEditAppointment(template: any, element: any) {
+    this.switchService.fetchAppointment(element.leadId).subscribe(res => {
+      if (res && res.length > 0) {
+        const latestAppointment = res[res.length - 1]; 
+        this.appointmentModal(template, element, latestAppointment);
+      } else {
+        this.appointmentModal(template, element);
+      }
+    });
+  }
+
+  openBulkMailOffcanvas(templateRef: TemplateRef<any>) {
+    if (!this.selectedLeads.length) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+
+    const selectedLeadObjects = this.dataSource.data.filter((lead: any) =>
+      this.selectedLeads.includes(lead.leadId)
+    );
+    const emailList = selectedLeadObjects.map((lead: any) => lead.email).filter(Boolean);
+    const emailString = emailList.join(', ');
+
+    this.sendLeadForm.patchValue({
+      email: emailString
+    });
+
+    this.offcanvasService.open(templateRef, { position: 'end' });
+  }
+
+  sendMailToMultipleLeads(offcanvasRef: any) {
+    this.sendMultiMailSubmitted = true;
+    if (!this.selectedLeads.length) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    if (this.sendLeadForm.invalid) {
+      this.toastr.warning('Fill in all required fields.');
+      return;
+    }
+    const selectedLeadsData = this.dataSource.data.filter((lead: any) =>
+      this.selectedLeads.includes(lead.leadId)
+    );
+    const emailList = selectedLeadsData.map((lead: any) => lead.email).filter(Boolean);
+    if (!emailList.length) {
+      this.toastr.warning('No valid emails found in selected leads.');
+      return;
+    }
+    const templateValue = this.sendLeadForm.get('template')?.value;
+    const payload = {
+      email: emailList.join(','),
+      template: typeof templateValue === 'object' ? templateValue.templateGenId : templateValue,
+      cc: this.sendLeadForm.get('cc')?.value,
+      bcc: this.sendLeadForm.get('bcc')?.value,
+      subject: this.sendLeadForm.get('subject')?.value,
+      content: this.sendLeadForm.get('content')?.value
+    };
+    this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message, 'Mail Sent');
+          offcanvasRef.close();
+          this.sendLeadForm.reset();
+          this.sendMultiMailSubmitted = false;
+          this.selectedLeads = []; 
+        } else {
+          this.toastr.error(res.message || 'Mail sending failed.');
+        }
+      },
+      error: () => {
+        this.toastr.error('An error occurred while sending mail.');
+      }
+    });
+  }
+
+  createTaskSubmit(modal: any) {
+    if (!this.selectedLeads || this.selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead');
+      return;
+    }
+    // const duplicateLead = this.selectedLeads.find((lead: any) =>
+    //   this.taskList.some((task: any) => task.leadId === lead.id)
+    // );
+
+    // if (duplicateLead) {
+    //   this.toastr.warning(`Task already created for lead`);
+    //   return; 
+    // }
+    let payload = { ...this.taskForm.value };
+    this.taskSubmitted = true;
+    payload.leadIdList = this.selectedLeads
+      .filter((id: any) => id !== '' && id !== null && id !== undefined)
+      .map((id: any) => Number(id));
+    if (Array.isArray(payload.assignedTo)) {
+      payload.assignedTo = payload.assignedTo.join(',');
+    }
+      this.switchService.createTask(payload).subscribe({
+        next: (res) => {
+          this.toastr.success('Task created successfully!');
+          this.taskForm.reset();
+          this.selectedLeads = [];
+          this.taskSubmitted = false;
+          modal.close();
+          this.getFetchLeadData();
+        },
+        error: (err) => {
+          this.toastr.error('Something went wrong!');
+        }
+      });
+  }
+
+  getTaskStatusColor(status: string): string {
+    switch (status) {
+      case 'completed':
+        return 'bg-success-transparent'; 
+      case 'pending':
+        return 'bg-warning-transparent'; 
+      case 'in_progress':
+        return 'bg-info-transparent';     
+      case 'cancelled':
+        return 'bg-danger-transparent'; 
+      default:
+        return 'bg-success-transparent'; 
+    }
+  }
+
+  today: Date = new Date();
+  getTaskColor(task: any): string {
+    if (!task.deadline) return 'btn-secondary-transparent';
+    const today = new Date();
+    const dueDate = new Date(task.deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return 'btn-danger-transparent';
+    }
+    if (diffDays === 0) {
+      return 'btn-warning-transparent';
+    }
+    if (diffDays <= 2) {
+      return 'btn-warning-transparent';
+    }
+    return 'btn-success-transparent';
+  }
+
+  getTaskBgColor(task: any): string {
+    if (!task.deadline) return 'bg-secondary-transparent';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    if (deadlineDate < today) {
+      return 'bg-danger-transparent';
+    }
+    if (deadlineDate.getTime() === today.getTime()) {
+      return 'bg-warning-transparent';
+    }
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 2) {
+      return 'bg-warning-transparent';
+    }
+    return 'bg-success-transparent';
+  }
+
+  getPriorityBadge(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'critical':
+        return 'badge bg-danger-transparent';
+      case 'high':
+        return 'badge bg-warning-transparent';
+      case 'medium':
+        return 'badge bg-info-transparent';
+      case 'low':
+        return 'badge bg-success-transparent';
+      default:
+        return 'badge bg-secondary-transparent';
+    }
+  }
+
+  getDaysLeft(deadline: string | Date): string {
+    const today = new Date();
+    const dueDate = new Date(deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays.toString();
+  }
+
+  getfullDaysLeft(task: any): string {
+    if (!task.deadline) return '';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return `${Math.abs(diffDays)} day's Due`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `${diffDays} day's left`;
+    }
+  }
+
+  getDayLeft(deadline: string | Date): string {
+    const today = new Date();
+    const dueDate = new Date(deadline);
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays > 0) return `${diffDays} days left`;
+    if (diffDays === 0) return `Due today`;
+    return `Expired ${Math.abs(diffDays)} days ago`;
+  }
+
+  fetchTasks() {
+    const payload = {
+      currentUser: this.userEmail
+    };
+    this.switchService.fetchTasksCreatedBy(payload).subscribe({
+      next: (res) => {
+        this.taskList = [
+          ...(res.createdTaskList || []),
+          ...(res.assignedTaskList || [])
+        ];
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+  openCompletionModal(content: any, lead: any) {
+    this.selectedLead = lead;
+    this.leadId = lead.leadId;
+    console.log(this.leadId);
+    this.currentStep = 1;  
+    this.completionForm.reset();
+    this.leadCompletionsubmitted = false;
+    this.modalService.open(content, { centered: true });
+  }
+
+
+   updateCompletionStatus(modal: any) {
+    this.leadCompletionsubmitted = true;
+    if (this.completionForm.invalid) {
+      return; 
+    }
+    const payload = {
+      ...this.completionForm.value,
+      status : "completed",
+      completedBy: this.userName,
+      leadId: this.leadId,
+      companyCode:this.userCompanyCode,
+      companyName: this.userCompanyName,
+      email: this.userEmail,
+      type: this.userType
+    };
+    console.log('status',payload);
+    this.switchService.updateLeadCompletion(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('lead completed successfully');
+            this.leadCompletionsubmitted = true;
+        if (this.selectedLead) {
+          this.selectedLead.completionStatus = "completed"; 
+        }
+        modal.close();
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
+
+  goToStep(step: number) {
+    this.currentStep = step;
+  }
+  submitClose(modal: any) {
+    this.leadCompletionsubmitted = true;
+    if (this.completionForm.invalid) {
+      return; 
+    }
+    this.updateCompletionStatus(modal);
+
+    modal.close();
+    this.currentStep = 1;
   }
 
 }

@@ -178,15 +178,32 @@ export class SwitherService {
   listLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/list_lead_entry_columns`,data); }
   editLeadEntry(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/edit_lead_entry_columns`,data); }   
   deleteLeadEntry(column_id:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/delete_lead_column/${column_id}`); } 
-  fetchLeadsIndividual(entryBy:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual/${entryBy}`); } 
-  filterCrmLeads(data:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/fetch_lead_data_individual`, data); } 
+  fetchLeadsIndividual(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/fetch_lead_data_individual`,data); } 
+  filterLeads(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/filter_crm_data`, data); } 
+  saveAppointment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/schedule_appointment`, data); } 
+  fetchAppointment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_scheduled_appointments`, data); } 
+  createTask(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_task`, data); } 
+  fetchTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks`, data); } 
+  fetchTasksCreatedBy(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks_created_by`, data); } 
+  updateTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/edit_task`, data); } 
+  updateLeadCompletion(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/update_lead_completion_status`, data); } 
 
   savedynamicMargins(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_dynamic_margins`, data); } 
   fetchDynamicMargin(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_dynamic_margins`, data); } 
-
   saveProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/save_project_conf`, data); } 
   fetchProjectConfig(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/get_project_conf`, data); }
   quotationHistory(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}quotation/getQuoteGenHistory`, data); }  
 
+  // Boq
+  fetchBoqData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/genrate_bom_data`, data); }  
+  saveElementData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/item_custom_addition`, data); }  
+  updateElementData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/update_boq_data`, data); }  
+  createProposal(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/create_proposal`, data); }  
+  fetchProposal(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_proposal_dashboard_data`, data); }  
+  fetchProposalContent(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_proposal_contnet`, data); } 
+  approveProposal(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/proposal_approval`, data); } 
+  extraContentProposal(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/extra_contnet_proposal`, data); } 
+  fetchClientOrder(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_client_order_data`, data); }
+  fetchClientOrderContent(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_client_order_content`, data); }
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }

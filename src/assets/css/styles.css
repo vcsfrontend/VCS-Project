@@ -35162,3 +35162,64 @@ div:where(.swal2-container) div:where(.swal2-validation-message) {
 }
 
 /*# sourceMappingURL=styles.css.map */
+
+/* ========== Global ng-select Styles ========== */
+.ng-dropdown-panel .ng-dropdown-panel-items {
+  max-height: 200px !important; 
+  overflow-y: auto !important;
+  scrollbar-width: thin;      
+  scrollbar-color: #666 #fff;   
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar-track {
+  background: #fff; 
+  border-radius: 10px;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
+}
+
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  cursor: pointer !important;
+}
+ng-select {
+  cursor: pointer !important;
+}
+.offcanvas.custom-offcanvas {
+  --bs-offcanvas-width: 1300px; 
+}
+.offcanvas.custom-offcanvas.show:not(.hiding),
+.offcanvas.custom-offcanvas.showing {
+  transform: none !important;
+  min-width: 1300px !important;
+}
+
+.custom-checkbox .mat-checkbox-label {
+  font-size: 2px;
+}
+
+.mdc-checkbox__background {
+  width: 11px !important;
+  height: 11px !important;
+}
+
+.mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background,
+.mdc-checkbox .mdc-checkbox__native-control[data-indeterminate="true"]:enabled~.mdc-checkbox__background {
+  background-color: #069 !important;
+  border-color: #069 !important;
+}
+
+.mdc-checkbox__ripple {
+  background: none !important;
+}

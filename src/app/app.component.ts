@@ -7,12 +7,15 @@ import { ColorPickerModule } from 'ngx-color-picker';
 // import filepond module
 import { FilePondModule } from 'ngx-filepond';
 import { AppStateService } from './shared/services/app-state.service';
+import { ChatbotComponent } from './componets/dashbord/chatbot/chatbot.component';
 @Component({
     selector: 'app-root',
     standalone: true,
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
-    imports: [FilePondModule, RouterOutlet, ToastrModule, NgxEchartsModule, ColorPickerModule]
+    imports: [FilePondModule, RouterOutlet, ToastrModule, NgxEchartsModule, ColorPickerModule,ChatbotComponent],
+    template: `<app-chatbot></app-chatbot>`
+
 })
 export class AppComponent {
   title = 'VCS';

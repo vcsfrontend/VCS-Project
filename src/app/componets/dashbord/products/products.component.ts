@@ -140,7 +140,7 @@ export class ProductsComponent {
         }
       },
       error: (error) => {
-        this.toastr.error("Error fetching product data");
+        // this.toastr.error("Error fetching product data");
         this.productDataSource.data = [];
       }
     });

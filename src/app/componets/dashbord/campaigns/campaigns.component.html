@@ -1,4 +1,4 @@
-<div class="row mt-4" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+<!-- <div class="row mt-4" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
     <div class="col-xl-2">
         <div class="card custom-card border border-primary bg-primary-transparent">
             <div class="card-body">
@@ -8,7 +8,7 @@
                     </span>
                     <p class="fs-14 fw-medium mb-2">Total Campaigns</p>
                     <div class="d-flex align-items-center justify-content-center flex-wrap">
-                        <h5 class="mb-0 fw-medium"*ngIf="campaignCount > 0">{{ campaignCount }}</h5>
+                        <h5 class="mb-0 fw-medium">{{ campaignCount ?? 0 }}</h5>
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                     </span>
                     <p class="fs-14 fw-medium mb-2">Total Leads</p>
                     <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium" *ngIf="totalLeadCount > 0">{{ totalLeadCount }}</h5>
+                       <h5 class="mb-0 fw-medium">{{ totalLeadCount ?? 0 }}</h5>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                     </span>
                     <p class="fs-14 fw-medium mb-2">Total Reports</p>
                     <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium"*ngIf="campaignCount > 0">{{ campaignCount }}</h5>
+                       <h5 class="mb-0 fw-medium">{{ campaignCount ?? 0 }}</h5>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                     </span>
                     <p class="fs-14 fw-medium mb-2">Call Logs</p>
                     <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium"*ngIf="campaignCount > 0">{{ campaignCount }}</h5>
+                       <h5 class="mb-0 fw-medium">{{ campaignCount ?? 0 }}</h5>
                     </div>
                 </div>
             </div>
@@ -89,56 +89,66 @@
             </div>
         </div>
     </div>
-</div> 
+</div>  -->
 
 <div class="col-xl-12 pt-3">
   <div class="card custom-card">
     <div class="card-header justify-content-between">
       <div class="card-title col-lg-4">All Campaigns</div>
       <div class="col-md-4 col-xl-4 col-xxl-4 col-lg-4 col-sm-6 d-flex">
-        <div class="input-group custom-input-group">
+        <!-- <div class="input-group custom-input-group">
           <input type="text" class="form-control">
           <button class="btn btn-ghost-light border" type="button"><i class="ri-search-line text-muted"></i></button>
-        </div>
+        </div> -->
       </div>
       <div class="text-center">
-        <button type="button" class="btn btn-primary btn-wave" (click)="open(content7)">Create Campaign</button>
-        <button class="btn btn-primary ms-2"> Show More </button>
+        <button type="button" class="btn btn-primary btn-wave" (click)="openCreateModal(content7)" *ngIf="adoanAiRole== 'ADMIN' || userType==1">Create Campaign</button>
+        <button class="btn btn-primary ms-3" (click)="toggleTopShowMore()">
+          {{ topshowMore ? 'Show Less' : 'Show More' }}
+        </button>
       </div>
     </div>
   </div>
-  <div class="col-xxl-12" *ngIf="campaignList.length > 0">
+  <div class="col-xxl-12" [ngStyle]="{
+        'max-height': topshowMore ? '330px' : '400px',
+        'overflow-y': topshowMore ? 'auto' : 'hidden',
+        'transition': 'max-height 0.5s ease' }" *ngIf="((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList?.length : listNew?.length) > 0">
     <div class="row">
-      <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6" *ngFor="let campaign of campaignList">
+      <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"  *ngFor="let campaign of ((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList : listNew)">
         <div class="card custom-card fixed-height-card">
           <div class="card-header d-flex align-items-start justify-content-between">
             <div class="align-items-center">
               <!-- <span class="avatar avatar-rounded p-1 bg-light" ngbTooltip="{{ campaign.campaignPoc }}" placement="top">
                 <img src="./assets/images/brand-logos/profile1.jpg" alt="" style="cursor: pointer;">
               </span> -->
-            <ng-container *ngIf="campaign.agents.split(',') as agentList">
-              <span class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center"
-                [ngClass]="getAgentColor(campaign.campaignPoc)" ngbTooltip="{{ campaign.campaignPoc }}" tabindex="0" role="button">
-                {{ campaign.campaignPoc.charAt(0) | uppercase }}
-              </span>
-            </ng-container>
+          <ng-container *ngIf="(campaign?.agents || '').split(',') as agentList">
+            <span class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center"
+              [ngClass]="getAgentColor(campaign.campaignPoc)" ngbTooltip="{{ campaign.campaignPoc }}" tabindex="0" role="button">
+              {{ campaign.campaignPoc?.charAt(0) | uppercase }}
+            </span>
+          </ng-container>
+
             </div>
             <div class="flex-fill">
               <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
                 Campaign: {{ campaign.campaignName }}</a>
-              <span class="text-muted d-block fs-12">Manager: {{ campaign.campaignPoc | slice:0:15 }}{{ campaign.campaignPoc.length > 15 ? '...' : '' }}</span>
+              <span class="text-muted d-block fs-12">
+                Manager:
+                {{ (campaign?.campaignPoc || '') | slice:0:15 }}
+                {{ (campaign?.campaignPoc?.length || 0) > 15 ? '...' : '' }}
+              </span>
               <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-center flex-wrap avatar-list-stacked" *ngIf="userType !== 1 && campaign.agents">
+                <div class="d-flex align-items-center flex-wrap avatar-list-stacked" *ngIf="userType !== 1 && campaign.agents">Users :&nbsp;
                   <ng-container *ngIf="campaign.agents.split(',') as agentList">
                     <ng-container *ngFor="let agent of agentList.slice(0, 3)">
                       <span
-                        class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center"
+                        class="avatar avatar-xs avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
                         [ngClass]="getAgentColor(agent)" tabindex="0" role="button">
-                        {{ agent.trim().charAt(0) | uppercase }}
+                        {{ agent ? (agent.trim().charAt(0) | uppercase) : '' }}
                       </span>
                     </ng-container>
-                    <a *ngIf="agentList.length > 3"
-                      class="avatar avatar-sm bg-primary avatar-rounded mt-1 text-fixed-white d-flex align-items-center justify-content-center ms-1 cu"
+                    <a *ngIf="agentList?.length > 3"
+                      class="avatar avatar-xs avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary cu"
                       href="javascript:void(0);">
                       +{{ agentList.length - 3 }}
                     </a>
@@ -163,7 +173,8 @@
                 aria-valuemax="100">
                 <div class="progress-bar bg-primary" style="width: 80%"></div>
               </div>
-              <div class="mt-1"><span class="text-primary fw-medium">80%</span> Completed</div>
+              <!-- <div class="mt-1"><span class="text-primary fw-medium">{{ leadCounts[campaign.campgnId] ||
+                0 }}%</span> Completed</div> -->
             </div>
             <div *ngFor="let stage of stageCounts[campaign.campgnId] | keyvalue">
               <div class="mb-1 pt-3">
@@ -176,19 +187,22 @@
                   aria-valuemax="100">
                   <div class="progress-bar bg-success" style="width: 80%"></div>
                 </div>
-                <div class="mt-1">
+                <!-- <div class="mt-1">
                   <span class="text-danger fw-medium">{{ stage.value }}%</span> Completed
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <button class="btn btn-sm btn-primary btn-wave ms-3" (click)="viewCampaignLeads(campaign)">
-              <i class="ri-eye-line me-2"></i> View
+            <button class="btn btn-primary-light btn-sm btn-wave ms-3 w-100 me-3" (click)="viewCampaignLeads(campaign)">
+              <i class="ri-eye-line me-2"></i> View Leads
             </button>
-            <button class="btn btn-sm btn-primary btn-wave me-3" (click)="deleteCampaignById(campaign)">
-              <i class="ri-delete-bin-line me-2"></i> Delete
-            </button>
+            <div class="d-flex align-items-center" *ngIf="adoanAiRole== 'ADMIN'|| userType ==1">
+              <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-2"
+              (click)="openEditModal(content7, campaign.campgnId)"><i class="ri-pencil-line"></i></a>
+              <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave me-3"
+              (click)="deleteCampaignById(campaign)"><i class="ri-delete-bin-line"></i></a>
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,34 @@
+<!-- Chat Toggle Button -->
+<button class="chat-toggle-btn" (click)="toggleChat()">
+  <i class="bi" [ngClass]="isOpen ? 'bi-x-lg' : 'bi-chat-left-text'"></i>
+</button>
+
+<!-- Chat Window -->
+<div class="chatbot-container" *ngIf="isOpen">
+  <div class="chat-header">Policy Chatbot</div>
+  <div class="chat-messages">
+    <div *ngFor="let msg of messages" [ngClass]="msg.sender">
+      {{ msg.text }}
+    </div>
+  </div>
+
+  <!-- Toggle Quick Questions -->
+  <div *ngIf="policyId" class="quick-toggle">
+    <button (click)="toggleQuickQuestions()">
+      {{ showQuickQuestions ? '▼ Hide Suggestions' : '▲ Show Suggestions' }}
+    </button>
+  </div>
+
+  <!-- Quick Questions -->
+  <div class="quick-questions" *ngIf="policyId && showQuickQuestions">
+    <button *ngFor="let question of quickQuestions" (click)="sendQuickQuestion(question)">
+      {{ question }}
+    </button>
+  </div>
+
+  <!-- Input Box -->
+  <div class="chat-input">
+    <input [(ngModel)]="userInput" placeholder="Type here..." (keydown.enter)="sendMessage()" />
+    <button (click)="sendMessage()">Send</button>
+  </div>
+</div>

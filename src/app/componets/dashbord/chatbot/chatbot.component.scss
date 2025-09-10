@@ -1,0 +1,149 @@
+
+/* Chatbot Container */
+.chatbot-container {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 300px;
+  height: 450px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  font-family: sans-serif;
+  z-index: 1000;
+}
+
+/* Floating Chat Toggle Button */
+.chat-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background-color: #006699;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  z-index: 1001;
+}
+
+/* Chat Header */
+.chat-header {
+  background-color: #006699;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* Message Area */
+.chat-messages {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.chat-messages .bot {
+  text-align: left;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.chat-messages .user {
+  text-align: right;
+  color: #006699;
+  margin-bottom: 8px;
+}
+
+/* Input Area */
+.chat-input {
+  display: flex;
+  border-top: 1px solid #ccc;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  font-size: 14px;
+}
+
+.chat-input button {
+  background-color: #006699;
+  border: none;
+  color: white;
+  padding: 0 15px;
+  cursor: pointer;
+}
+
+.chat-input input:focus,
+.chat-input button:focus {
+  outline: none;
+}
+
+.spanner {
+  border-radius: 50%;
+  background-color: #006699;
+  padding: 2%;
+  width: 30px; /* Adjust the width as needed */
+  height: 20px; /* Adjust the height to be less than the width for an oval shape */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white; /* Text color */
+  font-size: 12px; /* Adjust the font size as needed */
+}
+
+/* Already included styles above... add this below */
+
+.quick-questions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 8px 10px;
+  border-top: 1px solid #eee;
+  background: #f9f9f9;
+}
+
+.quick-questions button {
+  background: #e3f2fd;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quick-questions button:hover {
+  background: #cce4fb;
+}
+
+.quick-toggle {
+  text-align: center;
+  padding: 4px 0;
+  background: #f1f1f1;
+  border-top: 1px solid #ddd;
+  font-size: 12px;
+}
+
+.quick-toggle button {
+  background: none;
+  border: none;
+  color: #006699;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.quick-toggle button:hover {
+  text-decoration: underline;
+}

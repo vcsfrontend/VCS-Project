@@ -139,15 +139,22 @@
             <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
                 {{leadCount}} leads found
             </div>
-            <mat-form-field class="filter-field">
-                <mat-label>Seach</mat-label>
-                <input matInput (keyup)="applyFilter($event)" #input>
+            <mat-form-field class="filter-field" appearance="outline">
+                <mat-icon matPrefix>search</mat-icon>
+                <input matInput placeholder="Search Here" (keyup)="applyFilter($event)" #input>
             </mat-form-field>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-primary border-end border-light"
-                        (click)="openRight(content)" data-bs-toggle="offcanvas"
+                        (click)="openRight(Content1)" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                        Filter 
+                    </button>
+                    <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
+                        data-bs-target="#exampleModalLg" (click)="resetFilterForm()" *ngIf="filterApplied">Reset</button>
+                    <button type="button" class="btn btn-primary border-end border-light"
+                        (click)="openRight(content)" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" *ngIf="adoanAiRole== 'ADMIN' || userType ==1">
                         Bulk Upload
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
@@ -171,8 +178,8 @@
                                 (change)="onSelectAllChange($event)"></mat-checkbox>
                         </th>
                         <td mat-cell *matCellDef="let element">
-                            <mat-checkbox (change)="onRowCheckboxChange(element.leadId, $event)"
-                                [checked]="isSelected(element.leadId)" class="custom-checkbox"></mat-checkbox>
+                            <mat-checkbox (change)="onRowCheckboxChange(element, $event)"
+                                [checked]="isSelected(element.leadId)" [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
                         </td>
                     </ng-container>
                     <ng-container matColumnDef="slNo">
@@ -194,7 +201,7 @@
                                 data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                                 <i class="ri-eye-line"></i>
                             </a>
-                            <span ngbDropdown placement="right-top">
+                            <span ngbDropdown placement="right-top" container="body">
                                 <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
                                     ngbDropdownToggle></i>
                                 <ul class="dropdown-menu z-1" ngbDropdownMenu>
@@ -206,13 +213,26 @@
                                             Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
-                                    <li class="m-2">
+                                    <!-- <li class="m-2">
                                         <button class="btn btn-success label-btn label-end w-100"
                                             (click)="openRight(Content113); currentPhoneNumber = element.phoneNumber.toString()" data-bs-target="#offcanvasRight"
                                             aria-controls="offcanvasRight">
                                             Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
                                         </button>
+                                    </li> -->
+                                    <!-- <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100"
+                                            (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
+                                            aria-controls="offcanvasRight">
+                                            Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                        </button>
                                     </li>
+                                    <li class="m-2">
+                                        <button class="btn btn-success label-btn label-end w-100" (click)="openEditAppointment(appointment1, element)"
+                                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                            Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                        </button>
+                                    </li> -->
                                    <li class="m-2">
                                         <button class="btn btn-teal-light label-btn label-end w-100 "
                                             (click)="editLead(element,Content14)">
@@ -226,6 +246,32 @@
                                     </li>
                                 </ul>
                             </span>
+                            <ng-container *ngFor="let task of taskPriorityList">
+                                <a *ngIf="task.leadId === element.leadId" href="javascript:void(0);"
+                                    class="btn btn-icon btn-sm btn-wave waves-effect waves-light m-1 fw-semibold task-text-primary"
+                                    [ngClass]="getTaskColor(task)" [ngbPopover]="taskPopover" [popoverContext]="{ task: task }"
+                                    popoverClass="header-info wide-popover" popoverTitle="Task Info" placement="top">
+                                    {{ getDaysLeft(task.deadline) }}
+                                </a>
+                            </ng-container>
+                            <ng-template #taskPopover let-task="task">
+                                <div class="col-xl-12 border-danger" *ngIf="task">
+                                    <div>
+                                        <p class="fw-medium mb-2 d-flex align-items-center"> TaskName :&nbsp; {{ task.taskName }}
+                                        </p>
+                                        <p class="fw-medium mb-2 d-flex align-items-center">
+                                            Priority : &nbsp;
+                                            <span [ngClass]="getPriorityBadge(task.priority)"> {{ task.priority }}
+                                            </span>
+                                        </p>
+                                        <p class="fw-medium mb-2 d-flex align-items-center">
+                                            Deadline : &nbsp;
+                                            <span class="badge" [ngClass]="getTaskColor(task)"> {{ task.deadline | date:'dd, MMM yyyy' }}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </ng-template>
                             <!-- <div ngbDropdown  class="dropdown no-caret mt-2">
                                 <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
                                     <i class="ri-more-2-fill fs-18 text-muted"></i>
@@ -296,7 +342,7 @@
                                 {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
                                 <ng-container *ngIf="element.status.length > 18">...</ng-container>
                             </span>
-                            <button *ngIf="element.followUpDate" class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
+                            <button *ngIf="element.followUpDate || element.status === 'not connected'" class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
                                 popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
                                 type="button">
                                 <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
@@ -365,6 +411,22 @@
                              ? (capitalizeFirstLetter(element.city).slice(0, 20))
                             : capitalizeFirstLetter(element.city)}} </td>
                     </ng-container>
+                    <ng-container matColumnDef="completionStatus">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
+                        <td mat-cell *matCellDef="let element">
+                    
+                            <!-- Show "Close Lead" if not closed -->
+                            <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm"
+                                (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal" data-bs-target="#completionModal">
+                                CL
+                            </button>
+                    
+                            <!-- Show "Closed" if status is Completed -->
+                            <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm " disabled>
+                                CL
+                            </button>
+                        </td>
+                    </ng-container>
                     <!-- <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef> Actions </th>
                         <td mat-cell *matCellDef="let element">                     
@@ -378,8 +440,12 @@
                         </td>
                         </ng-container> -->
                     <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
+                    [class.disabled-row]="row.completionStatus === 'completed'"></tr>
                 </table>
+                <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
+                    <p class="text-muted mb-0">No data found</p>
+                </div>
             </div>
             <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         </div>
@@ -401,12 +467,16 @@
             </form>
             <div class="text-center ms-3 ">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-primary btn-wave"><i
-                            class="ri-alarm-line"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave"><i
-                            class="ri-mail-line bt-icon"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"><i
-                            class="ri-delete-bin-line"></i></button>
+                    <!-- <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="tooltip" placement="top"
+                        ngbTooltip="Follow up"><i class="ri-alarm-line"></i></button> -->
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMailOffcanvas(offcanvasTemplate)"
+                        data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Mail"><i class="ri-mail-line bt-icon"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)"
+                        *ngIf="adoanAiRole == 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="appointmentModal(appointment1, element)"
+                         data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Delete"><i class="ri-delete-bin-line"></i></button>
                 </div>
             </div>
         </div>
@@ -920,10 +990,22 @@
                                 <ul class="list-unstyled border border-dark rounded p-3" *ngFor="let followup of element.followLeads">
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowupDate :
                                         </span>{{followup.followupDate | date: 'dd-MMM-yyyy hh:mm:ss a'}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Stage :
-                                        </span>{{followup.stage}}</li>
-                                    <li class="mb-2"><span class="fw-semibold me-1">Status :
-                                        </span>{{followup.status}}</li>
+                                    <li class="mb-2">
+                                        <span class="fw-semibold me-1">Stage :</span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
+                                            [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null" placement="top">
+                                            {{ followup.stage | slice: 0:18 }}
+                                            <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
+                                        </span>
+                                    </li>
+                                    <li class="mb-2">
+                                        <span class="fw-semibold me-1">Status :</span>
+                                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
+                                            [ngbTooltip]="followup.status.length > 18 ? followup.status : null" placement="top">
+                                            {{ followup.status | slice: 0:18 }}
+                                            <ng-container *ngIf="followup.status.length > 18">...</ng-container>
+                                        </span>
+                                    </li>
                                     <li class="mb-2"><span class="fw-semibold me-1">FollowUpBy :
                                         </span>{{followup.followUpBy}}</li>
                                     <li class="mb-2"><span class="fw-semibold me-1">Comments :
@@ -937,13 +1019,6 @@
                     <div [ngbNavOutlet]="nav24" class="mt-2"></div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary mr-3" type="submit">Filter</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Reset
-                Filters</button>
         </div>
     </div>
 </ng-template>
@@ -1087,7 +1162,7 @@
 </ng-template>
 
 <div class="col-lg-12">
-    <div class="row">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
         <div class="col-lg-4">
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
@@ -1163,16 +1238,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer text-end">
+                <!-- <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm">Delete</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
 </div>
 
 <div class="col-lg-12">
-    <div class="row">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
@@ -1231,14 +1306,14 @@
                                     <span class="fs-14">{{ user.email }}</span>
                                     <div class="fs-12 text-muted">{{ user.username }}</div>
                                 </div>
-                                <div class="d-flex align-items-center">
+                                <!-- <div class="d-flex align-items-center">
                                     <a aria-label="anchor" href="javascript:void(0);"
                                         class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"><i
                                             class="ri-pencil-line"></i></a>
                                     <a aria-label="anchor" href="javascript:void(0);"
                                         class="btn btn-icon btn-sm btn-danger-light btn-wave "><i
                                             class="ri-delete-bin-line"></i></a>
-                                </div>
+                                </div> -->
                             </div>
                         </li>
                     </ul>
@@ -1487,4 +1562,376 @@
             </div>
         </div>
     </form>
+</ng-template>
+<ng-template #Content1 let-offcanvas>
+    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)">
+        <div class="offcanvas-header border-bottom border-block-end-dashed">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0"> 
+            <div class="col-xl-12 pt-3">
+                <div class="row gy-3 p-4">
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Start Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder="" formControlName="startDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">End Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder=""
+                        formControlName="endDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
+                            bindValue="stageName"  (change)="onFilterStageChange()" placeholder="Select an Stage" >
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                            placeholder="Select a status" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="source" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select an Source" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                            placeholder="Select an Executive" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <ng-select formControlName="city" [items]="cityList" bindLabel="name" bindValue="name"
+                            placeholder="Select an City" [multiple]="true">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+                <button class="btn btn-primary mr-3" type="submit">Filter</button>
+                <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #appointment1 let-modal>
+    <form [formGroup]="appointmentForm" (ngSubmit)="appointmentFormSubmit(modal)">
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Book a Demo</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <div class="col-xl-12">
+            <div class="row gy-2">
+                <div class="col-xl-6">
+                    <label for="code" class="form-label">Appointment type</label>
+                    <ng-select formControlName="appointmenType" [items]="appointmentList" bindLabel="name"
+                        bindValue="name" placeholder="Select Project" [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['appointmenType'].errors }">
+                    </ng-select>
+                    <div *ngIf="appointmentFormSubmitted && h['appointmenType'].errors" class="invalid-feedback">
+                        <span *ngIf="h['appointmenType'].errors['required']">Appointment type is required.</span>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label for="name" class="form-label">Date</label>
+                    <input type="datetime-local" class="form-control" id="name" formControlName="date" 
+                    [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['date'].errors }" [min]="minDateTime">
+                    <div *ngIf="appointmentFormSubmitted && h['date'].errors" class="invalid-feedback">
+                        <span *ngIf="h['date'].errors['required']">Date is required.</span>
+                    </div>
+                    <!-- min="2025-07-19T09:00"
+            max="2025-07-19T17:00" step="1800" laceholder="Enter Name" -->
+                </div>
+                <div class="col-xl-6">
+                    <label for="description" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your Description"
+                        formControlName="description">
+                </div>
+                <div class="col-xl-6">
+                    <label for="duration" class="form-label">duration</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter your duration"
+                        formControlName="duration" [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['duration'].errors }">
+                    <div *ngIf="appointmentFormSubmitted && h['duration'].errors" class="invalid-feedback">
+                        <span *ngIf="h['duration'].errors['required']">duration is required.</span>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label for="code" class="form-label">assignedDesigner</label>
+                    <ng-select formControlName="assignedDesigner" [items]="userList" bindLabel="email"
+                        bindValue="email" placeholder="Select Project" [ngClass]="{ 'is-invalid': appointmentFormSubmitted && h['assignedDesigner'].errors }">
+                    </ng-select>
+                    <div *ngIf="appointmentFormSubmitted && h['assignedDesigner'].errors" class="invalid-feedback">
+                        <span *ngIf="h['assignedDesigner'].errors['required']">Please select one designer</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+    </div>
+    </form>
+</ng-template>
+<ng-template #offcanvasTemplate let-offcanvasRef="offcanvasRef">
+  <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Bulk Email</strong></h5>
+    <button (click)="offcanvasRef.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+      aria-label="Close"></button>
+  </div>
+
+  <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailToMultipleLeads(offcanvasRef)" class="d-flex flex-column h-100">
+    <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+      <div class="mb-4">
+        <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+          bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['template'].errors }">
+        </ng-select>
+        <div *ngIf="sendMultiMailSubmitted && s['template'].errors" class="invalid-feedback">
+          <div *ngIf="s['template'].errors['required']">Template is required</div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['email'].errors }">
+        <div *ngIf="sendMultiMailSubmitted && s['email'].errors" class="invalid-feedback">
+          <div *ngIf="s['email'].errors['required']">Email is required</div>
+        </div>
+      </div>
+
+      <!-- CC -->
+      <div class="mb-4">
+        <input type="text" class="form-control" id="cc" placeholder="CC" formControlName="cc"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['cc'].errors }">
+        <div *ngIf="sendMultiMailSubmitted && s['cc'].errors" class="invalid-feedback">
+          <span *ngIf="s['cc'].errors['required']">CC is required.</span>
+          <span *ngIf="s['cc'].errors['email']">Invalid email address.</span>
+        </div>
+      </div>
+
+      <!-- Subject -->
+      <div class="mb-4">
+        <textarea class="form-control" id="subject" rows="4" placeholder="Subject" formControlName="subject"
+          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['subject'].errors }"></textarea>
+        <div *ngIf="sendMultiMailSubmitted && s['subject'].errors" class="invalid-feedback">
+          <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
+          <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="mb-4">
+        <textarea class="form-control" id="description" rows="4" placeholder="Description"
+          formControlName="content"></textarea>
+      </div>
+    </div>
+    <div class="p-4 border-top">
+      <div class="d-flex justify-content-end gap-3">
+        <button class="btn btn-primary w-50" type="submit"
+          >Send Mail</button>
+        <button (click)="offcanvasRef.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
+      </div>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #content30 id="addtask" let-modal>
+    <form [formGroup]="taskForm" (ngSubmit)="createTaskSubmit(modal)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Create Task</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="task-name" class="form-label">Task Name</label>
+                        <input type="text" class="form-control" id="task-name" placeholder="Task Name"
+                            formControlName="taskName" [ngClass]="{ 'is-invalid': taskSubmitted && g['taskName'].errors }">
+                        <div *ngIf="taskSubmitted && g['taskName'].errors" class="invalid-feedback">
+                            <span *ngIf="g['taskName'].errors['required']">Task Name is required.</span>
+                            <span *ngIf="g['taskName'].errors['minlength']">Task Name must be at least 3 characters long.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <label class="form-label">Assigned To</label>
+                        <ng-select formControlName="assignedTo" [items]="userList" bindLabel="email" bindValue="email"
+                            placeholder="Select Project" [multiple]="true" [ngClass]="{ 'is-invalid': taskSubmitted && g['assignedTo'].errors }">
+                        </ng-select>
+                        <div *ngIf="taskSubmitted && g['assignedTo'].errors" class="invalid-feedback">
+                            <span *ngIf="g['assignedTo'].errors['required']">Assigned to is required.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Deadline</label>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-text text-muted modal-calender"> <i
+                                        class="ri-calendar-line"></i>
+                                </div>
+                                <input type="date" class="form-control w-full !rounded-s-none" id="addignedDate"
+                                    placeholder="Choose date and time" formControlName="deadline" [ngClass]="{ 'is-invalid': taskSubmitted && g['deadline'].errors }" [min]="minDateTime">
+                                
+                            </div>
+                        </div>
+                        <div *ngIf="taskSubmitted && g['deadline'].errors" class="invalid-feedback">
+                            <span *ngIf="g['deadline'].errors['required']">Deadline is required.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Priority</label>
+                        <ng-select data-trigger name="choices-single-default" placeholder="select"
+                            id="choices-single-default" formControlName="priority" [ngClass]="{ 'is-invalid': taskSubmitted && g['priority'].errors }">
+                            <ng-option value="" selected>Select</ng-option>
+                            <ng-option value="Critical">Critical</ng-option>
+                            <ng-option value="High">High</ng-option>
+                            <ng-option value="Medium">Medium</ng-option>
+                            <ng-option value="Low">Low</ng-option>
+                        </ng-select>
+                        <div *ngIf="taskSubmitted && g['priority'].errors" class="invalid-feedback">
+                            <span *ngIf="g['priority'].errors['required']">priority is required.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" id="task-name" placeholder="Task Name"
+                            formControlName="description">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #completionModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Close Lead</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Step 1 -->
+    <ng-container *ngIf="currentStep === 1">
+      Do you want to close the lead <strong>{{ selectedLead?.name }}</strong>?
+    </ng-container>
+
+    <!-- Step 2 -->
+    <ng-container *ngIf="currentStep === 2">
+      <p>Do  you want to Proceed to the Project</p>
+      
+    </ng-container>
+   <ng-container *ngIf="currentStep === 3" [formGroup]="completionForm">
+        <div class="row gy-3 scrollable-content">
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="clientName" class="form-label">Client Name</label>
+                <input type="text" class="form-control" id="clientName" placeholder="Enter Client Name"
+                    formControlName="clientName" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['clientName'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['clientName'].errors" class="invalid-feedback">
+                    <span *ngIf="j['clientName'].errors['required']">
+                        clientName  is required.
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" placeholder="Enter Username"
+                    formControlName="username" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['username'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['username'].errors" class="invalid-feedback">
+                    <span *ngIf="j['username'].errors['required']">
+                        username  is required.
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="contact" class="form-label">Contact</label>
+                <input type="text" class="form-control" id="contact" placeholder="Enter Contact Number"
+                    formControlName="mobileNumber" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['mobileNumber'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['mobileNumber'].errors" class="invalid-feedback">
+                    <span *ngIf="j['mobileNumber'].errors['required']">
+                        client Mobile number is required.
+                    </span>
+                </div>
+            </div>
+             <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="projectName" class="form-label">Project Name</label>
+                <input type="text" class="form-control" id="projectName" placeholder="Enter Project Name"
+                    formControlName="projectName" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['projectName'].errors }">
+        
+                <div *ngIf="leadCompletionsubmitted && j['projectName'].errors" class="invalid-feedback">
+                    <span *ngIf="j['projectName'].errors['required']">
+                        Project Name is required.
+                    </span>
+                    <span *ngIf="j['projectName'].errors['minlength']">
+                        Project Name must be at least 3 characters long.
+                    </span>
+                </div>
+            </div>
+            <div class="col-xl-6">
+                <label for="businessCategory" class="form-label">Business Category:</label>
+                <select class="form-select" aria-label="Default select example" formControlName='businessCategory'
+                [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['businessCategory'].errors }">
+        
+                <div *ngIf="leadCompletionsubmitted && j['businessCategory'].errors" class="invalid-feedback">
+                    <span *ngIf="j['businessCategory'].errors['required']">
+                        businessCategory Name is required.
+                    </span>
+                </div>
+                    <option value="" disabled selected>select type</option>
+                    <option value="Commercial">Commercial</option>
+                    <option value="Residential">Residential</option>
+                </select>
+            </div>
+    
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="address" class="form-label">Address</label>
+                <input type="text" class="form-control" id="address" placeholder="Enter Address" formControlName="address"
+                [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['address'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['address'].errors" class="invalid-feedback">
+                    <span *ngIf="j['address'].errors['required']">
+                        address  is required.
+                    </span>
+                </div>
+            </div>
+            
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="contact" class="form-label">End Date</label>
+                <input type="date" class="form-control" id="contact" placeholder="Enter Contact Number"
+                    formControlName="endDate" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback">
+                    <span *ngIf="j['endDate'].errors['required']">
+                        endDate  is required.
+                    </span>
+                </div>
+            </div>
+    
+        </div>
+    </ng-container>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+
+    <!-- Step 1 actions -->
+    <ng-container *ngIf="currentStep === 1">
+      <button type="button" class="btn btn-danger" (click)="goToStep(2)">Yes, Close</button>
+    </ng-container>
+    <ng-container *ngIf="currentStep === 2">
+      <button type="button" class="btn btn-danger" (click)="goToStep(3)">Yes, Proceed</button>
+    </ng-container>
+    <!-- Step 2 actions -->
+    <ng-container *ngIf="currentStep === 3">
+      <button type="button" class="btn btn-primary" (click)="submitClose(modal);">Submit</button>
+    </ng-container>
+  </div>
 </ng-template>

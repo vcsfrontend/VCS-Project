@@ -36,10 +36,11 @@ export class CampaignsComponent extends BaseComponent {
   anyChecked: any; stageLst: any; crmStatusData: any; showValidationError = false; showCheckboxError = false; showNameError = false;
   isStagesLoading: boolean = true; statusLst: any;  public leadCounts: { [campaignId: string]: number } = {};
   stageCounts: { [campaignId: string]: { [stage: string]: number } } = {}; campaignCount: any; totalLeadCount: any;
-  fetchCrmLeadsList: any[] = [];
+  fetchCrmLeadsList: any[] = [];topshowMore = false;showMore = true;
+  matcardLst: any; topDisplayedCards: any;filteredUserList: any[] = [];
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
-  dataSource = new MatTableDataSource<any>();  campaignId!: string;
+  dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
 
   displayedColumns: string[] = [
     'sourceFlag',
@@ -72,8 +73,14 @@ export class CampaignsComponent extends BaseComponent {
   ngOnInit(): void {
     this.getCrmStages();
     this.getUsers();
-    this.getCampaignData();
-    this.getCampaignSecific();
+    if(this.adoanAiRole == 'ADMIN'|| this.userType == 1){
+      this.getCampaignData();
+    }
+    // this.getCampaignData();
+    if(this.userType == 2){
+      this.getCampaignSecific();
+    }
+    
     this.campaignList.forEach(campaign => {
       this.getLeadCountForCampaign(campaign.campgnId);
     });
@@ -106,6 +113,7 @@ export class CampaignsComponent extends BaseComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    
     this.isSubmitting = true;
     let agents = this.campaignForm.get('agents')?.value;
     if (Array.isArray(agents)) {
@@ -113,11 +121,17 @@ export class CampaignsComponent extends BaseComponent {
     }
     let payload = {
       ...this.campaignForm.value,
+      campaignPoc : this.userEmail,
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType,
       agents: agents,
     };
+    if (this.selectedCampgnId && this.selectedCampaignId) {
+      payload.campgnId = this.selectedCampgnId;
+      payload.campaignId = this.selectedCampaignId;
+    }
+    console.log(payload);
     this.switchService.saveCampaignData(payload).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;
@@ -134,6 +148,8 @@ export class CampaignsComponent extends BaseComponent {
           });
           this.getLeadCountForCampaign(res.campgnId)
           this.getCampaignData();
+          this.selectedCampgnId = null;
+          this.selectedCampaignId = null;
         } else {
           this.toastr.error(res.message || "Something went wrong while creating the campaign.");
         }
@@ -175,7 +191,7 @@ export class CampaignsComponent extends BaseComponent {
         this.isStagesLoading = false;
       },
       error: (error) => {
-        this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
+        // this.toastr.error(error.statusText || 'Something went wrong while fetching stages.');
       },
     });
   }
@@ -246,7 +262,7 @@ export class CampaignsComponent extends BaseComponent {
         }
       },
       error: (err) => {
-        this.toastr.error(err.statusText || "An error occurred while fetching data.");
+        // this.toastr.error(err.statusText || "An error occurred while fetching data.");
       }
     });
   }
@@ -260,20 +276,28 @@ export class CampaignsComponent extends BaseComponent {
     this.switchService.sepecificCampaign(payload).subscribe({
       next: (res: any) => {
         this.listNew = res;
+        if(this.userType == 2){
+        this.listNew.forEach((campaign:any) => {
+          this.getLeadCountForCampaign(campaign.campgnId);
+      });
+      }
       },
       error: (err) => {
-        this.toastr.error(err.statusText || "An error occurred while fetching data.");
+        // this.toastr.error(err.statusText || "An error occurred while fetching data.");
       }
     });
   }
   getUsers() {
-    if (this.userData.type == 2) {
+   if (JSON.parse(this.userData).type == 2) {
       let cn = this.userCompanyName;
       let cc = this.userCompanyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
             this.userList = res;
+             this.filteredUserList = this.userList.filter(
+              (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
+            );
           } else {
             this.toastr.error(res.message, 'signup', {
               timeOut: 3000,
@@ -282,16 +306,20 @@ export class CampaignsComponent extends BaseComponent {
           }
         },
         error: (error) => {
-          this.toastr.error(error.statusText);
+          // this.toastr.error(error.statusText);
         },
       })
     }
   }
 
-  getAgentColor(name: string): string {
+  getAgentColor(name: string | null | undefined): string {
+    if (!name || !name.trim()) {
+      return this.userColors[0]; // fallback color (pick index 0 or any default)
+    }
     const index = Math.abs(this.hashString(name.trim())) % this.userColors.length;
     return this.userColors[index];
   }
+
 
   private hashString(str: string): number {
     let hash = 0;
@@ -357,5 +385,58 @@ export class CampaignsComponent extends BaseComponent {
       });
     }
   }
+  openEditModal(content: any, campgnId: string) {
+  // this.selectedCampaignId = campgnId;  
+  console.log('Editing campaign ID:', this.selectedCampaignId);
+
+  const campaignData = this.campaignList.find(
+    (item: any) => item.campgnId === campgnId
+  );
+    console.log('campaign data',campaignData)
+  if (campaignData) {
+    this.selectedCampgnId = campaignData.campgnId;   // short ID
+    this.selectedCampaignId = campaignData.campaignId; // long ID
+
+    console.log('Editing campgnId:', this.selectedCampgnId);
+    console.log('Editing campaignId:', this.selectedCampaignId);
+    this.campaignForm.patchValue({
+      campaignName: campaignData.campaignName,
+      pipeline: campaignData.pipeline,
+      campaignPoc: campaignData.campaignPoc,
+      agents: (Array.isArray(campaignData.agents)
+             ? campaignData.agents
+             : campaignData.agents?.split(',') ?? []),
+      campaignPriority: campaignData.campaignPriority,
+      leadDuplicacy: campaignData.leadDuplicacy
+    });
+  }
+  this.open(content);
+  }
+  openCreateModal(content: any) {
+  // Clear previously selected campaign IDs
+  this.selectedCampgnId = null;
+  this.selectedCampaignId = null;
+
+  // Reset the form completely
+  this.campaignForm.reset();
+
+  // Open the modal using your existing open method
+  this.open(content);
+  }
+  toggleTopShowMore() {
+    this.topshowMore = !this.topshowMore;
+    if (this.topshowMore) {
+      setTimeout(() => {
+        const scrollContainer = document.querySelector('.scrollable-container');
+        if (scrollContainer) {
+          scrollContainer.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      }, 0);
+    }
+  }
+
 
 }

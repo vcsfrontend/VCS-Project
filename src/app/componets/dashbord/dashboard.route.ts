@@ -74,6 +74,11 @@ export const admin: Routes = [
     import('./projects/projects.component').then((m) => m.ProjectsComponent),
 },
 {
+  path: 'boq',
+  loadComponent: () =>
+    import('./boq/boq.component').then((m) => m.BoqComponent),
+},
+{
   path: 'support',
   loadComponent: () =>
     import('./support/support.component').then((m) => m.SupportComponent),
@@ -218,7 +223,12 @@ export const admin: Routes = [
   {
     path: 'appointments',
     loadComponent: () =>
-    import('./appointments/appointments.component').then((m) => m.AppointmentsComponent),
+    import('../apps/crm/appointments/appointments.component').then((m) => m.AppointmentsComponent),
+  },
+  {
+    path: 'chatbot',
+    loadComponent: () =>
+    import('./chatbot/chatbot.component').then((m) => m.ChatbotComponent),
   },
   {
     path: 'tasks',
