@@ -259,53 +259,69 @@
                 </div>
             </div>
             <div class="card-body p-0">
-                <div class="mat-elevation-z8">
-                    <div class="table-responsive">
-                        <table mat-table [dataSource]="myProjectDataSource">
-                            <ng-container matColumnDef="slNo">
-                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="projectId">
-                                <th mat-header-cell *matHeaderCellDef> Project Id </th>
-                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModalLg"
-                                    (click)="openLg(Content11);onProjectDetails(element)"> {{element.projectId |
-                                    slice:0:7}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="clientName">
-                                <th mat-header-cell *matHeaderCellDef> Client Name </th>
-                                <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="projStatus">
-                                <th mat-header-cell *matHeaderCellDef>Project Status</th>
-                                <td mat-cell *matCellDef="let element"> {{element.projStatus}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="projectEstimation">
-                                <th mat-header-cell *matHeaderCellDef>Project Estimation</th>
-                                <td mat-cell *matCellDef="let element" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModalLg"
-                                    (click)="VerticallyScrol(Content12); fetchPaymentStages(element)">
-                                    {{element.projectEstimation}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="projectArea">
-                                <th mat-header-cell *matHeaderCellDef>Project Area</th>
-                                <td mat-cell *matCellDef="let element"> {{element.projectArea}} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="projectStartDate">
-                                <th mat-header-cell *matHeaderCellDef>Project Start Date</th>
-                                <td mat-cell *matCellDef="let element"> {{element.projectStartDate | date:'dd-MM-yyyy'}}
+                <div class="table-container mat-elevation-z8">
+                    <table mat-table [dataSource]="myProjectDataSource" matSort class="mat-table w-100">
+                        <ng-container matColumnDef="slNo">
+                            <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                            <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="projectId">
+                            <th mat-header-cell *matHeaderCellDef> Project Id </th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                                (click)="openLg(Content11);onProjectDetails(element)"> {{element.projectId |
+                                slice:0:7}} </td>
+                        </ng-container>
+                         <ng-container matColumnDef="projectName">
+                                <th mat-header-cell *matHeaderCellDef>Project Name</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a href="javascript:void(0);" (click)="goToBoq(element)">{{element.projectName}}
+                                    </a>
                                 </td>
                             </ng-container>
-                            <ng-container matColumnDef="projectEndDate">
-                                <th mat-header-cell *matHeaderCellDef>Project End Date</th>
-                                <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
-                                    ({{calculateDateDifference(element.projectEndDate)}}) </td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
-                        </table>
-                    </div>
+                        <ng-container matColumnDef="clientName">
+                            <th mat-header-cell *matHeaderCellDef> Client Name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="projStatus">
+                            <th mat-header-cell *matHeaderCellDef>Project Status</th>
+                            <td mat-cell *matCellDef="let element"> {{element.projStatus}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="projectEstimation">
+                            <th mat-header-cell *matHeaderCellDef>Project Estimation</th>
+                            <td mat-cell *matCellDef="let element" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                                (click)="VerticallyScrol(Content12); fetchPaymentStages(element)">
+                                {{element.projectEstimation}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="projectArea">
+                            <th mat-header-cell *matHeaderCellDef>Project Area</th>
+                            <td mat-cell *matCellDef="let element"> {{element.projectArea}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="projectStartDate">
+                            <th mat-header-cell *matHeaderCellDef>Project Start Date</th>
+                            <td mat-cell *matCellDef="let element"> {{element.projectStartDate | date:'dd-MM-yyyy'}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="projectEndDate">
+                            <th mat-header-cell *matHeaderCellDef>Project End Date</th>
+                            <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
+                                ({{calculateDateDifference(element.projectEndDate)}}) </td>
+                        </ng-container>
+                        <!-- <ng-container matColumnDef="BOQ">
+                            <th mat-header-cell *matHeaderCellDef>BOQ</th>
+                            <td mat-cell *matCellDef="let element">
+                                <a href="javascript:void(0);"
+                                    class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1" (click)="goToBoq()">
+                                    <i class="ri-eye-line"></i>
+                                </a>
+                            </td>
+                        </ng-container> -->
+                        <ng-container matColumnDef="Quotation">
+                            <th mat-header-cell *matHeaderCellDef>Quotation</th>
+                            <td mat-cell *matCellDef="let element"> {{element.Quotation '}}</td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"></tr>
+                    </table>
                     <mat-paginator #myProjectPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
                         aria-label="Select page of periodic elements">
                     </mat-paginator>

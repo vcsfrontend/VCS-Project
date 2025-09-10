@@ -630,9 +630,18 @@ export class BaseComponent {
     { "name": "7%"},
   ];
 
-   desicion = [
-    { "name": "Approve"},
-    { "name": "Reject"},
+  desicion = [
+    { "name": "Approve" },
+    { "name": "Reject" },
+  ];
+
+  recceTemplate = [
+    { "name": "Recce Details" },
+    { "name": "External Environment" },
+    { "name": "Internal Environment" },
+    { "name": "Capture Spaces" },
+    { "name": "Signage and Facade" },
+    { "name": "Layout and Sketches" },
   ];
 
 

@@ -78,19 +78,8 @@
   content: "\f2e5";
   cursor: pointer;
 }
-.card-container {
-  overflow-y: auto;
-  max-height: 330px;
-}
 
-.table th, .table td {
-  padding: 10px 8px;
-  vertical-align: middle;
-  line-height: 1.462;
-  font-size: 0.813rem;
-  font-weight: 400;
-  text-align: center;
-}
+
 .form-control:disabled, .form-select:disabled {
   background-color: #00000000;
   text-align: center;
@@ -277,18 +266,6 @@
   margin-bottom: 20px;
 }
 
-table {
-  width: 100%;
-}
-
-th {
-  text-align: left;
-  font-weight: bold;
-}
-
-.mat-elevation-z8 {
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
 
 .spinner-overlay {
   position: fixed; /* Ensures it covers the full viewport */
@@ -315,10 +292,10 @@ mat-label {
   letter-spacing: 0.5px;
   margin-right: 10px;
 }
-.card-container {
-  overflow-y: auto;
-  max-height: 370px;
-}
+// .card-container {
+//   overflow-y: auto;
+//   max-height: 370px;
+// }
 .heigh {
   display: flex;
   flex-direction: column;
@@ -436,4 +413,153 @@ mat-label {
   height: 70px;
   /* No animation here */
 }
+.whatsapp{
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+.mmt{
+    margin-top: -30px;
+}
+.vertical-line{
+    border-left: 1px solid #717171;
+  height: 50px; 
+  margin: 0 20px;
+}
+
+table.mat-mdc-table .mdc-data-table__header-cell {
+  position: sticky !important;
+  top: 0;
+  z-index: 12 !important; 
+  background-color: #006699 !important; 
+  color: white !important;
+  border-right: none;
+}
+.table-container {
+  overflow-x: auto;
+}
+
+.mat-table th, 
+.mat-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; 
+  // cursor: pointer;
+}
+
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #fff;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
+}
+
+
+.mat-table1 {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mat-table1 th,
+.mat-table1 td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.offcanvas.custom-offcanvas {
+  --bs-offcanvas-width: 1300px; 
+}
+.offcanvas.custom-offcanvas.show:not(.hiding),
+.offcanvas.custom-offcanvas.showing {
+  transform: none !important;
+  min-width: 1300px !important;
+}
+
+.kt {
+  cursor: pointer;
+}
+
+.static-row {
+  background: #f8f9fa;
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-link.m-2.active {
+  background-color: 006699 !important;
+  color: #000000 !important;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+// .table thead th {
+//   background-color: #006699 !important;
+//   color: white !important;
+// }
+
+.my-table tbody tr {
+  height: 48px;    
+}
+
+.table-container {
+  max-height: calc(80px * 5);
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #fff;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
+}
+
+.editable-cell .cell-input {
+  display: none;
+  width: 100%;
+  border: 1px solid #d60606;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 13px;
+}
+.editable-cell .cell-text {
+  display: inline-block;
+}
+.editable-cell:hover .cell-input {
+  display: inline-block;
+}
+
 

@@ -132,9 +132,9 @@ export class SidebarComponent implements AfterViewInit {
           item.isVisible = true;
           break;
 
-        case 'Adonai Users':
-          this.getSalesUsers(this.userEmail, item);
-          break;
+        // case 'Adonai Users':
+        //   this.getSalesUsers(this.userEmail, item);
+        //   break;
 
         case 'Settings':
           // 🔹 use external method here
