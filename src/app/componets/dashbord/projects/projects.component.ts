@@ -66,8 +66,8 @@ export type ChartOptions = {
   styleUrl: './projects.component.scss',
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['slNo', 'projectId', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate'];
+  displayedColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
+    'projectArea', 'projectStartDate', 'projectEndDate',  'Quotation' ];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
@@ -103,7 +103,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   spinnerLoading = false;
   pendingRequests = 0;
   adonaiURL: any;
-  quotationForm!: FormGroup;
+  quotationForm!: FormGroup; boqForm!: FormGroup;
   quoteForm!: FormGroup;
 
   updateDisplayedCards(): void {
@@ -141,6 +141,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
   openLg1(content4: any) {
     this.modalService.open(content4, { size: 'sm', centered: true },);
+  }
+
+  boqmodal(content17: any) {
+    this.modalService.open(content17, { size: 'sm', centered: true },);
   }
 
   openLg2(content13: any) {
@@ -2091,6 +2095,15 @@ downloadButtons: { label: string; url: string }[] = [];
       }
     });
   }
+
+  goToBoq(element: any) {
+    this.router.navigate(
+      ['/dashboard/boq'],
+      { queryParams: { projectId: element.projectId, projectName: element.projectName } }
+    );
+  }
+
+
 
 
 }

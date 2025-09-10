@@ -15,16 +15,473 @@
                 data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
                 aria-selected="true">Recce</button>
             <ng-template ngbNavContent>
-                <p>Dummy</p>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card custom-card">
+                            <div class="card-header justify-content-between d-flex">
+                                <div class="card-title">
+                                    <button type="button" class="btn btn-sm btn-danger text-center me-2"
+                                        (click)="openModal2(recceContent2)" data-bs-toggle="modal1" data-bs-target="#addProject">
+                                        Create Recce
+                                    </button>
+                                </div>
+                                <div class="row col-lg-9 ">
+                                    <div class="col-lg-2 mt-2">
+                                        select template :
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <select id="inputState1" class="form-select">
+                                            <option selected>test</option>
+                                            <option>default template</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    status :not started
+                                </div>
+                                <!-- add New Field -->
+                                <div ngbDropdown class="dropdown no-caret">
+                                    <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-icon btn-sm btn-light"
+                                        data-bs-toggle="dropdown">
+                                        <i class="fe fe-more-vertical"></i>
+                                    </a>
+                                    <ul ngbDropdownMenu class="dropdown-menu">
+                                        <li><a ngbDropdownItem class="dropdown-item" (click)="openModal1(recceContent1)"
+                                                data-bs-toggle="modal123" data-bs-target="#addProject123"
+                                                href="javascript:void(0);">Add input field</a></li>
+                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Add Space</a></li>
+                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Add Image and
+                                                Videos</a></li>
+                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Dropdown fields</a>
+                                        </li>
+                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">single attachment
+                                                field</a></li>
+                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Date field</a></li>
+                                    </ul>
+                                </div>
+                                <!-- end add New Field -->
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-xl-12">
+                                        <div class="float-start">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-xl-3">
+                                        <nav ngbNav #nav6="ngbNav" [activeId]="active6" orientation="vertical"
+                                            class="nav nav-tabs flex-column nav-style-5" role="tablist">
+                                            <ng-container ngbNavItem="Home">
+                                                <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="false"><i
+                                                        class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Exterior
+                                                </a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <!-- <h5><b>Exterior :</b></h5> -->
+                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                        <div class="card-title">
+                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
+                                                        Test1
+                                                            </button> -->
+                                                            <h6 class="fs-16">Exterior</h6>
+                                                        </div>
+                                                        <div ngbDropdown class="dropdown no-caret">
+                                                            <a ngbDropdownToggle href="javascript:void(0);"
+                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="pt-3"><b>Exterior :</b></h5>
+                                                    <div class="file-upload float-end">
+                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
+                                                            accept="*/*" hidden>
+                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                    </div>
+                                                    <!-- Image template  -->
+                                                    <div class=" text-muted" id="home-vertical-link" role="tabpanel">
+                                                        <img src="./assets/images/ecommerce/jpg/19.jpeg" class="img-thumbnail"
+                                                            alt="Responsive image" (click)="openModal(recceContent3)"
+                                                            data-bs-toggle="modal2" data-bs-target="#addimage">
+                                                        <img src="./assets/images/ecommerce/jpg/19.jpeg" class="img-thumbnail"
+                                                            alt="Responsive image" (click)="openModal2(recceContent2)" data-bs-toggle="modal1"
+                                                            data-bs-target="#addtask">
+                                                    </div>
+                                                    <!--end Image template -->
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container ngbNavItem="About">
+                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="false"><i
+                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>Interior
+                                                </a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                        <div class="card-title">
+                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
+                                                        Test1
+                                                            </button> -->
+                                                            <h6 class="fs-16">Interior</h6>
+                                                        </div>
+                                                        <div ngbDropdown class="dropdown no-caret">
+                                                            <a ngbDropdownToggle href="javascript:void(0);"
+                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </a>
+                                                            <ul ngbDropdownMenu class="dropdown-menu">
+                                                                <li><a ngbDropdownItem class="dropdown-item"
+                                                                        (click)="openModal1(recceContent1)" data-bs-toggle="modal123"
+                                                                        data-bs-target="#addProject123"
+                                                                        href="javascript:void(0);">Add input field</a></li>
+                                                                <li><a ngbDropdownItem class="dropdown-item"
+                                                                        href="javascript:void(0);">Add Space</a></li>
+                                                                <li><a ngbDropdownItem class="dropdown-item"
+                                                                        href="javascript:void(0);">Add Image and Videos</a></li>
+                                                                <li><a ngbDropdownItem class="dropdown-item"
+                                                                        href="javascript:void(0);">Dropdown fields</a></li>
+                                                                <li><a ngbDropdownItem class="dropdown-item"
+                                                                        href="javascript:void(0);">single attachment field</a></li>
+                                                                <li><a ngbDropdownItem class="dropdown-item"
+                                                                        href="javascript:void(0);">Date field</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="pt-3"><b>Interior :</b></h5>
+                                                    <div class="file-upload float-end">
+                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
+                                                            accept="*/*" hidden>
+                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                    </div>
+                                                    <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div>
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container ngbNavItem="Services">
+                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="true"><i
+                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Site Images </a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                        <div class="card-title">
+                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
+                                                        Test1
+                                                            </button> -->
+                                                            <h6 class="fs-16">Site images</h6>
+                                                        </div>
+                                                        <div ngbDropdown class="dropdown no-caret">
+                                                            <a ngbDropdownToggle href="javascript:void(0);"
+                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="pt-3"><b>Site Images :</b></h5>
+                                                    <div class="file-upload float-end">
+                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
+                                                            accept="*/*" hidden>
+                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                    </div>
+            
+                                                    <div class=" show  text-muted mt-2" id="services-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div>
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container ngbNavItem="Contacts">
+                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="false"><i
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Remarks</a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                        <div class="card-title">
+                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
+                                                        Test1
+                                                            </button> -->
+                                                            <h6 class="fs-16">Remarks</h6>
+                                                        </div>
+                                                        <div ngbDropdown class="dropdown no-caret">
+                                                            <a ngbDropdownToggle href="javascript:void(0);"
+                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="pt-3"><b>Remarks</b></h5>
+                                                    <div class="file-upload float-end">
+                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
+                                                            accept="*/*" hidden>
+                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                    </div>
+                                                    <div class=" text-muted mt-2" id="contacts-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div>
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container ngbNavItem="gallery">
+                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="false"><i
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Site
+                                                    Dimentions</a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                        <div class="card-title">
+                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
+                                                        Test1
+                                                            </button> -->
+                                                            <h6 class="fs-16">Site Dimentions</h6>
+                                                        </div>
+                                                        <div ngbDropdown class="dropdown no-caret">
+                                                            <a ngbDropdownToggle href="javascript:void(0);"
+                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
+                                                                <i class="fe fe-more-vertical"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="pt-3"><b>Site Dimentions</b></h5>
+                                                    <div class="file-upload float-end">
+                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
+                                                            accept="*/*" hidden>
+                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                    </div>
+                                                    <div class=" text-muted mt-2" id="contacts-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div>
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container ngbNavItem="gallery1">
+                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="false"><i
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Site
+                                                    Visit</a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <div class="modal-body px-3">
+                                                        <div class="col-md-12">
+                                                            <div class="card-header justify-content-between  border-bottom border-1">
+                                                                <div class="card-title">
+                                                                    <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
+                                                                                                                    Test1
+                                                                                                                        </button> -->
+                                                                    <h6 class="fs-16">Test1</h6>
+                                                                </div>
+                                                                <div ngbDropdown class="dropdown no-caret">
+                                                                    <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-icon btn-sm btn-light"
+                                                                        data-bs-toggle="dropdown">
+                                                                        <i class="fe fe-more-vertical"></i>
+                                                                    </a>
+                                                                    <ul ngbDropdownMenu class="dropdown-menu">
+                                                                        <li><a ngbDropdownItem class="dropdown-item" (click)="openModal1(recceContent1)" data-bs-toggle="modal123"
+                                                                                data-bs-target="#addProject123" href="javascript:void(0);">Add input field</a>
+                                                                        </li>
+                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Add Space</a></li>
+                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Add Image and
+                                                                                Videos</a></li>
+                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Dropdown fields</a>
+                                                                        </li>
+                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">single attachment
+                                                                                field</a></li>
+                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Date field</a></li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                
+                                                            <div class="tab-content ">
+                                                                <div class="row pb-2 pt-3 ">
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 ">
+                                                                        <input type="text" placeholder="Main Header" class="form-control" id="input">
+                                                                    </div>
+                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                                
+                                                                        <input type="text" placeholder="category" class="form-control" id="input-label">
+                                                                    </div>
+                                                
+                                                                </div>
+                                                
+                                                                <div class="card-header justify-content-between ">
+                                                                    <div class="card-title">
+                                                                        <button type="button" class="btn btn-sm btn-danger text-center me-2">
+                                                                            Recce 1
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="file-upload float-end">
+                                                                        <input type="file" id="file-input" (change)="onFileSelected($event)" accept="*/*" hidden>
+                                                                        <label for="file-input" class="text-danger">Upload
+                                                                            File</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div [ngClass]="{ 'tab-pane fade show': activeTab === 'tab1', 'tab-pane fade': activeTab !== 'tab1' }">
+                                                                    <div class="col-xxl-4 col-xl-10 col-lg-6 col-md-6 col-sm-12 modal-body px-4">
+                                                                        <div class="card custom-card product-card mt-2">
+                                                                            <div>
+                                                                                <a class="product-image">
+                                                                                    <img src="./assets/images/ecommerce/jpg/19.jpeg" class="card-img "
+                                                                                        (click)="openModal(recceContent3)" data-bs-toggle="modal2"
+                                                                                        data-bs-target="#addimage" alt="...">
+                                                                                </a>
+                                                                                <div class="product-icons">
+                                                                                    <a class="wishlist"><i class="bi bi-plus"></i></a>
+                                                                                    <a class="cart"><i class="bi bi-download"></i></a>
+                                                                                    <a class="view"><i class="bi bi-trash"></i></a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row g-3 align-items-center p-4">
+                                                                        <div class="col-xl-3">
+                                                                            <label for="inputPassword6" class="col-form-label">Discription</label>
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label for="input-label" class="form-label">Height
+                                                                            </label>
+                                                                            <input type="text" class="form-control" id="input">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label for="input-label" class="form-label">Width</label>
+                                                                            <input type="text" class="form-control" id="input-label">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label for="input-label" class="form-label">Depth</label>
+                                                                            <input type="text" class="form-control" id="input-label">
+                                                                        </div>
+                                                
+                                                                    </div>
+                                                                    <button class="btn d-flex align-items-center justify-content-center">
+                                                                        <i class="ri-add-circle-line fs-16 align-middle me-1 mb-1"></i>Add
+                                                                        more fields
+                                                                    </button>
+                                                                    <div class="row g-3 align-items-center p-4">
+                                                                        <div class="col-xl-3">
+                                                                            <label for="inputPassword6" class="col-form-label">Discription</label>
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label for="input-label" class="form-label">Height
+                                                                            </label>
+                                                                            <input type="text" class="form-control" id="input">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label for="input-label" class="form-label">Width</label>
+                                                                            <input type="text" class="form-control" id="input-label">
+                                                                        </div>
+                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                                                                            <label for="input-label" class="form-label">Depth</label>
+                                                                            <input type="text" class="form-control" id="input-label">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </ng-container>
+                                        </nav>
+                                    </div>
+                                    <div class="col-xl-9 bg-light border rounded">
+                                        <div [ngbNavOutlet]="nav6" class=""></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </ng-template>
         </li>
         <li [ngbNavItem]="2" class="nav-item me-0" role="presentation">
             <button ngbNavLink class="nav-link about py-1" id="profile-tab" data-bs-toggle="tab"
                 data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
-                aria-selected="false">Design</button>
+                aria-selected="false" (click)="getLst()">Design</button>
             <ng-template ngbNavContent>
-                <div class="p-3 border br-7 text-muted" id="profile-tab-pane" role="tabpanel"
-                    aria-labelledby="profile-tab" tabindex="0">Dummy</div>
+                <div class="col-xl-12 mt-2">
+                    <div class="card custom-card">
+                        <div class="card-header justify-content-between">
+                            <div class="card-title">
+                                My Projects
+                            </div>
+                            <div class="d-flex flex-wrap gap-3">
+                                <mat-form-field class="filter-field">
+                                    <mat-label>Fliter</mat-label>
+                                    <input matInput (keyup)="applyDesignerFilter($event)" #input>
+                                </mat-form-field>
+                                <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                                    aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
+                                    New Design
+                                </button>
+                                <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
+                                    aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
+                                    All Projects
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-container mat-elevation-z8">
+                                <table mat-table [dataSource]="designerDataSource" matSort class="mat-table w-100">
+                                    <ng-container matColumnDef="slNo">
+                                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectId">
+                                        <th mat-header-cell *matHeaderCellDef> Project Id </th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{element.projectId |
+                                            slice:0:7}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectName">
+                                        <th mat-header-cell *matHeaderCellDef>Project Name</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{element.projectName}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="clientName">
+                                        <th mat-header-cell *matHeaderCellDef> Client Name </th>
+                                        <td mat-cell *matCellDef="let element"> {{element.clientName}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projStatus">
+                                        <th mat-header-cell *matHeaderCellDef>Project Status</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.projStatus}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectEstimation">
+                                        <th mat-header-cell *matHeaderCellDef>Project Estimation</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            {{element.projectEstimation}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectArea">
+                                        <th mat-header-cell *matHeaderCellDef>Project Area</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.projectArea}} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectStartDate">
+                                        <th mat-header-cell *matHeaderCellDef>Project Start Date</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.projectStartDate | date:'dd-MM-yyyy'}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectEndDate">
+                                        <th mat-header-cell *matHeaderCellDef>Project End Date</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
+                                            ({{calculateDateDifference(element.projectEndDate)}}) </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="Quotation">
+                                        <th mat-header-cell *matHeaderCellDef>Quotation</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.Quotation '}}</td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="designerColumns"
+                                        style="height:47px; vertical-align:middle;"></tr>
+                                    <tr mat-row *matRowDef="let row; columns: designerColumns;"
+                                        style="height:47px; vertical-align:middle;"></tr>
+                                </table>
+                                <!-- <mat-paginator #myProjectPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+                                    aria-label="Select page of periodic elements">
+                                </mat-paginator> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </ng-template>
         </li>
         <li [ngbNavItem]="3" class="nav-item me-0" role="presentation">
@@ -1757,4 +2214,223 @@
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
         </div>
     </form>
+</ng-template>
+
+
+<ng-template #recceContent1 id="addProject123" let-modal>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title" id="mail-ComposeLabel">Add input field</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal123" (click)="modal.close('Cross click')"
+                aria-label="Close">
+            </button>
+        </div>
+        <div class="modal-body ">
+            <div class="row gy-2">
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">input field title</label>
+                    <input type="text" class="form-control" id="task-name"
+                        placeholder="input field title">
+                </div>
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">Add Space field</label>
+                    <input type="text" class="form-control" id="task-name"
+                        placeholder="Add Space">
+                </div>
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">Add image and videos field</label>
+                    <input type="text" class="form-control" id="task-name"
+                        placeholder="Add image and videos">
+                </div>
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">Dropdown field title</label>
+                    <input type="text" class="form-control" id="task-name"
+                        placeholder="Dropdown field">
+                        <button class="btn d-flex align-items-center justify-content-center"
+    >
+                            <i class="ri-add-circle-line fs-16 align-middle me-1 mb-1"></i>Add more fields
+                        </button>
+                    <label for="task-name" class="form-label">Dropdown values</label>
+                    <input type="text" class="form-control" id="task-name"
+                        placeholder="enter value">
+                        
+                </div>
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">single attachment file Upload field</label>
+                    <input type="text" class="form-control" id="task-name"
+                        placeholder="single attachment file Upload field">
+                </div>
+                <div class="col-xl-12">
+                    <label for="task-name" class="form-label">enter date field</label>
+                    <input type="text" class="form-control" id="task-name"
+                        placeholder="enter date field">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"  (click)="modal.close('Cross click')">Cancel</button>
+            <button type="button" class="btn btn-primary">Add</button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #recceContent2 let-modal>
+    <form [formGroup]="recceForm" (ngSubmit)="recceSubmit(modal)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Creating New Recce</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal1" (click)="modal.close('Cross click')"
+                    aria-label="Close">
+                </button>
+            </div>
+            <!-- <div class="container border">
+            <div class="row col-lg-12 border mb-3">
+                <div class="col-lg-3 mt-2">
+                    select template
+                </div>
+                <div class="col-lg-9">
+                    <select id="inputState1" class="form-select">
+                        <option selected>test</option>
+                        <option>default template</option>     
+                    </select> 
+                </div>
+            </div>
+        </div> -->
+            <div class="modal-body overflowImportant">
+                <div class="row">
+                    <div class="d-flex">
+                        <div class="col-lg-4 nav flex-column me-3 border-end align-items-start" id="v-pills-tab"
+                            role="tablist" aria-orientation="vertical">
+                            <div class="mb-3 col-lg-11">
+                                <label class="form-label">Select reacce Type</label>
+                                <ng-select formControlName="recceStage" [items]="recceTemplate" bindLabel="name"
+                                    bindValue="name" placeholder="Select recce">
+                                </ng-select>
+                            </div>
+                            <!-- <button class="nav-link" [ngClass]="{ active: activeTab === 'tab1' }"
+                            (click)="selectTab('tab1')">
+                            <input type="checkbox" [(ngModel)]="tab1Checked">
+                            Recce Details
+                        </button>
+                        <button class="nav-link" [ngClass]="{ active: activeTab === 'tab2' }"
+                            (click)="selectTab('tab2')">
+                            <input type="checkbox" [(ngModel)]="tab2Checked">
+                            test
+                        </button> -->
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="modal-body scrollable-body">
+                                <div class="col-md-12">
+                                    <div class="row gy-2 border rounded">
+                                        <div class="tab-content ">
+                                            <div
+                                                [ngClass]="{ 'tab-pane fade show': activeTab === 'tab1', 'tab-pane fade': activeTab !== 'tab1' }">
+                                                <h6>Recce Details</h6>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Recce Name</label>
+                                                    <input type="text" class="form-control" placeholder="Recce name"
+                                                        aria-label="First name" formControlName="recceName">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Recce Due Date</label>
+                                                    <input type="date" class="form-control" formControlName="recceDueDate"
+                                                        placeholder="select due date">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Assign Recce to(will receive recce
+                                                        link)</label>
+                                                    <ng-select [items]="userList"
+                                                        bindLabel="email" bindValue="email" formControlName="recceAssigne"
+                                                        placeholder="Select an user" >
+                                                    </ng-select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Project Stakeholders to be contacted
+                                                    </label>
+                                                    <ng-select formControlName="recceStakeHolders" [items]="userList"
+                                                        bindLabel="email" bindValue="email"
+                                                        placeholder="Select an user">
+                                                    </ng-select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Client POC to be contacted</label>
+                                                    <ng-select formControlName="recceClientPoc" [items]="userList"
+                                                        bindLabel="email" bindValue="email"
+                                                        placeholder="Select an user">
+                                                    </ng-select>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label">Instruction for Recce </label>
+                                                    <textarea class="form-control" rows="5" placeholder="Enter Instruction for Recce"
+                                                        formControlName="description"></textarea>
+                                                </div>
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                                    <label for="input-file" class="form-label">Upload Images</label>
+                                                    <input type="file" multiple (change)="onFilesChange($event)">
+                                                </div>
+                                                <!-- <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="" id="primaryChecked" checked="">
+                                                <label class="form-check-label" for="primaryChecked">
+                                                    Remarks from Site
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="" id="primaryChecked" checked="">
+                                                <label class="form-check-label" for="primaryChecked">
+                                                    Capture Location
+                                                </label>
+                                            </div>
+                                            <div class="form-check mb-2">
+                                                <input class="form-check-input" type="checkbox" value="" id="primaryChecked" checked="">
+                                                <label class="form-check-label" for="primaryChecked">
+                                                    Shareable Recce Link
+                                                </label>
+                                            </div> -->
+                                            </div>
+                                            <!-- <div
+                                                [ngClass]="{ 'tab-pane fade show': activeTab === 'tab2', 'tab-pane fade': activeTab !== 'tab2' }">
+                                                <h6>Test</h6>
+                                                <div class="mb-2">
+                                                    <input type="checkbox" [(ngModel)]="tab2Checked">
+                                                    <label class="form-label">test1</label>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <input type="checkbox" [(ngModel)]="tab2Checked">
+                                                    <label class="form-label">test2</label>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal1"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+<ng-template #recceContent3 id="addimage" let-modal >
+    <div class="col-xxl-12 col-xl-10 col-lg-6 col-md-6 col-sm-12 modal-body px-1 border-0 "  >
+        <div class="card custom-card product-card">
+            <div class="card-body p-0">
+                <a  class="product-image">
+                    <img  src="./assets/images/ecommerce/jpg/19.jpeg" class="card-img " alt="...">
+                </a>
+                <div class="product-icons">
+                    <a   class="wishlist"><i class="bi bi-plus"></i></a>
+                    <a   class="cart"><i class="bi bi-download"></i></a>
+                    <a   class="view"><i class="bi bi-trash"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  (click)="modal.close('Cross click')">Cancel</button>
+        
+    </div>
 </ng-template>

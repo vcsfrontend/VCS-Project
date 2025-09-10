@@ -1,5 +1,5 @@
-import { Component, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, ViewChild, AfterViewInit, ElementRef,HostListener  } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule,FormArray } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
@@ -19,6 +19,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyDoc } from 'ngx-editor';
+import { ActivatedRoute } from '@angular/router';
 
 interface Plan {
     name: string;
@@ -52,6 +53,8 @@ export class BoqComponent extends BaseComponent {
     proposalContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount" ];
     orderContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount" ];
     userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+    designerColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
+    'projectArea', 'projectStartDate', 'projectEndDate',  'Quotation' ];
     invoiceForm!: FormGroup; extraContentProposal!: FormGroup
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -61,15 +64,16 @@ export class BoqComponent extends BaseComponent {
     userCompanyName: string = this.userData ? this.userData.companyName : '';
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
-    selectedOrderContent: any = null;
+    selectedOrderContent: any = null; actstatus: any;
     itemId :any; currentSection :any; proposals: any[] = []; clientOrders: any[] = [];
     dataSource = new MatTableDataSource<any>();
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     proposalContentDetailsDataSource = new MatTableDataSource<any>([]);
-    proposalTabKeys: string[] = [];
+    designerDataSource = new MatTableDataSource<any>();
+    proposalTabKeys: string[] = []; dateDiff: any; roleid: any;
     proposalTabCounts: { [key: string]: number } = {};
-    itemCodeLst:any;
+    itemCodeLst:any; public userList: any; filteredUserList: any[] = [];
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -79,14 +83,15 @@ export class BoqComponent extends BaseComponent {
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
     boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
-    proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup
+    proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; recceForm!:FormGroup;
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null; 
     activeId:any =0;  highlightedTabIndex = 0; selectedProposal: any;          // raw API data
     filteredProposals: any[] = [];  filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
     orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
-    orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
+    orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = []; 
+    projectLst: any = []; boqproject: any;
 
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
@@ -101,7 +106,7 @@ export class BoqComponent extends BaseComponent {
     constructor(
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
-        private fb: FormBuilder,) {
+        private fb: FormBuilder, private route: ActivatedRoute,) {
         super();
     }
 
@@ -146,6 +151,7 @@ export class BoqComponent extends BaseComponent {
     };
 
     ngOnInit(): void {
+        this.getUsers();
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
@@ -226,6 +232,61 @@ export class BoqComponent extends BaseComponent {
             contentJs:[''],
             // designId:['3FO3EWPJHYSK']
         });
+        this.recceForm = this.fb.group({
+            projectName:['Project Testing'],
+            projectId:['SHIV43561757396915624'],
+            recceName:[''],
+            recceStage:[''],
+            recceDueDate:[''],
+            recceAssigne:[''],
+            recceStakeHolders:[''],
+            recceClientPoc:[''],
+            description:[''],
+            files: this.fb.array([]), 
+            companyCode:this.userCompanyCode,
+            email:this.userEmail,
+            type:this.userType,
+            createdBy:this.userName
+        });
+        this.flatpickrOptions = {
+          enableTime: true,
+          noCalendar: true,
+          dateFormat: 'H:i',
+        };
+        // this.route.queryParams.subscribe(params => {
+        //     console.log('boq queryParams:', params); 
+        //     const projectId = params['projectId'] ?? '';
+        //     const projectname = params['projectname'] ?? '';
+        //     if (projectId || projectname) {
+        //         this.boqproject(projectId, projectname);
+        //     }
+        // });
+        flatpickr('#addignedDate', this.flatpickrOptions);
+    }
+
+    getUsers() {
+        if (this.userType==2) {
+            let cn = this.userCompanyName;
+            let cc = this.userCompanyCode;
+            this.switchService.cmpnyUsers(cn, cc).subscribe({
+                next: (res: any) => {
+                    if (res) {
+                        this.userList = res;
+                        this.filteredUserList = this.userList.filter(
+                            (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
+                        );
+                    } else {
+                        this.toastr.error(res.message, 'signup', {
+                            timeOut: 3000,
+                            positionClass: 'toast-top-right',
+                        });
+                    }
+                },
+                error: (error) => {
+                    // this.toastr.error(error.statusText);
+                },
+            })
+        }
     }
 
     onSubmit() {
@@ -1194,6 +1255,179 @@ export class BoqComponent extends BaseComponent {
     clientCreditDataSource = new MatTableDataSource<any>([
 
     ])
-   sectionName = 'Unsectioned (12)';
-sectionTotal = 10000;
+    sectionName = 'Unsectioned (12)';
+    sectionTotal = 10000;
+    activeTab: string = 'tab1';
+      tab1Checked: boolean = false;
+      tab2Checked: boolean = false;
+      tab3Checked: boolean = false;
+    
+      selectTab(tab: string) {
+        this.activeTab = tab;
+      }
+    
+      fileName: string | null = null;
+    
+      onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files.length > 0) {
+          this.fileName = input.files[0].name;
+        } else {
+          this.fileName = null; // Reset if no file selected
+        }
+      }
+      active5='Home';
+      active6='Home'
+      active7='Home1'
+      
+     
+      @HostListener('window:resize', ['$event'])
+      onResize(event: any) {
+        this.myFileClick();
+        this.detailsClick(); 
+      }
+    
+      myFileClick() {
+        const fileManagerFolders = document.querySelector('.file-manager-folders');
+        const fileManagerNavigation = document.querySelector('.file-manager-navigation');
+    
+        if (window.innerWidth <= 992) {
+          if (fileManagerFolders) {
+            fileManagerFolders.classList.add('open');
+          }
+          if (fileManagerNavigation) {
+            fileManagerNavigation.classList.add('close');
+          }
+        } else {
+          if (fileManagerFolders) {
+            fileManagerFolders.classList.remove('open');
+          }
+          if (fileManagerNavigation) {
+            fileManagerNavigation.classList.remove('close');
+          }
+        }
+      }
+      detailsClick() {
+        const selectedFileDetails = document.querySelector('.selected-file-details');
+    
+        if (window.innerWidth <= 1180 && selectedFileDetails) {
+          selectedFileDetails.classList.add('open');
+        } else {
+          // Close the details when the window width is greater than 992
+          if (selectedFileDetails) {
+            selectedFileDetails.classList.remove('open');
+          }
+      }
+      }
+
+    openModal(recceContent3: any) {
+        this.modalService.open(recceContent3, { centered: true, size: 'lg' });
+    }
+    openModal1(recceContent1: any) {
+        this.modalService.open(recceContent1, { centered: true, size: 'lg' });
+    }
+    openModal2(recceContent2: any) {
+        this.modalService.open(recceContent2, { centered: true, size: 'lg' });
+    }
+    
+
+    onClkDesign(key: string = '', type: 'newDesign' | 'projectList' = 'newDesign') {
+        this.userData = localStorage.getItem('userDetails');
+        this.switchService.onAdonai(JSON.parse(this.userData)?.email).subscribe({
+            next: (res: any) => {
+                if (!res.status) {
+                    alert(res.message);
+                    return;
+                }
+                if (key === 'i') {
+                    this.dateDiff = res.datediff;
+                    this.roleid = res.roleId;
+                    this.actstatus = res.activityStatus;
+                } else {
+                    const url = type === 'newDesign' ? res.newDesign : res.projectList;
+                    window.open(url, '_blank');
+                    this.toastr.success(res.message);
+                }
+            },
+            error: (err) => {
+                this.toastr.error('Something went wrong');
+            }
+        });
+    }
+
+    getLst() {
+        let payload = {
+            email: this.userEmail,
+            type: this.userType,
+            companyname: this.userCompanyName,
+            companycode: this.userCompanyCode,
+            projectId: '',
+            projectname: '',
+            filter: 'All',
+        }
+        this.switchService.projectLst(payload).subscribe({
+            next: (res: any) => {
+                if (res) {
+                    this.projectLst = res.projList;
+                    this.designerDataSource.data = this.projectLst;
+                } else {
+                    this.toastr.error(res.message);
+                }
+            }
+        })
+    }
+
+    applyDesignerFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value;
+        this.designerDataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    recceSubmit(modal: any) {
+        if (this.recceForm.invalid) {
+            this.toastr.warning('Please fill all required fields');
+            return;
+        }
+        const payload = {
+            ...this.recceForm.value,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+            createdBy: this.userName
+        };
+        console.log(payload)
+        // this.switchService.createRecce(payload).subscribe({
+        //     next: () => {
+        //         this.toastr.success("Recce created successfully!");
+        //         modal.close();
+        //         this.recceForm.reset();
+        //     },
+        //     error: () => this.toastr.error("Failed to create recce")
+        // });
+    }
+
+    get files(): FormArray {
+        return this.recceForm.get('files') as FormArray;
+    }
+
+    onFilesChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (!input.files) return;
+
+        this.files.clear();
+
+        Array.from(input.files).forEach(file => {
+            this.files.push(this.fb.control(file.name)); // or push the uploaded file / URL
+        });
+
+        console.log("Selected files:", this.recceForm.value.files);
+    }
+
+
+
+
+    
+
+    
+
+    
 }

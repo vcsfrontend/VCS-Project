@@ -8,329 +8,6 @@
     </nav>
 </div>
 
-<div class="col-xxl-12 col-xl-6">
-    <div class="card custom-card">
-        <div class="card-body">
-            <ul ngbNav #nav13="ngbNav" [activeId]="1" class="nav nav-tabs justify-content-center tab-style-3 bg-light p-5"
-                id="myTab2" role="tablist">
-                <li [ngbNavItem]="1" class="nav-item me-0" role="presentation">
-                    <button ngbNavLink class="nav-link  home py-1" id="home-tab" data-bs-toggle="tab"
-                        data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
-                        aria-selected="true">Recce</button>
-                    <ng-template ngbNavContent>
-                        <p>Many desktop publishing packages as their default model text, and a search for 'lorem ipsum' will over the years.</p>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="2" class="nav-item me-0" role="presentation">
-                    <button ngbNavLink class="nav-link about py-1" id="profile-tab" data-bs-toggle="tab"
-                        data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
-                        aria-selected="false">Design</button>
-                    <ng-template ngbNavContent>
-                        <div class="p-3 border br-7 text-muted" id="profile-tab-pane" role="tabpanel"
-                            aria-labelledby="profile-tab" tabindex="0">Many desktop
-                            publishing packages as their default model text, and a search for <b>'lorem ipsum'</b> will
-                            over the
-                            years.</div>
-                    </ng-template>
-                </li>
-                <li [ngbNavItem]="3" class="nav-item me-0" role="presentation">
-                    <button ngbNavLink class="nav-link services py-1" id="contact-tab" data-bs-toggle="tab"
-                        data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane"
-                        aria-selected="false">BOQ</button>
-                    <ng-template ngbNavContent>
-                        <div class="" id="contact-tab-pane" role="tabpanel"
-                            aria-labelledby="contact-tab" tabindex="0">
-                            <div class="row">
-                                <nav ngbNav #nav2="ngbNav" [activeId]="2" class="nav nav-style-1 nav-pills bg-light p-2" role="tablist">
-                                    <ng-container [ngbNavItem]="1">
-                                        <a ngbNavLink class="nav-link">Proposal For Client</a>
-                                        <ng-template ngbNavContent>
-                                            <div class="col-xl-12 mt-2">
-                                                <div class="card custom-card bg-light">
-                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                        <h5 class="mb-0">Proposal For Client</h5>
-                                                        <button type="button" class="btn btn-primary">Add New</button>
-                                                    </div>
-                                                    <div class="card-body p-0">
-                                                        <div class="table-container mat-elevation-z8">
-                                                            <table mat-table [dataSource]="prposaldataSource" matSort class="mat-table w-100">
-                                                                <ng-container matColumnDef="slNo">
-                                                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                                    <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
-                                                                </ng-container>
-                                                                <ng-container matColumnDef="ReferenceNo">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Reference No </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{ element.ReferenceNo }} </td>
-                                                                </ng-container>
-                                                                <ng-container matColumnDef="ProposalRequestType">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal Request Type </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{ element.ProposalRequestType }} </td>
-                                                                </ng-container>
-                                                                <ng-container matColumnDef="ProposalFor">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Proposal For </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{ element.ProposalFor }} </td>
-                                                                </ng-container>
-                                                                <ng-container matColumnDef="CreatedBy">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{ element.CreatedBy }} </td>
-                                                                </ng-container>
-                                                                <ng-container matColumnDef="CreatedDate">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Created Date </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{ element.CreatedDate }} </td>
-                                                                </ng-container>
-                                                                <ng-container matColumnDef="Status">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{ element.Status }} </td>
-                                                                </ng-container>
-                                                                <ng-container matColumnDef="amount">
-                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Amount </th>
-                                                                    <td mat-cell *matCellDef="let element"> {{ element.amount }} </td>
-                                                                </ng-container>
-                                                                <tr mat-header-row *matHeaderRowDef="displayedClientProposal"></tr>
-                                                                <tr mat-row *matRowDef="let row; columns: displayedClientProposal;"></tr>
-                                                            </table>
-                                                        </div>
-                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </ng-template>
-                                    </ng-container>
-                                    <ng-container [ngbNavItem]="2">
-                                        <a ngbNavLink class="nav-link " data-bs-toggle="tab" role="tab" aria-selected="true">Client Orders
-                                            <span class="badge bg-secondary ms-1 rounded-pill">32</span></a>
-                                        <ng-template class="tab-content " ngbNavContent>
-                                            <div class=" show active text-muted" id="nav-cart" role="tabpanel">
-                                                How hotel deals can help you live a better life. <b>How celebrity cruises</b>
-                                                aren't as bad as you think. How cultural solutions can help you predict the
-                                                future. How to cheat at dog friendly hotels and get away with it. 17 problems
-                                                with summer activities. How to cheat at travel agents and get away with it. How
-                                                not knowing family trip ideas makes you a rookie. What everyone is saying about
-                                                daily deals. How twitter can teach you about carnival cruises. How to start
-                                                using cultural solutions.
-                                            </div>
-                                        </ng-template>
-                                    </ng-container>
-                                    <ng-container [ngbNavItem]="3">
-                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-selected="false">Client Invoices
-                                            <span class="badge bg-success ms-1 rounded-pill">4</span></a>
-                                        <ng-template class="tab-content" ngbNavContent>
-                                            <div class=" text-muted" id="nav-orders" role="tabpanel">
-                                                Unbelievable healthy snack success stories. 12 facts about safe food handling
-                                                tips that will impress your friends. Restaurant weeks by the numbers. Will
-                                                mexican food ever rule the world? The 10 best thai restaurant youtube videos.
-                                                How restaurant weeks can make you sick. The complete beginner's guide to cooking
-                                                healthy food. Unbelievable food stamp success stories. How whole foods markets
-                                                are making the world a better place. 16 things that won't happen in dish
-                                                reviews.
-                                            </div>
-                            
-                                        </ng-template>
-                                    </ng-container>
-                                    <ng-container ngbNavItem="4">
-                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-selected="false">Payments From
-                                            Client</a>
-                                        <ng-template class="tab-content" ngbNavContent>
-                                            <div class=" text-muted" id="nav-offers" role="tabpanel">
-                                                Why delicious magazines are killing you. Why our world would end if restaurants
-                                                disappeared. Why restaurants are on crack about restaurants. How restaurants are
-                                                making the world a better place. 8 great articles about minute meals. Why our
-                                                world would end if healthy snacks disappeared. Why the world would end without
-                                                mexican food. The evolution of chef uniforms. How not knowing food processors
-                                                makes you a rookie. Why whole foods markets beat peanut butter on pancakes.
-                                            </div>
-                            
-                                        </ng-template>
-                                    </ng-container>
-                                    <ng-container ngbNavItem="5">
-                                        <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-selected="false">My Scope</a>
-                                        <ng-template class="tab-content" ngbNavContent>
-                                            <div class="row">
-                                                <div class="col-xl-12">
-                                                    <div class="card custom-card">
-                                                        <div class="card-body">
-                                                            <nav ngbNav #nav2="ngbNav" [activeId]="1" class="nav nav-style-1 nav-pills mb-3" role="tablist">
-                                                
-                                                                <ng-container *ngFor="let key of tabKeys; let i = index">
-                                                                    <ng-container [ngbNavItem]="i+1">
-                                                                        <a ngbNavLink class="nav-link">{{ key | titlecase }}</a>
-                                                                        <ng-template ngbNavContent>
-                                                                            <div class="col-xl-12 mt-2">
-                                                                                <div class="card custom-card bg-light">
-                                                                                    <div
-                                                                                        class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                                                        <h5 class="mb-0">Proposal For Client ({{ key | titlecase }})</h5>
-                                                                                        <button type="button" class="btn btn-primary">Add New</button>
-                                                                                    </div>
-                                                                                    <div class="card-body p-0">
-                                                                                        <div class="table-container mat-elevation-z8">
-                                                                                            <table mat-table [dataSource]="boqDataSources[key]" matSort
-                                                                                                class="mat-table1 w-100">
-                                                
-                                                                                                <!-- S.No -->
-                                                                                                <ng-container matColumnDef="slNo">
-                                                                                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                                                                                    <td mat-cell *matCellDef="let element; let i = index">{{ i+1 }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Item -->
-                                                                                                 <ng-container matColumnDef="elementUrl">
-                                                                                                    <th mat-header-cell *matHeaderCellDef class="description-cell"> Item </th>
-                                                                                                    <td mat-cell *matCellDef="let element"
-                                                                                                        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 750px; display: inline-block;">
-                                                                                                        <div class="d-flex align-items-start"
-                                                                                                            (click)="openDetails(detailsOffcanvas, element)"
-                                                                                                            style="cursor: pointer;">
-                                                                                                            <span class="avatar avatar-xl me-3">
-                                                                                                                <img [src]="element.elementUrl" class="img-thumbnail rounded"
-                                                                                                                    alt="Project Image" width="60" height="60">
-                                                                                                            </span>
-                                                                                                            <div>
-                                                                                                                <span class="fw-medium d-block">
-                                                                                                                    {{
-                                                                                                                    element.elementNameAndDescription.split('\n')[0].length > 30
-                                                                                                                    ? (element.elementNameAndDescription.split('\n')[0] |
-                                                                                                                    slice:0:30) + '...'
-                                                                                                                    : element.elementNameAndDescription.split('\n')[0]
-                                                                                                                    }}
-                                                                                                                </span>
-                                                                                                                <div class="text-muted small">
-                                                                                                                    {{ element.elementNameAndDescription.split('\n')[1] }}
-                                                                                                                </div>
-                                                                                                            </div>
-                                                            
-                                                                                                        </div>
-                                                                                                    </td>
-                                                                                                </ng-container>
-                                                                                                <!-- Code & Category -->
-                                                                                                <ng-container matColumnDef="codeAndCategory">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Code &
-                                                                                                        Category </th>
-                                                                                                    <td mat-cell *matCellDef="let element">
-                                                                                                        {{ element.codeAndCategory }}
-                                                                                                    </td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Order Status -->
-                                                                                                <ng-container matColumnDef="orderStatus">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status
-                                                                                                    </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.orderStatus }}
-                                                                                                    </td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Item Type -->
-                                                                                                <ng-container matColumnDef="itemType">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Type
-                                                                                                    </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.itemType }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Source -->
-                                                                                                <ng-container matColumnDef="source">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Source </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.source }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Status -->
-                                                                                                <ng-container matColumnDef="status">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.status }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Length -->
-                                                                                                <ng-container matColumnDef="length">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Length </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.length }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Breadth -->
-                                                                                                <ng-container matColumnDef="breadth">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Breadth </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.breadth }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Height -->
-                                                                                                <ng-container matColumnDef="height">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Height </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.height }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Quantity -->
-                                                                                                <ng-container matColumnDef="quantity">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Quantity
-                                                                                                    </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- UOM -->
-                                                                                                <ng-container matColumnDef="uom">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> UOM </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.uom }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Draft Quantity -->
-                                                                                                <ng-container matColumnDef="draftQuantity">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Draft
-                                                                                                        Quantity </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.draftQuantity }}
-                                                                                                    </td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Client Rate -->
-                                                                                                <ng-container matColumnDef="clientRate">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Rate
-                                                                                                        (₹) </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.clientRate }}</td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Final Amount -->
-                                                                                                <ng-container matColumnDef="finalAmount">
-                                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Final Amount
-                                                                                                        (₹) </th>
-                                                                                                    <td mat-cell *matCellDef="let element">{{ element.finalAmount }}
-                                                                                                    </td>
-                                                                                                </ng-container>
-                                                
-                                                                                                <!-- Table Rows -->
-                                                                                                <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true">
-                                                                                                </tr>
-                                                                                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                                                                                            </table>
-                                                                                        </div>
-                                                                                        <mat-paginator [pageSizeOptions]="[10,20,30]"
-                                                                                            showFirstLastButtons></mat-paginator>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </ng-template>
-                                                                    </ng-container>
-                                                                </ng-container>
-                                                
-                                                            </nav>
-                                                
-                                                            <div [ngbNavOutlet]="nav2" class="mt-2"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </ng-template>
-                                    </ng-container>
-                                </nav>
-                                <div [ngbNavOutlet]="nav2" class=""></div>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
-            <div class="tab-content" id="myTabContent1">
-                <div [ngbNavOutlet]="nav13" class="mt-2"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="row">
     <div class="col-xxl-12">
         <div class="row">
@@ -395,7 +72,7 @@
         <div class="col-xl-6">
             <div class="card custom-card">
                 <div class="card-body p-0">
-                    <div class="d-flex p-2 align-items-center">
+                    <div class="d-flex p-3 align-items-center">
                         <div>
                             <ul ngbNav #nav="ngbNav" [activeId]="1"
                                 class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block justify-content-between"
@@ -443,54 +120,40 @@
                                                                 <div class="card custom-card overflow-hidden">
                                                                     <div class="card-body">
                                                                         <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                            <div><strong class="fs-18">Section</strong> </div>
+                                                                            <div><strong class="fs-18">Section</strong></div>
                                                                             <div><strong class="fs-18">Amount</strong></div>
                                                                         </div>
                                                                         <hr>
+                                                                    
+                                                                        <!-- Loop through rooms -->
+                                                                        <div *ngFor="let key of tabKeys" class="d-flex justify-content-between align-items-start mb-3">
+                                                                            <div><strong class="fs-14 fw-medium">{{ key }}</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">{{ getRoomTotal(key) | currency:'INR' }}</strong></div>
+                                                                        </div>
+                                                                    
+                                                                        <hr>
+                                                                        <!-- Grand Total -->
                                                                         <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Drawing Room</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">Total</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">{{ totalPrice | currency:'INR' }}</strong></div>
+                                                                        </div>
+                                                                    
+                                                                        <!-- Example fixed values -->
+                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                            <div><strong class="fs-14 fw-medium">Design and Handling Fees</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">INR 10,000.00</strong></div>
                                                                         </div>
                                                                         <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Kitchen</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Dining Room</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Master Bedroom</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Kids Room</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Utility</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium text-primary">Total Discount</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">INR 5,000.00</strong></div>
                                                                         </div>
                                                                         <hr>
                                                                         <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Total</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Design and Handling Fees</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
-                                                                        </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium text-primary">Total Discount</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium text-primary">Total Project Estimate</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">{{ (totalPrice + 10000 - 5000) | currency:'INR' }}</strong></div>
                                                                         </div>
                                                                         <hr>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium text-primary">Total Project Estimate</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
-                                                                        </div>
-                                                                        <hr>
-                                                                        *All prices are inclusive of GST
+                                                                        <small>*All prices are inclusive of GST</small>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -543,773 +206,90 @@
                                         aria-selected="true"><i class="lar la-star me-2"></i>Rooms</a>
                                     <ng-template ngbNavContent>
                                         <div class="col-xl-12">
-                                            <div class="row">
-                                                <div class="col-xl-6">
-                                                    <div class="card custom-card">
-                                                        <div class="card-body p-0">
-                                                            <div class="d-flex p-2 align-items-center">
-                                                                <div>
-                                                                    <ul ngbNav #nav="ngbNav" [activeId]="1"
-                                                                        class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block justify-content-between"
-                                                                        role="tablist">
-                                                                        <li [ngbNavItem]="2"
-                                                                            class="nav-item m-1 me-3  p-1 pe-4">
-                                                                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="true"><i
-                                                                                    class="las la-history me-2"></i>Drawing Room</a>
-                                                                            <ng-template ngbNavContent>
-                                                                                <div class="p-0" id="pending"
-                                                                                    role="tabpanel">
-                                                                                    <div class="col-xl-12 mmt">
-                                                                                        <div class="card custom-card overflow-hidden">
-                                                                                            <div class="card-header justify-content-between">
-                                                                                                <div class="card-title">
-                                                                                                    Custom Works
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="card-body px-0 pt-2 pb-0">
-                                                                                                <div class="table-responsive">
-                                                                                                    <table class="table text-nowrap">
-                                                                                                        <thead>
-                                                                                                            <tr>
-                                                                                                                <th scope="col">
-                                                                                                                    S.No
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Image
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Item
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Description
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Quantity
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Unit
-                                                                                                                    Price
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Amount
-                                                                                                                </th>
-                                                                                                            </tr>
-                                                                                                        </thead>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-xl-12 mmt mt-1">
-                                                                                        <div class="card custom-card overflow-hidden">
-                                                                                            <div class="card-header justify-content-between">
-                                                                                                <div class="card-title">
-                                                                                                    Onsite Services
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="card-body px-0 pt-2 pb-0">
-                                                                                                <div class="table-responsive">
-                                                                                                    <table class="table text-nowrap">
-                                                                                                        <thead>
-                                                                                                            <tr>
-                                                                                                                <th scope="col">
-                                                                                                                    S.No
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Image
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Item
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Description
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Quantity
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Unit
-                                                                                                                    Price
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Amount
-                                                                                                                </th>
-                                                                                                            </tr>
-                                                                                                        </thead>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-xl-12 mmt mt-1">
-                                                                                        <div class="card custom-card overflow-hidden">
-                                                                                            <div class="card-header justify-content-between">
-                                                                                                <div class="card-title">
-                                                                                                    Modular
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="card-body px-0 pt-2 pb-0">
-                                                                                                <div class="table-responsive">
-                                                                                                    <table class="table text-nowrap">
-                                                                                                        <thead>
-                                                                                                            <tr>
-                                                                                                                <th scope="col"> S.No </th>
-                                                                                                                <th scope="col"> Image </th>
-                                                                                                                <th scope="col"> Item </th>
-                                                                                                                <th scope="col"> Description </th>
-                                                                                                                <th scope="col"> Quantity </th>
-                                                                                                                <th scope="col"> Unit Price </th>
-                                                                                                                <th scope="col"> Amount </th>
-                                                                                                            </tr>
-                                                                                                        </thead>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td>1 </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS (Client Site) </td>
-                                                                                                                <td> OS9003-3 </td>
-                                                                                                                <td> 4 </td>
-                                                                                                                <td> INR 1,770.00 </td>
-                                                                                                                <td> INR 7,080.00 </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1 </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS (Client Site)</td>
-                                                                                                                <td> OS9003-3 </td>
-                                                                                                                <td> 4</td>
-                                                                                                                <td>INR 1,770.00 </td>
-                                                                                                                <td>INR7,080.00 </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                     <div class="col-xl-12 mmt mt-1">
-                                                                                        <div class="card custom-card overflow-hidden">
-                                                                                            <div class="card-header justify-content-between">
-                                                                                                <div class="card-title">
-                                                                                                    Sub Total
-                                                                                                </div>
-                                                                                                <h6>INR 1,80,065.43</h6>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </ng-template>
-                                                                        </li>
-                                                                        <li [ngbNavItem]="3"
-                                                                            class="nav-item m-1 me-3  p-1 pe-4">
-                                                                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="true"><i
-                                                                                    class="las la-history me-2"></i>Kitchen
-                                                                                Room</a>
-                                                                            <ng-template ngbNavContent>
-                                                                                <div class="p-0" id="pending"
-                                                                                    role="tabpanel">
-                                                                                    <div class="col-xl-12 mmt">
-                                                                                        <div class="card custom-card overflow-hidden">
-                                                                                            <div class="card-header justify-content-between">
-                                                                                                <div class="card-title">
-                                                                                                    Custom Works
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="card-body px-0 pt-2 pb-0">
-                                                                                                <div class="table-responsive">
-                                                                                                    <table class="table text-nowrap">
-                                                                                                        <thead>
-                                                                                                            <tr>
-                                                                                                                <th scope="col">
-                                                                                                                    S.No
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Image
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Item
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Description
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Quantity
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Unit
-                                                                                                                    Price
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Amount
-                                                                                                                </th>
-                                                                                                            </tr>
-                                                                                                        </thead>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-xl-12 mmt mt-1">
-                                                                                        <div class="card custom-card overflow-hidden">
-                                                                                            <div class="card-header justify-content-between">
-                                                                                                <div class="card-title">
-                                                                                    
-                                                                                                    Onsite Services
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="card-body px-0 pt-2 pb-0">
-                                                                                                <div class="table-responsive">
-                                                                                                    <table class="table text-nowrap">
-                                                                                                        <thead>
-                                                                                                            <tr>
-                                                                                                                <th scope="col">
-                                                                                                                    S.No
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Image
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Item
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Description
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Quantity
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Unit
-                                                                                                                    Price
-                                                                                                                </th>
-                                                                                                                <th scope="col">
-                                                                                                                    Amount
-                                                                                                                </th>
-                                                                                                            </tr>
-                                                                                                        </thead>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                            <tr>
-                                                                                                                <td>1
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    <div>
-                                                                                                                        <img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp">
-                                                                                                                    </div>
-                                                                                                                </td>
-                                                                                                                <td>LOUVERS
-                                                                                                                    (Client
-                                                                                                                    Site)
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    OS9003-3
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    4
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    1,770.00
-                                                                                                                </td>
-                                                                                                                <td>
-                                                                                                                    INR
-                                                                                                                    7,080.00
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </ng-template>
-                                                                        </li>
-                                                                        <li [ngbNavItem]="4" class="nav-item m-1  p-2">
-                                                                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="true"><i
-                                                                                    class="lar la-star me-2"></i>Dining Rooms</a>
-                                                                            <ng-template ngbNavContent>
-                                                                            </ng-template>
-                                                                        </li>
-                                                                    </ul>
+                                            <ul ngbNav #nav="ngbNav" class="nav nav-tabs bg-white">
+                                                <ng-container *ngFor="let key of tabKeys; let i = index">
+                                                    <li [ngbNavItem]="i + 1" class="nav-item m-1 me-3 p-1 pe-4">
+                                                        <a ngbNavLink class="nav-link">
+                                                            <i class="las la-history me-2"></i>{{ key }}
+                                                        </a>
+                                                        <ng-template ngbNavContent>
+                                                            <div class="card custom-card overflow-hidden">
+                                                                <div class="card-header">
+                                                                    <div class="card-title">{{ key }} Items</div>
+                                                                </div>
+                                                                <div class="card-body px-0 pb-0">
+                                                                    <div class="table-container">
+                                                                        <table class="table table-hover text-nowrap my-table">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>S.No</th>
+                                                                                    <th>Image</th>
+                                                                                    <th>Item Code</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Brand/Make</th>
+                                                                                    <th>Category</th>
+                                                                                    <th>Order Status</th>
+                                                                                    <th>Item Type</th>
+                                                                                    <th>Source</th>
+                                                                                    <th>Status</th>
+                                                                                    <th>Length</th>
+                                                                                    <th>Breadth</th>
+                                                                                    <th>Height</th>
+                                                                                    <th>Quantity</th>
+                                                                                    <th>UOM</th>
+                                                                                    <th>Draft Qty</th>
+                                                                                    <th>Client Rate</th>
+                                                                                    <th>Service Charge</th>
+                                                                                    <th>Base Amount</th>
+                                                                                    <th>Budget Rate</th>
+                                                                                    <th>HSN</th>
+                                                                                    <th>GST %</th>
+                                                                                    <th>Amt w/o GST</th>
+                                                                                    <th>Discount</th>
+                                                                                    <th>Final Amount</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr *ngFor="let row of boqDataSources[key]; let j = index">
+                                                                                    <td>{{ j + 1 }}</td>
+                                                                                    <td>
+                                                                                        <img [src]="row.elementUrl || '/assets/images/placeholder.png'" alt="Item"
+                                                                                            width="40" height="40" />
+                                                                                    </td>
+                                                                                    <td>{{ row.itemCode }}</td>
+                                                                                    <td>{{ row.elementNameAndDescription | slice: 0:15}}</td>
+                                                                                    <td>{{ row.brandOrMake }}</td>
+                                                                                    <td>{{ row.codeAndCategory }}</td>
+                                                                                    <td>{{ row.orderStatus }}</td>
+                                                                                    <td>{{ row.itemType }}</td>
+                                                                                    <td>{{ row.source }}</td>
+                                                                                    <td>{{ row.status }}</td>
+                                                                                    <td>{{ row.length }}</td>
+                                                                                    <td>{{ row.breadth }}</td>
+                                                                                    <td>{{ row.height }}</td>
+                                                                                    <td>{{ row.quantity }}</td>
+                                                                                    <td>{{ row.uom }}</td>
+                                                                                    <td>{{ row.draftQuantity }}</td>
+                                                                                    <td>{{ row.clientRate }}</td>
+                                                                                    <td>{{ row.serviceCharge }}</td>
+                                                                                    <td>{{ row.baseAmount }}</td>
+                                                                                    <td>{{ row.budgetRate }}</td>
+                                                                                    <td>{{ row.hsn }}</td>
+                                                                                    <td>{{ row.gstPrecent }}</td>
+                                                                                    <td>{{ row.amountWithoutGst }}</td>
+                                                                                    <td>{{ row.discount }}</td>
+                                                                                    <td>{{ row.finalAmount }}</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div [ngbNavOutlet]="nav" class="mt-2"></div>
-                                            </div>
+                                                        </ng-template>
+                                                    </li>
+                                                </ng-container>
+                                            </ul>
+                                            <div [ngbNavOutlet]="nav"></div>
                                         </div>
                                     </ng-template>
                                 </li>
@@ -1324,16 +304,12 @@
                 <div class="card-body pb-1">
                     <div class="d-flex gap-3  align-items-start">
                         <div>
-                            <p class="mb-2">
-                                Quote Includes
-                            </p>
-                            <p><strong>6 Rooms , 19 Products</strong> </p>
+                            <p class="mb-2">Quote Includes</p>
+                            <p><strong>{{ totalRooms }} Rooms , {{ totalProducts }} Products</strong></p>
                         </div>
-                        <div class=" ps-2 vertical-line"> 
-                            <p class="mb-2">
-                                Total Price
-                            </p>
-                            <p><strong>INR 11,24,528.53</strong> </p>
+                        <div class="ps-2 vertical-line">
+                            <p class="mb-2">Total Price</p>
+                            <p><strong>{{ totalPrice | currency:'INR' }}</strong></p>
                         </div>
                         <div  class="ps-2 vertical-line">
                              <p class="mb-2">
@@ -1347,7 +323,7 @@
         </div>
 
         <div class="tab-content task-tabs-container">
-            <hr style="border: none; border-top: 2px dashed #999; margin: 20px 0;">
+            <hr style="border: none; border-top: 2px dashed #999; margin: 5px 0;">
             <div [ngbNavOutlet]="nav" class=""></div>
         </div>
     </div>

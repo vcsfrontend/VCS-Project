@@ -41,8 +41,12 @@ export class QuotationComponent {
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort; 
-    tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
+    tabKeys: string[] = []; boqDataSources: { [key: string]: any[] } = {};
     selectedCategory: any; editIndex: number | null = null;  designId : any; 
+    totalRooms: number = 0;
+    totalProducts: number = 0;
+    totalPrice: number = 0;
+
     boqList: any;
     categories = [
         { id: 1, name: 'Acoustic', code: 'AT' },
@@ -378,38 +382,80 @@ export class QuotationComponent {
     }
 
     boqData() {
-        const payload = {
-            email: this.userEmail,
-            designId: "3FO3EWPJHYSK",
-            bomRequired: true,
-            wardrobeRequired: true,
-            kbRequired: true
-        };
-        this.switchService.fetchBoqData(payload).subscribe({
-            next: (res) => {
-                const boqData = res?.boqData || {};
-                this.tabKeys = Object.keys(boqData);
-                this.tabKeys.forEach((key) => {
-                    const items = boqData[key] || [];
-                    this.boqDataSources[key] = new MatTableDataSource(
-                        items.map((item: any, index: number) => ({
-                            slNo: index + 1,
-                            ...item
-                        }))
-                    );
-                });
-            },
-            error: () => {
-                this.toastr.error('Something went wrong!');
-            }
+  const payload = {
+    email: this.userEmail,
+    designId: "3FO3EWPJHYSK",
+    bomRequired: true,
+    wardrobeRequired: true,
+    kbRequired: true
+  };
+
+  this.switchService.fetchBoqData(payload).subscribe({
+    next: (res) => {
+      const boqData = res?.boqData || {};
+
+      // extract room names
+      this.tabKeys = Object.keys(boqData);
+
+      // reset once
+      this.boqDataSources = {};
+
+      // reset totals
+      this.totalRooms = this.tabKeys.length;
+      this.totalProducts = 0;
+      this.totalPrice = 0;
+
+      // build arrays per room + accumulate totals
+      this.tabKeys.forEach((key) => {
+        const items = boqData[key] || [];
+
+        this.boqDataSources[key] = items.map((item: any, index: number) => {
+          const amount = (item.clientRate || 0) * (item.quantity || 0);
+          return {
+            slNo: index + 1,
+            calculatedAmount: amount, // new field for UI
+            ...item
+          };
         });
+
+        this.totalProducts += items.length;
+        this.totalPrice += items.reduce(
+          (sum: number, item: any) =>
+            sum + ((item.clientRate || 0) * (item.quantity || 0)),
+          0
+        );
+      });
+
+      console.log("tabKeys:", this.tabKeys);
+      console.log("boqDataSources:", this.boqDataSources);
+      console.log("Total Rooms:", this.totalRooms);
+      console.log("Total Products:", this.totalProducts);
+      console.log("Total Price:", this.totalPrice);
+    },
+    error: () => {
+      this.toastr.error("Something went wrong!");
     }
-    setPaginatorAndSort(key: string) {
-        if (this.boqDataSources[key]) {
-        this.boqDataSources[key].paginator = this.paginator;
-        this.boqDataSources[key].sort = this.sort;
-        }
-    }
+  });
+}
+
+
+getRoomTotal(roomKey: string): number {
+  const items = this.boqDataSources[roomKey] || [];
+  return items.reduce((sum, item) => {
+    // Prefer finalAmount if > 0, else calculate from clientRate × quantity
+    const amount = (item.finalAmount && item.finalAmount > 0)
+      ? item.finalAmount
+      : (item.clientRate || 0) * (item.quantity || 0);
+    return sum + amount;
+  }, 0);
+}
+
+
+
+
+
+
+
     
 
 }
