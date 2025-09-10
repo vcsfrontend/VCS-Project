@@ -538,16 +538,16 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/dashboard/quotation',
     // },
-    {
-      title: 'Boq',
-      dirchange: false,
-      type: 'link',
-      icon: ' bi-file-earmark-text side-menu__icon',
-      linkType: 'internal',
-      active: false,
-      selected: false,
-      path: '/dashboard/boq',
-    },
+    // {
+    //   title: 'Boq',
+    //   dirchange: false,
+    //   type: 'link',
+    //   icon: ' bi-file-earmark-text side-menu__icon',
+    //   linkType: 'internal',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/boq',
+    // },
     
     // {
     //   title: 'proposal',

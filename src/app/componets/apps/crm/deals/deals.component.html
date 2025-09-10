@@ -416,14 +416,14 @@
                         <td mat-cell *matCellDef="let element">
                     
                             <!-- Show "Close Lead" if not closed -->
-                            <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm w-100"
+                            <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm"
                                 (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal" data-bs-target="#completionModal">
-                                Close Lead
+                                CL
                             </button>
                     
                             <!-- Show "Closed" if status is Completed -->
-                            <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm w-100" disabled>
-                                Closed
+                            <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm " disabled>
+                                CL
                             </button>
                         </td>
                     </ng-container>
