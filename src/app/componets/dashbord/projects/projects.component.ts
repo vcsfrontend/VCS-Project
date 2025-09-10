@@ -89,7 +89,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
   projectConfigList: string[] = []; quotationHistoryList: any[] = [];
   quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
-  projectMarginList:any; isLoading = false;
+  projectMarginList:any; isLoading = false;projectShare !: FormGroup;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -162,6 +162,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
   openLg5(content16: any) {
     this.modalService.open(content16, { size: 'xl', centered: true },);
+  }
+  openLg6(content17: any) {
+    this.modalService.open(content17, { size: 'md', centered: true },);
   }
 
   openRights(content: any) {

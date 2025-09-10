@@ -239,7 +239,7 @@
                                             Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                         </button>
                                     </li>
-                                    <li class="m-2">
+                                    <li class="m-2" class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
                                         <button class="btn btn-danger label-btn label-end w-100" (click)="deleteSingleLead(element.leadId)">
                                             Delete<i class="ri-delete-bin-line label-btn-icon"></i>
                                         </button>

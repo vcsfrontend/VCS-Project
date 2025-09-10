@@ -985,6 +985,7 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         // this.getFormTemplate();
+        this.getAllEmailTemplates();
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
