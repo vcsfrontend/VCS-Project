@@ -290,7 +290,7 @@
         <li [ngbNavItem]="2" class="nav-item me-0" role="presentation">
             <button ngbNavLink class="nav-link about py-1" id="profile-tab" data-bs-toggle="tab"
                 data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
-                aria-selected="false" (click)="getLst()">Design</button>
+                aria-selected="false" (click)="getAssignProjects()">Design</button>
             <ng-template ngbNavContent>
                 <div class="col-xl-12 mt-2">
                     <div class="card custom-card">
@@ -298,20 +298,12 @@
                             <div class="card-title">
                                 My Projects
                             </div>
-                            <div class="d-flex flex-wrap gap-3">
+                            <!-- <div class="d-flex flex-wrap gap-3">
                                 <mat-form-field class="filter-field">
                                     <mat-label>Fliter</mat-label>
                                     <input matInput (keyup)="applyDesignerFilter($event)" #input>
                                 </mat-form-field>
-                                <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                                    aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
-                                    New Design
-                                </button>
-                                <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                                    aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
-                                    All Projects
-                                </button>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="card-body p-0">
                             <div class="table-container mat-elevation-z8">
@@ -323,8 +315,10 @@
                                     <ng-container matColumnDef="projectId">
                                         <th mat-header-cell *matHeaderCellDef> Project Id </th>
                                         <td mat-cell *matCellDef="let element">
-                                            {{element.projectId |
-                                            slice:0:7}} </td>
+                                            <a href="javascript:void(0);" (click)="openProjectModal(content45,element.projectId)">{{element.projectId |
+                                                slice:0:7}}
+                                            </a>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="projectName">
                                         <th mat-header-cell *matHeaderCellDef>Project Name</th>
@@ -359,9 +353,15 @@
                                         <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
                                             ({{calculateDateDifference(element.projectEndDate)}}) </td>
                                     </ng-container>
-                                    <ng-container matColumnDef="Quotation">
-                                        <th mat-header-cell *matHeaderCellDef>Quotation</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Quotation '}}</td>
+                                    <ng-container matColumnDef="designUrl">
+                                        <th mat-header-cell *matHeaderCellDef>Design</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button class="btn btn-primary btn-sm"
+                                                *ngIf="(element.assignedDesigner === userEmail || userRole === 'ADMIN') && element.designUrl"
+                                                (click)="openDesignLink(element.designUrl)">
+                                                Open Design
+                                            </button>
+                                        </td>
                                     </ng-container>
                                     <tr mat-header-row *matHeaderRowDef="designerColumns"
                                         style="height:47px; vertical-align:middle;"></tr>
@@ -2338,6 +2338,51 @@
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Submit</button>
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+
+<ng-template #content45 let-modal>
+    <form [formGroup]="updateProjectForm" (ngSubmit)="updateProjectSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title">Update Project</h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3">
+                <div class="col-lg-6">
+                    <label class="form-label">Design ID</label>
+                    <input type="text" class="form-control" formControlName="designId">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Project Stage</label>
+                    <input type="text" class="form-control" formControlName="projectStage">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Project Area</label>
+                    <input type="text" class="form-control" formControlName="projectArea">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Design URL</label>
+                    <input type="text" class="form-control" formControlName="designUrl">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Assigned Designer</label>
+                    <ng-select [items]="userList" bindLabel="email" bindValue="email"formControlName="assignedDesigner" placeholder="Select a user">
+                    </ng-select>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <label class="form-label">Update Project Status</label>
+                    <ng-select formControlName="designCompletionStatus" [items]="designStatus" bindLabel="name"
+                        bindValue="name">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
+            </div>
         </div>
     </form>
 </ng-template>

@@ -644,5 +644,10 @@ export class BaseComponent {
     { "name": "Layout and Sketches" },
   ];
 
+  designStatus = [
+    { "name": "Complete" },
+  ];
+
+
 
 }

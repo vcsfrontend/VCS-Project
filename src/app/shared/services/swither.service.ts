@@ -206,6 +206,8 @@ export class SwitherService {
   fetchClientOrder(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_client_order_data`, data); }
   fetchClientOrderContent(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_client_order_content`, data); }
   fetchRecceData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_recce_data`, data); }
+  fetchAssgnAdonaiDesign(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/get_proj_design`, data); }
+  updateAssgnAdonaiDesign(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/update_project_details`, data); }
   createRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {
