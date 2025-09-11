@@ -154,6 +154,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   openLg3(content14: any, element: any) {
     this.selectedRow = element;
+  
     this.modalService.open(content14, { centered: true },);
   }
 
@@ -1764,8 +1765,14 @@ downloadButtons: { label: string; url: string }[] = [];
     this.switchService.quotationXl(payload).subscribe({
     next: (res) => {
       if (res) {
+        const allNull = Object.values(res).every(value => value === null);
+        if (allNull) {
+          this.toastr.warning('Quotation is not available for this moment.');
+          this.isLoading = false;
+        }
+        else{
           this.toastr.success('Quotation Generated successfully!');
-        this.quotationForm.reset();
+        // this.quotationForm.reset();
         this.isLoading = false;
          this.fileUrl = res.url;
 
@@ -1796,7 +1803,7 @@ downloadButtons: { label: string; url: string }[] = [];
 
         // Save main quotation file URL (if needed elsewhere)
        
-      
+      }
     },
     error: (err) => {
       this.toastr.error(err.statusText || 'Something went wrong');

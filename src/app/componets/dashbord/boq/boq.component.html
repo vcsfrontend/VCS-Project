@@ -104,7 +104,7 @@
                                             <ng-container ngbNavItem="About">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>External Environment
+                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>External
                                                 </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('External Environment')">
@@ -117,13 +117,11 @@
                                                                 <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
+                                                        <p class="card-text d-flex align-items-center mt-1"  *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                        <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
                                                        
                                                     </div>
-                                                    <div class="file-upload float-end">
-                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
-                                                            accept="*/*" hidden>
-                                                        <label for="file-input" class="text-danger">Upload File</label>
-                                                    </div>
+                                                    
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -134,7 +132,7 @@
                                             <ng-container ngbNavItem="Services">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="true"><i
-                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Internal Environment </a>
+                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Internal </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Internal Environment')">
                                                         <div class="card-title">
@@ -192,7 +190,7 @@
                                             <ng-container ngbNavItem="gallery">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Signage and Facade</a>
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Signage & Facade</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Signage and Facade')">
                                                         <div class="card-title">
@@ -221,7 +219,7 @@
                                             <ng-container ngbNavItem="Layout and Sketches">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Layout and Sketches</a>
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Layout & Sketches</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Layout and Sketches')">
                                                         <div class="card-title">
