@@ -23,7 +23,7 @@
                         Bulk Upload 
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);">Add New</button>
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);" *ngIf="adoanAiRole == 'ADMIN'|| userType ==1">Add New</button>
                 </div>
             </div>
         </div>
@@ -610,7 +610,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Lead</button>
+            <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Save Lead</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
@@ -651,7 +651,7 @@
                             placeholder="Select an Source" [multiple]="true">
                         </ng-select>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-xl-6" *ngIf="adoanAiRole == 'ADMIN'">
                         <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
                             placeholder="Select an Executive" [multiple]="true">
                         </ng-select>
@@ -1195,7 +1195,7 @@
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
                 <div class="d-flex justify-content-end gap-3">
-                    <button class="btn btn-primary mr-3 w-50" type="submit" [disabled]="isStatusUnchanged">Update Status</button>
+                    <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
                     <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
                         type="submit">Cancel</button>
                 </div>
@@ -1642,6 +1642,17 @@
                 <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback">
                     <span *ngIf="j['endDate'].errors['required']">
                         endDate  is required.
+                    </span>
+                </div>
+            </div>
+
+            <div class="col-xl-6 col-lg-6 col-md-6">
+                <label for="address" class="form-label">project Estimation</label>
+                <input type="text" class="form-control" id="address" placeholder="Enter Address" formControlName="projectEstimation"
+                [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['projectEstimation'].errors }">
+                <div *ngIf="leadCompletionsubmitted && j['projectEstimation'].errors" class="invalid-feedback">
+                    <span *ngIf="j['projectEstimation'].errors['required']">
+                        projectEstimation  is required.
                     </span>
                 </div>
             </div>

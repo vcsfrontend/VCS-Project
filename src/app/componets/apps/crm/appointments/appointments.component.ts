@@ -31,6 +31,8 @@ export class AppointmentsComponent extends BaseComponent {
   userEmail: string = this.userData ? this.userData.email : '';
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  adoanAiRole : string = this.userData ? this.userData.adoanAiRole : '';
+
   userType: any = this.userData ? this.userData.type : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   displayedColumns: string[] = [ 'slNo','Appointment','Date','Description','Duration','Current','assigned'];
@@ -41,7 +43,7 @@ export class AppointmentsComponent extends BaseComponent {
   appointmentsList : any;appointments: any[] = [];
   monthlyAppointments: any[] = []; 
   editMode = false; saving = false;                 
-  selectedAppointment: any = null;
+  selectedAppointment: any = null;crmRole : any;
   appointmentDates: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('appointment1') appointment1!: TemplateRef<any>;
@@ -55,7 +57,11 @@ export class AppointmentsComponent extends BaseComponent {
   };
   constructor(private modalService: NgbModal,private fb: FormBuilder,
      public switchService: SwitherService, private toastr: ToastrService,) {
+      
       super()
+      this.userData = localStorage.getItem('userDetails');
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+
   }
   ngOnInit() {
     this.getUsers();
@@ -309,6 +315,7 @@ private getDefaultColor(str: string): string {
   getAppointment() {
   const startOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
   const endOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+  const isAdmin = this.adoanAiRole === 'ADMIN' || this.crmRole === 'ADMIN';
 
   const payload = {
     // ...this.appointmentForm.value,
@@ -317,6 +324,7 @@ private getDefaultColor(str: string): string {
     companyCode: this.userCompanyCode,
     email: this.userEmail,
     type: this.userType,
+    currentUser : isAdmin ? 'from_admin' : this.userEmail
   };
 
   this.switchService.fetchAppointment(payload).subscribe({

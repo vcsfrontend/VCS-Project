@@ -32,7 +32,7 @@ export class TasksComponent {
   adoanAiRole: any;
   inprogressTasks: any[] = [];
   verifyTasks: any[] = [];
-  completedTasks: any[] = [];
+  completedTasks: any[] = [];userList:any[]=[];
   constructor(
     private modalService: NgbModal, public switchService: SwitherService,
     private toastr: ToastrService, private fb: FormBuilder,
@@ -48,7 +48,7 @@ export class TasksComponent {
   };
   ngOnInit(): void {
     this.fetchTasks();
-
+    this.getUsers();
     this.taskForm = this.fb.group({
       deadline: ['',],
       taskName: ['',],
@@ -327,7 +327,29 @@ export class TasksComponent {
     });
   }
 
-
+getUsers() {
+    if (JSON.parse(this.userData).type == 2) {
+      // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
+      let cn = JSON.parse(this.userData).companyName;
+      let cc = JSON.parse(this.userData).companyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.userList = res;
+             
+          } else {
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        error: (error) => {
+          // this.toastr.error(error.statusText);
+        },
+      })
+    }
+  }
 
 
 
