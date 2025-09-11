@@ -47,6 +47,25 @@
                                 <p class="mb-0 fs-11 op-5">Overdue</p>
                             </div>
                         </div>
+                        <div class="d-sm-flex justify-content-center mb-0" *ngIf="taskStats">
+                            <div class="me-sm-3 mb-2 border p-3 border-dashed rounded stat-box">
+                                <p class="fw-bold fs-20 text-shadow mb-0 text-center">{{taskStats.total}}</p>
+                                <p class="mb-0 fs-11 op-5">AllTasks</p>
+                            </div>
+                            <div class="me-sm-3 mb-2 border p-3 border-dashed rounded stat-box">
+                                <p class="fw-bold fs-20 text-shadow mb-0 text-center">{{taskStats.inprogress}}</p>
+                                <p class="mb-0 fs-11 op-5">InProgress</p>
+                            </div>
+                            <div class="me-sm-3 mb-2 border p-3 border-dashed rounded stat-box">
+                                <p class="fw-bold fs-20 text-shadow mb-0 text-center">{{taskStats.verify}}</p>
+                                <p class="mb-0 fs-11 op-5">AttoVerify</p>
+                            </div>
+                            <div class="me-0 me-sm-3 mb-2 border p-3 border-dashed rounded stat-box">
+                                <p class="fw-bold fs-20 text-shadow mb-0 text-center">{{taskStats.completed}}</p>
+                                <p class="mb-0 fs-11 op-5">Completed</p>
+                            </div>
+                        </div>
+
                         <div class="pt-2">
                             <div class="text-muted">
                                 <p class="mb-4">
@@ -91,7 +110,7 @@
     </div>
     <div class="col-xl-8">
         <div class="card custom-card">
-            <div class="card-body p-0">
+            <div class="card-body p-0" style="min-height: 469px; max-height: 600px; overflow-y: auto;">
                 <div
                     class="p-3 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
                     <div>
@@ -278,6 +297,11 @@
                             placement="top" ngbTooltip="Adonai: {{ contact.adonai }} Crm: {{ contact.crm }}">
                             View Tools
                         </button>
+                         <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button"
+                            (click)="openRight(content2);ViewUserDetails(contact)" data-bs-target="#offcanvasRight"
+                            aria-controls="offcanvasRight">
+                            <i class="fe fe-eye text-muted"></i>
+                        </button>
                         <!-- <button aria-label="button" class="btn btn-sm btn-primary border" type="button" >
                             {{contact.adoanAiRole}}
                         </button> -->
@@ -306,6 +330,33 @@
         <div class="d-flex align-items-center">
             <div class="flex-fill">
                 <div ngbAccordion class=" customized-accordion accordions-items-seperate accordion-wrapper" id="customizedAccordion" >
+                     <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                        <h2 ngbAccordionHeader id="customizedAccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
+                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                                <strong>Admin</strong>
+                            </button>
+                        </h2>
+                        <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
+                            data-bs-parent="#customizedAccordion">
+                            <div ngbAccordionBody>
+                        
+                                <div class="p-3 border rounded">
+                                    <p><strong>Role:</strong>HR/Admin</p>
+                                    <p><strong>Description:</strong>
+                                       Handle HR & office admin tasks
+                                    </p>
+                                    <p><strong>Key Tasks:</strong>Hiring, payroll, attendance, admin support</p>
+                                     <p><strong>Targets</strong>Close all open positions in 45 days</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Hiring TAT, employee retention rate</p>
+                                    <p><strong>Bonus</strong>Bonus for 30 day hiring closure</p>
+                                    <p><strong>Penalty</strong>Penalty for compliance lapses</p>
+                                   
+                                </div>
+                        
+                            </div>
+                        </div>
+                    </div>
                     <div ngbAccordionItem  [collapsed]="true" class="custom-accordion-primary " *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
                             <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
@@ -658,39 +709,55 @@
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
-                        <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
-                                <strong>Admin</strong>
-                            </button>
-                        </h2>
-                        <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
-                            data-bs-parent="#customizedAccordion">
-                            <div ngbAccordionBody>
-                        
-                                <div class="p-3 border rounded">
-                                    <p><strong>Role:</strong>HR/Admin</p>
-                                    <p><strong>Description:</strong>
-                                       Handle HR & office admin tasks
-                                    </p>
-                                    <p><strong>Key Tasks:</strong>Hiring, payroll, attendance, admin support</p>
-                                     <p><strong>Targets</strong>Close all open positions in 45 days</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Hiring TAT, employee retention rate</p>
-                                    <p><strong>Bonus</strong>Bonus for 30 day hiring closure</p>
-                                    <p><strong>Penalty</strong>Penalty for compliance lapses</p>
-                                   
-                                </div>
-                        
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>
     </li>
 </ul>
+<ng-template #content2 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>User Info</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="card custom-card border">
+            <div class="card-body">
+                <div class="p-3 text-dark" id="pill-flex-home" role="tabpanel">
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><span class="fw-semibold me-1">Name : </span>{{
+                            userDetails.firstName?userDetails.firstName + ' ' +userDetails.lastName:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Email : </span>{{
+                            userDetails.email?userDetails.email:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">No.of Users : </span>{{
+                            userDetails.noOfUsers?userDetails.noOfUsers:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">City : </span>{{
+                            userDetails.city?userDetails.city:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Country : </span>{{
+                            userDetails.country?userDetails.country:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">DOB : </span>{{
+                            userDetails.dob?userDetails.dob:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Phone : </span>{{
+                            userDetails.phoneNumber?userDetails.phoneNumber:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Username : </span>{{
+                            userDetails.username?userDetails.username:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Company Name : </span>{{
+                            userDetails.companyName?userDetails.companyName:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Created Date : </span>{{
+                            userDetails.createdDate? (userDetails.createdDate | date:'dd-MM-yy'):'' }}</li>
 
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
+        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+</ng-template>
 
 
         

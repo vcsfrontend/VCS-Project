@@ -259,9 +259,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         hardwareList: [false],
       }),
       customizedOptions: this.fb.group({
-        bomRequired : [false],
-        kbRequired : [false],
-        wardrobeRequired :[false]
+        bomRequired : [true],
+        kbRequired : [true],
+        wardrobeRequired :[true]
       },),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
@@ -1764,12 +1764,10 @@ downloadButtons: { label: string; url: string }[] = [];
     this.switchService.quotationXl(payload).subscribe({
     next: (res) => {
       if (res) {
-        this.toastr.success('Quotation Generated successfully!');
+          this.toastr.success('Quotation Generated successfully!');
         this.quotationForm.reset();
         this.isLoading = false;
-
-        // Save main quotation file URL (if needed elsewhere)
-        this.fileUrl = res.url;
+         this.fileUrl = res.url;
 
         // Prepare download buttons based on valid URLs
         this.downloadButtons = [
@@ -1793,7 +1791,12 @@ downloadButtons: { label: string; url: string }[] = [];
         modal.close();
         this.onQuotationSubmitted = false;
         this.quotationForm.reset();
-      }
+        }
+        
+
+        // Save main quotation file URL (if needed elsewhere)
+       
+      
     },
     error: (err) => {
       this.toastr.error(err.statusText || 'Something went wrong');

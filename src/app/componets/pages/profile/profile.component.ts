@@ -1,6 +1,6 @@
 import { Component,TemplateRef, ViewChild } from '@angular/core';
 import { SharedModule } from '../../../shared/common/sharedmodule';
-import { NgbNavModule,NgbDropdownModule ,NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule,NgbDropdownModule ,NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { GalleryItem, Gallery, ImageItem, ImageSize, ThumbnailsPosition, GalleryModule } from 'ng-gallery';
 import { Lightbox, LightboxModule } from 'ng-gallery/lightbox';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
@@ -68,12 +68,17 @@ export class ProfileComponent {
   imageData = data; pjData : any;isCollapsed = true;
   items!: GalleryItem[];lastField: any;stageLst: any;
   userLst: any = []; searchUser: string = '';adoanAiRole: any;topshowMore = false;
-  adonaiAccess:any; crmAccess : any;
+  adonaiAccess:any; crmAccess : any;taskList: any[] | null = null;
+  inprogressTasks: any[] = [];
+  verifyTasks: any[] = [];
+  completedTasks: any[] = [];userList:any[]=[];
+  userDetails: any = {};taskStats : any;
   //  isCollapsed = true;
   isCollapsed1 = true;
   isCollapsed2 = true;
   constructor(public gallery: Gallery, public lightbox: Lightbox ,
-    public switchService: SwitherService,private toastr: ToastrService,) {
+    public switchService: SwitherService,private toastr: ToastrService,
+  private offcanvasService: NgbOffcanvas,) {
        this.userData = localStorage.getItem('userDetails');
       this.userType = JSON.parse(this.userData).type;
       this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
@@ -85,6 +90,7 @@ export class ProfileComponent {
     this.getUserInfo(this.userEmail);
     this.getAllStages();
     this.getUsers();
+    this.fetchTasks();
     this.items = this.imageData.map(
       (item) => new ImageItem({ src: item.srcUrl, thumb: item.previewUrl })
     );
@@ -237,5 +243,38 @@ export class ProfileComponent {
       }, 0);
     }
   }
+  openRight(content: any) {
+    this.offcanvasService.open(content, { position: 'end' });
+  }
 
+   ViewUserDetails(data: any) {
+    this.userDetails = data;
+  }
+  fetchTasks() {
+    const payload = {
+      currentUser: this.userEmail
+    };
+    this.switchService.fetchTasksCreatedBy(payload).subscribe({
+      next: (res) => {
+        this.taskList = [
+          ...(res.createdTaskList || []),
+          ...(res.assignedTaskList || [])
+        ];
+        const tasks = [...(res.createdTaskList || []), ...(res.assignedTaskList || [])];
+        this.inprogressTasks = tasks.filter((t: any) => t.currentStatus === 'Inprogress');
+        this.verifyTasks = tasks.filter((t: any) => t.currentStatus === 'At to Verify');
+        this.completedTasks = tasks.filter((t: any) => t.currentStatus === 'Completed');
+       this.taskStats = {
+        total: tasks.length,
+        inprogress: this.inprogressTasks.length,
+        verify: this.verifyTasks.length,
+        completed: this.completedTasks.length
+        };
+        console.log(this.taskStats);
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
 }

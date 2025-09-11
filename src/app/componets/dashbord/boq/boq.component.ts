@@ -54,7 +54,7 @@ export class BoqComponent extends BaseComponent {
     orderContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount"];
     userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
     designerColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-        'projectArea', 'projectStartDate', 'projectEndDate', 'designUrl'];
+        'projectArea', 'projectStartDate', 'projectEndDate', 'designUrl','projectCompletion'];
     invoiceForm!: FormGroup; extraContentProposal!: FormGroup
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -66,8 +66,10 @@ export class BoqComponent extends BaseComponent {
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
     selectedOrderContent: any = null; actstatus: any;
+    adoanAiRole : string = '';
     itemId: any; currentSection: any; proposals: any[] = []; clientOrders: any[] = [];
     dataSource = new MatTableDataSource<any>(); projectId: any; projectName!: any;
+    designingId:any;designCompletionStatus:string='';
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     proposalContentDetailsDataSource = new MatTableDataSource<any>([]);
@@ -94,7 +96,7 @@ export class BoqComponent extends BaseComponent {
     filteredProposals: any[] = []; filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
     orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
-    projectLst: any = []; boqproject: any;
+    projectLst: any = []; boqproject: any;showAllProposals = false;
 
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
@@ -111,6 +113,9 @@ export class BoqComponent extends BaseComponent {
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
         private fb: FormBuilder, private route: ActivatedRoute,) {
         super();
+        this.userData = localStorage.getItem('userDetails');
+        this.userType = JSON.parse(this.userData).type;
+        this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
     }
 
     open(content: any) {
@@ -135,13 +140,17 @@ export class BoqComponent extends BaseComponent {
             projectStage: project.projectStage || '',
             projectArea: project.projectArea || '',
             designUrl: project.designUrl || '',
-            assignedDesigner: project.assignedDesigner?.email || '',
+            assignedDesigner: project.assignedDesigner?.email || project.assignedDesigner || '',
             designCompletionStatus: project.designCompletionStatus || '',
             email: this.userEmail,
             companycode: this.userCompanyCode,
             updatedBy: this.userName,
             type: this.userType
         });
+        if (project.designCompletionStatus === 'Complete') {
+        this.updateProjectForm.disable(); 
+        } else{
+
         if (this.userRole === 'USER') {
             Object.keys(this.updateProjectForm.controls).forEach(control => {
                 if (control !== 'designCompletionStatus') {
@@ -154,6 +163,7 @@ export class BoqComponent extends BaseComponent {
             Object.keys(this.updateProjectForm.controls).forEach(control => {
                 this.updateProjectForm.controls[control].enable();
             });
+        }
         }
         this.modalService.open(content45, { backdrop: 'static' });
     }
@@ -194,6 +204,7 @@ export class BoqComponent extends BaseComponent {
 
     ngOnInit(): void {
         this.getUsers();
+        this.getAssignProjects();
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
@@ -424,10 +435,10 @@ export class BoqComponent extends BaseComponent {
         const ref = this.offcanvasService.open(content, { position: 'end', scroll: true });
         ref.closed.subscribe(() => this.resetForm());
         ref.dismissed.subscribe(() => this.resetForm());
-        if (this.isEditMode) {
-            this.elementForm.disable();
-            this.elementForm.get('quantity')?.enable();
-        }
+        // if (this.isEditMode) {
+        //     this.elementForm.disable();
+        //     this.elementForm.get('quantity')?.enable();
+        // }
 
     }
 
@@ -556,7 +567,8 @@ export class BoqComponent extends BaseComponent {
     boqData() {
         const payload = {
             email: this.userEmail,
-            designId: "3FO3EWPJHYSK",
+            // designId: "3FO3EWPJHYSK",
+            designId : this.designingId,
             bomRequired: true,
             wardrobeRequired: true,
             kbRequired: true
@@ -1464,6 +1476,8 @@ export class BoqComponent extends BaseComponent {
             next: (res: any) => {
                 if (res) {
                     let projects = Array.isArray(res) ? res : [res];
+                    this.designingId= res?.designId || '';
+                    this.designCompletionStatus = res.designCompletionStatus;
                     if (this.userRole === 'ADMIN') {
                         this.projectLst = projects;
                     } else if (this.userRole === 'USER') {
@@ -1563,8 +1577,9 @@ export class BoqComponent extends BaseComponent {
                         imageList: recce.imageUrls
                             ? recce.imageUrls.split(',').map((url: string) => url.trim())
                             : [],
-                        recceAssigneEmail: recce.recceAssigne
-                            ? recce.recceAssigne.split(',')[0].trim() : '',
+                        recceAssigneEmails: recce.recceAssigne
+                        ? recce.recceAssigne.split(',').map((v: string) => v.trim())
+                        : [],
                         recceStakeHoldersEmail: recce.recceStakeHolders
                             ? recce.recceStakeHolders.split(',')[0].trim() : '',
                         recceClientPocEmail: recce.recceClientPoc
@@ -1612,7 +1627,8 @@ export class BoqComponent extends BaseComponent {
 
     updateProjectSubmit(modal: any) {
         if (this.updateProjectForm.valid) {
-            const formValue = this.updateProjectForm.value;
+            const formValue = this.updateProjectForm.getRawValue();
+            // const formValue = this.updateProjectForm.value;
             const payload = {
                 ...formValue,
                 updatedBy: `${this.userName},${this.userEmail}`,
@@ -1639,9 +1655,6 @@ export class BoqComponent extends BaseComponent {
      getRecceByStage(stage: string) {
         return this.recceList.filter(r => r.recceStage === stage);
     }
-
-
-
-
+    
 
 }

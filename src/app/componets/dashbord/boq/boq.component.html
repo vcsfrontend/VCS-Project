@@ -88,7 +88,7 @@
                                                                 <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
-                                                        <p class="card-text d-flex align-items-center mt-1">Update:
+                                                        <p class="card-text d-flex align-items-center mt-1"  *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
                                                         <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
                                                      </p>
                                                        
@@ -333,6 +333,19 @@
                                                 *ngIf="(element.assignedDesigner === userEmail || userRole === 'ADMIN') && element.designUrl"
                                                 (click)="openDesignLink(element.designUrl)">
                                                 Open Design
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectCompletion">
+                                        <th mat-header-cell *matHeaderCellDef>projectCompletion</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button *ngIf="element.designCompletionStatus === 'Complete'" class="btn btn-success btn-sm">
+                                                Completed
+                                            </button>
+                                            
+                                            <!-- If Empty -->
+                                            <button *ngIf="!element.designCompletionStatus" class="btn btn-warning btn-sm">
+                                                Pending
                                             </button>
                                         </td>
                                     </ng-container>
@@ -1117,6 +1130,12 @@
                                                                     <td mat-cell *matCellDef="let element">{{
                                                                         element.orderAmount }}</td>
                                                                 </ng-container>
+                                                                <ng-container matColumnDef="invoprposaldataSourceiceType">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order Amount </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoprposaldataSourceiceType }}</td>
+                                                                </ng-container>
                                                                 <ng-container matColumnDef="invoiceDate">
                                                                     <th mat-header-cell *matHeaderCellDef
                                                                         mat-sort-header> Invoice Date </th>
@@ -1284,8 +1303,8 @@
                                                                             (click)="getProposal()" ngbDropdownToggle>
                                                                                 <i class="ri-edit-line me-2"></i>Edit Proposal
                                                                             </button>
-                                                                            <ul ngbDropdownMenu class="dropdown-menu cuu">
-                                                                                <li *ngFor="let proposal of proposals">
+                                                                            <ul ngbDropdownMenu class="dropdown-menu cuu"  [ngStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }">
+                                                                                <li *ngFor="let proposal of proposals | slice:0:5">
                                                                                     <a ngbDropdownItem class="dropdown-item d-flex justify-content-between align-items-center border"
                                                                                     (click)="openRights5(content6, proposal)">
                                                                                         <div>
@@ -1550,6 +1569,11 @@
                                                                             </td>
                                                                         </tr>
                                                                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                                                        <tr class="mat-row" *matNoDataRow>
+                                                                            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                                                                                No data found
+                                                                            </td>
+                                                                        </tr>
                                                                     </table>
                                                                 </div>
                                                                 <div class="d-flex justify-content-between align-items-center">
@@ -2353,7 +2377,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" [disabled]="updateProjectForm.invalid || updateProjectForm.disabled">Submit</button>
                 <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
             </div>
         </div>
