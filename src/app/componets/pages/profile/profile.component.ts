@@ -1,12 +1,14 @@
 import { Component,TemplateRef, ViewChild } from '@angular/core';
 import { SharedModule } from '../../../shared/common/sharedmodule';
-import { NgbNavModule,NgbDropdownModule ,NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule,NgbDropdownModule ,NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { GalleryItem, Gallery, ImageItem, ImageSize, ThumbnailsPosition, GalleryModule } from 'ng-gallery';
 import { Lightbox, LightboxModule } from 'ng-gallery/lightbox';
 import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule, DatePipe } from '@angular/common';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 const data = [
@@ -47,7 +49,7 @@ const data = [
   selector: 'app-profile',
   standalone: true,
   imports: [SharedModule,NgbNavModule,NgbDropdownModule,GalleryModule,LightboxModule, OverlayscrollbarsModule,
-    DatePipe,CommonModule
+    DatePipe,CommonModule,NgbAccordionModule,NgbTooltipModule
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -63,13 +65,32 @@ export class ProfileComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : '';
-  imageData = data; pjData : any;
+  imageData = data; pjData : any;isCollapsed = true;
   items!: GalleryItem[];lastField: any;stageLst: any;
+  userLst: any = []; searchUser: string = '';adoanAiRole: any;topshowMore = false;
+  adonaiAccess:any; crmAccess : any;taskList: any[] | null = null;
+  inprogressTasks: any[] = [];
+  verifyTasks: any[] = [];
+  completedTasks: any[] = [];userList:any[]=[];
+  userDetails: any = {};taskStats : any;
+  //  isCollapsed = true;
+  isCollapsed1 = true;
+  isCollapsed2 = true;
   constructor(public gallery: Gallery, public lightbox: Lightbox ,
-    public switchService: SwitherService,private toastr: ToastrService,) {}
+    public switchService: SwitherService,private toastr: ToastrService,
+  private offcanvasService: NgbOffcanvas,) {
+       this.userData = localStorage.getItem('userDetails');
+      this.userType = JSON.parse(this.userData).type;
+      this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+      this.adonaiAccess =  JSON.parse(this.userData).adonai;
+      this.crmAccess =  JSON.parse(this.userData).crm;
+
+    }
   ngOnInit():void {
     this.getUserInfo(this.userEmail);
     this.getAllStages();
+    this.getUsers();
+    this.fetchTasks();
     this.items = this.imageData.map(
       (item) => new ImageItem({ src: item.srcUrl, thumb: item.previewUrl })
     );
@@ -165,4 +186,95 @@ export class ProfileComponent {
     })
   }
   
+  filterUserData() {
+    if (this.userLst.length > 0) {
+      return this.userLst.filter((item: { firstName: string; lastName: string; email: string; }) =>
+        item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+        item.lastName.toLowerCase().includes(this.searchUser.toLowerCase()) ||
+        item.email.toLowerCase().includes(this.searchUser.toLowerCase())
+      );
+    }
+  }
+
+  getUsers() {
+    if (JSON.parse(this.userData).type == 2) {
+      // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
+      let cn = JSON.parse(this.userData).companyName;
+      let cc = JSON.parse(this.userData).companyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.userLst = res;
+            // this.dataSource = new MatTableDataSource<any>(res);
+            // this.dataSource.data = res;
+          } else {
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      })
+    }
+  }
+   getUserColor(contact: any): string {
+    const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
+    if (contact && contact.email) {
+      const index = contact.email.charCodeAt(0) % colors.length;
+      return colors[index];
+    }
+    return 'bg-secondary';
+  }
+
+  toggleTopShowMore() {
+    this.topshowMore = !this.topshowMore;
+    if (this.topshowMore) {
+      setTimeout(() => {
+        const scrollContainer = document.querySelector('.scrollable-container');
+        if (scrollContainer) {
+          scrollContainer.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      }, 0);
+    }
+  }
+  openRight(content: any) {
+    this.offcanvasService.open(content, { position: 'end' });
+  }
+
+   ViewUserDetails(data: any) {
+    this.userDetails = data;
+  }
+  fetchTasks() {
+    const payload = {
+      currentUser: this.userEmail
+    };
+    this.switchService.fetchTasksCreatedBy(payload).subscribe({
+      next: (res) => {
+        this.taskList = [
+          ...(res.createdTaskList || []),
+          ...(res.assignedTaskList || [])
+        ];
+        const tasks = [...(res.createdTaskList || []), ...(res.assignedTaskList || [])];
+        this.inprogressTasks = tasks.filter((t: any) => t.currentStatus === 'Inprogress');
+        this.verifyTasks = tasks.filter((t: any) => t.currentStatus === 'At to Verify');
+        this.completedTasks = tasks.filter((t: any) => t.currentStatus === 'Completed');
+       this.taskStats = {
+        total: tasks.length,
+        inprogress: this.inprogressTasks.length,
+        verify: this.verifyTasks.length,
+        completed: this.completedTasks.length
+        };
+        console.log(this.taskStats);
+      },
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
+    });
+  }
 }

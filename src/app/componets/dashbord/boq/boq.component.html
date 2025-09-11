@@ -69,212 +69,187 @@
                                     </div>
                                 </div>
                                 <div class="row ">
-                                    <div class="col-xl-3">
+                                    <div class="col-lg-2">
                                         <nav ngbNav #nav6="ngbNav" [activeId]="active6" orientation="vertical"
                                             class="nav nav-tabs flex-column nav-style-5" role="tablist">
                                             <ng-container ngbNavItem="Home">
                                                 <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="false"><i
                                                         class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Recce Details
                                                 </a>
+                                                
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="modal-body px-3" *ngFor="let recce of filteredRecce">
-                                                        <div class="col-md-12">
-                                                            <div class="tab-content">
-                                                                <div class="row">
-                                                                    <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
-                                                                        <div class="card custom-card">
-                                                                            <img [src]="img" class="card-img-top fixed-img" alt="Recce Image">
-                                                                            <div class="card-body">
-                                                                                <h6 class="card-title fw-medium">Recce Name: {{ recce.recceName }}</h6>
-                                                                                <p class="card-text">Description: {{ recce.description }}</p>
-                                                                            </div>
-                                                                            <div class="card-body border-top">
-                                                                                <p class="card-text d-flex align-items-center mt-1">Due Date:
-                                                                                    <span class="badge bg-danger ms-2">{{ recce.recceDueDate }}</span>
-                                                                                </p>
-                                                                                <p class="card-text d-flex align-items-center mt-1">Assign To : {{recce.recceAssigneEmail}}
-                                                                                    <span
-                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
-                                                                                            justify-content-center bg-primaryms-2" [ngClass]="getAgentColor(recce.recceAssigneEmail)">
-                                                                                        {{ recce.recceAssigneEmail?.trim().charAt(0) | uppercase }}
-                                                                                    </span>
-                                                                                </p>
-                                                                                <p class="card-text d-flex align-items-center mt-1">Stakeholders : {{
-                                                                                    recce.recceStakeHoldersEmail}}
-                                                                                    <span
-                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
-                                                                                          justify-content-center bg-primaryms-2"
-                                                                                        [ngClass]="getAgentColor(recce.recceStakeHoldersEmail)">
-                                                                                        {{ recce.recceStakeHoldersEmail?.trim().charAt(0) | uppercase }}
-                                                                                    </span>
-                                                                                </p>
-                                                                                <p class="card-text d-flex align-items-center mt-1">ClientPoc : {{recce.recceClientPocEmail}}
-                                                                                    <span
-                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
-                                                                                            justify-content-center bg-primaryms-2" [ngClass]="getAgentColor(recce.recceClientPocEmail)">
-                                                                                        {{ recce.recceClientPocEmail?.trim().charAt(0) | uppercase }}
-                                                                                    </span>
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Recce Details')">
+                                                        <div class="card-title">
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
                                                                 </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
+                                                        <p class="card-text d-flex align-items-center mt-1"  *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                        <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
+                                                     </p>
+                                                       
                                                     </div>
+                                                     
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="About">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>Interior
+                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>External
                                                 </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('External Environment')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Interior</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                            <ul ngbDropdownMenu class="dropdown-menu">
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        (click)="openModal1(recceContent1)" data-bs-toggle="modal123"
-                                                                        data-bs-target="#addProject123"
-                                                                        href="javascript:void(0);">Add input field</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Add Space</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Add Image and Videos</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Dropdown fields</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">single attachment field</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Date field</a></li>
-                                                            </ul>
-                                                        </div>
+                                                        <p class="card-text d-flex align-items-center mt-1"  *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                        <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
+                                                       
                                                     </div>
-                                                    <h5 class="pt-3"><b>Interior :</b></h5>
-                                                    <div class="file-upload float-end">
-                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
-                                                            accept="*/*" hidden>
-                                                        <label for="file-input" class="text-danger">Upload File</label>
-                                                    </div>
-                                                    <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
+                                                    
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
-                                                    </div>
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="Services">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="true"><i
-                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Site Images </a>
+                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Internal </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Internal Environment')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Site images</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                        </div>
+                                                       <p class="card-text d-flex align-items-center mt-1"  *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                        <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
                                                     </div>
-                                                    <h5 class="pt-3"><b>Site Images :</b></h5>
                                                     <div class="file-upload float-end">
                                                         <input type="file" id="file-input" (change)="onFileSelected($event)"
                                                             accept="*/*" hidden>
                                                         <label for="file-input" class="text-danger">Upload File</label>
                                                     </div>
-            
-                                                    <div class=" show  text-muted mt-2" id="services-vertical-link" role="tabpanel">
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
-                                                    </div>
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="Contacts">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Remarks</a>
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Capture Spaces</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Capture Spaces')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Remarks</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                        </div>
+                                                       
                                                     </div>
-                                                    <h5 class="pt-3"><b>Remarks</b></h5>
                                                     <div class="file-upload float-end">
                                                         <input type="file" id="file-input" (change)="onFileSelected($event)"
                                                             accept="*/*" hidden>
                                                         <label for="file-input" class="text-danger">Upload File</label>
                                                     </div>
-                                                    <div class=" text-muted mt-2" id="contacts-vertical-link" role="tabpanel">
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
-                                                    </div>
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="gallery">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Site
-                                                    Dimentions</a>
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Signage & Facade</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Signage and Facade')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Site Dimentions</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                        </div>
+                                                       
                                                     </div>
-                                                    <h5 class="pt-3"><b>Site Dimentions</b></h5>
                                                     <div class="file-upload float-end">
                                                         <input type="file" id="file-input" (change)="onFileSelected($event)"
                                                             accept="*/*" hidden>
                                                         <label for="file-input" class="text-danger">Upload File</label>
                                                     </div>
-                                                    <div class=" text-muted mt-2" id="contacts-vertical-link" role="tabpanel">
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div> -->
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container ngbNavItem="Layout and Sketches">
+                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="false"><i
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Layout & Sketches</a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Layout and Sketches')">
+                                                        <div class="card-title">
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
+                                                        </div>
+                                                       
                                                     </div>
+                                                    <div class="file-upload float-end">
+                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
+                                                            accept="*/*" hidden>
+                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                    </div>
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             
                                         </nav>
                                     </div>
-                                    <div class="col-xl-9 bg-light border rounded">
+                                    <div class="col-xl-10 bg-light border rounded">
                                         <div [ngbNavOutlet]="nav6" class=""></div>
                                     </div>
                                 </div>
@@ -287,7 +262,7 @@
         <li [ngbNavItem]="2" class="nav-item me-0" role="presentation">
             <button ngbNavLink class="nav-link about py-1" id="profile-tab" data-bs-toggle="tab"
                 data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
-                aria-selected="false" (click)="getLst()">Design</button>
+                aria-selected="false" (click)="getAssignProjects()">Design</button>
             <ng-template ngbNavContent>
                 <div class="col-xl-12 mt-2">
                     <div class="card custom-card">
@@ -295,20 +270,12 @@
                             <div class="card-title">
                                 My Projects
                             </div>
-                            <div class="d-flex flex-wrap gap-3">
+                            <!-- <div class="d-flex flex-wrap gap-3">
                                 <mat-form-field class="filter-field">
                                     <mat-label>Fliter</mat-label>
                                     <input matInput (keyup)="applyDesignerFilter($event)" #input>
                                 </mat-form-field>
-                                <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                                    aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
-                                    New Design
-                                </button>
-                                <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
-                                    aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
-                                    All Projects
-                                </button>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="card-body p-0">
                             <div class="table-container mat-elevation-z8">
@@ -320,8 +287,10 @@
                                     <ng-container matColumnDef="projectId">
                                         <th mat-header-cell *matHeaderCellDef> Project Id </th>
                                         <td mat-cell *matCellDef="let element">
-                                            {{element.projectId |
-                                            slice:0:7}} </td>
+                                            <a href="javascript:void(0);" (click)="openProjectModal(content45,element.projectId)">{{element.projectId |
+                                                slice:0:7}}
+                                            </a>
+                                        </td>
                                     </ng-container>
                                     <ng-container matColumnDef="projectName">
                                         <th mat-header-cell *matHeaderCellDef>Project Name</th>
@@ -356,9 +325,28 @@
                                         <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
                                             ({{calculateDateDifference(element.projectEndDate)}}) </td>
                                     </ng-container>
-                                    <ng-container matColumnDef="Quotation">
-                                        <th mat-header-cell *matHeaderCellDef>Quotation</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.Quotation '}}</td>
+                                    <ng-container matColumnDef="designUrl">
+                                        <th mat-header-cell *matHeaderCellDef>Design</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button class="btn btn-primary btn-sm"
+                                                *ngIf="(element.assignedDesigner === userEmail || userRole === 'ADMIN') && element.designUrl"
+                                                (click)="openDesignLink(element.designUrl)">
+                                                Open Design
+                                            </button>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectCompletion">
+                                        <th mat-header-cell *matHeaderCellDef>projectCompletion</th>
+                                        <td mat-cell *matCellDef="let element">
+                                            <button *ngIf="element.designCompletionStatus === 'Complete'" class="btn btn-success btn-sm">
+                                                Completed
+                                            </button>
+                                            
+                                            <!-- If Empty -->
+                                            <button *ngIf="!element.designCompletionStatus" class="btn btn-warning btn-sm">
+                                                Pending
+                                            </button>
+                                        </td>
                                     </ng-container>
                                     <tr mat-header-row *matHeaderRowDef="designerColumns"
                                         style="height:47px; vertical-align:middle;"></tr>
@@ -1141,6 +1129,12 @@
                                                                     <td mat-cell *matCellDef="let element">{{
                                                                         element.orderAmount }}</td>
                                                                 </ng-container>
+                                                                <ng-container matColumnDef="invoprposaldataSourceiceType">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order Amount </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoprposaldataSourceiceType }}</td>
+                                                                </ng-container>
                                                                 <ng-container matColumnDef="invoiceDate">
                                                                     <th mat-header-cell *matHeaderCellDef
                                                                         mat-sort-header> Invoice Date </th>
@@ -1277,9 +1271,222 @@
                                 aria-selected="false">Payments From
                                 Client</a>
                             <ng-template class="tab-content bg-white" ngbNavContent>
-                                <div class=" text-muted" id="nav-offers" role="tabpanel">
-                                    Dummy
-                                </div>
+                                <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
+                                    class="nav nav-pills m-3 show active text-muted">
+                                    <li [ngbNavItem]="1">
+                                        <button ngbNavLink class="btn  btn-outline-primary">Invoices</button>
+                                        <ng-template ngbNavContent>
+                                            <div class="row">
+                                                <div class="col-xxl-12">
+                                                    <div class="row">
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="card custom-card overflow-hidden">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between align-items-start mb-2 border p-3">
+                                                                        <div>Invoice Uploaded(0)</div>
+                                                                        <div>0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="card custom-card overflow-hidden">
+                                                                <div class="card-body">
+                                                                    <div
+                                                                        class="d-flex justify-content-between align-items-start mb-2 border p-3">
+                                                                        <div>Invoice Approved(0)</div>
+                                                                        <div>0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-4 col-sm-6">
+                                                            <div class="card custom-card overflow-hidden">
+                                                                <div class="card-body">
+                                                                    <div class="d-flex justify-content-between align-items-start mb-2 border p-3">
+                                                                        <div>Pending Approval(0)</div>
+                                                                        <div>0</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xl-12 mt-2">
+                                                <div class="card custom-card">
+                                                    <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                        <h5 class="mb-0">Client Invoices</h5>
+                                                        <button type="button" class="btn btn-primary">Add New</button>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <div class="table-container mat-elevation-z8">
+                                                            <table mat-table [dataSource]="clientInvoicesDataSource"
+                                                                matSort class="mat-table w-100">
+                                                                <ng-container matColumnDef="slNo">
+                                                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                                                    <td mat-cell *matCellDef="let element; let i = index">{{ i +
+                                                                        1 }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="invoiceNo">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Invoice No </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceNo }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="invoiceType">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Invoice Type </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceType }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="orderNo">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order No </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderNo }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="orderAmount">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order Amount </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderAmount }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="invoprposaldataSourceiceType">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order Amount </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoprposaldataSourceiceType }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="invoiceDate">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Invoice Date </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceDate | date }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="uploadedBy">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Uploaded By </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.uploadedBy }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="status">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.status }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="invoiceAmount">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Invoice Amount </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceAmount }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="creditNoteAmount">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Credit Note Amount
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.creditNoteAmount }}</td>
+                                                                </ng-container>
+                                                                <tr mat-header-row *matHeaderRowDef="displayedClientInvoices"></tr>
+                                                                <tr mat-row *matRowDef="let row; columns: displayedClientInvoices;">
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                                        <div class="text-start p-2">
+                                                            <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
+                                                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                                + Add New Invoice
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="2">
+                                        <button ngbNavLink class="btn btn-outline-secondary">Credit Note</button>
+                                        <ng-template ngbNavContent>
+                                            <div class="col-xl-12 mt-2">
+                                                <div class="card custom-card">
+                                                    <div
+                                                        class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                        <h5 class="mb-0">Credit Note</h5>
+                                                        <button type="button" class="btn btn-primary">Add New</button>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <div class="table-container mat-elevation-z8">
+                                                            <table mat-table [dataSource]="clientCreditDataSource"
+                                                                matSort class="mat-table w-100">
+                                                                <ng-container matColumnDef="slNo">
+                                                                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                                                                    <td mat-cell *matCellDef="let element; let i = index">{{ i +
+                                                                        1 }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="creditnoteNo">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> creditnoteNo </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceNo }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="refInvoiceNo">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> refInvoiceNo</th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceType }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="createdBy">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> createdBy </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderNo }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="orderAmount">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> orderAmount</th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.orderAmount }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="attachments">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> attachments </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceDate | date }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="verificationStatus">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> verificationStatus
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.uploadedBy }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="status">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.status }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="remark">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> remark </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.invoiceAmount }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="amount">
+                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> amount</th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.creditNoteAmount }}</td>
+                                                                </ng-container>
+                                                                <tr mat-header-row *matHeaderRowDef="displayedClientCredit"></tr>
+                                                                <tr mat-row *matRowDef="let row; columns: displayedClientCredit;">
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                                                        <div class="text-start p-2">
+                                                            <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
+                                                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                                + Add New Invoice
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </li>
+                                </ul>
+                                <div [ngbNavOutlet]="innerNav"></div>
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="5">
@@ -1308,8 +1515,8 @@
                                                                             (click)="getProposal()" ngbDropdownToggle>
                                                                                 <i class="ri-edit-line me-2"></i>Edit Proposal
                                                                             </button>
-                                                                            <ul ngbDropdownMenu class="dropdown-menu cuu">
-                                                                                <li *ngFor="let proposal of proposals">
+                                                                            <ul ngbDropdownMenu class="dropdown-menu cuu"  [ngStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }">
+                                                                                <li *ngFor="let proposal of proposals | slice:0:5">
                                                                                     <a ngbDropdownItem class="dropdown-item d-flex justify-content-between align-items-center border"
                                                                                     (click)="openRights5(content6, proposal)">
                                                                                         <div>
@@ -1574,6 +1781,11 @@
                                                                             </td>
                                                                         </tr>
                                                                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                                                        <tr class="mat-row" *matNoDataRow>
+                                                                            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                                                                                No data found
+                                                                            </td>
+                                                                        </tr>
                                                                     </table>
                                                                 </div>
                                                                 <div class="d-flex justify-content-between align-items-center">
@@ -1857,6 +2069,7 @@
         </div>
     </div>
 </ng-template>
+
 <ng-template #content12 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Invoice</strong></h5>
@@ -2300,19 +2513,85 @@
     <div class="col-xxl-12 col-xl-10 col-lg-6 col-md-6 col-sm-12 modal-body px-1 border-0 "  >
         <div class="card custom-card product-card">
             <div class="card-body p-0">
-                <a  class="product-image">
-                    <img  src="./assets/images/ecommerce/jpg/19.jpeg" class="card-img " alt="...">
+                <a class="product-image">
+                    <img src="./assets/images/ecommerce/jpg/19.jpeg" class="card-img " alt="...">
                 </a>
                 <div class="product-icons">
-                    <a   class="wishlist"><i class="bi bi-plus"></i></a>
-                    <a   class="cart"><i class="bi bi-download"></i></a>
-                    <a   class="view"><i class="bi bi-trash"></i></a>
+                    <a class="wishlist"><i class="bi bi-plus"></i></a>
+                    <a class="cart"><i class="bi bi-download"></i></a>
+                    <a class="view"><i class="bi bi-trash"></i></a>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  (click)="modal.close('Cross click')">Cancel</button>
-        
     </div>
+</ng-template>
+
+
+<ng-template #content44 let-modal>
+    <form [formGroup]="updateRecceForm" (ngSubmit)="updateRecce(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title">Update Recce</h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3">
+                <div class="col-lg-6">
+                    <label for="input-file" class="form-label">Upload Images</label>
+                    <input type="file" multiple (change)="onUpdateFilesChange($event)">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+
+<ng-template #content45 let-modal>
+    <form [formGroup]="updateProjectForm" (ngSubmit)="updateProjectSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title">Update Project</h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3">
+                <div class="col-lg-6">
+                    <label class="form-label">Design ID</label>
+                    <input type="text" class="form-control" formControlName="designId">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Project Stage</label>
+                    <input type="text" class="form-control" formControlName="projectStage">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Project Area</label>
+                    <input type="text" class="form-control" formControlName="projectArea">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Design URL</label>
+                    <input type="text" class="form-control" formControlName="designUrl">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Assigned Designer</label>
+                    <ng-select [items]="userList" bindLabel="email" bindValue="email"formControlName="assignedDesigner" placeholder="Select a user">
+                    </ng-select>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <label class="form-label">Update Project Status</label>
+                    <ng-select formControlName="designCompletionStatus" [items]="designStatus" bindLabel="name"
+                        bindValue="name">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" [disabled]="updateProjectForm.invalid || updateProjectForm.disabled">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
+            </div>
+        </div>
+    </form>
 </ng-template>
