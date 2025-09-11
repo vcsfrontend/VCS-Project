@@ -299,6 +299,7 @@ export class BoqComponent extends BaseComponent {
                 projectName: this.projectName
             });
         });
+        this.getRecceData();
         this.updateRecceForm = this.fb.group({
             files: this.fb.array([]),
             updatedBy: [''],
@@ -319,6 +320,7 @@ export class BoqComponent extends BaseComponent {
             assignedDesigner: [''],
             designCompletionStatus: ['']
         });
+        this.getAssignProjects();
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
