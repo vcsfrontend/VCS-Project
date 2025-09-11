@@ -224,6 +224,22 @@ export class SwitherService {
     });
     return this.http.post(`${this.adonaiURL}projo_boq/recce_creation`, formData);
   }
+   updateRecce(data: any): Observable<any> {
+    const formData = new FormData();
+    Object.keys(data).forEach(key => {
+      const value = data[key];
+      if (key === 'files' && Array.isArray(value)) {
+        value.forEach((file: any) => {
+          if (file instanceof File) {
+            formData.append('files', file, file.name); 
+          }
+        });
+      } else if (value !== null && value !== undefined) {
+        formData.append(key, value.toString());
+      }
+    });
+    return this.http.post(`${this.adonaiURL}projo_boq/update_recce`, formData);
+  }
 
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
