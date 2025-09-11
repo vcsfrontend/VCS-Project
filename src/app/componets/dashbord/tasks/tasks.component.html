@@ -533,7 +533,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div>
+                            <!-- <div>
                                 <div ngbDropdown class="dropdown no-caret">
                                     <button ngbDropdownToggle
                                         class="btn btn-icon btn-sm btn-light btn-wave waves-light waves-effect"
@@ -541,7 +541,7 @@
                                         <i class="ti ti-dots-vertical"></i>
                                     </button>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -581,7 +581,7 @@
                     </div>
                     <div class="col-xl-12">
                         <label class="form-label">Assigned to</label>
-                        <ng-select formControlName="assignedTo" [items]="agentUsers" bindLabel="email" bindValue="email"
+                        <ng-select formControlName="assignedTo" [items]="userList" bindLabel="email" bindValue="email"
                             placeholder="Select User" [disabled]="adoanAiRole !== 'ADMIN'">
                         </ng-select>
                     </div>
@@ -617,7 +617,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary">Update</button>
             </div>
         </div>
     </form>

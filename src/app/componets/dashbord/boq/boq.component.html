@@ -13,7 +13,7 @@
         <li [ngbNavItem]="1" class="nav-item me-0" role="presentation">
             <button ngbNavLink class="nav-link  home py-1" id="home-tab" data-bs-toggle="tab"
                 data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
-                aria-selected="true">Recce</button>
+                aria-selected="true" (click)="getRecceData()">Recce</button>
             <ng-template ngbNavContent>
                 <div class="row">
                     <div class="col-xl-12">
@@ -25,7 +25,7 @@
                                         Create Recce
                                     </button>
                                 </div>
-                                <div class="row col-lg-9 ">
+                                <!-- <div class="row col-lg-9 ">
                                     <div class="col-lg-2 mt-2">
                                         select template :
                                     </div>
@@ -35,12 +35,12 @@
                                             <option>default template</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div>
+                                </div> -->
+                                <!-- <div>
                                     status :not started
-                                </div>
+                                </div> -->
                                 <!-- add New Field -->
-                                <div ngbDropdown class="dropdown no-caret">
+                                <!-- <div ngbDropdown class="dropdown no-caret">
                                     <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-icon btn-sm btn-light"
                                         data-bs-toggle="dropdown">
                                         <i class="fe fe-more-vertical"></i>
@@ -58,7 +58,7 @@
                                                 field</a></li>
                                         <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Date field</a></li>
                                     </ul>
-                                </div>
+                                </div> -->
                                 <!-- end add New Field -->
                             </div>
                             <div class="card-body">
@@ -73,42 +73,55 @@
                                         <nav ngbNav #nav6="ngbNav" [activeId]="active6" orientation="vertical"
                                             class="nav nav-tabs flex-column nav-style-5" role="tablist">
                                             <ng-container ngbNavItem="Home">
-                                                <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                                    aria-selected="false"><i
-                                                        class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Exterior
+                                                <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="false"><i
+                                                        class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Recce Details
                                                 </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <!-- <h5><b>Exterior :</b></h5> -->
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
-                                                        <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Exterior</h6>
+                                                    <div class="modal-body px-3" *ngFor="let recce of filteredRecce">
+                                                        <div class="col-md-12">
+                                                            <div class="tab-content">
+                                                                <div class="row">
+                                                                    <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                        <div class="card custom-card">
+                                                                            <img [src]="img" class="card-img-top fixed-img" alt="Recce Image">
+                                                                            <div class="card-body">
+                                                                                <h6 class="card-title fw-medium">Recce Name: {{ recce.recceName }}</h6>
+                                                                                <p class="card-text">Description: {{ recce.description }}</p>
+                                                                            </div>
+                                                                            <div class="card-body border-top">
+                                                                                <p class="card-text d-flex align-items-center mt-1">Due Date:
+                                                                                    <span class="badge bg-danger ms-2">{{ recce.recceDueDate }}</span>
+                                                                                </p>
+                                                                                <p class="card-text d-flex align-items-center mt-1">Assign To : {{recce.recceAssigneEmail}}
+                                                                                    <span
+                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
+                                                                                            justify-content-center bg-primaryms-2" [ngClass]="getAgentColor(recce.recceAssigneEmail)">
+                                                                                        {{ recce.recceAssigneEmail?.trim().charAt(0) | uppercase }}
+                                                                                    </span>
+                                                                                </p>
+                                                                                <p class="card-text d-flex align-items-center mt-1">Stakeholders : {{
+                                                                                    recce.recceStakeHoldersEmail}}
+                                                                                    <span
+                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
+                                                                                          justify-content-center bg-primaryms-2"
+                                                                                        [ngClass]="getAgentColor(recce.recceStakeHoldersEmail)">
+                                                                                        {{ recce.recceStakeHoldersEmail?.trim().charAt(0) | uppercase }}
+                                                                                    </span>
+                                                                                </p>
+                                                                                <p class="card-text d-flex align-items-center mt-1">ClientPoc : {{recce.recceClientPocEmail}}
+                                                                                    <span
+                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
+                                                                                            justify-content-center bg-primaryms-2" [ngClass]="getAgentColor(recce.recceClientPocEmail)">
+                                                                                        {{ recce.recceClientPocEmail?.trim().charAt(0) | uppercase }}
+                                                                                    </span>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                        </div>
                                                     </div>
-                                                    <h5 class="pt-3"><b>Exterior :</b></h5>
-                                                    <div class="file-upload float-end">
-                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
-                                                            accept="*/*" hidden>
-                                                        <label for="file-input" class="text-danger">Upload File</label>
-                                                    </div>
-                                                    <!-- Image template  -->
-                                                    <div class=" text-muted" id="home-vertical-link" role="tabpanel">
-                                                        <img src="./assets/images/ecommerce/jpg/19.jpeg" class="img-thumbnail"
-                                                            alt="Responsive image" (click)="openModal(recceContent3)"
-                                                            data-bs-toggle="modal2" data-bs-target="#addimage">
-                                                        <img src="./assets/images/ecommerce/jpg/19.jpeg" class="img-thumbnail"
-                                                            alt="Responsive image" (click)="openModal2(recceContent2)" data-bs-toggle="modal1"
-                                                            data-bs-target="#addtask">
-                                                    </div>
-                                                    <!--end Image template -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="About">
@@ -258,130 +271,7 @@
                                                     </div>
                                                 </ng-template>
                                             </ng-container>
-                                            <ng-container ngbNavItem="gallery1">
-                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
-                                                    aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Site
-                                                    Visit</a>
-                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="modal-body px-3">
-                                                        <div class="col-md-12">
-                                                            <div class="card-header justify-content-between  border-bottom border-1">
-                                                                <div class="card-title">
-                                                                    <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                                                                                    Test1
-                                                                                                                        </button> -->
-                                                                    <h6 class="fs-16">Test1</h6>
-                                                                </div>
-                                                                <div ngbDropdown class="dropdown no-caret">
-                                                                    <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-icon btn-sm btn-light"
-                                                                        data-bs-toggle="dropdown">
-                                                                        <i class="fe fe-more-vertical"></i>
-                                                                    </a>
-                                                                    <ul ngbDropdownMenu class="dropdown-menu">
-                                                                        <li><a ngbDropdownItem class="dropdown-item" (click)="openModal1(recceContent1)" data-bs-toggle="modal123"
-                                                                                data-bs-target="#addProject123" href="javascript:void(0);">Add input field</a>
-                                                                        </li>
-                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Add Space</a></li>
-                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Add Image and
-                                                                                Videos</a></li>
-                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Dropdown fields</a>
-                                                                        </li>
-                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">single attachment
-                                                                                field</a></li>
-                                                                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Date field</a></li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div>
-                                                
-                                                            <div class="tab-content ">
-                                                                <div class="row pb-2 pt-3 ">
-                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 ">
-                                                                        <input type="text" placeholder="Main Header" class="form-control" id="input">
-                                                                    </div>
-                                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                                
-                                                                        <input type="text" placeholder="category" class="form-control" id="input-label">
-                                                                    </div>
-                                                
-                                                                </div>
-                                                
-                                                                <div class="card-header justify-content-between ">
-                                                                    <div class="card-title">
-                                                                        <button type="button" class="btn btn-sm btn-danger text-center me-2">
-                                                                            Recce 1
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="file-upload float-end">
-                                                                        <input type="file" id="file-input" (change)="onFileSelected($event)" accept="*/*" hidden>
-                                                                        <label for="file-input" class="text-danger">Upload
-                                                                            File</label>
-                                                                    </div>
-                                                                </div>
-                                                                <div [ngClass]="{ 'tab-pane fade show': activeTab === 'tab1', 'tab-pane fade': activeTab !== 'tab1' }">
-                                                                    <div class="col-xxl-4 col-xl-10 col-lg-6 col-md-6 col-sm-12 modal-body px-4">
-                                                                        <div class="card custom-card product-card mt-2">
-                                                                            <div>
-                                                                                <a class="product-image">
-                                                                                    <img src="./assets/images/ecommerce/jpg/19.jpeg" class="card-img "
-                                                                                        (click)="openModal(recceContent3)" data-bs-toggle="modal2"
-                                                                                        data-bs-target="#addimage" alt="...">
-                                                                                </a>
-                                                                                <div class="product-icons">
-                                                                                    <a class="wishlist"><i class="bi bi-plus"></i></a>
-                                                                                    <a class="cart"><i class="bi bi-download"></i></a>
-                                                                                    <a class="view"><i class="bi bi-trash"></i></a>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row g-3 align-items-center p-4">
-                                                                        <div class="col-xl-3">
-                                                                            <label for="inputPassword6" class="col-form-label">Discription</label>
-                                                                        </div>
-                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-                                                                            <label for="input-label" class="form-label">Height
-                                                                            </label>
-                                                                            <input type="text" class="form-control" id="input">
-                                                                        </div>
-                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-                                                                            <label for="input-label" class="form-label">Width</label>
-                                                                            <input type="text" class="form-control" id="input-label">
-                                                                        </div>
-                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-                                                                            <label for="input-label" class="form-label">Depth</label>
-                                                                            <input type="text" class="form-control" id="input-label">
-                                                                        </div>
-                                                
-                                                                    </div>
-                                                                    <button class="btn d-flex align-items-center justify-content-center">
-                                                                        <i class="ri-add-circle-line fs-16 align-middle me-1 mb-1"></i>Add
-                                                                        more fields
-                                                                    </button>
-                                                                    <div class="row g-3 align-items-center p-4">
-                                                                        <div class="col-xl-3">
-                                                                            <label for="inputPassword6" class="col-form-label">Discription</label>
-                                                                        </div>
-                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-                                                                            <label for="input-label" class="form-label">Height
-                                                                            </label>
-                                                                            <input type="text" class="form-control" id="input">
-                                                                        </div>
-                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-                                                                            <label for="input-label" class="form-label">Width</label>
-                                                                            <input type="text" class="form-control" id="input-label">
-                                                                        </div>
-                                                                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-                                                                            <label for="input-label" class="form-label">Depth</label>
-                                                                            <input type="text" class="form-control" id="input-label">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ng-template>
-                                            </ng-container>
+                                            
                                         </nav>
                                     </div>
                                     <div class="col-xl-9 bg-light border rounded">
@@ -524,10 +414,10 @@
                                                                 <td>{{ element.createdDate | date:'dd-MMM-yyyy hh:mm a' }}</td>
                                                                 <td>
                                                                     <span class="badge" [ngClass]="{
-                                                                                                        'bg-warning': element.status === 'Pending for Approval',
-                                                                                                        'bg-success': element.status === 'Approve',
-                                                                                                        'bg-danger': element.status === 'Rejected'
-                                                                                                        }">
+                                                                        'bg-warning': element.status === 'Pending for Approval',
+                                                                        'bg-success': element.status === 'Approve',
+                                                                        'bg-danger': element.status === 'Rejected'
+                                                                        }">
                                                                         {{ element.status }}
                                                                     </span>
                                                                     <div *ngIf="element?.status && element.updatedBy"
@@ -559,10 +449,10 @@
                                                                             <div>
                                                                                 Proposal Status:
                                                                                 <span class="badge" [ngClass]="{
-                                                                                                                                                'bg-warning': element.status === 'Pending for Approval',
-                                                                                                                                                'bg-success': element.status === 'Approved',
-                                                                                                                                                'bg-danger': element.status === 'Rejected'
-                                                                                                                                            }">
+                                                                                    'bg-warning': element.status === 'Pending for Approval',
+                                                                                    'bg-success': element.status === 'Approved',
+                                                                                    'bg-danger': element.status === 'Rejected'
+                                                                                  }">
                                                                                     {{ element.status }}
                                                                                 </span>
                                                                             </div>
@@ -578,7 +468,6 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <!-- Right side: updated info -->
                                                                         <div>
                                                                             Last Updated On {{ element.updatedDate | date:'dd MMM yyyy' }}
                                                                             by
@@ -2338,29 +2227,22 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Assign Recce to(will receive recce
                                                         link)</label>
-                                                    <ng-select [items]="userList"
-                                                        bindLabel="email" bindValue="email" formControlName="recceAssigne"
-                                                        placeholder="Select an user" >
+                                                    <ng-select [items]="userList" bindLabel="email" formControlName="recceAssigne" placeholder="Select a user">
                                                     </ng-select>
                                                 </div>
                                                 <div class="mb-3">
-                                                    <label class="form-label">Project Stakeholders to be contacted
-                                                    </label>
-                                                    <ng-select formControlName="recceStakeHolders" [items]="userList"
-                                                        bindLabel="email" bindValue="email"
-                                                        placeholder="Select an user">
+                                                    <label class="form-label">Project Stakeholders to be contacted</label>
+                                                    <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email" placeholder="Select a user">
                                                     </ng-select>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Client POC to be contacted</label>
-                                                    <ng-select formControlName="recceClientPoc" [items]="userList"
-                                                        bindLabel="email" bindValue="email"
-                                                        placeholder="Select an user">
+                                                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email" placeholder="Select a user">
                                                     </ng-select>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Instruction for Recce </label>
-                                                    <textarea class="form-control" rows="5" placeholder="Enter Instruction for Recce"
+                                                    <textarea class="form-control" rows="2" placeholder="Enter Instruction for Recce"
                                                         formControlName="description"></textarea>
                                                 </div>
                                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">

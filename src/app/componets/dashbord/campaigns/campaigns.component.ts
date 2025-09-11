@@ -38,6 +38,7 @@ export class CampaignsComponent extends BaseComponent {
   stageCounts: { [campaignId: string]: { [stage: string]: number } } = {}; campaignCount: any; totalLeadCount: any;
   fetchCrmLeadsList: any[] = [];topshowMore = false;showMore = true;
   matcardLst: any; topDisplayedCards: any;filteredUserList: any[] = [];
+  preSelectedUsers: string[] = []; isEditMode : boolean = false;
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
   dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
@@ -295,6 +296,12 @@ export class CampaignsComponent extends BaseComponent {
         next: (res: any) => {
           if (res) {
             this.userList = res;
+            if (this.preSelectedUsers?.length) {
+              const ctrl = this.campaignForm.get('agents');
+              const current = ctrl?.value || [];
+              const merged = Array.from(new Set([...current, ...this.preSelectedUsers]));
+              ctrl?.setValue(merged);
+            }
              this.filteredUserList = this.userList.filter(
               (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
             );
@@ -386,34 +393,34 @@ export class CampaignsComponent extends BaseComponent {
     }
   }
   openEditModal(content: any, campgnId: string) {
-  // this.selectedCampaignId = campgnId;  
-  console.log('Editing campaign ID:', this.selectedCampaignId);
+    this.isEditMode = true;
+    const campaignData = this.campaignList.find(
+      (item: any) => item.campgnId === campgnId
+    );
+    if (campaignData) {
+      this.selectedCampgnId = campaignData.campgnId;  
+      this.selectedCampaignId = campaignData.campaignId; 
 
-  const campaignData = this.campaignList.find(
-    (item: any) => item.campgnId === campgnId
-  );
-    console.log('campaign data',campaignData)
-  if (campaignData) {
-    this.selectedCampgnId = campaignData.campgnId;   // short ID
-    this.selectedCampaignId = campaignData.campaignId; // long ID
+      this.preSelectedUsers = Array.isArray(campaignData.agents)
+        ? campaignData.agents
+        : (campaignData.agents ? campaignData.agents.split(',') : []);
 
-    console.log('Editing campgnId:', this.selectedCampgnId);
-    console.log('Editing campaignId:', this.selectedCampaignId);
-    this.campaignForm.patchValue({
-      campaignName: campaignData.campaignName,
-      pipeline: campaignData.pipeline,
-      campaignPoc: campaignData.campaignPoc,
-      agents: (Array.isArray(campaignData.agents)
-             ? campaignData.agents
-             : campaignData.agents?.split(',') ?? []),
-      campaignPriority: campaignData.campaignPriority,
-      leadDuplicacy: campaignData.leadDuplicacy
-    });
-  }
-  this.open(content);
+      const current = this.campaignForm.get('agents')?.value || [];
+      const merged = Array.from(new Set([...current, ...this.preSelectedUsers]));
+      this.campaignForm.patchValue({
+        campaignName: campaignData.campaignName,
+        pipeline: campaignData.pipeline,
+        campaignPoc: campaignData.campaignPoc,
+        agents: this.preSelectedUsers,
+        campaignPriority: campaignData.campaignPriority,
+        leadDuplicacy: campaignData.leadDuplicacy
+      });
+    }
+    this.open(content);
   }
   openCreateModal(content: any) {
   // Clear previously selected campaign IDs
+   this.isEditMode = false;
   this.selectedCampgnId = null;
   this.selectedCampaignId = null;
 
@@ -438,5 +445,16 @@ export class CampaignsComponent extends BaseComponent {
     }
   }
 
+  isPreSelected(email: string): boolean {
+  return this.preSelectedUsers.includes(email);
+  }
+  onRemove(userEmail: string): void {
+  if (this.preSelectedUsers.includes(userEmail)) {
+    const current = this.campaignForm.get('agents')?.value || [];
+    if (!current.includes(userEmail)) {
+      this.campaignForm.patchValue({ agents: [...current, userEmail] });
+    }
+  }
+  }
 
 }
