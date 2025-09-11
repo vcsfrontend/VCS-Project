@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                                 <div class="row ">
-                                    <div class="col-xl-3">
+                                    <div class="col-lg-2">
                                         <nav ngbNav #nav6="ngbNav" [activeId]="active6" orientation="vertical"
                                             class="nav nav-tabs flex-column nav-style-5" role="tablist">
                                             <ng-container ngbNavItem="Home">
@@ -81,7 +81,7 @@
                                                         <div class="col-md-12">
                                                             <div class="tab-content">
                                                                 <div class="row">
-                                                                    <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                    <div class="col-lg-4 col-md-4 mt-2" *ngFor="let img of recce.imageList">
                                                                         <div class="card custom-card">
                                                                             <img [src]="img" class="card-img-top fixed-img" alt="Recce Image">
                                                                             <div class="card-body">
@@ -114,6 +114,9 @@
                                                                                             justify-content-center bg-primaryms-2" [ngClass]="getAgentColor(recce.recceClientPocEmail)">
                                                                                         {{ recce.recceClientPocEmail?.trim().charAt(0) | uppercase }}
                                                                                     </span>
+                                                                                </p>
+                                                                                 <p class="card-text d-flex align-items-center mt-1">Update:
+                                                                                    <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -274,7 +277,7 @@
                                             
                                         </nav>
                                     </div>
-                                    <div class="col-xl-9 bg-light border rounded">
+                                    <div class="col-xl-10 bg-light border rounded">
                                         <div [ngbNavOutlet]="nav6" class=""></div>
                                     </div>
                                 </div>
@@ -1857,6 +1860,7 @@
         </div>
     </div>
 </ng-template>
+
 <ng-template #content12 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Invoice</strong></h5>
@@ -2300,19 +2304,40 @@
     <div class="col-xxl-12 col-xl-10 col-lg-6 col-md-6 col-sm-12 modal-body px-1 border-0 "  >
         <div class="card custom-card product-card">
             <div class="card-body p-0">
-                <a  class="product-image">
-                    <img  src="./assets/images/ecommerce/jpg/19.jpeg" class="card-img " alt="...">
+                <a class="product-image">
+                    <img src="./assets/images/ecommerce/jpg/19.jpeg" class="card-img " alt="...">
                 </a>
                 <div class="product-icons">
-                    <a   class="wishlist"><i class="bi bi-plus"></i></a>
-                    <a   class="cart"><i class="bi bi-download"></i></a>
-                    <a   class="view"><i class="bi bi-trash"></i></a>
+                    <a class="wishlist"><i class="bi bi-plus"></i></a>
+                    <a class="cart"><i class="bi bi-download"></i></a>
+                    <a class="view"><i class="bi bi-trash"></i></a>
                 </div>
             </div>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  (click)="modal.close('Cross click')">Cancel</button>
-        
     </div>
+</ng-template>
+
+
+<ng-template #content44 let-modal>
+    <form [formGroup]="updateRecceForm" (ngSubmit)="updateRecce(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title">Update Recce</h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3">
+                <div class="col-lg-6">
+                    <label for="input-file" class="form-label">Upload Images</label>
+                    <input type="file" multiple (change)="onUpdateFilesChange($event)">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </form>
 </ng-template>
