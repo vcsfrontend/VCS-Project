@@ -59,7 +59,7 @@
                       <ng-container *ngFor="let agent of agentList.slice(0, 3)">
                         <span
                           class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
-                          [ngClass]="getAgentColor(agent)" tabindex="0" role="button">
+                          [ngClass]="getAgentColor(agent)" tabindex="0" role="button" >
                           {{ agent.trim().charAt(0) | uppercase }}
                         </span>
                       </ng-container>

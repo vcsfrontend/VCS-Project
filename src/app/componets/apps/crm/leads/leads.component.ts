@@ -525,7 +525,8 @@ export class LeadsComponent extends BaseComponent {
       username: ['',Validators.required],
       clientName: ['',Validators.required],
       mobileNumber: ['',Validators.required],
-      endDate : ['',Validators.required]
+      endDate : ['',Validators.required],
+      projectEstimation : ['',Validators.required]
     });
 
     this.getUsers();
@@ -842,6 +843,8 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
+    this.uploadSpinner = true;
+
     if (this.leadForm?.valid) {
       this.switchService.AddCrmLeads(payload).subscribe({
         next: (res: any) => {
@@ -850,6 +853,7 @@ export class LeadsComponent extends BaseComponent {
             this.submitted = false;
             this.leadForm.reset();
             this.getFetchLeadData();
+            this.uploadSpinner = false;
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
@@ -913,6 +917,9 @@ export class LeadsComponent extends BaseComponent {
       currentUser: this.userEmail,
       assignedDesigner: formData.assignedDesigner,
           ...(this.appointmentId ? { appointmentId: this.appointmentId } : {}),
+      companyCode : this.userCompanyCode,
+      email : this.userEmail,
+      type : this.userType,
       leadEntry:this.selectedLeadForAppointment ? {
         leadId: this.selectedLeadForAppointment.leadId,
         name: this.selectedLeadForAppointment.name,
@@ -2151,7 +2158,7 @@ export class LeadsComponent extends BaseComponent {
           this.leadCount = res.length;
           modal.close();
           this.submitted = false;
-          this.sendLeadForm.reset();
+          this.filterLeadForm.reset();
           this.toastr.success(res.message, 'Lead');
           this.filterApplied = true;
         } else {
@@ -2174,14 +2181,7 @@ export class LeadsComponent extends BaseComponent {
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
 
-    if (
-      currentStatus &&
-      this.originalStatus &&
-      currentStatus.toLowerCase().trim() === this.originalStatus.toLowerCase().trim()
-    ) {
-      this.toastr.warning('Please select a different status before submitting.', 'Validation');
-      return;
-    }
+    
    
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
@@ -2733,11 +2733,7 @@ export class LeadsComponent extends BaseComponent {
       }
     });
   }
-  get isStatusUnchanged(): boolean {
-    const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
-    const original = this.originalStatus?.toLowerCase().trim();
-    return current === original;
-  }
+  
 
   onFilterStageChange(): void {
     const selectedStages: string[] = this.filterLeadForm.get('stage')?.value || [];
@@ -2773,6 +2769,7 @@ export class LeadsComponent extends BaseComponent {
 
   resetFilterForm() {
     this.getFetchLeadData(); 
+    this.filterApplied= false;
   }
 
   moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string },modal:any) {

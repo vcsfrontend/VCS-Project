@@ -1296,14 +1296,7 @@ export class DealsComponent extends BaseComponent {
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
 
-    if (
-      currentStatus &&
-      this.originalStatus &&
-      currentStatus.toLowerCase().trim() === this.originalStatus.toLowerCase().trim()
-    ) {
-      this.toastr.warning('Please select a different status before submitting.', 'Validation');
-      return;
-    }
+    
 
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
@@ -2336,11 +2329,6 @@ export class DealsComponent extends BaseComponent {
     });
   }
 
-  get isStatusUnchanged(): boolean {
-  const current = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
-  const original = this.originalStatus?.toLowerCase().trim();
-  return current === original;
-  }
 
    filterLeads(modal:any) {
     const formValue = this.filterLeadForm.value;
@@ -2371,7 +2359,7 @@ export class DealsComponent extends BaseComponent {
           this.leadCount = res.length;
           modal.close();
           this.submitted = false;
-          this.sendLeadForm.reset();
+          this.filterLeadForm.reset();
           this.toastr.success(res.message, 'Lead');
           this.filterApplied = true;
         } else {
@@ -2417,6 +2405,7 @@ export class DealsComponent extends BaseComponent {
   }
   resetFilterForm() {
     this.getfetchLeadsIndividual(); 
+    this.filterApplied= false;
   }
 
   appointmentModal(appointment1: any, element: any,appointmentData: any = null) {
@@ -2433,7 +2422,7 @@ export class DealsComponent extends BaseComponent {
 
   appointmentFormSubmit(modal: any) {  
     const formData = this.appointmentForm.value;
-    const payload = {
+     const payload = {
       appointmenType: formData.appointmenType,
       date: formData.date,
       description: formData.description,
@@ -2441,6 +2430,9 @@ export class DealsComponent extends BaseComponent {
       currentUser: this.userEmail,
       assignedDesigner: formData.assignedDesigner,
           ...(this.appointmentId ? { appointmentId: this.appointmentId } : {}),
+      companyCode : this.userCompanyCode,
+      email : this.userEmail,
+      type : this.userType,
       leadEntry:this.selectedLeadForAppointment ? {
         leadId: this.selectedLeadForAppointment.leadId,
         name: this.selectedLeadForAppointment.name,
