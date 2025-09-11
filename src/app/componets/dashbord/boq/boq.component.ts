@@ -1514,6 +1514,7 @@ export class BoqComponent extends BaseComponent {
         this.switchService.createRecce(payload).subscribe({
             next: () => {
                 this.toastr.success('Recce created successfully!');
+                this.getRecceData();
                 modal.close();
                 this.recceForm.reset();
             },
@@ -1594,7 +1595,8 @@ export class BoqComponent extends BaseComponent {
             recceStage: this.recceStage,
             projectId: this.projectId,
             updatedBy: this.userEmail,
-            updatedTime: new Date().toISOString()
+            updatedTime: new Date().toISOString(),
+            // files :this.updateRecceForm.value.files,
         };
         console.log(payload)
         // this.switchService.updateRecce(payload).subscribe({
@@ -1634,6 +1636,9 @@ export class BoqComponent extends BaseComponent {
         }
     }
 
+     getRecceByStage(stage: string) {
+        return this.recceList.filter(r => r.recceStage === stage);
+    }
 
 
 

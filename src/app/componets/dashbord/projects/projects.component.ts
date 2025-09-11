@@ -259,9 +259,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         hardwareList: [false],
       }),
       customizedOptions: this.fb.group({
-        bomRequired : [true],
-        kbRequired : [true],
-        wardrobeRequired :[true]
+        bomRequired : [false],
+        kbRequired : [false],
+        wardrobeRequired :[false]
       },),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
@@ -1765,6 +1765,7 @@ downloadButtons: { label: string; url: string }[] = [];
     next: (res) => {
       if (res) {
         this.toastr.success('Quotation Generated successfully!');
+        this.quotationForm.reset();
         this.isLoading = false;
 
         // Save main quotation file URL (if needed elsewhere)

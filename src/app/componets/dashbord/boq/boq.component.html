@@ -76,202 +76,175 @@
                                                 <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="false"><i
                                                         class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Recce Details
                                                 </a>
+                                                
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="modal-body px-3" *ngFor="let recce of filteredRecce">
-                                                        <div class="col-md-12">
-                                                            <div class="tab-content">
-                                                                <div class="row">
-                                                                    <div class="col-lg-4 col-md-4 mt-2" *ngFor="let img of recce.imageList">
-                                                                        <div class="card custom-card">
-                                                                            <img [src]="img" class="card-img-top fixed-img" alt="Recce Image">
-                                                                            <div class="card-body">
-                                                                                <h6 class="card-title fw-medium">Recce Name: {{ recce.recceName }}</h6>
-                                                                                <p class="card-text">Description: {{ recce.description }}</p>
-                                                                            </div>
-                                                                            <div class="card-body border-top">
-                                                                                <p class="card-text d-flex align-items-center mt-1">Due Date:
-                                                                                    <span class="badge bg-danger ms-2">{{ recce.recceDueDate }}</span>
-                                                                                </p>
-                                                                                <p class="card-text d-flex align-items-center mt-1">Assign To : {{recce.recceAssigneEmail}}
-                                                                                    <span
-                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
-                                                                                            justify-content-center bg-primaryms-2" [ngClass]="getAgentColor(recce.recceAssigneEmail)">
-                                                                                        {{ recce.recceAssigneEmail?.trim().charAt(0) | uppercase }}
-                                                                                    </span>
-                                                                                </p>
-                                                                                <p class="card-text d-flex align-items-center mt-1">Stakeholders : {{
-                                                                                    recce.recceStakeHoldersEmail}}
-                                                                                    <span
-                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
-                                                                                          justify-content-center bg-primaryms-2"
-                                                                                        [ngClass]="getAgentColor(recce.recceStakeHoldersEmail)">
-                                                                                        {{ recce.recceStakeHoldersEmail?.trim().charAt(0) | uppercase }}
-                                                                                    </span>
-                                                                                </p>
-                                                                                <p class="card-text d-flex align-items-center mt-1">ClientPoc : {{recce.recceClientPocEmail}}
-                                                                                    <span
-                                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center 
-                                                                                            justify-content-center bg-primaryms-2" [ngClass]="getAgentColor(recce.recceClientPocEmail)">
-                                                                                        {{ recce.recceClientPocEmail?.trim().charAt(0) | uppercase }}
-                                                                                    </span>
-                                                                                </p>
-                                                                                 <p class="card-text d-flex align-items-center mt-1">Update:
-                                                                                    <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
-                                                                                </p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Recce Details')">
+                                                        <div class="card-title">
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
                                                                 </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
+                                                        <p class="card-text d-flex align-items-center mt-1">Update:
+                                                        <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
+                                                     </p>
+                                                       
                                                     </div>
+                                                     
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="About">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>Interior
+                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>External Environment
                                                 </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('External Environment')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Interior</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                            <ul ngbDropdownMenu class="dropdown-menu">
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        (click)="openModal1(recceContent1)" data-bs-toggle="modal123"
-                                                                        data-bs-target="#addProject123"
-                                                                        href="javascript:void(0);">Add input field</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Add Space</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Add Image and Videos</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Dropdown fields</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">single attachment field</a></li>
-                                                                <li><a ngbDropdownItem class="dropdown-item"
-                                                                        href="javascript:void(0);">Date field</a></li>
-                                                            </ul>
-                                                        </div>
+                                                       
                                                     </div>
-                                                    <h5 class="pt-3"><b>Interior :</b></h5>
                                                     <div class="file-upload float-end">
                                                         <input type="file" id="file-input" (change)="onFileSelected($event)"
                                                             accept="*/*" hidden>
                                                         <label for="file-input" class="text-danger">Upload File</label>
                                                     </div>
-                                                    <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
-                                                    </div>
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="Services">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="true"><i
-                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Site Images </a>
+                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Internal Environment </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Internal Environment')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Site images</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                        </div>
+                                                       
                                                     </div>
-                                                    <h5 class="pt-3"><b>Site Images :</b></h5>
                                                     <div class="file-upload float-end">
                                                         <input type="file" id="file-input" (change)="onFileSelected($event)"
                                                             accept="*/*" hidden>
                                                         <label for="file-input" class="text-danger">Upload File</label>
                                                     </div>
-            
-                                                    <div class=" show  text-muted mt-2" id="services-vertical-link" role="tabpanel">
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
-                                                    </div>
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="Contacts">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Remarks</a>
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Capture Spaces</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Capture Spaces')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Remarks</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                        </div>
+                                                       
                                                     </div>
-                                                    <h5 class="pt-3"><b>Remarks</b></h5>
                                                     <div class="file-upload float-end">
                                                         <input type="file" id="file-input" (change)="onFileSelected($event)"
                                                             accept="*/*" hidden>
                                                         <label for="file-input" class="text-danger">Upload File</label>
                                                     </div>
-                                                    <div class=" text-muted mt-2" id="contacts-vertical-link" role="tabpanel">
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
-                                                    </div>
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             <ng-container ngbNavItem="gallery">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
                                                     aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Site
-                                                    Dimentions</a>
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Signage and Facade</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Signage and Facade')">
                                                         <div class="card-title">
-                                                            <!-- <button type="button" class="btn btn-sm fw-medium fs-18 text-center me-2">
-                                                        Test1
-                                                            </button> -->
-                                                            <h6 class="fs-16">Site Dimentions</h6>
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div ngbDropdown class="dropdown no-caret">
-                                                            <a ngbDropdownToggle href="javascript:void(0);"
-                                                                class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown">
-                                                                <i class="fe fe-more-vertical"></i>
-                                                            </a>
-                                                        </div>
+                                                       
                                                     </div>
-                                                    <h5 class="pt-3"><b>Site Dimentions</b></h5>
                                                     <div class="file-upload float-end">
                                                         <input type="file" id="file-input" (change)="onFileSelected($event)"
                                                             accept="*/*" hidden>
                                                         <label for="file-input" class="text-danger">Upload File</label>
                                                     </div>
-                                                    <div class=" text-muted mt-2" id="contacts-vertical-link" role="tabpanel">
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
                                                             data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div> -->
+                                                </ng-template>
+                                            </ng-container>
+                                            <ng-container ngbNavItem="Layout and Sketches">
+                                                <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
+                                                    aria-selected="false"><i
+                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Layout and Sketches</a>
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Layout and Sketches')">
+                                                        <div class="card-title">
+                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
+                                                                <div class="card custom-card">
+                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                </div>
+                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                            </div>
+                                                        </div>
+                                                       
                                                     </div>
+                                                    <div class="file-upload float-end">
+                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
+                                                            accept="*/*" hidden>
+                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                    </div>
+                                                    <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
+                                                        <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
+                                                            class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
+                                                            data-bs-toggle="modal" data-bs-target="#addtask">
+                                                    </div> -->
                                                 </ng-template>
                                             </ng-container>
                                             
