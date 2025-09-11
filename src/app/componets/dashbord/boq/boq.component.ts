@@ -1333,6 +1333,29 @@ export class BoqComponent extends BaseComponent {
             invoiceAmount: 5500,
             creditNoteAmount: 200
         },
+        {
+            invoiceNo: 'INV-002',
+            invoiceType: 'Tax Invoice',
+            orderNo: 'ORD-104',
+            orderAmount: 5000,
+            invoiceDate: new Date(),
+            uploadedBy: 'Admin',
+            status: 'Approved',
+            invoiceAmount: 5500,
+            creditNoteAmount: 200
+        },
+        {
+            invoiceNo: 'INV-003',
+            invoiceType: 'Tax Invoice',
+            orderNo: 'ORD-105',
+            orderAmount: 5000,
+            invoiceDate: new Date(),
+            uploadedBy: 'Admin',
+            status: 'Approved',
+            invoiceAmount: 5500,
+            creditNoteAmount: 200
+        },
+
 
     ]);
     clientCreditDataSource = new MatTableDataSource<any>([
@@ -1616,15 +1639,15 @@ export class BoqComponent extends BaseComponent {
             // files :this.updateRecceForm.value.files,
         };
         console.log(payload)
-        // this.switchService.updateRecce(payload).subscribe({
-        //     next: (res: any) => {
-        //         this.toastr.success('Recce updated successfully');
-        //         this.getRecceData();
-        //     },
-        //     error: (err: any) => {
-        //         this.toastr.error('Something went wrong while updating recce');
-        //     }
-        // });
+        this.switchService.updateRecce(payload).subscribe({
+            next: (res: any) => {
+                this.toastr.success('Recce updated successfully');
+                this.getRecceData();
+            },
+            error: (err: any) => {
+                this.toastr.error('Something went wrong while updating recce');
+            }
+        });
     }
 
     updateProjectSubmit(modal: any) {
