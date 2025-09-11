@@ -73,8 +73,9 @@ export class BoqComponent extends BaseComponent {
     designerDataSource = new MatTableDataSource<any>();
     proposalTabKeys: string[] = []; dateDiff: any; roleid: any;
     proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
-    itemCodeLst:any; public userList: any; filteredUserList: any[] = [];
-    proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
+    itemCodeLst:any; public userList: any; filteredUserList: any[] = []; recceStage: string = '';
+    proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
+    filteredRecce: any[] = [];
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -83,7 +84,7 @@ export class BoqComponent extends BaseComponent {
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
     boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
-    proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; recceForm!:FormGroup;
+    proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; recceForm!:FormGroup; updateRecceForm!: FormGroup;
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null; 
@@ -116,6 +117,10 @@ export class BoqComponent extends BaseComponent {
     openRights(content: any) {
         this.offcanvasService.open(content, { position: 'end' });
     }
+    openRecce(content44: any, recceStage: string) {
+        this.recceStage = recceStage; 
+        this.modalService.open(content44, { centered: true });
+    }
     openRights2(content3: any) {
         this.offcanvasService.open(content3, { position: 'end' });
     }
@@ -126,10 +131,11 @@ export class BoqComponent extends BaseComponent {
         }
         this.openRights4(content);
     }
-
+    
     openRights4(content4: any) {
         this.modalService.open(content4, { centered: true, size: 'lg' });
     }
+
     openRights5(content6: any, proposal: any) {
         this.extraContentProposalForm.patchValue({
             orderNo: proposal?.orderNo || '',
@@ -245,6 +251,13 @@ export class BoqComponent extends BaseComponent {
                 projectId: this.projectId,
                 projectName: this.projectName
             });
+        });
+        this.updateRecceForm = this.fb.group({
+            files: this.fb.array([]), 
+            updatedBy:[''],
+            updatedTime:[new Date().toISOString()],
+            projectId:[''],
+            recceStage: [''],
         });
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
@@ -1419,24 +1432,31 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-
     get files(): FormArray {
         return this.recceForm.get('files') as FormArray;
+    }
+
+    get updateFiles(): FormArray {
+        return this.updateRecceForm.get('files') as FormArray;
+    }
+
+    onUpdateFilesChange(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (!input.files) return;
+        this.updateFiles.clear();
+        Array.from(input.files).forEach(file => {
+            this.updateFiles.push(this.fb.control(file));
+        });
     }
 
     onFilesChange(event: Event) {
         const input = event.target as HTMLInputElement;
         if (!input.files) return;
-
         this.files.clear();
-
         Array.from(input.files).forEach(file => {
             this.files.push(this.fb.control(file)); 
         });
     }
-
-    recceList: any[] = [];
-    filteredRecce: any[] = [];
 
     getRecceData() {
         const payload = {
@@ -1445,7 +1465,6 @@ export class BoqComponent extends BaseComponent {
             type: this.userType,
             projectId: this.projectId
         };
-
         this.switchService.fetchRecceData(payload).subscribe({
             next: (res: any) => {
                 if (res && res.length > 0) {
@@ -1461,14 +1480,12 @@ export class BoqComponent extends BaseComponent {
                         recceClientPocEmail: recce.recceClientPoc
                             ? recce.recceClientPoc.split(',')[0].trim(): '',   
                     }));
-
                     this.filterRecceByStage('Recce Details');
                 } else {
                     this.toastr.warning('No recce data found');
                 }
             },
             error: (err) => {
-                console.error(err);
                 this.toastr.error('Something went wrong');
             }
         });
@@ -1476,6 +1493,30 @@ export class BoqComponent extends BaseComponent {
 
     filterRecceByStage(stage: string) {
         this.filteredRecce = this.recceList.filter(r => r.recceStage === stage);
+    }
+
+    updateRecce(modal:any) {
+        if (this.updateRecceForm.invalid) {
+            this.toastr.warning('Please fill required fields');
+            return;
+        }
+        const payload = {
+            ...this.updateRecceForm.value,
+            recceStage: this.recceStage,
+            projectId: this.projectId,
+            updatedBy: this.userEmail,
+            updatedTime: new Date().toISOString()
+        };
+        console.log(payload)
+        // this.switchService.updateRecce(payload).subscribe({
+        //     next: (res: any) => {
+        //         this.toastr.success('Recce updated successfully');
+        //         this.getRecceData();
+        //     },
+        //     error: (err: any) => {
+        //         this.toastr.error('Something went wrong while updating recce');
+        //     }
+        // });
     }
 
 

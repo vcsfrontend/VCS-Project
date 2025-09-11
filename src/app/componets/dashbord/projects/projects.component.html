@@ -361,7 +361,7 @@
     </div>
 </div>
 
-<div class="row" [hidden]="!(roleid === 7 || roleid === 12 || roleid === 3 )">
+<div class="row" [hidden]="!(roleid === 7 || roleid === 12 || roleid === 3 || roleid === 5)">
     <div class="col-xl-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
@@ -495,7 +495,7 @@
                          <ng-container matColumnDef="projectName">
                                 <th mat-header-cell *matHeaderCellDef>Project Name</th>
                                 <td mat-cell *matCellDef="let element">
-                                    <a href="javascript:void(0);">{{element.projectName}}
+                                    <a href="javascript:void(0);" (click)="goToBoq(element)">{{element.projectName}}
                                     </a>
                                 </td>
                             </ng-container>
