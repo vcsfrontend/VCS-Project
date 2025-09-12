@@ -260,9 +260,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         hardwareList: [false],
       }),
       customizedOptions: this.fb.group({
-        bomRequired : [true],
-        kbRequired : [true],
-        wardrobeRequired :[true]
+        bomRequired : [false],
+        kbRequired : [false],
+        wardrobeRequired :[false]
       },),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
