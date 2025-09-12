@@ -260,9 +260,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         hardwareList: [false],
       }),
       customizedOptions: this.fb.group({
-        bomRequired : [true],
-        kbRequired : [true],
-        wardrobeRequired :[true]
+        bomRequired : [false],
+        kbRequired : [false],
+        wardrobeRequired :[false]
       },),
       email: [JSON.parse(this.userData).email],
       type: [JSON.parse(this.userData).type,],
@@ -1761,6 +1761,7 @@ downloadButtons: { label: string; url: string }[] = [];
       tdsc: parseFloat(rest.tdsc),
       gpa: parseFloat(rest.gpa),
       tdpa: parseFloat(rest.tdpa),
+      companyCode :this.userCompanyCode
     };
     this.switchService.quotationXl(payload).subscribe({
     next: (res) => {
@@ -1790,9 +1791,7 @@ downloadButtons: { label: string; url: string }[] = [];
 
         if (validFileUrls.length > 0) {
           this.downloadAllFiles(validFileUrls);
-        } else {
-          console.warn('No valid file URLs found for download.');
-        }
+        } 
 
         // Cleanup
         modal.close();

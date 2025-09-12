@@ -78,7 +78,7 @@ export class BoqComponent extends BaseComponent {
     proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
     itemCodeLst: any; public userList: any; filteredUserList: any[] = []; recceStage: string = '';
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
-    filteredRecce: any[] = [];
+    filteredRecce: any[] = [];blockedStages: string[] = [];
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -917,7 +917,6 @@ export class BoqComponent extends BaseComponent {
                 type: this.userType,
             },
         ];
-        console.log(payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -1610,10 +1609,14 @@ export class BoqComponent extends BaseComponent {
                         recceClientPocEmail: recce.recceClientPoc
                             ? recce.recceClientPoc.split(',')[0].trim() : '',
                     }));
+                    this.blockedStages = [];
+                    this.recceList.forEach(recce => {
+                        if (recce.recceStage) {
+                        this.blockedStages.push(recce.recceStage);
+                        }
+                    });
                     this.filterRecceByStage('Recce Details');
-                } else {
-                    this.toastr.warning('No recce data found');
-                }
+                } 
             },
             error: (err) => {
                 this.toastr.error('Something went wrong');
@@ -1638,7 +1641,6 @@ export class BoqComponent extends BaseComponent {
             updatedTime: new Date().toISOString(),
             // files :this.updateRecceForm.value.files,
         };
-        console.log(payload)
         this.switchService.updateRecce(payload).subscribe({
             next: (res: any) => {
                 this.toastr.success('Recce updated successfully');
@@ -1658,7 +1660,6 @@ export class BoqComponent extends BaseComponent {
                 ...formValue,
                 updatedBy: `${this.userName},${this.userEmail}`,
             };
-            console.log('Update Project Payload:', payload);
             this.switchService.updateAssgnAdonaiDesign(payload).subscribe({
                 next: (res: any) => {
                     this.toastr.success('Project updated successfully');
@@ -1681,5 +1682,9 @@ export class BoqComponent extends BaseComponent {
         return this.recceList.filter(r => r.recceStage === stage);
     }
     
+    isBlocked(stageName: string): boolean {
+        return this.blockedStages.includes(stageName);
+    }
+
 
 }
