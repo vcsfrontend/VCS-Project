@@ -1791,9 +1791,7 @@ downloadButtons: { label: string; url: string }[] = [];
 
         if (validFileUrls.length > 0) {
           this.downloadAllFiles(validFileUrls);
-        } else {
-          console.warn('No valid file URLs found for download.');
-        }
+        } 
 
         // Cleanup
         modal.close();

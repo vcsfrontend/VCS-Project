@@ -917,7 +917,6 @@ export class BoqComponent extends BaseComponent {
                 type: this.userType,
             },
         ];
-        console.log(payload);
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -1642,7 +1641,6 @@ export class BoqComponent extends BaseComponent {
             updatedTime: new Date().toISOString(),
             // files :this.updateRecceForm.value.files,
         };
-        console.log(payload)
         this.switchService.updateRecce(payload).subscribe({
             next: (res: any) => {
                 this.toastr.success('Recce updated successfully');
@@ -1662,7 +1660,6 @@ export class BoqComponent extends BaseComponent {
                 ...formValue,
                 updatedBy: `${this.userName},${this.userEmail}`,
             };
-            console.log('Update Project Payload:', payload);
             this.switchService.updateAssgnAdonaiDesign(payload).subscribe({
                 next: (res: any) => {
                     this.toastr.success('Project updated successfully');
