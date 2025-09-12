@@ -77,9 +77,9 @@
                                                         class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Recce Details
                                                 </a>
                                                 
-                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
+                                                <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0"  >
                                                    <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1"
-                                                        *ngFor="let recce of getRecceByStage('Recce Details')">
+                                                        *ngFor="let recce of getRecceByStage('Recce Details')" style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
 
                                                     <!-- Left side -->
                                                     <div class="card-title">

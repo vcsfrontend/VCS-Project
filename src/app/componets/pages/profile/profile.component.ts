@@ -270,7 +270,6 @@ export class ProfileComponent {
         verify: this.verifyTasks.length,
         completed: this.completedTasks.length
         };
-        console.log(this.taskStats);
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');

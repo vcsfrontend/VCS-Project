@@ -146,7 +146,7 @@ export class AppointmentsComponent extends BaseComponent {
 
   submitAvailability() {
     if (this.availabilityForm.valid) {
-      console.log(this.availabilityForm.value);
+      // console.log(this.availabilityForm.value);
       // Add your logic here
     }
   }
