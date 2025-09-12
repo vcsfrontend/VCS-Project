@@ -618,7 +618,7 @@ export class BoqComponent extends BaseComponent {
 
     getProposal() {
         const payload = {
-            designId: "3FO3EWPJHYSK",
+            designId: this.designingId,
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType,
@@ -706,7 +706,7 @@ export class BoqComponent extends BaseComponent {
 
     getClientOrders() {
         const payload = {
-            designId: "3FO3EWPJHYSK",
+            designId: this.designingId,
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType,
@@ -908,7 +908,7 @@ export class BoqComponent extends BaseComponent {
                 gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
                 amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
 
-                designId: "3FO3EWPJHYSK",
+                designId: this.designingId,
                 roomName: element?.roomName || formValue.roomName || '',
                 itemCode: element?.itemCode || formValue.itemCode || '',
 
@@ -962,7 +962,7 @@ export class BoqComponent extends BaseComponent {
             shippingAddress: Number(formValue.shippingAddress),
             contentJs: JSON.stringify(selectedData),
             currentAmount: totalAmount,
-            designId: "3FO3EWPJHYSK"
+            designId: this.designingId
         };
         this.updateElementsAndCreateProposal(proposalPayload, modal);
     }
@@ -1013,7 +1013,7 @@ export class BoqComponent extends BaseComponent {
                 hsn: Number(element?.hsn ?? formValue.hsn) || 0,
                 gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
                 amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-                designId: "3FO3EWPJHYSK",
+                designId: this.designingId,
                 roomName: element?.roomName || formValue.roomName || '',
                 itemCode: element?.itemCode || formValue.itemCode || '',
                 companyCode: this.userCompanyCode,
