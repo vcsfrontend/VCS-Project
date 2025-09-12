@@ -1761,6 +1761,7 @@ downloadButtons: { label: string; url: string }[] = [];
       tdsc: parseFloat(rest.tdsc),
       gpa: parseFloat(rest.gpa),
       tdpa: parseFloat(rest.tdpa),
+      companyCode :this.userCompanyCode
     };
     this.switchService.quotationXl(payload).subscribe({
     next: (res) => {

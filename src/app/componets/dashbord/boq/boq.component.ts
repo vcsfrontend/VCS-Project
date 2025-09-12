@@ -78,7 +78,7 @@ export class BoqComponent extends BaseComponent {
     proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
     itemCodeLst: any; public userList: any; filteredUserList: any[] = []; recceStage: string = '';
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
-    filteredRecce: any[] = [];
+    filteredRecce: any[] = [];blockedStages: string[] = [];
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -1610,10 +1610,14 @@ export class BoqComponent extends BaseComponent {
                         recceClientPocEmail: recce.recceClientPoc
                             ? recce.recceClientPoc.split(',')[0].trim() : '',
                     }));
+                    this.blockedStages = [];
+                    this.recceList.forEach(recce => {
+                        if (recce.recceStage) {
+                        this.blockedStages.push(recce.recceStage);
+                        }
+                    });
                     this.filterRecceByStage('Recce Details');
-                } else {
-                    this.toastr.warning('No recce data found');
-                }
+                } 
             },
             error: (err) => {
                 this.toastr.error('Something went wrong');
@@ -1681,5 +1685,9 @@ export class BoqComponent extends BaseComponent {
         return this.recceList.filter(r => r.recceStage === stage);
     }
     
+    isBlocked(stageName: string): boolean {
+        return this.blockedStages.includes(stageName);
+    }
+
 
 }
