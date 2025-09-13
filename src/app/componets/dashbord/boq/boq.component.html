@@ -78,31 +78,31 @@
                                                 </a>
                                                 
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0"  >
-                                                   <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1"
-                                                        *ngFor="let recce of getRecceByStage('Recce Details')" style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
-
-                                                    <!-- Left side -->
-                                                    <div class="card-title">
-                                                        <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
-
-                                                        <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
-                                                        <div class="card custom-card">
-                                                            <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                    <div class="d-flex" *ngFor="let recce of getRecceByStage('Recce Details')"
+                                                        style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
+                                                         
+                                                        <!-- Left side -->
+                                                        <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
+                                                            <div class="card-title">
+                                                                <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                                <div class="d-flex flex-wrap gap-4 mt-2">
+                                                                    <div class="col-lg-2 col-md-2 mt-2" *ngFor="let img of recce.imageList">
+                                                                        <div class="card custom-card">
+                                                                            <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                        </div>
+                                                                        <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                        <div class="d-flex justify-content-end mt-4"
+                                                            *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                            <button class="btn btn-danger btn-lg w-100  mb-2" style="height:40px;" (click)="openRecce(content44, recce.recceStage)">
+                                                                Update
+                                                            </button>
                                                         </div>
+                                                       
                                                     </div>
-
-                                                    <!-- Right side -->
-                                                    <div *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
-                                                        <button class="btn btn-danger"
-                                                                (click)="openRecce(content44, recce.recceStage)">
-                                                        Update
-                                                        </button>
-                                                    </div>
-                                                    </div>
-
-                                                     
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -116,21 +116,31 @@
                                                         class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>External
                                                 </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('External Environment')">
-                                                        <div class="card-title">
-                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
-                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
-                                                                <div class="card custom-card">
-                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                    <div class="d-flex" *ngFor="let recce of getRecceByStage('External Environment')"
+                                                        style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
+                                                    
+                                                        <!-- Left side -->
+                                                        <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
+                                                            <div class="card-title">
+                                                                <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                                <div class="d-flex flex-wrap gap-4 mt-2">
+                                                                    <div class="col-lg-2 col-md-2 mt-2" *ngFor="let img of recce.imageList">
+                                                                        <div class="card custom-card">
+                                                                            <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                        </div>
+                                                                        <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                                    </div>
                                                                 </div>
-                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
-                                                        <p class="card-text d-flex align-items-center mt-1"  *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
-                                                        <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
-                                                       
+                                                        <div class="d-flex justify-content-end mt-4"
+                                                            *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                            <button class="btn btn-danger btn-lg w-100  mb-2" style="height:40px;"
+                                                                (click)="openRecce(content44, recce.recceStage)">
+                                                                Update
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -143,24 +153,32 @@
                                                     aria-selected="true"><i
                                                         class="ri-bank-line me-2 align-middle d-inline-block"></i>Internal </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Internal Environment')">
-                                                        <div class="card-title">
-                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
-                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
-                                                                <div class="card custom-card">
-                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                    <div class="d-flex" *ngFor="let recce of getRecceByStage('Internal Environment')"
+                                                        style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
+                                                    
+                                                        <!-- Left side -->
+                                                        <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
+                                                            <div class="card-title">
+                                                                <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                                <div class="d-flex flex-wrap gap-4 mt-2">
+                                                                    <div class="col-lg-2 col-md-2 mt-2" *ngFor="let img of recce.imageList">
+                                                                        <div class="card custom-card">
+                                                                            <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                        </div>
+                                                                        <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                                    </div>
                                                                 </div>
-                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
-                                                       <p class="card-text d-flex align-items-center mt-1"  *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
-                                                        <span class="btn btn-danger" (click)="openRecce(content44, recce.recceStage)"> Update</span>
+                                                        <div class="d-flex justify-content-end mt-4"
+                                                            *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                            <button class="btn btn-danger btn-lg w-100  mb-2" style="height:40px;"
+                                                                (click)="openRecce(content44, recce.recceStage)">
+                                                                Update
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                    <div class="file-upload float-end">
-                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
-                                                            accept="*/*" hidden>
-                                                        <label for="file-input" class="text-danger">Upload File</label>
-                                                    </div>
+                                                   
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -173,22 +191,31 @@
                                                     aria-selected="false"><i
                                                         class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Capture Spaces</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Capture Spaces')">
-                                                        <div class="card-title">
-                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
-                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
-                                                                <div class="card custom-card">
-                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                    <div class="d-flex" *ngFor="let recce of getRecceByStage('Capture Spaces')"
+                                                        style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
+                                                    
+                                                        <!-- Left side -->
+                                                        <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
+                                                            <div class="card-title">
+                                                                <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                                <div class="d-flex flex-wrap gap-4 mt-2">
+                                                                    <div class="col-lg-2 col-md-2 mt-2" *ngFor="let img of recce.imageList">
+                                                                        <div class="card custom-card">
+                                                                            <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                        </div>
+                                                                        <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                                    </div>
                                                                 </div>
-                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
-                                                       
-                                                    </div>
-                                                    <div class="file-upload float-end">
-                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
-                                                            accept="*/*" hidden>
-                                                        <label for="file-input" class="text-danger">Upload File</label>
+                                                        <div class="d-flex justify-content-end mt-4"
+                                                            *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                            <button class="btn btn-danger btn-lg w-100  mb-2" style="height:40px;"
+                                                                (click)="openRecce(content44, recce.recceStage)">
+                                                                Update
+                                                            </button>
+                                                        </div>
+                                                    
                                                     </div>
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
@@ -202,23 +229,33 @@
                                                     aria-selected="false"><i
                                                         class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Signage & Facade</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Signage and Facade')">
-                                                        <div class="card-title">
-                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
-                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
-                                                                <div class="card custom-card">
-                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                    <div class="d-flex" *ngFor="let recce of getRecceByStage('Signage and Facade')"
+                                                        style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
+                                                    
+                                                        <!-- Left side -->
+                                                        <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
+                                                            <div class="card-title">
+                                                                <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                                <div class="d-flex flex-wrap gap-4 mt-2">
+                                                                    <div class="col-lg-2 col-md-2 mt-2" *ngFor="let img of recce.imageList">
+                                                                        <div class="card custom-card">
+                                                                            <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                        </div>
+                                                                        <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
+                                                                    </div>
                                                                 </div>
-                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
-                                                       
+                                                        <div class="d-flex justify-content-end mt-4"
+                                                            *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                            <button class="btn btn-danger btn-lg w-100  mb-2" style="height:40px;"
+                                                                (click)="openRecce(content44, recce.recceStage)">
+                                                                Update
+                                                            </button>
+                                                        </div>
+                                                    
                                                     </div>
-                                                    <div class="file-upload float-end">
-                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
-                                                            accept="*/*" hidden>
-                                                        <label for="file-input" class="text-danger">Upload File</label>
-                                                    </div>
+                                                    
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -231,23 +268,33 @@
                                                     aria-selected="false"><i
                                                         class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Layout & Sketches</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                                    <div class="card-header justify-content-between  border-bottom border-1" *ngFor="let recce of getRecceByStage('Layout and Sketches')">
-                                                        <div class="card-title">
-                                                             <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
-                                                            <div class="col-lg-5 col-md-5 mt-2" *ngFor="let img of recce.imageList">
-                                                                <div class="card custom-card">
-                                                                    <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                    <div class="d-flex" *ngFor="let recce of getRecceByStage('Layout and Sketches')"
+                                                        style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
+                                                    
+                                                        <!-- Left side -->
+                                                        <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
+                                                            <div class="card-title">
+                                                                <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
+                                                                <div class="d-flex flex-wrap gap-4 mt-2">
+                                                                    <div class="col-lg-2 col-md-2 mt-2" *ngFor="let img of recce.imageList">
+                                                                        <div class="card custom-card">
+                                                                            <img [src]="img" class="card-img-top" alt="Recce Image">
+                                                                        </div>
+                                                                        <p class="card-text pt-0 fs-13" >{{ recce.description }}</p>
+                                                                    </div>
                                                                 </div>
-                                                                <p class="card-text pt-0 fs-13">{{ recce.description }}</p>
                                                             </div>
                                                         </div>
-                                                       
+                                                        <div class="d-flex justify-content-end mt-4"
+                                                            *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)">
+                                                            <button class="btn btn-danger btn-lg w-100  mb-2" style="height:40px;"
+                                                                (click)="openRecce(content44, recce.recceStage)">
+                                                                Update
+                                                            </button>
+                                                        </div>
+                                                    
                                                     </div>
-                                                    <div class="file-upload float-end">
-                                                        <input type="file" id="file-input" (change)="onFileSelected($event)"
-                                                            accept="*/*" hidden>
-                                                        <label for="file-input" class="text-danger">Upload File</label>
-                                                    </div>
+                                                   
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -502,6 +549,7 @@
                                                     <div class="card-title">Order Details</div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
+                                                        <button class="btn btn-primary btn-sm" (click)="onShare()">Share</button>
                                                         <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
                                                             <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
                                                         </button>
@@ -1325,7 +1373,7 @@
                                             <div class="col-xl-12 mt-2">
                                                 <div class="card custom-card">
                                                     <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                        <h5 class="mb-0">Client Invoices</h5>
+                                                        <h5 class="mb-0">Client Payments</h5>
                                                         <button type="button" class="btn btn-primary">Add New</button>
                                                     </div>
                                                     <div class="card-body p-0">
@@ -1555,7 +1603,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="table-container mat-elevation-z8">
+                                                                <div class="table-container mat-elevation-z8 boq-table-wrapper">
                                                                     <table mat-table [dataSource]="boqDataSources[key]"
                                                                         matSort class="mat-table1 w-100">
                                                                         <ng-container matColumnDef="sourceFlag">
@@ -1607,17 +1655,17 @@
                                                                             </td>
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="brandOrMake">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-left-3">
                                                                                 Brand Or Make
                                                                             </th>
-                                                                            <td mat-cell *matCellDef="let element">
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left-3">
                                                                                 {{ element.elementNameAndDescription.split('\n')[1]?.split(':')[1]?.trim() }}
                                                                             </td>
                                                                         </ng-container>
-                                                                        <ng-container matColumnDef="codeAndCategory">
-                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Code & Category
+                                                                        <ng-container matColumnDef="codeAndCategory" >
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-left-4"> Code & Category
                                                                             </th>
-                                                                            <td mat-cell *matCellDef="let element">
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left-4">
                                                                                 <div class="btn-group d-flex flex-column" ngbDropdown>
                                                                                     <button type="button" class="btn custom-btn" ngbDropdownToggle>
                                                                                          {{
@@ -2610,3 +2658,4 @@
         </div>
     </form>
 </ng-template>
+
