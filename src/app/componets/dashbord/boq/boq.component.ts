@@ -19,7 +19,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyDoc, Validators } from 'ngx-editor';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Plan {
     name: string;
@@ -111,7 +111,7 @@ export class BoqComponent extends BaseComponent {
     constructor(
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
-        private fb: FormBuilder, private route: ActivatedRoute,) {
+        private fb: FormBuilder, private route: ActivatedRoute,private router: Router) {
         super();
         this.userData = localStorage.getItem('userDetails');
         this.userType = JSON.parse(this.userData).type;
@@ -203,8 +203,15 @@ export class BoqComponent extends BaseComponent {
     };
 
     ngOnInit(): void {
-        this.getUsers();
-        this.getAssignProjects();
+        this.route.queryParams.subscribe(params => {
+            this.projectId = params['projectId'];
+            this.projectName = params['projectName'];
+            this.buildRecceForm();
+            this.recceForm.patchValue({
+                projectId: this.projectId,
+                projectName: this.projectName
+            });
+        });
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
@@ -290,15 +297,7 @@ export class BoqComponent extends BaseComponent {
             noCalendar: true,
             dateFormat: 'H:i',
         };
-        this.route.queryParams.subscribe(params => {
-            this.projectId = params['projectId'];
-            this.projectName = params['projectName'];
-            this.buildRecceForm();
-            this.recceForm.patchValue({
-                projectId: this.projectId,
-                projectName: this.projectName
-            });
-        });
+       
         this.getRecceData();
         this.updateRecceForm = this.fb.group({
             files: this.fb.array([]),
@@ -320,6 +319,7 @@ export class BoqComponent extends BaseComponent {
             assignedDesigner: [''],
             designCompletionStatus: ['']
         });
+        this.getUsers();
         this.getAssignProjects();
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
@@ -1685,6 +1685,8 @@ export class BoqComponent extends BaseComponent {
     isBlocked(stageName: string): boolean {
         return this.blockedStages.includes(stageName);
     }
-
+    onShare() {
+        this.router.navigate(['/dashboard/quotation'], { queryParams: { id: this.designingId } });
+    }
 
 }

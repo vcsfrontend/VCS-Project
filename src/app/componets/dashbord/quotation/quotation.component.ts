@@ -16,6 +16,7 @@ import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-quotation',
@@ -82,7 +83,8 @@ export class QuotationComponent {
     chartOptions1: any;
     constructor(// config: NgbModalConfig,
         private modalService: NgbModal, public switchService: SwitherService,
-        private toastr: ToastrService,private offcanvasService: NgbOffcanvas) {
+        private toastr: ToastrService,private offcanvasService: NgbOffcanvas,private router: Router,
+        private route: ActivatedRoute) {
         this.chartOptions4 = {
     series: [],
     chart: {
@@ -154,12 +156,18 @@ export class QuotationComponent {
     };
 
     ngOnInit(): void {
-        this.boqData();
+        
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
             dateFormat: 'H:i',
         };
+        this.route.queryParams.subscribe(params => {
+            this.designId = params['id'];
+            console.log('Received designId:', this.designId);
+        });
+        console.log(this.designId);
+        this.boqData();
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
@@ -183,7 +191,8 @@ export class QuotationComponent {
     boqData() {
         const payload = {
             email: this.userEmail,
-            designId: "3FO3EWPJHYSK",
+            // designId: "3FO3EWPJHYSK",
+            designId : this.designId,
             bomRequired: true,
             wardrobeRequired: true,
             kbRequired: true

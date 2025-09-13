@@ -94,30 +94,6 @@ ul.dropdown-menu.cuw{
   min-width: 250px;
   min-height: 250px;
 }
-
-.sticky-col-left {
-  position: sticky !important;
-  left: 0;
-  z-index: 9;
-  background: #fff; 
-}
-
-.sticky-col-left-2 {
-  position: sticky !important;
-  left: 50px; 
-  z-index: 9;
-  background: #fff;
-  border-right: 1px solid black;
-}
-
-
-.sticky-col-right {
-  position: sticky !important;
-  right: 0;
-  z-index: 11;
-  border-left: 1px solid black;
-}
-
 .dropdown-toggle::after {
   display: none !important;
 }
@@ -356,5 +332,45 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   height: 200px;       
   object-fit: cover;      
   border-radius: 8px;    
+}
+/* Sticky first col (checkbox) */
+/* Left sticky col (checkbox) */
+.sticky-col-left {
+  position: sticky;
+  left: 0;
+  z-index: 11;
+  background: #fff;
+}
+
+.sticky-col-left-2 {
+  position: sticky;
+  left: 50px; /* adjust based on col width */
+  z-index: 11;
+  background: #fff;
+  border-right: 1px solid #ddd;
+}
+.sticky-col-right {
+  position: sticky;
+  right: 0;
+  z-index: 11;
+  background: #fff;
+  border-left: 1px solid #ddd;
+}
+
+/* All header cells */
+.mat-header-cell {
+  position: sticky;
+  top: 0;
+  z-index: 11;
+  background: #0d6efd;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Left sticky headers need higher z-index */
+.mat-header-cell.sticky-col-left,
+.mat-header-cell.sticky-col-left-2,
+.mat-header-cell.sticky-col-right {
+  z-index: 111 !important;
 }
 
