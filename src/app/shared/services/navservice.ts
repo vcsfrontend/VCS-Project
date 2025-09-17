@@ -110,15 +110,15 @@ export class NavService implements OnDestroy {
   MENUITEMS: Menu[] = [
     // Dashboard
     { headTitle: 'MAIN' },
-    // {
-    //   title: 'Dashboard',
-    //   icon: 'bi-house',
-    //   dirchange: false,
-    //   active: false,
-    //   type: 'link',
-    //   linkType : 'internal',
-    //   path: '/dashboard/sales',
-    // },
+    {
+      title: 'Dashboard',
+      icon: 'bi-house',
+      dirchange: false,
+      active: false,
+      type: 'link',
+      linkType : 'internal',
+      path: '/dashboard/sales',
+    },
     // {
     //   title: 'CRM',
     //   icon: 'bi-file-earmark',

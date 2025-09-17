@@ -82,28 +82,28 @@ SwiperCore.use([
 export class StocksComponent {
     thumbsSwiper: any;
     setThumbsSwiper(swiper: any) {
-       this.thumbsSwiper = swiper;
-     }
-     public swiperConfig:any = {
-   
-        breakpoints:{
-          200:{
-               slidesPerView: 1, 
-              },
-              500:{
-                slidesPerView: 2, 
-              },
-              770:{
-                slidesPerView: 3, 
-              },
-              1400:{
-                slidesPerView: 4, 
-              },
-              1600:{
-                slidesPerView: 5, 
-              },
-       }
-      } 
+        this.thumbsSwiper = swiper;
+    }
+    public swiperConfig: any = {
+
+        breakpoints: {
+            200: {
+                slidesPerView: 1,
+            },
+            500: {
+                slidesPerView: 2,
+            },
+            770: {
+                slidesPerView: 3,
+            },
+            1400: {
+                slidesPerView: 4,
+            },
+            1600: {
+                slidesPerView: 5,
+            },
+        }
+    } 
     chartOptions:any = {
     chart: {
         type: 'line',

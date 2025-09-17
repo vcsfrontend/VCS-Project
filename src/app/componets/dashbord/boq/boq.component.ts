@@ -20,7 +20,27 @@ import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyDoc, Validators } from 'ngx-editor';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { SwiperModule, } from 'swiper/angular';
+import SwiperCore, {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Virtual,
+  Zoom,
+  Autoplay,
+  Thumbs,
+  Mousewheel,
+  Keyboard,
+  EffectCube,
+  EffectFade,
+  EffectFlip,
+  EffectCoverflow,
+  SwiperOptions,
+  Swiper,
+  
+ 
+} from 'swiper';
 interface Plan {
     name: string;
     checked: boolean;
@@ -28,13 +48,30 @@ interface Plan {
     isCustom?: boolean;   // optional flag for custom items
 }
 
+SwiperCore.use([
+  Navigation,
+  Pagination,
+  Scrollbar,
+  A11y,
+  Virtual,
+  Mousewheel,
+  Zoom,
+  Autoplay,
+  Thumbs,
+  Keyboard,
+  EffectCube,
+  EffectFade,
+  EffectFlip,
+  EffectCoverflow,
+]);
+
 @Component({
     selector: 'app-boq',
     standalone: true,
     imports: [SharedModule, NgSelectModule, NgbModule,
         NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule,
         NgApexchartsModule, MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,
-        NgbOffcanvasModule],
+        NgbOffcanvasModule,SwiperModule],
     providers: [NgbModalConfig, NgbModal, FlatpickrDefaults,],
     templateUrl: './boq.component.html',
     styleUrl: './boq.component.scss'
@@ -54,7 +91,7 @@ export class BoqComponent extends BaseComponent {
     orderContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount"];
     userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
     designerColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-        'projectArea', 'projectStartDate', 'projectEndDate', 'designUrl','projectCompletion'];
+        'projectArea', 'projectStartDate', 'projectEndDate', 'designUrl', 'projectCompletion'];
     invoiceForm!: FormGroup; extraContentProposal!: FormGroup
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -66,10 +103,10 @@ export class BoqComponent extends BaseComponent {
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
     selectedOrderContent: any = null; actstatus: any;
-    adoanAiRole : string = '';
+    adoanAiRole: string = '';
     itemId: any; currentSection: any; proposals: any[] = []; clientOrders: any[] = [];
     dataSource = new MatTableDataSource<any>(); projectId: any; projectName!: any;
-    designingId:any;designCompletionStatus:string='';
+    designingId: any; designCompletionStatus: string = '';
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     proposalContentDetailsDataSource = new MatTableDataSource<any>([]);
@@ -78,7 +115,7 @@ export class BoqComponent extends BaseComponent {
     proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
     itemCodeLst: any; public userList: any; filteredUserList: any[] = []; recceStage: string = '';
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
-    filteredRecce: any[] = [];blockedStages: string[] = [];
+    filteredRecce: any[] = []; blockedStages: string[] = [];
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -96,8 +133,31 @@ export class BoqComponent extends BaseComponent {
     filteredProposals: any[] = []; filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
     orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
-    projectLst: any = []; boqproject: any;showAllProposals = false;
+    projectLst: any = []; boqproject: any; showAllProposals = false;
+    thumbsSwiper: any;
+    setThumbsSwiper(swiper: any) {
+        this.thumbsSwiper = swiper;
+    }
+    public swiperConfig: any = {
 
+        breakpoints: {
+            200: {
+                slidesPerView: 1,
+            },
+            500: {
+                slidesPerView: 2,
+            },
+            770: {
+                slidesPerView: 3,
+            },
+            1400: {
+                slidesPerView: 4,
+            },
+            1600: {
+                slidesPerView: 5,
+            },
+        }
+    } 
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
     public proposalApprovalSubmitted = false;
@@ -111,7 +171,7 @@ export class BoqComponent extends BaseComponent {
     constructor(
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
-        private fb: FormBuilder, private route: ActivatedRoute,private router: Router) {
+        private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
         super();
         this.userData = localStorage.getItem('userDetails');
         this.userType = JSON.parse(this.userData).type;
@@ -131,7 +191,7 @@ export class BoqComponent extends BaseComponent {
     openRights2(content3: any) {
         this.offcanvasService.open(content3, { position: 'end' });
     }
-    
+
     openProjectModal(content45: any, projectId: string) {
         const project = this.designerDataSource.data.find(p => p.projectId === projectId);
         this.updateProjectForm.patchValue({
@@ -148,22 +208,22 @@ export class BoqComponent extends BaseComponent {
             type: this.userType
         });
         if (project.designCompletionStatus === 'Complete') {
-        this.updateProjectForm.disable(); 
-        } else{
+            this.updateProjectForm.disable();
+        } else {
 
-        if (this.userRole === 'USER') {
-            Object.keys(this.updateProjectForm.controls).forEach(control => {
-                if (control !== 'designCompletionStatus') {
-                    this.updateProjectForm.controls[control].disable();
-                } else {
+            if (this.userRole === 'USER') {
+                Object.keys(this.updateProjectForm.controls).forEach(control => {
+                    if (control !== 'designCompletionStatus') {
+                        this.updateProjectForm.controls[control].disable();
+                    } else {
+                        this.updateProjectForm.controls[control].enable();
+                    }
+                });
+            } else if (this.userRole === 'ADMIN') {
+                Object.keys(this.updateProjectForm.controls).forEach(control => {
                     this.updateProjectForm.controls[control].enable();
-                }
-            });
-        } else if (this.userRole === 'ADMIN') {
-            Object.keys(this.updateProjectForm.controls).forEach(control => {
-                this.updateProjectForm.controls[control].enable();
-            });
-        }
+                });
+            }
         }
         this.modalService.open(content45, { backdrop: 'static' });
     }
@@ -297,7 +357,7 @@ export class BoqComponent extends BaseComponent {
             noCalendar: true,
             dateFormat: 'H:i',
         };
-       
+
         this.getRecceData();
         this.updateRecceForm = this.fb.group({
             files: this.fb.array([]),
@@ -358,15 +418,8 @@ export class BoqComponent extends BaseComponent {
                         this.filteredUserList = this.userList.filter(
                             (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
                         );
-                    } else {
-                        this.toastr.error(res.message, 'signup', {
-                            timeOut: 3000,
-                            positionClass: 'toast-top-right',
-                        });
                     }
-                },
-                error: (error) => {
-                },
+                }
             });
         }
     }
@@ -392,6 +445,14 @@ export class BoqComponent extends BaseComponent {
         }
         return hash;
     }
+
+    applyGlobalFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+        Object.keys(this.boqDataSources).forEach(key => {
+            this.boqDataSources[key].filter = filterValue;
+        });
+    }
+
 
     openEditForm(element: any, content: any) {
         this.isEditMode = true;
@@ -508,13 +569,8 @@ export class BoqComponent extends BaseComponent {
                     this.toastr.success(`${field} updated successfully`);
                     element[field] = fieldValue;
                     if (field === 'itemType') element.brandOrMake = brandOrMake;
-                } else {
-                    this.toastr.error(res?.message || `Failed to update ${field}`);
                 }
-            },
-            error: (err) => {
-                this.toastr.error(`Error while updating ${field}`);
-            },
+            }
         });
     }
 
@@ -570,7 +626,7 @@ export class BoqComponent extends BaseComponent {
         const payload = {
             email: this.userEmail,
             // designId: "3FO3EWPJHYSK",
-            designId : this.designingId,
+            designId: this.designingId,
             bomRequired: true,
             wardrobeRequired: true,
             kbRequired: true
@@ -610,9 +666,6 @@ export class BoqComponent extends BaseComponent {
                 this.tabTotals['All'] = allItems.reduce((sum, item) => sum + (item.clientRate || 0), 0);
                 this.tabKeys = ['All', ...this.tabKeys];
             },
-            error: () => {
-                this.toastr.error('Something went wrong!');
-            }
         });
     }
 
@@ -628,9 +681,6 @@ export class BoqComponent extends BaseComponent {
                 this.proposals = res.boqProposalList || [];
                 this.filteredProposals = [...this.proposals];
             },
-            error: () => {
-                this.toastr.error('Failed to fetch proposals');
-            }
         });
     }
 
@@ -691,9 +741,6 @@ export class BoqComponent extends BaseComponent {
                     this.proposalApprovalForm.patchValue({ amount: 0 });
                 }
             },
-            error: () => {
-                this.toastr.error("Failed to fetch proposal details");
-            }
         });
     }
 
@@ -715,9 +762,6 @@ export class BoqComponent extends BaseComponent {
             next: (res: any) => {
                 this.clientOrders = res.boqClinetOrderList || [];
                 this.filteredClientOrders = [...this.clientOrders];
-            },
-            error: () => {
-                this.toastr.error('Failed to fetch clientOrders');
             }
         });
     }
@@ -787,9 +831,6 @@ export class BoqComponent extends BaseComponent {
                     this.orderTabCounts = { All: 0 };
                     this.proposalApprovalForm.patchValue({ amount: 0 });
                 }
-            },
-            error: () => {
-                this.toastr.error("Failed to fetch order details");
             }
         });
     }
@@ -858,13 +899,8 @@ export class BoqComponent extends BaseComponent {
                     this.toastr.success(res.message || 'Data Saved Successfully');
                     this.elementForm.reset();
                     this.elementFormSubmitted = false;
-                } else {
-                    this.toastr.error(res?.message || 'Something went wrong.');
-                }
-            },
-            error: (err) => {
-                this.toastr.error('An error occurred while saving the element.');
-            },
+                } 
+            }
         });
     }
 
@@ -926,13 +962,8 @@ export class BoqComponent extends BaseComponent {
                     this.elementFormSubmitted = false;
                     this.selectedElement = null;
                     this.boqData();
-                } else {
-                    this.toastr.error(res?.message || 'Something went wrong.');
-                }
-            },
-            error: (err) => {
-                this.toastr.error('An error occurred while updating the element.');
-            },
+                } 
+            }
         });
     }
 
@@ -1026,9 +1057,6 @@ export class BoqComponent extends BaseComponent {
             next: () => {
                 this.createProposal(proposalPayload, modal);
             },
-            error: (err) => {
-                this.toastr.error("Failed to update elements");
-            }
         });
     }
 
@@ -1039,14 +1067,8 @@ export class BoqComponent extends BaseComponent {
                     this.toastr.success(res.message || "Proposal created successfully");
                     modal.close();
                     this.boqData();
-                } else {
-                    this.toastr.error(res?.message || "Something went wrong while creating proposal");
-                }
+                } 
             },
-            error: (err) => {
-                this.toastr.error("Failed to create proposal");
-                console.error(err);
-            }
         });
     }
 
@@ -1080,9 +1102,6 @@ export class BoqComponent extends BaseComponent {
             next: (res) => {
                 this.toastr.success("Proposal updated successfully");
                 modal.close();
-            },
-            error: (err) => {
-                this.toastr.error("Something went wrong");
             }
         });
     }
@@ -1451,9 +1470,6 @@ export class BoqComponent extends BaseComponent {
                     window.open(url, '_blank');
                     this.toastr.success(res.message);
                 }
-            },
-            error: (err) => {
-                this.toastr.error('Something went wrong');
             }
         });
     }
@@ -1473,9 +1489,7 @@ export class BoqComponent extends BaseComponent {
     //             if (res) {
     //                 this.projectLst = res.projList;
     //                 this.designerDataSource.data = this.projectLst;
-    //             } else {
-    //                 this.toastr.error(res.message);
-    //             }
+    //             } 
     //         }
     //     })
     // }
@@ -1500,7 +1514,7 @@ export class BoqComponent extends BaseComponent {
             next: (res: any) => {
                 if (res) {
                     let projects = Array.isArray(res) ? res : [res];
-                    this.designingId= res?.designId || '';
+                    this.designingId = res?.designId || '';
                     this.designCompletionStatus = res.designCompletionStatus;
                     if (this.userRole === 'ADMIN') {
                         this.projectLst = projects;
@@ -1516,11 +1530,6 @@ export class BoqComponent extends BaseComponent {
                     this.designerDataSource.data = [];
                 }
             },
-            error: (err) => {
-                console.error('Error fetching projects:', err);
-                this.projectLst = [];
-                this.designerDataSource.data = [];
-            }
         });
     }
 
@@ -1556,7 +1565,6 @@ export class BoqComponent extends BaseComponent {
                 modal.close();
                 this.recceForm.reset();
             },
-            error: () => this.toastr.error('Failed to create recce'),
         });
     }
 
@@ -1602,8 +1610,8 @@ export class BoqComponent extends BaseComponent {
                             ? recce.imageUrls.split(',').map((url: string) => url.trim())
                             : [],
                         recceAssigneEmails: recce.recceAssigne
-                        ? recce.recceAssigne.split(',').map((v: string) => v.trim())
-                        : [],
+                            ? recce.recceAssigne.split(',').map((v: string) => v.trim())
+                            : [],
                         recceStakeHoldersEmail: recce.recceStakeHolders
                             ? recce.recceStakeHolders.split(',')[0].trim() : '',
                         recceClientPocEmail: recce.recceClientPoc
@@ -1612,15 +1620,12 @@ export class BoqComponent extends BaseComponent {
                     this.blockedStages = [];
                     this.recceList.forEach(recce => {
                         if (recce.recceStage) {
-                        this.blockedStages.push(recce.recceStage);
+                            this.blockedStages.push(recce.recceStage);
                         }
                     });
                     this.filterRecceByStage('Recce Details');
-                } 
+                }
             },
-            error: (err) => {
-                this.toastr.error('Something went wrong');
-            }
         });
     }
 
@@ -1646,9 +1651,6 @@ export class BoqComponent extends BaseComponent {
                 this.toastr.success('Recce updated successfully');
                 this.getRecceData();
             },
-            error: (err: any) => {
-                this.toastr.error('Something went wrong while updating recce');
-            }
         });
     }
 
@@ -1672,21 +1674,28 @@ export class BoqComponent extends BaseComponent {
 
     openDesignLink(url: string) {
         if (url) {
-            window.open(url, '_blank'); 
+            window.open(url, '_blank');
         } else {
             this.toastr.warning('Design URL not available');
         }
     }
 
-     getRecceByStage(stage: string) {
+    getRecceByStage(stage: string) {
         return this.recceList.filter(r => r.recceStage === stage);
     }
-    
+
     isBlocked(stageName: string): boolean {
         return this.blockedStages.includes(stageName);
     }
-    onShare() {
-        this.router.navigate(['/dashboard/quotation'], { queryParams: { id: this.designingId } });
+    onShare(proposal: any) {
+        const designId = proposal?.designId;
+        const proposalContentId = proposal?.proposalContId;
+        this.router.navigate(['/dashboard/quotation'], {
+            queryParams: {
+                designId: designId,
+                proposalContentId: proposalContentId
+            }
+        });
     }
 
 }

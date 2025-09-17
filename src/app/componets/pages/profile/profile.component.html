@@ -15,8 +15,10 @@
                     <div>
                         <div class="d-flex align-items-center gap-2 mb-4">
                             <div class="lh-1">
-                                <span class="avatar avatar-xxl avatar-rounded online me-3">
-                                    <img src="assets/images/brand-logos/profile1.jpg" alt="">
+                                <span class="avatar avatar-xxl avatar-rounded online me-3 cu"
+                                    (click)="profileUpdate(content12)">
+                                    <img [src]="userData.profilePic || 'assets/images/brand-logos/profile1.jpg'"
+                                        alt="Profile Picture" class="rounded-circle border border-2 border-dark">
                                 </span>
                             </div>
                             <div class="flex-fill main-profile-info">
@@ -96,7 +98,7 @@
                                     <i class="ri-instagram-line fw-medium"></i>
                                 </button>
                                 <button class="btn btn-sm btn-icon btn-success-light btn-wave waves-effect waves-light">
-                                    <i class="ri-github-line fw-medium"></i>
+                                    <i class="ri-linkedin-fill fw-medium"></i>
                                 </button>
                                 <button class="btn btn-sm btn-icon btn-danger-light btn-wave waves-effect waves-light">
                                     <i class="ri-youtube-line fw-medium"></i>
@@ -115,8 +117,7 @@
                     class="p-3 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
                     <div>
                         <ul ngbNav #nav="ngbNav" [activeId]="1"
-                            class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab"
-                            role="tablist">
+                            class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab" role="tablist">
                             <li [ngbNavItem]="1" class="nav-item" role="presentation">
                                 <button ngbNavLink class="nav-link" id="activity-tab" data-bs-toggle="tab"
                                     data-bs-target="#activity-tab-pane" type="button" role="tab"
@@ -126,47 +127,58 @@
                                     <div class="row gy-3">
                                         <div class="col-xl-3 col-lg-3 col-md-3">
                                             <label for="firstName" class="form-label">First Name</label>
-                                            <input type="text" class="form-control" placeholder="firstName" value="{{ userData.firstName }}" disabled="true">
+                                            <input type="text" class="form-control" placeholder="firstName"
+                                                value="{{ userData.firstName }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
                                             <label for="lastName" class="form-label">Last Name</label>
-                                            <input type="text" class="form-control" placeholder="lastName" value="{{ userData.lastName }}" disabled="true">
+                                            <input type="text" class="form-control" placeholder="lastName"
+                                                value="{{ userData.lastName }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="dob" class="form-label">Dob</label>
-                                            <input type="email" class="form-control" placeholder="dob" value="{{ userData.dob}}" disabled="true">
+                                            <label for="dob" class="form-label">DOB</label>
+                                            <input type="email" class="form-control" placeholder="dob"
+                                                value="{{ userData.dob}}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
                                             <label for="Email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" placeholder="email" value="{{ userData.email }}" disabled="true">
+                                            <input type="email" class="form-control" placeholder="email"
+                                                value="{{ userData.email }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
                                             <label for="Country" class="form-label">Country</label>
-                                            <input type="text" class="form-control"  placeholder="Country" value="{{ userData.country }}" disabled="true">
+                                            <input type="text" class="form-control" placeholder="Country"
+                                                value="{{ userData.country }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
                                             <label for="phoneNumber" class="form-label">Phone Number</label>
-                                            <input type="text" class="form-control"  placeholder="phoneNumber" value="{{ userData.phoneNumber }}" disabled="true">
+                                            <input type="text" class="form-control" placeholder="phoneNumber"
+                                                value="{{ userData.phoneNumber }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="username" class="form-label">username</label>
-                                            <input type="text" class="form-control" placeholder="username" value="{{ userData.username }}" disabled="true">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" class="form-control" placeholder="username"
+                                                value="{{ userData.username }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
                                             <label for="city" class="form-label">City</label>
-                                            <input type="text" class="form-control" placeholder="city" value="{{ userData.city }}" disabled="true">
+                                            <input type="text" class="form-control" placeholder="city"
+                                                value="{{ userData.city }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="companyName" class="form-label">companyName</label>
-                                            <input type="text" class="form-control"  placeholder="companyName" value="{{ userData.companyName }}" disabled="true">
+                                            <label for="companyName" class="form-label">Company Name</label>
+                                            <input type="text" class="form-control" placeholder="companyName"
+                                                value="{{ userData.companyName }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="createdDate" class="form-label">createdDate</label>
-                                            <input type="tel" class="form-control" placeholder="createdDate" value="{{ userData.createdDate | date:'dd/MM/yyyy' }}" disabled="true">
+                                            <label for="createdDate" class="form-label">Created Date</label>
+                                            <input type="tel" class="form-control" placeholder="createdDate"
+                                                value="{{ userData.createdDate | date:'dd/MM/yyyy' }}" disabled="true">
                                         </div>
                                         <div class="col-xl-3 col-lg-3 col-md-3">
                                             <label for="adonaiRole" class="form-label">Role</label>
-                                            <input type="tel" class="form-control" placeholder="adonaiRole" value="{{ userData.adonaiRole }}" disabled="true">
+                                            <input type="tel" class="form-control" placeholder="adonaiRole"
+                                                value="{{ userData.adonaiRole }}" disabled="true">
                                         </div>
                                     </div>
                                 </ng-template>
@@ -270,11 +282,10 @@
             </div>
         </div>
     </div>
-    <div class="row ms-1 scrollable-container" 
-        [ngStyle]="{
+    <div class="row ms-1 scrollable-container" [ngStyle]="{
         'max-height': topshowMore ? '220px' : '220px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
-        'transition': 'max-height 0.5s ease' }" *ngIf="adoanAiRole== 'ADMIN'" >
+        'transition': 'max-height 0.5s ease' }" *ngIf="adoanAiRole== 'ADMIN'">
         <div *ngFor="let contact of filterUserData()" class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
             <div class="card custom-card text-center border-bottom">
                 <div class="card-body p-4">
@@ -297,7 +308,7 @@
                             placement="top" ngbTooltip="Adonai: {{ contact.adonai }} Crm: {{ contact.crm }}">
                             View Tools
                         </button>
-                         <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button"
+                        <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button"
                             (click)="openRight(content2);ViewUserDetails(contact)" data-bs-target="#offcanvasRight"
                             aria-controls="offcanvasRight">
                             <i class="fe fe-eye text-muted"></i>
@@ -329,387 +340,428 @@
     <li class="list-group-item">
         <div class="d-flex align-items-center">
             <div class="flex-fill">
-                <div ngbAccordion class=" customized-accordion accordions-items-seperate accordion-wrapper" id="customizedAccordion" >
-                     <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                <div ngbAccordion class=" customized-accordion accordions-items-seperate accordion-wrapper"
+                    id="customizedAccordion">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Admin</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong>HR/Admin</p>
                                     <p><strong>Description:</strong>
-                                       Handle HR & office admin tasks
+                                        Handle HR & office admin tasks
                                     </p>
                                     <p><strong>Key Tasks:</strong>Hiring, payroll, attendance, admin support</p>
-                                     <p><strong>Targets</strong>Close all open positions in 45 days</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Hiring TAT, employee retention rate</p>
+                                    <p><strong>Targets</strong>Close all open positions in 45 days</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Hiring TAT, employee retention
+                                        rate</p>
                                     <p><strong>Bonus</strong>Bonus for 30 day hiring closure</p>
                                     <p><strong>Penalty</strong>Penalty for compliance lapses</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem  [collapsed]="true" class="custom-accordion-primary " *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary "
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Marketing Head</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> Digital Marketer & Marketing Manager</p>
                                     <p><strong>Description:</strong>
                                         Develop and execute digital campaigns, manage brand presence
                                     </p>
                                     <p><strong>Key Tasks:</strong>SEO, Ads, Social Media, Lead generation</p>
-                                     <p><strong>Targets</strong>20% monthly lead growth</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Leads generated, conversion %, campaign ROI</p>
+                                    <p><strong>Targets</strong>20% monthly lead growth</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Leads generated, conversion %,
+                                        campaign ROI</p>
                                     <p><strong>Bonus</strong>5% of monthly salary as bonus</p>
                                     <p><strong>Penalty</strong>Warning + 10% salary deduction on repeated failure</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
 
                     </div>
-                    <div ngbAccordionItem *ngIf="adoanAiRole === 'USER' || adoanAiRole ==='ADMIN'" [collapsed]="true" class="custom-accordion-primary">
+                    <div ngbAccordionItem *ngIf="adoanAiRole === 'USER' || adoanAiRole ==='ADMIN'" [collapsed]="true"
+                        class="custom-accordion-primary">
                         <h2 ngbAccordionHeader id="customizedAccordionTwo">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="false" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="false"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Marketing Executive</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> Content Creator, CRM & Feedback Coordinator</p>
                                     <p><strong>Description:</strong>
                                         Create content, handle CRM follow-ups, manage client feedback
                                     </p>
                                     <p><strong>Key Tasks:</strong>Posts, blogs, reels, CRM updates, feedback calls</p>
-                                     <p><strong>Targets</strong>Weekly 5 content posts, 100% CRM data updated</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Engagement rate, timely CRM updates, feedback scores</p>
+                                    <p><strong>Targets</strong>Weekly 5 content posts, 100% CRM data updated</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Engagement rate, timely CRM
+                                        updates, feedback scores</p>
                                     <p><strong>Bonus</strong>2% of salary as bonus</p>
                                     <p><strong>Penalty</strong>Written warning + loss of bonus</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Sales Head</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> Business Development Manager / Head</p>
                                     <p><strong>Description:</strong>
                                         Lead sales, manage pipeline, close deals
                                     </p>
                                     <p><strong>Key Tasks:</strong>Client meetings, proposals, conversions</p>
-                                     <p><strong>Targets</strong>Close min. 3 projects/month worth 30L+</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Conversion ratio, revenue target, client onboarding</p>
+                                    <p><strong>Targets</strong>Close min. 3 projects/month worth 30L+</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Conversion ratio, revenue
+                                        target, client onboarding</p>
                                     <p><strong>Bonus</strong>Incentive 1% of closed revenue</p>
                                     <p><strong>Penalty</strong>Placed under PIP if 50% target</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole == 'USER' || adoanAiRole =='ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole == 'USER' || adoanAiRole =='ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Sales Executive</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> BDE</p>
                                     <p><strong>Description:</strong>
                                         Identify prospects, support BDM, follow up on leads
                                     </p>
                                     <p><strong>Key Tasks:</strong>Cold calls, follow ups, client meetings</p>
-                                     <p><strong>Targets</strong>50 calls/day, 5 meetings/week</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Lead conversion %, follow up completion</p>
+                                    <p><strong>Targets</strong>50 calls/day, 5 meetings/week</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Lead conversion %, follow up
+                                        completion</p>
                                     <p><strong>Bonus</strong>₹1000 incentive per deal closed</p>
                                     <p><strong>Penalty</strong>Bonus removed if 30% KPI score</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Design Head</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> Design Head</p>
                                     <p><strong>Description:</strong>
                                         Lead design team, approve concepts, manage quality
                                     </p>
                                     <p><strong>Key Tasks:</strong>Concept approvals, mentoring, client discussions</p>
-                                     <p><strong>Targets</strong>10 projects/month design delivery</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Accuracy of BOQ, client design approvals</p>
+                                    <p><strong>Targets</strong>10 projects/month design delivery</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Accuracy of BOQ, client design
+                                        approvals</p>
                                     <p><strong>Bonus</strong>5% bonus if zero design revisions on salary</p>
                                     <p><strong>Penalty</strong>Escalation to management if repeat errors</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                     <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole!== 'ADMIN' || adoanAiRole =='ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole!== 'ADMIN' || adoanAiRole =='ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Design Executive</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> Junior Designers & MMT</p>
                                     <p><strong>Description:</strong>
                                         Prepare drawings, 3D, and measurements
                                     </p>
                                     <p><strong>Key Tasks:</strong>2D, 3D, measurements, revisions</p>
-                                     <p><strong>Targets</strong>Daily 1 drawing or 3D model output/p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Accuracy %, on-time submission</p>
+                                    <p><strong>Targets</strong>Daily 1 drawing or 3D model output/p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Accuracy %, on-time submission
+                                    </p>
                                     <p><strong>Bonus</strong>₹2000 bonus/month for 95% accuracy</p>
                                     <p><strong>Penalty</strong>Rework + deduction from incentives</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Execution Head</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> Senior Manager / Operations Head</p>
                                     <p><strong>Description:</strong>
                                         Oversee execution, client updates, cost control
                                     </p>
                                     <p><strong>Key Tasks:</strong>2D, 3D, measurements, revisions</p>
-                                     <p><strong>Targets</strong>Zero project delays beyond 10%</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>On-time delivery, cost adherence</p>
+                                    <p><strong>Targets</strong>Zero project delays beyond 10%</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>On-time delivery, cost
+                                        adherence</p>
                                     <p><strong>Bonus</strong>5% bonus on profit margin achieved </p>
                                     <p><strong>Penalty</strong>Salary deduction for negligence causing losses</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole=== 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole=== 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Execution Manager</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong> Project Manager</p>
                                     <p><strong>Description:</strong>
                                         Plan & monitor site work, resource allocation
                                     </p>
                                     <p><strong>Key Tasks:</strong>Daily site tracking, vendor coordination</p>
-                                     <p><strong>Targets</strong>On-time milestone completion</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Timeline adherence, vendor response time</p>
+                                    <p><strong>Targets</strong>On-time milestone completion</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Timeline adherence, vendor
+                                        response time</p>
                                     <p><strong>Bonus</strong>₹5000 bonus per project delivered on time</p>
                                     <p><strong>Penalty</strong>Penalty for client complaints</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Execution</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong>Project Executors</p>
                                     <p><strong>Description:</strong>
                                         Execute site tasks as per plan
                                     </p>
                                     <p><strong>Key Tasks:</strong>Site-level execution, vendor follow-up</p>
-                                     <p><strong>Targets</strong>Complete daily targets as per PM</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Work completion %, attendance</p>
+                                    <p><strong>Targets</strong>Complete daily targets as per PM</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Work completion %, attendance
+                                    </p>
                                     <p><strong>Bonus</strong>₹1000 monthly bonus</p>
                                     <p><strong>Penalty</strong>Deduction for absenteeism</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                     <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole!== 'ADMIN' || adoanAiRole =='ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole!== 'ADMIN' || adoanAiRole =='ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Execution</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong>Quality Inspector / Factory PM</p>
                                     <p><strong>Description:</strong>
                                         Check site/factory quality, report deviations
                                     </p>
                                     <p><strong>Key Tasks:</strong>Daily quality checks, factory visit</p>
-                                     <p><strong>Targets</strong>95% defect-free delivery</p>
+                                    <p><strong>Targets</strong>95% defect-free delivery</p>
                                     <p><strong>KPIs (Key Performance Indicators):</strong>Defect %</p>
                                     <p><strong>Bonus</strong>Bonus ₹3000 if zero complaints</p>
                                     <p><strong>Penalty</strong>Penalty for >5% errors</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Planning & Accounts</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong>Project Planning Manager / Accounts</p>
                                     <p><strong>Description:</strong>
-                                       Plan project timelines, billing, accounts reporting
+                                        Plan project timelines, billing, accounts reporting
                                     </p>
                                     <p><strong>Key Tasks:</strong>BOQ, billing, cost reports</p>
-                                     <p><strong>Targets</strong>Weekly reports, 100% billing accuracy</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Billing accuracy %, timely reporting</p>
+                                    <p><strong>Targets</strong>Weekly reports, 100% billing accuracy</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Billing accuracy %, timely
+                                        reporting</p>
                                     <p><strong>Bonus</strong>Bonus 2% of saved costs</p>
                                     <p><strong>Penalty</strong>Deduction for financial mismatches</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Planning & Accounts Head</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong>Procurement Head</p>
                                     <p><strong>Description:</strong>
-                                       Procure materials, vendor negotiations
+                                        Procure materials, vendor negotiations
                                     </p>
                                     <p><strong>Key Tasks:</strong>Vendor deals, stock management</p>
-                                     <p><strong>Targets</strong>Material availability 100% before deadlines</p>
-                                    <p><strong>KPIs (Key Performance Indicators):</strong>Procurement time, vendor cost efficiency</p>
+                                    <p><strong>Targets</strong>Material availability 100% before deadlines</p>
+                                    <p><strong>KPIs (Key Performance Indicators):</strong>Procurement time, vendor cost
+                                        efficiency</p>
                                     <p><strong>Bonus</strong>Bonus on cost savings achieved</p>
                                     <p><strong>Penalty</strong>Deduction for delays impacting project</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary" *ngIf="adoanAiRole === 'ADMIN'">
+                    <div ngbAccordionItem [collapsed]="true" class="custom-accordion-primary"
+                        *ngIf="adoanAiRole === 'ADMIN'">
                         <h2 ngbAccordionHeader id="customizedAccordionOne">
-                            <button ngbAccordionButton type="button" data-bs-toggle="collapse" data-bs-target="#customized-AccordionOne"
-                                aria-expanded="true" aria-controls="customized-AccordionOne">
+                            <button ngbAccordionButton type="button" data-bs-toggle="collapse"
+                                data-bs-target="#customized-AccordionOne" aria-expanded="true"
+                                aria-controls="customized-AccordionOne">
                                 <strong>Planning & Accounts</strong>
                             </button>
                         </h2>
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-                        
+
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong>Vendor Coordinator</p>
                                     <p><strong>Description:</strong>
-                                       Coordinate with vendors, follow up supplies
+                                        Coordinate with vendors, follow up supplies
                                     </p>
                                     <p><strong>Key Tasks:</strong>Vendor calls, delivery status, updates</p>
-                                     <p><strong>Targets</strong>Daily 100% vendor follow ups</p>
+                                    <p><strong>Targets</strong>Daily 100% vendor follow ups</p>
                                     <p><strong>KPIs (Key Performance Indicators):</strong>On-time vendor deliveries</p>
                                     <p><strong>Bonus</strong>₹1000 monthly bonus</p>
                                     <p><strong>Penalty</strong>Deduction if >2 missed updates</p>
-                                   
+
                                 </div>
-                        
+
                             </div>
                         </div>
                     </div>
-                   
+
                 </div>
             </div>
         </div>
@@ -730,8 +782,6 @@
                             userDetails.firstName?userDetails.firstName + ' ' +userDetails.lastName:'' }}</li>
                         <li class="mb-2"><span class="fw-semibold me-1">Email : </span>{{
                             userDetails.email?userDetails.email:'' }}</li>
-                        <li class="mb-2"><span class="fw-semibold me-1">No.of Users : </span>{{
-                            userDetails.noOfUsers?userDetails.noOfUsers:'' }}</li>
                         <li class="mb-2"><span class="fw-semibold me-1">City : </span>{{
                             userDetails.city?userDetails.city:'' }}</li>
                         <li class="mb-2"><span class="fw-semibold me-1">Country : </span>{{
@@ -759,5 +809,21 @@
     </div>
 </ng-template>
 
-
-        
+<ng-template #content12 let-modal>
+    <form [formGroup]="profilePicForm" (ngSubmit)="updateProfile()">
+        <div class="modal-header">
+            <h5 class="modal-title">Update Profile</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Upload Profile Picture</label>
+                <input type="file" class="form-control" (change)="onFileSelected($event)">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </form>
+</ng-template>

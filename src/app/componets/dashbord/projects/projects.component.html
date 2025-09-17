@@ -15,12 +15,14 @@
                 <p *ngIf="dateDiff!=0"><strong> Enjoy Your {{dateDiff}} Days Free Trail </strong></p>
             </marquee>
         </div>
-        <div class="card-header justify-content-between" *ngIf="roleid!=7">
+        <div class="card-header justify-content-between" *ngIf="roleid != 7">
             <marquee behavior="scroll" direction="left" class="fs-18 font-weight-bold" style="color: #006699;">
-                <p><strong> Welcome to adonai, Explore Endless Designs </strong> <span
-                        [ngClass]="'badge bg-danger-transparent fs-11'" *ngIf="adonaiSubEndDate"> ({{ adonaiDaysLeft
-                        }})</span> </p>
-
+                <p>
+                    <strong>Welcome to Adonai, Explore Endless Designs</strong>
+                    <span class="badge bg-danger-transparent fs-11" *ngIf="adonaiSubEndDate">
+                        ({{ getSubscriptionStatus(roleid, adonaiSubEndDate) }})
+                    </span>
+                </p>
             </marquee>
         </div>
         <div class="row">

@@ -610,8 +610,29 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (diffDays === 0) return 'Last day';
     if(diffDays == 1) return 'Subscription ends in 1 day';
 
-
     return `Subscription ends in ${diffDays} days`;
+  }
+
+  getSubscriptionStatus(roleId: number, endDate: string | Date): string {
+    const roleMap: { [key: number]: string } = {
+      7: 'Free Trial',
+      12: 'Basic',
+      3: 'Pro',
+      5: 'Elite'
+    };
+    const roleName = roleMap[roleId] || 'Unknown';
+    const today = new Date();
+    const end = new Date(endDate);
+    if (isNaN(end.getTime())) return `${roleName} - Invalid date`;
+
+    const diffTime = end.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return `${roleName} expired`;
+    if (diffDays === 0) return `${roleName} expires today`;
+    if (diffDays === 1) return `${roleName} expires in 1 day`;
+
+    return `${roleName} Subscription expires in ${diffDays} days`;
   }
 
 
@@ -2119,6 +2140,8 @@ downloadButtons: { label: string; url: string }[] = [];
       }
     );
   }
+
+  
 
 
 

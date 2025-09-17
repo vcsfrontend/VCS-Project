@@ -1,5 +1,6 @@
-import { Component,TemplateRef, ViewChild } from '@angular/core';
+import { Component,TemplateRef, ViewChild ,NgModule } from '@angular/core';
 import { SharedModule } from '../../../shared/common/sharedmodule';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { NgbNavModule,NgbDropdownModule ,NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { GalleryItem, Gallery, ImageItem, ImageSize, ThumbnailsPosition, GalleryModule } from 'ng-gallery';
 import { Lightbox, LightboxModule } from 'ng-gallery/lightbox';
@@ -49,7 +50,7 @@ const data = [
   selector: 'app-profile',
   standalone: true,
   imports: [SharedModule,NgbNavModule,NgbDropdownModule,GalleryModule,LightboxModule, OverlayscrollbarsModule,
-    DatePipe,CommonModule,NgbAccordionModule,NgbTooltipModule
+    DatePipe,CommonModule,NgbAccordionModule,NgbTooltipModule,FormsModule,ReactiveFormsModule 
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
@@ -68,17 +69,17 @@ export class ProfileComponent {
   imageData = data; pjData : any;isCollapsed = true;
   items!: GalleryItem[];lastField: any;stageLst: any;
   userLst: any = []; searchUser: string = '';adoanAiRole: any;topshowMore = false;
-  adonaiAccess:any; crmAccess : any;taskList: any[] | null = null;
-  inprogressTasks: any[] = [];
+  adonaiAccess:any; crmAccess : any;taskList: any[] | null = null; profilePicForm!: FormGroup;
+  inprogressTasks: any[] = [];  modal: any;
   verifyTasks: any[] = [];
   completedTasks: any[] = [];userList:any[]=[];
-  userDetails: any = {};taskStats : any;
+  userDetails: any = {};taskStats : any; userProfilePic:any;
   //  isCollapsed = true;
   isCollapsed1 = true;
   isCollapsed2 = true;
   constructor(public gallery: Gallery, public lightbox: Lightbox ,
-    public switchService: SwitherService,private toastr: ToastrService,
-  private offcanvasService: NgbOffcanvas,) {
+    public switchService: SwitherService,private toastr: ToastrService,private fb: FormBuilder,
+  private offcanvasService: NgbOffcanvas, private modalService: NgbModal,) {
        this.userData = localStorage.getItem('userDetails');
       this.userType = JSON.parse(this.userData).type;
       this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
@@ -91,6 +92,11 @@ export class ProfileComponent {
     this.getAllStages();
     this.getUsers();
     this.fetchTasks();
+    this.profilePicForm = this.fb.group({
+      profilePic: [''],
+      email: [this.userEmail],
+      action: ['']
+    });
     this.items = this.imageData.map(
       (item) => new ImageItem({ src: item.srcUrl, thumb: item.previewUrl })
     );
@@ -104,22 +110,12 @@ export class ProfileComponent {
   }
 
   getUserInfo(email: string) {
-    if (!email) {
-      console.error("Invalid email passed to getUserInfo.");
-      return;
-    }
     this.switchService.userInfo(email).subscribe({
       next: (res: any) => {
         if (res) {
           this.userData = res;
-        } else {
-          this.toastr.error("User not found.");
         }
       },
-      error: (err: any) => {
-        console.error("Error fetching user data:", err);
-        this.toastr.error("Failed to fetch user data. Please try again.");
-      }
     });
   }
 
@@ -152,13 +148,8 @@ export class ProfileComponent {
         if (res) {
           this.stageLst = res;
           this.initializeDynamicFields();
-        } else {
-          this.toastr.error(res.message)
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+        } 
+      }
     })
   }
   getdesignData() {
@@ -173,16 +164,8 @@ export class ProfileComponent {
       next: (res: any) => {
         if (res) {
           this.pjData = res;
-        } else {
-          this.toastr.error(res.message, '', {
-            timeOut: 3000,
-            positionClass: 'toast-top-right',
-          });
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+        } 
+      }
     })
   }
   
@@ -207,16 +190,8 @@ export class ProfileComponent {
             this.userLst = res;
             // this.dataSource = new MatTableDataSource<any>(res);
             // this.dataSource.data = res;
-          } else {
-            this.toastr.error(res.message, 'signup', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+          } 
+        }
       })
     }
   }
@@ -271,9 +246,44 @@ export class ProfileComponent {
         completed: this.completedTasks.length
         };
       },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
-      }
     });
   }
+  profileUpdate(content12: any) {
+    this.modalService.open(content12, { centered: true });
+  }
+
+  updateProfile() {
+    if (this.profilePicForm.valid) {
+      const file: File = this.profilePicForm.get('profilePic')?.value;
+      const formData = new FormData();
+      formData.append('profilePic', file);
+      formData.append('email', this.userData.email);
+      formData.append('action', '');
+      this.switchService.updateProfilePic(formData).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.modal.close();
+            this.toastr.success('Profile updated successfully!',);
+          }
+        }
+      });
+    }
+  }
+
+
+
+  onFileSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (!input.files) return;
+
+  const file = input.files[0];
+  if (file) {
+    this.profilePicForm.patchValue({
+      profilePic: file
+    });
+    this.profilePicForm.get('profilePic')?.updateValueAndValidity();
+  }
+}
+
+
 }

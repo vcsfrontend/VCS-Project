@@ -80,6 +80,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
+  createRoleForm!: FormGroup;
   projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
   quotationSubmitted = false; quotationmarginsubmit:boolean=false;projectconfigsubmit:boolean=false;
@@ -425,6 +426,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       updatedBy:[localStorage.getItem('username')] ,
       updatedTime:[],
     });
+
+    this.createRoleForm = this.fb.group({
+      name: [''],
+      description:[''],
+      companyId:['']
+    })
 
 
 
@@ -1160,6 +1167,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   openRight13(content13: any) {
     this.modalService.open(content13, { centered: true, });
+  }
+  roleModal(content16: any) {
+    this.modalService.open(content16, { centered: true, });
   }
   openRight14(content14: any) {
     this.modalService.open(content14, { centered: true, });
