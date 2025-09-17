@@ -12,7 +12,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
-import { of } from 'rxjs';
+import { elementAt, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
@@ -81,6 +81,7 @@ export class QuotationComponent {
 
     modal: any; chartOptions4: any;
     chartOptions1: any;
+    selectedProposalContent: any;
     constructor(// config: NgbModalConfig,
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService,private offcanvasService: NgbOffcanvas,private router: Router,
@@ -163,11 +164,15 @@ export class QuotationComponent {
             dateFormat: 'H:i',
         };
         this.route.queryParams.subscribe(params => {
-            this.designId = params['id'];
-            console.log('Received designId:', this.designId);
+            const designId = params['designId'];
+            const proposalContentId = params['proposalContentId'];
+            if (designId && proposalContentId) {
+                this.getProposalContent({
+                    designId,
+                    proposalContentId
+                });
+            }
         });
-        console.log(this.designId);
-        this.boqData();
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
@@ -188,65 +193,43 @@ export class QuotationComponent {
         return index + 1;
     }
 
-    boqData() {
+    getProposalContent(element: any) {
         const payload = {
-            email: this.userEmail,
-            // designId: "3FO3EWPJHYSK",
-            designId : this.designId,
-            bomRequired: true,
-            wardrobeRequired: true,
-            kbRequired: true
+            designId: element.designId,
+            proposalContentId: element.proposalContId || element.proposalContentId
         };
-        this.switchService.fetchBoqData(payload).subscribe({
-            next: (res) => {
-                const boqData = res?.boqData || {};
-                this.tabKeys = Object.keys(boqData);
-                this.boqDataSources = {};
-                this.totalRooms = this.tabKeys.length;
-                this.totalProducts = 0;
-                this.totalPrice = 0;
-                const roomTotals: { [key: string]: number } = {};
-                this.tabKeys.forEach((key) => {
-                    const items = boqData[key] || [];
-                    this.boqDataSources[key] = items.map((item: any, index: number) => {
-                        const amount = (item.clientRate || 0) * (item.quantity || 0);
-                        return {
-                            slNo: index + 1,
-                            calculatedAmount: amount,
-                            ...item
-                        };
+        this.switchService.fetchProposalContent(payload).subscribe({
+            next: (res: any) => {
+                this.selectedProposalContent = res;
+                try {
+                    const parsedContent = JSON.parse(res.contentJs || "{}");
+                    const flattened = Object.values(parsedContent).flat();
+                    const uniqueFlattened = Array.from(
+                        new Map(flattened.map((item: any) => [item.boqId, item])).values()
+                    );
+                    this.boqDataSources = {};
+                    this.tabKeys = [];
+                    this.boqDataSources["All"] = uniqueFlattened;
+                    this.tabKeys.push("All");
+                    const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
+                    roomKeys.forEach(room => {
+                        this.boqDataSources[room] = parsedContent[room] || [];
+                        this.tabKeys.push(room);
                     });
-                    this.totalProducts += items.length;
-                    const roomTotal = items.reduce(
+                    this.totalPrice = uniqueFlattened.reduce(
                         (sum: number, item: any) =>
                             sum + ((item.finalAmount && item.finalAmount > 0)
                                 ? item.finalAmount
                                 : (item.clientRate || 0) * (item.quantity || 0)),
                         0
                     );
-                    roomTotals[key] = roomTotal;
-                    this.totalPrice += roomTotal;
-                });
-                const allItems = this.tabKeys.flatMap((key) => this.boqDataSources[key]);
-                this.boqDataSources['All'] = allItems.map((item, index) => ({
-                    ...item,
-                    slNo: index + 1
-                }));
-                this.tabKeys.unshift('All');
-                const seriesData = Object.keys(roomTotals).map((room) => {
-                    const percentage = this.totalPrice > 0
-                        ? (roomTotals[room] / this.totalPrice) * 100
-                        : 0;
-                    return {
-                        name: room,
-                        data: [{ x: 'Total', y: Number(percentage.toFixed(2)) }]
-                    };
-                });
-                this.chartOptions4 = {
-                    ...this.chartOptions4,
-                    series: seriesData
-                };
-            }
+
+                } catch (e) {
+                    this.boqDataSources = { All: [] };
+                    this.tabKeys = ["All"];
+                    this.totalPrice = 0;
+                }
+            },
         });
     }
 
@@ -262,8 +245,7 @@ export class QuotationComponent {
 
 
 
-
-quoteValidTill: Date = new Date('2025-09-30'); // Example static date
+      quoteValidTill: Date = new Date('2025-09-30'); 
 
 
 

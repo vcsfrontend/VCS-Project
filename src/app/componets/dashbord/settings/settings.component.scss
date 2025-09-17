@@ -278,4 +278,15 @@ button:disabled {
   max-width: 200px; 
 }
 
+table thead.custom-header th {
+  background-color: #006699;   
+  color: white;             
+  font-size: 15.2px;       
+  font-family: "Poppins", sans-serif; 
+  font-weight: 500;            
+  padding: 8px 12px;          
+  text-align: left; 
+  border: none;
+}
+
 

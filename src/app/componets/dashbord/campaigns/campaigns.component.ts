@@ -132,7 +132,6 @@ export class CampaignsComponent extends BaseComponent {
       payload.campgnId = this.selectedCampgnId;
       payload.campaignId = this.selectedCampaignId;
     }
-    console.log(payload);
     this.switchService.saveCampaignData(payload).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;

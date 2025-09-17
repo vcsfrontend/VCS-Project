@@ -479,10 +479,7 @@
                                                             <tr class="table-footer-row bg-light">
                                                                 <td colspan="8" style="padding:4px 8px; border-top:none; font-size:12px; line-height:1.2;">
                                                                     <div class="d-flex align-items-center justify-content-between flex-wrap small text-muted">
-                                                            
-                                                                        <!-- Left side: items & tags -->
                                                                         <div class="d-flex align-items-center">
-                                                            
                                                                             <i class="bi bi-plus-circle me-2 text-success " style="cursor: pointer;"></i>
                                                                             {{ proposalTabCounts[element.proposalFor] || 0 }} Items
                                                                             <span *ngIf="element.tags?.length">
@@ -490,11 +487,11 @@
                                                                                     {{ tag }}
                                                                                 </span>
                                                                             </span>
-                                                                            <div>
+                                                                            <div class="ms-3">
                                                                                 Proposal Status:
-                                                                                <span class="badge" [ngClass]="{
+                                                                                <span class="badge text-white" [ngClass]="{
                                                                                     'bg-warning': element.status === 'Pending for Approval',
-                                                                                    'bg-success': element.status === 'Approved',
+                                                                                    'bg-success': element.status === 'Approve',
                                                                                     'bg-danger': element.status === 'Rejected'
                                                                                   }">
                                                                                     {{ element.status }}
@@ -549,7 +546,7 @@
                                                     <div class="card-title">Order Details</div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
-                                                        <button class="btn btn-primary btn-sm" (click)="onShare()">Share</button>
+                                                        <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button>
                                                         <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
                                                             <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
                                                         </button>
@@ -1053,8 +1050,7 @@
                                                                         </ng-container>
                                                                         <ng-container matColumnDef="finalAmount">
                                                                             <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                                                                class="sticky-col-right">
-                                                                                Final Amount (₹)
+                                                                                class="sticky-col-right"> Final Amount (₹)
                                                                             </th>
                                                                             <td mat-cell *matCellDef="let element" class="sticky-col-right">
                                                                                 {{ element.finalAmount }}
@@ -1072,29 +1068,29 @@
                                             <div [ngbNavOutlet]="nav" class=""></div>
 
                                             <div class="card custom-card">
-                                            <div class="card-header d-flex justify-content-between align-items-center">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <div class="card-title mb-0">Terms & Condition</div>
+                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="card-title mb-0">Terms & Condition</div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
+                                                            <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
-                                                        <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
-                                                    </button>
+                                                <div class="card-body" *ngIf="!isCollapsed">
+                                                    <div class="form-check form-switch mb-0">
+                                                        <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
+                                                            checked="">
+                                                        <label class="form-check-label" for="Payment-Terms">Payment Terms</label>
+                                                    </div>
+                                                    <div class="form-check form-switch mb-0 pt-2">
+                                                        <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
+                                                            checked="">
+                                                        <label class="form-check-label" for="Other-Terms&Condition">Other Terms & Condition</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="card-body" *ngIf="!isCollapsed">
-                                                <div class="form-check form-switch mb-0">
-                                                    <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
-                                                        checked="">
-                                                    <label class="form-check-label" for="Payment-Terms">Payment Terms</label>
-                                                </div>
-                                                <div class="form-check form-switch mb-0 pt-2">
-                                                    <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
-                                                        checked="">
-                                                    <label class="form-check-label" for="Other-Terms&Condition">Other Terms & Condition</label>
-                                                </div>
-                                            </div>
-                                        </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1557,15 +1553,19 @@
                                             <!-- <button class="btn btn-primary me-2" (click)="openRights2(content3)"><i class="ri-add-line"></i></button> -->
                                             <ng-container *ngFor="let key of tabKeys; let i = index">
                                                 <ng-container [ngbNavItem]="i+1">
-                                                    <a ngbNavLink class="nav-link">{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{
+                                                    <a ngbNavLink class="nav-link border border-dark me-3 ">{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{
                                                             boqDataSources[key].data.length }}</span></a>
                                                     <ng-template ngbNavContent>
                                                         <div class="col-xl-12 mt-2">
                                                             <div class="card custom-card bg-white">
                                                                 <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                                    <div class="card-title">Proposal For Client ({{ key | titlecase }})</div>
+                                                                    <div class="card-title">Project Scope ({{ key | titlecase }})</div>
                                                                     <div class="dropdown" ngbDropdown>
                                                                         <div class="d-flex justify-content-end gap-3">
+                                                                        <mat-form-field class="filter-field">
+                                                                            <mat-label>Fliter</mat-label>
+                                                                            <input matInput (keyup)="applyGlobalFilter($event)" #input>
+                                                                        </mat-form-field>
                                                                         <div ngbDropdown class="d-inline-block">
                                                                           <button type="button" class="btn btn-outline-primary btn-wave me-2">({{ key | titlecase }}): {{ tabTotals[key] | number:'1.0-2' }}</button>
                                                                             <button type="button" class="btn btn-primary"
@@ -1597,8 +1597,8 @@
                                                                                 Create Proposal</a></li>
                                                                             <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">
                                                                                 Add Custom Element</a></li>
-                                                                            <!-- <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2)">Import
-                                                                                    Items From</a></li> -->
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2)">Import
+                                                                                    Items From</a></li>
                                                                         </ul>
                                                                         </div>
                                                                     </div>
@@ -2467,9 +2467,6 @@
                                 {{ item.name }}
                             </ng-option>
                         </ng-select>
-
-
-                                
                             </div>
                             <!-- <button class="nav-link" [ngClass]="{ active: activeTab === 'tab1' }"
                             (click)="selectTab('tab1')">

@@ -88,7 +88,7 @@ export class SuperadminComponent {
   displayedColumns: string[] = ['slNo', 'firstName', 'lastName', 'mobile', 'adonai', 'crm', 'action', 'view', 'edit', 'loginTime', 'logoutTime' ];
   displayAdonaiColumns: string[] = ['slNo', 'email', 'history'];
   displayCrmColumns: string[] = ['slNo', 'email', 'history'];
-  salesDisplayColumns: string[] = ['slNo','email', 'roleId', 'subRole', 'status', 'userName', 'createdAt'];
+  salesDisplayColumns: string[] = ['slNo','email',  'subRole', 'userName', 'createdAt'];
   dataSource = new MatTableDataSource<any>(); 
   adonaiSource = new MatTableDataSource<any>(); 
   crmSource = new MatTableDataSource<any>();
@@ -99,7 +99,7 @@ export class SuperadminComponent {
   @ViewChild('template', { static: true }) templateRef!: TemplateRef<any>;
   @ViewChild('salesPaginator') salesPaginator!: MatPaginator;
   salesDataSource = new MatTableDataSource<any>();
-  private modalRef: any;
+  private modalRef: any;  public updateCompanySubmitted = false;
   content3: any; content4: any; content5: any; content6: any; content7: any;
   userLst:any; userData: any; adonaiHstryLst: any; crmHstryLst: any;
   firstNm: any; lastNm: any; companyNm: any; phoneNo: any; dob: any;
@@ -113,7 +113,8 @@ export class SuperadminComponent {
   crmSubDate: any; crmRemarks: any; crmUsername: any; crmCity:any; crmUpdatedBy: any;
   isAdonaiView = false; isCrmView = false; userNm: any;
   isCrmTrue: any; type: any; users: any; email: any; username: any; country: any; isAdonaiTrue: any;
-  dbData: any = {}; isSts:boolean =true;  salesDesignationForm! : FormGroup;  subRole: any; status:any;
+  dbData: any = {}; isSts:boolean =true;  salesDesignationForm! : FormGroup;  updateCompanyForm! : FormGroup;
+  subRole: any; status:any;
   userDataStorage = localStorage.getItem('userDetails');
   salesData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.salesData ? this.salesData.email : '';
@@ -638,9 +639,6 @@ chartOptions6:any= {
     this.getUsers(); this.getInfo();
     this.getSalesUsers();  
 
-
-
-
     this.salesDesignationForm = this.fb.group({
       userId: [{ value: this.generateProductId(), disabled: true }],
       userName: [''],
@@ -649,6 +647,14 @@ chartOptions6:any= {
       subRole: [''],
       status: [''],
       createdAt: new Date().toISOString()
+    });
+
+    this.updateCompanyForm = this.fb.group({
+      userEmail: [''],
+      companyName: [''],
+      companyCode: [''],
+      type: [0],
+      updatedBy: [''],
     });
 
   }
@@ -943,6 +949,9 @@ chartOptions6:any= {
   openLg2(content2:any) {
 		this.modalService.open(content2, { scrollable: true, centered: true, },);
 	}
+  updateModal(content12:any) {
+		this.modalService.open(content12, { scrollable: true, centered: true, },);
+	}
 
   openMdl(template: TemplateRef<any>) {
     this.viewContainerRef.createEmbeddedView(template);
@@ -1067,5 +1076,33 @@ chartOptions6:any= {
   }
 
   options25: EChartsOption = { };
+
+  updateCompanyUser(modal: any) {
+    this.updateCompanySubmitted = true;
+    if (this.updateCompanyForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    let payload = {
+      ...this.updateCompanyForm.value,
+      updatedBy : this.userName,
+    };
+    this.switchService.updateUserCompany(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            modal.close();
+          }  
+          this.updateCompanyForm.reset();
+          this.updateCompanySubmitted = false;
+        } 
+      }
+    });
+    console.log(payload)
+  }
   
+  get gf() {
+    return this.updateCompanyForm.controls;
+  }
 }

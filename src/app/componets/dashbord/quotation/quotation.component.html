@@ -83,7 +83,7 @@
                                     <ng-template ngbNavContent>
                                         <div class="p-0" id="pending" role="tabpanel">
                                             <div class="row">
-                                                <div class="col-xl-4 mb-4">
+                                                <div class="col-xl-6 mb-4">
                                                     <div class="card custom-card h-100">
                                                         <div class="card-header">
                                                             <div class="card-title">Cost Breakup By Rooms</div>
@@ -257,20 +257,11 @@
                                                         </a>
                                                         <ng-template ngbNavContent>
                                                             <div class="card custom-card overflow-hidden">
-                                                                <!-- <div class="card-header">
-                                                                    <div class="card-title">{{ key }} Items {{
-                                                                        boqDataSources[key].length }}</div>
-                                                                </div> -->
                                                                 <div class="table-container">
                                                                     <table class="table table-hover text-nowrap my-table">
                                                                         <thead class="table-light sticky-header">
-                                                                            <tr>
-                                                                                <th scope="row" class="ps-4 sticky-col-left-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel2" value=""
-                                                                                        aria-label="...">
-                                                                                </th>
-                                                                                <th class="sticky-col-left-3">Element Name & Description</th>
-                                                                                <th>Item Code</th>
-                                                                                <th>Description</th>
+                                                                            <tr class="in">
+                                                                                <th class="sticky-col-left">Element Name & Description</th>
                                                                                 <th>Brand/Make</th>
                                                                                 <th>Category</th>
                                                                                 <th>Order Status</th>
@@ -291,15 +282,12 @@
                                                                                 <th>GST %</th>
                                                                                 <th>Amt w/o GST</th>
                                                                                 <th>Discount</th>
-                                                                                <th class="sticky-col-right" style="max-width: 750px;">Final Amount</th>
+                                                                                <th class="sticky-col-right">Final Amount</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                             <tr *ngFor="let row of boqDataSources[key]; let j = index">
-                                                                                <td scope="row" class="ps-4 sticky-col-left"><input class="form-check-input" type="checkbox" id="checkboxNoLabel2"
-                                                                                        value="" aria-label="...">
-                                                                                </td>
-                                                                                <td class="sticky-col-left-2" style="max-width: 750px;">
+                                                                                <td class="sticky-col-left" style="max-width: 750px;">
                                                                                     <div class="d-flex align-items-center" style="cursor: pointer;">
                                                                                         <span class="avatar avatar-xl me-3">
                                                                                             <img [src]="row.elementUrl || '/assets/images/placeholder.png'" class="img-thumbnail" alt="Project Image">
@@ -319,6 +307,7 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 </td>
+                                                                                <td>{{ row.brandOrMake }}</td>
                                                                                 <td>{{ row.codeAndCategory }}</td>
                                                                                 <td>{{ row.orderStatus }}</td>
                                                                                 <td>{{ row.itemType }}</td>
@@ -338,21 +327,27 @@
                                                                                 <td>{{ row.gstPrecent }}</td>
                                                                                 <td>{{ row.amountWithoutGst }}</td>
                                                                                 <td>{{ row.discount }}</td>
-                                                                                <td class="sticky-col-right" style="max-width: 750px;">{{ row.finalAmount }}</td>
-                                                                            </tr>
-                                                                            <tr class="table-subtotal sticky-footer" class="sticky-col-right">
-                                                                                <td colspan="100%" class="text-end p-3">
-                                                                                    <div class="d-flex justify-content-between align-items-center">
-                                                                                        <strong>Sub Total</strong>
-                                                                                        <div>
-                                                                                            <span class="fw-bold">INR {{ totalPrice | currency:'INR' }}</span>
-                                                                                            <div class="small text-muted">*All prices are inclusive of taxes</div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
+                                                                                <td class="sticky-col-right">{{ row.finalAmount }}</td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
+                                                                </div>
+                                                                <div class="card-footer border-top-0">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div>
+                                                                            <strong>Sub Total</strong>
+                                                                        </div>
+                                                                        <div class="ms-auto">
+                                                                            <nav aria-label="Page navigation" class="pagination-style-4">
+                                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                                    <div>
+                                                                                        <span class="fw-bold">INR {{ totalPrice | currency:'INR' }}</span>
+                                                                                        <div class="small text-muted">*All prices are inclusive of taxes</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </nav>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </ng-template>
