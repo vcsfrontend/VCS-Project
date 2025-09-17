@@ -46,7 +46,8 @@ export class QuotationComponent {
     selectedCategory: any; editIndex: number | null = null;  designId : any; 
     totalRooms: number = 0;
     totalProducts: number = 0;
-    totalPrice: number = 0;
+    totalPrice: number = 0;proposalStatus : string ='';proposalContentDataSources:any;
+    proposalTabCounts:any;
 
     boqList: any;
     categories = [
@@ -201,6 +202,7 @@ export class QuotationComponent {
         this.switchService.fetchProposalContent(payload).subscribe({
             next: (res: any) => {
                 this.selectedProposalContent = res;
+                this.proposalStatus=res.proposalStatus;
                 try {
                     const parsedContent = JSON.parse(res.contentJs || "{}");
                     const flattened = Object.values(parsedContent).flat();
@@ -223,6 +225,51 @@ export class QuotationComponent {
                                 : (item.clientRate || 0) * (item.quantity || 0)),
                         0
                     );
+                    this.totalRooms = Object.keys(parsedContent).length;
+                    this.totalProducts = 0;
+                    const roomTotals: { [key: string]: number } = {};
+                    this.proposalContentDataSources = {};
+                    this.proposalTabCounts = {};
+                    Object.keys(parsedContent).forEach((key) => {
+                    const items = parsedContent[key] || [];
+                    this.proposalContentDataSources[key] = items.map((item: any, index: number) => {
+                        const amount = (item.clientRate || 0) * (item.quantity || 0);
+                        return {
+                        slNo: index + 1,
+                        calculatedAmount: amount,
+                        ...item
+                        };
+                        
+                    }
+                );
+
+                    this.totalProducts += items.length;
+                    const roomTotal = items.reduce(
+                        (sum: number, item: any) =>
+                        sum + ((item.finalAmount && item.finalAmount > 0)
+                            ? item.finalAmount
+                            : (item.clientRate || 0) * (item.quantity || 0)),
+                        0
+                    );
+                    roomTotals[key] = roomTotal;
+
+                    this.proposalTabCounts[key] = items.length;
+                    });
+                    const seriesData = Object.keys(roomTotals).map((room) => {
+                    const percentage = this.totalPrice > 0
+                        ? (roomTotals[room] / this.totalPrice) * 100
+                        : 0;
+                    return {
+                        name: room,
+                        data: [{ x: 'Total', y: Number(percentage.toFixed(2)) }]
+                    };
+                    });
+
+                    this.chartOptions4 = {
+                    ...this.chartOptions4,
+                    series: seriesData
+                    };
+
 
                 } catch (e) {
                     this.boqDataSources = { All: [] };
@@ -248,10 +295,5 @@ export class QuotationComponent {
       quoteValidTill: Date = new Date('2025-09-30'); 
 
 
-
-
-
-
-    
 
 }
