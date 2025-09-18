@@ -404,7 +404,7 @@
                 aria-selected="false" (click)="boqData()">BOQ</button>
             <ng-template ngbNavContent>
                 <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                    <nav ngbNav #nav2="ngbNav" [activeId]="5"
+                    <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
                         class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom" role="tablist">
                         <ng-container ngbNavItem="1">
                             <a ngbNavLink class="nav-link border-end border-dark" (click)="getProposal()">Proposal For Client</a>

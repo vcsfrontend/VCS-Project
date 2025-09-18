@@ -213,11 +213,11 @@ export class QuotationComponent {
                     this.tabKeys = [];
                     this.boqDataSources["All"] = uniqueFlattened;
                     this.tabKeys.push("All");
-                    const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
-                    roomKeys.forEach(room => {
-                        this.boqDataSources[room] = parsedContent[room] || [];
-                        this.tabKeys.push(room);
-                    });
+                    // const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
+                    // roomKeys.forEach(room => {
+                    //     this.boqDataSources[room] = parsedContent[room] || [];
+                    //     this.tabKeys.push(room);
+                    // });
                     this.totalPrice = uniqueFlattened.reduce(
                         (sum: number, item: any) =>
                             sum + ((item.finalAmount && item.finalAmount > 0)
@@ -227,49 +227,94 @@ export class QuotationComponent {
                     );
                     this.totalRooms = Object.keys(parsedContent).length;
                     this.totalProducts = 0;
+                    this.totalPrice = 0;
                     const roomTotals: { [key: string]: number } = {};
                     this.proposalContentDataSources = {};
                     this.proposalTabCounts = {};
-                    Object.keys(parsedContent).forEach((key) => {
-                    const items = parsedContent[key] || [];
-                    this.proposalContentDataSources[key] = items.map((item: any, index: number) => {
-                        const amount = (item.clientRate || 0) * (item.quantity || 0);
-                        return {
-                        slNo: index + 1,
-                        calculatedAmount: amount,
-                        ...item
-                        };
-                        
-                    }
-                );
+                    const roomKeys = Object.keys(parsedContent).filter(
+                      (k) => k !== 'All'
+                    );
 
-                    this.totalProducts += items.length;
-                    const roomTotal = items.reduce(
+                    roomKeys.forEach((key) => {
+                      const items = parsedContent[key] || [];
+                      this.boqDataSources[key] = parsedContent[key] || [];
+                      this.tabKeys.push(key);
+                      this.proposalContentDataSources[key] = items.map(
+                        (item: any, index: number) => {
+                          const amount =
+                            (item.clientRate || 0) * (item.quantity || 0);
+                          return {
+                            slNo: index + 1,
+                            calculatedAmount: amount,
+                            ...item,
+                          };
+                        }
+                      );
+
+                      this.totalProducts += items.length;
+
+                      const roomTotal = items.reduce(
                         (sum: number, item: any) =>
-                        sum + ((item.finalAmount && item.finalAmount > 0)
+                          sum +
+                          (item.finalAmount && item.finalAmount > 0
                             ? item.finalAmount
                             : (item.clientRate || 0) * (item.quantity || 0)),
                         0
-                    );
-                    roomTotals[key] = roomTotal;
+                      );
 
-                    this.proposalTabCounts[key] = items.length;
-                    });
-                    const seriesData = Object.keys(roomTotals).map((room) => {
-                    const percentage = this.totalPrice > 0
-                        ? (roomTotals[room] / this.totalPrice) * 100
-                        : 0;
-                    return {
-                        name: room,
-                        data: [{ x: 'Total', y: Number(percentage.toFixed(2)) }]
-                    };
+                      roomTotals[key] = roomTotal;
+                      this.totalPrice += roomTotal;
+
+                      this.proposalTabCounts[key] = items.length;
                     });
 
-                    this.chartOptions4 = {
+                    // ✅ Build the "All" tab separately (using your flattened items logic)
+                    const allItems = Array.from(
+                      new Map(
+                        Object.values(parsedContent)
+                          .flat()
+                          .map((item: any) => [item.boqId, item])
+                      ).values()
+                    ).map((item: any, index: number) => ({
+                      ...item,
+                      slNo: index + 1,
+                    }));
+
+                    this.proposalContentDataSources['All'] = allItems;
+                    this.proposalTabCounts['All'] = allItems.length;
+
+                  const seriesData = [
+                    {
+                      name: 'Items Count',
+                      data: Object.keys(this.proposalContentDataSources).map(
+                        (room) => {
+                          return {
+                            x: room,
+                            y: this.proposalContentDataSources[room].length,
+                          };
+                        }
+                      ),
+                    },
+                  ];
+
+                  this.chartOptions4 = {
                     ...this.chartOptions4,
-                    series: seriesData
-                    };
-
+                    series: seriesData,
+                    chart: {
+                      type: 'bar',
+                    },
+                    xaxis: {
+                      type: 'category',
+                      title: {
+                        text: 'Rooms',
+                      },
+                    },
+                    yaxis: {
+                      title: {
+                        text: 'Items Count',
+                      },
+                    },
+                  };
 
                 } catch (e) {
                     this.boqDataSources = { All: [] };

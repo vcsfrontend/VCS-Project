@@ -116,6 +116,8 @@ export class BoqComponent extends BaseComponent {
     itemCodeLst: any; public userList: any; filteredUserList: any[] = []; recceStage: string = '';
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
     filteredRecce: any[] = []; blockedStages: string[] = [];
+    selectedProposalCount: any = null;
+    isReadOnly :boolean = false;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -1720,5 +1722,18 @@ export class BoqComponent extends BaseComponent {
             }
         });
     }
+
+    onTabChange(event: any) {
+  this.activeTab = event.nextId;
+
+  if (this.activeTab === '1') {
+    this.isReadOnly = true;
+    this.elementForm.disable();
+    this.elementForm.get('quantity')?.enable();
+  } else if (this.activeTab === '5') {
+    this.isReadOnly = false;
+    this.elementForm.enable();
+  }
+}
 
 }
