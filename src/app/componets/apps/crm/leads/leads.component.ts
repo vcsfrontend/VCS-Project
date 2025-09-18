@@ -1417,17 +1417,13 @@ export class LeadsComponent extends BaseComponent {
               color: defaultStageColor,
             });
           }
-
           this.getCrmStatus();
           this.isAddStagesDisabled = true;
         } else {
           this.stageLst = [];
           this.isAddStagesDisabled = false;
         }
-      },
-      error: (err) => {
-        this.toastr.error('Failed to fetch CRM stages.');
-      },
+      }
     });
   }
 
@@ -1460,12 +1456,8 @@ export class LeadsComponent extends BaseComponent {
         isCustom: true,
         color: newColor,
       };
-
-      // Push to both arrays
       currentStageOptions.push(newOption);
       currentDisplayOptions.push(newOption);
-
-      // Reassign for binding
       this.statusOptionsByStage[this.selectedStage] = [...currentStageOptions];
       this.statusOptionsByStageforDisplay[this.selectedStage] = [
         ...currentDisplayOptions,
@@ -1612,7 +1604,6 @@ export class LeadsComponent extends BaseComponent {
 
   onFollowupStatusChange(): void {
     const selectedStage = this.followupLeadForm.get('stage')?.value;
-
     if (selectedStage === 'open') {
       this.checkboxStageOptions = this.openStage.map((opt) => ({
         ...opt,
@@ -1625,12 +1616,10 @@ export class LeadsComponent extends BaseComponent {
           (opt) => opt.name !== 'Invalid'
         );
       }
-
       const firstStatus = this.checkboxStageOptions[0]?.name || null;
       this.followupLeadForm.patchValue({ status: firstStatus });
       return;
     }
-
     if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
       this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage];
 
@@ -1639,7 +1628,6 @@ export class LeadsComponent extends BaseComponent {
           (opt) => opt.name !== 'Invalid'
         );
       }
-
       const currentStatus = this.followupLeadForm.get('status')?.value;
       const statusExists = this.checkboxStageOptions.some(
         (option) => option.name === currentStatus
@@ -2176,41 +2164,86 @@ export class LeadsComponent extends BaseComponent {
     return this.followupLeadForm.controls;
   }
 
+  private getFormattedNow(): string {
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const yyyy = now.getFullYear();
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const mi = pad(now.getMinutes());
+    const ss = pad(now.getSeconds());
+
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  }
+
   followupLeadSubmit(modal: any) {
     this.followupLeadSubmitted = true;
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
-
-    
-   
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
-      let followUpDetails = this.followupLeadForm.value;
-      followUpDetails.leadEntry = { leadId: this.leadId };
-      followUpDetails.followupTime = this.convertTo12HourFormat(
-        followUpDetails.followupTime
-      );
-      this.switchService
-        .CRMAddFollowupLead(this.followupLeadForm.value)
-        .subscribe({
-          next: (res: any) => {
-            if (res.status == true) {
-              modal.close();
-              this.followupLeadSubmitted = false;
-              this.followupLeadForm.reset();
-              this.executiveName = '';
-              this.followupName = '';
-              this.leadId = 0;
-              this.toastr.success(res.message, 'lead');
-              this.getFetchLeadData();
-            } else {
-              this.toastr.error(res.message, 'lead');
-            }
-          },
-        });
+      const formValue = this.followupLeadForm.value;
+      const updatedTime = this.getFormattedNow();
+      const followUpDetails = {
+        followupDate: formValue.followupDate,
+        followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
+        stage: formValue.stage,
+        status: formValue.status,
+        comments: formValue.comments,
+        followUpBy: this.executiveName,
+        updatedTime: updatedTime,
+        currentStage: formValue.stage,
+        leadEntry: {
+          leadId: this.leadId,
+          name: formValue.name || '',
+          companyName: formValue.companyName || '',
+          executive: formValue.executive || this.executiveName || '',
+          products: formValue.products || '',
+          country: formValue.country || '',
+          stage: formValue.stage,
+          status: formValue.status,
+          leadSource: formValue.leadSource || '',
+          zipCode: formValue.zipCode || '',
+          followUpDate: formValue.followupDate || '',
+          state: formValue.state || '',
+          city: formValue.city || '',
+          address: formValue.address || '',
+          contact: formValue.contact || '',
+          email: formValue.email || '',
+          currentStage: formValue.stage,
+          updatedBy: this.executiveName || '',
+          updatedTime: updatedTime,
+          entryBy: formValue.entryBy || '',
+          campaignId: formValue.campaignId || '',
+          companyCode: formValue.companyCode || '',
+          individualEmail: formValue.individualEmail || '',
+          type: formValue.type || 0,
+          taskGenId: formValue.taskGenId || '',
+          completionStatus: formValue.completionStatus || '',
+          completedBy: formValue.completedBy || '',
+          completionTime: formValue.completionTime || ''
+        }
+      };
+      console.log(followUpDetails)
+      // this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
+      //   next: (res: any) => {
+      //     if (res.status == true) {
+      //       modal.close();
+      //       this.followupLeadSubmitted = false;
+      //       this.followupLeadForm.reset();
+      //       this.executiveName = '';
+      //       this.followupName = '';
+      //       this.leadId = 0;
+      //       this.toastr.success(res.message, 'lead');
+      //       this.getFetchLeadData();
+      //     }
+      //   },
+      // });
     }
   }
-  
+
   convertTo12HourFormat(time24: string): string {
     if (!time24) return '';
     const [hourStr, minuteStr] = time24.split(':');
@@ -3107,5 +3140,7 @@ export class LeadsComponent extends BaseComponent {
     modal.close();
     this.currentStep = 1;
   }
+
+
 
 }

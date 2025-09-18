@@ -374,10 +374,10 @@
                         <td mat-cell *matCellDef="let element">
                             <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm"
                                 (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal" data-bs-target="#completionModal">
-                                LC
+                               <strong>LC</strong> 
                             </button>
                             <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm" disabled>
-                                LC
+                                <strong>LC</strong> 
                             </button>
                         </td>
                     </ng-container>
@@ -1753,18 +1753,14 @@
         </div>
     </ng-container>
   </div>
-
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
-
-    <!-- Step 1 actions -->
     <ng-container *ngIf="currentStep === 1">
       <button type="button" class="btn btn-danger" (click)="goToStep(2)">Yes, Close</button>
     </ng-container>
     <ng-container *ngIf="currentStep === 2">
       <button type="button" class="btn btn-danger" (click)="goToStep(3)">Yes, Proceed</button>
     </ng-container>
-    <!-- Step 2 actions -->
     <ng-container *ngIf="currentStep === 3">
       <button type="button" class="btn btn-primary" (click)="submitClose(modal);">Submit</button>
     </ng-container>

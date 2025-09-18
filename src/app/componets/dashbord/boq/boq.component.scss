@@ -161,12 +161,13 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 }
 
 .offcanvas.custom-offcanvas {
-  --bs-offcanvas-width: 1300px; 
+  --bs-offcanvas-width: 1100px; 
 }
 .offcanvas.custom-offcanvas.show:not(.hiding),
 .offcanvas.custom-offcanvas.showing {
   transform: none !important;
   min-width: 1100px !important;
+  max-width: 1100px !important;
 }
 
 .kt {
@@ -193,9 +194,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   color: white !important;
 }
 
-/* fix row height */
 .my-table tbody tr {
-  height: 48px;       /* adjust until it fits your design */
+  height: 48px;   
 }
 
 .table-container {
@@ -222,7 +222,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   background-color: #333;
 }
 
-/* hide input by default */
 .editable-cell .cell-input {
   display: none;
   width: 100%;
@@ -251,7 +250,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   border-bottom: 1px solid black;                     
 }
 
-/* + button smaller and neat */
 .table-footer-row .btn {
   width: 20px;
   height: 20px;
@@ -265,7 +263,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   color: #28a745;
 }
 
-/* Badge (tags) */
 .table-footer-row .badge {
   font-size: 11px;
   background-color: #f1f1f1;
@@ -274,7 +271,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   padding: 3px 7px;
 }
 
-/* Avatar */
 .table-footer-row .avatar {
   width: 20px;
   height: 20px;
@@ -294,7 +290,7 @@ ul.dropdown-menu.cuw.show ~ .table-container {
     height: 35px;
 }
 .table-container {
-  max-height: 400px; /* set scrollable height */
+  max-height: 400px; 
   overflow-y: auto;
   position: relative;
 }
@@ -302,8 +298,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .table thead th {
   position: sticky;
   top: 0;
-  background: #fff;   /* white background to cover rows */
-  z-index: 10;        /* make sure it stays above rows */
+  background: #fff;  
+  z-index: 10;      
 }
 
 .table tfoot td {
@@ -333,8 +329,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   object-fit: cover;      
   border-radius: 8px;    
 }
-/* Sticky first col (checkbox) */
-/* Left sticky col (checkbox) */
 .sticky-col-left {
   position: sticky;
   left: 0;
@@ -344,7 +338,7 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 
 .sticky-col-left-2 {
   position: sticky;
-  left: 50px; /* adjust based on col width */
+  left: 50px; 
   z-index: 11;
   background: #fff;
   border-right: 1px solid #ddd;
@@ -357,7 +351,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   border-left: 1px solid #ddd;
 }
 
-/* All header cells */
 .mat-header-cell {
   position: sticky;
   top: 0;
@@ -367,7 +360,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   font-weight: 600;
 }
 
-/* Left sticky headers need higher z-index */
 .mat-header-cell.sticky-col-left,
 .mat-header-cell.sticky-col-left-2,
 .mat-header-cell.sticky-col-right {

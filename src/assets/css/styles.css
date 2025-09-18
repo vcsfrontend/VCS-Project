@@ -35196,12 +35196,13 @@ ng-select {
   cursor: pointer !important;
 }
 .offcanvas.custom-offcanvas {
-  --bs-offcanvas-width: 1300px; 
+  --bs-offcanvas-width: 1100px; 
 }
 .offcanvas.custom-offcanvas.show:not(.hiding),
 .offcanvas.custom-offcanvas.showing {
   transform: none !important;
-  min-width: 1300px !important;
+  min-width: 1100px !important;
+  max-width: 1100px !important;
 }
 
 .custom-checkbox .mat-checkbox-label {

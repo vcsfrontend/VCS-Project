@@ -76,12 +76,9 @@
                                                 <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="false"><i
                                                         class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Recce Details
                                                 </a>
-                                                
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0"  >
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Recce Details')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
-                                                         
-                                                        <!-- Left side -->
                                                         <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
                                                             <div class="card-title">
                                                                 <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
@@ -101,7 +98,6 @@
                                                                 Update
                                                             </button>
                                                         </div>
-                                                       
                                                     </div>
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
@@ -118,8 +114,6 @@
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('External Environment')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
-                                                    
-                                                        <!-- Left side -->
                                                         <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
                                                             <div class="card-title">
                                                                 <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
@@ -155,8 +149,6 @@
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Internal Environment')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
-                                                    
-                                                        <!-- Left side -->
                                                         <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
                                                             <div class="card-title">
                                                                 <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
@@ -193,8 +185,6 @@
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Capture Spaces')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
-                                                    
-                                                        <!-- Left side -->
                                                         <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
                                                             <div class="card-title">
                                                                 <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
@@ -215,7 +205,6 @@
                                                                 Update
                                                             </button>
                                                         </div>
-                                                    
                                                     </div>
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
@@ -231,8 +220,6 @@
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Signage and Facade')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
-                                                    
-                                                        <!-- Left side -->
                                                         <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
                                                             <div class="card-title">
                                                                 <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
@@ -253,9 +240,7 @@
                                                                 Update
                                                             </button>
                                                         </div>
-                                                    
                                                     </div>
-                                                    
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -270,8 +255,6 @@
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Layout and Sketches')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
-                                                    
-                                                        <!-- Left side -->
                                                         <div class="card-header d-flex justify-content-between align-items-start border-bottom border-1">
                                                             <div class="card-title">
                                                                 <h6 class="card-title fw-medium">{{ recce.recceName }}</h6>
@@ -292,9 +275,7 @@
                                                                 Update
                                                             </button>
                                                         </div>
-                                                    
                                                     </div>
-                                                   
                                                     <!-- <div class=" text-muted mt-2" id="about-vertical-link" role="tabpanel">
                                                         <img src="../../../../assets/images/ecommerce/jpg/19.jpeg"
                                                             class="img-thumbnail" alt="Responsive image" (click)="openModal2(recceContent2)"
@@ -302,7 +283,6 @@
                                                     </div> -->
                                                 </ng-template>
                                             </ng-container>
-                                            
                                         </nav>
                                     </div>
                                     <div class="col-xl-10 bg-light border rounded">
@@ -1553,13 +1533,13 @@
                                             <!-- <button class="btn btn-primary me-2" (click)="openRights2(content3)"><i class="ri-add-line"></i></button> -->
                                             <ng-container *ngFor="let key of tabKeys; let i = index">
                                                 <ng-container [ngbNavItem]="i+1">
-                                                    <a ngbNavLink class="nav-link border border-dark me-3 ">{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{
+                                                    <a ngbNavLink class="nav-link border border-dark me-2">{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{
                                                             boqDataSources[key].data.length }}</span></a>
                                                     <ng-template ngbNavContent>
                                                         <div class="col-xl-12 mt-2">
                                                             <div class="card custom-card bg-white">
                                                                 <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                                    <div class="card-title">Project Scope ({{ key | titlecase }})</div>
+                                                                    <div class="card-title">{{ key | titlecase }}</div>
                                                                     <div class="dropdown" ngbDropdown>
                                                                         <div class="d-flex justify-content-end gap-3">
                                                                         <mat-form-field class="filter-field">
@@ -1597,7 +1577,7 @@
                                                                                 Create Proposal</a></li>
                                                                             <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">
                                                                                 Add Custom Element</a></li>
-                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2)">Import
+                                                                            <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2); getLibraryData()">Import
                                                                                     Items From</a></li>
                                                                         </ul>
                                                                         </div>
@@ -2075,51 +2055,50 @@
                     <h6 class="mb-0">Please Select Library/Project type You Want To Import From</h6>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-container mat-elevation-z8" *ngIf="!selectedLibrary">
-                        <table mat-table [dataSource]="libraryDataSource" matSort class="mat-table w-100">
-                            <ng-container matColumnDef="slNo">
-                                <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                                <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="libraryName">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Library Name </th>
-                                <td mat-cell *matCellDef="let element">
-                                    <a href="javascript:void(0)" (click)="onLibraryClick(element)">
-                                        {{ element.libraryName }}
-                                    </a>
-                                </td>
-                            </ng-container>
-                            <ng-container matColumnDef="typeofLibrary">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Type of Library </th>
-                                <td mat-cell *matCellDef="let element"> {{ element.typeofLibrary }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="createdBy">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
-                                <td mat-cell *matCellDef="let element"> {{ element.createdBy }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="lastUpdated">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Updated </th>
-                                <td mat-cell *matCellDef="let element"> {{ element.lastUpdated }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="sections">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sections </th>
-                                <td mat-cell *matCellDef="let element"> {{ element.sections }} </td>
-                            </ng-container>
-                            <ng-container matColumnDef="elements">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Elements </th>
-                                <td mat-cell *matCellDef="let element"> {{ element.elements }}</td>
-                            </ng-container>
-                            <tr mat-header-row *matHeaderRowDef="libraryData"></tr>
-                            <tr mat-row *matRowDef="let row; columns: libraryData;"></tr>
+                    <div class="table-container" *ngIf="libraryListData?.length">
+                        <table class="table table-hover text-nowrap my-table">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Element Description</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Brand Make</th>
+                                    <th>categoryId</th>
+                                    <th>UOM</th>
+                                    <th>Quantity</th>
+                                    <th>Standard Rate</th>
+                                    <th>Budget Rate</th>
+                                    <th>HSN</th>
+                                    <th>GST</th>
+                                    <th>Library Type</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let item of libraryListData; let i = index">
+                                    <tr>
+                                        <td>{{ i + 1 }}</td>
+                                        <td>
+                                            <img [src]="item.imageUrl" alt="{{item.name}}" width="40" class="me-2">
+                                            <strong>{{ item.name }}</strong> - {{ item.description }}
+                                        </td>
+                                        <td>{{ item.brandMake }}</td>
+                                        <td>{{ item.categoryId }}</td>
+                                        <td>{{ item.uom }}</td>
+                                        <td>{{ item.standardQuantity }}</td>
+                                        <td>{{ item.standardRate }}</td>
+                                        <td>{{ item.budgetRate }}</td>
+                                        <td>{{ item.hsn }}</td>
+                                        <td>{{ item.gst }}</td>
+                                        <td>{{ item.type }}</td>
+                                        <td>{{ item.createdAt | date:'dd-MMM-yyyy hh:mm a' }}</td>
+                                        <td>{{ item.updatedAt | date:'dd-MMM-yyyy hh:mm a' }}</td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
                         </table>
-                    </div>
-                    <mat-paginator *ngIf="!selectedLibrary" [pageSizeOptions]="[5, 10, 20]"
-                        showFirstLastButtons></mat-paginator>
-                    <div *ngIf="selectedLibrary">
-                        <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-                            <h6>Details of {{ selectedLibrary.libraryName }}</h6>
-                            <button mat-stroked-button class="btn btn-primary" (click)="backToLibrary()">Back</button>
-                        </div>
                     </div>
                 </div>
             </div>
