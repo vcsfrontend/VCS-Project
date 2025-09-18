@@ -22,24 +22,24 @@ import { emptyDoc, Validators } from 'ngx-editor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SwiperModule, } from 'swiper/angular';
 import SwiperCore, {
-  Navigation,
-  Pagination,
-  Scrollbar,
-  A11y,
-  Virtual,
-  Zoom,
-  Autoplay,
-  Thumbs,
-  Mousewheel,
-  Keyboard,
-  EffectCube,
-  EffectFade,
-  EffectFlip,
-  EffectCoverflow,
-  SwiperOptions,
-  Swiper,
-  
- 
+    Navigation,
+    Pagination,
+    Scrollbar,
+    A11y,
+    Virtual,
+    Zoom,
+    Autoplay,
+    Thumbs,
+    Mousewheel,
+    Keyboard,
+    EffectCube,
+    EffectFade,
+    EffectFlip,
+    EffectCoverflow,
+    SwiperOptions,
+    Swiper,
+
+
 } from 'swiper';
 interface Plan {
     name: string;
@@ -49,20 +49,20 @@ interface Plan {
 }
 
 SwiperCore.use([
-  Navigation,
-  Pagination,
-  Scrollbar,
-  A11y,
-  Virtual,
-  Mousewheel,
-  Zoom,
-  Autoplay,
-  Thumbs,
-  Keyboard,
-  EffectCube,
-  EffectFade,
-  EffectFlip,
-  EffectCoverflow,
+    Navigation,
+    Pagination,
+    Scrollbar,
+    A11y,
+    Virtual,
+    Mousewheel,
+    Zoom,
+    Autoplay,
+    Thumbs,
+    Keyboard,
+    EffectCube,
+    EffectFade,
+    EffectFlip,
+    EffectCoverflow,
 ]);
 
 @Component({
@@ -71,7 +71,7 @@ SwiperCore.use([
     imports: [SharedModule, NgSelectModule, NgbModule,
         NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule,
         NgApexchartsModule, MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,
-        NgbOffcanvasModule,SwiperModule],
+        NgbOffcanvasModule, SwiperModule],
     providers: [NgbModalConfig, NgbModal, FlatpickrDefaults,],
     templateUrl: './boq.component.html',
     styleUrl: './boq.component.scss'
@@ -129,11 +129,12 @@ export class BoqComponent extends BaseComponent {
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null;
-    activeId: any = 0; highlightedTabIndex = 0; selectedProposal: any;          // raw API data
+    activeId: any = 0; highlightedTabIndex = 0; selectedProposal: any;        
     filteredProposals: any[] = []; filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
     orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
-    projectLst: any = []; boqproject: any; showAllProposals = false;
+    projectLst: any = []; boqproject: any; showAllProposals = false; libraryList: any[] = [];
+    libraryListData: any[] = [];
     thumbsSwiper: any;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
@@ -157,7 +158,7 @@ export class BoqComponent extends BaseComponent {
                 slidesPerView: 5,
             },
         }
-    } 
+    }
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
     public proposalApprovalSubmitted = false;
@@ -401,6 +402,8 @@ export class BoqComponent extends BaseComponent {
             type: this.userType,
             createdBy: this.userName
         });
+        this.getLibraryData();
+        this.getLibraryNames();
     }
 
     getUsers() {
@@ -899,7 +902,7 @@ export class BoqComponent extends BaseComponent {
                     this.toastr.success(res.message || 'Data Saved Successfully');
                     this.elementForm.reset();
                     this.elementFormSubmitted = false;
-                } 
+                }
             }
         });
     }
@@ -962,7 +965,7 @@ export class BoqComponent extends BaseComponent {
                     this.elementFormSubmitted = false;
                     this.selectedElement = null;
                     this.boqData();
-                } 
+                }
             }
         });
     }
@@ -1067,7 +1070,7 @@ export class BoqComponent extends BaseComponent {
                     this.toastr.success(res.message || "Proposal created successfully");
                     modal.close();
                     this.boqData();
-                } 
+                }
             },
         });
     }
@@ -1694,6 +1697,26 @@ export class BoqComponent extends BaseComponent {
             queryParams: {
                 designId: designId,
                 proposalContentId: proposalContentId
+            }
+        });
+    }
+
+    getLibraryData() {
+        this.switchService.getLibrarayData().subscribe({
+            next: (res: any) => {
+                if (res && res.items) {
+                    this.libraryListData = res.items;
+                }
+            }
+        });
+    }
+    
+    getLibraryNames() {
+        this.switchService.getLibrarayNames().subscribe({
+            next: (res: any) => {
+                if (res && res.libraries) {
+                    this.libraryList = res.libraries;
+                }
             }
         });
     }

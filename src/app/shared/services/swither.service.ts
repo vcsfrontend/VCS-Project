@@ -16,6 +16,7 @@ export class SwitherService {
   // private apiUrl = 'https://sasi-vcs-repo.onrender.com/auth/get_all_vcs_users';
   // GET request
   private apiUrl = environment.webURL;
+  private bizUrl = environment.bizPortal;
   private adonaiURL = environment.masterURL;
   getCall(url: string): Observable<any> {
     return this.http.get<any>(url);
@@ -210,6 +211,8 @@ export class SwitherService {
   fetchRecceData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_recce_data`, data); }
   fetchAssgnAdonaiDesign(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/get_proj_design`, data); }
   updateAssgnAdonaiDesign(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/update_project_details`, data); }
+  getLibrarayData(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/items/get/all`); }
+  getLibrarayNames(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/shared`); }
   createRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {
