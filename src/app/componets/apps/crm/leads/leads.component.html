@@ -1235,8 +1235,8 @@
 
     </div>
     <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
-        <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
-            <div class="offcanvas-body p-0 m-4 overflow-auto" style="max-height: 60vh;">
+        <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm" style="max-height: 60vh;">
+            <div class="offcanvas-body p-0 m-4 overflow-auto" >
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label for="followupDate" class="form-label">Next Follow up date</label>
