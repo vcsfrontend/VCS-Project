@@ -1,6 +1,6 @@
 
 import { Component,ElementRef,OnInit, Renderer2 } from '@angular/core';
-import { NgbDropdownModule,NgbTooltipModule  } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule,NgbModal,NgbOffcanvas,NgbTooltipModule,NgbModule  } from '@ng-bootstrap/ng-bootstrap';
 
 // C:\Users\LENOVO ADMIN\Project\VCS\src\app\shared\services
 import { AuthService } from '../../../shared/services/auth.service';
@@ -16,8 +16,20 @@ import {
   ApexLegend,
   ApexResponsive,
   NgApexchartsModule,
+  ApexTooltip,
+  ApexPlotOptions,
+  ApexFill
 } from 'ng-apexcharts';
+
 import { SharedModule } from '../../../shared/common/sharedmodule';
+import { ActivatedRoute, Router,RouterModule } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { SwitherService } from '../../../shared/services/swither.service';
+import { FormBuilder,FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+// import { BaseComponent } from '../../../shared/base/base.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { CommonModule } from '@angular/common';
+
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
@@ -43,13 +55,22 @@ curve:string
 @Component({
   selector: 'app-sales',
   standalone: true,
-  imports: [NgApexchartsModule,SharedModule,NgbTooltipModule ,NgbDropdownModule],
+  imports: [NgApexchartsModule,SharedModule,NgbTooltipModule ,NgbDropdownModule,NgSelectModule, RouterModule, NgbModule, FormsModule, CommonModule, SharedModule, NgbDropdownModule, ReactiveFormsModule],
   templateUrl: './sales.component.html',
   styleUrl: './sales.component.scss'
 })
 export class SalesComponent {
-  users: any[] = [];
-  newUser: string = '';
+  users: any[] = []; userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userType: any = this.userData ? this.userData.type : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  adoanAiRole: any;campaignCount: any; 
+  newUser: string = '';campaignList: any[] = [];campaignNameLst:any;public leadCounts: { [campaignId: string]: number } = {};
+  stageCounts: { [campaignId: string]: { [stage: string]: number } } = {};totalLeadCount: any;
+  selectedCampaignId: string | null = null;expandedStages: { [campaignId: string]: boolean } = {};
   chartOptions:any = {
     series: [{
       data: [0, 32, 18, 58]
@@ -599,11 +620,108 @@ chartOptions6:any= {
   },
 };
 constructor(private elementRef:ElementRef,private renderer:Renderer2,
-  private apiService: AuthService){
+  private apiService: AuthService,private modalService: NgbModal, public switchService: SwitherService,
+      private offcanvasService: NgbOffcanvas, private toastr: ToastrService, private fb: FormBuilder, private router: Router,
+          private route: ActivatedRoute){
+  // super();
   const htmlElement =
   this.elementRef.nativeElement.ownerDocument.documentElement;
+    this.userData = localStorage.getItem('userDetails');
+    this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
 
 }
+ngOnInit(): void {
+  this.getCampaignData();
+   this.campaignList.forEach(campaign => {
+      this.getLeadCountForCampaign(campaign.campgnId);
+    });
+}
+
+
+getCampaignData() {
+    const payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType
+    };
+    this.switchService.displayCampaignData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res)) {
+          this.campaignList = res;
+           if (this.campaignList.length > 0) {
+              const firstCampaignId = this.campaignList[0].campgnId;
+              this.selectCampaign(firstCampaignId);
+            }
+          this.campaignNameLst= res.map((c: any) => c.campaignName);
+          console.log(this.campaignNameLst)
+          this.campaignCount = this.campaignList.length;
+          this.campaignList.forEach(campaign => {
+          // this.getLeadCountForCampaign(campaign.campgnId);
+      });
+        } else {
+          this.toastr.error("Unexpected response format.");
+        }
+      },
+      error: (err) => {
+        // this.toastr.error(err.statusText || "An error occurred while fetching data.");
+      }
+    });
+  }
+  
+  getLeadCountForCampaign(campaignId: string) {
+  this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
+    next: (res: any) => {
+      const executiveList = res.executiveList || [];
+      const entryList = res.entryList || [];
+      const combined = [...executiveList, ...entryList];
+
+      // total leads for this campaign
+      this.leadCounts[campaignId] = combined.length;
+
+      // stage-wise counts
+      const stageMap: { [key: string]: number } = {};
+      combined.forEach((lead) => {
+        const stage = lead.stage || 'Unknown';
+        stageMap[stage] = (stageMap[stage] || 0) + 1;
+      });
+
+      // save stage counts
+      this.stageCounts[campaignId] = stageMap;
+
+      // update global total
+      this.updateTotalLeadCount();
+    },
+    error: () => {
+      this.leadCounts[campaignId] = 0;
+      this.stageCounts[campaignId] = {}; // clear stage counts on error
+      this.updateTotalLeadCount();
+    }
+    });
+  }
+
+  updateTotalLeadCount() {
+    this.totalLeadCount = Object.values(this.leadCounts).reduce((sum, count) => sum + count, 0);
+  }
+
+
+  selectCampaign(campaignId: string) {
+    this.selectedCampaignId = campaignId;
+
+  // If not already fetched, call API
+    if (!this.leadCounts[campaignId]) {
+      this.getLeadCountForCampaign(campaignId);
+    }
+  }
+
+  toggleStages(campaignId: string | null) {
+  if (!campaignId) return;
+
+  // Always toggle expanded/collapsed
+  this.expandedStages[campaignId] = !this.expandedStages[campaignId];
+  }
+
+
+
 
 
 }

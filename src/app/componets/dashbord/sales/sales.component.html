@@ -160,27 +160,29 @@
   <div class="row">
       <div class="col-lg-12 col-xxl-3">
           <div class="card custom-card overflow-hidden">
-              <div class="card-header justify-content-between">
-                  <div class="card-title">Visitors By Country</div>
-                  <div ngbDropdown  class="dropdown no-caret">
-                      <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
-                          <i class="ri-more-fill fs-18 text-muted"></i>
-                      </a>
-                      <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
-                      </ul>
-                  </div>
+            <div class="card-header justify-content-between">
+                <div class="card-title">Campaign Stages</div>
+                <div ngbDropdown class="dropdown no-caret">
+                    <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);">
+                        <i class="ri-more-fill fs-18 text-muted"></i>
+                    </a>
+                    <ul ngbDropdownMenu class="dropdown-menu" role="menu">
+                        <li *ngFor="let campaign of campaignList">
+                            <a ngbDropdownItem class="dropdown-item" href="javascript:void(0);" (click)="selectCampaign(campaign.campgnId)">
+                                {{ campaign.campaignName }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
               </div>
-              <div class="card-body">
-                  <ul class="list-unstyled visitors-country">
+              <div class="card-body" *ngIf="selectedCampaignId" style="height: 320px;">
+                  <ul class="list-unstyled visitors-country" [ngClass]="{ 'scrollable-list': expandedStages[selectedCampaignId] }">
                       <li>
                           <div class="d-flex align-items-center"> 
                               <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">U.S.A</span>
-                                      <span class="d-block fs-12 text-muted">559/896</span>
+                                  <div class="d-flex align-items-center justify-content-between mb-2" >
+                                      <span class="d-block fs-14">Total Leads: </span>
+                                      <span class="d-block fs-12 text-muted">{{ leadCounts[selectedCampaignId] || 0 }}</span>
                                   </div>
                                   <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
                                       <div class="progress-bar progress-bar-striped bg-primary" style="width: 85%"></div>
@@ -188,12 +190,13 @@
                               </div>
                           </div>
                       </li>
-                      <li>
+                      <li *ngFor="let stage of stageCounts[selectedCampaignId] | keyvalue; let i = index"
+                            [hidden]="!expandedStages[selectedCampaignId] && i >= 5">
                           <div class="d-flex align-items-center"> 
                               <div class="flex-fill">
                                   <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">Germany</span>
-                                      <span class="d-block fs-12 text-muted">358/786</span>
+                                      <span class="d-block fs-14">{{ stage.key }}</span>
+                                      <span class="d-block fs-12 text-muted">{{ stage.value }}</span>
                                   </div>
                                   <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
                                       <div class="progress-bar progress-bar-striped bg-secondary" style="width: 80%"></div>
@@ -201,65 +204,19 @@
                               </div>
                           </div>
                       </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">Russia</span>
-                                      <span class="d-block fs-12 text-muted">296/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-warning" style="width: 75%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">Brazil</span>
-                                      <span class="d-block fs-12 text-muted">185/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-info" style="width: 70%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">France</span>
-                                      <span class="d-block fs-12 text-muted">095/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-danger" style="width: 65%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">China</span>
-                                      <span class="d-block fs-12 text-muted">068/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-success" style="width: 60%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
+                     
                   </ul>
               </div>
-              <div class="card-footer">
-                  <div class="text-center">
-                      <a href="javascript:void(0);" class="text-secondary">Full Details <i class="ri-share-box-line align-middle"></i></a>
-                  </div>
-              </div>
+            <div class="card-footer"
+                *ngIf="selectedCampaignId && stageCounts[selectedCampaignId] && (stageCounts[selectedCampaignId] | keyvalue).length">
+                <div class="text-center">
+                    <a href="javascript:void(0);" class="text-secondary" (click)="toggleStages(selectedCampaignId)">
+                        {{ expandedStages[selectedCampaignId] ? 'View Less' : 'Full Details' }}
+                        <i class="ri-share-box-line align-middle"></i>
+                    </a>
+                </div>
+            </div>
+
           </div>
       </div>
       <div class="col-lg-12 col-xxl-6">
