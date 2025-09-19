@@ -53,7 +53,7 @@ export class DealsComponent extends BaseComponent {
   userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
   taskSubmitted : boolean = false;
-  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city',];
+  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city', 'completionStatus'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -1159,7 +1159,7 @@ export class DealsComponent extends BaseComponent {
             this.uploadLead.reset();
             this.uploadSubmitted = false;
             this.uploadSpinner = false;
-            this.toastr.success(res.message, 'Bulk Lead Upload Successful');
+            this.toastr.success('Bulk Lead Uploaded Successful');
             this.getfetchLeadsIndividual();
           } else {
             this.uploadSpinner = false;
@@ -1434,7 +1434,7 @@ export class DealsComponent extends BaseComponent {
   onSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedLeads = this.dataSource.data
-        .filter((row: any) => row.completionStatus !== 'completed') // ✅ exclude closed
+        .filter((row: any) => row.completionStatus !== 'completed')
         .map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
@@ -2583,32 +2583,33 @@ export class DealsComponent extends BaseComponent {
 
   
   createTaskSubmit(modal: any) {
-    this.taskSubmitted = true;
     if (!this.selectedLeads || this.selectedLeads.length === 0) {
       this.toastr.warning('Please select at least one lead');
       return;
     }
     let payload = { ...this.taskForm.value };
+    this.taskSubmitted = true;
     payload.leadIdList = this.selectedLeads
       .filter((id: any) => id !== '' && id !== null && id !== undefined)
       .map((id: any) => Number(id));
     if (Array.isArray(payload.assignedTo)) {
       payload.assignedTo = payload.assignedTo.join(',');
     }
-    if(this.taskForm?.valid){
       this.switchService.createTask(payload).subscribe({
         next: (res) => {
           this.toastr.success('Task created successfully!');
           this.taskForm.reset();
           this.selectedLeads = [];
+          this.taskSubmitted = false;
           modal.close();
+          this.getfetchLeadsIndividual();
         },
         error: (err) => {
           this.toastr.error('Something went wrong!');
         }
       });
-    }
-  }
+  } 
+
 
   getTaskStatusColor(status: string): string {
     switch (status) {
@@ -2739,5 +2740,41 @@ export class DealsComponent extends BaseComponent {
     this.currentStep = 1;
   }
 
+  getfullDaysLeft(task: any): string {
+    if (!task.deadline) return '';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return `${Math.abs(diffDays)} day's Due`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `${diffDays} day's left`;
+    }
+  }
+
+  getTaskBgColor(task: any): string {
+    if (!task.deadline) return 'bg-secondary-transparent';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    if (deadlineDate < today) {
+      return 'bg-danger-transparent';
+    }
+    if (deadlineDate.getTime() === today.getTime()) {
+      return 'bg-warning-transparent';
+    }
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 2) {
+      return 'bg-warning-transparent';
+    }
+    return 'bg-success-transparent';
+  }
 
 }

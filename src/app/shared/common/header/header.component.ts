@@ -244,6 +244,7 @@ export class HeaderComponent implements OnInit {
   private intervalSub!: Subscription;
   public SearchResultEmpty: boolean = false;
   ngOnInit(): void {
+    this.getUserInfo(this.userEmail);
     this.logRoute();
     this.loadLeadData();
     this.routerSub = this.router.events.subscribe(event => {
@@ -453,6 +454,16 @@ export class HeaderComponent implements OnInit {
   getUserColor(user: any): string {
     const index = this.hashString(user.email) % this.userColors.length;
     return this.userColors[index];
+  }
+
+  getUserInfo(email: string) {
+    this.switchService.userInfo(email).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.userData = res;
+        }
+      },
+    });
   }
   
 }

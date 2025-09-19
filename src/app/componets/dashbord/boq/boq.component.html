@@ -1078,8 +1078,7 @@
                         </ng-container>
                         <ng-container [ngbNavItem]="3">
                             <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
-                                aria-selected="true">Client Invoices
-                                <span class="badge bg-secondary ms-1 rounded-pill">32</span></a>
+                                aria-selected="true">Client Invoices</a>
                             <ng-template class="tab-content bg-white" ngbNavContent>
                                 <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
                                     class="nav nav-pills m-3 show active text-muted">
@@ -2060,11 +2059,9 @@
                             <thead>
                                 <tr>
                                     <th>S.No.</th>
-                                    <th>Element Description</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
+                                    <th>Element Name & Description</th>
                                     <th>Brand Make</th>
-                                    <th>categoryId</th>
+                                    <th>Category</th>
                                     <th>UOM</th>
                                     <th>Quantity</th>
                                     <th>Standard Rate</th>
@@ -2080,9 +2077,20 @@
                                 <ng-container *ngFor="let item of libraryListData; let i = index">
                                     <tr>
                                         <td>{{ i + 1 }}</td>
-                                        <td>
-                                            <img [src]="item.imageUrl" alt="{{item.name}}" width="40" class="me-2">
-                                            <strong>{{ item.name }}</strong> - {{ item.description }}
+                                        <td style="max-width: 750px;">
+                                            <div class="d-flex align-items-center">
+                                                <span class="avatar avatar-xl me-3">
+                                                    <img [src]="item.imageUrl || 'assets/images/brand-logos/no-image.png'" class="img-thumbnail" alt="Project Image">
+                                                </span>
+                                                <div>
+                                                    <span class="fw-medium d-block">
+                                                        {{ item.name.length > 30 ? (item.name | slice:0:15) + '...' : item.name }}
+                                                    </span>
+                                                    <div class="text-muted small">
+                                                        {{ item.description ? (item.description | slice:0:15) + '...' : 'No description available' }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td>{{ item.brandMake }}</td>
                                         <td>{{ item.categoryId }}</td>
