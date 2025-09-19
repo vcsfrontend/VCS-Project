@@ -84,6 +84,8 @@ export class DealsComponent extends BaseComponent {
   completionForm!:FormGroup;
   selectedLeadForAppointment:any;appointmentId: number | null = null;selectedLeadForAppointmentObject:any;
   filteredUserList: any[] = [];leadCompletionsubmitted : boolean = false;
+  leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
+  notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -790,7 +792,26 @@ export class DealsComponent extends BaseComponent {
           }));
           const combined = [...executiveList, ...entryList];
           this.leadCount = combined.length;
+           this.leadStatusCount = combined;
+          const statusCounts: { [status: string]: number } = {};
+          const statusCompletion : { [completionStatus: string]: number } = {};
+          combined.forEach(lead => {
+            const status = lead.status?.trim() || 'Unknown';
+            statusCounts[status] = (statusCounts[status] || 0) + 1;
+            const completionStatus = lead.completionStatus;
+            statusCompletion[completionStatus]= (statusCompletion[completionStatus] || 0) + 1;
+
+          });
+
+          this.activeCount = statusCounts['active'] || 0;
+          this.connectedCount = statusCounts['completed'] || 0;
+          this.notConnectedCount = statusCounts['not connected'] || 0;
+          this.statusCompletion = statusCompletion['completed'] || 0 ;
+
           this.dataSource.data = combined;
+           this.followUpCount = combined.filter(
+            (item) => item.followUpDue
+          ).length;
           if (combined.length > 0 && combined[0].contact) {
             this.phoneNumber = combined[0].contact;
           }

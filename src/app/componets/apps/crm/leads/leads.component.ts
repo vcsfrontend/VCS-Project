@@ -89,7 +89,9 @@ export class LeadsComponent extends BaseComponent {
   filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
   appointmentId: number | null = null; taskPriorityList :any;taskList:any; appointmentFormSubmitted : boolean = false;
   selectedLeadForAppointment:any;selectedLeadForAppointmentObject:any;
-  leadCompletionsubmitted : boolean = false;
+  leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
+  notConnectedCount:Number =0;statusCompletion:Number =0 ;
+
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -1758,10 +1760,27 @@ export class LeadsComponent extends BaseComponent {
           }));
           const combined = [...executiveList, ...entryList];
           this.leadCount = combined.length;
+          this.leadStatusCount = combined;
+          const statusCounts: { [status: string]: number } = {};
+          const statusCompletion : { [completionStatus: string]: number } = {};
+          combined.forEach(lead => {
+            const status = lead.status?.trim() || 'Unknown';
+            statusCounts[status] = (statusCounts[status] || 0) + 1;
+            const completionStatus = lead.completionStatus;
+            statusCompletion[completionStatus]= (statusCompletion[completionStatus] || 0) + 1;
+
+          });
+
+          this.activeCount = statusCounts['active'] || 0;
+          this.connectedCount = statusCounts['completed'] || 0;
+          this.notConnectedCount = statusCounts['not connected'] || 0;
+          this.statusCompletion = statusCompletion['completed'] || 0 ;
+
           this.followUpCount = combined.filter(
             (item) => item.followUpDue
           ).length;
           this.dataSource.data = combined;
+          
           this.updateColumns();
           if (combined.length > 0 && combined[0].contact) {
             this.phoneNumber = combined[0].contact;
@@ -1789,6 +1808,7 @@ export class LeadsComponent extends BaseComponent {
             this.taskPriorityList = res.taskPriorityList || [];
             this.dataSource.paginator = this.paginator;
           }
+          
         },
         error: (error) => {
           this.toastr.error(error.statusText || 'Server Error');
@@ -3140,7 +3160,130 @@ export class LeadsComponent extends BaseComponent {
     modal.close();
     this.currentStep = 1;
   }
+  chartOptions2:any = {
+  series: [{
+    data: [0, 32, 18, 58]
+  }],
+  chart: {
+    height: 115,
+    width: 180,
+    type: 'area',
+    fontFamily: 'Roboto, Arial, sans-serif',
+    foreColor: '#5d6162',
+    zoom: {
+      enabled: false
+    },
+    sparkline: {
+      enabled: true
+    }
+  },
+  tooltip: {
+    enabled: true,
+    x: {
+      show: false
+    },
+    y: {
+      title: {
+        formatter: function (seriesName: any) {
+          return ''
+        }
+      }
+    },
+    marker: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    curve: 'smooth',
+    width: [1],
+  },
+  title: {
+    text: undefined,
+  },
+  grid: {
+    borderColor: 'transparent',
+  },
+  xaxis: {
+    crosshairs: {
+      show: false,
+    }
+  },
+  colors: ["rgb(69, 214, 91)"],
 
+  fill: {
+    type: 'gradient',
+    gradient: {
+      opacityFrom: 0.5,
+      opacityTo: 0.2,
+      stops: [0, 60],
+    }
+  },
+  };
+  chartOptions3:any = {
+    series: [{
+      data: [0, 32, 18, 58]
+    }],
+    chart: {
+      height: 115,
+      width: 180,
+      type: 'area',
+      fontFamily: 'Roboto, Arial, sans-serif',
+      foreColor: '#5d6162',
+      zoom: {
+        enabled: false
+      },
+      sparkline: {
+        enabled: true
+      }
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false
+      },
+      y: {
+        title: {
+          formatter: function (seriesName: any) {
+            return ''
+          }
+        }
+      },
+      marker: {
+        show: false
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: 'smooth',
+      width: [1],
+    },
+    title: {
+      text: undefined,
+    },
+    grid: {
+      borderColor: 'transparent',
+    },
+    xaxis: {
+      crosshairs: {
+        show: false,
+      }
+    },
+    colors: ["rgb(231, 76, 60)"],
+
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.5,
+        opacityTo: 0.2,
+        stops: [0, 60],
+      }
+    },
+  };
 
 
 }
