@@ -195,13 +195,22 @@ export class ProfileComponent {
       })
     }
   }
-   getUserColor(contact: any): string {
+  getUserColor(contact: any): string {
     const colors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
     if (contact && contact.email) {
       const index = contact.email.charCodeAt(0) % colors.length;
       return colors[index];
     }
     return 'bg-secondary';
+  }
+
+  getUserBgColor(contact: any): string {
+    const colors = ['bg-primary-transparent', 'bg-success-transparent', 'bg-warning-transparent', 'bg-danger-transparent', 'bg-info-transparent', 'bg-secondary-transparent'];
+    if (contact && contact.email) {
+      const index = contact.email.charCodeAt(0) % colors.length;
+      return colors[index];
+    }
+    return 'bg-secondary-transparent';
   }
 
   toggleTopShowMore() {
@@ -265,25 +274,24 @@ export class ProfileComponent {
             this.modal.close();
             this.toastr.success('Profile updated successfully!',);
           }
+          this.getUserInfo(this.userEmail);
         }
       });
     }
   }
 
-
-
   onFileSelected(event: Event) {
-  const input = event.target as HTMLInputElement;
-  if (!input.files) return;
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
 
-  const file = input.files[0];
-  if (file) {
-    this.profilePicForm.patchValue({
-      profilePic: file
-    });
-    this.profilePicForm.get('profilePic')?.updateValueAndValidity();
+    const file = input.files[0];
+    if (file) {
+      this.profilePicForm.patchValue({
+        profilePic: file
+      });
+      this.profilePicForm.get('profilePic')?.updateValueAndValidity();
+    }
   }
-}
 
 
 }

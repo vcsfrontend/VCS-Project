@@ -26,7 +26,7 @@
                                     <h6 class="fw-medium mb-1">{{ userData.username }}</h6>
                                 </div>
                                 <div class="d-flex align-items-center gap-5 mb-1">
-                                    <h6 class="fs-12 m-1"><i class="ri-calendar-line"></i> {{ userData.dob }}</h6>
+                                    <h6 class="fs-12 m-1 badge bg-success"><i class="ri-user-line align-middle d-inline-block"></i> {{ userData.adonaiRole.charAt(0) | uppercase }}{{ userData.adonaiRole.slice(1) | lowercase }}</h6>
                                     <h6 class="fs-12 m-1"><i class="ri-map-pin-line"></i> {{ userData.city }}</h6>
                                 </div>
                             </div>
@@ -67,8 +67,8 @@
                                 <p class="mb-0 fs-11 op-5">Completed</p>
                             </div>
                         </div>
-
                         <div class="pt-2">
+                            <p class="fs-15 mb-3 me-4 fw-medium">Contact Information :</p>
                             <div class="text-muted">
                                 <p class="mb-4">
                                     <span class="avatar avatar-sm avatar-rounded me-2 bg-light border text-muted">
@@ -82,9 +82,26 @@
                                     </span>
                                     {{ userData.phoneNumber }}
                                 </p>
+                                 <p class="mb-4">
+                                    <span class="avatar avatar-sm avatar-rounded me-2 bg-light border text-muted">
+                                        <i class="ri-map-pin-line align-middle fs-14"></i>
+                                    </span>
+                                    {{ userData.city}}, {{userData.country}}
+                                </p>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <div class="skills-section">
+                        <p class="fs-15 mb-3 me-4 fw-medium">Tools Access:</p>
+                        <div class="d-flex align-items-center gap-2 flex-wrap mb-4">
+                            <a href="javascript:void(0);">
+                                <span class="badge bg-light border text-muted fw-medium">Adonai: {{ userData.adonai }}</span>
+                            </a>
+                            <a href="javascript:void(0);">
+                                <span class="badge bg-light border text-muted fw-medium">CRM: {{ userData.adonai }}</span>
+                            </a>
+                        </div>
+                    </div>
+                        <div class="d-flex align-items-center gap-3 flex-wrap mb-2">
                             <h6 class="fw-medium mb-0">Follow :</h6>
                             <div class="btn-list mb-0">
                                 <button class="btn btn-sm btn-icon btn-primary-light btn-wave waves-effect waves-light">
@@ -110,212 +127,102 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-8">
-        <div class="card custom-card">
-            <div class="card-body p-0" style="min-height: 469px; max-height: 600px; overflow-y: auto;">
-                <div
-                    class="p-3 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
-                    <div>
-                        <ul ngbNav #nav="ngbNav" [activeId]="1"
-                            class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab" role="tablist">
-                            <li [ngbNavItem]="1" class="nav-item" role="presentation">
-                                <button ngbNavLink class="nav-link" id="activity-tab" data-bs-toggle="tab"
-                                    data-bs-target="#activity-tab-pane" type="button" role="tab"
-                                    aria-controls="activity-tab-pane" aria-selected="false"><i
-                                        class="ri-gift-line me-1 align-middle d-inline-block"></i>Personal Info</button>
-                                <ng-template ngbNavContent>
-                                    <div class="row gy-3">
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="firstName" class="form-label">First Name</label>
-                                            <input type="text" class="form-control" placeholder="firstName"
-                                                value="{{ userData.firstName }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="lastName" class="form-label">Last Name</label>
-                                            <input type="text" class="form-control" placeholder="lastName"
-                                                value="{{ userData.lastName }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="dob" class="form-label">DOB</label>
-                                            <input type="email" class="form-control" placeholder="dob"
-                                                value="{{ userData.dob}}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="Email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" placeholder="email"
-                                                value="{{ userData.email }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="Country" class="form-label">Country</label>
-                                            <input type="text" class="form-control" placeholder="Country"
-                                                value="{{ userData.country }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="phoneNumber" class="form-label">Phone Number</label>
-                                            <input type="text" class="form-control" placeholder="phoneNumber"
-                                                value="{{ userData.phoneNumber }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="username" class="form-label">Username</label>
-                                            <input type="text" class="form-control" placeholder="username"
-                                                value="{{ userData.username }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="city" class="form-label">City</label>
-                                            <input type="text" class="form-control" placeholder="city"
-                                                value="{{ userData.city }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="companyName" class="form-label">Company Name</label>
-                                            <input type="text" class="form-control" placeholder="companyName"
-                                                value="{{ userData.companyName }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="createdDate" class="form-label">Created Date</label>
-                                            <input type="tel" class="form-control" placeholder="createdDate"
-                                                value="{{ userData.createdDate | date:'dd/MM/yyyy' }}" disabled="true">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="adonaiRole" class="form-label">Role</label>
-                                            <input type="tel" class="form-control" placeholder="adonaiRole"
-                                                value="{{ userData.adonaiRole }}" disabled="true">
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </li>
-                            <!-- <li [ngbNavItem]="2" class="nav-item" role="presentation">
-                                <button ngbNavLink class="nav-link" id="posts-tab" data-bs-toggle="tab"
-                                    data-bs-target="#posts-tab-pane" type="button" role="tab"
-                                    aria-controls="posts-tab-pane" aria-selected="false"><i
-                                        class="ri-bill-line me-1 align-middle d-inline-block"></i>Password Reset</button>
-                                <ng-template ngbNavContent>
-                                    <div class="row gy-3">
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="contact-name" class="form-label">Old Password</label>
-                                            <input type="text" class="form-control" id="contact-name" placeholder="Name">
-                                        </div>
-                                        <div class="col-xl-4 col-lg-4 col-md-4">
-                                            <label for="contact-mail" class="form-label">New Password</label>
-                                            <input type="email" class="form-control" id="contact-mail" placeholder="companyName">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">Confirm password</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </li>
-                            <li [ngbNavItem]="3" class="nav-item" role="presentation">
-                                <button ngbNavLink class="nav-link" id="followers-tab" data-bs-toggle="tab"
-                                    data-bs-target="#followers-tab-pane" type="button" role="tab"
-                                    aria-controls="followers-tab-pane" aria-selected="true"><i
-                                        class="ri-money-dollar-box-line me-1 align-middle d-inline-block"></i>Social media</button>
-                                <ng-template ngbNavContent>
-                                    <div class="row gy-3">
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="contact-name" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="contact-name" placeholder="Name">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="contact-mail" class="form-label">Company Name</label>
-                                            <input type="email" class="form-control" id="contact-mail" placeholder="companyName">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">Products</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">Zip Code</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="date" class="form-label">Follow up date</label>
-                                            <input type="date" class="form-control" id="contact-phone" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">State</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">City</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="company-name" class="form-label">Address</label>
-                                            <input type="text" class="form-control" id="company-name" placeholder="">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="contact-phone" class="form-label">contact</label>
-                                            <input type="tel" class="form-control" id="contact-phone" placeholder="Enter contact">
-                                        </div>
-                                        <div class="col-xl-3 col-lg-3 col-md-3">
-                                            <label for="email" class="form-label">E-mail</label>
-                                            <input type="email" class="form-control" id="contact-phone" placeholder="Enter email">
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </li> -->
-                        </ul>
-                    </div>
-                </div>
-                <div class="p-3">
-                    <div class="tab-content" id="myTabContent">
-                        <div [ngbNavOutlet]="nav"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row" *ngIf="adoanAiRole== 'ADMIN'">
-    <div class="col-xl-12">
-        <div class="card custom-card">
-            <div class="card-header justify-content-between">
-                <div class="card-title">
-                    Team
-                </div>
-                <div class="d-flex flex-wrap gap-3">
-                    <button class="btn btn-primary" (click)="toggleTopShowMore()">
-                        {{ topshowMore ? 'Show Less' : 'Show More' }}
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row ms-1 scrollable-container" [ngStyle]="{
-        'max-height': topshowMore ? '220px' : '220px',
-        'overflow-y': topshowMore ? 'auto' : 'hidden',
-        'transition': 'max-height 0.5s ease' }" *ngIf="adoanAiRole== 'ADMIN'">
-        <div *ngFor="let contact of filterUserData()" class="col-xxl-3 col-xl-3 col-lg-3 col-md-3 col-sm-3">
-            <div class="card custom-card text-center border-bottom">
-                <div class="card-body p-4">
-                    <div class="avatar avatar-lg avatar-rounded mb-2" [ngClass]="getUserColor(contact)">
-                        {{ contact.email?.charAt(0) | uppercase }}
-                    </div>
-                    <div class="mb-3">
-                        <h6 class="mb-1 fw-medium">
-                            Name: {{ contact.firstName }} {{ contact.lastName | slice:0:8}}
-                        </h6>
-                        <p class="fw-medium fs-11 mb-1 text-dark contact-mail text-truncate">
-                            Email: {{ contact.email }}
-                        </p>
-                        <p class="fw-medium fs-11 mb-0 text-primary">
-                            Number: {{ contact.phoneNumber }}
-                        </p>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-center gap-2">
-                        <button type="button" class="btn btn-sm btn-outline-light border" data-bs-toggle="tooltip"
-                            placement="top" ngbTooltip="Adonai: {{ contact.adonai }} Crm: {{ contact.crm }}">
-                            View Tools
-                        </button>
-                        <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button"
-                            (click)="openRight(content2);ViewUserDetails(contact)" data-bs-target="#offcanvasRight"
-                            aria-controls="offcanvasRight">
-                            <i class="fe fe-eye text-muted"></i>
-                        </button>
-                        <!-- <button aria-label="button" class="btn btn-sm btn-primary border" type="button" >
-                            {{contact.adoanAiRole}}
-                        </button> -->
+    <div class="col-xl-8" *ngIf="adoanAiRole== 'ADMIN'">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-body p-0">
+                        <div
+                            class="p-2 border-bottom border-block-end-dashed d-flex align-items-center justify-content-between">
+                            <div>
+                                <ul ngbNav #nav="ngbNav" [activeId]="1"
+                                    class="nav nav-tabs mb-0 tab-style-6 justify-content-start" id="myTab"
+                                    role="tablist">
+                                    <li [ngbNavItem]="1" class="nav-item" role="presentation">
+                                        <button ngbNavLink class="nav-link" id="activity-tab" data-bs-toggle="tab"
+                                            data-bs-target="#activity-tab-pane" type="button" role="tab"
+                                            aria-controls="activity-tab-pane" aria-selected="false"><i
+                                                class="ri-user-line me-1 align-middle d-inline-block"></i>Team</button>
+                                        <ng-template ngbNavContent>
+                                            <div id="followers-tab-pane" role="tabpanel" aria-labelledby="followers-tab"
+                                                tabindex="0">
+                                                <div class="row">
+                                                    <div class="col-xxl-4 col-xl-4 col-lg-6 col-md-6 col-sm-12" *ngFor="let contact of filterUserData()">
+                                                        <div class="card custom-card shadow-none border">
+                                                            <div class="card-body p-4">
+                                                                <div class="text-center">
+                                                                    <div class="avatar avatar-xl avatar-rounded mb-2" [ngClass]="getUserColor(contact)">
+                                                                        {{ contact.email?.charAt(0) | uppercase }}
+                                                                    </div>
+                                                                    <div class="mt-2">
+                                                                        <p class="mb-0 fw-medium">Name: {{ contact.firstName }} {{ contact.lastName | slice:0:8}}</p>
+                                                                        <p class="fs-12 op-7 mb-1 text-muted">
+                                                                            Email: {{ contact.email?.length > 16 ? (contact.email | slice:0:16) + '...' : contact.email }}
+                                                                        </p>
+                                                                        <span class="badge" [ngClass]="getUserBgColor(contact)">
+                                                                            Number: {{ contact.phoneNumber }}</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card-footer text-center">
+                                                                <div class="btn-list">
+                                                                    <button type="button" class="btn btn-sm btn-outline-light border" data-bs-toggle="tooltip" placement="top"
+                                                                        ngbTooltip="Adonai: {{ contact.adonai }} Crm: {{ contact.crm }}">
+                                                                        View Tools
+                                                                    </button>
+                                                                    <button aria-label="button" class="btn btn-sm btn-icon btn-outline-light border" type="button"
+                                                                        (click)="openRight(content2);ViewUserDetails(contact)" data-bs-target="#offcanvasRight"
+                                                                        aria-controls="offcanvasRight">
+                                                                        <i class="fe fe-eye text-muted"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="col-xl-12">
+                                                        <div class="text-center mt-4">
+                                                            <button class="btn btn-primary-light btn-wave">Show
+                                                                All</button>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="2" class="nav-item" role="presentation">
+                                        <button ngbNavLink class="nav-link" id="posts-tab" data-bs-toggle="tab"
+                                            data-bs-target="#posts-tab-pane" type="button" role="tab"
+                                            aria-controls="posts-tab-pane" aria-selected="false"><i
+                                                class="ri-bill-line me-1 align-middle d-inline-block"></i>Reset Password</button>
+                                        <ng-template ngbNavContent>
+
+                                        </ng-template>
+                                    </li>
+                                    <li [ngbNavItem]="3" class="nav-item" role="presentation">
+                                        <button ngbNavLink class="nav-link" id="posts-tab" data-bs-toggle="tab"
+                                            data-bs-target="#posts-tab-pane" type="button" role="tab"
+                                            aria-controls="posts-tab-pane" aria-selected="false"><i
+                                                class="ri-bill-line me-1 align-middle d-inline-block"></i>Mail Credentials</button>
+                                        <ng-template ngbNavContent>
+
+                                        </ng-template>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <p class="fw-medium mb-2">Complete Profile - <a href="javascript:void(0);"
+                                        class="text-primary fs-12">Finish now</a></p>
+                                <div class="progress progress-xs progress-animate">
+                                    <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="60"
+                                        aria-valuemin="0" aria-valuemax="100" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <div class="tab-content" id="myTabContent">
+                                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -354,7 +261,6 @@
                         <div id="customized-AccordionOne" ngbAccordionCollapse aria-labelledby="customizedAccordionOne"
                             data-bs-parent="#customizedAccordion">
                             <div ngbAccordionBody>
-
                                 <div class="p-3 border rounded">
                                     <p><strong>Role:</strong>HR/Admin</p>
                                     <p><strong>Description:</strong>
@@ -366,9 +272,7 @@
                                         rate</p>
                                     <p><strong>Bonus</strong>Bonus for 30 day hiring closure</p>
                                     <p><strong>Penalty</strong>Penalty for compliance lapses</p>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -794,9 +698,12 @@
                             userDetails.username?userDetails.username:'' }}</li>
                         <li class="mb-2"><span class="fw-semibold me-1">Company Name : </span>{{
                             userDetails.companyName?userDetails.companyName:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Adonai : </span>{{
+                            userDetails.adonai?userDetails.adonai:'' }}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">CRM : </span>{{
+                            userDetails.crm?userDetails.crm:'' }}</li>
                         <li class="mb-2"><span class="fw-semibold me-1">Created Date : </span>{{
                             userDetails.createdDate? (userDetails.createdDate | date:'dd-MM-yy'):'' }}</li>
-
                     </ul>
                 </div>
             </div>

@@ -194,11 +194,6 @@ table.mat-mdc-table {
 .mdc-data-table__header-cell {
   padding: 0 10px !important;
 }
-
-.table-container {
-  overflow-x: auto;
-}
-
 .mat-table th, 
 .mat-table td {
   white-space: nowrap;
@@ -255,5 +250,28 @@ table.mat-mdc-table {
   pointer-events: none;   
   opacity: 0.6;          
   background-color: #f5f5f5; 
+}
+.table-container {
+  max-height: calc(80px * 5);
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #fff;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
 }
 

@@ -1,102 +1,10 @@
-<!-- <div class="row mt-4">
-    <div class="col-xl-2">
-        <div class="card custom-card border border-primary bg-primary-transparent">
-            <div class="card-body">
-                <div class="text-center">
-                    <span class="avatar avatar-md bg-primary shadow-sm avatar-rounded mb-2">
-                        <i class="ri-briefcase-2-line fs-16"></i>
-                    </span>
-                    <p class="fs-14 fw-medium mb-2">Total Campaigns</p>
-                    <div class="d-flex align-items-center justify-content-center flex-wrap">
-                        <h5 class="mb-0 fw-medium"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-2">
-        <div class="card custom-card border border-secondary bg-secondary-transparent">
-            <div class="card-body">
-                <div class="text-center">
-                    <span class="avatar avatar-md bg-secondary shadow-sm avatar-rounded mb-2">
-                        <i class="ri-bill-line fs-16"></i>
-                    </span>
-                    <p class="fs-14 fw-medium mb-2">Total Leads</p>
-                    <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-2">
-        <div class="card custom-card border border-info bg-info-transparent">
-            <div class="card-body">
-                <div class="text-center">
-                    <span class="avatar avatar-md bg-info shadow-sm avatar-rounded mb-2">
-                        <i class="ri-line-chart-line fs-16"></i>
-                    </span>
-                    <p class="fs-14 fw-medium mb-2">Total Reports</p>
-                    <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-2">
-        <div class="card custom-card border border-warning bg-warning-transparent">
-            <div class="card-body">
-                <div class="text-center">
-                    <span class="avatar avatar-md bg-warning shadow-sm avatar-rounded mb-2">
-                        <i class="ri-money-dollar-box-line fs-16"></i>
-                    </span>
-                    <p class="fs-14 fw-medium mb-2">Call Logs</p>
-                    <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-2">
-        <div class="card custom-card border border-danger bg-danger-transparent">
-            <div class="card-body">
-                <div class="text-center">
-                    <span class="avatar avatar-md bg-danger shadow-sm avatar-rounded mb-2">
-                        <i class="ri-profile-line fs-16"></i>
-                    </span>
-                    <p class="fs-14 fw-medium mb-2">Opex Ratio</p>
-                    <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-2">
-        <div class="card custom-card border border-success bg-success-transparent">
-            <div class="card-body">
-                <div class="text-center">
-                    <span class="avatar avatar-md bg-success shadow-sm avatar-rounded mb-2">
-                        <i class="ri-wallet-2-line fs-16"></i>
-                    </span>
-                    <p class="fs-14 fw-medium mb-2">Total Income</p>
-                    <div class="d-flex align-items-center justify-content-center flex-wrap">
-                       <h5 class="mb-0 fw-medium"></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>   -->
-<div class="row mt-3">
+<div class="row mt-4">
     <div class="col-xl-3">
         <div class="card custom-card overflow-hidden">
             <div class="card-body">
                 <div class="d-flex align-items-top justify-content-between">
                     <div>
-                        <span class="avatar bg-primary-transparent svg-primary">
+                        <span class="avatar bg-secondary-transparent svg-secondary">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
                                 fill="#000000">
                                 <path d="M0 0h24v24H0V0z" fill="none" />
@@ -111,7 +19,7 @@
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div>
                                 <p class="text-muted mb-3">Active Leads</p>
-                                <h4 class="mt-1">{{activeCount}}</h4>
+                                <h4 class="mt-1">{{activeCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
@@ -144,13 +52,46 @@
                     <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div>
-                                <p class="text-muted mb-3">Not Connected Leads</p>
-                                <h4 class="mt-1">{{notConnectedCount}}</h4>
+                                <p class="text-muted mb-3">Not Connected</p>
+                                <h4 class="mt-1">{{notConnectedCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mt-1">
                             <div class="text-end">
                                 <p class="mb-0 text-success">+25%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar bg-warning-transparent svg-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#000000">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M15 17H9v-1H5v3h14v-3h-4zM4 14h5v-3h6v3h5V9H4z" opacity=".3" />
+                                <path
+                                    d="M20 7h-4V5l-2-2h-4L8 5v2H4c-1.1 0-2 .9-2 2v5c0 .75.4 1.38 1 1.73V19c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2v-3.28c.59-.35 1-.99 1-1.72V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm9 14H5v-3h4v1h6v-1h4v3zm-8-4v-2h2v2h-2zm9-1h-5v-3H9v3H4V9h16v5z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Followup's</p>
+                                <h4 class="mt-1">{{followUpCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+19%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
                         </div>
@@ -184,8 +125,8 @@
                     <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div>
-                                <p class="text-muted mb-3">Completed Leads</p>
-                                <h4 class="mt-1">{{statusCompletion}}</h4>
+                                <p class="text-muted mb-3">Completed</p>
+                                <h4 class="mt-1">{{statusCompletion}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mt-1">
@@ -199,42 +140,9 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-3">
-        <div class="card custom-card overflow-hidden">
-            <div class="card-body">
-                <div class="d-flex align-items-top justify-content-between">
-                    <div>
-                        <span class="avatar bg-warning-transparent svg-warning">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                                fill="#000000">
-                                <path d="M0 0h24v24H0V0z" fill="none" />
-                                <path d="M15 17H9v-1H5v3h14v-3h-4zM4 14h5v-3h6v3h5V9H4z" opacity=".3" />
-                                <path
-                                    d="M20 7h-4V5l-2-2h-4L8 5v2H4c-1.1 0-2 .9-2 2v5c0 .75.4 1.38 1 1.73V19c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2v-3.28c.59-.35 1-.99 1-1.72V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm9 14H5v-3h4v1h6v-1h4v3zm-8-4v-2h2v2h-2zm9-1h-5v-3H9v3H4V9h16v5z" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <div>
-                                <p class="text-muted mb-3">Pending Followup Leads</p>
-                                <h4 class="mt-1">{{followUpCount}}</h4>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-center justify-content-between mt-1">
-                            <div class="text-end">
-                                <p class="mb-0 text-success">+19%</p>
-                                <span class="text-muted op-7 fs-11">this month</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
-<div class="col-xl-12 mt-3">
+<div class="col-xl-12">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
             <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
@@ -263,279 +171,287 @@
                 </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            <div class="table-container mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort class="mat-table">
-                    <ng-container matColumnDef="sourceFlag">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let element">
-                            <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1" title="Executive Lead"></i>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="select">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
-                                (change)="onSelectAllChange($event)"></mat-checkbox>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <mat-checkbox (change)="onRowCheckboxChange(element, $event)"
-                                [checked]="isSelected(element.leadId)" [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="slNo">
-                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let element">
-                            <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light me-1"
-                                ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)" data-bs-target="#offcanvasRight"
-                                aria-controls="offcanvasRight">
-                                <i class="ri-alarm-line"></i>
-                            </a>
-                            <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)"
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                <i class="ri-eye-line"></i>
-                            </a>
-                            <span ngbDropdown placement="right-top" container="body">
-                                <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
-                                    ngbDropdownToggle></i>
-                                <ul class="dropdown-menu z-1" ngbDropdownMenu>
-                                    <li class="m-2">
-                                        <button class="btn btn-warning label-btn label-end w-100" (click)="sendEmail(element)"
-                                            data-bs-toggle="offcanvas" (click)="openRight(Content2)" data-bs-target="#offcanvasRight"
-                                            aria-controls="offcanvasRight">
-                                            Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                    <!-- <li class="m-2">
+        <div class="table-container mat-elevation-z8 boq-table-wrapper">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+                <ng-container matColumnDef="sourceFlag">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1"
+                            title="Executive Lead"></i>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
+                            (change)="onSelectAllChange($event)"></mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-checkbox (change)="onRowCheckboxChange(element, $event)" [checked]="isSelected(element.leadId)"
+                            [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="slNo">
+                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                    <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a href="javascript:void(0);"
+                            class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light me-1"
+                            ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                            <i class="ri-alarm-line"></i>
+                        </a>
+                        <a href="javascript:void(0);"
+                            class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                            ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                            <i class="ri-eye-line"></i>
+                        </a>
+                        <span ngbDropdown placement="right-top" container="body">
+                            <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
+                                ngbDropdownToggle></i>
+                            <ul class="dropdown-menu z-1" ngbDropdownMenu>
+                                <li class="m-2">
+                                    <button class="btn btn-warning label-btn label-end w-100" (click)="sendEmail(element)"
+                                        data-bs-toggle="offcanvas" (click)="openRight(Content2)"
+                                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                        Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
+                                    </button>
+                                </li>
+                                <!-- <li class="m-2">
+                                                                                <button class="btn btn-success label-btn label-end w-100"
+                                                                                    (click)="openRight(Content113)" data-bs-target="#offcanvasRight"
+                                                                                    aria-controls="offcanvasRight">
+                                                                                    Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                                                                </button>
+                                                                            </li> -->
+                                <!-- <li class="m-2">
+                                                                                <button class="btn btn-info-gradient label-btn label-end w-100"
+                                                                                    (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
+                                                                                    aria-controls="offcanvasRight">
+                                                                                    Create Task<i class="ri-task-line bt-icon label-btn-icon"></i>
+                                                                                </button>
+                                                                            </li> -->
+                                <!-- <li class="m-2">
                                                             <button class="btn btn-success label-btn label-end w-100"
-                                                                (click)="openRight(Content113)" data-bs-target="#offcanvasRight"
+                                                                (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
                                                                 aria-controls="offcanvasRight">
-                                                                Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                                                Appointment<i class="ri-calendar-line bt-icon label-btn-icon"></i>
                                                             </button>
                                                         </li> -->
-                                    <!-- <li class="m-2">
-                                                            <button class="btn btn-info-gradient label-btn label-end w-100"
-                                                                (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
+                                <!-- This ensures a button appears for each appointment -->
+                                <!-- <li class="m-2">
+                                                            <button class="btn btn-success label-btn label-end w-100"
+                                                                (click)="openEditAppointment(appointment1, element)" data-bs-target="#offcanvasRight"
                                                                 aria-controls="offcanvasRight">
-                                                                Create Task<i class="ri-task-line bt-icon label-btn-icon"></i>
+                                                                Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                                             </button>
                                                         </li> -->
-                                    <!-- <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
-                                            aria-controls="offcanvasRight">
-                                            Appointment<i class="ri-calendar-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li> -->
-                                    <!-- This ensures a button appears for each appointment -->
-                                    <!-- <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="openEditAppointment(appointment1, element)" data-bs-target="#offcanvasRight"
-                                            aria-controls="offcanvasRight">
-                                            Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
-                                        </button>
-                                    </li> -->
-                                    <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100" (click)="openRight3(content31, element)"
-                                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                            Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
-                                        </button>
-                                    </li>
-                                    <li class="m-2">
-                                        <button class="btn btn-teal label-btn label-end w-100 " (click)="editLead(element,Content14)">
-                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                    <li class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
-                                        <button class="btn btn-danger label-btn label-end w-100" (click)="deleteSingleLead(element.leadId)">
-                                            Delete<i class="ri-delete-bin-line label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </span>
-                            <ng-container *ngFor="let task of taskPriorityList">
-                                <a *ngIf="task.leadId === element.leadId" href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-wave waves-effect waves-light m-1 fw-semibold task-text-primary"
-                                    [ngClass]="getTaskColor(task)" [ngbPopover]="taskPopover" [popoverContext]="{ task: task }"
-                                    popoverClass="header-info wide-popover" popoverTitle="Task Info" placement="top">
-                                    {{ getDaysLeft(task.deadline) }}
-                                </a>
-                            </ng-container>
-                            <ng-template #taskPopover let-task="task">
-                                <div class="col-xl-12 border-danger" *ngIf="task">
-                                    <div>
-                                        <p class="fw-medium mb-2 d-flex align-items-center"> TaskName :&nbsp; {{ task.taskName }}
-                                        </p>
-                                        <p class="fw-medium mb-2 d-flex align-items-center">
-                                            Priority : &nbsp;
-                                            <span [ngClass]="getPriorityBadge(task.priority)"> {{ task.priority }}
-                                            </span>
-                                        </p>
-                                        <p class="fw-medium mb-2 d-flex align-items-center">
-                                            Deadline : &nbsp;
-                                            <span class="badge" [ngClass]="getTaskBgColor(task)"> {{task.deadline | date:'dd, MMM yyyy' }},
-                                                ({{getfullDaysLeft(task) }})
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </ng-template>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td mat-cell *matCellDef="let element" class="cursor-pointer"
-                            [matTooltip]="element.name?.length > 20 ? element.name : ''" matTooltipPosition="above"
-                            matTooltipClass="custom-tooltip">
-                            {{ element.name?.length > 20
-                            ? (capitalizeFirstLetter(element.name).slice(0, 20))
-                            : capitalizeFirstLetter(element.name) }}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="executive">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="d-flex align-items-center">
-                                <ng-container *ngIf="element.executive; else noExecutive">
-                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer" style="cursor: pointer;"
-                                        [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
-                                        tooltipClass="tooltip-primary">
-                                        <span class="d-flex align-items-center justify-content-center w-100 h-100">
-                                            {{ element.executive.charAt(0) | uppercase }}
+                                <li class="m-2">
+                                    <button class="btn btn-success label-btn label-end w-100"
+                                        (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">
+                                        Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                    </button>
+                                </li>
+                                <li class="m-2">
+                                    <button class="btn btn-teal label-btn label-end w-100 "
+                                        (click)="editLead(element,Content14)">
+                                        Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
+                                    </button>
+                                </li>
+                                <li class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+                                    <button class="btn btn-danger label-btn label-end w-100"
+                                        (click)="deleteSingleLead(element.leadId)">
+                                        Delete<i class="ri-delete-bin-line label-btn-icon"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </span>
+                        <ng-container *ngFor="let task of taskPriorityList">
+                            <a *ngIf="task.leadId === element.leadId" href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-wave waves-effect waves-light m-1 fw-semibold task-text-primary"
+                                [ngClass]="getTaskColor(task)" [ngbPopover]="taskPopover" [popoverContext]="{ task: task }"
+                                popoverClass="header-info wide-popover" popoverTitle="Task Info" placement="top">
+                                {{ getDaysLeft(task.deadline) }}
+                            </a>
+                        </ng-container>
+                        <ng-template #taskPopover let-task="task">
+                            <div class="col-xl-12 border-danger" *ngIf="task">
+                                <div>
+                                    <p class="fw-medium mb-2 d-flex align-items-center"> TaskName :&nbsp; {{ task.taskName }}
+                                    </p>
+                                    <p class="fw-medium mb-2 d-flex align-items-center">
+                                        Priority : &nbsp;
+                                        <span [ngClass]="getPriorityBadge(task.priority)"> {{ task.priority }}
                                         </span>
-                                    </div>
-                                </ng-container>
-                                <ng-template #noExecutive>
-                                    <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
-                                        class="avatar avatar-sm avatar-rounded me-2 border pointer" style="cursor: pointer;" ngbTooltip="No executive assigned"
-                                        tooltipClass="tooltip-primary" />
-                                </ng-template>
+                                    </p>
+                                    <p class="fw-medium mb-2 d-flex align-items-center">
+                                        Deadline : &nbsp;
+                                        <span class="badge" [ngClass]="getTaskBgColor(task)"> {{task.deadline | date:'dd, MMM
+                                            yyyy' }},
+                                            ({{getfullDaysLeft(task) }})
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="stage">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
-                        <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" type="button"
-                                [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
-                                [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
-                                {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
-                                <ng-container *ngIf="element.stage.length > 18">...</ng-container>
-                            </span>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Status</th>
-                        <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
-                                {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
-                                <ng-container *ngIf="element.status.length > 18">...</ng-container>
-                            </span>
-                            <button *ngIf="element.followUpDate || element.status === 'not connected'" class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
-                                popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
-                                type="button">
-                                <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
-                            </button>
-                             <ng-template #followupPopoverTemplate>
-                                <ng-container *ngIf="!!followUpDetails && followUpDetails.length > 0; else noData">
-                                    <div style="max-height: 200px; overflow-y: auto;">
-                                        <ul class="list-unstyled border-bottom" *ngFor="let followup of followUpDetails">
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">FollowupDate :</span>
-                                                {{ followup.followupDate | date: 'dd-MMM-yyyy hh:mm a' }}
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Stage :</span>
-                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
-                                                    [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null" placement="top">
-                                                    {{ followup.stage | slice: 0:18 }}
-                                                    <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
-                                                </span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Status :</span>
-                                                <span class="badge me-1" type="button"
-                                                    [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
-                                                    [ngbTooltip]="followup.status.length > 18 ? followup.status : null" placement="top">
-                                                    {{ followup.status | slice: 0:18 }}
-                                                    <ng-container *ngIf="followup.status.length > 18">...</ng-container>
-                                                </span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a'
-                                                }}
-                                                <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </ng-container>
-                                <ng-template #noData>
-                                    <p class="text-muted"></p>
-                                </ng-template>
+                        </ng-template>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let element" class="cursor-pointer"
+                        [matTooltip]="element.name?.length > 20 ? element.name : ''" matTooltipPosition="above"
+                        matTooltipClass="custom-tooltip">
+                        {{ element.name?.length > 20
+                        ? (capitalizeFirstLetter(element.name).slice(0, 20))
+                        : capitalizeFirstLetter(element.name) }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="executive">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="d-flex align-items-center">
+                            <ng-container *ngIf="element.executive; else noExecutive">
+                                <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer"
+                                    style="cursor: pointer;" [ngClass]="getUserColor({ email: element.executive })"
+                                    [ngbTooltip]="element.executive" tooltipClass="tooltip-primary">
+                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                        {{ element.executive.charAt(0) | uppercase }}
+                                    </span>
+                                </div>
+                            </ng-container>
+                            <ng-template #noExecutive>
+                                <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
+                                    class="avatar avatar-sm avatar-rounded me-2 border pointer" style="cursor: pointer;"
+                                    ngbTooltip="No executive assigned" tooltipClass="tooltip-primary" />
                             </ng-template>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="followUpDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
-                            Followup Date
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="contact">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
-                        <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-                        <td mat-cell *matCellDef="let element" [matTooltip]="element.email?.length > 20 ? element.email : ''" matTooltipPosition="above"
-                            matTooltipClass="custom-tooltip"> {{element.email ?.length > 20 
-                             ? (capitalizeFirstLetter(element.email).slice(0, 20))
-                            : capitalizeFirstLetter(element.email)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="city">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
-                        <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''"
-                            matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.city ?.length > 20
-                            ? (capitalizeFirstLetter(element.city).slice(0, 20))
-                            : capitalizeFirstLetter(element.city)}}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="completionStatus">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
-                        <td mat-cell *matCellDef="let element">
-                            <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm"
-                                (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal" data-bs-target="#completionModal">
-                               <strong>LC</strong> 
-                            </button>
-                            <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm" disabled>
-                                <strong>LC</strong> 
-                            </button>
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="stage">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
+                            [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
+                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
+                            <ng-container *ngIf="element.stage.length > 18">...</ng-container>
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Status</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="badge me-1" type="button"
+                            [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
+                            [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                            {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
+                            <ng-container *ngIf="element.status.length > 18">...</ng-container>
+                        </span>
+                        <button *ngIf="element.followUpDate || element.status === 'not connected'"
+                            class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
+                            popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'"
+                            placement="bottom" type="button">
+                            <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
+                        </button>
+                        <ng-template #followupPopoverTemplate>
+                            <ng-container *ngIf="!!followUpDetails && followUpDetails.length > 0; else noData">
+                                <div style="max-height: 200px; overflow-y: auto;">
+                                    <ul class="list-unstyled border-bottom" *ngFor="let followup of followUpDetails">
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">FollowupDate :</span>
+                                            {{ followup.followupDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">Stage :</span>
+                                            <span class="badge me-1" type="button"
+                                                [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
+                                                [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null"
+                                                placement="top">
+                                                {{ followup.stage | slice: 0:18 }}
+                                                <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
+                                            </span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">Status :</span>
+                                            <span class="badge me-1" type="button"
+                                                [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
+                                                [ngbTooltip]="followup.status.length > 18 ? followup.status : null"
+                                                placement="top">
+                                                {{ followup.status | slice: 0:18 }}
+                                                <ng-container *ngIf="followup.status.length > 18">...</ng-container>
+                                            </span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date:
+                                            'dd-MMM-yyyy hh:mm a'
+                                            }}
+                                            <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </ng-container>
+                            <ng-template #noData>
+                                <p class="text-muted"></p>
+                            </ng-template>
+                        </ng-template>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="followUpDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
+                        Followup Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="contact">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+                    <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="element.email?.length > 20 ? element.email : ''"
+                        matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.email ?.length > 20
+                        ? (capitalizeFirstLetter(element.email).slice(0, 20))
+                        : capitalizeFirstLetter(element.email)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="city">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''"
+                        matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.city ?.length > 20
+                        ? (capitalizeFirstLetter(element.city).slice(0, 20))
+                        : capitalizeFirstLetter(element.city)}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="completionStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm"
+                            (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal"
+                            data-bs-target="#completionModal">
+                            <strong>LC</strong>
+                        </button>
+                        <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm" disabled>
+                            <strong>LC</strong>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
                     [class.disabled-row]="row.completionStatus === 'completed'"></tr>
-                </table>
-                <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
-                    <p class="text-muted mb-0">No data found</p>
-                </div>
-
+            </table>
+            <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
+                <p class="text-muted mb-0">No data found</p>
             </div>
-            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        
         </div>
+        <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
         <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"

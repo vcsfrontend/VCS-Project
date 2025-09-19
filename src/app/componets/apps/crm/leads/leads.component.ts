@@ -2948,14 +2948,6 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    // const duplicateLead = this.selectedLeads.find((lead: any) =>
-    //   this.taskList.some((task: any) => task.leadId === lead.id)
-    // );
-
-    // if (duplicateLead) {
-    //   this.toastr.warning(`Task already created for lead`);
-    //   return; 
-    // }
     let payload = { ...this.taskForm.value };
     this.taskSubmitted = true;
     payload.leadIdList = this.selectedLeads
