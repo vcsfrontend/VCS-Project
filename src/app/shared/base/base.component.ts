@@ -647,7 +647,10 @@ export class BaseComponent {
   designStatus = [
     { "name": "Complete" },
   ];
-
+  filterFields = [
+    { "name": "followUp" },
+    { "name": "last_updated" },
+  ];
 
 
 }

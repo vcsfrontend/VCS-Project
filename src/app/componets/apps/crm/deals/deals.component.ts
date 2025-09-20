@@ -262,6 +262,7 @@ export class DealsComponent extends BaseComponent {
   openRight(content: any) {
     this.offcanvasRef = this.offcanvasService.open(content, {
       position: 'end',
+      scroll : true
     });
   }
   openRight1(content1: any) {
@@ -1163,7 +1164,8 @@ export class DealsComponent extends BaseComponent {
             this.getfetchLeadsIndividual();
           } else {
             this.uploadSpinner = false;
-            this.toastr.error(res.message, 'lead');
+            // this.toastr.error(res.message, 'lead');
+            this.toastr.warning('invalid file');
           }
         },
         error: (err: any) => {

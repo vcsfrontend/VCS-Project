@@ -45,7 +45,7 @@ import { errorRoutingModule } from '../../../error/error.route';
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','completionStatus'];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','completionStatus',];
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -437,6 +437,7 @@ export class LeadsComponent extends BaseComponent {
 
       // filterLeadForm
       this.filterLeadForm = this.fb.group({
+        action : [''],
         stage: [''],
         status: [''],
         source: [''],
