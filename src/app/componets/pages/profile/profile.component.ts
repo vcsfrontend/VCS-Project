@@ -66,6 +66,8 @@ export class ProfileComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : '';
+  adonaiToolActivity: any = this.userData ? this.userData.adonai : '';
+  crmRole : string ='';
   imageData = data; pjData : any;isCollapsed = true;
   items!: GalleryItem[];lastField: any;stageLst: any;
   userLst: any = []; searchUser: string = '';adoanAiRole: any;topshowMore = false;
@@ -85,7 +87,7 @@ export class ProfileComponent {
       this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
       this.adonaiAccess =  JSON.parse(this.userData).adonai;
       this.crmAccess =  JSON.parse(this.userData).crm;
-
+      this.crmRole = JSON.parse(this.userData).crmRole
     }
   ngOnInit():void {
     this.getUserInfo(this.userEmail);
@@ -118,24 +120,33 @@ export class ProfileComponent {
       },
     });
   }
-
+  
   dynamicFields: { value: string; percent: number; fieldNm: string; }[] = [];
   initializeDynamicFields() {
-    for (let i = 1; i <= 30; i++) {
-      const fieldName = `f${i}`;
-      const percentName = `f${i}Percent`;
-      if (this.stageLst[fieldName]) {
-        this.dynamicFields.push({
-          value: this.stageLst[fieldName],
-          percent: this.stageLst[percentName],
-          fieldNm: fieldName
-        });
-      }
+  if (!this.stageLst) return; // safeguard
+
+  this.dynamicFields = []; // reset before populating
+
+  for (let i = 1; i <= 30; i++) {
+    const fieldName = `f${i}`;
+    const percentName = `f${i}Percent`;
+
+    if (this.stageLst[fieldName]) {
+      this.dynamicFields.push({
+        value: this.stageLst[fieldName],
+        percent: this.stageLst[percentName],
+        fieldNm: fieldName
+      });
     }
-    this.lastField = this.dynamicFields[this.dynamicFields.length - 1].value;
-    this.getdesignData()
   }
 
+  if (this.dynamicFields.length > 0) {
+    this.lastField = this.dynamicFields[this.dynamicFields.length - 1].value;
+  }
+
+  this.getdesignData();
+  }
+  
   getAllStages() {
     let payload = {
       "email": this.userEmail,
@@ -292,6 +303,7 @@ export class ProfileComponent {
       this.profilePicForm.get('profilePic')?.updateValueAndValidity();
     }
   }
+ 
 
 
 }

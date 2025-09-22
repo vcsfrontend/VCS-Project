@@ -53,7 +53,7 @@ export class DealsComponent extends BaseComponent {
   userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
   taskSubmitted : boolean = false;
-  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city', 'completionStatus'];
+  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city', 'updatedTime','completionStatus'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -85,7 +85,8 @@ export class DealsComponent extends BaseComponent {
   selectedLeadForAppointment:any;appointmentId: number | null = null;selectedLeadForAppointmentObject:any;
   filteredUserList: any[] = [];leadCompletionsubmitted : boolean = false;
   leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
-  notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;
+  notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;selecteTemplateFormSubmitted:boolean=false;
+  crmRole:string = '';
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -181,6 +182,7 @@ export class DealsComponent extends BaseComponent {
 
     this.userData = localStorage.getItem('userDetails');
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+    this.crmRole = JSON.parse(this.userData).crmRole;
     this.chartOptions={
       series: [44, 55, 13, 43, 22],
       chart: {
@@ -260,6 +262,7 @@ export class DealsComponent extends BaseComponent {
     this.modalService.open(content1, { centered: true });
   }
   openRight(content: any) {
+    this.filterLeadForm.reset();
     this.offcanvasRef = this.offcanvasService.open(content, {
       position: 'end',
       scroll : true
@@ -287,6 +290,7 @@ export class DealsComponent extends BaseComponent {
   openFollowupLeadForm(element: any, content4: any): void {
     this.followupName = element.name;
     this.notconnectedstatusClicked = false;
+    this.showForm = false;
     let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
@@ -418,6 +422,7 @@ export class DealsComponent extends BaseComponent {
     });
 
     this.filterLeadForm = this.fb.group({
+      action:[''],
       stage: [''],
       status: [''],
       source: [''],
@@ -448,9 +453,9 @@ export class DealsComponent extends BaseComponent {
     this.selectTemplateForm = this.fb.group({
       campaignId: [0],
       templateGenId: [''],
-      templateName: [''],
-      subject: [''],
-      description: [''],
+      templateName: ['',Validators.required],
+      subject: ['',Validators.required],
+      description: ['',Validators.required],
       createdDate: [new Date().toISOString()],
       companyCode: this.userCompanyCode,
       email: this.userEmail,
@@ -512,7 +517,8 @@ export class DealsComponent extends BaseComponent {
       username: ['',Validators.required],
       clientName: ['',Validators.required],
       mobileNumber: ['',Validators.required],
-      endDate : ['',Validators.required]
+      endDate : ['',Validators.required],
+      projectEstimation : ['',Validators.required]
     });
 
     this.getUsers();
@@ -711,6 +717,9 @@ export class DealsComponent extends BaseComponent {
   get j() {
     return this.completionForm.controls;
   }
+  get k() {
+    return this.selectTemplateForm.controls;
+  }
 
   onSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue ((JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
@@ -806,7 +815,7 @@ export class DealsComponent extends BaseComponent {
 
           this.activeCount = statusCounts['active'] || 0;
           this.connectedCount = statusCounts['completed'] || 0;
-          this.notConnectedCount = statusCounts['not connected'] || 0;
+          this.notConnectedCount = statusCounts['Not Connected'] || 0;
           this.statusCompletion = statusCompletion['completed'] || 0 ;
 
           this.dataSource.data = combined;
@@ -1318,18 +1327,66 @@ export class DealsComponent extends BaseComponent {
     this.followupLeadSubmitted = true;
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
-
-    
-
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
-      let followUpDetails = this.followupLeadForm.value;
-      followUpDetails.leadEntry = { leadId: this.leadId };
-      this.switchService.CRMAddFollowupLead(this.followupLeadForm.value).subscribe({
+      const formValue = this.followupLeadForm.value;
+       const date = new Date(formValue.followupDate);
+
+      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+
+      const updatedTime = this.getFormattedNow();
+      const followUpDetails = {
+        followupDate: formattedDate,
+        followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
+        stage: formValue.stage,
+        status: formValue.status,
+        comments: formValue.comments,
+        followUpBy: this.executiveName,
+        updatedTime: updatedTime,
+        currentStage: formValue.stage,
+        leadEntry: {
+          leadId: this.leadId,
+          name: formValue.name || '',
+          companyName: formValue.companyName || '',
+          executive: formValue.executive || this.executiveName || '',
+          products: formValue.products || '',
+          country: formValue.country || '',
+          stage: formValue.stage,
+          status: formValue.status,
+          leadSource: formValue.leadSource || '',
+          zipCode: formValue.zipCode || '',
+          followUpDate: formValue.followupDate || '',
+          state: formValue.state || '',
+          city: formValue.city || '',
+          address: formValue.address || '',
+          contact: formValue.contact || '',
+          email: formValue.email || '',
+          currentStage: formValue.stage,
+          updatedBy: this.executiveName || '',
+          updatedTime: updatedTime,
+          entryBy: formValue.entryBy || '',
+          campaignId: formValue.campaignId || '',
+          companyCode: formValue.companyCode || '',
+          individualEmail: formValue.individualEmail || '',
+          type: formValue.type || 0,
+          taskGenId: formValue.taskGenId || '',
+          completionStatus: formValue.completionStatus || '',
+          completedBy: formValue.completedBy || '',
+          completionTime: formValue.completionTime || ''
+        }
+      };
+      console.log(followUpDetails)
+      this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             modal.close();
             this.followupLeadSubmitted = false;
+            this.showForm = false;
             this.followupLeadForm.reset();
             this.executiveName = '';
             this.followupName = '';
@@ -1346,6 +1403,27 @@ export class DealsComponent extends BaseComponent {
         }
       })
     }
+  }
+   private getFormattedNow(): string {
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const yyyy = now.getFullYear();
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const mi = pad(now.getMinutes());
+    const ss = pad(now.getSeconds());
+
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  }
+  convertTo12HourFormat(time24: string): string {
+    if (!time24) return '';
+    const [hourStr, minuteStr] = time24.split(':');
+    let hour = parseInt(hourStr, 10);
+    const suffix = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour.toString().padStart(2, '0')}:${minuteStr} ${suffix}`;
   }
 
   getUsers() {
@@ -1804,6 +1882,7 @@ export class DealsComponent extends BaseComponent {
       color: opt.color,
       isCustom: opt.isCustom || false
     }));
+    this.uploadSpinner = true;
     // this.crmStatusData = {
     //   stage: this.selectedStage,
     //   customStatuses: selectedOptions.filter(opt => opt.isCustom).map(opt => opt.name),
@@ -1819,6 +1898,7 @@ export class DealsComponent extends BaseComponent {
         if (res) {
           this.toastr.success('Status saved successfully');
           this.offcanvasService.dismiss();
+          this.uploadSpinner = false;
           this.getCrmStages();
           
         } else {
@@ -2047,8 +2127,10 @@ export class DealsComponent extends BaseComponent {
 
 
   selectFormTemplateSubmit() {
+    this.selecteTemplateFormSubmitted = true;
     if (this.selectTemplateForm.invalid) {
       this.selectTemplateForm.markAllAsTouched();
+      this.toastr.warning('please fill all mandatory fields');
       return;
     }
     const payload = this.selectTemplateForm.value;
@@ -2056,6 +2138,7 @@ export class DealsComponent extends BaseComponent {
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         this.getFormTemplate();
+        this.selecteTemplateFormSubmitted = false;
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
@@ -2080,6 +2163,9 @@ export class DealsComponent extends BaseComponent {
   }
 
   openRight13(content13: any) {
+    this.selectTemplateForm.reset();
+    this.selecteTemplateFormSubmitted = false;
+
     this.offcanvasService.open(content13, { position: 'end' });
   }
 
@@ -2589,20 +2675,26 @@ export class DealsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    let payload = { ...this.taskForm.value };
     this.taskSubmitted = true;
+    if (this.taskForm.invalid) {
+      this.toastr.warning('Please fill all required fields');
+      return;
+    }
+    let payload = { ...this.taskForm.value };
     payload.leadIdList = this.selectedLeads
       .filter((id: any) => id !== '' && id !== null && id !== undefined)
       .map((id: any) => Number(id));
     if (Array.isArray(payload.assignedTo)) {
       payload.assignedTo = payload.assignedTo.join(',');
     }
+    this.uploadSpinner = true;
       this.switchService.createTask(payload).subscribe({
         next: (res) => {
           this.toastr.success('Task created successfully!');
           this.taskForm.reset();
           this.selectedLeads = [];
           this.taskSubmitted = false;
+          this.uploadSpinner = false;
           modal.close();
           this.getfetchLeadsIndividual();
         },
@@ -2691,9 +2783,8 @@ export class DealsComponent extends BaseComponent {
   openCompletionModal(content: any, lead: any) {
     this.selectedLead = lead;
     this.leadId = lead.leadId;
-    console.log(this.leadId);
     this.currentStep = 1;  
-    this.modalService.open(content, { centered: true });
+    this.modalService.open(content, { centered: true,scrollable: true });
   }
 
 
@@ -2712,7 +2803,7 @@ export class DealsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType
     };
-    console.log('status',payload);
+    this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {
         this.toastr.success('lead completed successfully');
@@ -2721,6 +2812,8 @@ export class DealsComponent extends BaseComponent {
           this.selectedLead.completionStatus = "completed"; 
         }
         modal.close();
+        this.uploadSpinner = false;
+
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -2778,5 +2871,29 @@ export class DealsComponent extends BaseComponent {
     }
     return 'bg-success-transparent';
   }
+  
+  formatLocalDateTime(dateTimeString: string): string {
+  if (!dateTimeString) return "";
+  const normalized = dateTimeString.split('.')[0];
+  const date = new Date(normalized + "Z");
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const dd = pad(date.getDate());
+  const mmm = months[date.getMonth()];
+  const yyyy = date.getFullYear();
+
+  let hours = date.getHours();
+  const minutes = pad(date.getMinutes());
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+
+  return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  }
+
+
+  
+
 
 }

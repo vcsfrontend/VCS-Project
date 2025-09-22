@@ -17,7 +17,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, flatMap } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
@@ -45,7 +45,7 @@ import { errorRoutingModule } from '../../../error/error.route';
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','completionStatus',];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -90,7 +90,7 @@ export class LeadsComponent extends BaseComponent {
   appointmentId: number | null = null; taskPriorityList :any;taskList:any; appointmentFormSubmitted : boolean = false;
   selectedLeadForAppointment:any;selectedLeadForAppointmentObject:any;
   leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
-  notConnectedCount:Number =0;statusCompletion:Number =0 ;
+  notConnectedCount:Number =0;statusCompletion:Number =0 ;crmRole:any;selecteTemplateFormSubmitted : boolean = false;
 
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
@@ -171,6 +171,7 @@ export class LeadsComponent extends BaseComponent {
     };
     this.userData = localStorage.getItem('userDetails');
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+    this.crmRole = JSON.parse(this.userData).crmRole;
     this.chartOptions = {
       series: [44, 55, 13, 43, 22],
       chart: {
@@ -245,6 +246,7 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     this.modalService.open(content, { backdrop: 'static' });
+
   }
   
   offcanvasRef: any;
@@ -475,9 +477,9 @@ export class LeadsComponent extends BaseComponent {
     this.selectTemplateForm = this.fb.group({
       campaignId: [0],
       templateGenId: [''],
-      templateName: [''],
-      subject: [''],
-      description: [''],
+      templateName: ['',Validators.required],
+      subject: ['',Validators.required],
+      description: ['',Validators.required],
       createdDate: [new Date().toISOString()],
       companyCode: this.userCompanyCode,
       email: this.userEmail,
@@ -828,7 +830,9 @@ export class LeadsComponent extends BaseComponent {
   get j() {
     return this.completionForm.controls;
   }
-
+  get k() {
+    return this.selectTemplateForm.controls;
+  }
 
   onSubmit(modal: any) {
     const followUpDate = this.leadForm.get('followUpDate')?.value;
@@ -986,16 +990,21 @@ export class LeadsComponent extends BaseComponent {
   }
 
   selectFormTemplateSubmit() {
+    this.selecteTemplateFormSubmitted = true;
     if (this.selectTemplateForm.invalid) {
       this.selectTemplateForm.markAllAsTouched();
+      this.toastr.warning('please fill all mandatory fields');
       return;
     }
+   this.uploadSpinner = true;
     const payload = this.selectTemplateForm.value;
     this.switchService.selectFormTemplate(payload).subscribe({
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         // this.getFormTemplate();
         this.getAllEmailTemplates();
+        this.selecteTemplateFormSubmitted = false;
+           this.uploadSpinner = false;
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
@@ -1162,11 +1171,13 @@ export class LeadsComponent extends BaseComponent {
       color: opt.color,
       isCustom: opt.isCustom || false
     }));
+    this.uploadSpinner = true;
     this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
       next: (res: any) => {
         if (res) {
           this.toastr.success('Status saved successfully');
           this.offcanvasService.dismiss();
+          this.uploadSpinner = false;
           this.getCrmStages();
           this.getCrmStatus();
         } else {
@@ -2206,9 +2217,18 @@ export class LeadsComponent extends BaseComponent {
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
       const formValue = this.followupLeadForm.value;
+       const date = new Date(formValue.followupDate);
+
+      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
+      .getHours()
+      .toString()
+      .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+
       const updatedTime = this.getFormattedNow();
       const followUpDetails = {
-        followupDate: formValue.followupDate,
+        followupDate: formattedDate,
         followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
         stage: formValue.stage,
         status: formValue.status,
@@ -2248,20 +2268,21 @@ export class LeadsComponent extends BaseComponent {
         }
       };
       console.log(followUpDetails)
-      // this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
-      //   next: (res: any) => {
-      //     if (res.status == true) {
-      //       modal.close();
-      //       this.followupLeadSubmitted = false;
-      //       this.followupLeadForm.reset();
-      //       this.executiveName = '';
-      //       this.followupName = '';
-      //       this.leadId = 0;
-      //       this.toastr.success(res.message, 'lead');
-      //       this.getFetchLeadData();
-      //     }
-      //   },
-      // });
+      this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.followupLeadSubmitted = false;
+            this.showForm = false;
+            this.followupLeadForm.reset();
+            this.executiveName = '';
+            this.followupName = '';
+            this.leadId = 0;
+            this.toastr.success(res.message, 'lead');
+            this.getFetchLeadData();
+          }
+        },
+      });
     }
   }
 
@@ -2584,6 +2605,7 @@ export class LeadsComponent extends BaseComponent {
   openFollowupLeadForm(element: any, content4: any): void {
     this.followupName = element.name;
     this.notconnectedstatusClicked = false;
+    this.showForm = false;
     let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
@@ -2599,6 +2621,8 @@ export class LeadsComponent extends BaseComponent {
     this.offcanvasService.open(content12, { position: 'end' });
   }
   openRight13(content13: any) {
+    this.selectTemplateForm.reset();
+    this.selecteTemplateFormSubmitted = false;
     this.offcanvasService.open(content13, { position: 'end' });
   }
   updateTopDisplayedCards(): void {
@@ -2949,20 +2973,26 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    let payload = { ...this.taskForm.value };
     this.taskSubmitted = true;
+    if (this.taskForm.invalid) {
+      this.toastr.warning('Please fill all required fields');
+      return;
+    }
+    let payload = { ...this.taskForm.value };
     payload.leadIdList = this.selectedLeads
       .filter((id: any) => id !== '' && id !== null && id !== undefined)
       .map((id: any) => Number(id));
     if (Array.isArray(payload.assignedTo)) {
       payload.assignedTo = payload.assignedTo.join(',');
     }
+    this.uploadSpinner = true;
       this.switchService.createTask(payload).subscribe({
         next: (res) => {
           this.toastr.success('Task created successfully!');
           this.taskForm.reset();
           this.selectedLeads = [];
           this.taskSubmitted = false;
+          this.uploadSpinner = false;
           modal.close();
           this.getFetchLeadData();
         },
@@ -3105,7 +3135,7 @@ export class LeadsComponent extends BaseComponent {
     this.currentStep = 1;  
     this.completionForm.reset();
     this.leadCompletionsubmitted = false;
-    this.modalService.open(content, { centered: true });
+    this.modalService.open(content, { centered: true,scrollable : true });
   }
 
 
@@ -3124,7 +3154,7 @@ export class LeadsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType
     };
-    console.log('status',payload);
+    this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {
         this.toastr.success('lead completed successfully');
@@ -3132,7 +3162,9 @@ export class LeadsComponent extends BaseComponent {
         if (this.selectedLead) {
           this.selectedLead.completionStatus = "completed"; 
         }
+        this.uploadSpinner = false;
         modal.close();
+        this.currentStep = 1;
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -3150,8 +3182,7 @@ export class LeadsComponent extends BaseComponent {
     }
     this.updateCompletionStatus(modal);
 
-    modal.close();
-    this.currentStep = 1;
+    
   }
   chartOptions2:any = {
   series: [{
@@ -3277,6 +3308,26 @@ export class LeadsComponent extends BaseComponent {
       }
     },
   };
+
+   formatLocalDateTime(dateTimeString: string): string {
+  if (!dateTimeString) return "";
+  const normalized = dateTimeString.split('.')[0];
+  const date = new Date(normalized + "Z");
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  const dd = pad(date.getDate());
+  const mmm = months[date.getMonth()];
+  const yyyy = date.getFullYear();
+
+  let hours = date.getHours();
+  const minutes = pad(date.getMinutes());
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+
+  return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  }
 
 
 }
