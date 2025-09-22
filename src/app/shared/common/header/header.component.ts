@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
   themeType: string | undefined; userName:any; userData:any;  userEmail :any
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
     'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'];
-
+  profilePic: string | null = null;
   selectedItem: string  | null ='selectedItem'
   isOpen: boolean = false; isCrm:boolean = false; isAdonai:boolean = false;
   constructor(
@@ -252,6 +252,7 @@ export class HeaderComponent implements OnInit {
         this.loadLeadData();
       }
     });
+    this.profilePic = localStorage.getItem("profilePic");
     this.loggedInUser = JSON.parse(this.userData);
     this.userName = this.loggedInUser?.name || this.loggedInUser?.username;
     this.intervalSub = interval(5000).subscribe(() => this.loadLeadData());
