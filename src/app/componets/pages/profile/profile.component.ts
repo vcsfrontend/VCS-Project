@@ -67,11 +67,12 @@ export class ProfileComponent {
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : '';
   adonaiToolActivity: any = this.userData ? this.userData.adonai : '';
-  crmRole : string ='';
+  adoanAiRole :any = this.userData ? this.userData.adonaiRole:'';
+  crmRole : any = this.userData ? this.userData. crmRole:'';
   imageData = data; pjData : any;isCollapsed = true;
   items!: GalleryItem[];lastField: any;stageLst: any;
-  userLst: any = []; searchUser: string = '';adoanAiRole: any;topshowMore = false;
-  adonaiAccess:any; crmAccess : any;taskList: any[] | null = null; profilePicForm!: FormGroup;
+  userLst: any = []; searchUser: string = '';topshowMore = false;
+  taskList: any[] | null = null; profilePicForm!: FormGroup;
   inprogressTasks: any[] = [];  modal: any;
   verifyTasks: any[] = [];
   completedTasks: any[] = [];userList:any[]=[];
@@ -82,12 +83,7 @@ export class ProfileComponent {
   constructor(public gallery: Gallery, public lightbox: Lightbox ,
     public switchService: SwitherService,private toastr: ToastrService,private fb: FormBuilder,
   private offcanvasService: NgbOffcanvas, private modalService: NgbModal,) {
-       this.userData = localStorage.getItem('userDetails');
-      this.userType = JSON.parse(this.userData).type;
-      this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
-      this.adonaiAccess =  JSON.parse(this.userData).adonai;
-      this.crmAccess =  JSON.parse(this.userData).crm;
-      this.crmRole = JSON.parse(this.userData).crmRole
+      
     }
   ngOnInit():void {
     this.getUserInfo(this.userEmail);
@@ -114,8 +110,9 @@ export class ProfileComponent {
   getUserInfo(email: string) {
     this.switchService.userInfo(email).subscribe({
       next: (res: any) => {
-        if (res) {
-          this.userData = res;
+        this.userData = res;
+        if (res?.profilePic) {
+          localStorage.setItem("profilePic", res.profilePic);
         }
       },
     });
@@ -191,10 +188,10 @@ export class ProfileComponent {
   }
 
   getUsers() {
-    if (JSON.parse(this.userData).type == 2) {
+    if (this.userType == 2) {
       // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
-      let cn = JSON.parse(this.userData).companyName;
-      let cc = JSON.parse(this.userData).companyCode;
+      let cn = this.userCompanyName;
+      let cc = this.userCompanyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {

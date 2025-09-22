@@ -81,6 +81,7 @@ export class TasksComponent {
      this.selectedTaskId = task.taskGenId; 
     this.taskForm.patchValue({
       taskName: task.taskName,
+      currentStatus : task.currentStatus,
       assignedTo: task.assignedTo,
       deadline: task.deadline ? task.deadline.split('T')[0] : '',
       priority: task.priority,
@@ -125,6 +126,7 @@ export class TasksComponent {
             if (control !== 'currentStatus') {
               this.taskForm.get(control)?.disable();
             }
+            
           });
         }
       },
