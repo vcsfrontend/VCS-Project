@@ -122,8 +122,9 @@ table.mat-mdc-table {
   position: relative;
   display: block;
   box-sizing: border-box;
-  width: 200px;
+  width: 260px;
 }
+
 
 .marge {
   margin-top: -40px !important;
@@ -274,4 +275,14 @@ table.mat-mdc-table {
 .table-container::-webkit-scrollbar-thumb:hover {
   background-color: #333;
 }
+
+.ng-dropdown-panel .ng-option {
+  border-bottom: 1px solid #000000;  /* divider */
+  padding: 8px 12px;
+}
+
+.ng-dropdown-panel .ng-option:last-child {
+  border-bottom: none;
+}
+
 

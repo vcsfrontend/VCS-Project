@@ -453,8 +453,32 @@
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
-                    <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
-                        placeholder="Select an Executive" class="rounded-0 ng-selt">
+                    <ng-select formControlName="executive" [items]="userList" bindValue="email" placeholder="Select an Executive"
+                        class="rounded-0 ng-selt border-bottom" [searchable]="true">
+                        <ng-template ng-option-tmp let-user="item" let-index="index">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold" [ngClass]="getUserColor(user)">
+                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                        {{ user.email?.charAt(0) | uppercase }}
+                                    </span>
+                                </div>
+                                <div class="flex-fill">
+                                    <span class="fs-14">{{ user.email?.length > 22 ? (user.email | slice:0:22) + '...' : user.email }}</span>
+                                    <div class="fs-12 text-muted">{{ user.username }}</div>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-label-tmp let-user="item">
+                            <div class="d-flex align-items-center text-truncate w-100">
+                                <div class="avatar avatar-sm avatar-rounded me-1 border text-white fw-bold flex-shrink-0"
+                                    [ngClass]="getUserColor(user)">
+                                    <span>{{ user.email?.charAt(0) | uppercase }}</span>
+                                </div>
+                                <span class="text-truncate" style="max-width: calc(100% - 40px);">
+                                    {{ user.email?.length > 22 ? (user.email | slice:0:22) + '...' : user.email }}
+                                </span>
+                            </div>
+                        </ng-template>
                     </ng-select>
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
                         id="button-addon1" data-mdb-ripple-color="dark">
@@ -1118,21 +1142,34 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Stages</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight5(content5)" [disabled]="isAddStagesDisabled"
-                        >Add
-                        Stages</button>
+                    <button class="btn btn-primary btn-sm ms-auto" type="button" (click)="openRight5(content5)"
+                        [disabled]="isAddStagesDisabled">Add Stages</button>
                 </div>
-                <div class="card-body p-3" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
-                    <div *ngIf="stageLst?.length === 0"></div>
-                    <ul class="list-group">
-                        <li *ngFor="let stage of stageLst" class="list-group-item d-flex align-items-center">
-                            <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{ 
-                                                'width': '15px', 'height': '15px', 
-                                                'background-color': stage.color || '#ccc' 
-                                            }"></span>
-                            <span class="font-weight-bold">{{ stage.stageName }}</span>
-                        </li>
-                    </ul>
+                <div class="card-body p-0" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
+                    <div class="table-responsive" *ngIf="stageLst?.length > 0; else noData">
+                        <table class="table table-hover card-table mb-0">
+                            <tbody>
+                                <tr *ngFor="let stage of stageLst">
+                                    <td>
+                                        <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{ 
+                                            'width': '15px', 
+                                            'height': '15px', 
+                                            'background-color': stage.color || '#ccc' 
+                                        }">
+                                        </span>
+                                        <span class="font-weight-bold">
+                                            {{ capitalizeFirstLetter(stage.stageName) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #noData>
+                        <div class="p-3 text-center text-muted">
+                            No stages available.
+                        </div>
+                    </ng-template>
                 </div>
                 <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStages()">Delete</button>
@@ -1143,27 +1180,36 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Status</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight12(content12)"
+                    <button class="btn btn-primary btn-sm ms-auto" type="button" (click)="openRight12(content12)"
                         [disabled]="shouldDisableAddStatus">Add
                         Status</button>
                 </div>
-                <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
-                    <div *ngIf="statusLst && statusLst.length === 0">No statuses found</div>
-                    <ul class="list-unstyled">
-                        <li *ngFor="let status of statusLst" class="mb-3">
-                            <i class="bi bi-arrow-right-circle-fill text-info me-2"></i>
-                            <strong>{{ status.stage }}</strong>
-                            <ul class="list-group mt-2">
-                                <li *ngFor="let field of status.fields"
-                                    class="list-group-item d-flex align-items-center">
-                                    <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{'width': '15px','height': '15px', 
-                                                    'background-color': field.color || '#ccc'}">
-                                    </span>
-                                    {{ field.name }}
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                <div class="card-body p-0" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                    <div *ngIf="statusLst?.length > 0; else noStatus">
+                        <ul class="list-unstyled">
+                            <li *ngFor="let status of statusLst" class="mb-3 mt-2">
+                                <i class="bi bi-arrow-right-circle-fill text-info me-2 ms-2"></i>
+                                <strong>{{ capitalizeFirstLetter(status.stage) }}</strong>
+                
+                                <ul class="list-group mt-2">
+                                    <li *ngFor="let field of status.fields" class="list-group-item d-flex align-items-center">
+                                        <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{
+                                            'width': '15px',
+                                            'height': '15px',
+                                            'background-color': field.color || '#ccc'
+                                        }">
+                                        </span>
+                                        {{ capitalizeFirstLetter(field.name) }}
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <ng-template #noStatus>
+                        <div class="p-3 text-center text-muted">
+                            No statuses available.
+                        </div>
+                    </ng-template>
                 </div>
                 <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStatus()">Delete</button>
@@ -1174,14 +1220,14 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Mail Templates</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight13(content13)">Add Mail
+                    <button class="btn btn-primary btn-sm ms-auto" type="button" (click)="openRight13(content13)">Add Mail
                         Template</button>
                 </div>
-                <div class="card-body " style="min-height: 398px; max-height: 400px; overflow-y: auto;">
-                    <div *ngFor="let template of tempFormList" class="card custom-card card-bg-light mb-3">
+                <div class="card-body p-1" style="min-height: 398px; max-height: 400px; overflow-y: auto;">
+                    <div *ngFor="let template of tempFormList" class="card custom-card border mb-3">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-3">{{ capitalizeFirstLetter (template.templateName) }}</h5>
-                            <p><strong>Subject:</strong> {{ capitalizeFirstLetter (template.subject) }}</p>
+                            <p><strong>Subject:</strong> {{ capitalizeFirstLetter (template.subject?.slice(0,100)) }}</p>
                             <p><strong>Description:</strong> {{ capitalizeFirstLetter(template.description?.slice(0, 100)) }}</p>
                             <p><strong>Created Date:</strong> {{ template.createdDate | date: 'dd/MM/yyyy hh:mm a' }}
                             </p>

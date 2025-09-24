@@ -475,3 +475,20 @@ app-footer{
 .collapse-horizontal.collapse{
   transition:none !important
 }
+.ng-dropdown-panel .ng-option {
+  border-bottom: 1px solid #000;
+  padding: 8px 12px;
+}
+
+.ng-dropdown-panel .ng-option:last-child {
+  border-bottom: none;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option {
+  border-bottom: 1px solid #000;
+  padding: 8px 12px;
+}
+
+::ng-deep .ng-dropdown-panel .ng-option:last-child {
+  border-bottom: none;
+}
