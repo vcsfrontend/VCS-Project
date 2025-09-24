@@ -33,8 +33,8 @@
                     <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div>
-                                <p class="text-muted mb-3">Today’s Leads</p>
-                                <h4 class="mt-1">1,02,890</h4>
+                                <p class="text-muted mb-3">Total Campaigns</p>
+                                <h4 class="mt-1">{{ campaignCount ?? 0 }} <span class="text-muted op-7 fs-11">Campaigns</span></h4>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
@@ -67,8 +67,8 @@
                     <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
                         <div class="d-flex align-items-center justify-content-between flex-wrap">
                             <div>
-                                <p class="text-muted mb-3">Fresh Leads</p>
-                                <h4 class="mt-1">$56,562</h4>
+                                <p class="text-muted mb-3">Total Leads</p>
+                                <h4 class="mt-1">{{ totalLeadCount ?? 0 }}</h4>
                             </div>
                         </div>
                         <div class="d-flex align-items-center justify-content-between mt-1">

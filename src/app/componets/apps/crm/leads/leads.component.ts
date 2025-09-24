@@ -50,7 +50,7 @@ export class LeadsComponent extends BaseComponent {
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10; appointmentDataList: any[] = [];selectedAppointment: any = null; selectedLead: any;
-  Crmusers: any[] = []; selectedLeads: number[] = [];
+  Crmusers: any[] = []; selectedLeads: any[] = [];
   CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
   stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any;
@@ -88,7 +88,7 @@ export class LeadsComponent extends BaseComponent {
   displayedLeads: any[] = []; override cityList:any[]=[];
   filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
   appointmentId: number | null = null; taskPriorityList :any;taskList:any; appointmentFormSubmitted : boolean = false;
-  selectedLeadForAppointment:any;selectedLeadForAppointmentObject:any;
+  selectedLeadForAppointment:any; selectedLeadForAppointmentObject:any;
   leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;crmRole:any;selecteTemplateFormSubmitted : boolean = false;
 
@@ -2453,33 +2453,32 @@ export class LeadsComponent extends BaseComponent {
       },
     });
   }
-    onRowCheckboxChange(lead: any, event: any) {
+  onRowCheckboxChange(lead: any, event: any) {
     if (event.checked) {
-      if (!this.selectedLeads.includes(lead.leadId)) {
-        this.selectedLeads.push(lead.leadId);
+      if (!this.selectedLeads.some(l => l.leadId === lead.leadId)) {
+        this.selectedLeads.push(lead);
       }
       this.selectedLeadForAppointment = lead;
     } else {
-      this.selectedLeads = this.selectedLeads.filter(id => id !== lead.leadId);
+      this.selectedLeads = this.selectedLeads.filter(l => l.leadId !== lead.leadId);
       if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
         this.selectedLeadForAppointment = null;
       }
     }
   }
 
+  isSelected(leadId: number): boolean {
+    return this.selectedLeads.some(l => l.leadId === leadId);
+  }
+
   onSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedLeads = this.dataSource.data
-        .filter((row: any) => row.completionStatus !== 'completed') // ✅ exclude closed
+        .filter((row: any) => row.completionStatus !== 'completed')
         .map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
     }
-  }
-
-
-  isSelected(leadId: number): boolean {
-    return this.selectedLeads.includes(leadId);
   }
 
   isAllSelected(): boolean {
@@ -2973,33 +2972,31 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    this.taskSubmitted = true;
-    if (this.taskForm.invalid) {
-      this.toastr.warning('Please fill all required fields');
+    const leadsWithoutExecutive = this.selectedLeads.filter(lead => !lead.executive);
+    if (leadsWithoutExecutive.length > 0) {
+      this.toastr.warning('Please assign an executive before creating the task.');
       return;
     }
-    let payload = { ...this.taskForm.value };
-    payload.leadIdList = this.selectedLeads
-      .filter((id: any) => id !== '' && id !== null && id !== undefined)
-      .map((id: any) => Number(id));
-    if (Array.isArray(payload.assignedTo)) {
-      payload.assignedTo = payload.assignedTo.join(',');
-    }
-    this.uploadSpinner = true;
-      this.switchService.createTask(payload).subscribe({
-        next: (res) => {
-          this.toastr.success('Task created successfully!');
-          this.taskForm.reset();
-          this.selectedLeads = [];
-          this.taskSubmitted = false;
-          this.uploadSpinner = false;
-          modal.close();
-          this.getFetchLeadData();
-        },
-        error: (err) => {
-          this.toastr.error('Something went wrong!');
-        }
-      });
+    this.taskSubmitted = true;
+    let payload: any = {
+      ...this.taskForm.value,
+      leadIdList: this.selectedLeads.map((lead: any) => lead.leadId),
+      assignedTo: this.selectedLeads
+        .filter((lead: any) => lead.executive)
+        .map((lead: any) => lead.executive)  
+        .join(',')                        
+    };
+    this.switchService.createTask(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Task created successfully!');
+        this.taskForm.reset();
+        this.selectedLeads = [];
+        this.selectedLeadForAppointment = null;
+        this.taskSubmitted = false;
+        modal.close();
+        this.getFetchLeadData();
+      }
+    });
   }
 
   getTaskStatusColor(status: string): string {
