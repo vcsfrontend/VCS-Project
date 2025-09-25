@@ -1695,10 +1695,10 @@
     </div>
     </form>
 </ng-template>
-<ng-template #offcanvasTemplate let-offcanvasRef="offcanvasRef">
+<ng-template #offcanvasTemplate let-offcanvas>
   <div class="offcanvas-header border-bottom border-block-end-dashed">
     <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Bulk Email</strong></h5>
-    <button (click)="offcanvasRef.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
       aria-label="Close"></button>
   </div>
 
@@ -1751,7 +1751,7 @@
       <div class="d-flex justify-content-end gap-3">
         <button class="btn btn-primary w-50" type="submit"
           >Send Mail</button>
-        <button (click)="offcanvasRef.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
+        <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
       </div>
     </div>
   </form>
@@ -1776,7 +1776,7 @@
                             <span *ngIf="g['taskName'].errors['minlength']">Task Name must be at least 3 characters long.</span>
                         </div>
                     </div>
-                    <div class="col-xl-12">
+                    <!-- <div class="col-xl-12">
                         <label class="form-label">Assigned To</label>
                         <ng-select formControlName="assignedTo" [items]="userList" bindLabel="email" bindValue="email"
                             placeholder="Select Project" [multiple]="true" [ngClass]="{ 'is-invalid': taskSubmitted && g['assignedTo'].errors }">
@@ -1784,7 +1784,7 @@
                         <div *ngIf="taskSubmitted && g['assignedTo'].errors" class="invalid-feedback">
                             <span *ngIf="g['assignedTo'].errors['required']">Assigned to is required.</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-6">
                         <label class="form-label">Deadline</label>
                         <div class="form-group">
