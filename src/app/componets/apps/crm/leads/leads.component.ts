@@ -2364,11 +2364,14 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     if (this.allocateForm?.valid) {
-      this.allocateForm.patchValue({ idList: [...this.selectedLeads] });
-      const allocateData = {
-        idList: [...this.selectedLeads],
-        executive: selectedExecutive,
-      };
+      this.allocateForm.patchValue({
+        idList: this.selectedLeads.map((lead: any) => lead.leadId)
+      });
+      let allocateData = { 
+        idList: this.selectedLeads.map((lead: any) => lead.leadId), 
+        executive: this.allocateForm.get('executive')?.value 
+      };      
+      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2765,8 +2768,9 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
+    let leadList= this.selectedLeads.map((lead: any) => lead.leadId)
     if (confirm('Are you sure you want to delete the selected leads?')) {
-      this.switchService.deleteLeads({ leadList: this.selectedLeads }).subscribe({
+      this.switchService.deleteLeads({ leadList}).subscribe({
         next: (res: any) => {
           this.toastr.success('Leads deleted successfully');
           this.getFetchLeadData();
@@ -2908,13 +2912,13 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-
+    const selectedIds = this.selectedLeads.map((l: any) => l.leadId);
     const selectedLeadObjects = this.dataSource.data.filter((lead: any) =>
-      this.selectedLeads.includes(lead.leadId)
+      selectedIds.includes(lead.leadId)
     );
+
     const emailList = selectedLeadObjects.map((lead: any) => lead.email).filter(Boolean);
     const emailString = emailList.join(', ');
-
     this.sendLeadForm.patchValue({
       email: emailString
     });
@@ -2936,6 +2940,8 @@ export class LeadsComponent extends BaseComponent {
       this.selectedLeads.includes(lead.leadId)
     );
     const emailList = selectedLeadsData.map((lead: any) => lead.email).filter(Boolean);
+        console.log(emailList);
+
     if (!emailList.length) {
       this.toastr.warning('No valid emails found in selected leads.');
       return;
@@ -3306,25 +3312,34 @@ export class LeadsComponent extends BaseComponent {
     },
   };
 
-   formatLocalDateTime(dateTimeString: string): string {
-  if (!dateTimeString) return "";
-  const normalized = dateTimeString.split('.')[0];
-  const date = new Date(normalized + "Z");
-  const pad = (n: number) => n.toString().padStart(2, '0');
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  formatLocalDateTime(dateTime: string | Date): string {
+    if (!dateTime) return "";
 
-  const dd = pad(date.getDate());
-  const mmm = months[date.getMonth()];
-  const yyyy = date.getFullYear();
+    let dateTimeString = dateTime.toString();
 
-  let hours = date.getHours();
-  const minutes = pad(date.getMinutes());
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12;
+    if (typeof dateTime === "object" && dateTime instanceof Date) {
+        dateTimeString = dateTime.toISOString();
+    }
 
-  return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+    const normalized = dateTimeString.split('.')[0];
+    const date = new Date(normalized + "Z");
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const dd = pad(date.getDate());
+    const mmm = months[date.getMonth()];
+    const yyyy = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = pad(date.getMinutes());
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
   }
+
 
 
 }

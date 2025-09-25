@@ -73,7 +73,7 @@ export class DealsComponent extends BaseComponent {
   tempFormList: any; selectTemplateForm!: FormGroup; allTemplateGenIds: string[] = [];
   selectedStatusCount: number | null = null;statusCounts: { status: string; count: number }[] = [];
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
-  selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
+  selectedLeads: any[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
   shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any; individualEmail :any;
   phoneNumber: string = '';originalStatus: string = '';  notconnectedstatusClicked = false; hasSelectedInvalid = false;
@@ -369,6 +369,7 @@ export class DealsComponent extends BaseComponent {
     this.getFormTemplate();
     this.getAllEmailTemplates();
     this.getLeadEntry();
+    this.selectedLeads = [];
 
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -1467,51 +1468,65 @@ export class DealsComponent extends BaseComponent {
     return this.allocateForm.controls;
   }
 
-  onAllocateSubmit() {
+   onAllocateSubmit() {
     this.allocateSubmitted = true;
-    if (this.selectedLeads.length == 0) {
-      this.toastr.warning('Please choose at least one', 'lead', {
-        timeOut: 3000, positionClass: 'toast-top-right'
-      });
+    const selectedExecutive = this.allocateForm.get('executive')?.value;
+    const hasSelectedLeads = this.selectedLeads.length > 0;
+    if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
+      this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      return;
+    }
+    if (selectedExecutive == null || selectedExecutive === '') {
+      this.toastr.warning('Please select executive', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      return;
+    }
+    if (!hasSelectedLeads) {
+      this.toastr.warning('Please choose one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      return;
     }
     if (this.allocateForm?.valid) {
-      this.allocateForm.patchValue({ idList: this.allocateForm });
-      let allocateData = { idList: [...this.selectedLeads], executive: this.allocateForm.get('executive')?.value }
+      this.allocateForm.patchValue({
+        idList: this.selectedLeads.map((lead: any) => lead.leadId)
+      });
+      let allocateData = { 
+        idList: this.selectedLeads.map((lead: any) => lead.leadId), 
+        executive: this.allocateForm.get('executive')?.value 
+      };      
+      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
             this.selectedLeads=[];
-            this.toastr.success(res.message, 'lead');
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
             this.getfetchLeadsIndividual();
           } else {
-            this.toastr.error(res.message, 'lead', );
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           }
         },
         error: (error) => {
           this.toastr.error(error.statusText);
         },
-      })
-
+      });
     }
   }
 
    onRowCheckboxChange(lead: any, event: any) {
     if (event.checked) {
-      if (!this.selectedLeads.includes(lead.leadId)) {
-        this.selectedLeads.push(lead.leadId);
+      if (!this.selectedLeads.some(l => l.leadId === lead.leadId)) {
+        this.selectedLeads.push(lead);
       }
       this.selectedLeadForAppointment = lead;
     } else {
-      this.selectedLeads = this.selectedLeads.filter(id => id !== lead.leadId);
+      this.selectedLeads = this.selectedLeads.filter(l => l.leadId !== lead.leadId);
       if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
         this.selectedLeadForAppointment = null;
       }
     }
   }
 
-  onSelectAllChange(event: any) {
+   onSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedLeads = this.dataSource.data
         .filter((row: any) => row.completionStatus !== 'completed')
@@ -1521,8 +1536,9 @@ export class DealsComponent extends BaseComponent {
     }
   }
 
+
   isSelected(leadId: number): boolean {
-    return this.selectedLeads.includes(leadId);
+    return this.selectedLeads.some(l => l.leadId === leadId);
   }
 
   isAllSelected(): boolean {
@@ -2610,9 +2626,9 @@ export class DealsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-
+    const selectedIds = this.selectedLeads.map((l: any) => l.leadId);
     const selectedLeadObjects = this.dataSource.data.filter((lead: any) =>
-      this.selectedLeads.includes(lead.leadId)
+      selectedIds.includes(lead.leadId)
     );
     const emailList = selectedLeadObjects.map((lead: any) => lead.email).filter(Boolean);
     const emailString = emailList.join(', ');
@@ -2670,39 +2686,37 @@ export class DealsComponent extends BaseComponent {
   }
 
   
-  createTaskSubmit(modal: any) {
+ createTaskSubmit(modal: any) {
     if (!this.selectedLeads || this.selectedLeads.length === 0) {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    this.taskSubmitted = true;
-    if (this.taskForm.invalid) {
-      this.toastr.warning('Please fill all required fields');
+    const leadsWithoutExecutive = this.selectedLeads.filter(lead => !lead.executive);
+    if (leadsWithoutExecutive.length > 0) {
+      this.toastr.warning('Please assign an executive before creating the task.');
       return;
     }
-    let payload = { ...this.taskForm.value };
-    payload.leadIdList = this.selectedLeads
-      .filter((id: any) => id !== '' && id !== null && id !== undefined)
-      .map((id: any) => Number(id));
-    if (Array.isArray(payload.assignedTo)) {
-      payload.assignedTo = payload.assignedTo.join(',');
-    }
-    this.uploadSpinner = true;
-      this.switchService.createTask(payload).subscribe({
-        next: (res) => {
-          this.toastr.success('Task created successfully!');
-          this.taskForm.reset();
-          this.selectedLeads = [];
-          this.taskSubmitted = false;
-          this.uploadSpinner = false;
-          modal.close();
-          this.getfetchLeadsIndividual();
-        },
-        error: (err) => {
-          this.toastr.error('Something went wrong!');
-        }
-      });
-  } 
+    this.taskSubmitted = true;
+    let payload: any = {
+      ...this.taskForm.value,
+      leadIdList: this.selectedLeads.map((lead: any) => lead.leadId),
+      assignedTo: this.selectedLeads
+        .filter((lead: any) => lead.executive)
+        .map((lead: any) => lead.executive)  
+        .join(',')                        
+    };
+    this.switchService.createTask(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Task created successfully!');
+        this.taskForm.reset();
+        this.selectedLeads = [];
+        this.selectedLeadForAppointment = null;
+        this.taskSubmitted = false;
+        modal.close();
+        this.getfetchLeadsIndividual();
+      }
+    });
+  }
 
 
   getTaskStatusColor(status: string): string {
