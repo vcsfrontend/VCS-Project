@@ -217,6 +217,9 @@ export class SwitherService {
   getRole(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/roles/listRoles?companyCode=${companyCode}`); }  
   updateRole(id:any , name:any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/id=${id}?name=${name}`,null); }  
 
+  createDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/departments/createDepartment`, data); }
+  getDepartment(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/departments/listDepartments?companyCode=${companyCode}`); }  
+  updateDepartment(id:any , name:any, description:any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/id=${id}?name=${name}&description=${description}`,null); }  
   createRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {

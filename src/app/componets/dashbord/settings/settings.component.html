@@ -1311,6 +1311,87 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Departments</div>
+                <div class="d-flex flex-wrap">
+                    <div class="me-3 my-1">
+                        <input class="form-control form-control-sm" type="text" placeholder="Search Here" aria-label=".form-control-sm example">
+                    </div>
+                    <button class="btn btn-primary me-3" (click)="openLg(Content113);">Add Department</button>
+                    <button class="btn btn-secondary">Assign Permissions</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table text-nowrap">
+                        <thead class="custom-header">
+                            <tr>
+                                <th scope="col">S.No</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let department of departmentList">
+                            <tr>
+                                <td>
+                                    1
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center lh-1">
+                                        <div class="me-2">
+                                            <span class="avatar avatar-xs">
+                                                <img src="./assets/images/nft-images/1.png" alt="">
+                                            </span>
+                                        </div>
+                                        <div>{{department.name}}</div>
+                                    </div>
+                                </td>
+                                <td>{{department.description}}</td>
+                                <td>
+                                    <div class="hstack gap-2 fs-1">
+                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"
+                                        (click)="editDepartmentFormSelected(department, Content113)"><i class="ri-edit-line"></i></a>
+                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"><i class="ri-delete-bin-line"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer border-top-0">
+                <div class="d-flex flex-wrap align-items-center">
+                    <div>
+                        Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
+                    </div>
+                    <div class="ms-auto">
+                        <nav aria-label="Page navigation" class="pagination-style-4">
+                            <ul class="pagination mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="javascript:void(0);">
+                                        Prev
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                <li class="page-item">
+                                    <a class="page-link text-primary" href="javascript:void(0);">
+                                        next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <ng-template #Content112 let-modal>
     <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
@@ -1320,7 +1401,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
-    
         <div class="modal-body overflowImportant">
             <div class="row gy-3 scrollable-content">
                 <div class="col-xl-6 col-lg-6 col-md-6">
@@ -1331,13 +1411,41 @@
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <label for="name" class="form-label">description</label>
                     <input type="text" class="form-control" id="name" placeholder="Name" formControlName="description">
-                    
                 </div>
             </div>
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Save Role</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">cancel</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #Content113 let-modal>
+    <form [formGroup]="createDepartmentForm" (ngSubmit)="onDepartmentSubmit()">
+        <div class="modal-header">
+            <h6 class="modal-title" id="exampleModalLgLabel">
+                {{ isEditmode ? 'Edit Department' : 'Create Department' }}
+            </h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3 scrollable-content">
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name">
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                    <label for="name" class="form-label">description</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="description">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save Department</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
     </form>

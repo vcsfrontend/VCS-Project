@@ -80,13 +80,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
-  createRoleForm!: FormGroup;
+  createRoleForm!: FormGroup; createDepartmentForm!: FormGroup; 
   projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
   quotationSubmitted = false; quotationmarginsubmit:boolean=false;projectconfigsubmit:boolean=false;
   submittedQuotationNumber :any;addmargindisable:boolean=false; f1submitCount:number=0;
-  userEmail:any;roleForm !: FormGroup;roleLst:any;roleCreationId : number =0; roleName :string ="";
-  isEditmode : boolean = false;
+  userEmail:any;roleForm !: FormGroup; roleLst:any; roleCreationId : number =0; roleName :string ="";
+  isEditmode : boolean = false; departmentList: any[] = []; departmentId : number =0; departmentName :string ="";
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -249,6 +249,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
     this.getRoles();
+    this.getAllDepartments();
     this.userEmail = JSON.parse(this.userData).email;
 
     
@@ -440,6 +441,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     })
 
 
+    this.createDepartmentForm = this.fb.group({
+      name: [''],
+      description:[''],
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    })
 
 
     this.onTodayDt();
@@ -613,10 +621,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         } else {
           this.toastr.error(res.message)
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      }
     })
   }
 
@@ -718,10 +723,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         } else {
           this.toastr.error(res.message)
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      }
     })
   }
 
@@ -1029,7 +1031,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   openLg(content112:any) {
     this.isEditmode = false;
-    this.modalService.open(content112, { size: 'lg' },);
+    this.modalService.open(content112, { size: 'sm', scrollable: true, centered: true, },);
+  }
+
+  departmentModal(content113: any) {
+    this.isEditmode = false;
+    this.modalService.open(content113, { size: 'sm', scrollable: true, centered: true, });
   }
 
   closeModal() {
@@ -1795,22 +1802,35 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     return this.projectConfigForm.controls;
   }
   openEditFromSelected(element: any, content112: any) {
-  this.isEditmode = true;
-  this.openEditForm(element, content112);
-}
+    this.isEditmode = true;
+    this.openEditForm(element, content112);
+  }
 
-openEditForm(element: any, content112: any) {
-  this.isEditmode = true;
-  this.roleCreationId = element.id;
+  openEditForm(element: any, content112: any) {
+    this.isEditmode = true;
+    this.roleCreationId = element.id;
+    this.roleForm.patchValue({
+      name: element.name,
+      description: element.description
+    });
+    this.modalService.open(content112, { size: 'sm', scrollable: true, centered: true, });
+  }
 
-  this.roleForm.patchValue({
-    name: element.name,
-    description: element.description // if you have it
-  });
+  editDepartmentFormSelected(element: any, content113: any) {
+    this.isEditmode = true;
+    this.openEditDepartmentForm(element, content113);
+  }
 
-  // ⚡ OPEN THE MODAL
-  this.modalService.open(content112, { size: 'lg' });
-}
+  openEditDepartmentForm(element: any, content113: any) {
+    this.isEditmode = true;
+    this.departmentId = element.id;
+    this.createDepartmentForm.patchValue({
+      name: element.name,
+      description: element.description
+    });
+    this.modalService.open(content113, { size: 'sm', scrollable: true, centered: true });
+  }
+
 
   onRoleSubmit(){
     if(this.isEditmode){
@@ -1820,6 +1840,16 @@ openEditForm(element: any, content112: any) {
       this.addRoles();
     }
   }
+
+  onDepartmentSubmit(){
+    if(this.isEditmode){
+      this.updateDepartment();
+    }
+    else{
+      this.createDepartment();
+    }
+  }
+
   addRoles(){
     const rolesData = this.roleForm.value;
     let payload ={
@@ -1833,29 +1863,21 @@ openEditForm(element: any, content112: any) {
     this.switchService.addRole(payload).subscribe({
       next:()=>{
         this.toastr.success('role added successfully');
-
       },
-      error :()=>{
-
-      }
-
     })
   }
+
   getRoles(){
     const companyCode = JSON.parse(this.userData)?.companyCode;
     this.switchService.getRole(companyCode).subscribe({
       next:(res:any)=>{
-        this.toastr.success('role fetched successfully');
         this.roleLst = res;
         this.roleCreationId = res.id;
         this.roleName = res.name
       },
-      error :()=>{
-
-      }
-
     })
   }
+
   updateRoles(){
     const roleId = this.roleCreationId;
     const roleName = this.roleName;
@@ -1863,11 +1885,45 @@ openEditForm(element: any, content112: any) {
       next:(res:any)=>{
         this.toastr.success('role updated successfully');
       },
-      error :()=>{
-
-      }
-
     })
   }
-  
+
+  createDepartment() {
+    if (this.createDepartmentForm.invalid) {
+      this.toastr.warning('Please fill all required fields');
+      return;
+    }
+    const payload = this.createDepartmentForm.value;
+    this.switchService.createDepartment(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Department created successfully');
+        this.createDepartmentForm.reset();
+        this.getAllDepartments();
+      }
+    });
+  }
+
+  getAllDepartments() {
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    this.switchService.getDepartment(companyCode).subscribe({
+      next: (res: any[]) => {
+        this.departmentList = res;
+        if (res.length > 0) {
+          this.departmentId = res[0].id;
+          this.departmentName = res[0].name;
+        }
+      }
+    });
+  }
+
+  updateDepartment(){
+    const departmentId = this.departmentId;
+    const departmentName = this.departmentName;
+    console.log(departmentId,departmentName)
+    // this.switchService.updateRole(roleId,roleName).subscribe({
+    //   next:(res:any)=>{
+    //     this.toastr.success('role updated successfully');
+    //   },
+    // })
+  }
 }
