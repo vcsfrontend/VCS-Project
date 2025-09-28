@@ -213,6 +213,10 @@ export class SwitherService {
   updateAssgnAdonaiDesign(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/update_project_details`, data); }
   getLibrarayData(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/items/get/all`); }
   getLibrarayNames(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/shared`); }
+  addRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/roles/createRole`, data); }
+  getRole(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/roles/listRoles?companyCode=${companyCode}`); }  
+  updateRole(id:any , name:any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/id=${id}?name=${name}`,null); }  
+
   createRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {

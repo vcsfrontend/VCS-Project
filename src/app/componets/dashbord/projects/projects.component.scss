@@ -562,5 +562,11 @@ table.mat-mdc-table .mdc-data-table__header-cell {
 .editable-cell:hover .cell-input {
   display: inline-block;
 }
+::ng-deep .mat-row.highlight-row {
+  background-color: #006699 !important;
+  color: #fff !important;
+}
+
+
 
 

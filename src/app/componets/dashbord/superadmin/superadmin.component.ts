@@ -119,8 +119,10 @@ export class SuperadminComponent {
   salesData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.salesData ? this.salesData.email : '';
   userName: string = this.salesData ? this.salesData.username : ''; salesOptions: any;
-  totalUsers = 896; 
-  newUser: string = '';
+  totalUsers = 896; selectedUser: any ;
+  newUser: string = '';showForm:boolean = false;tooladdForm : boolean =false;
+  activeForm: 'company' | 'tool' | null = null;
+
   chartOptions:any = {
     series: [{
       data: [0, 32, 18, 58]
@@ -655,6 +657,9 @@ chartOptions6:any= {
       companyCode: [''],
       type: [0],
       updatedBy: [''],
+      crm: [null],
+      crmRole : [''],
+      crmActivityStatus : [true]
     });
 
   }
@@ -949,7 +954,14 @@ chartOptions6:any= {
   openLg2(content2:any) {
 		this.modalService.open(content2, { scrollable: true, centered: true, },);
 	}
-  updateModal(content12:any) {
+  updateModal(content12:any,element: any) {
+    this.selectedUser = element;
+  // If user already has companyName & companyCode OR type = 2
+  if ((element.companyName && element.companyCode) || element.type === 2) {
+    this.activeForm = 'tool'; // skip company form
+  } else {
+    this.activeForm = 'company';
+  }
 		this.modalService.open(content12, { scrollable: true, centered: true, },);
 	}
 
@@ -1083,26 +1095,62 @@ chartOptions6:any= {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
+    // let payload = {
+    //   ...this.updateCompanyForm.value,
+    //    userEmail:this.selectedUser.email,
+    //   type: 2,
+    //   updatedBy : this.userName,
+    // };
+    if (this.activeForm === 'company') {
+    if (this.gf['companyName'].invalid || this.gf['companyCode'].invalid) {
+      return;
+    }
     let payload = {
       ...this.updateCompanyForm.value,
+       userEmail:this.selectedUser.email,
+      type: 2,
       updatedBy : this.userName,
     };
-    this.switchService.updateUserCompany(payload).subscribe({
-      next: (res: any) => {
-        if (res.status === true) {
-          this.toastr.success(res.message);
-          if (modal) {
-            modal.close();
-          }  
-          this.updateCompanyForm.reset();
-          this.updateCompanySubmitted = false;
-        } 
-      }
-    });
-    console.log(payload)
+    
+    console.log('Company Payload:', payload);
+  }
+   if (this.activeForm === 'tool') {
+    // If user already has companyName & companyCode OR type = 2, use those values
+    const companyName = this.selectedUser.companyName || this.gf['companyName'].value;
+    const companyCode = this.selectedUser.companyCode || this.gf['companyCode'].value;
+
+    const payload = {
+            ...this.updateCompanyForm.value,
+      companyName: companyName,
+      companyCode: companyCode,
+      userEmail: this.selectedUser.email,
+       type: 2,
+      updatedBy : this.userName,
+    };
+    console.log('Tool Payload:', payload);
+  }
+    // console.log('user updation payload',payload);
+    // this.switchService.updateUserCompany(payload).subscribe({
+    //   next: (res: any) => {
+    //     if (res.status === true) {
+    //       this.toastr.success(res.message);
+    //       if (modal) {
+    //         modal.close();
+    //       }  
+    //       this.updateCompanyForm.reset();
+    //       this.updateCompanySubmitted = false;
+    //     } 
+    //   }
+    // });
   }
   
   get gf() {
     return this.updateCompanyForm.controls;
+  }
+  onCompanyUpgradationClick() {
+    this.showForm = true;
+  }
+  onToolEdition(){
+    this.tooladdForm = true;
   }
 }

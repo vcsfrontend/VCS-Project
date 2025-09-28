@@ -492,3 +492,9 @@ app-footer{
 ::ng-deep .ng-dropdown-panel .ng-option:last-child {
   border-bottom: none;
 }
+/* highlight entire row for MDC-based Material tables */
+.mdc-data-table__row.lead-closure-row .mat-mdc-cell {
+  background-color: #8699a34d !important;
+  color: #050505 !important;
+}
+

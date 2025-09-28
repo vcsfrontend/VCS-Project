@@ -872,9 +872,9 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -906,9 +906,9 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -983,9 +983,9 @@ export class LeadsComponent extends BaseComponent {
         this.appointmentId= res.appointmentId;
         
       },
-      error: (err) => {
-        this.toastr.error('Failed to fetch appointment');
-      }
+      // error: (err) => {
+      //   this.toastr.error('Failed to fetch appointment');
+      // }
     });
   }
 
@@ -1008,9 +1008,9 @@ export class LeadsComponent extends BaseComponent {
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Error submitting the template.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error submitting the template.');
+      // },
     });
   }
 
@@ -1030,9 +1030,9 @@ export class LeadsComponent extends BaseComponent {
           // this.getFormTemplate();
         }
       },
-      error: (error) => {
-        this.toastr.error('Error fetching product data');
-      },
+      // error: (error) => {
+      //   this.toastr.error('Error fetching product data');
+      // },
     });
   }
 
@@ -1184,9 +1184,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error(res.message);
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // },
     });
   }
 
@@ -1255,15 +1255,13 @@ export class LeadsComponent extends BaseComponent {
           if (completedRequests === this.stageLst.length) {
             this.statusLst = [];
 
-            // ✅ Push valid status lists only
             for (const [stage, fields] of Object.entries(
               this.statusOptionsByStageforDisplay
             )) {
-              const clonedFields = JSON.parse(JSON.stringify(fields)); // avoid reference bugs
+              const clonedFields = JSON.parse(JSON.stringify(fields)); 
               this.statusLst.push({ stage, fields: clonedFields });
             }
 
-            // ✅ Inject OPEN stage if not already
             const openExists = this.statusLst.some(
               (s: any) => s.stage.toLowerCase() === 'open'
             );
@@ -1277,7 +1275,6 @@ export class LeadsComponent extends BaseComponent {
               );
             }
 
-            // ✅ Sort 'open' to the top
             this.statusLst.sort(
               (
                 a: { stage: string; fields: any[] },
@@ -1289,7 +1286,6 @@ export class LeadsComponent extends BaseComponent {
               }
             );
 
-            // ✅ Default selections
             this.defaultStageName =
               this.statusLst.find(
                 (s: { stage: string }) => s.stage.toLowerCase() === 'open'
@@ -1298,7 +1294,6 @@ export class LeadsComponent extends BaseComponent {
               '';
             this.defaultStatusName = 'active';
 
-            // ✅ Button Disable Logic
             this.shouldDisableAddStatus =
               this.stageLst.length > 0 &&
               this.stageLst.every((stage: any) => {
@@ -1371,7 +1366,7 @@ export class LeadsComponent extends BaseComponent {
         }
       },
       error: (error) => {
-        this.toastr.error(error.statusText);
+        // this.toastr.error(error.statusText);
         this.isStagesDisabled = false;
       },
     });
@@ -1822,9 +1817,9 @@ export class LeadsComponent extends BaseComponent {
           }
           
         },
-        error: (error) => {
-          this.toastr.error(error.statusText || 'Server Error');
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText || 'Server Error');
+        // },
       });
   }
   
@@ -1849,9 +1844,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error('Unexpected response format.');
         }
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Server error.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Server error.');
+      // },
     });
   }
 
@@ -2142,9 +2137,9 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -2186,9 +2181,9 @@ export class LeadsComponent extends BaseComponent {
           this.filterApplied = false;
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText || 'Something went wrong', 'Error');
-      }
+      // error: (error) => {
+      //   this.toastr.error(error.statusText || 'Something went wrong', 'Error');
+      // }
     });
   }
 
@@ -2310,9 +2305,9 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -2384,9 +2379,9 @@ export class LeadsComponent extends BaseComponent {
             this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -2432,9 +2427,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error('Unexpected response format.');
         }
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Error while fetching campaigns.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error while fetching campaigns.');
+      // },
     });
   }
 
@@ -2451,9 +2446,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error('Unexpected user data format.');
         }
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Error while fetching users.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error while fetching users.');
+      // },
     });
   }
   onRowCheckboxChange(lead: any, event: any) {
@@ -2730,9 +2725,9 @@ export class LeadsComponent extends BaseComponent {
           this.getCrmStages();
           this.getCrmStatus();
         },
-        error: (error) => {
-          this.toastr.error('Failed to delete Lead stages.');
-        },
+        // error: (error) => {
+        //   this.toastr.error('Failed to delete Lead stages.');
+        // },
       });
     }
   }
@@ -2809,9 +2804,9 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         this.companyLst = res;
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      }
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // }
     });
   }
   
@@ -2967,9 +2962,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error(res.message || 'Mail sending failed.');
         }
       },
-      error: () => {
-        this.toastr.error('An error occurred while sending mail.');
-      }
+      // error: () => {
+      //   this.toastr.error('An error occurred while sending mail.');
+      // }
     });
   }
 
@@ -3126,9 +3121,9 @@ export class LeadsComponent extends BaseComponent {
           ...(res.assignedTaskList || [])
         ];
       },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
-      }
+      // error: (err) => {
+      //   this.toastr.error('Something went wrong!');
+      // }
     });
   }
   openCompletionModal(content: any, lead: any) {
@@ -3169,9 +3164,9 @@ export class LeadsComponent extends BaseComponent {
         modal.close();
         this.currentStep = 1;
       },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
-      }
+      // error: (err) => {
+      //   this.toastr.error('Something went wrong!');
+      // }
     });
   }
 

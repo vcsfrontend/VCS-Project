@@ -85,7 +85,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
   quotationSubmitted = false; quotationmarginsubmit:boolean=false;projectconfigsubmit:boolean=false;
   submittedQuotationNumber :any;addmargindisable:boolean=false; f1submitCount:number=0;
-  userEmail:any;
+  userEmail:any;roleForm !: FormGroup;roleLst:any;roleCreationId : number =0; roleName :string ="";
+  isEditmode : boolean = false;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -247,7 +248,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
-    
+    this.getRoles();
     this.userEmail = JSON.parse(this.userData).email;
 
     
@@ -375,6 +376,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       f8:[''],
       f9:[''],
       f10:['']
+    });
+    this.roleForm = this.fb.group({
+      name : [''],
+      description : [''],
+
     });
 
 
@@ -1020,6 +1026,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   openModal() {
     // Create an embedded view from the modal template
     this.modalRef = this.viewContainerRef.createEmbeddedView(this.modalTemplate);
+  }
+  openLg(content112:any) {
+    this.isEditmode = false;
+    this.modalService.open(content112, { size: 'lg' },);
   }
 
   closeModal() {
@@ -1783,6 +1793,81 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   get h() {
     return this.projectConfigForm.controls;
+  }
+  openEditFromSelected(element: any, content112: any) {
+  this.isEditmode = true;
+  this.openEditForm(element, content112);
+}
+
+openEditForm(element: any, content112: any) {
+  this.isEditmode = true;
+  this.roleCreationId = element.id;
+
+  this.roleForm.patchValue({
+    name: element.name,
+    description: element.description // if you have it
+  });
+
+  // ⚡ OPEN THE MODAL
+  this.modalService.open(content112, { size: 'lg' });
+}
+
+  onRoleSubmit(){
+    if(this.isEditmode){
+      this.updateRoles();
+    }
+    else{
+      this.addRoles();
+    }
+  }
+  addRoles(){
+    const rolesData = this.roleForm.value;
+    let payload ={
+      ...rolesData,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+
+    }
+    console.log(payload);
+    this.switchService.addRole(payload).subscribe({
+      next:()=>{
+        this.toastr.success('role added successfully');
+
+      },
+      error :()=>{
+
+      }
+
+    })
+  }
+  getRoles(){
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    this.switchService.getRole(companyCode).subscribe({
+      next:(res:any)=>{
+        this.toastr.success('role fetched successfully');
+        this.roleLst = res;
+        this.roleCreationId = res.id;
+        this.roleName = res.name
+      },
+      error :()=>{
+
+      }
+
+    })
+  }
+  updateRoles(){
+    const roleId = this.roleCreationId;
+    const roleName = this.roleName;
+    this.switchService.updateRole(roleId,roleName).subscribe({
+      next:(res:any)=>{
+        this.toastr.success('role updated successfully');
+      },
+      error :()=>{
+
+      }
+
+    })
   }
   
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild , AfterViewInit } from '@angular/core';
+import { Component, ViewChild , AfterViewInit, ElementRef } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
@@ -42,12 +42,14 @@ export class QuotationComponent {
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort; 
+    @ViewChild('tabContainer', { static: false }) tabContainer!: ElementRef;
+    
     tabKeys: string[] = []; boqDataSources: { [key: string]: any[] } = {};
     selectedCategory: any; editIndex: number | null = null;  designId : any; 
     totalRooms: number = 0;
     totalProducts: number = 0;
     totalPrice: number = 0;proposalStatus : string ='';proposalContentDataSources:any;
-    proposalTabCounts:any;
+    proposalTabCounts:any;showLeftArrow = false; showRightArrow = false;
 
     boqList: any;
     categories = [
@@ -179,6 +181,8 @@ export class QuotationComponent {
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
+            this.checkArrows();
+
         // this.dataSource.sort = this.sort;
     }
 
@@ -337,8 +341,23 @@ export class QuotationComponent {
 
 
 
-      quoteValidTill: Date = new Date('2025-09-30'); 
+    quoteValidTill: Date = new Date('2025-09-30'); 
+    scrollTabs(direction: 'left' | 'right') {
+    const container = this.tabContainer.nativeElement;
+    const scrollAmount = 150;
+    if (direction === 'left') {
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+    setTimeout(() => this.checkArrows(), 300);
+  }
 
-
+  checkArrows() {
+    const container = this.tabContainer?.nativeElement;
+    if (!container) return;
+    this.showLeftArrow = container.scrollLeft > 0;
+    this.showRightArrow = container.scrollWidth > container.clientWidth + container.scrollLeft;
+  }
 
 }

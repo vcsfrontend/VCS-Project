@@ -440,7 +440,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
       },
       error: (err) => {
-        this.toastr.error('Something went wrong');
+        // this.toastr.error('Something went wrong');
       }
     });
   }
@@ -516,9 +516,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.toastr.error(res.message);
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // },
     })
   }
 
@@ -571,7 +571,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.projectLst = res.projList;
           this.myProjectDataSource.data = this.projectLst;
         } else {
-          this.toastr.error(res.message);
+          // this.toastr.error(res.message);
         }
         this.stopLoading();
       }
@@ -591,7 +591,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.adonaiDaysLeft = this.calculateDateDiff(this.adonaiSubEndDate);
 
         } else {
-          this.toastr.error(res.message);
+          // this.toastr.error(res.message);
           return;
         }
       }
@@ -710,9 +710,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           });
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // },
     })
   }
 
@@ -920,7 +920,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.modalService.dismissAll();
         },
         error: (error) => {
-          this.toastr.error('Error save payment details', error);
+          // this.toastr.error('Error save payment details', error);
         },
       });
     }
@@ -1675,9 +1675,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       })
     }
   }
@@ -1826,7 +1826,7 @@ downloadButtons: { label: string; url: string }[] = [];
       }
     },
     error: (err) => {
-      this.toastr.error(err.statusText || 'Something went wrong');
+      // this.toastr.error(err.statusText || 'Something went wrong');
       this.isLoading = false;
     }
   });
@@ -1912,7 +1912,7 @@ downloadButtons: { label: string; url: string }[] = [];
 
 
         } else {
-          this.toastr.error("User not found.");
+          // this.toastr.error("User not found.");
         }
       },
       error: (err: any) => {
