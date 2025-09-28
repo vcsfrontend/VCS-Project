@@ -138,30 +138,62 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   background-color: #006699 !important; 
   color: #fff !important; 
 }
-
-.sticky-header th {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  background: #006699;
-  color: white;
+/* ================= Sticky Header ================= */
+.my-table thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important; 
+  color: #fff !important;
+  // font-weight: 600 !important;
 }
 
-.sticky-col-left {
-  position: sticky;
-  left: 0;
-  background: #fff;
-  z-index: 2;
-  overflow: hidden;
+/* ================= Sticky Left Columns ================= */
+.my-table td.sticky-col-left,
+.my-table th.sticky-col-left {
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 900 !important; /* body */
+  background: #fff !important;
+  border-right: 1px solid #ddd !important;
 }
 
-.sticky-col-right {
-  position: sticky !important; 
-  right: 0;
-  z-index: 2; 
-  min-width: 150px;
+.my-table td.sticky-col-left-2,
+.my-table th.sticky-col-left-2 {
+  position: sticky !important;
+  left: 200px !important; /* adjust based on col-1 width */
+  z-index: 900 !important;
+  background: #fff !important;
+  border-right: 1px solid #ddd !important;
 }
-.my-table tr {
-  position: relative;  /* creates a stacking context */
-  z-index: auto;       /* let <td> control its z-index */
+
+/* ================= Sticky Right Column ================= */
+.my-table td.sticky-col-right,
+.my-table th.sticky-col-right {
+  position: sticky !important;
+  right: 0 !important;
+  z-index: 900 !important;
+  background: #fff !important;
+  border-left: 1px solid #ddd !important;
 }
+
+/* ================= Header priority ================= */
+.my-table thead th.sticky-col-left,
+.my-table thead th.sticky-col-left-2,
+.my-table thead th.sticky-col-right {
+  z-index: 1001 !important; /* keep header above body cells */
+  // background: #0d6efd !important;
+  color: #fff !important;
+}
+
+/* ================= Safe transforms ================= */
+.my-table,
+.my-table * {
+  transform: none !important;
+  backface-visibility: visible !important;
+}
+
+.my-table {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+

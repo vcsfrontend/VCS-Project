@@ -35240,3 +35240,8 @@ ng-select {
 ::ng-deep .ng-dropdown-panel .ng-option:last-child {
   border-bottom: none;
 }
+.mdc-data-table__row.lead-closure-row .mat-mdc-cell {
+  background-color: #8699a34d !important;
+  color: #fff !important;
+}
+

@@ -1231,7 +1231,7 @@
 </ng-template>
 
 
-<!-- <div class="row">
+<div class="row">
     <div class="col-lg-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
@@ -1240,7 +1240,7 @@
                     <div class="me-3 my-1">
                         <input class="form-control form-control-sm" type="text" placeholder="Search Here" aria-label=".form-control-sm example">
                     </div>
-                    <button class="btn btn-primary me-3" (click)="roleModal(content16)">Add Role</button>
+                    <button class="btn btn-primary me-3" (click)="openLg(Content112);">Add Role</button>
                     <button class="btn btn-secondary">Assign Permissions</button>
                 </div>
             </div>
@@ -1255,7 +1255,7 @@
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody *ngFor="let role of roleLst">
                             <tr>
                                 <td>
                                     1
@@ -1267,14 +1267,14 @@
                                                 <img src="./assets/images/nft-images/1.png" alt="">
                                             </span>
                                         </div>
-                                        <div>Ray Optics &amp; Optical Fibre Master Class</div>
+                                        <div>{{role.name}}</div>
                                     </div>
                                 </td>
-                                <td>Ray Optics &amp; Optical Fibre Master Class</td>
+                                <td>{{role.description}}</td>
                                 <td>
                                     <div class="hstack gap-2 fs-1">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light"><i class="ri-eye-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"><i class="ri-edit-line"></i></a>
+                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"
+                                        (click)="openEditFromSelected(role, Content112)"><i class="ri-edit-line"></i></a>
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"><i class="ri-delete-bin-line"></i></a>
                                     </div>
                                 </td>
@@ -1310,35 +1310,35 @@
             </div>
         </div>
     </div>
-</div> -->
-
-<ng-template #content16 let-modal>
-    <form [formGroup]="createRoleForm">
-        <div class="modal-header justify-content-center">
-            <h6 class="modal-title" id="staticBackdropLabel3">Create Role</h6>
+</div>
+<ng-template #Content112 let-modal>
+    <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+        <div class="modal-header">
+            <h6 class="modal-title" id="exampleModalLgLabel">
+                {{ isEditmode ? 'Edit Role' : 'Create Role' }}
+            </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
+    
         <div class="modal-body overflowImportant">
-            <div class="col-xl-12">
-                <div class="row gy-2">
-                    <div class="col-xl-12">
-                        <label for="projectAddress" class="form-label">Role Name</label>
-                        <input type="text" class="form-control" id="projectAddress" formControlName="name"
-                            placeholder="Enter Role Name">
-                    </div>
-                    <div class="col-xl-12">
-                        <label for="projectAddress" class="form-label">Description</label>
-                        <textarea class="form-control" rows="2" placeholder="Enter Description"
-                            formControlName="description"></textarea>
-                    </div>
+            <div class="row gy-3 scrollable-content">
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="name">
+                    
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6">
+                    <label for="name" class="form-label">description</label>
+                    <input type="text" class="form-control" id="name" placeholder="Name" formControlName="description">
+                    
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"> Submit</button>
-            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-                data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save Role</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">cancel</button>
         </div>
     </form>
 </ng-template>
