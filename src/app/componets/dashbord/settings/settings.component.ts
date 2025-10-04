@@ -87,6 +87,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   submittedQuotationNumber :any;addmargindisable:boolean=false; f1submitCount:number=0;
   userEmail:any;roleForm !: FormGroup; roleLst:any; roleCreationId : number =0; roleName :string ="";
   isEditmode : boolean = false; departmentList: any[] = []; departmentId : number =0; departmentName :string ="";
+  departmentDescription : string =""; roleDescription : string ='';roleSubmitted : boolean = false;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -118,6 +119,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   public sawSubmitted = false;
   public partsSubmitted = false;
   public quoteSubmitted = false;
+  public DepartmentFormSubmitted = false;
   public stockForm!: FormGroup;
   public partsForm!: FormGroup;
   StData: any;
@@ -442,21 +444,16 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
 
     this.createDepartmentForm = this.fb.group({
-      name: [''],
-      description:[''],
+      name: ['', Validators.required],
+      description:['', Validators.required],
       companyName: JSON.parse(this.userData)?.companyName,
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type
     })
-
-
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
-   
     this.getMarginData();
-    
-
   }
   onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
@@ -1036,11 +1033,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   departmentModal(content113: any) {
     this.isEditmode = false;
-    this.modalService.open(content113, { size: 'sm', scrollable: true, centered: true, });
+    this.createDepartmentForm.reset();
+    this.modalService.open(content113, { scrollable: true, centered: true, });
   }
 
   closeModal() {
-    // Destroy the modal view when closing
     if (this.modalRef) {
       this.modalRef.destroy();
       this.modalRef = null;
@@ -1809,6 +1806,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   openEditForm(element: any, content112: any) {
     this.isEditmode = true;
     this.roleCreationId = element.id;
+    this.selectRole(element);
     this.roleForm.patchValue({
       name: element.name,
       description: element.description
@@ -1816,20 +1814,42 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.modalService.open(content112, { size: 'sm', scrollable: true, centered: true, });
   }
 
+  selectRole(index: number) {
+    if (Array.isArray(this.roleLst) && this.roleLst.length > index) {
+      const selectedRole = this.roleLst[index];
+
+      this.roleCreationId = selectedRole.id;
+      this.roleName = selectedRole.name;
+      this.roleDescription = selectedRole.description;
+
+      console.log("Selected Role:", selectedRole);
+    }
+  }
+
+  get i() {
+    return this.roleForm.controls;
+  }
+
   editDepartmentFormSelected(element: any, content113: any) {
     this.isEditmode = true;
     this.openEditDepartmentForm(element, content113);
   }
 
-  openEditDepartmentForm(element: any, content113: any) {
+ openEditDepartmentForm(element: any, content113: any) {
     this.isEditmode = true;
     this.departmentId = element.id;
+    this.createDepartmentForm.reset();
     this.createDepartmentForm.patchValue({
       name: element.name,
       description: element.description
     });
-    this.modalService.open(content113, { size: 'sm', scrollable: true, centered: true });
-  }
+    const modalRef = this.modalService.open(content113, { size: 'sm', scrollable: true, centered: true });
+    modalRef.result.finally(() => {
+        this.createDepartmentForm.reset();
+        this.isEditmode = false;
+    });
+}
+
 
 
   onRoleSubmit(){
@@ -1841,17 +1861,27 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
   }
 
-  onDepartmentSubmit(){
-    if(this.isEditmode){
-      this.updateDepartment();
+  onDepartmentSubmit(modal?: any) {
+    this.DepartmentFormSubmitted = true;
+
+    if (this.createDepartmentForm.invalid) {
+      return;
     }
-    else{
-      this.createDepartment();
+
+    if (this.isEditmode) {
+      this.updateDepartment();
+    } else {
+      this.createDepartment(modal);
     }
   }
 
   addRoles(){
     const rolesData = this.roleForm.value;
+    this.roleSubmitted = true
+    if (this.roleForm.invalid) {
+      this.toastr.error("Please fill all mandatory fields.");
+      return;
+    }
     let payload ={
       ...rolesData,
       companyName: JSON.parse(this.userData)?.companyName,
@@ -1863,6 +1893,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.addRole(payload).subscribe({
       next:()=>{
         this.toastr.success('role added successfully');
+        this.roleSubmitted = false
+        this.getRoles();
       },
     })
   }
@@ -1880,24 +1912,27 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   updateRoles(){
     const roleId = this.roleCreationId;
-    const roleName = this.roleName;
-    this.switchService.updateRole(roleId,roleName).subscribe({
+    const roleName = this.roleForm.value.name;
+    const description = this.roleForm.value.description;
+    this.switchService.updateRole(roleId,roleName,description).subscribe({
       next:(res:any)=>{
         this.toastr.success('role updated successfully');
+        this.getRoles();
       },
     })
   }
 
-  createDepartment() {
+  createDepartment(modal: any) {
+    this.DepartmentFormSubmitted = true;
     if (this.createDepartmentForm.invalid) {
-      this.toastr.warning('Please fill all required fields');
-      return;
+      return; 
     }
     const payload = this.createDepartmentForm.value;
+    console.log(payload)
     this.switchService.createDepartment(payload).subscribe({
       next: (res) => {
         this.toastr.success('Department created successfully');
-        this.createDepartmentForm.reset();
+        if (modal) {modal.close(); } 
         this.getAllDepartments();
       }
     });
@@ -1911,19 +1946,68 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         if (res.length > 0) {
           this.departmentId = res[0].id;
           this.departmentName = res[0].name;
+          this.departmentDescription = res[0].name;
         }
       }
     });
   }
 
-  updateDepartment(){
+  updateDepartment() {
     const departmentId = this.departmentId;
     const departmentName = this.departmentName;
-    console.log(departmentId,departmentName)
-    // this.switchService.updateRole(roleId,roleName).subscribe({
-    //   next:(res:any)=>{
-    //     this.toastr.success('role updated successfully');
-    //   },
-    // })
+    const description = this.departmentDescription;
+    console.log(departmentId, departmentName, description);
+    this.switchService.updateDepartment(departmentId, departmentName, description).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Department updated successfully');
+      },
+    });
   }
+
+  deleteDepartment(id: number) {
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteDepartment(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Department deleted successfully');
+          this.getAllDepartments();
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  showRoles  = false;
+
+  toggleTable() {
+    this.showRoles = true;
+  }
+
+  backToDepartments() {
+    this.showRoles = false;
+  }
+
+  get df() {
+    return this.createDepartmentForm.controls;
+  }
+
+  getDeptColor(name: string): string {
+    if (!name) return 'bg-secondary';
+    const colors = [
+      'bg-primary',
+      'bg-success',
+      'bg-danger',
+      'bg-warning',
+      'bg-info',
+      'bg-dark'
+    ];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
+  }
+
+
 }
+
