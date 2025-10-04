@@ -215,11 +215,15 @@ export class SwitherService {
   getLibrarayNames(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/shared`); }
   addRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/roles/createRole`, data); }
   getRole(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/roles/listRoles?companyCode=${companyCode}`); }  
-  updateRole(id:any , name:any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/id=${id}?name=${name}`,null); }  
+  updateRole(id:any,name:any,description :any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/${id}?name=${name}&description=${description}`,"");} 
 
   createDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/departments/createDepartment`, data); }
   getDepartment(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/departments/listDepartments?companyCode=${companyCode}`); }  
-  updateDepartment(id:any , name:any, description:any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/id=${id}?name=${name}&description=${description}`,null); }  
+  updateDepartment(id: any, name: any, description: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}api/departments/updateDepartment/${id}?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`, null);
+  }  
+  deleteDepartment(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/departments/deleteDepartment/${id}`); }  
+
   createRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {
