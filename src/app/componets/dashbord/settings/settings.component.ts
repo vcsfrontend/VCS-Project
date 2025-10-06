@@ -88,6 +88,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   userEmail:any;roleForm !: FormGroup; roleLst:any; roleCreationId : number =0; roleName :string ="";
   isEditmode : boolean = false; departmentList: any[] = []; departmentId : number =0; departmentName :string ="";
   departmentDescription : string =""; roleDescription : string ='';roleSubmitted : boolean = false;
+  createPermissionForm !:FormGroup; permissionFormSubmitted : boolean= false;
+  permissionList : any[]=[];permissionId : number = 0; permissionName : string =''; permissionDescription : string = '';
+  appointmentId : number =0;assignRoleForm ! : FormGroup;selectedDepartment: any = {};
+  selectedRole : any ={};assignedRoleLst : any[]=[]; depId : any;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -252,6 +256,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.getProjectConfig();
     this.getRoles();
     this.getAllDepartments();
+    this.getAllPermissions();
+    this.getAssignedRoles();
     this.userEmail = JSON.parse(this.userData).email;
 
     
@@ -383,8 +389,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.roleForm = this.fb.group({
       name : [''],
       description : [''],
-
     });
+    this.assignRoleForm = this.fb.group({
+      depRole : [0],
+      roleRole : [0],
+      description : [''],
+      
+    });
+
 
 
     // setTimeout(() => {
@@ -444,6 +456,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
 
     this.createDepartmentForm = this.fb.group({
+      name: ['', Validators.required],
+      description:['', Validators.required],
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    })
+    this.createPermissionForm = this.fb.group({
       name: ['', Validators.required],
       description:['', Validators.required],
       companyName: JSON.parse(this.userData)?.companyName,
@@ -1835,7 +1854,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.openEditDepartmentForm(element, content113);
   }
 
- openEditDepartmentForm(element: any, content113: any) {
+  openEditDepartmentForm(element: any, content113: any) {
     this.isEditmode = true;
     this.departmentId = element.id;
     this.createDepartmentForm.reset();
@@ -1848,9 +1867,26 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         this.createDepartmentForm.reset();
         this.isEditmode = false;
     });
-}
+  }
 
-
+  editPermissionFormSelected(element: any, content114: any) {
+    this.isEditmode = true;
+    this.openEditAppointmentForm(element, content114);
+  }
+  openEditAppointmentForm(element: any, content114: any) {
+    this.isEditmode = true;
+    this.permissionId = element.id;
+    this.createPermissionForm.reset();
+    this.createPermissionForm.patchValue({
+      name: element.name,
+      description: element.description
+    });
+    const modalRef = this.modalService.open(content114, { size: 'sm', scrollable: true, centered: true });
+    modalRef.result.finally(() => {
+        this.createPermissionForm.reset();
+        this.isEditmode = false;
+    });
+  }
 
   onRoleSubmit(){
     if(this.isEditmode){
@@ -1874,9 +1910,27 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.createDepartment(modal);
     }
   }
+  onPermissionSubmit(modal?: any) {
+    this.permissionFormSubmitted = true;
+
+    if (this.createPermissionForm.invalid) {
+      return;
+    }
+
+    if (this.isEditmode) {
+      this.updatePermission();
+    } else {
+      this.createPermission(modal);
+    }
+  }
 
   addRoles(){
     const rolesData = this.roleForm.value;
+    const roleName = this.roleForm.value.name;
+    if (this.isRoleExists(roleName)) {
+      this.toastr.error("Role already exists!");
+      return;
+    }
     this.roleSubmitted = true
     if (this.roleForm.invalid) {
       this.toastr.error("Please fill all mandatory fields.");
@@ -1923,19 +1977,24 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   createDepartment(modal: any) {
+    const deptName = this.createDepartmentForm.value.name;
+    if (this.isDepartmentExists(deptName)) {
+      this.toastr.error("department already exists!");
+      return;
+    }
     this.DepartmentFormSubmitted = true;
     if (this.createDepartmentForm.invalid) {
       return; 
     }
     const payload = this.createDepartmentForm.value;
     console.log(payload)
-    this.switchService.createDepartment(payload).subscribe({
-      next: (res) => {
-        this.toastr.success('Department created successfully');
-        if (modal) {modal.close(); } 
-        this.getAllDepartments();
-      }
-    });
+    // this.switchService.createDepartment(payload).subscribe({
+    //   next: (res) => {
+    //     this.toastr.success('Department created successfully');
+    //     if (modal) {modal.close(); } 
+    //     this.getAllDepartments();
+    //   }
+    // });
   }
 
   getAllDepartments() {
@@ -1946,7 +2005,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         if (res.length > 0) {
           this.departmentId = res[0].id;
           this.departmentName = res[0].name;
-          this.departmentDescription = res[0].name;
+          this.departmentDescription = res[0].description;
         }
       }
     });
@@ -2006,6 +2065,130 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     ];
     const index = name.charCodeAt(0) % colors.length;
     return colors[index];
+  }
+  get pf() {
+    return this.createPermissionForm.controls;
+  }
+
+  createPermission(modal:any) {
+    const permissionName = this.createPermissionForm.value.name;
+    if (this.isPermissionExists(permissionName)) {
+      this.toastr.error("permission already exists!");
+      return;
+    }
+    this.permissionFormSubmitted = true;
+    if (this.createPermissionForm.invalid) {
+      return; 
+    }
+    const payload = this.createPermissionForm.value;
+    console.log(payload)
+    // this.switchService.createPermission(payload).subscribe({
+    //   next: (res) => {
+    //     this.toastr.success('Permission created successfully');
+    //     if (modal) {modal.close(); } 
+    //     this.getAllPermissions();
+    //   }
+    // });
+  }
+
+  getAllPermissions() {
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    this.switchService.getPermissions(companyCode).subscribe({
+      next: (res: any[]) => {
+        this.permissionList = res;
+        if (res.length > 0) {
+          this.permissionId = res[0].id;
+          this.permissionName = res[0].name;
+          this.permissionDescription = res[0].description;
+        }
+      }
+    });
+  }
+  updatePermission() {
+    const permissionId = this.permissionId;
+    const permissionName = this.permissionName;
+    const description = this.permissionDescription;
+    console.log(permissionId, permissionName, description);
+    this.switchService.updatePermission(permissionId, permissionName, description).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Department updated successfully');
+      },
+    });
+  }
+  deletePermission(id: number) {
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deletePermission(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('permission deleted successfully');
+          this.getAllPermissions();
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+  isRoleExists(roleName: string): boolean {
+    return this.roleLst.some(
+      (role:any) => role.name.toLowerCase() === roleName.toLowerCase()
+    );
+  }
+  isDepartmentExists(deptName: string): boolean {
+    return this.departmentList.some(
+      (dept:any) => dept.name.toLowerCase() === deptName.toLowerCase()
+    );
+  }
+   isPermissionExists(permissionName: string): boolean {
+    return this.permissionList.some(
+      (permission:any) => permission.name.toLowerCase() === permissionName.toLowerCase()
+    );
+  }
+
+  assignRole(){
+    const payload = {
+      depRole : this.assignRoleForm.value.depRole,
+      roleRole : this.assignRoleForm.value.roleRole,
+      department : this.selectedDepartment,
+      role : this.selectedRole,
+      description : this.assignRoleForm.value.description,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+    }
+    console.log(payload)
+    this.switchService.assignRoleToDepartment(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('assigned successfully');
+        this.depId = res?.department?.id;
+        console.log('Department ID from response:', this.depId);
+        
+      }
+    });
+  }
+
+  onDepartmentChange(id: number) {
+    console.log('Selected Department ID:', id);
+    this.selectedDepartment = id;
+  }
+
+  onRoleChange(id: number) {
+    console.log('Selected Department ID:', id);
+    this.selectedRole = id;
+  }
+
+  getAssignedRoles(){
+   
+     const departmentId =this.depId;
+     const companyCode = JSON.parse(this.userData)?.companyCode;
+  
+    this.switchService.getAssignedRoles(departmentId,companyCode).subscribe({
+      next: (res) => {
+        this.toastr.success('assigned successfully');
+        this.assignedRoleLst = res;
+      }
+    });
   }
 
 

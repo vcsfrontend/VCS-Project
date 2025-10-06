@@ -252,7 +252,7 @@ export class LeadsComponent extends BaseComponent {
   offcanvasRef: any;
   openRight(content: any) {
     this.offcanvasRef = this.offcanvasService.open(content, {
-      position: 'end',
+      position: 'end',scroll: true,
     });
   }
 

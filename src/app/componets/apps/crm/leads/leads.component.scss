@@ -284,5 +284,16 @@ table.mat-mdc-table {
 .ng-dropdown-panel .ng-option:last-child {
   border-bottom: none;
 }
+.offcanvas-body {
+    overflow-y: auto;
+    max-height: calc(160vh - 160px); /* Adjust depending on header/footer size */
+}
+
+.offcanvas-footer {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 10;
+}
 
 

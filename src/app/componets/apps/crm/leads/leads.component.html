@@ -824,38 +824,41 @@
 </ng-template>
 
 <ng-template #Content1 let-offcanvas>
-    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)">
+    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)" class="offcanvas-form d-flex flex-column h-100">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
                 aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-0"> 
+        <div class="offcanvas-body p-0 overflow-auto" style="max-height: calc(100vh - 160px);">
             <div class="col-xl-12 pt-3">
                 <div class="row gy-3 p-4">
                     <div class="col-xl-6">
                         <label for="name" class="form-label">Date Type</label>
                         <ng-select formControlName="action" [items]="filterFields" bindLabel="name"
-                            bindValue="name"  placeholder="Select an Date Type" >
+                            [ngModel]="filterLeadForm.get('action')?.value || null" bindValue="name"
+                            placeholder="Select an Date Type">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
                         <label for="name" class="form-label">Start Date</label>
-                        <input type="datetime-local" class="form-control" id="date" placeholder="Start Date" formControlName="startDate">
+                        <input type="datetime-local" class="form-control" id="date" placeholder="Start Date"
+                            formControlName="startDate">
                     </div>
                     <div class="col-xl-6">
                         <label for="name" class="form-label">End Date</label>
-                        <input type="datetime-local" class="form-control" id="date" placeholder=""
-                        formControlName="endDate">
+                        <input type="datetime-local" class="form-control" id="date" placeholder="End Date"
+                            formControlName="endDate">
                     </div>
                     <div class="col-xl-6">
-                         <label for="name" class="form-label">Stage</label>
+                        <label for="name" class="form-label">Stage</label>
                         <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
-                            bindValue="stageName" (change)="onFilterStageChange()" placeholder="Select an Stage" >
+                            [ngModel]="filterLeadForm.get('stage')?.value || null" bindValue="stageName"
+                            (change)="onFilterStageChange()" placeholder="Select a Stage">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                         <label for="name" class="form-label">Status</label>
+                        <label for="name" class="form-label">Status</label>
                         <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
                             placeholder="Select a status" [multiple]="true">
                         </ng-select>
@@ -863,7 +866,7 @@
                     <div class="col-xl-6">
                         <label for="name" class="form-label">Source</label>
                         <ng-select formControlName="source" [items]="pipeLine" bindLabel="name" bindValue="name"
-                            placeholder="Select an Source" [multiple]="true">
+                            placeholder="Select a Source" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6" *ngIf="adoanAiRole == 'ADMIN' || crmRole=='ADMIN'">
@@ -875,14 +878,14 @@
                     <div class="col-xl-6">
                         <label for="name" class="form-label">City</label>
                         <ng-select formControlName="city" [items]="cityList" bindLabel="name" bindValue="name"
-                            placeholder="Select an City" [multiple]="true">
+                            placeholder="Select a City" [multiple]="true">
                         </ng-select>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-12 col-lg-12 col-md-12 mt-3 border-top">
-            <div class="m-4 position-relative justify-content-start d-flex gap-2">
+        <div class="offcanvas-footer border-top p-3">
+            <div class="d-flex justify-content-start gap-2">
                 <button class="btn btn-primary" type="submit">Filter</button>
                 <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
             </div>
@@ -1370,7 +1373,6 @@
     <div class="d-flex pt-4 gap-3 ms-2">
         <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
         <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)" >Not Connected</button>
-
     </div>
     <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
         <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm" style="max-height: 60vh;">
@@ -1425,9 +1427,9 @@
 
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
-                <div class="d-flex justify-content-end gap-3">
-                    <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
+                <div class="d-flex justify-content-start gap-3">
+                    <button class="btn btn-primary mr-3" type="submit">Update Status</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3"
                         type="submit">Cancel</button>
                 </div>
             </div>
