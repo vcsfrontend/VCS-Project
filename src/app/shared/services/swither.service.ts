@@ -224,6 +224,13 @@ export class SwitherService {
   }  
   deleteDepartment(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/departments/deleteDepartment/${id}`); }  
 
+  createPermission(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/permissions/createPermission`, data); }
+  getPermissions(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/permissions/listPermissions?companyCode=${companyCode}`); }  
+  updatePermission(id:any,name:any,description :any): Observable<any> { return this.http.put(`${this.apiUrl}api/permissions/updatePermission/${id}?name=${name}&description=${description}`,"");} 
+  deletePermission(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/permissions/deletePermission/${id}`); }  
+
+  assignRoleToDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/department-roles/assignRoleToDepartment`, data); }
+  getAssignedRoles(departmentId:any ,companyCode : any): Observable<any> { return this.http.get(`${this.apiUrl}api/department-roles/listRolesByDepartment?departmentId=${departmentId}&companyCode=${companyCode}`); }  
   createRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {
