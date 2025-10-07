@@ -91,7 +91,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   createPermissionForm !:FormGroup; permissionFormSubmitted : boolean= false;
   permissionList : any[]=[];permissionId : number = 0; permissionName : string =''; permissionDescription : string = '';
   appointmentId : number =0;assignRoleForm ! : FormGroup;selectedDepartment: any = {};
-  selectedRole : any ={};assignedRoleLst : any[]=[]; depId : any;
+  selectedRole : any ={};assignedRoleLst : any[]=[]; depId : any;responseList:any; selectedAssignedRole: any ={};
+  selectedPermissionRole : any ={};
+  assignPermissionForm ! :FormGroup;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -396,8 +398,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       description : [''],
       
     });
-
-
+    this.assignPermissionForm = this.fb.group({
+      permissionRole :[0],
+      depRole : [0],
+      description :[''],
+    })
 
     // setTimeout(() => {
 
@@ -2179,18 +2184,50 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   getAssignedRoles(){
-   
-     const departmentId =this.depId;
+     const departmentId =16;
      const companyCode = JSON.parse(this.userData)?.companyCode;
-  
+      console.log(departmentId,companyCode);
     this.switchService.getAssignedRoles(departmentId,companyCode).subscribe({
       next: (res) => {
         this.toastr.success('assigned successfully');
         this.assignedRoleLst = res;
+        this.assignedRoleLst = this.responseList.map((item:any) => ({
+          id: item.id,           
+          roleName: item.role.name 
+        }));
+
       }
     });
   }
 
+  onAssignRoleChange(id: number) {
+    console.log('Selected Department ID:', id);
+    this.selectedAssignedRole = id;
+  }
+  onPermissionChange(id: number) {
+    console.log('Selected Department ID:', id);
+    this.selectedPermissionRole = id;
+  }
+
+   assignPermission(){
+    const payload = {
+      depRole : this.assignPermissionForm.value.depRole,
+      permissionRole : this.assignPermissionForm.value.roleRole,
+      departmentRole : this.selectedAssignedRole,
+      permission : this.selectedPermissionRole,
+      description : this.assignPermissionForm.value.description,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+    }
+    console.log(payload)
+    // this.switchService.assignPermissionToRole(payload).subscribe({
+    //   next: (res) => {
+    //     this.toastr.success('assigned successfully');
+        
+    //   }
+    // });
+  }
 
 }
 

@@ -245,7 +245,7 @@
           <div class="col-xl-12" *ngIf="userType !== 1">
             <label for="deal-name" class="form-label">Select Agents</label>
             <ng-select formControlName="agents" [multiple]="true" placeholder="Select agents" (remove)="onRemove($event)">
-              <ng-option *ngFor="let user of userList" [value]="user.email" [disabled]="isPreSelected(user.email)">
+              <ng-option *ngFor="let user of (isEditMode ? userList : filteredUserList)" [value]="user.email" [disabled]="isPreSelected(user.email)">
                 {{ user.email }}
                 <span *ngIf="isPreSelected(user.email)" class="text-muted"></span>
               </ng-option>
