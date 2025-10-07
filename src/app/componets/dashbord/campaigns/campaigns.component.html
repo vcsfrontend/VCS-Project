@@ -213,7 +213,7 @@
   <form [formGroup]="campaignForm" (ngSubmit)="submitCampaign(modal)">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 class="modal-title">{{ isEditMode ? 'Edit Campaign' : 'Create Campaign' }}</h6>
+        <h6 class="modal-title"><strong>{{ isEditMode ? 'Edit Campaign' : 'Create Campaign' }}</strong></h6>
         <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal"
           aria-label="Close"></button>
       </div>
@@ -235,7 +235,6 @@
             <ng-select formControlName="pipeline" [items]="pipeLine" bindLabel="name" bindValue="name"
               placeholder="Select an option">
             </ng-select>
-
           </div>
           <div class="col-xl-12" *ngIf="userType !== 1">
             <label for="deal-name" class="form-label">Who will manage this Campaign</label>
@@ -243,18 +242,15 @@
               placeholder="Select an Manager" [readonly]="isEditMode">
             </ng-select>
           </div>
-
           <div class="col-xl-12" *ngIf="userType !== 1">
             <label for="deal-name" class="form-label">Select Agents</label>
             <ng-select formControlName="agents" [multiple]="true" placeholder="Select agents" (remove)="onRemove($event)">
-          
               <ng-option *ngFor="let user of userList" [value]="user.email" [disabled]="isPreSelected(user.email)">
                 {{ user.email }}
                 <span *ngIf="isPreSelected(user.email)" class="text-muted"></span>
               </ng-option>
             </ng-select>
           </div>
-
           <div class="col-xl-6">
             <label for="deal-name" class="form-label">Campaign Priority</label>
             <ng-select placeholder="Select Priority" [items]="campaignPriority" bindLabel="name" bindValue="name"
@@ -267,11 +263,17 @@
               formControlName="leadDuplicacy">
             </ng-select>
           </div>
+          <div class="col-xl-6">
+            <input class="form-check-input" type="checkbox" id="primaryChecked" formControlName="isAutoCreationRequired" />
+            <label class="form-check-label" for="primaryChecked">&nbsp;
+              Project Creation
+            </label>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">{{ isEditMode ? 'Update' : 'Save' }}</button>
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="c('Cancel click')">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">{{ isEditMode ? 'Update' : 'Create' }}</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="c('Cancel click')">Cancel</button>
       </div>
     </div>
   </form>
