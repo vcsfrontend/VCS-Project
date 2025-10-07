@@ -122,7 +122,6 @@ export class CampaignsComponent extends BaseComponent {
     }
     let payload = {
       ...this.campaignForm.value,
-      campaignPoc : this.userEmail,
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType,
@@ -282,28 +281,62 @@ export class CampaignsComponent extends BaseComponent {
       }
     });
   }
-  getUsers() {
+   getUsers() {
    if (JSON.parse(this.userData).type == 2) {
       let cn = this.userCompanyName;
       let cc = this.userCompanyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
-            this.userList = res;
-            if (this.preSelectedUsers?.length) {
-              const ctrl = this.campaignForm.get('agents');
-              const current = ctrl?.value || [];
-              const merged = Array.from(new Set([...current, ...this.preSelectedUsers]));
-              ctrl?.setValue(merged);
+          this.userList = res;
+
+          if (this.preSelectedUsers?.length) {
+            const ctrl = this.campaignForm.get('agents');
+            const current = ctrl?.value || [];
+            const merged = Array.from(new Set([...current, ...this.preSelectedUsers]));
+            ctrl?.setValue(merged);
+          }
+          if (!this.isEditMode) {
+            const selectedManager = this.campaignForm.get('campaignPoc')?.value;
+            if (selectedManager) {
+              this.filteredUserList = this.filteredUserList.filter(
+                (user: any) => user.email !== selectedManager
+              );
+
+              const agentsCtrl = this.campaignForm.get('agents');
+              const currentAgents: string[] = agentsCtrl?.value || [];
+              const updatedAgents = currentAgents.filter(a => a !== selectedManager);
+              agentsCtrl?.setValue(updatedAgents);
             }
-             this.filteredUserList = this.userList.filter(
-              (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
-            );
-          } 
+          }
+
+          this.campaignForm.get('campaignPoc')?.valueChanges.subscribe((managerEmail: string | null) => {
+            if (!this.isEditMode) {
+              if (managerEmail) {
+                this.filteredUserList = this.userList
+                  .filter((user: any) =>
+                    user.email !== managerEmail
+                  );
+                const agentsCtrl = this.campaignForm.get('agents');
+                const currentAgents: string[] = agentsCtrl?.value || [];
+                const updatedAgents = currentAgents.filter(a => a !== managerEmail);
+                agentsCtrl?.setValue(updatedAgents);
+              } else {
+                
+              }
+            }
+          });
+        } else {
+          this.userList = [];
+          this.filteredUserList = [];
+        }
+        
         },
+       
       })
     }
   }
+
 
   getAgentColor(name: string | null | undefined): string {
     if (!name || !name.trim()) {
