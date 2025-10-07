@@ -384,11 +384,21 @@
                                                 <ng-container *ngIf="followup.status.length > 18">...</ng-container>
                                             </span>
                                         </li>
-                                        <li class="mb-2">
-                                            <span class="fw-semibold me-1">Updated On :</span>{{  followup.updatedTime | date:
-                                            'dd-MMM-yyyy hh:mm a'
-                                            }}
-                                            <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
+                                        <li class="mb-2 d-flex flex-wrap align-items-center">
+                                            <span class="fw-semibold me-1">Updated On:</span>
+                                            <span class="me-3 text-primary">
+                                                {{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }}
+                                            </span>
+                                            <span class="fw-semibold me-1">By:</span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-sm avatar-rounded me-1 border text-white fw-bold flex-shrink-0"
+                                                    [ngClass]="getUserColor(followup)">
+                                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                                        {{ followup.followUpBy?.charAt(0) | uppercase }}
+                                                    </span>
+                                                </div>
+                                                <span>{{ followup.followUpBy }}</span>
+                                            </div>
                                         </li>
                                         <li class="mb-2">
                                             <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
@@ -407,6 +417,7 @@
                         Followup Date
                     </th>
                     <td mat-cell *matCellDef="let element">
+                        <i class="bi bi-calendar-event me-1 text-dark"></i>
                         {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
                     </td>
                 </ng-container>
@@ -436,12 +447,17 @@
                 <ng-container matColumnDef="completionStatus">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
                     <td mat-cell *matCellDef="let element">
-                        <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm"
+                        <button *ngIf="element.completionStatus !== 'completed'"
+                            class="btn btn-success btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
                             (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal"
                             data-bs-target="#completionModal">
+                            <i class="bi bi-hourglass-split me-1"></i>
                             <strong>LC</strong>
                         </button>
-                        <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm" disabled>
+                        <button *ngIf="element.completionStatus === 'completed'"
+                            class="btn btn-danger btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
+                            disabled>
+                            <i class="bi bi-check-circle-fill me-1"></i>
                             <strong>LC</strong>
                         </button>
                     </td>
@@ -473,7 +489,7 @@
                                     <div class="flex-fill">
                                         <span class="fs-14">{{ user.email?.length > 22 ? (user.email | slice:0:22) + '...' : user.email
                                             }}</span>
-                                        <div class="fs-12 text-muted">{{ user.username }}</div>
+                                        <div class="fs-11">{{ user.username }}</div>
                                     </div>
                                 </div>
                             </div>
@@ -704,7 +720,7 @@
 <ng-template #Content112 let-modal>
     <div class="modal-header">
         <h6 class="modal-title" id="exampleModalLgLabel">
-            Add Lead
+           <strong> Add Lead</strong>
         </h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
@@ -817,7 +833,7 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Save Lead</button>
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
     </form>
@@ -884,7 +900,7 @@
                 </div>
             </div>
         </div>
-        <div class="offcanvas-footer border-top p-3">
+        <div class="offcanvas-footer border-top p-4">
             <div class="d-flex justify-content-start gap-2">
                 <button class="btn btn-primary" type="submit">Filter</button>
                 <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
@@ -1080,7 +1096,7 @@
                                     </label>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12">
-                                    <button class="btn btn-primary me-1" type="submit"
+                                    <button class="btn btn-primary me-3" type="submit"
                                         [disabled]="uploadSpinner">Import</button>
                                     <button class="btn btn-danger" type="button"
                                         (click)="offcanvas.dismiss('Cross click')">Cancel</button>
@@ -1347,10 +1363,9 @@
             </div>
         </div>
         <div class="p-4 border-top">
-            <div class="d-flex justify-content-end gap-3">
-                <button class="btn btn-primary w-50" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
-                    type="button">Cancel</button>
+            <div class="d-flex justify-content-start gap-2">
+                    <button class="btn btn-primary w-50" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50" type="button">Cancel</button>
             </div>
         </div>
         <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
@@ -1441,7 +1456,6 @@
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
         <div class="mb-3">
-            <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
                 data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
@@ -1484,8 +1498,8 @@
             </li>
         </ul>
     </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3 border-top">
+        <div class="m-4 position-relative justify-content-start d-flex gap-3 ">
             <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
                 (click)="saveCrmStages()" [disabled]="isStagesDisabled">Save Stages</button>
             <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
@@ -1537,8 +1551,8 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3 border-top">
+        <div class="m-4 position-relative justify-content-start d-flex gap-3 ">
             <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked || uploadSpinner">Save
                 Status</button>
             <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
@@ -1790,14 +1804,14 @@
 
 <ng-template #completionModal let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Close Lead</h5>
+    <h5 class="modal-title"><strong>Close Lead</strong></h5>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
 
   <div class="modal-body" style="max-height: 300px;">
     <!-- Step 1 -->
     <ng-container *ngIf="currentStep === 1">
-      Do you want to close the lead <strong>{{ selectedLead?.name }}</strong>?
+      Do you want to close the  <strong>{{ selectedLead?.name }}</strong> lead ?
     </ng-container>
 
     <!-- Step 2 -->
@@ -1890,8 +1904,8 @@
             </div>
 
             <div class="col-xl-6 col-lg-6 col-md-6">
-                <label for="address" class="form-label">project Estimation</label>
-                <input type="text" class="form-control" id="address" placeholder="Enter Address" formControlName="projectEstimation"
+                <label for="address" class="form-label">Project Estimation</label>
+                <input type="text" class="form-control" id="address" placeholder="Enter ProjectEstimation" formControlName="projectEstimation"
                 [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['projectEstimation'].errors }">
                 <div *ngIf="leadCompletionsubmitted && j['projectEstimation'].errors" class="invalid-feedback">
                     <span *ngIf="j['projectEstimation'].errors['required']">
@@ -1904,12 +1918,12 @@
     </ng-container>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Cancel</button>
     <ng-container *ngIf="currentStep === 1">
-      <button type="button" class="btn btn-danger" (click)="goToStep(2)">Yes, Close</button>
+      <button type="button" class="btn btn-primary" (click)="goToStep(2)">Yes, Close</button>
     </ng-container>
     <ng-container *ngIf="currentStep === 2">
-      <button type="button" class="btn btn-danger" (click)="goToStep(3)">Yes, Proceed</button>
+      <button type="button" class="btn btn-primary" (click)="goToStep(3)">Yes, Proceed</button>
     </ng-container>
     <ng-container *ngIf="currentStep === 3">
       <button type="button" class="btn btn-primary" (click)="submitClose(modal);" [disabled]="uploadSpinner">Submit</button>
@@ -1921,4 +1935,3 @@
         </div>
     </div>
 </ng-template>
-

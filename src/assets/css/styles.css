@@ -2193,6 +2193,9 @@ textarea {
   line-height: inherit;
 }
 
+
+
+
 button,
 select {
   text-transform: none;
@@ -3879,6 +3882,8 @@ progress {
   border-radius: var(--bs-border-radius);
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+
 
 @media (prefers-reduced-motion: reduce) {
   .form-control {
@@ -35191,6 +35196,7 @@ div:where(.swal2-container) div:where(.swal2-validation-message) {
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
   cursor: pointer !important;
+  border-radius: 10px !important;
 }
 ng-select {
   cursor: pointer !important;
@@ -35230,7 +35236,7 @@ ng-select {
 }
 
 .ng-dropdown-panel .ng-option:last-child {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 ::ng-deep .ng-dropdown-panel .ng-option {
   border-bottom: 1px solid #000;
@@ -35238,10 +35244,32 @@ ng-select {
 }
 
 ::ng-deep .ng-dropdown-panel .ng-option:last-child {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 .mdc-data-table__row.lead-closure-row .mat-mdc-cell {
   background-color: #8699a34d !important;
   color: #fff !important;
 }
 
+ng-select.ng-select.ng-select-focused .ng-select-container {
+  border: 1px solid #006699; 
+  outline: none;
+}
+
+.ng-select {
+  border-radius: 0.85rem !important;
+}
+
+.ng-select.ng-select-focused .ng-select-container {
+  border: 1px solid rgb(0, 102, 153) !important;
+}
+
+.ng-dropdown-panel {
+    box-sizing: border-box;
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    z-index: 1050;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+}

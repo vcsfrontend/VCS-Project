@@ -1090,8 +1090,9 @@ export class LeadsComponent extends BaseComponent {
     return this.sendwhatsLeadForm.controls;
   }
 
-  getUserColor(user: any): string {
-    const index = this.hashString(user.email) % this.userColors.length;
+  getUserColor(followup: any): string {
+    const key = followup.email || followup.followUpBy || 'default';
+    const index = this.hashString(key) % this.userColors.length;
     return this.userColors[index];
   }
 
@@ -3334,6 +3335,9 @@ export class LeadsComponent extends BaseComponent {
 
     return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
   }
+
+  
+  
 
 
 
