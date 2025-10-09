@@ -514,7 +514,7 @@ export class LeadsComponent extends BaseComponent {
 
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
-      executive: ['', [Validators.required]],
+      executive: [ [Validators.required]],
     });
 
     // lead Move to Campaign
@@ -1059,9 +1059,6 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.allEmailTemplates(payload).subscribe({
       next: (res: any[]) => {
         this.tempFormList = res;
-      },
-      error: (err) => {
-        this.toastr.error('Error fetching template details');
       },
     });
   }
@@ -3336,7 +3333,7 @@ export class LeadsComponent extends BaseComponent {
     return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
   }
 
-  
+
   
 
 
