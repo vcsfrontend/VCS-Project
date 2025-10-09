@@ -1510,30 +1510,20 @@
                         <thead class="custom-header">
                             <tr>
                                 <th scope="col">S.No</th>
-                                <th scope="col">Name</th>
+                                <th scope="col">Department Name</th>
                                 <th scope="col">Description</th>
+                                <th scope="col">Role Name</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody *ngFor="let assignedRole of assignedRoleLst; let i = index">
                             <tr>
                                 <td> {{ i + 1 }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center lh-1">
-                                        <div class="me-2">
-                                            <span class="avatar avatar-sm avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center"
-                                                [ngClass]="getDeptColor(assignedRole.name)">
-                                                {{ assignedRole.name?.charAt(0) | uppercase }}
-                                            </span>
-                                        </div>
-                                        <div>{{assignedRole.name}}</div>
-                                    </div>
-                                </td>
+                                <td>{{assignedRole.departmentName}}</td>
                                 <td>{{assignedRole.description}}</td>
+                                <td>{{assignedRole.roleName}}</td>
                                 <td>
                                     <div class="hstack gap-2 fs-1">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"
-                                        (click)="editPermissionFormSelected(assignedRole, Content114)"><i class="ri-edit-line"></i></a>
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
                                       (click)="deletePermission(assignedRole.id)"  ><i class="ri-delete-bin-line"></i></a>
                                     </div>

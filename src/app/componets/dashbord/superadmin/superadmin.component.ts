@@ -1088,8 +1088,8 @@ chartOptions6:any= {
   }
 
   options25: EChartsOption = { };
-
   updateCompanyUser(modal: any) {
+    let payload: any; 
     this.updateCompanySubmitted = true;
     if (this.updateCompanyForm.invalid) {
       this.toastr.error("Please fill in all required fields.");
@@ -1105,7 +1105,7 @@ chartOptions6:any= {
     if (this.gf['companyName'].invalid || this.gf['companyCode'].invalid) {
       return;
     }
-    let payload = {
+    payload = {
       ...this.updateCompanyForm.value,
        userEmail:this.selectedUser.email,
       type: 2,
@@ -1119,7 +1119,7 @@ chartOptions6:any= {
     const companyName = this.selectedUser.companyName || this.gf['companyName'].value;
     const companyCode = this.selectedUser.companyCode || this.gf['companyCode'].value;
 
-    const payload = {
+   payload = {
             ...this.updateCompanyForm.value,
       companyName: companyName,
       companyCode: companyCode,
@@ -1129,19 +1129,19 @@ chartOptions6:any= {
     };
     console.log('Tool Payload:', payload);
   }
-    // console.log('user updation payload',payload);
-    // this.switchService.updateUserCompany(payload).subscribe({
-    //   next: (res: any) => {
-    //     if (res.status === true) {
-    //       this.toastr.success(res.message);
-    //       if (modal) {
-    //         modal.close();
-    //       }  
-    //       this.updateCompanyForm.reset();
-    //       this.updateCompanySubmitted = false;
-    //     } 
-    //   }
-    // });
+    console.log('user updation payload',payload);
+    this.switchService.updateUserCompany(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.toastr.success(res.message);
+          if (modal) {
+            modal.close();
+          }  
+          this.updateCompanyForm.reset();
+          this.updateCompanySubmitted = false;
+        } 
+      }
+    });
   }
   
   get gf() {
