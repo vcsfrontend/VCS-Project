@@ -461,15 +461,15 @@ export class NavService implements OnDestroy {
           active: false,
           path: '/dashboard/tasks'
         },
-        // {
-        //   title: 'Reports',
-        //   icon: 'bi-layout-text-window side-menu__icon',
-        //   dirchange: false,
-        //   type: 'link',
-        //   linkType : 'internal',
-        //   active: false,
-        //   path: '/dashboard/reports'
-        // },
+        {
+          title: 'Reports',
+          icon: 'bi-layout-text-window side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          active: false,
+          path: '/dashboard/reports'
+        },
         // {
         //   title: 'CRM Settings',
         //   icon: 'bi-layout-text-window side-menu__icon',
