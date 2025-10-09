@@ -447,7 +447,7 @@ export class DealsComponent extends BaseComponent {
 
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
-      executive: ['', [Validators.required]]
+      executive: [, [Validators.required]]
     });
 
     //Send Email

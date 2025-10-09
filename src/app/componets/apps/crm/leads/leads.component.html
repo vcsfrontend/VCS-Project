@@ -148,10 +148,16 @@
             <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
                 {{leadCount}} Leads found
             </div>
-            <mat-form-field class="filter-field" appearance="outline">
-                <i class="bi bi-search ms-2" matPrefix></i>
-                <input matInput placeholder="Search Here" (keyup)="applyFilter($event)" #input>
-            </mat-form-field>
+            <div class="d-flex justify-content-center">
+                <div class="input-group shadow-sm rounded-3" style="width: 280px;">
+                    <button class="btn btn-primary d-flex align-items-center justify-content-center rounded-start" type="button"
+                        id="button-addon2">
+                        <i class="ri-search-line text-white fs-5"></i>
+                    </button>
+                    <input type="text" class="form-control border rounded-end" placeholder="Search Here..."
+                        aria-describedby="button-addon2" (keyup)="applyFilter($event)" #input />
+                </div>
+            </div>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-primary border-end border-light"
@@ -335,7 +341,8 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
                     <td mat-cell *matCellDef="let element">
                         <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
-                            [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
+                            [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top" 
+                            (click)="openFollowupLeadForm(element, Content4)">
                             {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
                             <ng-container *ngIf="element.stage.length > 18">...</ng-container>
                         </span>
@@ -346,7 +353,8 @@
                     <td mat-cell *matCellDef="let element">
                         <div class="d-flex justify-content-between">
                             <span class="badge" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top"
+                                (click)="openFollowupLeadForm(element, Content4)">
                                 {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
                                 <ng-container *ngIf="element.status.length > 18">...</ng-container>
                             </span>

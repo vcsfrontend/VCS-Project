@@ -1,0 +1,235 @@
+<div class="col-xl-12 mt-4">
+  <div class="card custom-card">
+    <div class="align-items-start">
+      <div class="row">
+        <div class="col-md-2">
+          <div ngbNav #nav17="ngbNav" [activeId]="1" orientation="vertical"
+            class="nav flex-column nav-pills me-3 tab-style-7" id="v-pills-tab" role="tablist"
+            aria-orientation="vertical">
+            <ng-container [ngbNavItem]="1">
+              <button ngbNavLink class="nav-link text-start ms-2 mt-2" id="main-profile-tab" data-bs-toggle="pill"
+                data-bs-target="#main-profile" type="button" role="tab" aria-controls="main-profile"
+                aria-selected="true">All </button>
+              <ng-template ngbNavContent>
+                <div class="container">
+                  <div class="row g-3 overflow-auto fixed-height">
+                    <div *ngIf="!selectedFolder" class="col-12">
+                      <div class="row g-3">
+                        <div class="col-md-4 col-sm-6 mb-3" *ngFor="let folder of folders">
+                          <div class="border rounded p-3 bg-white h-100 shadow-sm folder-card" (click)="openFolder(folder)">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                              <div class="d-flex align-items-center">
+                                <i class="bi bi-folder fs-5 text-primary me-2"></i>
+                                <span class="fw-semibold">{{ folder.name }}</span>
+                              </div>
+                              <i class="ri-star-s-fill fs-16 text-warning"></i>
+                            </div>
+                            <small class="text-muted">In {{ folder.owner }}</small>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div *ngIf="selectedFolder" class="col-12">
+                      <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+                        <button class="btn btn-primary btn-link text-decoration-none" (click)="selectedFolder = null">
+                          <i class="bi bi-arrow-left"></i> Back to Folders
+                        </button>
+                        <div class="card-title">{{ selectedFolder.name }}</div>
+                      </div>
+                      <div class="row g-3">
+                        <div class="col-md-4 col-sm-6 mb-3" *ngFor="let product of selectedFolder.items">
+                          <div class="card border rounded p-3 bg-white h-100 shadow-sm folder-card">
+                            <img [src]="product.image" class="card-img-top mx-auto d-block folder-img" alt="{{ product.name }}"
+                              style="max-height: 200px; object-fit: cover; cursor: pointer;"
+                              (click)="openModal(imageModal, product.image)">
+                            <div class="card-body p-2">
+                              <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-semibold">{{ product.name }}</span>
+                                <div>
+                                  <i class="bi bi-clock-history me-2"></i>
+                                  <i class="bi bi-person-circle text-primary" [ngbPopover]="userPopover" popoverClass="popover-white only-body"
+                                    triggers="click" placement="top" [autoClose]="'outside'" style="cursor: pointer;">
+                                  </i>
+                                  <ng-template #userPopover let-popover="popover">
+                                    <div class=" border-0 rounded-4 position-relative">
+                                      <button type="button" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close"
+                                        (click)="popover.close()">
+                                      </button>
+                                      <div class="d-flex align-items-center">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" alt="User Avatar"
+                                          class="rounded-circle me-3 flex-shrink-0" width="60" height="60">
+                                        <div>
+                                          <h6 class="fw-bold mb-0">bala</h6>
+                                          <p class="text-muted mb-1 small">Artistic Director</p>
+                                          <p class="text-muted mb-3 small">Administration</p>
+                                          <p class="mb-1 small">
+                                            <i class="bi bi-envelope-fill text-primary me-2"></i>
+                                            <a href="mailto:websiteteam80@gmail.com" class="text-decoration-none text-dark">
+                                              websiteteam80gmail.com
+                                            </a>
+                                          </p>
+                                  
+                                          <p class="mb-3 small">
+                                            <i class="bi bi-telephone-fill text-success me-2"></i>
+                                            <a href="tel:+16506913277" class="text-decoration-none text-dark">
+                                              +1 650-691-3277
+                                            </a>
+                                          </p>
+                                  
+                                          <div class="d-flex gap-2">
+                                            <button class="btn btn-outline-primary btn-sm px-3">Send</button>
+                                            <button class="btn btn-primary btn-sm px-3">View</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </ng-template>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <ng-template #imageModal let-modal>
+                      <div class="modal-header border-0">
+                        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                      </div>
+                      <div class="modal-body p-0">
+                        <img [src]="selectedImage" class="img-fluid w-100" alt="Product">
+                      </div>
+                    </ng-template>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-container>
+            <ng-container [ngbNavItem]="2">
+                <button ngbNavLink class="nav-link text-start ms-2 d-flex align-items-center" id="man-password-tab"
+                  data-bs-toggle="pill" data-bs-target="#man-password" type="button" role="tab" aria-controls="man-password"
+                  aria-selected="false">
+                  <i class="bi bi-folder-fill fs-6 me-2 folder-icon"></i>
+                  My Drive
+                </button>
+              <ng-template ngbNavContent>
+                <div id="man-password" role="tabpanel" tabindex="0">
+                  <ul class="list-unstyled text-muted mb-0">
+                    <li class="mb-2">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                        ever since the 1500s</b>, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book. It has
+                      survived not only five centuries, but also the leap into electronic
+                      typesetting, remaining essentially unchanged. It was popularised in
+                      the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                      passages, and more recently with desktop publishing software like
+                      Aldus PageMaker including versions of Lorem Ipsum.
+                    </li>
+                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                      random text. It has roots in a piece of classical Latin literature
+                      from 45 BC, making it over 2000 years old. Richard McClintock, a
+                      Latin professor at Hampden-Sydney College in Virginia,</li>
+                    <li class="mb-0">There are many variations of passages of Lorem Ipsum
+                      available, but the majority have suffered alteration in some form.
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ng-container>
+            <ng-container [ngbNavItem]="3">
+              <button ngbNavLink class="nav-link text-start ms-2" id="main-team-tab" data-bs-toggle="pill"
+                data-bs-target="#main-team" type="button" role="tab" aria-controls="main-team" aria-selected="false">
+                <i class="bi bi-people-fill text-success fs-6 me-2"></i>Company</button>
+              <ng-template ngbNavContent>
+                <div id="main-team" role="tabpanel" aria-labelledby="main-team-tab" tabindex="0">
+                  <ul class="list-unstyled text-muted mb-0">
+                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                      random text. It has roots in a piece of classical Latin literature
+                      from 45 BC, making it over 2000 years old. Richard McClintock, a
+                      Latin professor at Hampden-Sydney College in Virginia,</li>
+                    <li class="mb-2">There are many variations of passages of Lorem Ipsum
+                      available, but the majority have suffered alteration in some form.
+                    </li>
+                    <li class="mb-0">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                        ever since the 1500s</b>, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book. It has
+                      survived not only five centuries, but also the leap into electronic
+                      typesetting, remaining essentially unchanged. It was popularised in
+                      the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                      passages, and more recently with desktop publishing software like
+                      Aldus PageMaker including versions of Lorem Ipsum.
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ng-container>
+            <ng-container [ngbNavItem]="4">
+              <button ngbNavLink class="nav-link text-start ms-2" id="main-billing-tab" data-bs-toggle="pill"
+                data-bs-target="#main-billing" type="button" role="tab" aria-controls="main-billing"
+                aria-selected="false"><i class="bi bi-clock-history text-info fs-6 me-2"></i>Recent</button>
+              <ng-template ngbNavContent>
+                <div id="main-billing" role="tabpanel" aria-labelledby="main-billing-tab" tabindex="0">
+                  <ul class="list-unstyled text-muted mb-0">
+                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                      random text. It has roots in a piece of classical Latin literature
+                      from 45 BC, making it over 2000 years old. Richard McClintock, a
+                      Latin professor at Hampden-Sydney College in Virginia,</li>
+                    <li class="mb-2">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                        ever since the 1500s</b>, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book. It has
+                      survived not only five centuries, but also the leap into electronic
+                      typesetting, remaining essentially unchanged. It was popularised in
+                      the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                      passages, and more recently with desktop publishing software like
+                      Aldus PageMaker including versions of Lorem Ipsum.
+                    </li>
+                    <li class="mb-0">There are many variations of passages of Lorem Ipsum
+                      available, but the majority have suffered alteration in some form.
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ng-container>
+            <ng-container [ngbNavItem]="5">
+              <button ngbNavLink class="nav-link text-start mb-1 ms-2" id="main-email-tab" data-bs-toggle="pill"
+                data-bs-target="#main-email" type="button" role="tab" aria-controls="main-email"
+                aria-selected="false"><i class="bi bi-trash-fill text-danger fs-6 me-2"></i>Trash</button>
+              <ng-template ngbNavContent>
+                <div id="main-email" role="tabpanel" aria-labelledby="main-email-tab" tabindex="0">
+                  <ul class="list-unstyled text-muted mb-0">
+                    <li class="mb-2">Contrary to popular belief, Lorem Ipsum is not simply
+                      random text. It has roots in a piece of classical Latin literature
+                      from 45 BC, making it over 2000 years old. Richard McClintock, a
+                      Latin professor at Hampden-Sydney College in Virginia,</li>
+                    <li class="mb-2">There are many variations of passages of Lorem Ipsum
+                      available, but the majority have suffered alteration in some form.
+                    </li>
+                    <li class="mb-0">
+                      Lorem Ipsum is simply dummy text of the printing and typesetting
+                      industry. Lorem Ipsum has been the industry's <b>standard dummy text
+                        ever since the 1500s</b>, when an unknown printer took a galley
+                      of type and scrambled it to make a type specimen book. It has
+                      survived not only five centuries, but also the leap into electronic
+                      typesetting, remaining essentially unchanged. It was popularised in
+                      the 1960s with the release of Letraset sheets containing Lorem Ipsum
+                      passages, and more recently with desktop publishing software like
+                      Aldus PageMaker including versions of Lorem Ipsum.
+                    </li>
+                  </ul>
+                </div>
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+        <div class="col-md-10 bg-light border">
+          <div class="tab-content" id="v-pills-tabContent">
+            <div [ngbNavOutlet]="nav17" class="mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

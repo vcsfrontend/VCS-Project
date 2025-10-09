@@ -545,3 +545,9 @@ textarea:focus {
   background-color: #fff !important;
   color: #333 !important;
 }
+
+.popover.wide-popover {
+    max-width: 250px !important;
+    width: 250px !important;
+    border-radius: 10px !important;
+}

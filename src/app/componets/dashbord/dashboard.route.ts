@@ -74,6 +74,11 @@ export const admin: Routes = [
     import('./projects/projects.component').then((m) => m.ProjectsComponent),
 },
 {
+  path: 'documents',
+  loadComponent: () =>
+    import('./documents/documents.component').then((m) => m.DocumentsComponent),
+},
+{
   path: 'boq',
   loadComponent: () =>
     import('./boq/boq.component').then((m) => m.BoqComponent),
