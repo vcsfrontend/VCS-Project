@@ -12,7 +12,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute,Router, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 import { FirebaseService } from '../../../../shared/services/firebase.service';
@@ -160,7 +160,8 @@ export class LeadsComponent extends BaseComponent {
     public switchService: SwitherService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
     super();
     this.statusOptionsByStage = 
@@ -1256,10 +1257,13 @@ export class LeadsComponent extends BaseComponent {
             for (const [stage, fields] of Object.entries(
               this.statusOptionsByStageforDisplay
             )) {
-              const clonedFields = JSON.parse(JSON.stringify(fields)); 
-              this.statusLst.push({ stage, fields: clonedFields });
+              const clonedFields = JSON.parse(JSON.stringify(fields));
+              this.statusLst.push({
+                stage,
+                fields: clonedFields,
+                count: clonedFields.length 
+              });
             }
-
             const openExists = this.statusLst.some(
               (s: any) => s.stage.toLowerCase() === 'open'
             );
@@ -3331,6 +3335,10 @@ export class LeadsComponent extends BaseComponent {
     hours = hours % 12 || 12;
 
     return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  }
+
+  goBackToCampaigns() {
+    this.router.navigate(['/dashboard/campaigns']);
   }
 
 

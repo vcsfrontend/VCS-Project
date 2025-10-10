@@ -652,6 +652,18 @@ export class BaseComponent {
     { "name": "last_updated" },
   ];
  
+  roomNameList = [
+    { "name": "Livinig Room" },
+    { "name": "Kitchen" },
+    { "name": "Hall" },
+  ];
+
+  itemCodeLst = [
+    { "name": "AK_PA" },
+    { "name": "AK_KC" },
+    { "name": "AK_SH" },
+    { "name": "AK_AP" },
+  ];
 
 
 }
