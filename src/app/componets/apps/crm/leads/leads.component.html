@@ -225,11 +225,11 @@
                                                                 Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                                             </button>
                                                         </li> -->
-                                <li class="m-2">
+                                 <li class="m-2">
                                     <button class="btn btn-success label-btn label-end w-100"
                                         (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
                                         aria-controls="offcanvasRight">
-                                        Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
+                                        Move To<i class="bi bi-arrows-move bt-icon label-btn-icon"></i>
                                     </button>
                                 </li>
                                 <li class="m-2">
@@ -448,7 +448,7 @@
             </div>
         
         </div>
-        <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #paginator [pageSizeOptions]="[20, 100, 500]" showFirstLastButtons></mat-paginator>
         <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
@@ -500,7 +500,8 @@
                         data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Mail"><i class="ri-mail-line bt-icon"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)"
                         *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
-                    
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMove(content31,selectedLeads)"
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Move To"><i class="bi bi-arrows-move"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="appointmentModal(appointment1, element)"
                         *ngIf="adoanAiRole !== 'ADMIN' || userType== 1 || crmRole !=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"
@@ -816,6 +817,11 @@
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
+        <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
     </form>
 </ng-template>
 
