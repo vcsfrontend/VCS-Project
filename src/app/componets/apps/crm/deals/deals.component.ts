@@ -2269,8 +2269,9 @@ export class DealsComponent extends BaseComponent {
     }
     return hash >>> 0;
   }
-  getUserColor(user: any): string {
-    const index = this.hashString(user.email) % this.userColors.length;
+  getUserColor(followup: any): string {
+    const key = followup.email || followup.followUpBy || 'default';
+    const index = this.hashString(key) % this.userColors.length;
     return this.userColors[index];
   }
 

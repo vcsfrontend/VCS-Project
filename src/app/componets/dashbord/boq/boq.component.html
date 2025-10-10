@@ -351,15 +351,10 @@
                                         <th mat-header-cell *matHeaderCellDef>Project Area</th>
                                         <td mat-cell *matCellDef="let element"> {{element.projectArea}} </td>
                                     </ng-container>
-                                    <ng-container matColumnDef="projectStartDate">
-                                        <th mat-header-cell *matHeaderCellDef>Project Start Date</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.projectStartDate | date:'dd-MM-yyyy'}}
+                                     <ng-container matColumnDef="assignedDesigner">
+                                        <th mat-header-cell *matHeaderCellDef>Assigned Designer</th>
+                                        <td mat-cell *matCellDef="let element">{{element.assignedDesigner}}
                                         </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="projectEndDate">
-                                        <th mat-header-cell *matHeaderCellDef>Project End Date</th>
-                                        <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
-                                            ({{calculateDateDifference(element.projectEndDate)}}) </td>
                                     </ng-container>
                                     <ng-container matColumnDef="designUrl">
                                         <th mat-header-cell *matHeaderCellDef>Design</th>
@@ -372,17 +367,26 @@
                                         </td>
                                     </ng-container>
                                     <ng-container matColumnDef="projectCompletion">
-                                        <th mat-header-cell *matHeaderCellDef>projectCompletion</th>
+                                        <th mat-header-cell *matHeaderCellDef>Project Completion</th>
                                         <td mat-cell *matCellDef="let element">
                                             <button *ngIf="element.designCompletionStatus === 'Complete'" class="btn btn-success btn-sm">
                                                 Completed
                                             </button>
-                                            
                                             <!-- If Empty -->
                                             <button *ngIf="!element.designCompletionStatus" class="btn btn-warning btn-sm">
                                                 Pending
                                             </button>
                                         </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectStartDate">
+                                        <th mat-header-cell *matHeaderCellDef>Project Start Date</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.projectStartDate | date:'dd-MM-yyyy'}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="projectEndDate">
+                                        <th mat-header-cell *matHeaderCellDef>Project End Date</th>
+                                        <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
+                                            ({{calculateDateDifference(element.projectEndDate)}}) </td>
                                     </ng-container>
                                     <tr mat-header-row *matHeaderRowDef="designerColumns"
                                         style="height:47px; vertical-align:middle;"></tr>
@@ -1537,8 +1541,11 @@
                                                         style="scroll-behavior: smooth;" (scroll)="checkArrows()">
                                                         <ng-container *ngFor="let key of tabKeys; let i = index">
                                                             <ng-container [ngbNavItem]="i+1">
-                                                                <a ngbNavLink class="nav-link  me-2">{{ key | titlecase }}<span class="badge bg-white text-dark ms-1">{{
-                                                                        boqDataSources[key].data.length }}</span></a>
+                                                                <a ngbNavLink class="nav-link  me-2">{{ key | titlecase }}
+                                                                    <span class="badge bg-black text-white ms-1">
+                                                                        {{ boqDataSources[key].data.length }}
+                                                                    </span>
+                                                                </a>
                                                                 <ng-template ngbNavContent>
                                                                     <div class="col-xl-12 mt-2">
                                                                         <div class="card custom-card bg-white">
@@ -1546,44 +1553,48 @@
                                                                                 <div class="card-title col-xl-4">{{ key | titlecase }}</div>
                                                                                 <div class="dropdown col-xl-7" ngbDropdown>
                                                                                     <div class="d-flex justify-content-end gap-3">
-                                                                                    <mat-form-field class="filter-field">
-                                                                                        <mat-label>Fliter</mat-label>
-                                                                                        <input matInput (keyup)="applyGlobalFilter($event)" #input>
-                                                                                    </mat-form-field>
-                                                                                    <div ngbDropdown class="d-inline-block">
-                                                                                    <button type="button" class="btn btn-outline-primary btn-wave me-2">({{ key | titlecase }}): {{ tabTotals[key] | number:'1.0-2' }}</button>
-                                                                                        <button type="button" class="btn btn-primary"
-                                                                                        (click)="getProposal()" ngbDropdownToggle>
-                                                                                            <i class="ri-edit-line me-2"></i>Edit Proposal
-                                                                                        </button>
-                                                                                        <ul ngbDropdownMenu class="dropdown-menu cuu"  [ngStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }">
-                                                                                            <li *ngFor="let proposal of proposals | slice:0:5">
-                                                                                                <a ngbDropdownItem class="dropdown-item d-flex justify-content-between align-items-center border"
-                                                                                                (click)="openRights5(content6, proposal)">
-                                                                                                    <div>
-                                                                                                        <div class="fw-bold">{{ proposal.referenceNo }}</div>
-                                                                                                        <small class="text-muted">
-                                                                                                            {{ proposal.proposalRequestType }} → {{ proposal.status }}
-                                                                                                        </small>
-                                                                                                    </div>
-                                                                                                    <div class="text-end">
-                                                                                                        <div>{{ proposal.amount | currency:'INR' }}</div>
-                                                                                                    </div>
-                                                                                                </a>
-                                                                                            </li>
-                                                                                        </ul>
-                                                                                    </div>
-                                                                                    <button type="button" class="btn btn-primary" ngbDropdownToggle type="button" aria-expanded="false">
-                                                                                        <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Actions
-                                                                                    </button>
-                                                                                    <ul class="dropdown-menu cuu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                                                                        <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="onCreateProposalClick(content4)">
-                                                                                            Create Proposal</a></li>
-                                                                                        <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">
-                                                                                            Add Custom Element</a></li>
-                                                                                        <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2); getLibraryData()">Import
-                                                                                                Items From</a></li>
-                                                                                    </ul>
+                                                                                        <div class="input-group shadow-sm rounded-3" style="width: 280px;">
+                                                                                            <button class="btn btn-primary d-flex align-items-center justify-content-center rounded-start" type="button"
+                                                                                                id="button-addon2">
+                                                                                                <i class="ri-search-line text-white fs-5"></i>
+                                                                                            </button>
+                                                                                            <input type="text" class="form-control border rounded-end" placeholder="Search Here..."
+                                                                                                aria-describedby="button-addon2" (keyup)="applyGlobalFilter($event)" #input />
+                                                                                        </div>
+                                                                                        <div ngbDropdown class="d-inline-block">
+                                                                                            <button type="button" class="btn btn-primary" (click)="getProposal()" ngbDropdownToggle>
+                                                                                                <i class="ri-edit-line me-2"></i>Edit Proposal
+                                                                                            </button>
+                                                                                            <ul ngbDropdownMenu class="dropdown-menu cuu" [ngStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }">
+                                                                                                <li *ngFor="let proposal of proposals | slice:0:5">
+                                                                                                    <a ngbDropdownItem class="dropdown-item d-flex justify-content-between align-items-center border"
+                                                                                                        (click)="openRights5(content6, proposal)">
+                                                                                                        <div>
+                                                                                                            <div class="fw-bold">{{ proposal.referenceNo }}</div>
+                                                                                                            <small class="text-muted">
+                                                                                                                {{ proposal.proposalRequestType }} → {{ proposal.status }}
+                                                                                                            </small>
+                                                                                                        </div>
+                                                                                                        <div class="text-end">
+                                                                                                            <div>{{ proposal.amount | currency:'INR' }}</div>
+                                                                                                        </div>
+                                                                                                    </a>
+                                                                                                </li>
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                        <div ngbDropdown class="d-inline-block">
+                                                                                            <button type="button" class="btn btn-primary" ngbDropdownToggle type="button" aria-expanded="false">
+                                                                                                <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>Actions
+                                                                                            </button>
+                                                                                            <ul class="dropdown-menu cuu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
+                                                                                                <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="onCreateProposalClick(content4)">
+                                                                                                        Create Proposal</a></li>
+                                                                                                <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">
+                                                                                                        Add Custom Element</a></li>
+                                                                                                <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg2(content2); getLibraryData()">Import
+                                                                                                        Items From</a></li>
+                                                                                            </ul>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -1775,10 +1786,33 @@
                                                                                                 (keydown.enter)="editElement(element)" (click)="$event.stopPropagation()" />
                                                                                         </td>
                                                                                     </ng-container>
-
                                                                                     <ng-container matColumnDef="clientRate">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Client Rate (₹) </th>
                                                                                         <td mat-cell *matCellDef="let element"> {{ element.clientRate }} </td>
+                                                                                    </ng-container>
+                                                                                    <ng-container matColumnDef="l1">
+                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> L1 </th>
+                                                                                        <td mat-cell *matCellDef="let element"> {{ element.l1 }} </td>
+                                                                                    </ng-container>
+                                                                                    <ng-container matColumnDef="l2">
+                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> L2 </th>
+                                                                                        <td mat-cell *matCellDef="let element"> {{ element.l2 }} </td>
+                                                                                    </ng-container>
+                                                                                    <ng-container matColumnDef="w1">
+                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> W1 </th>
+                                                                                        <td mat-cell *matCellDef="let element"> {{ element.w1 }} </td>
+                                                                                    </ng-container>
+                                                                                    <ng-container matColumnDef="w2">
+                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> W2 </th>
+                                                                                        <td mat-cell *matCellDef="let element"> {{ element.w2 }} </td>
+                                                                                    </ng-container>
+                                                                                    <ng-container matColumnDef="cl">
+                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cl </th>
+                                                                                        <td mat-cell *matCellDef="let element"> {{ element.cl }} </td>
+                                                                                    </ng-container>
+                                                                                    <ng-container matColumnDef="cw">
+                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> CW </th>
+                                                                                        <td mat-cell *matCellDef="let element"> {{ element.cw }} </td>
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="serviceCharge">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Service Charge </th>
@@ -1829,14 +1863,20 @@
                                                                                     </tr>
                                                                                 </table>
                                                                             </div>
-                                                                            <div class="d-flex justify-content-between align-items-center">
-                                                                                <div class="btn-group ms-5" role="group" aria-label="Basic outlined example">
-                                                                                    <!-- <button type="button" class="btn btn-outline-primary btn-wave"
-                                                                                    ngbTooltip="Edit" placement="top">
-                                                                                        <i class="ri-edit-line" ></i>
-                                                                                    </button> -->
+                                                                            <div class="d-flex align-items-center mx-4 my-2">
+                                                                                <div>
+                                                                                    <strong>Sub Total</strong>
                                                                                 </div>
-                                                                                <!-- <mat-paginator [pageSizeOptions]="[10,20,30]" showFirstLastButtons></mat-paginator> -->
+                                                                                <div class="ms-auto">
+                                                                                    <nav aria-label="Page navigation" class="pagination-style-4">
+                                                                                        <div class="d-flex justify-content-between align-items-center">
+                                                                                            <div>
+                                                                                                <span class="fw-bold">INR ({{ key | titlecase }}): {{ tabTotals[key] | number:'1.0-2' }}</span>
+                                                                                                <div class="small text-muted">*Inclusive of Taxes</div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </nav>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1941,15 +1981,14 @@
 
 <ng-template #content1 let-offcanvas>
     <form [formGroup]="elementForm" (ngSubmit)="onSubmit()">
-        <div class="offcanvas-header border-bottom border-block-end-dashed">
-            <h5 class="offcanvas-title">
-                {{ isEditMode ? 'Edit Element' : 'Create Element' }}
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title"><strong> {{ isEditMode ? 'Edit Element' : 'Create Element' }}</strong>
             </h5>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
                 data-bs-dismiss="offcanvas" aria-label="Close">
             </button>
         </div>
-        <div class="offcanvas-body p-4 overflow-auto" style="max-height: 80vh;">
+        <div class="offcanvas-body p-4 overflow-auto" style="max-height: 76vh;">
             <div class="col-xl-12">
                 <div class="row gy-1">
                     <div class="col-xl-6">
@@ -2010,6 +2049,37 @@
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
+                        <label class="form-label">Length 1</label>
+                        <input type="number" class="form-control" formControlName="l1"
+                            placeholder="Enter Length 1">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Length 2</label>
+                        <input type="number" class="form-control" formControlName="l2"
+                            placeholder="Enter Length 2">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Width 1</label>
+                        <input type="number" class="form-control" formControlName="w1"
+                            placeholder="Enter Width 1">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Width 2</label>
+                        <input type="number" class="form-control" formControlName="w2"
+                            placeholder="Enter Width 2">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Room Name</label>
+                        <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
+                            placeholder="Select Room Name">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Draft Quantity</label>
+                        <input type="number" class="form-control" formControlName="draftQuantity"
+                            placeholder="Enter Draft Quantity">
+                    </div>
+                    <div class="col-xl-6">
                         <label class="form-label">Client Rate (₹)</label>
                         <input type="number" class="form-control" formControlName="clientRate"
                             placeholder="Enter Client Rate">
@@ -2025,8 +2095,8 @@
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Item Code</label>
-                        <ng-select formControlName="itemCode" [items]="itemCodeLst" bindLabel="code" bindValue="id"
-                            placeholder="Select Item Code" [searchable]="true" [clearable]="true">
+                        <ng-select formControlName="itemCode" [items]="itemCodeLst" bindLabel="name" bindValue="name"
+                            placeholder="Select Item Code">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
@@ -2045,12 +2115,12 @@
                 </div>
             </div>
         </div>
-        <div class="m-3">
+        <div class="offcanvas-footer border-top p-3">
             <button type="submit" class="btn btn-primary me-3">
                 {{ isEditMode ? 'Update' : 'Save' }}
             </button>
             <button type="button" class="btn btn-danger" (click)="offcanvas.dismiss('Close click')">
-                Close
+                Cancel
             </button>
         </div>
     </form>

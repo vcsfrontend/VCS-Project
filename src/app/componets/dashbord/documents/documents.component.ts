@@ -132,4 +132,60 @@ products = [
   openFolder(folder: any) {
     this.selectedFolder = folder;
   }
+  task = {
+    id: 1,
+    taskName: 'Email follow-up with client',
+    priority: 'Overdue',
+    assignedTo: 'Bala',
+    avatar: 'assets/images/avatar.png',
+    deadline: new Date('2025-10-08') // yesterday for demo
+  };
+
+  // ✅ Priority Badge Colors
+  getPriorityBadge(priority: string): string {
+    switch (priority?.toLowerCase()) {
+      case 'high':
+      case 'overdue':
+        return 'bg-danger text-white';
+      case 'medium':
+        return 'bg-warning text-dark';
+      case 'low':
+        return 'bg-success text-white';
+      default:
+        return 'bg-secondary text-white';
+    }
+  }
+
+  // ✅ Deadline Color Based on Date
+  getTaskBgColor(task: any): string {
+    if (!task.deadline) return 'bg-secondary text-white';
+    const today = new Date();
+    const deadline = new Date(task.deadline);
+    return deadline < today ? 'bg-danger text-white' : 'bg-success text-white';
+  }
+
+  // ✅ Days Left or Overdue Calculation
+  getfullDaysLeft(task: any): string {
+    if (!task.deadline) return 'No deadline';
+    const today = new Date();
+    const deadline = new Date(task.deadline);
+    const diffTime = deadline.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
+
+    if (diffDays > 0) {
+      return `${diffDays} days left`;
+    } else if (diffDays === 0) {
+      return 'Today';
+    } else {
+      return `${Math.abs(diffDays)} days overdue`;
+    }
+  }
+
+  // ✅ Check if Task is Overdue
+  isOverdue(task: any): boolean {
+    if (!task.deadline) return false;
+    const today = new Date();
+    const deadline = new Date(task.deadline);
+    return deadline < today;
+  }
 }

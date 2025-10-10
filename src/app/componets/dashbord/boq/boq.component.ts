@@ -77,7 +77,7 @@ SwiperCore.use([
     styleUrl: './boq.component.scss'
 })
 export class BoqComponent extends BaseComponent {
-    displayedColumns: string[] = ['sourceFlag', 'select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
+    displayedColumns: string[] = ['sourceFlag', 'select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'l1', 'l2', 'w1', 'w2', 'cl', 'cw', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
     // optionalColumns: string[] = ['brandOrMake', 'discount', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gst', 'amountWithoutGST'];
     displayedClientProposal: string[] = ['slNo', 'referenceNo', 'proposalRequestType', 'proposalFor', 'createdBy', 'createdDate', 'status', 'amount'];
     displayedClientOrder: string[] = ['slNo', 'orderNo', 'ordertType', 'orderFrom', 'issuedBy', 'issueDate', 'dueDate', 'orderStatus', 'poStatus', 'progress', 'amount'];
@@ -91,7 +91,7 @@ export class BoqComponent extends BaseComponent {
     orderContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount"];
     userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
     designerColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-        'projectArea', 'projectStartDate', 'projectEndDate', 'designUrl', 'projectCompletion'];
+        'projectArea', 'assignedDesigner', 'designUrl', 'projectCompletion', 'projectStartDate', 'projectEndDate'];
     invoiceForm!: FormGroup; extraContentProposal!: FormGroup
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -113,7 +113,7 @@ export class BoqComponent extends BaseComponent {
     designerDataSource = new MatTableDataSource<any>();
     proposalTabKeys: string[] = []; dateDiff: any; roleid: any;
     proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
-    itemCodeLst: any; public userList: any; filteredUserList: any[] = []; recceStage: string = '';
+    public userList: any; filteredUserList: any[] = []; recceStage: string = '';
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
     filteredRecce: any[] = []; blockedStages: string[] = [];
     selectedProposalCount: any = null;
@@ -298,6 +298,12 @@ export class BoqComponent extends BaseComponent {
             quantity: [0],
             uom: [''],
             draftQuantity: [0],
+            l1: [''],
+            l2: [''],
+            w1: [''],
+            w2: [''],
+            cl: [''],
+            cw: [''],
             clientRate: [0],
             finalAmount: [0],
             brandOrMake: [''],
@@ -460,7 +466,6 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-
     openEditForm(element: any, content: any) {
         this.isEditMode = true;
         this.itemId = element.boqId;
@@ -537,7 +542,6 @@ export class BoqComponent extends BaseComponent {
                 brandOrMake = brandLine.split(':')[1]?.trim() || '';
             }
         }
-
         const payload = [{
             boqId: element.boqId ?? 0,
             elementUrl: element.elementUrl ?? '',
@@ -885,22 +889,44 @@ export class BoqComponent extends BaseComponent {
         const formValue = { ...this.elementForm.value };
         delete formValue.elementName;
         delete formValue.elementDescription;
+        const breadthNum = Number(this.elementForm.value.breadth || 0);
+        const lengthNum = Number(this.elementForm.value.length || 0);
+        const heightNum = Number(this.elementForm.value.height || 0);
+        const quantityNum = Number(this.elementForm.value.quantity || 0);
+        const w1Num = Number(this.elementForm.value.w1 || 0);
+        const w2Num = Number(this.elementForm.value.w2 || 0);
+        const l1Num = Number(this.elementForm.value.l1 || 0);
+        const l2Num = Number(this.elementForm.value.l2 || 0);
+        const clNum = breadthNum - (w1Num + w2Num);
+        const cwNum = lengthNum - (l1Num + l2Num); 
         const payload = {
             ...formValue,
-            elementNameAndDescription: `${this.elementForm.value.elementName || ''}`
-                + `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}`
-                + `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`, // 👈 embed brand
-            budgetRate: Number(this.elementForm.value.budgetRate),
-            clientRate: Number(this.elementForm.value.clientRate),
-            gstPrecent: Number(this.elementForm.value.gstPrecent),
-            hsn: Number(this.elementForm.value.hsn),
-            breadth: Number(this.elementForm.value.breadth),
-            height: Number(this.elementForm.value.height),
-            length: Number(this.elementForm.value.length),
-            quantity: Number(this.elementForm.value.quantity),
-            codeAndCategory: formValue.codeAndCategory?.name,
-            brandOrMake: this.elementForm.value.brandOrMake || ''
+            elementNameAndDescription:
+                `${this.elementForm.value.elementName || ''}` +
+                `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}` +
+                `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`,
+            budgetRate: Number(this.elementForm.value.budgetRate || 0).toString(),
+            clientRate: Number(this.elementForm.value.clientRate || 0).toString(),
+            gstPrecent: Number(this.elementForm.value.gstPrecent || 0).toString(),
+            hsn: Number(this.elementForm.value.hsn || 0).toString(),
+            breadth: breadthNum,
+            height: heightNum,
+            length: lengthNum,
+            quantity: quantityNum,
+            codeAndCategory: formValue.codeAndCategory?.name || '',
+            brandOrMake: this.elementForm.value.brandOrMake || '',
+            w1: w1Num.toString(),
+            w2: w2Num.toString(),
+            l1: l1Num.toString(),
+            l2: l2Num.toString(),
+            cl: clNum.toString(),
+            cw: cwNum.toString(),
+            designId:this.designId,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType
         };
+        console.log('Payload:', payload);
         this.switchService.saveElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {

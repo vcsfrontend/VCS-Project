@@ -444,7 +444,7 @@ export class NavService implements OnDestroy {
           path: '/dashboard/campaigns',
         }, 
         {
-          title: 'Deals',
+          title: 'Fresh Leads',
           icon: 'bi-grid side-menu__icon',
           dirchange: false,
           type: 'link',
@@ -518,6 +518,16 @@ export class NavService implements OnDestroy {
       active: false,
       selected: false,
       path: '/dashboard/projects',
+    },
+    {
+      title: 'Documents',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: ' bi-layers side-menu__icon',
+      active: false,
+      selected: false,
+      path: '/dashboard/documents',
     },
     // {
     //   title: 'Chatbot',
