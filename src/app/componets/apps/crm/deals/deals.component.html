@@ -230,6 +230,13 @@
                                         Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                     </button>
                                 </li>
+                                <li class="m-2">
+                                    <button class="btn btn-success label-btn label-end w-100"
+                                        (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">
+                                        Move To<i class="bi bi-arrows-move bt-icon label-btn-icon"></i>
+                                    </button>
+                                </li>
                                 <li class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'">
                                     <button class="btn btn-danger label-btn label-end w-100"
                                         (click)="deleteSingleLead(element.leadId)">
@@ -359,9 +366,10 @@
                                             <span class="me-3 text-primary">
                                                 {{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }}
                                             </span>
+
                                             <span class="fw-semibold me-1">By:</span>
                                             <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-ttm avatar-rounded me-1 border text-white fw-bold flex-shrink-0"
+                                                <div class="avatar avatar-sm avatar-rounded me-1 border text-white fw-bold flex-shrink-0"
                                                     [ngClass]="getUserColor(followup)">
                                                     <span class="d-flex align-items-center justify-content-center w-100 h-100">
                                                         {{ followup.followUpBy?.charAt(0) | uppercase }}
@@ -439,7 +447,7 @@
                 <p class="text-muted mb-0">No data found</p>
             </div>
         </div>
-        <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #paginator [pageSizeOptions]="[20, 100, 500]" showFirstLastButtons></mat-paginator>
         <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
@@ -488,6 +496,8 @@
                         data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Mail"><i class="ri-mail-line bt-icon"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)"
                         *ngIf="adoanAiRole == 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMove(content31,selectedLeads)"
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Move To"><i class="bi bi-arrows-move"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="appointmentModal(appointment1, element)"
                        *ngIf="adoanAiRole !== 'ADMIN' || userType== 1 || crmRole !=='ADMIN'"  data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"
@@ -747,9 +757,14 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Lead</button>
+            <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Save Lead</button>
             <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
+        </div>
+        <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
     </form>
 </ng-template>
@@ -1413,9 +1428,14 @@
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save
+            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked || uploadSpinner">Save
                 Status</button>
             <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+    <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 </ng-template>
@@ -1953,4 +1973,30 @@
       <button type="button" class="btn btn-primary" (click)="submitClose(modal);">Submit</button>
     </ng-container>
   </div>
+</ng-template>
+<ng-template #content31 id="addtask" let-modal>
+    <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit(modal)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label class="form-label">Select Campaign</label>
+                        <ng-select [items]="campaignList" bindLabel="campaignName" bindValue="id" placeholder="Select Campaign"
+                            formControlName="campaignId">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
 </ng-template>

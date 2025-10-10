@@ -91,7 +91,7 @@ export class LeadsComponent extends BaseComponent {
   selectedLeadForAppointment:any; selectedLeadForAppointmentObject:any;
   leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;crmRole:any;selecteTemplateFormSubmitted : boolean = false;
-
+  currentCampaignId : string ='';
   crmStaticStages = [ 
     {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -199,7 +199,6 @@ export class LeadsComponent extends BaseComponent {
   }
   appointmentModal(appointment1: any, element: any, appointmentData: any = null) {
    this.selectedLeadForAppointmentObject = element; // full lead object
-  console.log('Selected for appointment:', this.selectedLeadForAppointmentObject);
   if (!this.selectedLeads || this.selectedLeads.length === 0) {
       this.toastr.warning('Please select at least one lead');
       return;
@@ -916,7 +915,6 @@ export class LeadsComponent extends BaseComponent {
 
   appointmentFormSubmit(modal: any) {  
     const formData = this.appointmentForm.value;
-    console.log('the',this.leadId)
     const payload = {
       appointmenType: formData.appointmenType,
       date: formData.date,
@@ -955,7 +953,6 @@ export class LeadsComponent extends BaseComponent {
         type: this.selectedLeadForAppointment.type,
       }  : null  
     };
-    console.log('payload',payload);
     this.appointmentFormSubmitted = true;
     if(this.appointmentForm?.valid){
       this.switchService.saveAppointment(payload).subscribe({
@@ -2215,15 +2212,22 @@ export class LeadsComponent extends BaseComponent {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
       const formValue = this.followupLeadForm.value;
        const date = new Date(formValue.followupDate);
+          let formattedDate: string | null = null;
 
-      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
-      .getHours()
-      .toString()
-      .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+      if (formValue.followupDate) {
+      const date = new Date(formValue.followupDate);
 
-      const updatedTime = this.getFormattedNow();
+      if (!isNaN(date.getTime())) {
+        formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
+          .getHours()
+          .toString()
+          .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+      }
+      }
+
+    const updatedTime = this.getFormattedNow();
       const followUpDetails = {
         followupDate: formattedDate,
         followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
@@ -2264,7 +2268,6 @@ export class LeadsComponent extends BaseComponent {
           completionTime: formValue.completionTime || ''
         }
       };
-      console.log(followUpDetails)
       this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2332,17 +2335,27 @@ export class LeadsComponent extends BaseComponent {
   }
 
   leadToCampaignSubmit(modal: any) {
-    const currentCampaignId = this.campaignId;
-    this.selectedLeadId = this.selectedLeadData.leadId;
-    const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
-    const payload = {
-      leadId: this.selectedLeadId.toString(),
-      campaignId: selectedCampaignId,
-    };
-    this.moveLeadToAnotherCampaign(payload, modal);
-    this.getFetchLeadData(currentCampaignId);
-    this.campaignId = selectedCampaignId;
+  const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+  const currentCampaignId = this.campaignId;
+  let payloadArray: any[] = [];
+  if (this.selectedLeads && this.selectedLeads.length > 0) {
+    payloadArray = this.selectedLeads.map((lead: any) => ({
+      leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
+      campaignId: selectedCampaignId
+    }));
   }
+  else if (this.selectedLeadData) {
+    payloadArray = [
+      {
+        leadId: this.selectedLeadData.leadId.toString(),
+        campaignId: selectedCampaignId
+      }
+    ];
+  }
+    this.moveLeadToAnotherCampaign(payloadArray, modal);
+    this.getFetchLeadData(this.currentCampaignId);
+    this.campaignId = selectedCampaignId;
+}
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
@@ -2368,7 +2381,6 @@ export class LeadsComponent extends BaseComponent {
         idList: this.selectedLeads.map((lead: any) => lead.leadId), 
         executive: this.allocateForm.get('executive')?.value 
       };      
-      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2467,9 +2479,12 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-  isSelected(leadId: number): boolean {
-    return this.selectedLeads.some(l => l.leadId === leadId);
-  }
+ isSelected(leadId: number): boolean {
+  return this.selectedLeads.some((l: any) =>
+    typeof l === 'object' ? l.leadId === leadId : l === leadId
+  );
+}
+
 
   onSelectAllChange(event: any) {
     if (event.checked) {
@@ -2850,34 +2865,65 @@ export class LeadsComponent extends BaseComponent {
     this.filterApplied= false;
   }
 
-  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string },modal:any) {
-    this.switchService.ViewCrmLeads(data.leadId).subscribe(
-    (res) => {
-      const leadsEntry = res.leadsEntry;
-      leadsEntry.campaignId = data.campaignId;
-      // moveCampaign = data.campaignId;
-      leadsEntry.updatedBy = JSON.parse(this.userData).email;
-      leadsEntry.updatedTime = new Date().toISOString();
-      this.switchService.EditCrmLeads(leadsEntry).subscribe(
-        (res) => {
-          modal.close();
-            this.submitted = false;
-            this.leadForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          this.leadList = this.leadList.filter(
-          (lead: any) => lead.leadId !== leadsEntry.leadId
+  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string } | any[], modal: any) {
+  const payloadArray = Array.isArray(data) ? data : [data];
+  this.currentCampaignId = this.campaignId
+  let processedCount = 0;
+
+    payloadArray.forEach((item) => {
+      this.switchService.ViewCrmLeads(item.leadId).subscribe({
+        next: (res) => {
+          const leadsEntry = res.leadsEntry;
+          leadsEntry.campaignId = item.campaignId;
+          leadsEntry.updatedBy = JSON.parse(this.userData).email;
+          leadsEntry.updatedTime = new Date().toISOString();
+
+          this.switchService.EditCrmLeads(leadsEntry).subscribe({
+            next: (res) => {
+              // Remove the moved lead from local list
+              this.leadList = this.leadList.filter(
+                (lead: any) => lead.leadId !== leadsEntry.leadId
+              );
+
+              this.toastr.success(
+                `Lead ${leadsEntry.leadId} moved successfully!`,
+                'Lead Movement',
+                {
+                  timeOut: 3000,
+                  positionClass: 'toast-top-right',
+                }
+              );
+              processedCount++;
+              // Close modal only after all leads are processed
+              if (processedCount === payloadArray.length) {
+                modal.close();
+                this.submitted = false;
+                this.leadForm.reset();
+              }
+            },
+            error: (err) => {
+              this.toastr.error(
+                `Failed to move lead ${item.leadId}`,
+                'Error',
+                { timeOut: 3000 }
+              );
+            },
+          });
+        },
+        
+        error: () => {
+          this.toastr.error(
+            `Failed to fetch lead ${item.leadId} details`,
+            'Error',
+            { timeOut: 3000 }
           );
         },
-        (err) => {
-          
-        }
-      );
-    },
-  );
+        
+      });
+    });
+    this.getFetchLeadData(this.currentCampaignId);
   }
+
   onAppointmentSelect(selectedAppointment: any) {
   if (selectedAppointment) {
     this.appointmentForm.patchValue({
@@ -2937,8 +2983,6 @@ export class LeadsComponent extends BaseComponent {
       this.selectedLeads.includes(lead.leadId)
     );
     const emailList = selectedLeadsData.map((lead: any) => lead.email).filter(Boolean);
-        console.log(emailList);
-
     if (!emailList.length) {
       this.toastr.warning('No valid emails found in selected leads.');
       return;
@@ -3131,7 +3175,6 @@ export class LeadsComponent extends BaseComponent {
   openCompletionModal(content: any, lead: any) {
     this.selectedLead = lead;
     this.leadId = lead.leadId;
-    console.log(this.leadId);
     this.currentStep = 1;  
     this.completionForm.reset();
     this.leadCompletionsubmitted = false;
@@ -3341,6 +3384,14 @@ export class LeadsComponent extends BaseComponent {
     this.router.navigate(['/dashboard/campaigns']);
   }
 
+  openBulkMove(content31: any, selectedLeads: any[]) {
+  if (!selectedLeads || selectedLeads.length === 0) {
+    this.toastr.warning('Please select at least one lead.');
+    return;
+  }
+  this.selectedLeads = selectedLeads;
+  this.modalService.open(content31, { centered: true });
+  }
 
   
 

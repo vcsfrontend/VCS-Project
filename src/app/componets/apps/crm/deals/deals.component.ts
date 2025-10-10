@@ -86,7 +86,8 @@ export class DealsComponent extends BaseComponent {
   filteredUserList: any[] = [];leadCompletionsubmitted : boolean = false;
   leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;selecteTemplateFormSubmitted:boolean=false;
-  crmRole:string = '';
+  crmRole:string = '';LeadToCampaignForm!: FormGroup;leadList :any[]=[];  selectedLeadData: any;
+  campaignList: any[] = [];selectedCampaign: any;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -271,6 +272,10 @@ export class DealsComponent extends BaseComponent {
   openRight1(content1: any) {
     this.offcanvasService.open(content1, { position: 'end' });
   }
+  openRight3(content31: any, element: any) {
+    this.selectedLeadData = element;
+    this.modalService.open(content31, { centered: true });
+  }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
   }
@@ -369,8 +374,8 @@ export class DealsComponent extends BaseComponent {
     this.getFormTemplate();
     this.getAllEmailTemplates();
     this.getLeadEntry();
+    this.getCampaignData();
     this.selectedLeads = [];
-
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
     const yyyy = now.getFullYear();
@@ -421,6 +426,11 @@ export class DealsComponent extends BaseComponent {
       comments: ['', [Validators.required]],
       followUpBy: [''],
     });
+
+    this.LeadToCampaignForm = this.fb.group({
+      campaignId: [this.campaignId,],
+    });
+
 
     this.filterLeadForm = this.fb.group({
       action:[''],
@@ -734,6 +744,7 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
+    this.uploadSpinner = true
     if (this.leadForm?.valid) {
       this.switchService.AddCrmLeads(payload).subscribe({
         next: (res: any) => {
@@ -747,6 +758,7 @@ export class DealsComponent extends BaseComponent {
             this.submitted = false;
             this.leadForm.reset();
             this.getfetchLeadsIndividual();
+                this.uploadSpinner = false;
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
@@ -1333,13 +1345,20 @@ export class DealsComponent extends BaseComponent {
       const formValue = this.followupLeadForm.value;
        const date = new Date(formValue.followupDate);
 
-      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
-      .getHours()
-      .toString()
-      .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+       let formattedDate: string | null = null;
 
+      if (formValue.followupDate) {
+      const date = new Date(formValue.followupDate);
+
+      if (!isNaN(date.getTime())) {
+        formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
+          .getHours()
+          .toString()
+          .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+      }
+      }
       const updatedTime = this.getFormattedNow();
       const followUpDetails = {
         followupDate: formattedDate,
@@ -1381,7 +1400,6 @@ export class DealsComponent extends BaseComponent {
           completionTime: formValue.completionTime || ''
         }
       };
-      console.log(followUpDetails)
       this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1405,6 +1423,7 @@ export class DealsComponent extends BaseComponent {
       })
     }
   }
+
    private getFormattedNow(): string {
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -1492,7 +1511,6 @@ export class DealsComponent extends BaseComponent {
         idList: this.selectedLeads.map((lead: any) => lead.leadId), 
         executive: this.allocateForm.get('executive')?.value 
       };      
-      console.log(allocateData);
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2887,28 +2905,159 @@ export class DealsComponent extends BaseComponent {
     return 'bg-success-transparent';
   }
   
-  formatLocalDateTime(dateTimeString: string): string {
-  if (!dateTimeString) return "";
-  const normalized = dateTimeString.split('.')[0];
-  const date = new Date(normalized + "Z");
-  const pad = (n: number) => n.toString().padStart(2, '0');
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+formatLocalDateTime(dateTime: string | Date): string {
+    if (!dateTime) return "";
 
-  const dd = pad(date.getDate());
-  const mmm = months[date.getMonth()];
-  const yyyy = date.getFullYear();
+    let dateTimeString = dateTime.toString();
 
-  let hours = date.getHours();
-  const minutes = pad(date.getMinutes());
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12;
+    if (typeof dateTime === "object" && dateTime instanceof Date) {
+        dateTimeString = dateTime.toISOString();
+    }
 
-  return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+    const normalized = dateTimeString.split('.')[0];
+    const date = new Date(normalized + "Z");
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const dd = pad(date.getDate());
+    const mmm = months[date.getMonth()];
+    const yyyy = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = pad(date.getMinutes());
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
   }
 
+  getCampaignData() {
+    const payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    this.switchService.displayCampaignData(payload).subscribe({
+      next: (res: any[]) => {
+        if (Array.isArray(res)) {
+          this.campaignList = res.map((c: any) => ({
+            id: c.campgnId,
+            campaignName: c.campaignName,
+            agents: c.agents,
+          }));
+          const campaign = res.find((c) => c.campgnId === this.campaignId);
+          if (campaign) {
+            this.selectedCampaign = campaign;
+            const agentEmails = campaign.agents
+              ?.split(',')
+              ?.map((email: string) => email.trim())
+              ?.filter((email: string) => email);
+           
+          }
+        } else {
+          this.toastr.error('Unexpected response format.');
+        }
+      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error while fetching campaigns.');
+      // },
+    });
+  }
 
+  leadToCampaignSubmit(modal: any) {
+  const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+  const currentCampaignId = this.campaignId;
+  let payloadArray: any[] = [];
+  if (this.selectedLeads && this.selectedLeads.length > 0) {
+    payloadArray = this.selectedLeads.map((lead: any) => ({
+      leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
+      campaignId: selectedCampaignId
+    }));
+  }
+  else if (this.selectedLeadData) {
+    payloadArray = [
+      {
+        leadId: this.selectedLeadData.leadId.toString(),
+        campaignId: selectedCampaignId
+      }
+    ];
+  }
+    this.moveLeadToAnotherCampaign(payloadArray, modal);
   
+
+  this.getfetchLeadsIndividual();
+    this.campaignId = selectedCampaignId;
+  }
+
+  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string } | any[], modal: any) {
+  const payloadArray = Array.isArray(data) ? data : [data];
+
+  let processedCount = 0;
+
+  payloadArray.forEach((item) => {
+    this.switchService.ViewCrmLeads(item.leadId).subscribe({
+      next: (res) => {
+        const leadsEntry = res.leadsEntry;
+        leadsEntry.campaignId = item.campaignId;
+        leadsEntry.updatedBy = JSON.parse(this.userData).email;
+        leadsEntry.updatedTime = new Date().toISOString();
+
+        this.switchService.EditCrmLeads(leadsEntry).subscribe({
+          next: (res) => {
+            this.leadList = this.leadList.filter(
+              (lead: any) => lead.leadId !== leadsEntry.leadId
+            );
+
+            this.toastr.success(
+              `Lead ${leadsEntry.leadId} moved successfully!`,
+              'Lead Movement',
+              {
+                timeOut: 3000,
+                positionClass: 'toast-top-right',
+              }
+              
+            );
+            processedCount++;
+            // Close modal only after all leads are processed
+            if (processedCount === payloadArray.length) {
+              modal.close();
+              this.submitted = false;
+              this.leadForm.reset();
+            }
+            this.getfetchLeadsIndividual();
+          },
+          error: (err) => {
+            this.toastr.error(
+              `Failed to move lead ${item.leadId}`,
+              'Error',
+              { timeOut: 3000 }
+            );
+          },
+        });
+      },
+      
+      error: () => {
+        this.toastr.error(
+          `Failed to fetch lead ${item.leadId} details`,
+          'Error',
+          { timeOut: 3000 }
+        );
+      },
+    });
+  });
+  }
+  
+  openBulkMove(content31: any, selectedLeads: any[]) {
+  if (!selectedLeads || selectedLeads.length === 0) {
+    this.toastr.warning('Please select at least one lead.');
+    return;
+  }
+  this.selectedLeads = selectedLeads;
+  this.modalService.open(content31, { centered: true });
+  }
 
 
 }
