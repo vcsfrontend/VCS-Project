@@ -129,6 +129,7 @@ export class SidebarComponent implements AfterViewInit {
         
         case 'Tasks':
         case 'Dashboard':
+        case 'Knowledge':
         item.isVisible = true;
         break;
           
