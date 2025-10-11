@@ -529,6 +529,16 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/documents',
     },
+    {
+      title: 'Knowledge',
+      dirchange: false,
+      type: 'link',
+      linkType : 'internal',
+      icon: ' bi-layers side-menu__icon',
+      active: false,
+      selected: false,
+      path: '/dashboard/knowledge',
+    },
     // {
     //   title: 'Chatbot',
     //   icon: 'bi-layout-text-window side-menu__icon',
