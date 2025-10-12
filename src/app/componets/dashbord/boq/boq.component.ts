@@ -921,7 +921,7 @@ export class BoqComponent extends BaseComponent {
             l2: l2Num.toString(),
             cl: clNum.toString(),
             cw: cwNum.toString(),
-            designId:this.designId,
+            designId:this.designingId,
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType
@@ -977,11 +977,9 @@ export class BoqComponent extends BaseComponent {
                 hsn: Number(element?.hsn ?? formValue.hsn) || 0,
                 gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
                 amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-
                 designId: this.designingId,
                 roomName: element?.roomName || formValue.roomName || '',
                 itemCode: element?.itemCode || formValue.itemCode || '',
-
                 companyCode: this.userCompanyCode,
                 email: this.userEmail,
                 type: this.userType,

@@ -395,7 +395,14 @@
                         Followup Date
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                        <div>
+                            <div>
+                                {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                            </div>
+                            <div class="text-muted small">
+                                {{ element.followUpComment| slice:0:20 }}
+                            </div>
+                        </div>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="contact">
@@ -1205,8 +1212,8 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+    <div class="col-xl-12 col-lg-12 col-md-12 p-4 border-top">
+        <div class="position-relative justify-content-start d-flex gap-3 ">
             <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
@@ -1635,7 +1642,7 @@
     <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
+                <h6 class="modal-title" id="mail-ComposeLabel"><strong>Select Campaign</strong></h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
@@ -1653,6 +1660,7 @@
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button"class="btn btn-primary ms-2">Create Campaign</button>
             </div>
         </div>
     </form>

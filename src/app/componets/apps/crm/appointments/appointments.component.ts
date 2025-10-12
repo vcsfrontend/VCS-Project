@@ -17,11 +17,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { OverlayscrollbarsModule } from 'overlayscrollbars-ngx';
 
 @Component({
   selector: 'app-appointments',
   standalone: true,
-  imports: [CommonModule, FullCalendarModule,SharedModule,NgSelectModule,FormsModule,ReactiveFormsModule,MatTooltipModule,MaterialModuleModule,NgbTooltipModule],
+  imports: [CommonModule, FullCalendarModule,SharedModule,NgSelectModule,FormsModule,ReactiveFormsModule,MatTooltipModule,MaterialModuleModule,NgbTooltipModule,
+    OverlayscrollbarsModule
+  ],
   providers:[{ provide: ToastrService, useClass: ToastrService }],
   templateUrl: './appointments.component.html',
   styleUrl: './appointments.component.scss'
