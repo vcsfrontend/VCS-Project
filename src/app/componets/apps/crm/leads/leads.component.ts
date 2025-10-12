@@ -2335,27 +2335,27 @@ export class LeadsComponent extends BaseComponent {
   }
 
   leadToCampaignSubmit(modal: any) {
-  const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
-  const currentCampaignId = this.campaignId;
-  let payloadArray: any[] = [];
-  if (this.selectedLeads && this.selectedLeads.length > 0) {
-    payloadArray = this.selectedLeads.map((lead: any) => ({
-      leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
-      campaignId: selectedCampaignId
-    }));
-  }
-  else if (this.selectedLeadData) {
-    payloadArray = [
-      {
-        leadId: this.selectedLeadData.leadId.toString(),
+    const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+    const currentCampaignId = this.campaignId;
+    let payloadArray: any[] = [];
+    if (this.selectedLeads && this.selectedLeads.length > 0) {
+      payloadArray = this.selectedLeads.map((lead: any) => ({
+        leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
         campaignId: selectedCampaignId
-      }
-    ];
-  }
+      }));
+    }
+    else if (this.selectedLeadData) {
+      payloadArray = [
+        {
+          leadId: this.selectedLeadData.leadId.toString(),
+          campaignId: selectedCampaignId
+        }
+      ];
+    }
     this.moveLeadToAnotherCampaign(payloadArray, modal);
     this.getFetchLeadData(this.currentCampaignId);
     this.campaignId = selectedCampaignId;
-}
+  }
 
   onAllocateSubmit() {
     this.allocateSubmitted = true;
@@ -2865,64 +2865,33 @@ export class LeadsComponent extends BaseComponent {
     this.filterApplied= false;
   }
 
-  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string } | any[], modal: any) {
-  const payloadArray = Array.isArray(data) ? data : [data];
-  this.currentCampaignId = this.campaignId
-  let processedCount = 0;
-
-    payloadArray.forEach((item) => {
-      this.switchService.ViewCrmLeads(item.leadId).subscribe({
-        next: (res) => {
-          const leadsEntry = res.leadsEntry;
-          leadsEntry.campaignId = item.campaignId;
-          leadsEntry.updatedBy = JSON.parse(this.userData).email;
-          leadsEntry.updatedTime = new Date().toISOString();
-
-          this.switchService.EditCrmLeads(leadsEntry).subscribe({
-            next: (res) => {
-              // Remove the moved lead from local list
-              this.leadList = this.leadList.filter(
-                (lead: any) => lead.leadId !== leadsEntry.leadId
-              );
-
-              this.toastr.success(
-                `Lead ${leadsEntry.leadId} moved successfully!`,
-                'Lead Movement',
-                {
-                  timeOut: 3000,
-                  positionClass: 'toast-top-right',
-                }
-              );
-              processedCount++;
-              // Close modal only after all leads are processed
-              if (processedCount === payloadArray.length) {
-                modal.close();
-                this.submitted = false;
-                this.leadForm.reset();
-              }
-            },
-            error: (err) => {
-              this.toastr.error(
-                `Failed to move lead ${item.leadId}`,
-                'Error',
-                { timeOut: 3000 }
-              );
-            },
-          });
-        },
-        
-        error: () => {
-          this.toastr.error(
-            `Failed to fetch lead ${item.leadId} details`,
-            'Error',
-            { timeOut: 3000 }
-          );
-        },
-        
-      });
+  moveLeadToAnotherCampaign(
+    data: { leadId: string; campaignId: string } | any[],
+    modal: any
+  ) {
+    const payloadArray = Array.isArray(data) ? data : [data];
+    this.currentCampaignId = this.campaignId;
+    const leadIds = payloadArray.map(item => item.leadId);
+    const campaignId = payloadArray[0].campaignId;
+    console.log(campaignId, leadIds);
+    this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
+      next: (res) => {
+        this.leadList = this.leadList.filter(
+          (lead: any) => !leadIds.includes(lead.leadId)
+        );
+        this.toastr.success(`Leads moved successfully!`);
+        modal.close();
+        this.submitted = false;
+        this.leadForm.reset();
+        this.getFetchLeadData(this.currentCampaignId);
+      },
+      error: (err) => {
+        console.error('Error moving leads:', err);
+      }
     });
-    this.getFetchLeadData(this.currentCampaignId);
   }
+
+
 
   onAppointmentSelect(selectedAppointment: any) {
   if (selectedAppointment) {

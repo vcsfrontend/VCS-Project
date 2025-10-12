@@ -187,7 +187,12 @@ export class SwitherService {
   fetchAppointment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_scheduled_appointments`, data); } 
   createTask(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_task`, data); } 
   fetchTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks`, data); } 
-  fetchTasksCreatedBy(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks_created_by`, data); } 
+  fetchTasksCreatedBy(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks_created_by`, data); }
+  update_existing_campaign(leadIds: string[] | string, campaignId: string): Observable<any> {
+    const leadIdsParam = Array.isArray(leadIds) ? leadIds.join('&leadIds=') : leadIds;
+    const url = `${this.apiUrl}designation/add_leads_exsting_campaign?leadIds=${leadIdsParam}&campaignId=${campaignId}`;
+    return this.http.get(url);
+  }
   updateTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/edit_task`, data); } 
   updateLeadCompletion(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/update_lead_completion_status`, data); } 
 
