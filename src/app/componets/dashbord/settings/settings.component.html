@@ -1277,7 +1277,8 @@
                                     <div class="hstack gap-2 fs-1">
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"
                                         (click)="openEditFromSelected(role, Content112)"><i class="ri-edit-line"></i></a>
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"><i class="ri-delete-bin-line"></i></a>
+                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
+                                        (click)="deleteRole(role.id)"><i class="ri-delete-bin-line"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -1525,7 +1526,7 @@
                                 <td>
                                     <div class="hstack gap-2 fs-1">
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                      (click)="deletePermission(assignedRole.id)"  ><i class="ri-delete-bin-line"></i></a>
+                                      (click)="deleteDepartmentRole(assignedRole.id)"  ><i class="ri-delete-bin-line"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -1569,7 +1570,7 @@
                 <div class="card-title d-flex align-items-center">
                     <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light me-2">
                         <i class="ri-arrow-left-line"></i>
-                    </a>Assigne Permission To Role
+                    </a>Assigne Permission To Department Role
                 </div>
                 <div class="d-flex flex-wrap align-items-center gap-2">
                     <div class="input-group" style="max-width: 150px;">
@@ -1586,32 +1587,95 @@
                         <thead class="custom-header">
                             <tr>
                                 <th scope="col">S.No</th>
-                                <th scope="col">Name</th>
                                 <th scope="col">Description</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let assignedRole of assignedRoleLst; let i = index">
+                        <tbody *ngFor="let assignedPermission of assignedPermissionLst; let i = index">
                             <tr>
                                 <td> {{ i + 1 }}</td>
-                                <td>
-                                    <div class="d-flex align-items-center lh-1">
-                                        <div class="me-2">
-                                            <span class="avatar avatar-sm avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center"
-                                                [ngClass]="getDeptColor(assignedRole.name)">
-                                                {{ assignedRole.name?.charAt(0) | uppercase }}
-                                            </span>
-                                        </div>
-                                        <div>{{assignedRole.name}}</div>
-                                    </div>
-                                </td>
-                                <td>{{assignedRole.description}}</td>
+                               
+                                <td>{{assignedPermission.description}}</td>
                                 <td>
                                     <div class="hstack gap-2 fs-1">
-                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"
-                                        (click)="editPermissionFormSelected(assignedRole, Content114)"><i class="ri-edit-line"></i></a>
+                                        
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                      (click)="deletePermission(assignedRole.id)"  ><i class="ri-delete-bin-line"></i></a>
+                                      (click)="deletePermission(assignedPermission.id)"  ><i class="ri-delete-bin-line"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer border-top-0">
+                <div class="d-flex flex-wrap align-items-center">
+                    <div>
+                        Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
+                    </div>
+                    <div class="ms-auto">
+                        <nav aria-label="Page navigation" class="pagination-style-4">
+                            <ul class="pagination mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="javascript:void(0);">
+                                        Prev
+                                    </a>
+                                </li>
+                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                <li class="page-item">
+                                    <a class="page-link text-primary" href="javascript:void(0);">
+                                        next
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title d-flex align-items-center">
+                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light me-2">
+                        <i class="ri-arrow-left-line"></i>
+                    </a>Assigne User to department Role
+                </div>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <div class="input-group" style="max-width: 150px;">
+                        <input type="text" class="form-control" placeholder="Search Departments" aria-describedby="button-addon2">
+                        <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
+                                class="ri-search-line text-muted"></i></button>
+                    </div>
+                    <button class="btn btn-primary btn-sm" (click)="openLg(Content17);">Assign User</button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table text-nowrap">
+                        <thead class="custom-header">
+                            <tr>
+                                <th scope="col">S.No</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let assignedUser of assignedUserLst; let i = index">
+                            <tr>
+                                <td> {{ i + 1 }}</td>
+                               
+                                <td>{{assignedUser.userEmail}}</td>
+                                <td>{{assignedUser.description}}</td>
+                                <td>
+                                    <div class="hstack gap-2 fs-1">
+                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
+                                        ><i class="ri-delete-bin-line"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -1649,7 +1713,7 @@
 </div>
 
 <ng-template #Content112 let-modal>
-    <form [formGroup]="roleForm" (ngSubmit)="onRoleSubmit()">
+    <form [formGroup]="roleForm" (ngSubmit)="onRoleSubmit(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
                 {{ isEditmode ? 'Edit Role' : 'Create Role' }}
@@ -1729,7 +1793,7 @@
 </ng-template>
 
 <ng-template #Content114 let-modal>
-    <form [formGroup]="createPermissionForm" (ngSubmit)="onPermissionSubmit()">
+    <form [formGroup]="createPermissionForm" (ngSubmit)="onPermissionSubmit(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
                 {{ isEditmode ? 'Edit Permission' : 'Create Permission' }}
@@ -1769,10 +1833,10 @@
 </ng-template>
 
 <ng-template #Content15 let-modal>
-    <form [formGroup]="assignRoleForm" (ngSubmit)="assignRole()">
+    <form [formGroup]="assignRoleForm" (ngSubmit)="assignRole(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
-                Assign Role
+                Assign Role To Department
             </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
@@ -1799,7 +1863,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Permission</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
@@ -1807,10 +1871,10 @@
 </ng-template>
 
 <ng-template #Content16 let-modal>
-    <form [formGroup]="assignPermissionForm" (ngSubmit)="assignPermission()">
+    <form [formGroup]="assignPermissionForm" (ngSubmit)="assignPermission(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
-                Assign Role
+                Assign Permission To Department Role
             </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
@@ -1837,7 +1901,51 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Permission</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">cancel</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #Content17 let-modal>
+    <form [formGroup]="assignUserForm" (ngSubmit)="assignUserToDeptRole(modal)">
+        <div class="modal-header">
+            <h6 class="modal-title" id="exampleModalLgLabel">
+                Assign User To Department
+            </h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3 scrollable-content">
+                <div class="col-xl-6">
+                    <label for="name" class="form-label">Select User</label>
+                    <ng-select formControlName="userEmail" [items]="userLst" bindLabel="email" bindValue="email"
+                        placeholder="Select an Permission">
+                    </ng-select>
+                </div>
+                <div class="col-xl-6">
+                    <label for="name" class="form-label">Select Department</label>
+                    <ng-select formControlName="depRole" [items]="assignedRoleLst" bindLabel="departmentName" bindValue="id"
+                        placeholder="Select an Department" (change)="onAssignRoleChange($event)">
+                    </ng-select>
+                </div>
+                <!-- <div class="col-xl-6">
+                    <label for="name" class="form-label">Select Role</label>
+                    <ng-select formControlName="depRole" [items]="assignedRoleLst" bindLabel="roleName" bindValue="id"
+                        placeholder="Select an Role" (change)="onAssignRoleChange($event)">
+                    </ng-select>
+                </div> -->
+                 <div class="col-lg-12">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" rows="3" formControlName="description"
+                        placeholder="Department Description"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>

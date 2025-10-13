@@ -221,6 +221,7 @@ export class SwitherService {
   addRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/roles/createRole`, data); }
   getRole(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/roles/listRoles?companyCode=${companyCode}`); }  
   updateRole(id:any,name:any,description :any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/${id}?name=${name}&description=${description}`,"");} 
+  deleteRole(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/roles/deleteRole/${id}`); }  
 
   createDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/departments/createDepartment`, data); }
   getDepartment(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/departments/listDepartments?companyCode=${companyCode}`); }  
@@ -235,10 +236,25 @@ export class SwitherService {
   deletePermission(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/permissions/deletePermission/${id}`); }  
 
   assignRoleToDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/department-roles/assignRoleToDepartment`, data); }
-  getAssignedRoles(departmentId:any ,companyCode : any): Observable<any> { return this.http.get(`${this.apiUrl}api/department-roles/listRolesByDepartment?departmentId=${departmentId}&companyCode=${companyCode}`); } 
+  getAssignedRoles(departmentIds:number[] ,companyCode : any): Observable<any> { 
+    const deptRoleParams = departmentIds.map(id => `departmentIds=${id}`).join('&');
+    const url =`${this.apiUrl}api/department-roles/listRolesByDepartment?${deptRoleParams}&companyCode=${companyCode}`;
+    return this.http.get(url); 
+  } 
   deleteAssignedRoles(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/department-roles/deleteDepartmentRole/${id}`); }  
 
   assignPermissionToRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/role-permissions/assignPermissionToDeptRole`, data); }
+  getAssignPermissions(deptRoleIds: number[], companyCode: string): Observable<any> {
+    const deptRoleParams = deptRoleIds.map(id => `deptRoleIds=${id}`).join('&');
+    const url = `${this.apiUrl}api/role-permissions/listPermissionsByDeptRole?${deptRoleParams}&companyCode=${companyCode}`;
+
+    return this.http.get(url);
+  }
+
+  assignUserToDeptRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/user-mapping/assign`, data); }
+  getAssignUser(email  :any ,companyCode : any): Observable<any> { return this.http.get(`${this.apiUrl}api/user-mapping/${email }?companyCode=${companyCode}`); } 
+
+  getUserAccess(email :any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/${email}/access`); }  
 
   
   
