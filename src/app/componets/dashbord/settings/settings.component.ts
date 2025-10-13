@@ -86,16 +86,19 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   quotationSubmitted = false; quotationmarginsubmit:boolean=false;projectconfigsubmit:boolean=false;
   submittedQuotationNumber :any;addmargindisable:boolean=false; f1submitCount:number=0;
   userEmail:any;roleForm !: FormGroup; roleLst:any; roleCreationId : number =0; roleName :string ="";
+  deptName : string ="";
   isEditmode : boolean = false; departmentList: any[] = []; departmentId : number =0; departmentName :string ="";
   departmentDescription : string =""; roleDescription : string ='';roleSubmitted : boolean = false;
   createPermissionForm !:FormGroup; permissionFormSubmitted : boolean= false;
   permissionList : any[]=[];permissionId : number = 0; permissionName : string =''; permissionDescription : string = '';
   appointmentId : number =0;assignRoleForm ! : FormGroup;selectedDepartment: any = {};
-  selectedRole : any ={};assignedRoleLst : any[]=[]; depId : any;responseList:any; selectedAssignedRole: any ={};
-  selectedPermissionRole : any ={};assignRoleResponse : any ={};selectedRoleObj: any;
+  selectedRole : any ={};assignedRoleLst : any[]=[]; depId : number=0;responseList:any; selectedAssignedRole: any ={};
+  selectedPermissionRole : any ={};assignRoleResponse : any ={};selectedRoleObj: any;selectedDeptObj : any;
   selectedId: number = 0;  
-  savedDepartmentRoles: any[] = [];
-  assignPermissionForm ! :FormGroup;
+    savedRoles: { [companyCode: string]: any[] } = {};
+  savedDepartmentRoles: any[] = [];assignedPermissionLst : any[]=[];
+  assignPermissionForm ! :FormGroup;assignUserForm ! : FormGroup;assignUserEmail : string = '';
+  assignedUserLst : any[]=[];modal:any;
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -253,7 +256,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-
+     const storedRoles = localStorage.getItem('savedRoles');
+    if (storedRoles) {
+      this.savedRoles = JSON.parse(storedRoles);
+      console.log('Loaded savedRoles from localStorage:', this.savedRoles);
+    }
     this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
@@ -262,9 +269,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.getAllDepartments();
     this.getAllPermissions();
     this.getAssignedRoles();
+    this.getAssignedDeptRolePermissions();
+    this.getAssignedUsers();
+    this.getUsersAccess();
     this.userEmail = JSON.parse(this.userData).email;
-
-    
     this.saveData = {
       id: 0,
       companyName: JSON.parse(this.userData).companyName,
@@ -405,6 +413,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       depRole : [0],
       description :[''],
     })
+
+     this.assignUserForm = this.fb.group({
+      userEmail :[''],
+      depRole : [0],
+      description :[''],
+    })
+
+    
 
     // setTimeout(() => {
 
@@ -1851,6 +1867,16 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       console.log("Selected Role:", selectedRole);
     }
   }
+   selectDepartment(index: number) {
+    if (Array.isArray(this.departmentList) && this.departmentList.length > index) {
+      const selectedDept = this.departmentList[index];
+
+      this.deptName = selectedDept.name;
+      this.roleDescription = selectedDept.description;
+
+      console.log("Selected Role:", selectedDept);
+    }
+  }
 
   get i() {
     return this.roleForm.controls;
@@ -1895,12 +1921,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
   }
 
-  onRoleSubmit(){
+  onRoleSubmit(modal ?: any){
     if(this.isEditmode){
       this.updateRoles();
     }
     else{
-      this.addRoles();
+      this.addRoles(modal);
     }
   }
 
@@ -1931,7 +1957,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
   }
 
-  addRoles(){
+  addRoles(modal:any){
     const rolesData = this.roleForm.value;
     const roleName = this.roleForm.value.name;
     if (this.isRoleExists(roleName)) {
@@ -1954,7 +1980,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.addRole(payload).subscribe({
       next:()=>{
         this.toastr.success('role added successfully');
-        this.roleSubmitted = false
+        modal.close()
+        this.roleSubmitted = false;
         this.getRoles();
       },
     })
@@ -1982,6 +2009,21 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       },
     })
   }
+  deleteRole(id: number) {
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this Role?')) {
+      this.switchService.deleteRole(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Role deleted successfully');
+          this.getRoles();
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
 
   createDepartment(modal: any) {
     const deptName = this.createDepartmentForm.value.name;
@@ -1999,6 +2041,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       next: (res) => {
         this.toastr.success('Department created successfully');
         if (modal) {modal.close(); } 
+        modal.dismiss();
         this.getAllDepartments();
       }
     });
@@ -2077,7 +2120,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     return this.createPermissionForm.controls;
   }
 
-  createPermission(modal:any) {
+  createPermission(modal?:any) {
     const permissionName = this.createPermissionForm.value.name;
     if (this.isPermissionExists(permissionName)) {
       this.toastr.error("permission already exists!");
@@ -2092,7 +2135,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.createPermission(payload).subscribe({
       next: (res) => {
         this.toastr.success('Permission created successfully');
-        if (modal) {modal.close(); } 
+        modal.close();
         this.getAllPermissions();
       }
     });
@@ -2124,7 +2167,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   deletePermission(id: number) {
     if (!id) return;
-    if (confirm('Are you sure you want to delete this department?')) {
+    if (confirm('Are you sure you want to delete this Permission?')) {
       this.switchService.deletePermission(id).subscribe({
         next: (res: any) => {
           this.toastr.success('permission deleted successfully');
@@ -2153,45 +2196,57 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     );
   }
 
-  storeDepartmentRole(response: any, companyCode: string) {
-    const key = `savedDepartmentRoles_${companyCode}`;
-    let existingRoles = JSON.parse(localStorage.getItem(key) || "[]");
-    existingRoles.push(response);
-    localStorage.setItem(key, JSON.stringify(existingRoles));
-
-    console.log(`Saved roles for company ${companyCode}:`, existingRoles);
+  storeDepartmentRole(response: any, companyCode: string): void {
+    if (!this.savedRoles[companyCode]) {
+      this.savedRoles[companyCode] = [];
+    }
+    this.savedRoles[companyCode].push(response);
+    console.log(`Saved roles for company ${companyCode}:`, this.savedRoles[companyCode]);
+    localStorage.setItem('savedRoles', JSON.stringify(this.savedRoles));
   }
 
-
-  assignRole(){
+  assignRole(modal:any) {
     const payload = {
-      depRole : this.assignRoleForm.value.depRole,
-      roleRole : this.assignRoleForm.value.roleRole,
-      department : this.selectedDepartment,
-      role : this.selectedRole,
-      description : this.assignRoleForm.value.description,
+      depRole: this.assignRoleForm.value.depRole,
+      roleRole: this.assignRoleForm.value.roleRole,
+      department: this.selectedDepartment,
+      role: this.selectedRole,
+      description: this.assignRoleForm.value.description,
       companyName: JSON.parse(this.userData)?.companyName,
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type,
-    }
-    console.log(payload)
+    };
+
+    console.log('Payload:', payload);
+
     this.switchService.assignRoleToDepartment(payload).subscribe({
       next: (res) => {
-        this.toastr.success('assigned successfully');
+        this.toastr.success('Assigned successfully');
+        modal.close();
         this.assignRoleResponse = res;
         this.savedDepartmentRoles.push(res);
-        this.getAssignedRoles()
-        this.depId = res?.department?.id;
+        this.depId = res.id;
         console.log('Department ID from response:', this.depId);
-        this.storeDepartmentRole(res, payload.companyCode);
-        
+        this.handleResponse(res, payload);
+        this.getAssignedRoles();
+      },
+      error: (err) => {
+        this.toastr.error('Assignment failed');
+        console.error(err);
       }
     });
   }
-  getSavedDepartmentRoles(companyCode: string) {
-    const key = `savedDepartmentRoles_${companyCode}`;
-    return JSON.parse(localStorage.getItem(key) || "[]");
+
+  handleResponse(res: any, payload: any) {
+    this.depId = res.id;
+    console.log('Department ID from response:', this.depId);
+    this.storeDepartmentRole(res, payload.companyCode);
   }
+
+  getSavedDepartmentRoles(companyCode: string): any[] {
+    return this.savedRoles[companyCode] || [];
+  }
+
 
   onDepartmentChange(id: number) {
     console.log('Selected Department ID:', id);
@@ -2203,43 +2258,99 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.selectedRole = id;
   }
 
-  getAssignedRoles(){
-     const departmentId =17;
-     const companyCode = JSON.parse(this.userData)?.companyCode;
-      console.log(departmentId,companyCode);
-    this.switchService.getAssignedRoles(departmentId,companyCode).subscribe({
-      next: (res) => {
-        this.toastr.success('assigned successfully');
-        this.assignedRoleLst = res;
-        console.log( this.savedDepartmentRoles);
-        this.assignedRoleLst = this.responseList.map((item:any) => ({
-          id: item.id,           
-          roleName: item.role.name 
-        }));
+  getAllDepartmentIds(companyCode: string): number[] {
+  // Get all saved roles for the company
+  const roles = this.getSavedDepartmentRoles(companyCode);
 
+  if (!roles || roles.length === 0) return [];
+
+  // Map all department IDs
+  const departmentIds = roles
+    .map(role => role.department?.id)
+    .filter(id => id !== undefined && id !== null);
+
+  console.log('All department IDs:', departmentIds);
+  return departmentIds;
+  }
+
+
+  getAssignedRoles(){
+  const companyCode = JSON.parse(this.userData)?.companyCode;
+  const savedRolesObj = JSON.parse(localStorage.getItem('savedRoles') || '{}');
+  const savedRoles = savedRolesObj[companyCode] || [];
+
+  if (!Array.isArray(savedRoles) || savedRoles.length === 0) {
+    console.warn('No saved roles found for company:', companyCode);
+    return;
+  }
+  const departmentIds: number[] = Array.from(
+    new Set(
+      savedRoles
+        .map((role: any) => Number(role?.department?.id || role?.id))
+        .filter((id: any) => !isNaN(id))
+    )
+  );
+  console.log('Unique Department IDs:', departmentIds, 'Company Code:', companyCode);
+    this.switchService.getAssignedRoles(departmentIds,companyCode).subscribe({
+      next: (res) => {
+        this.assignedRoleLst = res;
+       
       }
     });
   }
 
+  deleteDepartmentRole(id: number) {
+    if (!id) return;
+      const companyCode = JSON.parse(this.userData)?.companyCode;
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteAssignedRoles(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('permission deleted successfully');
+          this.getAssignedRoles();
+          if (this.savedRoles[companyCode]) {
+        this.savedRoles[companyCode] = this.savedRoles[companyCode].filter(
+          (r: any) => r.id !== id
+        );
+      }
+
+      // ✅ 2. Also remove from localStorage
+      const savedLocal = JSON.parse(localStorage.getItem('savedDepartmentRoles') || '[]');
+      const updatedLocal = savedLocal.filter((r: any) => r.id !== id);
+
+      localStorage.setItem('savedDepartmentRoles', JSON.stringify(updatedLocal));
+
+      console.log('✅ Updated localStorage after delete:', updatedLocal);
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+
   onAssignRoleChange(id: any) {
     this.selectedRoleObj = this.assignedRoleLst.find((r: any) => r.id === id);
-  console.log('Selected Role Object:', this.selectedRoleObj);
+    console.log('Selected Role Object:', this.selectedRoleObj);
   }
+ 
   onPermissionChange(id: number) {
     console.log('Selected Department ID:', id);
     this.selectedPermissionRole = id;
   }
 
-  getSavedDepartmentRoleById(companyCode: string, id: number) {
+  getSavedDepartmentRoleById(companyCode: string, id: number): any {
     const roles = this.getSavedDepartmentRoles(companyCode);
+    console.log('roles', roles);
     return roles.find((role: any) => role.id === id);
   }
 
 
-   assignPermission(){
+   assignPermission(modal:any){
     let companyCode = JSON.parse(this.userData)?.companyCode;
     let selectedId = this.assignPermissionForm.value.depRole;
-      const departmentRole = this.getSavedDepartmentRoleById(companyCode,selectedId );
+    console.log(selectedId);
+    const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
     const payload = {
       depRole : this.assignPermissionForm.value.depRole,
       permissionRole : this.assignPermissionForm.value.permissionRole,
@@ -2251,12 +2362,84 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       type: JSON.parse(this.userData)?.type,
     }
     console.log(payload)
-    // this.switchService.assignPermissionToRole(payload).subscribe({
-    //   next: (res) => {
-    //     this.toastr.success('assigned successfully');
+    this.switchService.assignPermissionToRole(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('assigned successfully');
+        modal.close();
+        this.getAssignedDeptRolePermissions();
+      }
+    });
+  }
+
+  getAssignedDeptRolePermissions(){
+     const companyCode = JSON.parse(this.userData)?.companyCode;
+    const savedRolesObj = JSON.parse(localStorage.getItem('savedRoles') || '{}');
+    const savedRoles = savedRolesObj[companyCode] || [];
+
+    if (!Array.isArray(savedRoles) || savedRoles.length === 0) {
+      console.warn('No saved roles found for company:', companyCode);
+      return;
+    }
+    const deptRoleIds: number[] = Array.from(
+      new Set(
+        savedRoles
+          .map((role: any) => Number(role?.id))
+          .filter((id: any) => !isNaN(id))
+      )
+    );
+    console.log('Unique Department IDs:', deptRoleIds, 'Company Code:', companyCode);
+    this.switchService.getAssignPermissions(deptRoleIds,companyCode).subscribe({
+      next: (res) => {
+        this.assignedPermissionLst = res;
+        console.log( this.assignedPermissionLst);
+       
+      }
+    });
+  }
+
+  assignUserToDeptRole(modal?: any){
+    let companyCode = JSON.parse(this.userData)?.companyCode;
+    let selectedId = this.assignUserForm.value.depRole;
+    console.log(selectedId);
+    const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
+    const payload = {
+      userEmail : this.assignUserForm.value.userEmail,
+      depRole : this.assignUserForm.value.depRole,
+      departmentRole : departmentRole,
+      description : this.assignUserForm.value.description,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+    }
+    console.log(payload)
+    this.switchService.assignUserToDeptRole(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('assigned User to department Role successfully');
+        modal.close();
+        this.getAssignedUsers();
         
-    //   }
-    // });
+      }
+    });
+  }
+  getAssignedUsers(){
+     const email =JSON.parse(this.userData).email;
+     const companyCode = JSON.parse(this.userData)?.companyCode;
+      console.log('assigned users',email,companyCode);
+    this.switchService.getAssignUser(email,companyCode).subscribe({
+      next: (res) => {
+        this.assignedUserLst = res;
+      }
+    });
+  }
+
+   getUsersAccess(){
+     const email =JSON.parse(this.userData).email;
+      console.log('assigned users',email);
+    this.switchService.getUserAccess(email).subscribe({
+      next: (res) => {
+        
+      }
+    });
   }
 
 }
