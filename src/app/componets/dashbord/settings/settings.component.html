@@ -1526,7 +1526,7 @@
                                 <td>
                                     <div class="hstack gap-2 fs-1">
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                      (click)="deleteDepartmentRole(assignedRole.id)"  ><i class="ri-delete-bin-line"></i></a>
+                                      (click)="deleteAssignUsers(assignedRole)"  ><i class="ri-delete-bin-line"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -1600,7 +1600,7 @@
                                     <div class="hstack gap-2 fs-1">
                                         
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                      (click)="deletePermission(assignedPermission.id)"  ><i class="ri-delete-bin-line"></i></a>
+                                      (click)="deleteAssignPermission(assignedPermission)"  ><i class="ri-delete-bin-line"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -1803,14 +1803,26 @@
         </div>
         <div class="modal-body overflowImportant">
             <div class="row gy-3 scrollable-content">
-                <div class="col-lg-12">
+                <!-- <div class="col-lg-12">
                     <label for="name" class="form-label">Permission Name</label>
                     <input type="text" class="form-control" id="name" placeholder="Permission Name" formControlName="name"
                         [ngClass]="{ 'is-invalid': permissionFormSubmitted && pf['name'].errors }">
                     <div *ngIf="permissionFormSubmitted && pf['name'].errors" class="invalid-feedback">
                         <div *ngIf="pf['name'].errors['required']">Permission name is required</div>
                     </div>
+                </div> -->
+                <div class="col-lg-12">
+                    <label for="permissionName" class="form-label">Permission Name</label>
+                
+                    <ng-select [items]="permissionCategories" bindLabel="name" bindValue="name" formControlName="name"
+                        placeholder="Select Permission" [ngClass]="{ 'is-invalid': permissionFormSubmitted && pf['name'].errors }">
+                    </ng-select>
+                
+                    <div *ngIf="permissionFormSubmitted && pf['name'].errors" class="invalid-feedback">
+                        <div *ngIf="pf['name'].errors['required']">Permission name is required</div>
+                    </div>
                 </div>
+
                 <div class="col-lg-12">
                     <label for="description" class="form-label">Permission Description</label>
                     <textarea class="form-control" id="description" rows="3" formControlName="description"
@@ -1825,7 +1837,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Save Permission</button>
+            <button type="submit" class="btn btn-primary">{{ isEditmode ? 'Edit Permission' : 'Create Permission' }}</button>
             <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>

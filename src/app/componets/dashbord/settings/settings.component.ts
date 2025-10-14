@@ -98,7 +98,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     savedRoles: { [companyCode: string]: any[] } = {};
   savedDepartmentRoles: any[] = [];assignedPermissionLst : any[]=[];
   assignPermissionForm ! :FormGroup;assignUserForm ! : FormGroup;assignUserEmail : string = '';
-  assignedUserLst : any[]=[];modal:any;
+  assignedUserLst : any[]=[];modal:any;permissiondeptroleId : number =0;assignPermissionId : number=0;
+  userdeptroleId:any;email : string ='';
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -1909,6 +1910,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   openEditAppointmentForm(element: any, content114: any) {
     this.isEditmode = true;
     this.permissionId = element.id;
+    this.permissionName = element.name;
+    this.permissionDescription = element.description;
     this.createPermissionForm.reset();
     this.createPermissionForm.patchValue({
       name: element.name,
@@ -1938,7 +1941,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
 
     if (this.isEditmode) {
-      this.updateDepartment();
+      this.updateDepartment(modal);
     } else {
       this.createDepartment(modal);
     }
@@ -1951,7 +1954,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     }
 
     if (this.isEditmode) {
-      this.updatePermission();
+      this.updatePermission(modal);
     } else {
       this.createPermission(modal);
     }
@@ -2040,6 +2043,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.createDepartment(payload).subscribe({
       next: (res) => {
         this.toastr.success('Department created successfully');
+        this.DepartmentFormSubmitted = false;
         if (modal) {modal.close(); } 
         modal.dismiss();
         this.getAllDepartments();
@@ -2061,7 +2065,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     });
   }
 
-  updateDepartment() {
+  updateDepartment(modal:any) {
     const departmentId = this.departmentId;
     const departmentName = this.departmentName;
     const description = this.departmentDescription;
@@ -2069,6 +2073,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.updateDepartment(departmentId, departmentName, description).subscribe({
       next: (res: any) => {
         this.toastr.success('Department updated successfully');
+        modal.close();
+        this.getAllDepartments();
       },
     });
   }
@@ -2135,6 +2141,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.createPermission(payload).subscribe({
       next: (res) => {
         this.toastr.success('Permission created successfully');
+        this.permissionFormSubmitted = false;
         modal.close();
         this.getAllPermissions();
       }
@@ -2154,7 +2161,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       }
     });
   }
-  updatePermission() {
+  updatePermission(modal:any) {
     const permissionId = this.permissionId;
     const permissionName = this.permissionName;
     const description = this.permissionDescription;
@@ -2162,6 +2169,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.updatePermission(permissionId, permissionName, description).subscribe({
       next: (res: any) => {
         this.toastr.success('Department updated successfully');
+        this.getAllPermissions();
+        modal.close()
       },
     });
   }
@@ -2381,22 +2390,41 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       return;
     }
     const deptRoleIds: number[] = Array.from(
-      new Set(
         savedRoles
           .map((role: any) => Number(role?.id))
-          .filter((id: any) => !isNaN(id))
-      )
     );
     console.log('Unique Department IDs:', deptRoleIds, 'Company Code:', companyCode);
     this.switchService.getAssignPermissions(deptRoleIds,companyCode).subscribe({
       next: (res) => {
         this.assignedPermissionLst = res;
-        console.log( this.assignedPermissionLst);
-       
+         if (this.assignedPermissionLst.length > 0) {
+          this.permissiondeptroleId = this.assignedPermissionLst[0].departmentRoleId;
+          this.assignPermissionId = this.assignedPermissionLst[0].permissionId;
+        }
+        console.log('Assigned Permissions:', this.assignPermissionId);
+        console.log('Department Role ID:', this.permissiondeptroleId);
       }
     });
   }
-
+  deleteAssignPermission(assignedPermission:any) {
+    const deptRoleId  = assignedPermission?.departmentRoleId || assignedPermission?.depRoleId;
+    const permissionId  = assignedPermission?.permissionId || assignedPermission?.id;
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    console.log(deptRoleId,permissionId,companyCode);
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteAssignedPermission(deptRoleId,permissionId,companyCode).subscribe({
+        next: (res: any) => {
+          this.toastr.success('permission deleted successfully');
+          this.getAssignedDeptRolePermissions();
+         
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
   assignUserToDeptRole(modal?: any){
     let companyCode = JSON.parse(this.userData)?.companyCode;
     let selectedId = this.assignUserForm.value.depRole;
@@ -2415,6 +2443,11 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.assignUserToDeptRole(payload).subscribe({
       next: (res) => {
         this.toastr.success('assigned User to department Role successfully');
+         const userEmail = res?.userEmail || res?.email;
+         if (userEmail) {
+          localStorage.setItem('userEmail', userEmail);
+          console.log('✅ Stored user email in local storage:', userEmail);
+          }
         modal.close();
         this.getAssignedUsers();
         
@@ -2428,11 +2461,31 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.getAssignUser(email,companyCode).subscribe({
       next: (res) => {
         this.assignedUserLst = res;
+         if (this.assignedUserLst.length > 0) {
+          this.userdeptroleId = this.assignedUserLst[0].departmentRoleId;
+          this.email = this.assignedUserLst[0].userEmail;
+        }
+        console.log('Assigned Role:', this.userdeptroleId);
+        console.log('Department email:', this.email);
       }
     });
   }
 
-   getUsersAccess(){
+  deleteAssignUsers(assignedUser:any){
+    const deptRoleId  = assignedUser?.departmentRoleId || assignedUser?.depRoleId;
+    const email   = assignedUser?.permissionId || assignedUser?.id;
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    console.log(deptRoleId,email ,companyCode);
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteAssignUser(email,deptRoleId,companyCode).subscribe({
+        next:(res:any)=>{
+          this.toastr.success('user deleted successfully');
+          this.getAssignedUsers();
+        }
+      })
+    }
+  }
+  getUsersAccess(){
      const email =JSON.parse(this.userData).email;
       console.log('assigned users',email);
     this.switchService.getUserAccess(email).subscribe({
