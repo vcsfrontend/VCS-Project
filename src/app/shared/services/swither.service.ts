@@ -256,6 +256,11 @@ export class SwitherService {
   assignUserToDeptRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/user-mapping/assign`, data); }
   getAssignUser(email  :any ,companyCode : any): Observable<any> { return this.http.get(`${this.apiUrl}api/user-mapping/${email }?companyCode=${companyCode}`); } 
   deleteAssignUser(email :any,companyCode:any,deptRoleId :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/user-mapping/remove?email=${email }&deptRoleId=${deptRoleId}&companyCode=${companyCode}`); } 
+  deleteAssignTask(askId: number, taskId: number, deptRoleId: number, assignmentId: number, companyCode: string): Observable<any> {
+  const url = `${this.apiUrl}tasks/assign/removal?taskId=${taskId}&deptRoleId=${deptRoleId}&assignmentId=${assignmentId}&companyCode=${companyCode}`;
+  return this.http.delete(url);
+}
+
 
   getUserAccess(email :any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/${email}/access`); }  
 
@@ -300,7 +305,7 @@ export class SwitherService {
   updateGlobalTask(taskData: any): Observable<any> { return this.http.put(`${this.apiUrl}api/globalTasks/update/${taskData.id}`, taskData);}
   deleteGlobalTaskById(taskId: number): Observable<any> { return this.http.delete(`${this.apiUrl}api/globalTasks/delete/${taskId}`);}
 
-  assignTasksRoles(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/globalTasks/createGlobalTask`, data); }
+  assignTasksRoles(data:any): Observable<any> { return this.http.post(`${this.apiUrl}tasks/assign/user-or-roles`, data); }
   getAllassignTasks(userDeptRole:any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listAssignedTasksOnUserDeptId?userDeptRole=${userDeptRole}&companyCode=${companyCode}`); }
   adminAccessAllUsers(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/admin/access?companyCode=${companyCode}`); }
 

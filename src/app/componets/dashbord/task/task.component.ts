@@ -176,6 +176,28 @@ export class TaskComponent extends BaseComponent{
     }
   }
 
+  deleteAssignTask(selectedTask: any): void {
+    if (!selectedTask) return; const payload = {
+      taskId: selectedTask.taskId,
+      deptRoleId: selectedTask.userDeptId,
+      assignmentId: selectedTask.id,
+      companyCode: this.userCompanyCode
+    };
+    if (confirm('Are you sure you want to delete this Assign task?')) {
+      console.log(payload)
+      // this.switchService.deleteAssignTask(payload).subscribe({
+      //   next: (res: any) => {
+      //     this.toastr.success(res.message || 'Task deleted successfully');
+      //     this.getAllGlobalTask();
+      //   },
+      //   error: (err) => {
+      //     this.toastr.error(err.message || 'Failed to delete task');
+      //   }
+      // });
+    }
+  }
+
+
   getAssignedUsers() {
     const email = this.userEmail;
     const companyCode = this.userCompanyCode;
@@ -209,50 +231,39 @@ export class TaskComponent extends BaseComponent{
       activityStatus: String(this.assignTaskForm.value.activityStatus),
       userDeptId: this.assignedUserId
     };
-
-    console.log('Task Assignment Payload:', payload);
-    this.switchService.assignTasksRoles(payload).subscribe({
-      next: (res: any) => {
-        console.log('Task Assign Response:', res);
-        this.toastr.success(res.message || 'Task assigned successfully');
-        modal.close();
-        this.assignTaskForm.reset();
-        this.assignTaskSubmitted = false;
-      },
-    });
+    console.log(payload)
+    // this.switchService.assignTasksRoles(payload).subscribe({
+    //   next: (res: any) => {
+    //     this.toastr.success(res.message || 'Task assigned successfully');
+    //     modal.close();
+    //     this.loadAssignedTasks();
+    //     this.assignTaskForm.reset();
+    //     this.assignTaskSubmitted = false;
+    //   },
+    // });
   }
 
- onUserChange(selectedUser: any) {
-  if (selectedUser) {
-    console.log('Selected User:', selectedUser);
-
-    // Fetch the assigned user to get department role ID
-    this.switchService.getAssignUser(selectedUser.userEmail, this.userCompanyCode)
-      .subscribe((res: any[]) => {
-        if (res.length > 0) {
-          const assignedUser = res[0]; // the user with department role
-          this.assignedUserId = assignedUser.id; // save the department role ID
-
-          this.assignTaskForm.patchValue({
-            userDeptId: assignedUser.id,
-            userEmail: assignedUser.userEmail
-          });
-
-          console.log('Form after getting department ID:', this.assignTaskForm.value);
-        } else {
-          // Fallback if user has no assigned department yet
-          this.assignedUserId = null;
-          this.assignTaskForm.patchValue({
-            userDeptId: null,
-            userEmail: selectedUser.userEmail
-          });
-        }
-      });
+  onUserChange(selectedUser: any) {
+    if (selectedUser) {
+      this.switchService.getAssignUser(selectedUser.userEmail, this.userCompanyCode)
+        .subscribe((res: any[]) => {
+          if (res.length > 0) {
+            const assignedUser = res[0];
+            this.assignedUserId = assignedUser.id;
+            this.assignTaskForm.patchValue({
+              userDeptId: assignedUser.id,
+              userEmail: assignedUser.userEmail
+            });
+          } else {
+            this.assignedUserId = null;
+            this.assignTaskForm.patchValue({
+              userDeptId: null,
+              userEmail: selectedUser.userEmail
+            });
+          }
+        });
+    }
   }
-}
-
-
-
 
   onTaskChange(selectedTask: any) {
     if (selectedTask) {
@@ -262,8 +273,6 @@ export class TaskComponent extends BaseComponent{
       });
     }
   }
-
-
 
   loadAssignedTasks() {
     const userDeptRole = this.assignTaskForm.get('userDeptId')?.value;

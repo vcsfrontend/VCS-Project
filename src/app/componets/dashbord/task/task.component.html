@@ -3,7 +3,7 @@
     <div class="col-lg-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <div class="card-title">All Tasks {{globalTaskCount}}</div>
+                <div class="card-title">All Tasks  <span class="badge bg-primary">{{globalTaskCount}}</span></div>
                 <button class="btn btn-primary" (click)="openGlobalTaskModal(content1)">
                     <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Create Task
                 </button>
@@ -221,14 +221,6 @@
                                                                                     <i class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i>
                                                                                 </a>
                                                                                 {{ task.taskName}} 
-                                                                                <span class="badge ms-2" 
-            [ngClass]="{
-              'bg-success-transparent': task.recurringStatus === 'DAILY',
-              'bg-info-transparent': task.recurringStatus === 'WEEKLY',
-              'bg-warning-transparent': task.recurringStatus === 'MONTHLY'
-            }">
-        {{ task.recurringStatus }}
-      </span>
                                                                             </p>
                                                                              <p class="mb-3">
                                                                                 Description :
@@ -237,7 +229,7 @@
                                                                                 </span>
                                                                             </p>
                                                                             <p class="mb-3">
-                                                                                Assigned On :
+                                                                                Assigned At :
                                                                                 <span class="fs-12 mb-1 text-muted">
                                                                                     {{ task.assignedAt | date: 'dd, MMM yyyy' }}
                                                                                 </span>
@@ -257,20 +249,17 @@
                                                                         </div>
                                                                         <div>
                                                                             <div class="btn-list">
-                                                                                <button class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle">
-                                                                                    <i class="ri-edit-line"></i>
-                                                                                </button>
                                                                                 <button class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"
-                                                                                    (click)="deleteTask(task.id)">
+                                                                                    (click)="deleteAssignTask(task)">
                                                                                     <i class="ri-delete-bin-line"></i>
                                                                                 </button>
                                                                             </div>
                                                                             <span class="badge" [ngClass]="{
-                                                                                    'bg-success-transparent': task.activityStatus == 1,
-                                                                                    'bg-danger-transparent': task.activityStatus == 0,
-                                                                                    'bg-warning-transparent': task.activityStatus != 0 && task.activityStatus != 1
+                                                                                    'bg-success-transparent': task.recurringStatus === 'DAILY',
+                                                                                    'bg-info-transparent': task.recurringStatus === 'WEEKLY',
+                                                                                    'bg-warning-transparent': task.recurringStatus === 'MONTHLY'
                                                                                 }">
-                                                                                {{ task.activityStatus == 1 ? 'Active' : task.activityStatus == 0 ? 'Inactive' : 'Pending' }}
+                                                                                {{ task.recurringStatus }}
                                                                             </span>
                                                                         </div>
                                                                     </div>
@@ -287,97 +276,6 @@
                                             <ng-template ngbNavContent>
                                                 <div class="p-0" id="pending" role="tabpanel">
                                                     <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-pending-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
-                                                                                Project Blueprint</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">13,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/2.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-warning-transparent d-block">High</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-pending-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
-                                                                                <a href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Updating
-                                                                                Old Ui
-                                                                            </p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">30,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">05,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/14.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/21.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/16.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-warning-transparent d-block">High</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </ng-template>
@@ -388,126 +286,6 @@
                                             <ng-template ngbNavContent>
                                                 <div class="p-0" id="in-progress" role="tabpanel">
                                                     <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-inprogress-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Design
-                                                                                New Landing Pages </p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">21,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/12.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-inprogress-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Designing
-                                                                                New Authentication Pages</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">26,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">12,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/15.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-success-transparent d-block">Low</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-inprogress-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 me-1 text-warning"></i></a>Improving
-                                                                                Ui Of Updated Templates</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">4,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">20,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/13.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </ng-template>
@@ -515,181 +293,12 @@
                                     <li [ngbNavItem]="4" class="nav-item m-1">
                                         <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
                                             aria-selected="true">Completed</a>
-                                            <ng-template ngbNavContent>
-                                                <div class="p-0" id="completed" role="tabpanel">
-                                                    <div class="row">
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>New
-                                                                                Plugin Development</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">28,Oct
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">28,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/9.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-success-transparent d-block">Low</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Documentation
-                                                                                For New Template</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">25,Nov
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/10.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-danger-transparent d-block">Critical</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center">
-                                                                                <a href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Developing
-                                                                                New Events in Plugin
-                                                                            </p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">5,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">10,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/5.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/8.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/11.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-primary-transparent d-block">Medium</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xl-4">
-                                                            <div class="card custom-card task-completed-card">
-                                                                <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
-                                                                        <div>
-                                                                            <p class="fw-medium mb-3 d-flex align-items-center"><a
-                                                                                    href="javascript:void(0);"><i
-                                                                                        class="ri-star-s-fill fs-16 op-5 me-1 text-muted"></i></a>Designing
-                                                                                Of New Ecommerce Pages</p>
-                                                                            <p class="mb-3">Assigned On : <span class="fs-12 mb-1 text-muted">1,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-3">Target Date : <span class="fs-12 mb-1 text-muted">15,Dec
-                                                                                    2023</span></p>
-                                                                            <p class="mb-0">Assigned To :
-                                                                                <span class="avatar-list-stacked ms-1">
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/1.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/3.jpg" alt="img">
-                                                                                    </span>
-                                                                                    <span class="avatar avatar-sm avatar-rounded">
-                                                                                        <img src="./assets/images/faces/6.jpg" alt="img">
-                                                                                    </span>
-                                                                                </span>
-                                                                            </p>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div class="btn-list">
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-primary-light rounded-circle"><i
-                                                                                        class="ri-edit-line"></i></button>
-                                                                                <button
-                                                                                    class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"><i
-                                                                                        class="ri-delete-bin-line"></i></button>
-                                                                            </div>
-                                                                            <span class="badge bg-success-transparent d-block">Low</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        <ng-template ngbNavContent>
+                                            <div class="p-0" id="completed" role="tabpanel">
+                                                <div class="row">
                                                 </div>
-                                            </ng-template>
+                                            </div>
+                                        </ng-template>
                                     </li>
                                 </ul>
                             </div>
