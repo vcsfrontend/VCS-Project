@@ -664,6 +664,10 @@ export class BaseComponent {
     { "name": "AK_SH" },
     { "name": "AK_AP" },
   ];
-
+  permissionCategories =[
+    { "name": "CRM" },
+    { "name": "Projects" },
+    {"name" : 'optimizer'},
+  ]
 
 }

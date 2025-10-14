@@ -250,9 +250,12 @@ export class SwitherService {
 
     return this.http.get(url);
   }
+  deleteAssignedPermission(deptRoleId  :any,permissionId :any,companyCode :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/role-permissions/removePermissionFromDeptRole?deptRoleId=${deptRoleId}&permissionId=${permissionId}&companyCode=${companyCode}`); }  
+
 
   assignUserToDeptRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/user-mapping/assign`, data); }
   getAssignUser(email  :any ,companyCode : any): Observable<any> { return this.http.get(`${this.apiUrl}api/user-mapping/${email }?companyCode=${companyCode}`); } 
+  deleteAssignUser(email :any,companyCode:any,deptRoleId :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/user-mapping/remove?email=${email }&deptRoleId=${deptRoleId}&companyCode=${companyCode}`); } 
 
   getUserAccess(email :any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/${email}/access`); }  
 
