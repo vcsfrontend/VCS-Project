@@ -295,5 +295,14 @@ export class SwitherService {
   }
 
 
+  createGloabalTaks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/globalTasks/createGlobalTask`, data); }
+  getAllGlobalTasks(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/globalTasks/listGlobalTaskData?companyCode=${companyCode}`);}
+  updateGlobalTask(taskData: any): Observable<any> { return this.http.put(`${this.apiUrl}api/globalTasks/update/${taskData.id}`, taskData);}
+  deleteGlobalTaskById(taskId: number): Observable<any> { return this.http.delete(`${this.apiUrl}api/globalTasks/delete/${taskId}`);}
+
+  assignTasksRoles(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/globalTasks/createGlobalTask`, data); }
+  getAllassignTasks(userDeptRole:any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listAssignedTasksOnUserDeptId?userDeptRole=${userDeptRole}&companyCode=${companyCode}`); }
+  adminAccessAllUsers(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/admin/access?companyCode=${companyCode}`); }
+
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
