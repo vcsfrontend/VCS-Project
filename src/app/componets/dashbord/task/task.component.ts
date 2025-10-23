@@ -57,7 +57,7 @@ export class TaskComponent extends BaseComponent{
 
     this.assignTaskForm = this.fb.group({
       taskId: [0,Validators.required],
-      userDeptId:[0],
+      userDeptId:[0,Validators.required],
       assignedBy:[this.userEmail],
       assignedAt:[new Date().toISOString()],
       activityStatus:[''],
@@ -75,6 +75,8 @@ export class TaskComponent extends BaseComponent{
   get gf() {
     return this.globalTaskForm.controls;
   }
+
+ 
 
   openGlobalTaskModal(content1: TemplateRef<any>, task?: any): void {
     this.globalTaskForm.reset();
@@ -280,19 +282,31 @@ export class TaskComponent extends BaseComponent{
     this.switchService.getAllassignTasks(userDeptRole, companyCode).subscribe({
       next: (assignedRes) => {
         const assignedTasks = assignedRes.data || assignedRes;
-        this.assignedTasksList = assignedTasks.map((assigned: any) => {
-          const matched = this.globaltaskList.find((task: any) => task.id === assigned.taskId);
-          return {
-            ...assigned,
-            taskName: matched?.name || 'N/A',
-            description: matched?.description || 'N/A',
-            result: matched?.result || 'N/A',
-            recurringStatus: matched?.recurringStatus || 'N/A',
-          };
-        });
-      },
+        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toUpperCase();
+        this.assignedTasksList = assignedTasks
+          .map((assigned: any) => {
+            const matched = this.globaltaskList.find((task: any) => task.id === assigned.taskId);
+            return {
+              ...assigned,
+              taskName: matched?.name || 'N/A',
+              description: matched?.description || 'N/A',
+              result: matched?.result || 'N/A',
+              recurringStatus: matched?.recurringStatus?.toUpperCase() || 'N/A',
+            };
+          })
+          .filter((task: any) => {
+            const status = task.recurringStatus;
+            if (status === 'DAILY') return true;
+            if (status === 'WEEKLY' && today === 'MONDAY') return true;
+            if (status === today) return true;
+            if (status === 'SAT_SUN' && (today === 'SATURDAY' || today === 'SUNDAY')) return true;
+            if (status === 'MONTHLY' && new Date().getDate() === 1) return true;
+            return false;
+          });
+      }
     });
   }
+
 
 
 

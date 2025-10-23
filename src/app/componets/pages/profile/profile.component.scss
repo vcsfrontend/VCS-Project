@@ -28,3 +28,58 @@
 }
 
 
+.nft-banner {
+  height: 260px; 
+  background: linear-gradient(135deg, #1e0c4f, #2a006f);
+  position: relative;
+  border-radius: 1.5rem;
+}
+
+.nft-banner .card-img {
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(65%);
+}
+
+.nft-banner .card-img-overlay {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 1.5rem;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #00c6ff, #ad38e6, #f472b6);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent; 
+  animation: gradientFlow 6s linear infinite;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+.btn-light:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .nft-banner {
+    height: 200px;
+  }
+
+  .text-gradient {
+    font-size: 1.6rem;
+  }
+}

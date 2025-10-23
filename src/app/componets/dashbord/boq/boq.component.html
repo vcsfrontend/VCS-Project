@@ -8,7 +8,7 @@
     </nav>
 </div> -->
 <div class="col-lg-12">
-    <ul ngbNav #nav13="ngbNav" [activeId]="1" class="nav nav-tabs justify-content-center tab-style-3 bg-white p-5"
+    <ul ngbNav #nav13="ngbNav" [activeId]="1" class="nav nav-tabs justify-content-center tab-style-3 bg-white pb-5"
         id="myTab2" role="tablist">
         <li [ngbNavItem]="1" class="nav-item me-0" role="presentation">
             <button ngbNavLink class="nav-link  home py-1" id="home-tab" data-bs-toggle="tab"
@@ -411,7 +411,8 @@
                     <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
                         class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom" role="tablist">
                         <ng-container ngbNavItem="1">
-                            <a ngbNavLink class="nav-link border-end border-dark" (click)="getProposal()">Proposal For Client</a>
+                            <a ngbNavLink class="nav-link ms-1" (click)="getProposal()">Proposal For Client</a>
+                            <div class="tt"></div>
                             <ng-template ngbNavContent>
                                 <div class="col-xl-12">
                                     <div class="card custom-card">
@@ -773,10 +774,11 @@
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="2">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
                                 aria-selected="true" (click)="getClientOrders()">Client Orders
                                 <!-- <span class="badge bg-secondary ms-1 rounded-pill">32</span> -->
                             </a>
+                            <div class="tt"></div>
                             <ng-template class="tab-content bg-white" ngbNavContent>
                                 <div class="col-xl-12">
                                     <div class="card custom-card">
@@ -1081,8 +1083,9 @@
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="3">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
                                 aria-selected="true">Client Invoices</a>
+                                <div class="tt"></div>
                             <ng-template class="tab-content bg-white" ngbNavContent>
                                 <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
                                     class="nav nav-pills m-3 show active text-muted">
@@ -1303,9 +1306,10 @@
                             </ng-template>
                         </ng-container>
                         <ng-container ngbNavItem="4">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
                                 aria-selected="false">Payments From
                                 Client</a>
+                                <div class="tt"></div>
                             <ng-template class="tab-content bg-white" ngbNavContent>
                                 <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
                                     class="nav nav-pills m-3 show active text-muted">
@@ -1526,7 +1530,7 @@
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="5">
-                            <a ngbNavLink class="nav-link border-end border-dark" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
                                 aria-selected="false">Project Scope</a>
                             <ng-template class="tab-content" ngbNavContent>
                                 <div class="row">
@@ -1535,17 +1539,17 @@
                                             class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
                                             <!-- <button class="btn btn-primary me-2" (click)="openRights2(content3)"><i class="ri-add-line"></i></button> -->
                                             <div class="d-flex align-items-center border-0">
-                                                <!-- Scrollable Nav -->
                                                 <div class="flex-grow-1 position-relative">
                                                     <ul #tabContainer ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex  flex-nowrap"
                                                         style="scroll-behavior: smooth;" (scroll)="checkArrows()">
                                                         <ng-container *ngFor="let key of tabKeys; let i = index">
                                                             <ng-container [ngbNavItem]="i+1">
-                                                                <a ngbNavLink class="nav-link  me-2">{{ key | titlecase }}
+                                                                <a ngbNavLink class="nav-link me-2 ms-1">{{ key | titlecase }}
                                                                     <span class="badge bg-black text-white ms-1">
                                                                         {{ boqDataSources[key].data.length }}
                                                                     </span>
                                                                 </a>
+                                                                <div class="tt"></div>
                                                                 <ng-template ngbNavContent>
                                                                     <div class="col-xl-12 mt-2">
                                                                         <div class="card custom-card bg-white">
