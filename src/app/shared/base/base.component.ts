@@ -324,7 +324,7 @@ export class BaseComponent {
       {"name":"Others"}    
     ]
 
-    pipeLine = [{"name":"Sales"},
+    pipeLine = [{"name":"Sales"}, 
       {"name":"Direct mail"},
       {"name":"Adwords"},
       {"name":"Leadform"},

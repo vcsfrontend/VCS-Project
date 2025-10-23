@@ -219,7 +219,7 @@ export class TaskComponent extends BaseComponent{
   }
 
   assignTaskSubmit(modal: any) {
-    this.assignTaskSubmitted = true;
+    this.assignTaskSubmitted = true; 
     if (this.assignTaskForm.invalid) {
       this.toastr.error('Please fill in all required fields.');
       return;
