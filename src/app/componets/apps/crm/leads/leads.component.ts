@@ -91,6 +91,12 @@ export class LeadsComponent extends BaseComponent {
   selectedLeadForAppointment:any; selectedLeadForAppointmentObject:any;
   leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;crmRole:any;selecteTemplateFormSubmitted : boolean = false;
+  currentCampaignId : string ='';
+  crmStaticStages = [
+    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-secondary text-secondary' },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-danger text-danger' },
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-primary text-primary' }
+  ];
 
   stageColor: { [key: string]: string } = { open: '#007bff',};
   statusColor: { [key: string]: string } = { active: '#007bff', };
@@ -528,28 +534,6 @@ export class LeadsComponent extends BaseComponent {
       endDate : ['',Validators.required],
       projectEstimation : ['',Validators.required]
     });
-
-    this.campaignForm = this.fb.group({
-      campaignId: [0],
-      campaignName: ['', [Validators.required, Validators.minLength(4)]],
-      pipeline: ['',],
-      campaignPoc: [''],
-      agents: [[]],
-      campaignPriority: [''],
-      leadDuplicacy: [''],
-      companyName: [this.userCompanyName],
-      companyCode: [this.userCompanyCode],
-      email: [this.userEmail],
-      type: [this.userType],
-      isAutoCreationRequired:[false],
-      createdDate: new Date().toISOString(),
-      campgnId: [''],
-
-    });
-    if (this.userType === 1) {
-      this.campaignForm.patchValue({ campaignPoc: this.userEmail });
-    }
-
 
     this.getUsers();
     this.searchControl.valueChanges.subscribe((searchText) => {
@@ -2099,9 +2083,6 @@ export class LeadsComponent extends BaseComponent {
   get s() {
     return this.sendLeadForm.controls;
   }
-  get t() {
-    return this.campaignForm.controls;
-  }
 
   sendMailLeadSubmit(modal: any) {
     this.sendLeadSubmitted = true;
@@ -2303,19 +2284,6 @@ export class LeadsComponent extends BaseComponent {
         next: (res: any) => {
           if (res) {
             this.userList = res;
-            if (!this.isEditMode) {
-            const selectedManager = this.campaignForm.get('campaignPoc')?.value;
-            if (selectedManager) {
-              this.filteredUserList = this.filteredUserList.filter(
-                (user: any) => user.email !== selectedManager
-              );
-
-              const agentsCtrl = this.campaignForm.get('agents');
-              const currentAgents: string[] = agentsCtrl?.value || [];
-              const updatedAgents = currentAgents.filter(a => a !== selectedManager);
-              agentsCtrl?.setValue(updatedAgents);
-            }
-          }
           } else {
             this.toastr.error(res.message, 'signup', {
               timeOut: 3000,
@@ -3375,62 +3343,8 @@ export class LeadsComponent extends BaseComponent {
   this.modalService.open(content31, { centered: true });
   }
 
-   submitCampaign(modal: any) {
-    this.campaignSubmitted = true;
-    if (this.campaignForm.invalid) {
-      this.toastr.error("Please fill in all required fields.");
-      return;
-    }
-    this.isSubmitting = true;
-    let agents = this.campaignForm.get('agents')?.value;
-    if (Array.isArray(agents)) {
-      agents = agents.join(',');
-    }
-    let payload = {
-      ...this.campaignForm.value,
-      email: this.userEmail,
-      companyCode: this.userCompanyCode,
-      type: this.userType,
-      agents: agents,
-      isAutoCreationRequired: this.campaignForm.value.isAutoCreationRequired ?? false
-    };
-    if (this.selectedCampgnId && this.selectedCampaignId) {
-      payload.campgnId = this.selectedCampgnId;
-      payload.campaignId = this.selectedCampaignId;
-    }
-    this.switchService.saveCampaignData(payload).subscribe({
-      next: (res: any) => {
-        this.isSubmitting = false;
-        if (res.status === true || res.campaignId || res.createdDate) {
-          const name = res.campaignName;
-          this.toastr.success(`${name} created successfully!`);
-          this.modalService.dismissAll(modal);
-          this.campaignForm.reset();
-          this.campaignForm.patchValue({
-            companyName: this.userCompanyName,
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
-          });
-          this.selectedCampgnId = null;
-          this.selectedCampaignId = null;
-        } 
-      }
-    });
-  }
   
-  openCreateModal(content: any) {
-  // Clear previously selected campaign IDs
-   this.isEditMode = false;
-  this.selectedCampgnId = null;
-  this.selectedCampaignId = null;
 
-  // Reset the form completely
-  this.campaignForm.reset();
-
-  // Open the modal using your existing open method
-  this.open(content);
-  }
 
 
 }

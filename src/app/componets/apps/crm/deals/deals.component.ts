@@ -87,8 +87,7 @@ export class DealsComponent extends BaseComponent {
   leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;selecteTemplateFormSubmitted:boolean=false;
   crmRole:string = '';LeadToCampaignForm!: FormGroup;leadList :any[]=[];  selectedLeadData: any;
-  campaignList: any[] = [];selectedCampaign: any;campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
-  campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
+  campaignList: any[] = [];selectedCampaign: any;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -432,26 +431,6 @@ export class DealsComponent extends BaseComponent {
       campaignId: [this.campaignId,],
     });
 
-     this.campaignForm = this.fb.group({
-      campaignId: [0],
-      campaignName: ['', [Validators.required, Validators.minLength(4)]],
-      pipeline: ['',],
-      campaignPoc: [''],
-      agents: [[]],
-      campaignPriority: [''],
-      leadDuplicacy: [''],
-      companyName: [this.userCompanyName],
-      companyCode: [this.userCompanyCode],
-      email: [this.userEmail],
-      type: [this.userType],
-      isAutoCreationRequired:[false],
-      createdDate: new Date().toISOString(),
-      campgnId: [''],
-
-    });
-    if (this.userType === 1) {
-      this.campaignForm.patchValue({ campaignPoc: this.userEmail });
-    }
 
     this.filterLeadForm = this.fb.group({
       action:[''],
@@ -1308,9 +1287,7 @@ export class DealsComponent extends BaseComponent {
   get s() {
     return this.sendLeadForm.controls;
   }
-  get t() {
-    return this.campaignForm.controls;
-  }
+
   sendMailLeadSubmit(modal: any) {
     this.sendLeadSubmitted = true;
     if (this.sendLeadForm?.valid) {
@@ -3082,61 +3059,5 @@ formatLocalDateTime(dateTime: string | Date): string {
   this.modalService.open(content31, { centered: true });
   }
 
-  submitCampaign(modal: any) {
-    this.campaignSubmitted = true;
-    if (this.campaignForm.invalid) {
-      this.toastr.error("Please fill in all required fields.");
-      return;
-    }
-    this.isSubmitting = true;
-    let agents = this.campaignForm.get('agents')?.value;
-    if (Array.isArray(agents)) {
-      agents = agents.join(',');
-    }
-    let payload = {
-      ...this.campaignForm.value,
-      email: this.userEmail,
-      companyCode: this.userCompanyCode,
-      type: this.userType,
-      agents: agents,
-      isAutoCreationRequired: this.campaignForm.value.isAutoCreationRequired ?? false
-    };
-    if (this.selectedCampgnId && this.selectedCampaignId) {
-      payload.campgnId = this.selectedCampgnId;
-      payload.campaignId = this.selectedCampaignId;
-    }
-    this.switchService.saveCampaignData(payload).subscribe({
-      next: (res: any) => {
-        this.isSubmitting = false;
-        if (res.status === true || res.campaignId || res.createdDate) {
-          const name = res.campaignName;
-          this.toastr.success(`${name} created successfully!`);
-          this.modalService.dismissAll(modal);
-          this.campaignForm.reset();
-          this.campaignForm.patchValue({
-            companyName: this.userCompanyName,
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
-          });
-          this.selectedCampgnId = null;
-          this.selectedCampaignId = null;
-        } 
-      }
-    });
-  }
-  
-  openCreateModal(content: any) {
-  // Clear previously selected campaign IDs
-   this.isEditMode = false;
-  this.selectedCampgnId = null;
-  this.selectedCampaignId = null;
-
-  // Reset the form completely
-  this.campaignForm.reset();
-
-  // Open the modal using your existing open method
-  this.open(content);
-  }
 
 }

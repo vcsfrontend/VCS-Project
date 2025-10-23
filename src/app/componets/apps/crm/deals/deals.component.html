@@ -2003,79 +2003,7 @@
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <button ty3tpe="button"class="btn btn-primary ms-2" (click)="open(content15)">Create Campaign</button>
-
             </div>
         </div>
     </form>
-</ng-template>
-<ng-template #content15 let-modal>
-  <form [formGroup]="campaignForm" (ngSubmit)="submitCampaign(modal)">
-    <div class="modal-content">
-     <div class="modal-header border-bottom border-block-end-dashed justify-content-between">
-        <h5 class="modal-title" id="offcanvasExampleLabel"><strong>Create Campaign</strong></h5>
-        <div class="mb-3">
-            <button (click)="modal.dismiss('Cross click')" type="button" class="btn-close"
-                data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-    </div>
-      <div class="offcanvas-body px-4">
-        <div class="row gy-3">
-          <div class="col-xl-6">
-            <label for="deal-name" class="form-label">Campaign Name</label>
-            <input type="text" class="form-control" id="deal-name" placeholder="Campaign Name"
-              formControlName="campaignName"
-              [ngClass]="{ 'is-invalid': campaignSubmitted && t['campaignName'].errors }">
-            <div *ngIf="campaignSubmitted && t['campaignName'].errors" class="invalid-feedback">
-              <span *ngIf="t['campaignName'].errors['required']">campaign name is required.</span>
-              <span *ngIf="t['campaignName'].errors['minlength']">campaign name must be at least 4 characters
-                long.</span>
-            </div>
-          </div>
-          <div class="col-xl-6">
-            <label for="deal-name" class="form-label">Pipeline</label>
-            <ng-select formControlName="pipeline" [items]="pipeLine" bindLabel="name" bindValue="name"
-              placeholder="Select an option">
-            </ng-select>
-          </div>
-          <div class="col-xl-12" *ngIf="userType !== 1">
-            <label for="deal-name" class="form-label">Who will manage this Campaign</label>
-            <ng-select formControlName="campaignPoc" [items]="userList" bindLabel="email" bindValue="email"
-              placeholder="Select an Manager">
-            </ng-select>
-          </div>
-          <div class="col-xl-12" *ngIf="userType !== 1">
-            <label for="deal-name" class="form-label">Select Agents</label>
-            <ng-select formControlName="agents" [multiple]="true" placeholder="Select agents">
-              <ng-option *ngFor="let user of (isEditMode ? userList : filteredUserList)" [value]="user.email">
-                {{ user.email }}
-              </ng-option>
-            </ng-select>
-          </div>
-          <div class="col-xl-6">
-            <label for="deal-name" class="form-label">Campaign Priority</label>
-            <ng-select placeholder="Select Priority" [items]="campaignPriority" bindLabel="name" bindValue="name"
-              formControlName="campaignPriority">
-            </ng-select>
-          </div>
-          <div class="col-xl-6">
-            <label for="deal-name" class="form-label">Lead Duplicacy</label>
-            <ng-select placeholder="Select Duplicacy" [items]="leadDuplicacy" bindLabel="name" bindValue="name"
-              formControlName="leadDuplicacy">
-            </ng-select>
-          </div>
-          <div class="col-xl-6">
-            <input class="form-check-input" type="checkbox" id="primaryChecked" formControlName="isAutoCreationRequired" />
-            <label class="form-check-label" for="primaryChecked">&nbsp;
-              Project Creation
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Create</button>
-        <button class="btn btn-danger" type="button" (click)="modal.dismiss('Cross click')">Cancel</button>
-      </div>
-    </div>
-  </form>
 </ng-template>

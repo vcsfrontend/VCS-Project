@@ -324,7 +324,7 @@ export class BaseComponent {
       {"name":"Others"}    
     ]
 
-    pipeLine = [{"name":"Sales"},
+    pipeLine = [{"name":"Sales"}, 
       {"name":"Direct mail"},
       {"name":"Adwords"},
       {"name":"Leadform"},
@@ -668,10 +668,6 @@ export class BaseComponent {
     { "name": "CRM" },
     { "name": "Projects" },
     {"name" : 'optimizer'},
-    {"name" : 'Tasks'},
-    {"name" : 'Knowledge'},
-    {"name" : 'Dashboard'},
-
   ]
 
   recurringStatusItems = [{ "name": "DAILY" },

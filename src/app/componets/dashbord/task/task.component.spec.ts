@@ -4,7 +4,7 @@ import { TaskComponent } from './task.component';
 
 describe('TaskComponent', () => {
   let component: TaskComponent;
-  let fixture: ComponentFixture<TaskComponent>;
+  let fixture: ComponentFixture<TaskComponent>; 
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
