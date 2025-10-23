@@ -1458,15 +1458,13 @@
             <li class="list-group-item">
                 <div class="container mt-3">
                     <div class="col-12">
-                        <div *ngFor="let plan of crmStaticStages; let i = index"
-                            class="form-check mb-3 d-flex align-items-center">
-                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked"
-                                [id]="'plan-' + i">
-                            <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
-                            <div class="ms-2" style="width: 20px; height: 20px; border-radius: 4px;"
-                                [style.background]="plan.color" *ngIf="plan.color"></div>
-                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom"
-                                (click)="deleteLeadItem(i)">
+                        <div *ngFor="let plan of crmStaticStages; let i = index" class="form-check mb-3 d-flex align-items-center">
+                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked" [id]="'plan-' + i">
+                            <label class="form-check-label w-50 mt-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <span *ngIf="plan.color" class="badges ms-2" [ngClass]="plan.color">
+                                &nbsp;
+                            </span>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom" (click)="deleteLeadItem(i)">
                                 Delete
                             </button>
                         </div>

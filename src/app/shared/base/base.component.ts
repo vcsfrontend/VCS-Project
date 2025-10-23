@@ -674,13 +674,13 @@ export class BaseComponent {
 
   ]
 
-  recurringStatusItems = [{"name":"DAILY"},
-      {"name":"WEEKLY"},
-      {"name":"SATURDAY"},
-      {"name":"SUNDAY"},
-      {"name":"MONTHLY"},
-      {"name":"SAT_SUN"}, 
-    ]
+  recurringStatusItems = [{ "name": "DAILY" },
+  { "name": "WEEKLY" },
+  { "name": "SATURDAY" },
+  { "name": "SUNDAY" },
+  { "name": "MONTHLY" },
+  { "name": "SAT_SUN" },
+  ]
 
     activityStatus = [{"name":"Yes"},
       {"name":"No"},

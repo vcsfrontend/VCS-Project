@@ -7,9 +7,12 @@
             class="nav flex-column nav-pills me-3 tab-style-7" id="v-pills-tab" role="tablist"
             aria-orientation="vertical">
             <ng-container [ngbNavItem]="1">
-              <button ngbNavLink class="nav-link text-start ms-2 mt-2" id="main-profile-tab" data-bs-toggle="pill"
-                data-bs-target="#main-profile" type="button" role="tab" aria-controls="main-profile"
-                aria-selected="true">All </button>
+              <button ngbNavLink class="nav-link text-start ms-2 mt-2 d-flex align-items-center justify-content-between"
+                id="main-profile-tab" data-bs-toggle="pill" data-bs-target="#main-profile" type="button" role="tab"
+                aria-controls="main-profile" aria-selected="true">
+                All
+                <i class="ri-add-line align-middle fw-medium" (click)="filed(content1)"></i>
+              </button>
               <ng-template ngbNavContent>
                 <div class="container">
                   <div class="row g-3 overflow-auto fixed-height">
@@ -277,3 +280,35 @@
     </div>
   </div>
 </div>
+
+<ng-template #content1 let-modal>
+  <form [formGroup]="documentForm" (ngSubmit)="submitDocumentForm()">
+    <div class="modal-header justify-content-between">
+      <h6 class="modal-title">Add Folder Name</h6>
+      <button type="button" class="btn btn-outline-success btn-sm ms-4" (click)="addDocumentField()">
+        <i class="bi bi-plus-lg"></i> Add More
+      </button>
+      <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body overflowImportant">
+      <div formArrayName="documents">
+        <div class="row gy-2" *ngFor="let doc of documents.controls; let i = index" [formGroupName]="i">
+          <div class="col-xl-10">
+            <label class="form-label">Folder Name</label>
+            <input type="text" class="form-control" formControlName="fileName" placeholder="Enter name">
+          </div>
+          <div class="col-xl-2 d-flex align-items-end mb-2">
+            <a aria-label="anchor" href="javascript:void(0);"
+              class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0" (click)="removeDocumentField(i)">
+              <i class="ri-delete-bin-line"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </form>
+</ng-template>

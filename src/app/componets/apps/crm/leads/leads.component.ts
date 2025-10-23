@@ -91,13 +91,7 @@ export class LeadsComponent extends BaseComponent {
   selectedLeadForAppointment:any; selectedLeadForAppointmentObject:any;
   leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;crmRole:any;selecteTemplateFormSubmitted : boolean = false;
-  currentCampaignId : string ='';campaignForm !:FormGroup;campaignSubmitted : boolean = false;isSubmitting : boolean = false;
-  selectedCampaignId:any;selectedCampgnId:any;filteredUserList: any[] = [];isEditMode : boolean = false;modal: any;
-  crmStaticStages = [ 
-    {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
-    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
-    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff',},
-  ];
+
   stageColor: { [key: string]: string } = { open: '#007bff',};
   statusColor: { [key: string]: string } = { active: '#007bff', };
   uploadStageDisplay: { name: string; color: string } = { name: '', color: '' };
@@ -752,23 +746,13 @@ export class LeadsComponent extends BaseComponent {
     this.leadStatusitems.push({ checked: false, label: '' });
   }
   inPorgressLeads = [
-    {
-      name: 'Quotataion Shared',
-      checked: false,
-      isDefault: true,
-      color: '#28a745',
-    },
-    {
-      name: 'Commercial Discussion',
-      checked: false,
-      isDefault: true,
-      color: '#007bff',
-    },
-    { name: 'Office Visit', checked: false, isDefault: true, color: '#ffc107' },
-    { name: 'Hot', checked: false, isDefault: true, color: '#dc3545' },
-    { name: 'Cold', checked: false, isDefault: true, color: '#6c757d' },
-    { name: 'Warm', checked: false, isDefault: true, color: '#fd7e14' },
-    { name: 'Call Back', checked: false, isDefault: true, color: '#17a2b8' },
+    { name: 'Quotation Shared', checked: false, isDefault: true, color: 'badge bg-secondary-transparent text-secondary' },
+    { name: 'Commercial Discussion', checked: false, isDefault: true, color: 'badge bg-primary-transparent text-primary' },
+    { name: 'Office Visit', checked: false, isDefault: true, color: 'badge bg-warning-transparent text-warning' },
+    { name: 'Hot', checked: false, isDefault: true, color: 'badge bg-danger-transparent text-danger' },
+    { name: 'Cold', checked: false, isDefault: true, color: 'badge bg-secondary-transparent text-secondary' },
+    { name: 'Warm', checked: false, isDefault: true, color: 'badge bg-orange-transparent text-orange' },
+    { name: 'Call Back', checked: false, isDefault: true, color: 'badge bg-info-transparent text-info' },
   ];
 
   lostLeads = [
@@ -776,14 +760,14 @@ export class LeadsComponent extends BaseComponent {
       name: 'Not Interested',
       checked: false,
       isDefault: true,
-      color: '#dc3545',
+      color: 'badge bg-danger-transparent text-danger',
     },
     { name: 'Irrelevant', checked: false, isDefault: true, color: '#6c757d' },
     {
       name: 'Given to others',
       checked: false,
       isDefault: true,
-      color: '#fd7e14',
+      color: 'badge bg-warning-transparent text-danger',
     },
   ];
 
@@ -1375,23 +1359,18 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     this.prepareCrmStageData();
-    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Stages saved successfully');
-          this.isStagesDisabled = false;
-          this.offcanvasService.dismiss();
-          this.getCrmStages();
-          this.isAddStagesDisabled = true;
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        // this.toastr.error(error.statusText);
-        this.isStagesDisabled = false;
-      },
-    });
+    console.log(this.crmStageData)
+    // this.switchService.SaveCrmStages(this.crmStageData).subscribe({
+    //   next: (res: any) => {
+    //     if (res) {
+    //       this.toastr.success('Stages saved successfully');
+    //       this.isStagesDisabled = false;
+    //       this.offcanvasService.dismiss();
+    //       this.getCrmStages();
+    //       this.isAddStagesDisabled = true;
+    //     }
+    //   },
+    // });
   }
 
   getCrmStages(): void {
@@ -1439,7 +1418,6 @@ export class LeadsComponent extends BaseComponent {
           }
           const defaultStageName = 'open';
           const defaultStageColor = '#007bff';
-
           if (
             !this.stageLst.find((s: any) => s.stageName === defaultStageName)
           ) {
@@ -1461,12 +1439,10 @@ export class LeadsComponent extends BaseComponent {
   addNewOption(): void {
     const newName = this.newOptionName?.trim();
     const newColor = this.newOptionColor;
-
     if (!newName) {
       this.toastr.warning('Please enter a status name.');
       return;
     }
-
     if (!newColor) {
       this.toastr.warning('Please select a color.');
       return;
@@ -1475,11 +1451,9 @@ export class LeadsComponent extends BaseComponent {
       this.statusOptionsByStage[this.selectedStage] || [];
     const currentDisplayOptions =
       this.statusOptionsByStageforDisplay[this.selectedStage] || [];
-
     const isDuplicate = currentStageOptions.some(
       (opt: any) => opt.name.toLowerCase() === newName.toLowerCase()
     );
-
     if (!isDuplicate) {
       const newOption = {
         name: newName,
