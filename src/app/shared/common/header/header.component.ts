@@ -244,7 +244,7 @@ export class HeaderComponent implements OnInit {
   private intervalSub!: Subscription;
   public SearchResultEmpty: boolean = false;
   ngOnInit(): void {
-    this.getUserInfo(this.userEmail);
+    // this.getUserInfo(this.userEmail);
     this.logRoute();
     this.loadLeadData();
     this.routerSub = this.router.events.subscribe(event => {
@@ -252,7 +252,7 @@ export class HeaderComponent implements OnInit {
         this.loadLeadData();
       }
     });
-    this.profilePic = localStorage.getItem("profilePic");
+    // this.profilePic = localStorage.getItem("profilePic");
     this.loggedInUser = JSON.parse(this.userData);
     this.userName = this.loggedInUser?.name || this.loggedInUser?.username;
     this.intervalSub = interval(5000).subscribe(() => this.loadLeadData());
@@ -457,14 +457,15 @@ export class HeaderComponent implements OnInit {
     return this.userColors[index];
   }
 
-  getUserInfo(email: string) {
-    this.switchService.userInfo(email).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.userData = res;
-        }
-      },
-    });
-  }
+  // getUserInfo(email: string) {
+  //   this.switchService.userInfo(email).subscribe({
+  //     next: (res: any) => {
+  //       if (res) {
+  //         this.userData = res;
+  //         this.profilePic = res.profilePic
+  //       }
+  //     },
+  //   });
+  // }
   
 }

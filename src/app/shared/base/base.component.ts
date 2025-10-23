@@ -668,6 +668,10 @@ export class BaseComponent {
     { "name": "CRM" },
     { "name": "Projects" },
     {"name" : 'optimizer'},
+    {"name" : 'Tasks'},
+    {"name" : 'Knowledge'},
+    {"name" : 'Dashboard'},
+
   ]
 
   recurringStatusItems = [{ "name": "DAILY" },
