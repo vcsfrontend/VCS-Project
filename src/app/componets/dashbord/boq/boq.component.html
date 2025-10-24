@@ -2350,40 +2350,297 @@
       <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
     </div>
     <div class="modal-body overflowImportant">
-      <div class="row gy-3">
-        <div class="col-xl-6">
-          <label class="form-label">Proposal From</label>
-          <input type="text" class="form-control" formControlName="orderFrom" placeholder="Enter Proposal From">
+        <div *ngIf="step === 1">
+            <div class="row gy-2">
+                <div class="col-xl-12">
+                    <label for="projectName" class="form-label">Client Name</label>
+                    <input type="text" class="form-control" id="projectName" formControlName="clientName"
+                        placeholder="Enter Client Name" [ngClass]="{ 'is-invalid': submittedStep1 && g['clientName'].errors }"
+                        maxlength="50">
+                    <div *ngIf="submittedStep1 && g['clientName'].errors" class="invalid-feedback">
+                        <div *ngIf="g['clientName'].errors['required']">Client name is
+                            required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <label for="projectAddress" class="form-label">Client Address</label>
+                    <input type="text" class="form-control" id="projectAddress" formControlName="clientAddress"
+                        placeholder="Enter Client Address" [ngClass]="{ 'is-invalid': submittedStep1 && g['clientAddress'].errors }"
+                        maxlength="50">
+                    <div *ngIf="submittedStep1 && g['clientAddress'].errors" class="invalid-feedback">
+                        <div *ngIf="g['clientAddress'].errors['required']">client Address is
+                            required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <label for="projectAddress" class="form-label">Client Mobile Number</label>
+                    <input type="text" class="form-control" id="projectAddress" placeholder="Enter Client Mobile Number"
+                    formControlName="clientMobileNumber" (keypress)="allowOnlynum($event)" maxlength="10" [ngClass]="{ 'is-invalid': submittedStep1 && g['clientMobileNumber'].invalid }">
+                    <div class="invalid-feedback" *ngIf="submittedStep1 && g['clientMobileNumber'].errors">
+                        <span *ngIf="g['clientMobileNumber'].errors['required']">Mobile number is required.</span>
+                        <span *ngIf="g['clientMobileNumber'].errors['pattern']">Enter a valid 10-digit mobile number.</span>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <label for="projectAddress" class="form-label">Client Email</label>
+                    <input type="text" class="form-control" id="projectAddress" placeholder="Enter Client Email"
+                    formControlName="clientEmail">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
+                </div>
+            </div>
         </div>
-        <div class="col-xl-6">
-          <label class="form-label">Vendor ID</label>
-          <input type="text" class="form-control" formControlName="vendorId" placeholder="Enter Vendor ID">
+        <div *ngIf="step === 2">
+            <div class="row gy-2">
+                <div class="col-xl-6">
+                    <label for="projectAddress" class="form-label">Project Name</label>
+                    <input type="text" class="form-control" id="projectAddress" formControlName="projectName"
+                        placeholder="Enter Client Address" [ngClass]="{ 'is-invalid': submitted && g['projectName'].errors }"
+                        maxlength="50">
+                    <div *ngIf="submitted && g['projectName'].errors" class="invalid-feedback">
+                        <div *ngIf="g['projectName'].errors['required']">project Name is
+                            required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label for="projectAddress" class="form-label">Flat_No</label>
+                    <input type="text" class="form-control" id="projectAddress" formControlName="flatNo"
+                        placeholder="Enter Flat_No" [ngClass]="{ 'is-invalid': submitted && g['flatNo'].errors }">
+                    <div *ngIf="submitted && g['flatNo'].errors" class="invalid-feedback">
+                        <div *ngIf="g['flatNo'].errors['required']">flatNo is
+                            required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label for="projectAddress" class="form-label">Project_Config</label>
+                    <ng-select formControlName="projectConfig" [items]="projectConfigList"
+                        placeholder="Select Project Configuration"
+                        [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && g['projectConfig'].errors" class="invalid-feedback">
+                        <div *ngIf="g['projectConfig'].errors['required']">project Config is
+                            required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label for="dedEmail" class="form-label">Project Designer</label>
+                    <ng-select formControlName="dedEmail" [items]="userList" bindLabel="email" bindValue="email"
+                        placeholder="Select DED_Email" (change)="onDedSelected($event)"
+                        [ngClass]="{ 'is-invalid': submitted && g['dedEmail'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && g['dedEmail'].errors" class="invalid-feedback">
+                        <div *ngIf="g['dedEmail'].errors['required']">DED Email is required</div>
+                    </div>
+                </div>
+                <div *ngIf="showOtherDesignerFields" class="row">
+                        <div class="col-xl-6">
+                            <label for="dedEmail" class="form-label">Designer Name</label>
+                            <input type="text" class="form-control" formControlName="otherDesignerName" placeholder="">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="dedEmail" class="form-label">Designer Email</label>
+                            <input type="email" class="form-control" formControlName="otherDesignerEmail">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="dedEmail" class="form-label">Designer Phone</label>
+                            <input type="text" class="form-control" formControlName="otherDesignerPhone"
+                                (keypress)="allowOnlyNumbers($event)">
+                        </div>
+                    </div>
+                <div class="col-xl-6">
+                    <label for="projectAddress" class="form-label">RelationShip Manager</label>
+                    <ng-select formControlName="rmdEmail" [items]="userList" bindLabel="email" bindValue="email"
+                        placeholder="Select an Manager" (change)="onUserSelected($event)"
+                        [ngClass]="{ 'is-invalid': submitted && g['rmdEmail'].errors }">
+                    </ng-select>
+                    <div *ngIf="submitted && g['rmdEmail'].errors" class="invalid-feedback">
+                        <div *ngIf="g['rmdEmail'].errors['required']">rmdEmail is
+                            required
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="showOtherRelationshipFields" class="row">
+                        <div class="col-xl-6">
+                            <label>RelationShip Manger Name</label>
+                            <input type="text" class="form-control" formControlName="otherRmdName">
+                        </div>
+                        <div class="col-xl-6">
+                            <label>RelationShip Manger Email</label>
+                            <input type="email" class="form-control" formControlName="otherRmdEmail">
+                        </div>
+                        <div class="col-xl-6">
+                            <label>RelationShip Manger Phone</label>
+                            <input type="text" class="form-control" formControlName="otherRmdPhone"
+                                (keypress)="allowOnlyNumbers($event)">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary me-2 ct" type="button" (click)="prevStep()">Back</button>
+                    <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
+                </div>
+            </div>
         </div>
-        <div class="col-xl-6">
-          <label class="form-label">Shipping Address</label>
-          <input type="text" class="form-control" formControlName="shippingAddress" placeholder="Enter Shipping Address">
+        <div *ngIf="step === 3">
+            <div class="row gy-2">
+                <div class="col-xl-6">
+                    <label for="projectAddress" class="form-label">Margin</label>
+                    <ng-select formControlName="margin" [items]="projectMarginList" bindLabel="name" bindValue=""
+                        placeholder="Select Project Configuration"
+                        [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }">
+                    </ng-select>
+                </div>
+                <div class="col-xl-6">
+                    <label for="projectAddress" class="form-label">Discount</label>
+                    <input type="text" class="form-control" id="projectAddress" formControlName="discount"
+                        placeholder="Enter Discount" [ngClass]="{ 'is-invalid': submitted && g['discount'].errors }"
+                        (keypress)="allowOnlynum($event)">
+                    <div *ngIf="submitted && g['discount'].errors" class="invalid-feedback">
+                        <div *ngIf="g['discount'].errors['required']">discount is required </div>
+                        <div *ngIf="g['discount'].errors['pattern']">Only numbers are allowed.</div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label for="projectAddress" class="form-label">Others</label>
+                    <input type="text" class="form-control" id="projectAddress" formControlName="others" placeholder="Enter Others"
+                        [ngClass]="{ 'is-invalid': submitted && g['others'].errors }" (keypress)="allowOnlynum($event)">
+                    <div *ngIf="submitted && g['others'].errors" class="invalid-feedback">
+                        <div *ngIf="g['others'].errors['required']">others is required </div>
+                        <div *ngIf="g['others'].errors['pattern']">Only numbers are allowed.</div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">
+                        <input type="checkbox" class="form-check-input" id="graniteCheckbox" [checked]="graniteEnabled"
+                            (change)="toggleGraniteFields()"> Granite Material Cost
+                    </label>
+                </div>
+                <div class="col-xl-6" *ngIf="graniteEnabled">
+                    <label for="gmc" class="form-label">Granite Material Cost</label>
+                        <div class="d-flex align-items-center gap-2">
+                        <input type="text" class="form-control" id="gmc" formControlName="gmc" placeholder="Enter Granite Material Cost"
+                            [ngClass]="{ 'is-invalid': submitted && g['gmc'].errors }" (keypress)="allowOnlynum($event)">
+                    </div>
+                    <div *ngIf="submitted && g['gmc'].errors" class="invalid-feedback d-block mt-1">
+                        <div *ngIf="g['gmc'].errors['required']">G_MC is required</div>
+                        <div *ngIf="g['gmc'].errors['pattern']">Only numbers are allowed.</div>
+                    </div>
+                </div>
+                <div class="col-xl-6" *ngIf="graniteEnabled">
+                    <label for="clientName" class="form-label">Granite Projected Area</label>
+                    <input type="text" class="form-control" id="clientName" formControlName="gpa"
+                        placeholder="Enter Granite Projected Area" [ngClass]="{ 'is-invalid': submitted && g['gpa'].errors }"
+                            (keypress)="allowOnlynum($event)">
+                    <div *ngIf="submitted && g['gpa'].errors" class="invalid-feedback">
+                        <div *ngIf="g['gpa'].errors['required']">G_Mc is
+                            required
+                        </div>
+                        <div *ngIf="g['gpa'].errors['pattern']">Only numbers are allowed.</div>
+                    </div>
+                </div>
+                <div class="col-xl-6" *ngIf="graniteEnabled">
+                    <label for="clientName" class="form-label">Granite Service Cost</label>
+                    <input type="text" class="form-control" id="clientName" formControlName="gsc"
+                        placeholder="Enter Granite Service Cost" [ngClass]="{ 'is-invalid': submitted && g['gsc'].errors }"
+                        (keypress)="allowOnlynum($event)">
+                    <div *ngIf="submitted && g['gsc'].errors" class="invalid-feedback">
+                        <div *ngIf="g['gsc'].errors['required']">G_SC is
+                            required
+                        </div>
+                        <div *ngIf="g['gsc'].errors['pattern']">Only numbers are allowed.</div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">
+                        <input type="checkbox" class="form-check-input" id="graniteCheckbox" [checked]="TDMCEnabled"
+                            (change)="toggleTDMCFields()"> Tiles dadoing material cost
+                    </label>
+                </div>
+                <div class="col-xl-6" *ngIf="TDMCEnabled">
+                    <label for="clientName" class="form-label">Tiles dadoing material cost</label>
+                    <input type="text" class="form-control" id="clientName" formControlName="tdmc"
+                        placeholder="Enter Tils Dodadoing Material Cost" [ngClass]="{ 'is-invalid': submitted && g['tdmc'].errors }"
+                        (keypress)="allowOnlynum($event)">
+                    <div *ngIf="submitted && g['tdmc'].errors" class="invalid-feedback">
+                        <div *ngIf="g['tdmc'].errors['required']">tDMC is
+                            required
+                        </div>
+                        <div *ngIf="g['tdmc'].errors['pattern']">Only numbers are allowed.</div>
+                    </div>
+                </div>
+                <div class="col-xl-6" *ngIf="TDMCEnabled">
+                    <label for="projectAddress" class="form-label">Tiles dadoing projected area</label>
+                    <input type="text" class="form-control" id="projectAddress" formControlName="tdpa"
+                        placeholder="Enter Tils Dodadoing Projected Area"  [ngClass]="{ 'is-invalid': submitted && g['tdpa'].errors }"
+                        >
+                    <div *ngIf="submitted && g['tdpa'].errors" class="invalid-feedback">
+                        <div *ngIf="g['tdpa'].errors['required']">tDPA is
+                            required
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6" *ngIf="TDMCEnabled">
+                    <label for="projectAddress" class="form-label"> Tiles dadoing service cost </label>
+                    <input type="text" class="form-control" id="projectAddress" formControlName="tdsc"
+                        placeholder="Enter Tils Dodadoing Service Cost" [ngClass]="{ 'is-invalid': submitted && g['tdsc'].errors }"
+                        (keypress)="allowOnlynum($event)">
+                    <div *ngIf="submitted && g['tdsc'].errors" class="invalid-feedback">
+                        <div *ngIf="g['tdsc'].errors['required']">tDSC is
+                            required
+                        </div>
+                        <div *ngIf="g['tdsc'].errors['pattern']">Only numbers are allowed.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary me-2 ct" type="button" (click)="prevStep()">Back</button>
+                <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
+            </div>
         </div>
-        <div class="col-xl-6">
-          <label class="form-label">Execution Start Date</label>
-          <input type="date" class="form-control" formControlName="startDate" placeholder="Execution Start Date">
+        <div *ngIf="step === 4">
+            <div class="row gy-3">
+                <div class="col-xl-6">
+                <label class="form-label">Proposal From</label>
+                <input type="text" class="form-control" formControlName="orderFrom" placeholder="Enter Proposal From">
+                </div>
+                <div class="col-xl-6">
+                <label class="form-label">Vendor ID</label>
+                <input type="text" class="form-control" formControlName="vendorId" placeholder="Enter Vendor ID">
+                </div>
+                <div class="col-xl-6">
+                <label class="form-label">Shipping Address</label>
+                <input type="text" class="form-control" formControlName="shippingAddress" placeholder="Enter Shipping Address">
+                </div>
+                <div class="col-xl-6">
+                <label class="form-label">Execution Start Date</label>
+                <input type="date" class="form-control" formControlName="startDate" placeholder="Execution Start Date">
+                </div>
+                <div class="col-xl-6">
+                <label class="form-label">Execution End Date</label>
+                <input type="date" class="form-control" formControlName="dueDate" placeholder="Execution End Date">
+                </div>
+                <div class="col-xl-6">
+                <label class="form-label">GST No</label>
+                <input type="text" class="form-control" formControlName="gstNo" placeholder="Enter GST No">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary me-2 ct" type="button" (click)="prevStep()">Back</button>
+                    <button class="btn btn-primary ct" type="button">submit</button>  
+                </div>
+            </div>
         </div>
-        <div class="col-xl-6">
-          <label class="form-label">Execution End Date</label>
-          <input type="date" class="form-control" formControlName="dueDate" placeholder="Execution End Date">
-        </div>
-        <div class="col-xl-6">
-          <label class="form-label">GST No</label>
-          <input type="text" class="form-control" formControlName="gstNo" placeholder="Enter GST No">
-        </div>
-      </div>
     </div>
-    <div class="modal-footer">
+    <!-- <div class="modal-footer">
       <button type="submit" class="btn btn-primary">Submit</button>
       <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
-    </div>
+    </div> -->
   </form>
 </ng-template>
-
 
 <ng-template #content5 let-modal>
     <form [formGroup]="proposalApprovalForm" (ngSubmit)="proposalApprovalSubmit(modal)">

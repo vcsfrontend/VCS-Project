@@ -110,15 +110,15 @@ export class NavService implements OnDestroy {
   MENUITEMS: Menu[] = [
     // Dashboard
     { headTitle: 'MAIN' },
-    {
-      title: 'Dashboard',
-      icon: 'bi-house',
-      dirchange: false,
-      active: false,
-      type: 'link',
-      linkType : 'internal',
-      path: '/dashboard/sales',
-    },
+    // {
+    //   title: 'Dashboard',
+    //   icon: 'bi-house',
+    //   dirchange: false,
+    //   active: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   path: '/dashboard/sales',
+    // },
     // {
     //   title: 'CRM',
     //   icon: 'bi-file-earmark',
@@ -433,6 +433,16 @@ export class NavService implements OnDestroy {
       type: 'sub',
       active: false,
       children: [
+        
+        {
+          title: 'Fresh Leads',
+          icon: 'bi-grid side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          active: false,
+          path: '/apps/crm/deals'
+        },
         {
           title: 'Campaigns',
           dirchange: false,
@@ -444,15 +454,6 @@ export class NavService implements OnDestroy {
           path: '/dashboard/campaigns',
         }, 
         {
-          title: 'Fresh Leads',
-          icon: 'bi-grid side-menu__icon',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          active: false,
-          path: '/apps/crm/deals'
-        },
-        {
           title: 'Tasks',
           icon: 'bi-bag side-menu__icon',
           dirchange: false,
@@ -461,15 +462,15 @@ export class NavService implements OnDestroy {
           active: false,
           path: '/dashboard/tasks'
         },
-        {
-          title: 'Reports',
-          icon: 'bi-layout-text-window side-menu__icon',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          active: false,
-          path: '/dashboard/reports'
-        },
+        // {
+        //   title: 'Reports',
+        //   icon: 'bi-layout-text-window side-menu__icon',
+        //   dirchange: false,
+        //   type: 'link',
+        //   linkType : 'internal',
+        //   active: false,
+        //   path: '/dashboard/reports'
+        // },
         // {
         //   title: 'CRM Settings',
         //   icon: 'bi-layout-text-window side-menu__icon',
@@ -519,36 +520,36 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/projects',
     },
-    {
-      title: 'Documents',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: ' bi bi-folder side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/documents',
-    },
-    {
-      title: 'Knowledge',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: 'bi bi-book side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/knowledge',
-    },
-    {
-      title: 'Tasks',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      icon: 'bi bi-check2-square side-menu__icon',
-      active: false,
-      selected: false,
-      path: '/dashboard/task',
-    },
+    // {
+    //   title: 'Documents',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: ' bi bi-folder side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/documents',
+    // },
+    // {
+    //   title: 'Knowledge',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: 'bi bi-book side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/knowledge',
+    // },
+    // {
+    //   title: 'Tasks',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: 'bi bi-check2-square side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/task',
+    // },
     // {
     //   title: 'Chatbot',
     //   icon: 'bi-layout-text-window side-menu__icon',
