@@ -112,13 +112,13 @@ export class SidebarComponent implements AfterViewInit {
           item.isVisible = this.crmRole === 'ADMIN' || this.crmRole === 'USER';
           break;
 
-        case 'Quotation':
+        // case 'Quotation':
         case 'Optimization':
         case 'Projects':
           item.isVisible = this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER';
           break;
 
-        case 'Dashboard':
+        // case 'Dashboard':
         // case 'To-Do-List':
         // case 'HRM':
         // case 'Analytics':
@@ -128,6 +128,11 @@ export class SidebarComponent implements AfterViewInit {
         case 'optimizer':
         
         case 'Tasks':
+        case 'Dashboard':
+        case 'Knowledge':
+        item.isVisible = true;
+        break;
+          
         // case 'Boq':
         //   item.isVisible = true;
         //   break;

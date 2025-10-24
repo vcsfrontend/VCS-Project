@@ -433,6 +433,16 @@ export class NavService implements OnDestroy {
       type: 'sub',
       active: false,
       children: [
+        
+        {
+          title: 'Fresh Leads',
+          icon: 'bi-grid side-menu__icon',
+          dirchange: false,
+          type: 'link',
+          linkType : 'internal',
+          active: false,
+          path: '/apps/crm/deals'
+        },
         {
           title: 'Campaigns',
           dirchange: false,
@@ -443,15 +453,6 @@ export class NavService implements OnDestroy {
           selected: false,
           path: '/dashboard/campaigns',
         }, 
-        {
-          title: 'Deals',
-          icon: 'bi-grid side-menu__icon',
-          dirchange: false,
-          type: 'link',
-          linkType : 'internal',
-          active: false,
-          path: '/apps/crm/deals'
-        },
         {
           title: 'Tasks',
           icon: 'bi-bag side-menu__icon',
@@ -519,6 +520,36 @@ export class NavService implements OnDestroy {
       selected: false,
       path: '/dashboard/projects',
     },
+    // {
+    //   title: 'Documents',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: ' bi bi-folder side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/documents',
+    // },
+    // {
+    //   title: 'Knowledge',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: 'bi bi-book side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/knowledge',
+    // },
+    // {
+    //   title: 'Tasks',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   icon: 'bi bi-check2-square side-menu__icon',
+    //   active: false,
+    //   selected: false,
+    //   path: '/dashboard/task',
+    // },
     // {
     //   title: 'Chatbot',
     //   icon: 'bi-layout-text-window side-menu__icon',

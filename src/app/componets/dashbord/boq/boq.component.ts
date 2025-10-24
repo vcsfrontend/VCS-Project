@@ -19,8 +19,28 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyDoc, Validators } from 'ngx-editor';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SwiperModule, } from 'swiper/angular';
+import SwiperCore, {
+    Navigation,
+    Pagination,
+    Scrollbar,
+    A11y,
+    Virtual,
+    Zoom,
+    Autoplay,
+    Thumbs,
+    Mousewheel,
+    Keyboard,
+    EffectCube,
+    EffectFade,
+    EffectFlip,
+    EffectCoverflow,
+    SwiperOptions,
+    Swiper,
 
+
+} from 'swiper';
 interface Plan {
     name: string;
     checked: boolean;
@@ -28,19 +48,36 @@ interface Plan {
     isCustom?: boolean;   // optional flag for custom items
 }
 
+SwiperCore.use([
+    Navigation,
+    Pagination,
+    Scrollbar,
+    A11y,
+    Virtual,
+    Mousewheel,
+    Zoom,
+    Autoplay,
+    Thumbs,
+    Keyboard,
+    EffectCube,
+    EffectFade,
+    EffectFlip,
+    EffectCoverflow,
+]);
+
 @Component({
     selector: 'app-boq',
     standalone: true,
     imports: [SharedModule, NgSelectModule, NgbModule,
         NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule,
         NgApexchartsModule, MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,
-        NgbOffcanvasModule],
+        NgbOffcanvasModule, SwiperModule],
     providers: [NgbModalConfig, NgbModal, FlatpickrDefaults,],
     templateUrl: './boq.component.html',
     styleUrl: './boq.component.scss'
 })
 export class BoqComponent extends BaseComponent {
-    displayedColumns: string[] = ['sourceFlag', 'select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
+    displayedColumns: string[] = ['sourceFlag', 'select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'l1', 'l2', 'w1', 'w2', 'cl', 'cw', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
     // optionalColumns: string[] = ['brandOrMake', 'discount', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gst', 'amountWithoutGST'];
     displayedClientProposal: string[] = ['slNo', 'referenceNo', 'proposalRequestType', 'proposalFor', 'createdBy', 'createdDate', 'status', 'amount'];
     displayedClientOrder: string[] = ['slNo', 'orderNo', 'ordertType', 'orderFrom', 'issuedBy', 'issueDate', 'dueDate', 'orderStatus', 'poStatus', 'progress', 'amount'];
@@ -54,7 +91,7 @@ export class BoqComponent extends BaseComponent {
     orderContentColumns: string[] = ["elementUrl", "brandOrMake", "codeAndCategory", "orderStatus", "itemType", "source", "status", "length", "breadth", "height", "quantity", "uom", "draftQuantity", "clientRate", "serviceCharge", "baseAmount", "budgetRate", "hsn", "gstPrecent", "amountWithoutGst", "discount", "finalAmount"];
     userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
     designerColumns: string[] = ['slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-        'projectArea', 'projectStartDate', 'projectEndDate', 'designUrl','projectCompletion'];
+        'projectArea', 'assignedDesigner', 'designUrl', 'projectCompletion', 'projectStartDate', 'projectEndDate'];
     invoiceForm!: FormGroup; extraContentProposal!: FormGroup
     userDataStorage = localStorage.getItem('userDetails');
     userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
@@ -66,22 +103,25 @@ export class BoqComponent extends BaseComponent {
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
     selectedOrderContent: any = null; actstatus: any;
-    adoanAiRole : string = '';
+    adoanAiRole: string = '';
     itemId: any; currentSection: any; proposals: any[] = []; clientOrders: any[] = [];
     dataSource = new MatTableDataSource<any>(); projectId: any; projectName!: any;
-    designingId:any;designCompletionStatus:string='';
+    designingId: any; designCompletionStatus: string = '';
     detailsDataSource = new MatTableDataSource<any>([]);
     proposaldataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
     proposalContentDetailsDataSource = new MatTableDataSource<any>([]);
     designerDataSource = new MatTableDataSource<any>();
     proposalTabKeys: string[] = []; dateDiff: any; roleid: any;
     proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
-    itemCodeLst: any; public userList: any; filteredUserList: any[] = []; recceStage: string = '';
+    public userList: any; filteredUserList: any[] = []; recceStage: string = '';
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
-    filteredRecce: any[] = [];blockedStages: string[] = [];
+    filteredRecce: any[] = []; blockedStages: string[] = [];
+    selectedProposalCount: any = null;
+    isReadOnly :boolean = false;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+    @ViewChild('tabContainer', { static: false }) tabContainer!: ElementRef;
 
     @ViewChild(MatSort) sort!: MatSort;
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
@@ -92,12 +132,40 @@ export class BoqComponent extends BaseComponent {
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null;
-    activeId: any = 0; highlightedTabIndex = 0; selectedProposal: any;          // raw API data
+    activeId: any = 0; highlightedTabIndex = 0; selectedProposal: any;        
     filteredProposals: any[] = []; filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
     orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
-    projectLst: any = []; boqproject: any;showAllProposals = false;
+    projectLst: any = []; boqproject: any; showAllProposals = false; libraryList: any[] = [];
+    libraryListData: any[] = [];objectKeys = Object.keys;
+    showLeftArrow = false; showRightArrow = false;step = 1;submittedStep1:boolean=false;
+    submitted: boolean = false; projectConfigList: string[] = []; 
+    showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
+    // selectedColumns: Set<string> = new Set();
+    thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
+    setThumbsSwiper(swiper: any) {
+        this.thumbsSwiper = swiper;
+    }
+    public swiperConfig: any = {
 
+        breakpoints: {
+            200: {
+                slidesPerView: 1,
+            },
+            500: {
+                slidesPerView: 2,
+            },
+            770: {
+                slidesPerView: 3,
+            },
+            1400: {
+                slidesPerView: 4,
+            },
+            1600: {
+                slidesPerView: 5,
+            },
+        }
+    }
     public elementFormSubmitted = false;
     public proposalFormSubmitted = false;
     public proposalApprovalSubmitted = false;
@@ -111,7 +179,7 @@ export class BoqComponent extends BaseComponent {
     constructor(
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
-        private fb: FormBuilder, private route: ActivatedRoute,) {
+        private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
         super();
         this.userData = localStorage.getItem('userDetails');
         this.userType = JSON.parse(this.userData).type;
@@ -131,7 +199,7 @@ export class BoqComponent extends BaseComponent {
     openRights2(content3: any) {
         this.offcanvasService.open(content3, { position: 'end' });
     }
-    
+
     openProjectModal(content45: any, projectId: string) {
         const project = this.designerDataSource.data.find(p => p.projectId === projectId);
         this.updateProjectForm.patchValue({
@@ -148,22 +216,22 @@ export class BoqComponent extends BaseComponent {
             type: this.userType
         });
         if (project.designCompletionStatus === 'Complete') {
-        this.updateProjectForm.disable(); 
-        } else{
+            this.updateProjectForm.disable();
+        } else {
 
-        if (this.userRole === 'USER') {
-            Object.keys(this.updateProjectForm.controls).forEach(control => {
-                if (control !== 'designCompletionStatus') {
-                    this.updateProjectForm.controls[control].disable();
-                } else {
+            if (this.userRole === 'USER') {
+                Object.keys(this.updateProjectForm.controls).forEach(control => {
+                    if (control !== 'designCompletionStatus') {
+                        this.updateProjectForm.controls[control].disable();
+                    } else {
+                        this.updateProjectForm.controls[control].enable();
+                    }
+                });
+            } else if (this.userRole === 'ADMIN') {
+                Object.keys(this.updateProjectForm.controls).forEach(control => {
                     this.updateProjectForm.controls[control].enable();
-                }
-            });
-        } else if (this.userRole === 'ADMIN') {
-            Object.keys(this.updateProjectForm.controls).forEach(control => {
-                this.updateProjectForm.controls[control].enable();
-            });
-        }
+                });
+            }
         }
         this.modalService.open(content45, { backdrop: 'static' });
     }
@@ -179,7 +247,7 @@ export class BoqComponent extends BaseComponent {
     }
 
     openRights4(content4: any) {
-        this.modalService.open(content4, { centered: true, size: 'lg' });
+        this.modalService.open(content4, { centered: true, size: 'md' });
     }
 
     openRights5(content6: any, proposal: any) {
@@ -203,8 +271,15 @@ export class BoqComponent extends BaseComponent {
     };
 
     ngOnInit(): void {
-        this.getUsers();
-        this.getAssignProjects();
+        this.route.queryParams.subscribe(params => {
+            this.projectId = params['projectId'];
+            this.projectName = params['projectName'];
+            this.buildRecceForm();
+            this.recceForm.patchValue({
+                projectId: this.projectId,
+                projectName: this.projectName
+            });
+        });
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
@@ -226,6 +301,12 @@ export class BoqComponent extends BaseComponent {
             quantity: [0],
             uom: [''],
             draftQuantity: [0],
+            l1: [''],
+            l2: [''],
+            w1: [''],
+            w2: [''],
+            cl: [''],
+            cw: [''],
             clientRate: [0],
             finalAmount: [0],
             brandOrMake: [''],
@@ -244,6 +325,22 @@ export class BoqComponent extends BaseComponent {
             type: this.userType
         });
         this.proposalForm = this.fb.group({
+            margin:[''],
+            discount: [0, [Validators.required]],
+            others: [0, [Validators.required]],
+            clientName: ['',],
+            clientAddress: ['',],
+            clientEmail:[''],
+            projectConfig: [''],
+            dedEmail: [''],
+            dedMobile: [''],
+            dedName: [''],
+            rmdEmail: [''],
+            rmdMobile: [''],
+            projectName: [''],
+            flatNo: [''],
+            rmdName: [''],
+            clientMobileNumber:['',[Validators.required]],
             orderFrom: [''],
             orderFor: [this.userCompanyName],
             vendorId: [''],
@@ -255,6 +352,12 @@ export class BoqComponent extends BaseComponent {
             proposalContId: [''],
             designId: [''],
             companyCode: this.userCompanyCode,
+            tdmc: [0.0, [Validators.required]],
+            gmc: [0.0, [Validators.required]],
+            gsc: [0.0, [Validators.required]],
+            tdsc: [0.0, [Validators.required]],
+            gpa: [0.0, [Validators.required]],
+            tdpa: [0.0, [Validators.required]],
             email: this.userEmail,
             type: this.userType,
             updatedBy: this.userName,
@@ -290,15 +393,7 @@ export class BoqComponent extends BaseComponent {
             noCalendar: true,
             dateFormat: 'H:i',
         };
-        this.route.queryParams.subscribe(params => {
-            this.projectId = params['projectId'];
-            this.projectName = params['projectName'];
-            this.buildRecceForm();
-            this.recceForm.patchValue({
-                projectId: this.projectId,
-                projectName: this.projectName
-            });
-        });
+
         this.getRecceData();
         this.updateRecceForm = this.fb.group({
             files: this.fb.array([]),
@@ -320,6 +415,7 @@ export class BoqComponent extends BaseComponent {
             assignedDesigner: [''],
             designCompletionStatus: ['']
         });
+        this.getUsers();
         this.getAssignProjects();
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
@@ -341,6 +437,8 @@ export class BoqComponent extends BaseComponent {
             type: this.userType,
             createdBy: this.userName
         });
+        this.getLibraryData();
+        this.getLibraryNames();
     }
 
     getUsers() {
@@ -358,15 +456,8 @@ export class BoqComponent extends BaseComponent {
                         this.filteredUserList = this.userList.filter(
                             (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
                         );
-                    } else {
-                        this.toastr.error(res.message, 'signup', {
-                            timeOut: 3000,
-                            positionClass: 'toast-top-right',
-                        });
                     }
-                },
-                error: (error) => {
-                },
+                }
             });
         }
     }
@@ -391,6 +482,13 @@ export class BoqComponent extends BaseComponent {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
         return hash;
+    }
+
+    applyGlobalFilter(event: Event) {
+        const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+        Object.keys(this.boqDataSources).forEach(key => {
+            this.boqDataSources[key].filter = filterValue;
+        });
     }
 
     openEditForm(element: any, content: any) {
@@ -469,7 +567,6 @@ export class BoqComponent extends BaseComponent {
                 brandOrMake = brandLine.split(':')[1]?.trim() || '';
             }
         }
-
         const payload = [{
             boqId: element.boqId ?? 0,
             elementUrl: element.elementUrl ?? '',
@@ -508,13 +605,8 @@ export class BoqComponent extends BaseComponent {
                     this.toastr.success(`${field} updated successfully`);
                     element[field] = fieldValue;
                     if (field === 'itemType') element.brandOrMake = brandOrMake;
-                } else {
-                    this.toastr.error(res?.message || `Failed to update ${field}`);
                 }
-            },
-            error: (err) => {
-                this.toastr.error(`Error while updating ${field}`);
-            },
+            }
         });
     }
 
@@ -551,6 +643,7 @@ export class BoqComponent extends BaseComponent {
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.proposaldataSource.paginator = this.paginator;
+        this.checkArrows();
         // this.dataSource.sort = this.sort;
     }
 
@@ -570,7 +663,7 @@ export class BoqComponent extends BaseComponent {
         const payload = {
             email: this.userEmail,
             // designId: "3FO3EWPJHYSK",
-            designId : this.designingId,
+            designId: this.designingId,
             bomRequired: true,
             wardrobeRequired: true,
             kbRequired: true
@@ -610,9 +703,6 @@ export class BoqComponent extends BaseComponent {
                 this.tabTotals['All'] = allItems.reduce((sum, item) => sum + (item.clientRate || 0), 0);
                 this.tabKeys = ['All', ...this.tabKeys];
             },
-            error: () => {
-                this.toastr.error('Something went wrong!');
-            }
         });
     }
 
@@ -628,9 +718,6 @@ export class BoqComponent extends BaseComponent {
                 this.proposals = res.boqProposalList || [];
                 this.filteredProposals = [...this.proposals];
             },
-            error: () => {
-                this.toastr.error('Failed to fetch proposals');
-            }
         });
     }
 
@@ -691,9 +778,6 @@ export class BoqComponent extends BaseComponent {
                     this.proposalApprovalForm.patchValue({ amount: 0 });
                 }
             },
-            error: () => {
-                this.toastr.error("Failed to fetch proposal details");
-            }
         });
     }
 
@@ -715,9 +799,6 @@ export class BoqComponent extends BaseComponent {
             next: (res: any) => {
                 this.clientOrders = res.boqClinetOrderList || [];
                 this.filteredClientOrders = [...this.clientOrders];
-            },
-            error: () => {
-                this.toastr.error('Failed to fetch clientOrders');
             }
         });
     }
@@ -787,9 +868,6 @@ export class BoqComponent extends BaseComponent {
                     this.orderTabCounts = { All: 0 };
                     this.proposalApprovalForm.patchValue({ amount: 0 });
                 }
-            },
-            error: () => {
-                this.toastr.error("Failed to fetch order details");
             }
         });
     }
@@ -836,35 +914,52 @@ export class BoqComponent extends BaseComponent {
         const formValue = { ...this.elementForm.value };
         delete formValue.elementName;
         delete formValue.elementDescription;
+        const breadthNum = Number(this.elementForm.value.breadth || 0);
+        const lengthNum = Number(this.elementForm.value.length || 0);
+        const heightNum = Number(this.elementForm.value.height || 0);
+        const quantityNum = Number(this.elementForm.value.quantity || 0);
+        const w1Num = Number(this.elementForm.value.w1 || 0);
+        const w2Num = Number(this.elementForm.value.w2 || 0);
+        const l1Num = Number(this.elementForm.value.l1 || 0);
+        const l2Num = Number(this.elementForm.value.l2 || 0);
+        const clNum = breadthNum - (w1Num + w2Num);
+        const cwNum = lengthNum - (l1Num + l2Num); 
         const payload = {
             ...formValue,
-            elementNameAndDescription: `${this.elementForm.value.elementName || ''}`
-                + `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}`
-                + `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`, // 👈 embed brand
-            budgetRate: Number(this.elementForm.value.budgetRate),
-            clientRate: Number(this.elementForm.value.clientRate),
-            gstPrecent: Number(this.elementForm.value.gstPrecent),
-            hsn: Number(this.elementForm.value.hsn),
-            breadth: Number(this.elementForm.value.breadth),
-            height: Number(this.elementForm.value.height),
-            length: Number(this.elementForm.value.length),
-            quantity: Number(this.elementForm.value.quantity),
-            codeAndCategory: formValue.codeAndCategory?.name,
-            brandOrMake: this.elementForm.value.brandOrMake || ''
+            elementNameAndDescription:
+                `${this.elementForm.value.elementName || ''}` +
+                `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}` +
+                `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`,
+            budgetRate: Number(this.elementForm.value.budgetRate || 0).toString(),
+            clientRate: Number(this.elementForm.value.clientRate || 0).toString(),
+            gstPrecent: Number(this.elementForm.value.gstPrecent || 0).toString(),
+            hsn: Number(this.elementForm.value.hsn || 0).toString(),
+            breadth: breadthNum,
+            height: heightNum,
+            length: lengthNum,
+            quantity: quantityNum,
+            codeAndCategory: formValue.codeAndCategory?.name || '',
+            brandOrMake: this.elementForm.value.brandOrMake || '',
+            w1: w1Num.toString(),
+            w2: w2Num.toString(),
+            l1: l1Num.toString(),
+            l2: l2Num.toString(),
+            cl: clNum.toString(),
+            cw: cwNum.toString(),
+            designId:this.designingId,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType
         };
+        console.log('Payload:', payload);
         this.switchService.saveElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
                     this.toastr.success(res.message || 'Data Saved Successfully');
                     this.elementForm.reset();
                     this.elementFormSubmitted = false;
-                } else {
-                    this.toastr.error(res?.message || 'Something went wrong.');
                 }
-            },
-            error: (err) => {
-                this.toastr.error('An error occurred while saving the element.');
-            },
+            }
         });
     }
 
@@ -907,11 +1002,9 @@ export class BoqComponent extends BaseComponent {
                 hsn: Number(element?.hsn ?? formValue.hsn) || 0,
                 gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
                 amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-
                 designId: this.designingId,
                 roomName: element?.roomName || formValue.roomName || '',
                 itemCode: element?.itemCode || formValue.itemCode || '',
-
                 companyCode: this.userCompanyCode,
                 email: this.userEmail,
                 type: this.userType,
@@ -926,13 +1019,8 @@ export class BoqComponent extends BaseComponent {
                     this.elementFormSubmitted = false;
                     this.selectedElement = null;
                     this.boqData();
-                } else {
-                    this.toastr.error(res?.message || 'Something went wrong.');
                 }
-            },
-            error: (err) => {
-                this.toastr.error('An error occurred while updating the element.');
-            },
+            }
         });
     }
 
@@ -1026,9 +1114,6 @@ export class BoqComponent extends BaseComponent {
             next: () => {
                 this.createProposal(proposalPayload, modal);
             },
-            error: (err) => {
-                this.toastr.error("Failed to update elements");
-            }
         });
     }
 
@@ -1039,14 +1124,8 @@ export class BoqComponent extends BaseComponent {
                     this.toastr.success(res.message || "Proposal created successfully");
                     modal.close();
                     this.boqData();
-                } else {
-                    this.toastr.error(res?.message || "Something went wrong while creating proposal");
                 }
             },
-            error: (err) => {
-                this.toastr.error("Failed to create proposal");
-                console.error(err);
-            }
         });
     }
 
@@ -1080,9 +1159,6 @@ export class BoqComponent extends BaseComponent {
             next: (res) => {
                 this.toastr.success("Proposal updated successfully");
                 modal.close();
-            },
-            error: (err) => {
-                this.toastr.error("Something went wrong");
             }
         });
     }
@@ -1451,9 +1527,6 @@ export class BoqComponent extends BaseComponent {
                     window.open(url, '_blank');
                     this.toastr.success(res.message);
                 }
-            },
-            error: (err) => {
-                this.toastr.error('Something went wrong');
             }
         });
     }
@@ -1473,9 +1546,7 @@ export class BoqComponent extends BaseComponent {
     //             if (res) {
     //                 this.projectLst = res.projList;
     //                 this.designerDataSource.data = this.projectLst;
-    //             } else {
-    //                 this.toastr.error(res.message);
-    //             }
+    //             } 
     //         }
     //     })
     // }
@@ -1500,7 +1571,7 @@ export class BoqComponent extends BaseComponent {
             next: (res: any) => {
                 if (res) {
                     let projects = Array.isArray(res) ? res : [res];
-                    this.designingId= res?.designId || '';
+                    this.designingId = res?.designId || '';
                     this.designCompletionStatus = res.designCompletionStatus;
                     if (this.userRole === 'ADMIN') {
                         this.projectLst = projects;
@@ -1516,11 +1587,6 @@ export class BoqComponent extends BaseComponent {
                     this.designerDataSource.data = [];
                 }
             },
-            error: (err) => {
-                console.error('Error fetching projects:', err);
-                this.projectLst = [];
-                this.designerDataSource.data = [];
-            }
         });
     }
 
@@ -1556,7 +1622,6 @@ export class BoqComponent extends BaseComponent {
                 modal.close();
                 this.recceForm.reset();
             },
-            error: () => this.toastr.error('Failed to create recce'),
         });
     }
 
@@ -1602,8 +1667,8 @@ export class BoqComponent extends BaseComponent {
                             ? recce.imageUrls.split(',').map((url: string) => url.trim())
                             : [],
                         recceAssigneEmails: recce.recceAssigne
-                        ? recce.recceAssigne.split(',').map((v: string) => v.trim())
-                        : [],
+                            ? recce.recceAssigne.split(',').map((v: string) => v.trim())
+                            : [],
                         recceStakeHoldersEmail: recce.recceStakeHolders
                             ? recce.recceStakeHolders.split(',')[0].trim() : '',
                         recceClientPocEmail: recce.recceClientPoc
@@ -1612,15 +1677,12 @@ export class BoqComponent extends BaseComponent {
                     this.blockedStages = [];
                     this.recceList.forEach(recce => {
                         if (recce.recceStage) {
-                        this.blockedStages.push(recce.recceStage);
+                            this.blockedStages.push(recce.recceStage);
                         }
                     });
                     this.filterRecceByStage('Recce Details');
-                } 
+                }
             },
-            error: (err) => {
-                this.toastr.error('Something went wrong');
-            }
         });
     }
 
@@ -1646,9 +1708,6 @@ export class BoqComponent extends BaseComponent {
                 this.toastr.success('Recce updated successfully');
                 this.getRecceData();
             },
-            error: (err: any) => {
-                this.toastr.error('Something went wrong while updating recce');
-            }
         });
     }
 
@@ -1672,19 +1731,244 @@ export class BoqComponent extends BaseComponent {
 
     openDesignLink(url: string) {
         if (url) {
-            window.open(url, '_blank'); 
+            window.open(url, '_blank');
         } else {
             this.toastr.warning('Design URL not available');
         }
     }
 
-     getRecceByStage(stage: string) {
+    getRecceByStage(stage: string) {
         return this.recceList.filter(r => r.recceStage === stage);
     }
-    
+
     isBlocked(stageName: string): boolean {
         return this.blockedStages.includes(stageName);
     }
+    onShare(proposal: any) {
+        const designId = proposal?.designId;
+        const proposalContentId = proposal?.proposalContId;
+        this.router.navigate(['/dashboard/quotation'], {
+            queryParams: {
+                designId: designId,
+                proposalContentId: proposalContentId
+            }
+        });
+    }
 
+    getLibraryData() {
+        this.switchService.getLibrarayData().subscribe({
+            next: (res: any) => {
+                if (res && res.items) {
+                    this.libraryListData = res.items;
+                }
+            }
+        });
+    }
+    
+    getLibraryNames() {
+        this.switchService.getLibrarayNames().subscribe({
+            next: (res: any) => {
+                if (res && res.libraries) {
+                    this.libraryList = res.libraries;
+                }
+            }
+        });
+    }
+
+    onTabChange(event: any) {
+  this.activeTab = event.nextId;
+
+  if (this.activeTab === '1') {
+    this.isReadOnly = true;
+    this.elementForm.disable();
+    this.elementForm.get('quantity')?.enable();
+  } else if (this.activeTab === '5') {
+    this.isReadOnly = false;
+    this.elementForm.enable();
+  }
+}
+scrollTabs(direction: 'left' | 'right') {
+    const container = this.tabContainer.nativeElement;
+    const scrollAmount = 150;
+    if (direction === 'left') {
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+    setTimeout(() => this.checkArrows(), 300);
+  }
+
+  checkArrows() {
+    const container = this.tabContainer?.nativeElement;
+    if (!container) return;
+
+    this.showLeftArrow = container.scrollLeft > 0;
+    this.showRightArrow = container.scrollWidth > container.clientWidth + container.scrollLeft;
+  }
+
+  prevStep() {
+    if (this.step > 1) {
+      this.step--;
+    }
+  }
+  nextStep() {
+  if (this.step === 1) {
+    if (
+      this.proposalForm.get('clientName')?.invalid ||
+      this.proposalForm.get('clientAddress')?.invalid ||
+      this.proposalForm.get('clientMobileNumber')?.invalid
+    ) {
+      this.submittedStep1 = true; 
+      return;
+    }
+    this.step = 2;
+  } 
+  else if (this.step === 2) {
+    if (this.proposalForm.get('others')?.invalid) {
+      return;
+    }
+    this.step =3;
+    }
+    else if ( this.step ===3){
+        this.step =4 ;
+    }
+    else if(this.step===4){
+        return;
+        }
+    }
+    
+
+  allowOnlyNumbers(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '');
+  }
+  allowOnlynum(event: KeyboardEvent) {
+    const allowedChars = '0123456789.';
+    const inputChar = event.key;
+
+    if (
+      ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
+    ) {
+      return;
+    }
+
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
+      event.preventDefault();
+    }
+  }
+  get g() {
+    return this.proposalForm.controls;
+  }
+   onDedSelected(selectedUser: any): void {
+    if (selectedUser?.email === 'Other') {
+    this.showOtherDesignerFields = true;
+
+    // Clear auto-fill fields
+    this.proposalForm.patchValue({
+      dedMobile: '',
+      dedName: ''
+    });
+    } else {
+    this.showOtherDesignerFields = false;
+    if (selectedUser) {
+      this.proposalForm.patchValue({
+        dedMobile: selectedUser.phoneNumber || '',
+        dedName: selectedUser.username || ''
+      });
+    } else {
+      this.proposalForm.patchValue({
+        dedMobile: '',
+        dedName: ''
+      });
+    }
+  }
+  }
+
+  onUserSelected(selectedUser: any): void {
+  if (selectedUser?.email === 'Other') {
+    this.showOtherRelationshipFields = true;
+
+    // Clear auto-fill fields
+    this.proposalForm.patchValue({
+      rmdMobile: '',
+      rmdName: ''
+    });
+    } else {
+      this.showOtherRelationshipFields = false;
+      if (selectedUser) {
+        this.proposalForm.patchValue({
+          rmdMobile: selectedUser.phoneNumber || '',
+          rmdName: selectedUser.username || ''
+        });
+      } else {
+        this.proposalForm.patchValue({
+          rmdMobile: '',
+          rmdName: ''
+        });
+      }
+    }
+  }
+  getProjectConfig(){
+    let payload = {
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchProjectConfig(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+           const configs: string[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const value = res[`f${i}`];
+            if (value) configs.push(value);
+          }
+          this.projectConfigList = configs;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        // this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+   toggleGraniteFields() {
+    this.graniteEnabled = !this.graniteEnabled;
+    if (!this.graniteEnabled) {
+      this.proposalForm.patchValue({ gpa: 0, gsc: 0,gmc:0 });
+    }
+  }
+  toggleTDMCFields() {
+    this.TDMCEnabled = !this.TDMCEnabled;
+    if (!this.TDMCEnabled) {
+      this.proposalForm.patchValue({ tdmc: 0, tdpa: 0,tdsc:0 });
+    }
+  }
+
+  getMarginData(){
+    let payload = {
+      companycode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchDynamicMargin(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          const configs: { name: string, percent: number }[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const name = res[`f${i}`];
+            const percent = res[`f${i}Percent`];
+            if (name) {
+              configs.push({ name, percent: percent || 0 });
+            }
+          }
+          this.projectMarginList = configs;
+        }
+      },
+      error: (error) => {
+      }
+    });
+  }
 
 }

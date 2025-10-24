@@ -399,12 +399,12 @@
           <div  class="p-3">
             <div class="d-flex align-items-center justify-content-between">
               <p class="mb-0 fs-16">Notifications</p>
-              <span class="badge bg-secondary-transparent" id="notifiation-data">{{ notificationCount }} Unread</span>
+              <span class="badge bg-danger-transparent" id="notifiation-data">{{ followUpCount }} Unread</span>
             </div>
           </div>
           <div class="dropdown-divider"></div>
           <overlay-scrollbars [defer]>
-            <ul class="list-unstyled mb-0" id="header-notification-scroll" *ngIf="followUpCount > 1" (click)="handleCardClick($event)">
+            <ul class="list-unstyled mb-0" id="header-notification-scroll" *ngIf="followUpCount >= 1" (click)="handleCardClick($event)">
               <li ngbDropdownItem class="dropdown-item" id="not4">
                 <div class="d-flex align-items-center">
                   <div class="d-flex align-items-center">
@@ -417,8 +417,7 @@
                       <div>
                         <p class="mb-0 fw-medium">
                           <a [routerLink]="['/apps/crm/leads']" [queryParams]="{ campaignId: campaignId }">
-                            <span style="background-color: rgb(5, 63, 99); padding: 2px 4px; border-radius: 4px;">
-                              {{ nextLeadStatus }}
+                            <span class="bg-danger-transparent me-2">{{ nextLeadStatus }}
                             </span>
                             Follow-Ups Pending
                           </a>
@@ -474,10 +473,9 @@
         <a ngbDropdownToggle href="javascript:void(0);" class="header-link dropdown-toggle" id="mainHeaderProfile"
           data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
           <div class="d-flex align-items-center">
-            <div class="avatar avatar-md avatar-rounded me-2 border text-white fw-bold" [ngClass]="getUserColor(loggedInUser)">
-              <span class="d-flex align-items-center justify-content-center w-100 h-100">
-                {{ loggedInUser?.email?.charAt(0) | uppercase }}
-              </span>
+            <div class="avatar avatar-md avatar-rounded online me-3 cu">
+              <img [src]="profilePic || 'assets/images/brand-logos/profile1.jpg'" alt="Profile Picture"
+                class="rounded-circle border border-2 border-dark">
             </div>
             <div class="d-xl-block d-none lh-1">
               <span class="fw-medium lh-1">{{userName}}</span>

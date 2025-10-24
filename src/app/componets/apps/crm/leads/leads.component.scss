@@ -122,8 +122,9 @@ table.mat-mdc-table {
   position: relative;
   display: block;
   box-sizing: border-box;
-  width: 200px;
+  width: 260px;
 }
+
 
 .marge {
   margin-top: -40px !important;
@@ -194,11 +195,6 @@ table.mat-mdc-table {
 .mdc-data-table__header-cell {
   padding: 0 10px !important;
 }
-
-.table-container {
-  overflow-x: auto;
-}
-
 .mat-table th, 
 .mat-table td {
   white-space: nowrap;
@@ -256,4 +252,61 @@ table.mat-mdc-table {
   opacity: 0.6;          
   background-color: #f5f5f5; 
 }
+.table-container {
+  max-height: calc(80px * 5);
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #666 #fff;
+}
 
+.table-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: #fff;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px;
+}
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #333;
+}
+
+.ng-dropdown-panel .ng-option {
+  border-bottom: 1px solid #000000;  /* divider */
+  padding: 8px 12px;
+}
+
+.ng-dropdown-panel .ng-option:last-child {
+  border-bottom: none;
+}
+.offcanvas-body {
+    overflow-y: auto;
+    max-height: calc(160vh - 160px); /* Adjust depending on header/footer size */
+}
+
+.offcanvas-footer {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 10;
+}
+
+
+.avatar.avatar-ttm {
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.75rem;
+    font-size: 0.65rem;
+}
+
+.badges {
+    padding: 0.05rem 0.5rem;
+    font-size: 0.75rem;   
+    font-weight: 500;
+    border-radius: 0.2rem; 
+}

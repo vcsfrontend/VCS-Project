@@ -440,7 +440,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
       },
       error: (err) => {
-        this.toastr.error('Something went wrong');
+        // this.toastr.error('Something went wrong');
       }
     });
   }
@@ -516,9 +516,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.toastr.error(res.message);
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // },
     })
   }
 
@@ -571,7 +571,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.projectLst = res.projList;
           this.myProjectDataSource.data = this.projectLst;
         } else {
-          this.toastr.error(res.message);
+          // this.toastr.error(res.message);
         }
         this.stopLoading();
       }
@@ -591,7 +591,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.adonaiDaysLeft = this.calculateDateDiff(this.adonaiSubEndDate);
 
         } else {
-          this.toastr.error(res.message);
+          // this.toastr.error(res.message);
           return;
         }
       }
@@ -610,8 +610,29 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (diffDays === 0) return 'Last day';
     if(diffDays == 1) return 'Subscription ends in 1 day';
 
-
     return `Subscription ends in ${diffDays} days`;
+  }
+
+  getSubscriptionStatus(roleId: number, endDate: string | Date): string {
+    const roleMap: { [key: number]: string } = {
+      7: 'Free Trial',
+      12: 'Basic',
+      3: 'Pro',
+      5: 'Elite'
+    };
+    const roleName = roleMap[roleId] || 'Unknown';
+    const today = new Date();
+    const end = new Date(endDate);
+    if (isNaN(end.getTime())) return `${roleName} - Invalid date`;
+
+    const diffTime = end.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) return `${roleName} expired`;
+    if (diffDays === 0) return `${roleName} expires today`;
+    if (diffDays === 1) return `${roleName} expires in 1 day`;
+
+    return `${roleName} Subscription expires in ${diffDays} days`;
   }
 
 
@@ -689,9 +710,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           });
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // },
     })
   }
 
@@ -899,7 +920,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.modalService.dismissAll();
         },
         error: (error) => {
-          this.toastr.error('Error save payment details', error);
+          // this.toastr.error('Error save payment details', error);
         },
       });
     }
@@ -1654,9 +1675,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       })
     }
   }
@@ -1805,7 +1826,7 @@ downloadButtons: { label: string; url: string }[] = [];
       }
     },
     error: (err) => {
-      this.toastr.error(err.statusText || 'Something went wrong');
+      // this.toastr.error(err.statusText || 'Something went wrong');
       this.isLoading = false;
     }
   });
@@ -1891,7 +1912,7 @@ downloadButtons: { label: string; url: string }[] = [];
 
 
         } else {
-          this.toastr.error("User not found.");
+          // this.toastr.error("User not found.");
         }
       },
       error: (err: any) => {
@@ -2119,6 +2140,8 @@ downloadButtons: { label: string; url: string }[] = [];
       }
     );
   }
+
+  
 
 
 

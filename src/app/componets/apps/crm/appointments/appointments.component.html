@@ -1,14 +1,140 @@
-<div class="col-lg-12 bg-white m-1">
-    <full-calendar [options]="calendarOptions">
-        <ng-template #eventContent let-arg>
+<div class="row mt-4">
+  <div class="col-xl-9">
+    <div class="card custom-card">
+      <div class="card-header justify-content-between">
+        <div class="card-title">All Slots</div>
+        <button class="btn btn-primary btn-wave"><i
+            class="ri-add-line align-middle me-1 fw-medium d-inline-block"></i>Create New Slot</button>
+      </div>
+      <div class="card-body p-0">
+        <div id="external-events" #external class="border-bottom p-3 d-flex align-items-center justify-content-between flex-wrap">
+          <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event bg-primary-transparent">
+            <div class="fc-event-main text-primary">12:00PM - 1:00PM</div>
+          </div>
+          <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event bg-secondary-transparent"
+            data-class="bg-secondary-transparent">
+            <div class="fc-event-main text-secondary">12:00PM - 1:00PM</div>
+          </div>
+          <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event bg-success-transparent"
+            data-class="bg-success-transparent text-success">
+            <div class="fc-event-main text-success">12:00PM - 1:00PM</div>
+          </div>
+          <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event bg-info-transparent"
+            data-class="bg-info-transparent text-info">
+            <div class="fc-event-main text-info">12:00PM - 1:00PM</div>
+          </div>
+          <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event bg-warning-transparent"
+            data-class="bg-warning">
+            <div class="fc-event-main text-warning">12:00PM - 1:00PM</div>
+          </div>
+          <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event bg-danger-transparent"
+            data-class="bg-danger">
+            <div class="fc-event-main text-danger">12:00PM - 1:00PM</div>
+          </div>
+          <div class="fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event bg-teal-transparent"
+            data-class="bg-danger">
+            <div class="fc-event-main text-teal">12:00PM - 1:00PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card custom-card">
+      <div class="card-header">
+        <div class="card-title">Full Calendar</div>
+      </div>
+      <div class="card-body">
+        <div id='calendar2'>
+          <full-calendar [options]="calendarOptions">
+          <ng-template #eventContent let-arg>
             <div class="custom-event" (click)="open(content1)">
-                <strong >{{ arg.event.title }}</strong>
+              <strong>{{ arg.event.title }}</strong>
             </div>
-        </ng-template>
-    </full-calendar>
+          </ng-template>
+        </full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3">
+    <div class="card custom-card">
+      <div class="card-body">
+        <div class="p-3">
+          <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fw-medium">
+              Activity :
+            </h6>
+            <button class="btn btn-primary-light btn-sm btn-wave">View All</button>
+          </div>
+        </div>
+      <overlay-scrollbars [defer]>
+        <div class="p-3" id="full-calendar-activity">
+          <ul class="list-unstyled mb-0 fullcalendar-events-activity mb-0">
+            <li>
+              <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <p class="mb-1 fw-medium">
+                  Monday, Jan 1,2023
+                </p>
+                <span class="badge bg-light text-default mb-1">12:00PM - 1:00PM</span>
+              </div>
+              <p class="mb-0 text-muted fs-12">
+                Meeting with a client about new project requirement.
+              </p>
+            </li>
+            <li>
+              <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <p class="mb-1 fw-medium">
+                  Thursday, Dec 29,2022
+                </p>
+                <span class="badge bg-success mb-1">Completed</span>
+              </div>
+              <p class="mb-0 text-muted fs-12">
+                Birthday party of niha suka
+              </p>
+            </li>
+            <li>
+              <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <p class="mb-1 fw-medium">
+                  Wednesday, Jan 3,2023
+                </p>
+                <span class="badge bg-warning-transparent mb-1">Reminder</span>
+              </div>
+              <p class="mb-0 text-muted fs-12">
+                WOrk taget for new project is completing
+              </p>
+            </li>
+            <li>
+              <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <p class="mb-1 fw-medium">
+                  Friday, Jan 20,2023
+                </p>
+                <span class="badge bg-light text-default mb-1">06:00PM - 09:00PM</span>
+              </div>
+              <p class="mb-0 text-muted fs-12">
+                Watch new movie with family
+              </p>
+            </li>
+            <li>
+              <div class="d-flex align-items-center justify-content-between flex-wrap">
+                <p class="mb-1 fw-medium">
+                  Saturday, Jan 07,2023
+                </p>
+                <span class="badge bg-danger-transparent mb-1">Due Date</span>
+              </div>
+              <p class="mb-0 text-muted fs-12">
+                Last day to pay the electricity bill and water bill.need to check the bank details.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </overlay-scrollbars>
+        <div class="p-3 border-top">
+          <img src="./assets/images/media/media-81.svg" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Book a Demo Modal -->
 <ng-template #content1 let-modal>
   <form [formGroup]="appointmentForm">
     <div class="modal-header justify-content-center">
@@ -48,18 +174,21 @@
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div>
-                  <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1" [ngClass]="getPriorityIconColor(item.appointmenType)"></i> Type:</strong> {{ item.appointmenType
+                  <p><strong><i class="ri-star-s-fill fs-16 op-5 me-1"
+                        [ngClass]="getPriorityIconColor(item.appointmenType)"></i> Type:</strong> {{ item.appointmenType
                     }}</p>
                   <p><strong>Date:</strong> {{ item.date | date: 'medium' }}</p>
                   <p><strong>Description:</strong> {{ item.description }}</p>
-                  <p><strong >Duration:</strong><span class="ms-3" [ngClass]="getTaskColor(item)">{{ item.duration }} mins</span></p>
+                  <p><strong>Duration:</strong><span class="ms-3" [ngClass]="getTaskColor(item)">{{ item.duration }}
+                      mins</span></p>
                   <ng-container *ngIf="item.assignedDesigner?.split(',') as agentList">
                     <div class="d-flex align-items-center">
                       <span class="me-2"><strong>Assigned Designer:</strong></span>
                       <ng-container *ngFor="let agent of agentList.slice(0, 3)">
                         <span
                           class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
-                          [ngClass]="getAgentColor(agent)" tabindex="0" role="button" >
+                          [ngClass]="getAgentColor(agent)" tabindex="0" role="button" [ngbTooltip]="agent"
+                          tooltipClass="tooltip-primary">
                           {{ agent.trim().charAt(0) | uppercase }}
                         </span>
                       </ng-container>
@@ -111,11 +240,7 @@
         <div class="row gy-2">
           <div class="col-xl-6">
             <label class="form-label">Appointment type</label>
-            <ng-select
-              formControlName="appointmenType"
-              [items]="appointmentList"
-              bindLabel="name"
-              bindValue="name"
+            <ng-select formControlName="appointmenType" [items]="appointmentList" bindLabel="name" bindValue="name"
               placeholder="Select Project">
             </ng-select>
           </div>
@@ -136,11 +261,7 @@
 
           <div class="col-xl-6">
             <label class="form-label">assignedDesigner</label>
-            <ng-select
-              formControlName="assignedDesigner"
-              [items]="userList"
-              bindLabel="email"
-              bindValue="email"
+            <ng-select formControlName="assignedDesigner" [items]="userList" bindLabel="email" bindValue="email"
               placeholder="Select Project">
             </ng-select>
           </div>
@@ -156,8 +277,3 @@
     </div>
   </form>
 </ng-template>
-
-
-
-
-

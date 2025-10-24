@@ -996,3 +996,21 @@ div:where(.swal2-container) div:where(.swal2-validation-message) {
     transition: none;
   }
 }
+
+.ng-select {
+  border-radius: 0.85rem !important;
+}
+
+.ng-select.ng-select-focused .ng-select-container {
+  border: 1px solid rgb(0, 102, 153) !important;
+}
+
+.ng-dropdown-panel {
+    box-sizing: border-box;
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    z-index: 1050;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+}

@@ -483,17 +483,9 @@
                               <th mat-header-cell *matHeaderCellDef> Email </th>
                               <td mat-cell *matCellDef="let element">{{ element.email }}</td>
                             </ng-container>
-                            <ng-container matColumnDef="roleId">
-                              <th mat-header-cell *matHeaderCellDef> RoleID </th>
-                              <td mat-cell *matCellDef="let element">{{ element.roleId }}</td>
-                            </ng-container>
                             <ng-container matColumnDef="subRole">
                               <th mat-header-cell *matHeaderCellDef> Sub Role </th>
                               <td mat-cell *matCellDef="let element">{{ element.subRole }}</td>
-                            </ng-container>
-                            <ng-container matColumnDef="status">
-                              <th mat-header-cell *matHeaderCellDef> Status </th>
-                              <td mat-cell *matCellDef="let element">{{ element.status }}</td>
                             </ng-container>
                             <ng-container matColumnDef="createdAt">
                               <th mat-header-cell *matHeaderCellDef> Created At </th>
@@ -659,7 +651,7 @@
                                             data-bs-toggle="modal" data-bs-target="#exampleModalLg" (click)="openMdl(template); getAdonaiHistory(element)">
                                             <i class="las la-history"></i></a>
                                         <a aria-label="anchor" href="javascript:void(0);" 
-                                        class="btn btn-sm btn-icon btn-wave btn btn-success" ><i class="las la-edit"></i></a>
+                                        class="btn btn-sm btn-icon btn-wave btn btn-success" (click)="updateModal(content12,element)" ><i class="las la-edit"></i></a>
                                     </div>
                                 </td>
                             </ng-container>
@@ -1147,4 +1139,73 @@
                 data-bs-dismiss="modal">Close</button>
         </div>
     </form>
+</ng-template>
+
+<ng-template #content12 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3">Update User</h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="d-flex pt-4 gap-3 ms-2 mb-3">
+        <button type="button" class="btn btn-primary" (click)="activeForm='company'" 
+                  [disabled]="selectedUser?.type === 2 || (selectedUser?.companyName && selectedUser?.companyCode)">
+                Company Upgradation</button>
+        <button type="button" class="btn btn-primary" (click)="activeForm='tool'">Tool Addition</button>
+    </div>
+        <form [formGroup]="updateCompanyForm" (ngSubmit)="updateCompanyUser(modal)">
+            <div *ngIf="activeForm==='company'" class="m-3">
+                <div class="col-xl-12 mb-3">
+                    <div class="row gy-2">
+                        <div class="col-xl-12">
+                            <label for="projectAddress" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="projectAddress" formControlName="companyName"
+                                placeholder="Enter Grade Panel Name" [ngClass]="{ 'is-invalid': updateCompanySubmitted && gf['companyName'].errors }">
+                            <div *ngIf="updateCompanySubmitted && gf['companyName'].errors" class="invalid-feedback">
+                                <div *ngIf="gf['companyName'].errors['required']">Company Name is required</div>
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <label for="projectAddress" class="form-label">Company Code</label>
+                            <input type="text" class="form-control" id="projectAddress" formControlName="companyCode"
+                                placeholder="Enter Grade Panel Name" [ngClass]="{ 'is-invalid': updateCompanySubmitted && gf['companyCode'].errors }">
+                            <div *ngIf="updateCompanySubmitted && gf['companyCode'].errors" class="invalid-feedback">
+                                <div *ngIf="gf['companyCode'].errors['required']">Company Code is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="activeForm==='tool'" class="m-3 d-flex">
+                <div class="col-xl-6">
+                    <div class="row gy-2">
+                        <div class="col-xl-12 form-check m-4">
+                            <input type="checkbox" id="enableTool" formControlName="crm" class="form-check-input">
+                            <label for="enableTool" class="form-check-label">CRM Tool</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <label for="toolSelect" class="form-label">Roles</label>
+                    <ng-select formControlName="crmRole" placeholder="Select a role">
+                        <ng-option [value]="'ADMIN'">Admin</ng-option>
+                        <ng-option [value]="'USER'">User</ng-option>
+                    </ng-select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"> Submit</button>
+                <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                    data-bs-dismiss="modal">Close</button>
+            </div>
+            
+        </form>
+    <div *ngIf="tooladdForm">
+        <div class="col-xl-12 form-check">
+          <input type="checkbox" id="enableTool" formControlName="enableTool" class="form-check-input">
+          <label for="enableTool" class="form-check-label">Enable Tool</label>
+        </div>
+
+    </div>
 </ng-template>

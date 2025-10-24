@@ -1,4 +1,4 @@
-import { Component, ViewChild , AfterViewInit } from '@angular/core';
+import { Component, ViewChild , AfterViewInit, ElementRef } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
@@ -12,10 +12,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
-import { of } from 'rxjs';
+import { elementAt, of } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'app-quotation',
@@ -41,11 +42,14 @@ export class QuotationComponent {
     dataSource = new MatTableDataSource<any>();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort; 
+    @ViewChild('tabContainer', { static: false }) tabContainer!: ElementRef;
+    
     tabKeys: string[] = []; boqDataSources: { [key: string]: any[] } = {};
     selectedCategory: any; editIndex: number | null = null;  designId : any; 
     totalRooms: number = 0;
     totalProducts: number = 0;
-    totalPrice: number = 0;
+    totalPrice: number = 0;proposalStatus : string ='';proposalContentDataSources:any;
+    proposalTabCounts:any;showLeftArrow = false; showRightArrow = false;
 
     boqList: any;
     categories = [
@@ -80,250 +84,51 @@ export class QuotationComponent {
 
     modal: any; chartOptions4: any;
     chartOptions1: any;
+    selectedProposalContent: any;
     constructor(// config: NgbModalConfig,
         private modalService: NgbModal, public switchService: SwitherService,
-        private toastr: ToastrService,private offcanvasService: NgbOffcanvas) {
+        private toastr: ToastrService,private offcanvasService: NgbOffcanvas,private router: Router,
+        private route: ActivatedRoute) {
         this.chartOptions4 = {
+    series: [],
+    chart: {
+      height: 320,
+      type: 'bar'
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        barHeight: '50%'
+      }
+    },
+    colors: [
+      "#b94eed", "#45d65b", "#f39c12", "#e74c3c", "#8f00ff",
+      "#3F51B5", "#546E7A", "#D4526E", "#8D5B4C", "#F86624",
+      "#D7263D", "#1B998B", "#2E294E", "#F46036", "#E2C044"
+    ],
+    grid: { borderColor: '#f2f5f7' },
+    fill: { type: 'solid' },
+    xaxis: {
+      labels: {
+        style: {
+          colors: "#8c9097",
+          fontSize: '11px',
+          fontWeight: 600,
+        }
+      }
+    },
+    yaxis: {
+      labels: {
+        style: {
+          colors: "#8c9097",
+          fontSize: '11px',
+          fontWeight: 600,
+        }
+      }
+    },
+    legend: { position: 'right' }
+  };
 
-            series: [
-                // George Washington
-                {
-                    name: 'George Washington',
-                    data: [
-                        {
-                            x: 'President',
-                            y: [
-                                new Date(1789, 3, 30).getTime(),
-                                new Date(1797, 2, 4).getTime()
-                            ]
-                        },
-                    ]
-                },
-                // John Adams
-                {
-                    name: 'John Adams',
-                    data: [
-                        {
-                            x: 'President',
-                            y: [
-                                new Date(1797, 2, 4).getTime(),
-                                new Date(1801, 2, 4).getTime()
-                            ]
-                        },
-                        {
-                            x: 'Vice President',
-                            y: [
-                                new Date(1789, 3, 21).getTime(),
-                                new Date(1797, 2, 4).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // Thomas Jefferson
-                {
-                    name: 'Thomas Jefferson',
-                    data: [
-                        {
-                            x: 'President',
-                            y: [
-                                new Date(1801, 2, 4).getTime(),
-                                new Date(1809, 2, 4).getTime()
-                            ]
-                        },
-                        {
-                            x: 'Vice President',
-                            y: [
-                                new Date(1797, 2, 4).getTime(),
-                                new Date(1801, 2, 4).getTime()
-                            ]
-                        },
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1790, 2, 22).getTime(),
-                                new Date(1793, 11, 31).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // Aaron Burr
-                {
-                    name: 'Aaron Burr',
-                    data: [
-                        {
-                            x: 'Vice President',
-                            y: [
-                                new Date(1801, 2, 4).getTime(),
-                                new Date(1805, 2, 4).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // George Clinton
-                {
-                    name: 'George Clinton',
-                    data: [
-                        {
-                            x: 'Vice President',
-                            y: [
-                                new Date(1805, 2, 4).getTime(),
-                                new Date(1812, 3, 20).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // John Jay
-                {
-                    name: 'John Jay',
-                    data: [
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1789, 8, 25).getTime(),
-                                new Date(1790, 2, 22).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // Edmund Randolph
-                {
-                    name: 'Edmund Randolph',
-                    data: [
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1794, 0, 2).getTime(),
-                                new Date(1795, 7, 20).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // Timothy Pickering
-                {
-                    name: 'Timothy Pickering',
-                    data: [
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1795, 7, 20).getTime(),
-                                new Date(1800, 4, 12).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // Charles Lee
-                {
-                    name: 'Charles Lee',
-                    data: [
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1800, 4, 13).getTime(),
-                                new Date(1800, 5, 5).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // John Marshall
-                {
-                    name: 'John Marshall',
-                    data: [
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1800, 5, 13).getTime(),
-                                new Date(1801, 2, 4).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // Levi Lincoln
-                {
-                    name: 'Levi Lincoln',
-                    data: [
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1801, 2, 5).getTime(),
-                                new Date(1801, 4, 1).getTime()
-                            ]
-                        }
-                    ]
-                },
-                // James Madison
-                {
-                    name: 'James Madison',
-                    data: [
-                        {
-                            x: 'Secretary of State',
-                            y: [
-                                new Date(1801, 4, 2).getTime(),
-                                new Date(1809, 2, 3).getTime()
-                            ]
-                        }
-                    ]
-                },
-            ],
-            chart: {
-                height: 320,
-                type: 'rangeBar'
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: true,
-                    barHeight: '50%',
-                    rangeBarGroupRows: true
-                }
-            },
-            colors: [
-                "#b94eed", "#45d65b", "#f39c12", "#e74c3c", "#8f00ff",
-                "#3F51B5", "#546E7A", "#D4526E", "#8D5B4C", "#F86624",
-                "#D7263D", "#1B998B", "#2E294E", "#F46036", "#E2C044"
-            ],
-            grid: {
-                borderColor: '#f2f5f7',
-            },
-            fill: {
-                type: 'solid'
-            },
-            xaxis: {
-                type: 'datetime',
-                labels: {
-                    show: true,
-                    style: {
-                        colors: "#8c9097",
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        cssClass: 'apexcharts-xaxis-label',
-                    },
-                }
-            },
-            yaxis: {
-                labels: {
-                    show: true,
-                    style: {
-                        colors: "#8c9097",
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        cssClass: 'apexcharts-yaxis-label',
-                    },
-                }
-            },
-            legend: {
-                position: 'right'
-            },
-            tooltip: {
-                custom: function (opts: { y1: string | number | Date; y2: string | number | Date; ctx: { rangeBar: { getTooltipValues: (arg0: any) => any; }; }; }) {
-                    const fromYear = new Date(opts.y1).getFullYear()
-                    const toYear = new Date(opts.y2).getFullYear()
-                    const values = opts.ctx.rangeBar.getTooltipValues(opts)
-
-                    return (
-                        ''
-                    )
-                }
-            }
-        };
         this.chartOptions1 = {
             series: [44, 55, 41, 17, 15],
             chart: {
@@ -355,17 +160,29 @@ export class QuotationComponent {
     };
 
     ngOnInit(): void {
-        this.boqData();
+        
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
             dateFormat: 'H:i',
         };
+        this.route.queryParams.subscribe(params => {
+            const designId = params['designId'];
+            const proposalContentId = params['proposalContentId'];
+            if (designId && proposalContentId) {
+                this.getProposalContent({
+                    designId,
+                    proposalContentId
+                });
+            }
+        });
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
+            this.checkArrows();
+
         // this.dataSource.sort = this.sort;
     }
 
@@ -381,81 +198,166 @@ export class QuotationComponent {
         return index + 1;
     }
 
-    boqData() {
-  const payload = {
-    email: this.userEmail,
-    designId: "3FO3EWPJHYSK",
-    bomRequired: true,
-    wardrobeRequired: true,
-    kbRequired: true
-  };
+    getProposalContent(element: any) {
+        const payload = {
+            designId: element.designId,
+            proposalContentId: element.proposalContId || element.proposalContentId
+        };
+        this.switchService.fetchProposalContent(payload).subscribe({
+            next: (res: any) => {
+                this.selectedProposalContent = res;
+                this.proposalStatus=res.proposalStatus;
+                try {
+                    const parsedContent = JSON.parse(res.contentJs || "{}");
+                    const flattened = Object.values(parsedContent).flat();
+                    const uniqueFlattened = Array.from(
+                        new Map(flattened.map((item: any) => [item.boqId, item])).values()
+                    );
+                    this.boqDataSources = {};
+                    this.tabKeys = [];
+                    this.boqDataSources["All"] = uniqueFlattened;
+                    this.tabKeys.push("All");
+                    // const roomKeys = Object.keys(parsedContent).filter(k => k !== "All");
+                    // roomKeys.forEach(room => {
+                    //     this.boqDataSources[room] = parsedContent[room] || [];
+                    //     this.tabKeys.push(room);
+                    // });
+                    this.totalPrice = uniqueFlattened.reduce(
+                        (sum: number, item: any) =>
+                            sum + ((item.finalAmount && item.finalAmount > 0)
+                                ? item.finalAmount
+                                : (item.clientRate || 0) * (item.quantity || 0)),
+                        0
+                    );
+                    this.totalRooms = Object.keys(parsedContent).length;
+                    this.totalProducts = 0;
+                    this.totalPrice = 0;
+                    const roomTotals: { [key: string]: number } = {};
+                    this.proposalContentDataSources = {};
+                    this.proposalTabCounts = {};
+                    const roomKeys = Object.keys(parsedContent).filter(
+                      (k) => k !== 'All'
+                    );
 
-  this.switchService.fetchBoqData(payload).subscribe({
-    next: (res) => {
-      const boqData = res?.boqData || {};
+                    roomKeys.forEach((key) => {
+                      const items = parsedContent[key] || [];
+                      this.boqDataSources[key] = parsedContent[key] || [];
+                      this.tabKeys.push(key);
+                      this.proposalContentDataSources[key] = items.map(
+                        (item: any, index: number) => {
+                          const amount =
+                            (item.clientRate || 0) * (item.quantity || 0);
+                          return {
+                            slNo: index + 1,
+                            calculatedAmount: amount,
+                            ...item,
+                          };
+                        }
+                      );
 
-      // extract room names
-      this.tabKeys = Object.keys(boqData);
+                      this.totalProducts += items.length;
 
-      // reset once
-      this.boqDataSources = {};
+                      const roomTotal = items.reduce(
+                        (sum: number, item: any) =>
+                          sum +
+                          (item.finalAmount && item.finalAmount > 0
+                            ? item.finalAmount
+                            : (item.clientRate || 0) * (item.quantity || 0)),
+                        0
+                      );
 
-      // reset totals
-      this.totalRooms = this.tabKeys.length;
-      this.totalProducts = 0;
-      this.totalPrice = 0;
+                      roomTotals[key] = roomTotal;
+                      this.totalPrice += roomTotal;
 
-      // build arrays per room + accumulate totals
-      this.tabKeys.forEach((key) => {
-        const items = boqData[key] || [];
+                      this.proposalTabCounts[key] = items.length;
+                    });
 
-        this.boqDataSources[key] = items.map((item: any, index: number) => {
-          const amount = (item.clientRate || 0) * (item.quantity || 0);
-          return {
-            slNo: index + 1,
-            calculatedAmount: amount, // new field for UI
-            ...item
-          };
+                    // ✅ Build the "All" tab separately (using your flattened items logic)
+                    const allItems = Array.from(
+                      new Map(
+                        Object.values(parsedContent)
+                          .flat()
+                          .map((item: any) => [item.boqId, item])
+                      ).values()
+                    ).map((item: any, index: number) => ({
+                      ...item,
+                      slNo: index + 1,
+                    }));
+
+                    this.proposalContentDataSources['All'] = allItems;
+                    this.proposalTabCounts['All'] = allItems.length;
+
+                  const seriesData = [
+                    {
+                      name: 'Items Count',
+                      data: Object.keys(this.proposalContentDataSources).map(
+                        (room) => {
+                          return {
+                            x: room,
+                            y: this.proposalContentDataSources[room].length,
+                          };
+                        }
+                      ),
+                    },
+                  ];
+
+                  this.chartOptions4 = {
+                    ...this.chartOptions4,
+                    series: seriesData,
+                    chart: {
+                      type: 'bar',
+                    },
+                    xaxis: {
+                      type: 'category',
+                      title: {
+                        text: 'Rooms',
+                      },
+                    },
+                    yaxis: {
+                      title: {
+                        text: 'Items Count',
+                      },
+                    },
+                  };
+
+                } catch (e) {
+                    this.boqDataSources = { All: [] };
+                    this.tabKeys = ["All"];
+                    this.totalPrice = 0;
+                }
+            },
         });
-
-        this.totalProducts += items.length;
-        this.totalPrice += items.reduce(
-          (sum: number, item: any) =>
-            sum + ((item.clientRate || 0) * (item.quantity || 0)),
-          0
-        );
-      });
-
-      console.log("tabKeys:", this.tabKeys);
-      console.log("boqDataSources:", this.boqDataSources);
-      console.log("Total Rooms:", this.totalRooms);
-      console.log("Total Products:", this.totalProducts);
-      console.log("Total Price:", this.totalPrice);
-    },
-    error: () => {
-      this.toastr.error("Something went wrong!");
     }
-  });
-}
 
-
-getRoomTotal(roomKey: string): number {
-  const items = this.boqDataSources[roomKey] || [];
-  return items.reduce((sum, item) => {
-    // Prefer finalAmount if > 0, else calculate from clientRate × quantity
-    const amount = (item.finalAmount && item.finalAmount > 0)
-      ? item.finalAmount
-      : (item.clientRate || 0) * (item.quantity || 0);
-    return sum + amount;
-  }, 0);
-}
+    getRoomTotal(roomKey: string): number {
+        const items = this.boqDataSources[roomKey] || [];
+        return items.reduce((sum, item) => {
+            const amount = (item.finalAmount && item.finalAmount > 0)
+                ? item.finalAmount
+                : (item.clientRate || 0) * (item.quantity || 0);
+            return sum + amount;
+        }, 0);
+    }
 
 
 
+    quoteValidTill: Date = new Date('2025-09-30'); 
+    scrollTabs(direction: 'left' | 'right') {
+    const container = this.tabContainer.nativeElement;
+    const scrollAmount = 150;
+    if (direction === 'left') {
+      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    } else {
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+    setTimeout(() => this.checkArrows(), 300);
+  }
 
-
-
-
-    
+  checkArrows() {
+    const container = this.tabContainer?.nativeElement;
+    if (!container) return;
+    this.showLeftArrow = container.scrollLeft > 0;
+    this.showRightArrow = container.scrollWidth > container.clientWidth + container.scrollLeft;
+  }
 
 }

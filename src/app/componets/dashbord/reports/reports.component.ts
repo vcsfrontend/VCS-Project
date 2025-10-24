@@ -7,6 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MaterialModuleModule } from '../../../material-module/material-module.module';
 import { NgbDropdownModule,NgbNavModule,NgbModal, NgbModalConfig, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SwitherService } from '../../../shared/services/swither.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -19,15 +21,41 @@ import { NgSelectModule } from '@ng-select/ng-select';
 })
 export class ReportsComponent {
   displayedColumns: string[] = ['slNo', 'name', 'role', 'number', 'date','totalCallsAttempted','totalCallsConnectd', 'totalCallsNotConnectd','totalInprogressLeads', 'totalConvertedLeads','totalLostleads','startcallingtime'];
+  displayedUsersColumns: string[] = ['slNo', 'name','role','number','date','totalCampaigns','totalConnected','totalNotConnectd','totalInprogressLeads','totalConvertedLeads','totalLostleads'];
   dataSource = new MatTableDataSource<any>();
+  dataSources1 = new MatTableDataSource<any>();
+
   showTable: boolean = false;
-  temp: any[] = [];
+   userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  userType: any = this.userData ? this.userData.type : ''; campaignName :any;
+  temp: any[] = [];userList:any[] = [];  
+  campaignCount: any; 
+  newUser: string = '';campaignList: any[] = [];campaignNameLst:any;public leadCounts: { [campaignId: string]: number } = {};
+  stageCounts: { [campaignId: string]: { [stage: string]: number } } = {};totalLeadCount: any;
+  selectedCampaignId: string | null = null;expandedStages: { [campaignId: string]: boolean } = {};
+  totalUsersCount : number =0;allUserLeadCounts: { [userEmail: string]: number } = {};
+  totalConnected : number =0; totalNotConnected  : number=0;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   pageSize = 10;
-   constructor(private modalService: NgbModal, ) {
+   constructor(private modalService: NgbModal,public switchService: SwitherService,  private toastr: ToastrService, ) {
+      this.userData = localStorage.getItem('userDetails');
       // super();
       
     }
+  ngOnInit(): void {
+    this.getUsers();
+    this.getCampaignData();
+    this.campaignList.forEach(campaign => {
+      this.getLeadCountForCampaign(campaign.campgnId);
+    });
+     
+    
+  }
   
   modal: any;
   
@@ -100,42 +128,185 @@ export class ReportsComponent {
     email: 'mike.johnson@example.com',
     city: 'Chicago'
   },
-  {
-    slNo: 4,
-    name: 'Sarah Lee',
-    role: 'Sales Executive',
-    number: '9876534562',
-    date: '2024-05-23',
-    totalCallsAttempted: 55,
-    totalCallsConnectd: 40,
-    totalCallsNotConnectd: 15,
-    totalInprogressLeads: 8,
-    totalConvertedLeads: 9,
-    totalLostleads: 1,
-    email: 'sarah.lee@example.com',
-    city: 'Houston'
-  },
-  {
-    slNo: 5,
-    name: 'David Kim',
-    role: 'Sales Lead',
-    number: '9876545673',
-    date: '2024-05-24',
-    totalCallsAttempted: 65,
-    totalCallsConnectd: 48,
-    totalCallsNotConnectd: 17,
-    totalInprogressLeads: 9,
-    totalConvertedLeads: 11,
-    totalLostleads: 5,
-    email: 'david.kim@example.com',
-    city: 'San Francisco'
-  }
   ];
 
   showDetailsMap: { [key: string]: boolean } = {};
   toggleDetails(taskId: string | number) {
     this.showDetailsMap[taskId] = !this.showDetailsMap[taskId];
   }
+
+  getUsers() {
+    if (JSON.parse(this.userData).type == 2) {
+      let cn = JSON.parse(this.userData).companyName;
+      let cc = JSON.parse(this.userData).companyCode;
+      this.switchService.cmpnyUsers(cn, cc).subscribe({
+        next: (res: any) => {
+          if (res) {
+            this.userList = res;
+            if (this.userList.length >= 0) {
+              this.onSelectUser(this.userList[0]);
+            }
+            this.totalUsersCount = this.userList.length;
+            console.log(this.userList);
+          } else {
+            this.toastr.error(res.message, 'signup', {
+              timeOut: 3000,
+              positionClass: 'toast-top-right',
+            });
+          }
+        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
+      });
+    }
+  }
+  
+  getCampaignData() {
+    const payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    console.log(payload);
+    this.switchService.displayCampaignData(payload).subscribe({
+      next: (res: any) => {
+        if (Array.isArray(res)) {
+          this.campaignList = res;
+           if (this.campaignList.length > 0) {
+              const firstCampaignId = this.campaignList[0].campgnId;
+              this.selectCampaign(firstCampaignId);
+            }
+          this.campaignNameLst= res.map((c: any) => c.campaignName);
+          console.log(this.campaignNameLst)
+          this.campaignCount = this.campaignList.length;
+          this.campaignList.forEach(campaign => {
+      });
+        } else {
+          this.toastr.error("Unexpected response format.");
+        }
+      },
+    });
+  }
+  
+  getLeadCountForCampaign(campaignId: string) {
+    this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
+    next: (res: any) => {
+      const executiveList = res.executiveList || [];
+      const entryList = res.entryList || [];
+      const combined = [...executiveList, ...entryList];
+
+      this.leadCounts[campaignId] = combined.length;
+
+      const stageMap: { [key: string]: number } = {};
+      combined.forEach((lead) => {
+        const stage = lead.stage || 'Unknown';
+        stageMap[stage] = (stageMap[stage] || 0) + 1;
+      });
+
+      this.stageCounts[campaignId] = stageMap;
+
+      this.updateTotalLeadCount();
+    },
+    error: () => {
+      this.leadCounts[campaignId] = 0;
+      this.stageCounts[campaignId] = {};
+      this.updateTotalLeadCount();
+    }
+    });
+  }
+
+  updateTotalLeadCount() {
+    this.totalLeadCount = Object.values(this.leadCounts).reduce((sum, count) => sum + count, 0);
+  }
+
+
+  selectCampaign(campaignId: string) {
+    this.selectedCampaignId = campaignId;
+
+    if (!this.leadCounts[campaignId]) {
+      this.getLeadCountForCampaign(campaignId);
+    }
+  }
+
+  toggleStages(campaignId: string | null) {
+  if (!campaignId) return;
+
+  // Always toggle expanded/collapsed
+  this.expandedStages[campaignId] = !this.expandedStages[campaignId];
+  }
+
+
+ selectedUser: any = null;
+userCampaignCount: number = 0;
+userTotalLeads: number = 0;
+loadingUserStats: boolean = false;
+
+onSelectUser(user: any) {
+  this.selectedUser = user;
+  this.userCampaignCount = 0;
+  this.userTotalLeads = 0;
+  this.totalConnected = 0;
+  this.totalNotConnected = 0;
+
+  this.loadingUserStats = true;
+
+  let activeCampaigns = 0;
+  let totalLeads = 0;
+   let connectedLeads = 0;
+  let notConnectedLeads = 0;
+
+  const requests = this.campaignList.map(campaign =>
+    this.switchService.FetchLeadData(user.email, campaign.campgnId).toPromise()
+      .then((res: any) => {
+        const executiveList = res.executiveList || [];
+        const entryList = res.entryList || [];
+        const combined = [...executiveList, ...entryList];
+
+        if (combined.length >= 0) {
+          activeCampaigns++;
+          totalLeads += combined.length;
+        }
+        combined.forEach(lead => {
+            if (lead.status?.toLowerCase() === 'connected') {
+              connectedLeads++;
+            } else {
+              notConnectedLeads++;
+            }
+        });
+      })
+      .catch(err => console.error('Error fetching leads for', campaign.campaignName, err))
+  );
+
+  Promise.all(requests).then(() => {
+    this.userCampaignCount = activeCampaigns;
+    this.userTotalLeads = totalLeads;
+    this.totalConnected = connectedLeads;
+    this.totalNotConnected = notConnectedLeads;
+    this.loadingUserStats = false;
+
+    console.log(`User: ${user.email} → Campaigns: ${activeCampaigns}, Leads: ${totalLeads}`);
+
+    this.dataSources1.data = [
+      {
+        slNo: 1,
+        name: user.username || user.email,
+        role: user.role || '',
+        number: user.phoneNumber || '',
+        date: new Date().toLocaleDateString(),
+        totalCampaigns: this.userCampaignCount,
+        totalCallsAttempted: totalLeads, 
+        totalCallsConnectd: this.totalConnected,           
+        totalCallsNotConnectd: 0,        
+        totalInprogressLeads: 0,         
+        totalConvertedLeads: 0,          
+        totalLostleads: 0,           
+        email: user.email,
+        city: user.city || ''
+      }
+    ];
+  });
+}
 
   
 }

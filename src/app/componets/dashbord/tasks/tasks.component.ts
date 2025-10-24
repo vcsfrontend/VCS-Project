@@ -81,11 +81,18 @@ export class TasksComponent {
      this.selectedTaskId = task.taskGenId; 
     this.taskForm.patchValue({
       taskName: task.taskName,
+      currentStatus : task.currentStatus,
       assignedTo: task.assignedTo,
       deadline: task.deadline ? task.deadline.split('T')[0] : '',
       priority: task.priority,
       description: task.description
     });
+    if (this.taskForm.get('currentStatus')?.value === 'Completed') {
+      this.taskForm.get('currentStatus')?.disable();
+    }
+    else{
+      this.taskForm.get('currentStatus')?.enable();
+    }
     this.modalService.open(modalContent, { backdrop: 'static' });
   }
 
@@ -125,6 +132,7 @@ export class TasksComponent {
             if (control !== 'currentStatus') {
               this.taskForm.get(control)?.disable();
             }
+            
           });
         }
       },
@@ -145,6 +153,9 @@ export class TasksComponent {
     this.switchService.updateTasks(payload).subscribe({
       next: (res) => {
         this.toastr.success('Task updated successfully!');
+         if (this.taskForm.get('currentStatus')?.value === 'Completed') {
+        this.taskForm.get('currentStatus')?.disable();
+      }
         modal.close();
         this.fetchTasks();
       },
@@ -327,7 +338,7 @@ export class TasksComponent {
     });
   }
 
-getUsers() {
+  getUsers() {
     if (JSON.parse(this.userData).type == 2) {
       // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
       let cn = JSON.parse(this.userData).companyName;

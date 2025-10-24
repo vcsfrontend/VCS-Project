@@ -77,7 +77,7 @@
                             <ul ngbNav #nav="ngbNav" [activeId]="1"
                                 class="nav nav-tabs nav-tabs-header mb-0 d-sm-flex d-block justify-content-between"
                                 role="tablist">
-                                <li [ngbNavItem]="1" class="nav-item m-1 me-3  p-1 pe-4">
+                                <li [ngbNavItem]="1" class="nav-item m-1 me-2 p-1">
                                     <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
                                         aria-selected="true"><i class="las la-history me-2"></i>Summary</a>
                                     <ng-template ngbNavContent>
@@ -90,11 +90,10 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div id="timeline-grouped">
-                                                                <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart" [stroke]="chartOptions4.stroke"
-                                                                    [dataLabels]="chartOptions4.dataLabels" [plotOptions]="chartOptions4.plotOptions" [xaxis]="chartOptions4.xaxis"
-                                                                    [colors]="chartOptions4.colors" [fill]="chartOptions4.fill" [yaxis]="chartOptions4.yaxis"
-                                                                    [legend]="chartOptions4.legend" [grid]="chartOptions4.grid" [title]="chartOptions4.title"
-                                                                    [colors]="chartOptions4.colors"></apx-chart>
+                                                                <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart" [plotOptions]="chartOptions4.plotOptions"
+                                                                    [xaxis]="chartOptions4.xaxis" [colors]="chartOptions4.colors" [fill]="chartOptions4.fill"
+                                                                    [yaxis]="chartOptions4.yaxis" [legend]="chartOptions4.legend" [grid]="chartOptions4.grid">
+                                                                </apx-chart>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -106,8 +105,12 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div id="donut-simple">
-                                                                <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart" [legend]="chartOptions1.legend"
-                                                                    [labels]="chartOptions1.labels" [responsive]="chartOptions1.responsive" [colors]="chartOptions1.colors"
+                                                                <apx-chart [series]="chartOptions1.series"
+                                                                    [chart]="chartOptions1.chart"
+                                                                    [legend]="chartOptions1.legend"
+                                                                    [labels]="chartOptions1.labels"
+                                                                    [responsive]="chartOptions1.responsive"
+                                                                    [colors]="chartOptions1.colors"
                                                                     [dataLabels]="chartOptions1.dataLabels"></apx-chart>
                                                             </div>
                                                         </div>
@@ -119,38 +122,49 @@
                                                             <div class="col-xl-6 col-sm-6">
                                                                 <div class="card custom-card overflow-hidden">
                                                                     <div class="card-body">
-                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                            <div><strong class="fs-18">Section</strong></div>
-                                                                            <div><strong class="fs-18">Amount</strong></div>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-2">
+                                                                            <div><strong class="fs-18">Section</strong>
+                                                                            </div>
+                                                                            <div><strong class="fs-18">Amount</strong>
+                                                                            </div>
                                                                         </div>
                                                                         <hr>
-                                                                    
-                                                                        <!-- Loop through rooms -->
-                                                                        <div *ngFor="let key of tabKeys" class="d-flex justify-content-between align-items-start mb-3">
+                                                                        <div *ngFor="let key of tabKeys"
+                                                                            class="d-flex justify-content-between align-items-start mb-3">
                                                                             <div><strong class="fs-14 fw-medium">{{ key }}</strong></div>
-                                                                            <div><strong class="fs-14 fw-medium">{{ getRoomTotal(key) | currency:'INR' }}</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">{{ getRoomTotal(key) | currency:'INR'}}</strong></div>
                                                                         </div>
-                                                                    
                                                                         <hr>
-                                                                        <!-- Grand Total -->
                                                                         <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Total</strong></div>
-                                                                            <div><strong class="fs-14 fw-medium">{{ totalPrice | currency:'INR' }}</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">Total</strong>
+                                                                            </div>
+                                                                            <div><strong class="fs-14 fw-medium">{{ totalPrice | currency:'INR'
+                                                                                    }}</strong></div>
                                                                         </div>
-                                                                    
-                                                                        <!-- Example fixed values -->
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-3">
                                                                             <div><strong class="fs-14 fw-medium">Design and Handling Fees</strong></div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 10,000.00</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">INR
+                                                                                    1000.00</strong></div>
                                                                         </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium text-primary">Total Discount</strong></div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 5,000.00</strong></div>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-3">
+                                                                            <div><strong
+                                                                                    class="fs-14 fw-medium text-primary">Total
+                                                                                    Discount</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">INR
+                                                                                    5,000.00</strong></div>
                                                                         </div>
                                                                         <hr>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium text-primary">Total Project Estimate</strong></div>
-                                                                            <div><strong class="fs-14 fw-medium">{{ (totalPrice + 10000 - 5000) | currency:'INR' }}</strong></div>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-3">
+                                                                            <div><strong
+                                                                                    class="fs-14 fw-medium text-primary">Total
+                                                                                    Project Estimate</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">{{
+                                                                                    (totalPrice + 10000 - 5000) |
+                                                                                    currency:'INR' }}</strong></div>
                                                                         </div>
                                                                         <hr>
                                                                         <small>*All prices are inclusive of GST</small>
@@ -160,35 +174,61 @@
                                                             <div class="col-xl-6 col-sm-6">
                                                                 <div class="card custom-card overflow-hidden">
                                                                     <div class="card-body">
-                                                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                                                            <div><strong class="fs-18">Scope</strong> </div>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-2">
+                                                                            <div><strong class="fs-18">Scope</strong>
+                                                                            </div>
                                                                         </div>
                                                                         <hr>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3 border p-3 rounded">
-                                                                            <div><strong class="fs-14 fw-medium">Custom Works</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-3 border p-3 rounded">
+                                                                            <div><strong class="fs-14 fw-medium">Custom
+                                                                                    Works</strong> </div>
+                                                                            <div><strong class="fs-14 fw-medium">INR
+                                                                                    1,80,065.43</strong></div>
                                                                         </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3 border p-3 rounded">
-                                                                            <div><strong class="fs-14 fw-medium">Store Products</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-3 border p-3 rounded">
+                                                                            <div><strong class="fs-14 fw-medium">Store
+                                                                                    Products</strong> </div>
+                                                                            <div><strong class="fs-14 fw-medium">INR
+                                                                                    1,80,065.43</strong></div>
                                                                         </div>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3 border p-3 rounded">
-                                                                            <div><strong class="fs-14 fw-medium">Onsite Services</strong> </div>
-                                                                            <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-3 border p-3 rounded">
+                                                                            <div><strong class="fs-14 fw-medium">Onsite
+                                                                                    Services</strong> </div>
+                                                                            <div><strong class="fs-14 fw-medium">INR
+                                                                                    1,80,065.43</strong></div>
                                                                         </div>
                                                                         <div class="border rounded">
-                                                                            <div class="d-flex justify-content-between align-items-start p-2 mb-1 ">
-                                                                                <div><strong class="fs-14 fw-medium">Modular</strong> </div>
-                                                                                <div><strong class="fs-14 fw-medium">INR 1,80,065.43</strong></div>
+                                                                            <div
+                                                                                class="d-flex justify-content-between align-items-start p-2 mb-1 ">
+                                                                                <div><strong
+                                                                                        class="fs-14 fw-medium">Modular</strong>
+                                                                                </div>
+                                                                                <div><strong class="fs-14 fw-medium">INR
+                                                                                        1,80,065.43</strong></div>
                                                                             </div>
-                                                                            <div class="d-flex justify-content-between align-items-start p-2 mb-1">
-                                                                                <div><strong class="fs-14 fw-medium text-secondary">Discount</strong> </div>
-                                                                                <div><strong class="fs-14 fw-medium text-secondary">INR 1,80,065.43</strong></div>
+                                                                            <div
+                                                                                class="d-flex justify-content-between align-items-start p-2 mb-1">
+                                                                                <div><strong
+                                                                                        class="fs-14 fw-medium text-secondary">Discount</strong>
+                                                                                </div>
+                                                                                <div><strong
+                                                                                        class="fs-14 fw-medium text-secondary">INR
+                                                                                        1,80,065.43</strong></div>
                                                                             </div>
-                                                                            <hr style="border: none; border-top: 1px dashed #999; margin: 20px 0;">
-                                                                            <div class="d-flex justify-content-between align-items-start p-2 mb-1">
-                                                                                <div><strong class="fs-14 fw-medium text-secondary">Discount</strong> </div>
-                                                                                <div><strong class="fs-14 fw-medium text-secondary">INR 1,80,065.43</strong></div>
+                                                                            <hr
+                                                                                style="border: none; border-top: 1px dashed #999; margin: 20px 0;">
+                                                                            <div
+                                                                                class="d-flex justify-content-between align-items-start p-2 mb-1">
+                                                                                <div><strong
+                                                                                        class="fs-14 fw-medium text-secondary">Discount</strong>
+                                                                                </div>
+                                                                                <div><strong
+                                                                                        class="fs-14 fw-medium text-secondary">INR
+                                                                                        1,80,065.43</strong></div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -208,80 +248,118 @@
                                         <div class="col-xl-12">
                                             <ul ngbNav #nav="ngbNav" class="nav nav-tabs bg-white">
                                                 <ng-container *ngFor="let key of tabKeys; let i = index">
-                                                    <li [ngbNavItem]="i + 1" class="nav-item m-1 me-3 p-1 pe-4">
-                                                        <a ngbNavLink class="nav-link">
-                                                            <i class="las la-history me-2"></i>{{ key }}
+                                                    <li [ngbNavItem]="i + 1" class="nav-item m-1 me-2 p-1">
+                                                        <a ngbNavLink class="nav-link border-end border-dark"
+                                                            data-bs-toggle="tab" role="tab" aria-selected="true">{{ key
+                                                            }}
+                                                            <span class="badge bg-white text-black ms-1">{{
+                                                                boqDataSources[key].length }}</span>
                                                         </a>
                                                         <ng-template ngbNavContent>
                                                             <div class="card custom-card overflow-hidden">
-                                                                <div class="card-header">
-                                                                    <div class="card-title">{{ key }} Items</div>
+                                                                <div class="table-container">
+                                                                     <div class="flex-grow-1 position-relative">
+                                                    <ul #tabContainer ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex  flex-nowrap"
+                                                        style="scroll-behavior: smooth;" (scroll)="checkArrows()">
+                                                                    <table class="table table-hover text-nowrap my-table">
+                                                                        <thead class="table-light sticky-header">
+                                                                            <tr class="in">
+                                                                                <th class="sticky-col-left">Element Name & Description</th>
+                                                                                <th>Brand/Make</th>
+                                                                                <th>Category</th>
+                                                                                <th>Order Status</th>
+                                                                                <th>Item Type</th>
+                                                                                <th>Source</th>
+                                                                                <th>Status</th>
+                                                                                <th>Length</th>
+                                                                                <th>Breadth</th>
+                                                                                <th>Height</th>
+                                                                                <th>Quantity</th>
+                                                                                <th>UOM</th>
+                                                                                <th>Draft Qty</th>
+                                                                                <th>Client Rate</th>
+                                                                                <th>Service Charge</th>
+                                                                                <th>Base Amount</th>
+                                                                                <th>Budget Rate</th>
+                                                                                <th>HSN</th>
+                                                                                <th>GST %</th>
+                                                                                <th>Amt w/o GST</th>
+                                                                                <th>Discount</th>
+                                                                                <th class="sticky-col-right">Final Amount</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr *ngFor="let row of boqDataSources[key]; let j = index">
+                                                                                <td class="sticky-col-left" style="max-width: 750px;">
+                                                                                    <div class="d-flex align-items-center" style="cursor: pointer;">
+                                                                                        <span class="avatar avatar-xl me-3">
+                                                                                            <img [src]="row.elementUrl || '/assets/images/placeholder.png'" class="img-thumbnail" alt="Project Image">
+                                                                                        </span>
+                                                                                        <div>
+                                                                                            <span class="fw-medium d-block">
+                                                                                                {{ row.elementNameAndDescription.split('\n')[0].length > 30
+                                                                                                ? (row.elementNameAndDescription.split('\n')[0] | slice:0:30) + '...'
+                                                                                                : row.elementNameAndDescription.split('\n')[0] }}
+                                                                                            </span>
+                                                                                            <div class="text-muted small">
+                                                                                                {{ row.elementNameAndDescription.split('\n')[1] }}
+                                                                                            </div>
+                                                                                            <div class="text-muted small" *ngIf="row.elementNameAndDescription.split('\n')[2]">
+                                                                                                {{ row.elementNameAndDescription.split('\n')[2] }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </td>
+                                                                                <td>{{ row.brandOrMake }}</td>
+                                                                                <td>{{ row.codeAndCategory }}</td>
+                                                                                <td>{{ row.orderStatus }}</td>
+                                                                                <td>{{ row.itemType }}</td>
+                                                                                <td>{{ row.source }}</td>
+                                                                                <td>{{ row.status }}</td>
+                                                                                <td>{{ row.length }}</td>
+                                                                                <td>{{ row.breadth }}</td>
+                                                                                <td>{{ row.height }}</td>
+                                                                                <td>{{ row.quantity }}</td>
+                                                                                <td>{{ row.uom }}</td>
+                                                                                <td>{{ row.draftQuantity }}</td>
+                                                                                <td>{{ row.clientRate }}</td>
+                                                                                <td>{{ row.serviceCharge }}</td>
+                                                                                <td>{{ row.baseAmount }}</td>
+                                                                                <td>{{ row.budgetRate }}</td>
+                                                                                <td>{{ row.hsn }}</td>
+                                                                                <td>{{ row.gstPrecent }}</td>
+                                                                                <td>{{ row.amountWithoutGst }}</td>
+                                                                                <td>{{ row.discount }}</td>
+                                                                                <td class="sticky-col-right">{{ row.finalAmount }}</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </ul>
                                                                 </div>
-                                                                <div class="card-body px-0 pb-0">
-                                                                    <div class="table-container">
-                                                                        <table class="table table-hover text-nowrap my-table">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th>S.No</th>
-                                                                                    <th>Image</th>
-                                                                                    <th>Item Code</th>
-                                                                                    <th>Description</th>
-                                                                                    <th>Brand/Make</th>
-                                                                                    <th>Category</th>
-                                                                                    <th>Order Status</th>
-                                                                                    <th>Item Type</th>
-                                                                                    <th>Source</th>
-                                                                                    <th>Status</th>
-                                                                                    <th>Length</th>
-                                                                                    <th>Breadth</th>
-                                                                                    <th>Height</th>
-                                                                                    <th>Quantity</th>
-                                                                                    <th>UOM</th>
-                                                                                    <th>Draft Qty</th>
-                                                                                    <th>Client Rate</th>
-                                                                                    <th>Service Charge</th>
-                                                                                    <th>Base Amount</th>
-                                                                                    <th>Budget Rate</th>
-                                                                                    <th>HSN</th>
-                                                                                    <th>GST %</th>
-                                                                                    <th>Amt w/o GST</th>
-                                                                                    <th>Discount</th>
-                                                                                    <th>Final Amount</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr *ngFor="let row of boqDataSources[key]; let j = index">
-                                                                                    <td>{{ j + 1 }}</td>
-                                                                                    <td>
-                                                                                        <img [src]="row.elementUrl || '/assets/images/placeholder.png'" alt="Item"
-                                                                                            width="40" height="40" />
-                                                                                    </td>
-                                                                                    <td>{{ row.itemCode }}</td>
-                                                                                    <td>{{ row.elementNameAndDescription | slice: 0:15}}</td>
-                                                                                    <td>{{ row.brandOrMake }}</td>
-                                                                                    <td>{{ row.codeAndCategory }}</td>
-                                                                                    <td>{{ row.orderStatus }}</td>
-                                                                                    <td>{{ row.itemType }}</td>
-                                                                                    <td>{{ row.source }}</td>
-                                                                                    <td>{{ row.status }}</td>
-                                                                                    <td>{{ row.length }}</td>
-                                                                                    <td>{{ row.breadth }}</td>
-                                                                                    <td>{{ row.height }}</td>
-                                                                                    <td>{{ row.quantity }}</td>
-                                                                                    <td>{{ row.uom }}</td>
-                                                                                    <td>{{ row.draftQuantity }}</td>
-                                                                                    <td>{{ row.clientRate }}</td>
-                                                                                    <td>{{ row.serviceCharge }}</td>
-                                                                                    <td>{{ row.baseAmount }}</td>
-                                                                                    <td>{{ row.budgetRate }}</td>
-                                                                                    <td>{{ row.hsn }}</td>
-                                                                                    <td>{{ row.gstPrecent }}</td>
-                                                                                    <td>{{ row.amountWithoutGst }}</td>
-                                                                                    <td>{{ row.discount }}</td>
-                                                                                    <td>{{ row.finalAmount }}</td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
+                                                                <div class="ms-2 d-flex">
+                                                                    <button class="btn btn-light border me-1" *ngIf="showLeftArrow" (click)="scrollTabs('left')">
+                                                                        ‹
+                                                                    </button>
+                                                                    <button class="btn btn-light border" *ngIf="showRightArrow" (click)="scrollTabs('right')">
+                                                                        ›
+                                                                    </button>
+                                                                </div>
+                                                                </div>
+                                                                <div class="card-footer border-top-0">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <div>
+                                                                            <strong>Sub Total</strong>
+                                                                        </div>
+                                                                        <div class="ms-auto">
+                                                                            <nav aria-label="Page navigation" class="pagination-style-4">
+                                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                                    <div>
+                                                                                        <span class="fw-bold">INR {{ totalPrice | currency:'INR' }}</span>
+                                                                                        <div class="small text-muted">*All prices are inclusive of taxes</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </nav>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -311,12 +389,19 @@
                             <p class="mb-2">Total Price</p>
                             <p><strong>{{ totalPrice | currency:'INR' }}</strong></p>
                         </div>
-                        <div  class="ps-2 vertical-line">
-                             <p class="mb-2">
+                        <div class="ps-2 vertical-line">
+                            <p class="mb-2">
                                 Quote Valid Till
                             </p>
-                            <p><strong>Approved</strong> </p>
+                            <p><strong>{{ quoteValidTill | date:'dd-MMM-yyyy' }}</strong> </p>
                         </div>
+                        <div class="ps-2 vertical-line">
+                            <p class="mb-2">
+                               Approve Status
+                            </p>
+                            <p><strong>{{ proposalStatus }}</strong> </p>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -329,80 +414,81 @@
     </div>
 </div>
 <ng-template #detailsOffcanvas let-offcanvas>
-  <div class="offcanvas-header border-bottom border-block-end-dashed">
-    <h5 class="offcanvas-title"><strong>Element Details</strong></h5>
-    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
-      aria-label="Close"></button>
-  </div>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title"><strong>Element Details</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" aria-label="Close"></button>
+    </div>
 
-  <div class="offcanvas-body p-3">
-    <div *ngIf="selectedItem" class="container-fluid">
-        <div class="row">
-         <div class="col-md-4 text-center">
-        <div class="border d-flex align-items-center justify-content-center" style="height: 250px; overflow: hidden;">
-          <img *ngIf="selectedItem?.elementUrl; else noImage"
-               [src]="selectedItem.elementUrl"
-               class="img-fluid rounded"
-               alt="Project Image"
-               style="max-height: 100%; max-width: 100%; object-fit: contain;">
-          <ng-template #noImage>
-            <p class="text-muted">No Preview Image to show</p>
-          </ng-template>
-        </div>
-      </div>
-        <div class="col-md-8">
-            <div class="row mb-2">
-                <div class="col-6"><strong>Name:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[0] }}</div>
-                <div class="col-6"><strong>Carcass Material:</strong><br>{{
-                    selectedItem.elementNameAndDescription.split('\n')[1] }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>Carcass Finish:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[2]
-                    }}</div>
-                <div class="col-6"><strong>Shutter Material:</strong><br>{{
-                    selectedItem.elementNameAndDescription.split('\n')[3] }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>Shutter Finish:</strong><br>{{ selectedItem.elementNameAndDescription.split('\n')[4]
-                    }}</div>
-                <div class="col-6"><strong>Code & Category:</strong><br>{{ selectedItem.codeAndCategory }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>Order Status:</strong><br>{{ selectedItem.orderStatus }}</div>
-                <div class="col-6"><strong>Item Type:</strong><br>{{ selectedItem.itemType }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>Source:</strong><br>{{ selectedItem.source }}</div>
-                <div class="col-6"><strong>Status:</strong><br>{{ selectedItem.status }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>Length:</strong><br>{{ selectedItem.length }}</div>
-                <div class="col-6"><strong>Breadth:</strong><br>{{ selectedItem.breadth }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>Height:</strong><br>{{ selectedItem.height }}</div>
-                <div class="col-6"><strong>Quantity:</strong><br>{{ selectedItem.quantity }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>UOM:</strong><br>{{ selectedItem.uom }}</div>
-                <div class="col-6"><strong>Client Rate:</strong><br>{{ selectedItem.clientRate }}</div>
-            </div>
-        
-            <div class="row mb-2">
-                <div class="col-6"><strong>Final Amount:</strong><br>{{ selectedItem.finalAmount }}</div>
-            </div>
-        </div>
+    <div class="offcanvas-body p-3">
+        <div *ngIf="selectedItem" class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <div class="border d-flex align-items-center justify-content-center"
+                        style="height: 250px; overflow: hidden;">
+                        <img *ngIf="selectedItem?.elementUrl; else noImage" [src]="selectedItem.elementUrl"
+                            class="img-fluid rounded" alt="Project Image"
+                            style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                        <ng-template #noImage>
+                            <p class="text-muted">No Preview Image to show</p>
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Name:</strong><br>{{
+                            selectedItem.elementNameAndDescription.split('\n')[0] }}</div>
+                        <div class="col-6"><strong>Carcass Material:</strong><br>{{
+                            selectedItem.elementNameAndDescription.split('\n')[1] }}</div>
+                    </div>
 
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Carcass Finish:</strong><br>{{
+                            selectedItem.elementNameAndDescription.split('\n')[2]
+                            }}</div>
+                        <div class="col-6"><strong>Shutter Material:</strong><br>{{
+                            selectedItem.elementNameAndDescription.split('\n')[3] }}</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Shutter Finish:</strong><br>{{
+                            selectedItem.elementNameAndDescription.split('\n')[4]
+                            }}</div>
+                        <div class="col-6"><strong>Code & Category:</strong><br>{{ selectedItem.codeAndCategory }}</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Order Status:</strong><br>{{ selectedItem.orderStatus }}</div>
+                        <div class="col-6"><strong>Item Type:</strong><br>{{ selectedItem.itemType }}</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Source:</strong><br>{{ selectedItem.source }}</div>
+                        <div class="col-6"><strong>Status:</strong><br>{{ selectedItem.status }}</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Length:</strong><br>{{ selectedItem.length }}</div>
+                        <div class="col-6"><strong>Breadth:</strong><br>{{ selectedItem.breadth }}</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Height:</strong><br>{{ selectedItem.height }}</div>
+                        <div class="col-6"><strong>Quantity:</strong><br>{{ selectedItem.quantity }}</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>UOM:</strong><br>{{ selectedItem.uom }}</div>
+                        <div class="col-6"><strong>Client Rate:</strong><br>{{ selectedItem.clientRate }}</div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-6"><strong>Final Amount:</strong><br>{{ selectedItem.finalAmount }}</div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-   </div>
 
 
 </ng-template>

@@ -42,7 +42,7 @@ export class CampaignsComponent extends BaseComponent {
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
   newItemColor: string = '#000000'; listNew: any;
   dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
-
+ 
   displayedColumns: string[] = [
     'sourceFlag',
     'select',
@@ -90,7 +90,7 @@ export class CampaignsComponent extends BaseComponent {
     this.campaignForm = this.fb.group({
       campaignId: [0],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
-      pipeline: ['', Validators.required],
+      pipeline: ['',],
       campaignPoc: [''],
       agents: [[]],
       campaignPriority: [''],
@@ -99,6 +99,7 @@ export class CampaignsComponent extends BaseComponent {
       companyCode: [this.userCompanyCode],
       email: [this.userEmail],
       type: [this.userType],
+      isAutoCreationRequired:[false],
       createdDate: new Date().toISOString(),
       campgnId: [''],
 
@@ -114,7 +115,6 @@ export class CampaignsComponent extends BaseComponent {
       this.toastr.error("Please fill in all required fields.");
       return;
     }
-    
     this.isSubmitting = true;
     let agents = this.campaignForm.get('agents')?.value;
     if (Array.isArray(agents)) {
@@ -122,17 +122,16 @@ export class CampaignsComponent extends BaseComponent {
     }
     let payload = {
       ...this.campaignForm.value,
-      campaignPoc : this.userEmail,
       email: this.userEmail,
       companyCode: this.userCompanyCode,
       type: this.userType,
       agents: agents,
+      isAutoCreationRequired: this.campaignForm.value.isAutoCreationRequired ?? false
     };
     if (this.selectedCampgnId && this.selectedCampaignId) {
       payload.campgnId = this.selectedCampgnId;
       payload.campaignId = this.selectedCampaignId;
     }
-    console.log(payload);
     this.switchService.saveCampaignData(payload).subscribe({
       next: (res: any) => {
         this.isSubmitting = false;
@@ -151,13 +150,7 @@ export class CampaignsComponent extends BaseComponent {
           this.getCampaignData();
           this.selectedCampgnId = null;
           this.selectedCampaignId = null;
-        } else {
-          this.toastr.error(res.message || "Something went wrong while creating the campaign.");
-        }
-      },
-      error: (error) => {
-        this.isSubmitting = false;
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
+        } 
       }
     });
   }
@@ -288,36 +281,62 @@ export class CampaignsComponent extends BaseComponent {
       }
     });
   }
-  getUsers() {
+   getUsers() {
    if (JSON.parse(this.userData).type == 2) {
       let cn = this.userCompanyName;
       let cc = this.userCompanyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
-            this.userList = res;
-            if (this.preSelectedUsers?.length) {
-              const ctrl = this.campaignForm.get('agents');
-              const current = ctrl?.value || [];
-              const merged = Array.from(new Set([...current, ...this.preSelectedUsers]));
-              ctrl?.setValue(merged);
-            }
-             this.filteredUserList = this.userList.filter(
-              (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
-            );
-          } else {
-            this.toastr.error(res.message, 'signup', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
+          this.userList = res;
+
+          if (this.preSelectedUsers?.length) {
+            const ctrl = this.campaignForm.get('agents');
+            const current = ctrl?.value || [];
+            const merged = Array.from(new Set([...current, ...this.preSelectedUsers]));
+            ctrl?.setValue(merged);
           }
+          if (!this.isEditMode) {
+            const selectedManager = this.campaignForm.get('campaignPoc')?.value;
+            if (selectedManager) {
+              this.filteredUserList = this.filteredUserList.filter(
+                (user: any) => user.email !== selectedManager
+              );
+
+              const agentsCtrl = this.campaignForm.get('agents');
+              const currentAgents: string[] = agentsCtrl?.value || [];
+              const updatedAgents = currentAgents.filter(a => a !== selectedManager);
+              agentsCtrl?.setValue(updatedAgents);
+            }
+          }
+
+          this.campaignForm.get('campaignPoc')?.valueChanges.subscribe((managerEmail: string | null) => {
+            if (!this.isEditMode) {
+              if (managerEmail) {
+                this.filteredUserList = this.userList
+                  .filter((user: any) =>
+                    user.email !== managerEmail
+                  );
+                const agentsCtrl = this.campaignForm.get('agents');
+                const currentAgents: string[] = agentsCtrl?.value || [];
+                const updatedAgents = currentAgents.filter(a => a !== managerEmail);
+                agentsCtrl?.setValue(updatedAgents);
+              } else {
+                
+              }
+            }
+          });
+        } else {
+          this.userList = [];
+          this.filteredUserList = [];
+        }
+        
         },
-        error: (error) => {
-          // this.toastr.error(error.statusText);
-        },
+       
       })
     }
   }
+
 
   getAgentColor(name: string | null | undefined): string {
     if (!name || !name.trim()) {
@@ -446,15 +465,21 @@ export class CampaignsComponent extends BaseComponent {
   }
 
   isPreSelected(email: string): boolean {
-  return this.preSelectedUsers.includes(email);
-  }
-  onRemove(userEmail: string): void {
-  if (this.preSelectedUsers.includes(userEmail)) {
-    const current = this.campaignForm.get('agents')?.value || [];
-    if (!current.includes(userEmail)) {
-      this.campaignForm.patchValue({ agents: [...current, userEmail] });
-    }
-  }
+    return this.preSelectedUsers.includes(email);
   }
 
+  onRemove(userEmail: string): void {
+    if (this.preSelectedUsers.includes(userEmail)) {
+      const current = this.campaignForm.get('agents')?.value || [];
+      if (!current.includes(userEmail)) {
+        this.campaignForm.patchValue({ agents: [...current, userEmail] });
+      }
+    }
+  }
+
+  getUserColor(followup: any): string {
+    const key = followup.email || followup.followUpBy || 'default';
+    const index = this.hashString(key) % this.userColors.length;
+    return this.userColors[index];
+  }
 }

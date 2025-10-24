@@ -110,12 +110,12 @@
     </div>
   </div>
   <div class="col-xxl-12" [ngStyle]="{
-        'max-height': topshowMore ? '330px' : '400px',
+        'max-height': topshowMore ? '395px' : '400px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
         'transition': 'max-height 0.5s ease' }" *ngIf="((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList?.length : listNew?.length) > 0">
     <div class="row">
       <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"  *ngFor="let campaign of ((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList : listNew)">
-        <div class="card custom-card fixed-height-card">
+        <div class="card custom-card fixed-height-card kt shadow-sm card-hover-zoom">
           <div class="card-header d-flex align-items-start justify-content-between">
             <div class="align-items-center">
               <!-- <span class="avatar avatar-rounded p-1 bg-light" ngbTooltip="{{ campaign.campaignPoc }}" placement="top">
@@ -127,8 +127,7 @@
               {{ campaign.campaignPoc?.charAt(0) | uppercase }}
             </span>
           </ng-container>
-
-            </div>
+            </div> 
             <div class="flex-fill">
               <a href="javascript:void(0);" class="fs-14 d-block text-truncate project-list-title">
                 Campaign: {{ campaign.campaignName }}</a>
@@ -165,7 +164,7 @@
               </div>
             </div>
           </div>
-          <div class="card-body card-scroll">
+          <div class="card-body card-scroll " (click)="viewCampaignLeads(campaign)">
             <div class="mb-1">Total Leads : <span class="badge bg-info-transparent">{{ leadCounts[campaign.campgnId] ||
                 0 }}</span></div>
             <div>
@@ -213,7 +212,7 @@
   <form [formGroup]="campaignForm" (ngSubmit)="submitCampaign(modal)">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 class="modal-title">{{ isEditMode ? 'Edit Campaign' : 'Create Campaign' }}</h6>
+        <h6 class="modal-title"><strong>{{ isEditMode ? 'Edit Campaign' : 'Create Campaign' }}</strong></h6>
         <button type="button" class="btn-close" (click)="d('Cross click')" data-bs-dismiss="modal"
           aria-label="Close"></button>
       </div>
@@ -235,7 +234,6 @@
             <ng-select formControlName="pipeline" [items]="pipeLine" bindLabel="name" bindValue="name"
               placeholder="Select an option">
             </ng-select>
-
           </div>
           <div class="col-xl-12" *ngIf="userType !== 1">
             <label for="deal-name" class="form-label">Who will manage this Campaign</label>
@@ -243,18 +241,15 @@
               placeholder="Select an Manager" [readonly]="isEditMode">
             </ng-select>
           </div>
-
           <div class="col-xl-12" *ngIf="userType !== 1">
             <label for="deal-name" class="form-label">Select Agents</label>
             <ng-select formControlName="agents" [multiple]="true" placeholder="Select agents" (remove)="onRemove($event)">
-          
-              <ng-option *ngFor="let user of userList" [value]="user.email" [disabled]="isPreSelected(user.email)">
+              <ng-option *ngFor="let user of (isEditMode ? userList : filteredUserList)" [value]="user.email" [disabled]="isPreSelected(user.email)">
                 {{ user.email }}
                 <span *ngIf="isPreSelected(user.email)" class="text-muted"></span>
               </ng-option>
             </ng-select>
           </div>
-
           <div class="col-xl-6">
             <label for="deal-name" class="form-label">Campaign Priority</label>
             <ng-select placeholder="Select Priority" [items]="campaignPriority" bindLabel="name" bindValue="name"
@@ -267,11 +262,17 @@
               formControlName="leadDuplicacy">
             </ng-select>
           </div>
+          <div class="col-xl-6">
+            <input class="form-check-input" type="checkbox" id="primaryChecked" formControlName="isAutoCreationRequired" />
+            <label class="form-check-label" for="primaryChecked">&nbsp;
+              Project Creation
+            </label>
+          </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">{{ isEditMode ? 'Update' : 'Save' }}</button>
-        <button type="button" class="btn btn-light" data-bs-dismiss="modal" (click)="c('Cancel click')">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">{{ isEditMode ? 'Update' : 'Create' }}</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="c('Cancel click')">Cancel</button>
       </div>
     </div>
   </form>

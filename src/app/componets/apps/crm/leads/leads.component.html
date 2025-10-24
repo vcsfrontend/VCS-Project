@@ -1,13 +1,133 @@
-<div class="col-xl-12 mt-3">
+<div class="row mt-4">
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar bg-secondary-transparent">
+                            <i class="ri-user-follow-line fs-5"></i>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Active Leads</p>
+                                <h4 class="mt-1">{{activeCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+40%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar bg-danger-transparent">
+                            <i class="ri-user-unfollow-line fs-5"></i>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Not Connected</p>
+                                <h4 class="mt-1">{{notConnectedCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+25%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar p-2 bg-orange-transparent svg-orange">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Followup's</p>
+                                <h4 class="mt-1">{{followUpCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+19%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar avatar-rounded bg-secondary-transparent">
+                            <i class="ti ti-file-check fs-20"></i>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Completed</p>
+                                <h4 class="mt-1">{{statusCompletion}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-danger">-12%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-xl-12">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
             <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
+                <button class="btn btn-primary btn-sm me-1" (click)="goBackToCampaigns()">
+                    <i class="bi bi-arrow-left"></i>
+                </button>
                 {{leadCount}} Leads found
             </div>
-            <mat-form-field class="filter-field" appearance="outline">
-                <mat-icon matPrefix>search</mat-icon>
-                <input matInput placeholder="Search Here" (keyup)="applyFilter($event)" #input>
-            </mat-form-field>
+            <div class="d-flex justify-content-center">
+                <div class="input-group shadow-sm rounded-3" style="width: 280px;">
+                    <button class="btn btn-primary d-flex align-items-center justify-content-center rounded-start" type="button"
+                        id="button-addon2">
+                        <i class="ri-search-line text-white fs-5"></i>
+                    </button>
+                    <input type="text" class="form-control border rounded-end" placeholder="Search Here..."
+                        aria-describedby="button-addon2" (keyup)="applyFilter($event)" #input />
+                </div>
+            </div>
             <div class="text-center">
                 <div class="btn-group" role="group" aria-label="Basic outlined example">
                     <button type="button" class="btn btn-primary border-end border-light"
@@ -19,293 +139,356 @@
                         data-bs-target="#exampleModalLg" (click)="resetFilterForm()" *ngIf="filterApplied">Reset</button>
                     <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" *ngIf="adoanAiRole== 'ADMIN'|| userType ==1">
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" *ngIf="adoanAiRole== 'ADMIN'|| userType ==1 || crmRole=='ADMIN'">
                         Bulk Upload 
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);" *ngIf="adoanAiRole == 'ADMIN'|| userType ==1">Add New</button>
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);" *ngIf="adoanAiRole == 'ADMIN'|| userType ==1 || crmRole=='ADMIN'">Add New</button>
                 </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            <div class="table-container mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort class="mat-table">
-                    <ng-container matColumnDef="sourceFlag">
-                        <th mat-header-cell *matHeaderCellDef></th>
-                        <td mat-cell *matCellDef="let element">
-                            <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1" title="Executive Lead"></i>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="select">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <mat-checkbox [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
-                                (change)="onSelectAllChange($event)"></mat-checkbox>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <mat-checkbox (change)="onRowCheckboxChange(element, $event)"
-                                [checked]="isSelected(element.leadId)" [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="slNo">
-                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let element">
-                            <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light me-1"
-                                ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)" data-bs-target="#offcanvasRight"
-                                aria-controls="offcanvasRight">
-                                <i class="ri-alarm-line"></i>
-                            </a>
-                            <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)"
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                <i class="ri-eye-line"></i>
-                            </a>
-                            <span ngbDropdown placement="right-top" container="body">
-                                <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
-                                    ngbDropdownToggle></i>
-                                <ul class="dropdown-menu z-1" ngbDropdownMenu>
-                                    <li class="m-2">
-                                        <button class="btn btn-warning label-btn label-end w-100" (click)="sendEmail(element)"
-                                            data-bs-toggle="offcanvas" (click)="openRight(Content2)" data-bs-target="#offcanvasRight"
-                                            aria-controls="offcanvasRight">
-                                            Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                    <!-- <li class="m-2">
+        <div class="table-container mat-elevation-z8 boq-table-wrapper">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+                <ng-container matColumnDef="sourceFlag">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element">
+                        <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1"
+                            title="Executive Lead"></i>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox [checked]="isAllSelected()" [indeterminate]="isIndeterminate()"
+                            (change)="onSelectAllChange($event)"></mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <mat-checkbox (change)="onRowCheckboxChange(element, $event)" [checked]="isSelected(element.leadId)"
+                            [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="slNo">
+                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                    <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef>Actions</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a href="javascript:void(0);"
+                            class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light me-1"
+                            ata-bs-toggle="offcanvas" (click)="openFollowupLeadForm(element, Content4)"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                            <i class="ri-alarm-line"></i>
+                        </a>
+                        <a href="javascript:void(0);"
+                            class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
+                            ata-bs-toggle="offcanvas" (click)="openRight1(content3); ViewCrmLeads(element)"
+                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                            <i class="ri-eye-line"></i>
+                        </a>
+                        <span ngbDropdown placement="right-top" container="body">
+                            <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
+                                ngbDropdownToggle></i>
+                            <ul class="dropdown-menu z-1" ngbDropdownMenu>
+                                <li class="m-2">
+                                    <button class="btn btn-warning label-btn label-end w-100" (click)="sendEmail(element)"
+                                        data-bs-toggle="offcanvas" (click)="openRight(Content2)"
+                                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                        Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
+                                    </button>
+                                </li>
+                                <!-- <li class="m-2">
+                                                                                <button class="btn btn-success label-btn label-end w-100"
+                                                                                    (click)="openRight(Content113)" data-bs-target="#offcanvasRight"
+                                                                                    aria-controls="offcanvasRight">
+                                                                                    Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                                                                </button>
+                                                                            </li> -->
+                                <!-- <li class="m-2">
+                                                                                <button class="btn btn-info-gradient label-btn label-end w-100"
+                                                                                    (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
+                                                                                    aria-controls="offcanvasRight">
+                                                                                    Create Task<i class="ri-task-line bt-icon label-btn-icon"></i>
+                                                                                </button>
+                                                                            </li> -->
+                                <!-- <li class="m-2">
                                                             <button class="btn btn-success label-btn label-end w-100"
-                                                                (click)="openRight(Content113)" data-bs-target="#offcanvasRight"
+                                                                (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
                                                                 aria-controls="offcanvasRight">
-                                                                Send Whats'up<i class="ri-whatsapp-line bt-icon label-btn-icon"></i>
+                                                                Appointment<i class="ri-calendar-line bt-icon label-btn-icon"></i>
                                                             </button>
                                                         </li> -->
-                                    <!-- <li class="m-2">
-                                                            <button class="btn btn-info-gradient label-btn label-end w-100"
-                                                                (click)="openRight2(content30)" data-bs-target="#offcanvasRight"
+                                <!-- This ensures a button appears for each appointment -->
+                                <!-- <li class="m-2">
+                                                            <button class="btn btn-success label-btn label-end w-100"
+                                                                (click)="openEditAppointment(appointment1, element)" data-bs-target="#offcanvasRight"
                                                                 aria-controls="offcanvasRight">
-                                                                Create Task<i class="ri-task-line bt-icon label-btn-icon"></i>
+                                                                Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
                                                             </button>
                                                         </li> -->
-                                    <!-- <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="appointmentModal(appointment1, element)" data-bs-target="#offcanvasRight"
-                                            aria-controls="offcanvasRight">
-                                            Appointment<i class="ri-calendar-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li> -->
-                                    <!-- This ensures a button appears for each appointment -->
-                                    <!-- <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100"
-                                            (click)="openEditAppointment(appointment1, element)" data-bs-target="#offcanvasRight"
-                                            aria-controls="offcanvasRight">
-                                            Edit Appointment<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
-                                        </button>
-                                    </li> -->
-                                    <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100" (click)="openRight3(content31, element)"
-                                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                            Move To<i class="las la-edit bt-icon label-btn-icon pt-2"></i>
-                                        </button>
-                                    </li>
-                                    <li class="m-2">
-                                        <button class="btn btn-teal label-btn label-end w-100 " (click)="editLead(element,Content14)">
-                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                    <li class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
-                                        <button class="btn btn-danger label-btn label-end w-100" (click)="deleteSingleLead(element.leadId)">
-                                            Delete<i class="ri-delete-bin-line label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </span>
-                            <ng-container *ngFor="let task of taskPriorityList">
-                                <a *ngIf="task.leadId === element.leadId" href="javascript:void(0);"
-                                    class="btn btn-icon btn-sm btn-wave waves-effect waves-light m-1 fw-semibold task-text-primary"
-                                    [ngClass]="getTaskColor(task)" [ngbPopover]="taskPopover" [popoverContext]="{ task: task }"
-                                    popoverClass="header-info wide-popover" popoverTitle="Task Info" placement="top">
-                                    {{ getDaysLeft(task.deadline) }}
-                                </a>
-                            </ng-container>
-                            <ng-template #taskPopover let-task="task">
-                                <div class="col-xl-12 border-danger" *ngIf="task">
-                                    <div>
-                                        <p class="fw-medium mb-2 d-flex align-items-center"> TaskName :&nbsp; {{ task.taskName }}
-                                        </p>
-                                        <p class="fw-medium mb-2 d-flex align-items-center">
-                                            Priority : &nbsp;
-                                            <span [ngClass]="getPriorityBadge(task.priority)"> {{ task.priority }}
-                                            </span>
-                                        </p>
-                                        <p class="fw-medium mb-2 d-flex align-items-center">
-                                            Deadline : &nbsp;
-                                            <span class="badge" [ngClass]="getTaskBgColor(task)"> {{task.deadline | date:'dd, MMM yyyy' }},
-                                                ({{getfullDaysLeft(task) }})
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </ng-template>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td mat-cell *matCellDef="let element" class="cursor-pointer"
-                            [matTooltip]="element.name?.length > 20 ? element.name : ''" matTooltipPosition="above"
-                            matTooltipClass="custom-tooltip">
-                            {{ element.name?.length > 20
-                            ? (capitalizeFirstLetter(element.name).slice(0, 20))
-                            : capitalizeFirstLetter(element.name) }}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="executive">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="d-flex align-items-center">
-                                <ng-container *ngIf="element.executive; else noExecutive">
-                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer" style="cursor: pointer;"
-                                        [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
-                                        tooltipClass="tooltip-primary">
-                                        <span class="d-flex align-items-center justify-content-center w-100 h-100">
-                                            {{ element.executive.charAt(0) | uppercase }}
+                                 <li class="m-2">
+                                    <button class="btn btn-success label-btn label-end w-100"
+                                        (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
+                                        aria-controls="offcanvasRight">
+                                        Move To<i class="bi bi-arrows-move bt-icon label-btn-icon"></i>
+                                    </button>
+                                </li>
+                                <li class="m-2">
+                                    <button class="btn btn-teal label-btn label-end w-100 "
+                                        (click)="editLead(element,Content14)">
+                                        Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
+                                    </button>
+                                </li>
+                                <li class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'">
+                                    <button class="btn btn-danger label-btn label-end w-100"
+                                        (click)="deleteSingleLead(element.leadId)">
+                                        Delete<i class="ri-delete-bin-line label-btn-icon"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </span>
+                        <ng-container *ngFor="let task of taskPriorityList">
+                            <a *ngIf="task.leadId === element.leadId" href="javascript:void(0);"
+                                class="btn btn-icon btn-sm btn-wave waves-effect waves-light m-1 fw-semibold task-text-primary"
+                                [ngClass]="getTaskColor(task)" [ngbPopover]="taskPopover" [popoverContext]="{ task: task }"
+                                popoverClass="header-info wide-popover" popoverTitle="Task Info" placement="top">
+                                {{ getDaysLeft(task.deadline) }}
+                            </a>
+                        </ng-container>
+                        <ng-template #taskPopover let-task="task">
+                            <div class="col-xl-12 border-danger" *ngIf="task">
+                                <div>
+                                    <p class="fw-medium mb-2 d-flex align-items-center"> TaskName :&nbsp; {{ task.taskName }}
+                                    </p>
+                                    <p class="fw-medium mb-2 d-flex align-items-center">
+                                        Priority : &nbsp;
+                                        <span [ngClass]="getPriorityBadge(task.priority)"> {{ task.priority }}
                                         </span>
-                                    </div>
-                                </ng-container>
-                                <ng-template #noExecutive>
-                                    <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
-                                        class="avatar avatar-sm avatar-rounded me-2 border pointer" style="cursor: pointer;" ngbTooltip="No executive assigned"
-                                        tooltipClass="tooltip-primary" />
-                                </ng-template>
+                                    </p>
+                                    <p class="fw-medium mb-2 d-flex align-items-center">
+                                        Deadline : &nbsp;
+                                        <span class="badge" [ngClass]="getTaskBgColor(task)"> {{task.deadline | date:'dd, MMM
+                                            yyyy' }},
+                                            ({{getfullDaysLeft(task) }})
+                                        </span>
+                                    </p>
+                                </div>
                             </div>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="stage">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
-                        <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" type="button"
-                                [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
-                                [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top">
-                                {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
-                                <ng-container *ngIf="element.stage.length > 18">...</ng-container>
-                            </span>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Status</th>
-                        <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
-                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top">
+                        </ng-template>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let element" class="cursor-pointer"
+                        [matTooltip]="element.name?.length > 20 ? element.name : ''" matTooltipPosition="above"
+                        matTooltipClass="custom-tooltip">
+                        {{ element.name?.length > 20
+                        ? (capitalizeFirstLetter(element.name).slice(0, 20))
+                        : capitalizeFirstLetter(element.name) }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="executive">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="d-flex align-items-center">
+                            <ng-container *ngIf="element.executive; else noExecutive">
+                                <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer" style="cursor: pointer;"
+                                    [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
+                                    tooltipClass="tooltip-primary">
+                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                        {{ element.executive.charAt(0) | uppercase }}
+                                    </span>
+                                </div>
+                            </ng-container>
+                            <ng-template #noExecutive>
+                                <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
+                                    class="avatar avatar-sm avatar-rounded me-2 border pointer" style="cursor: pointer;"
+                                    ngbTooltip="No executive assigned" tooltipClass="tooltip-primary" />
+                            </ng-template>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="stage">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Stage</th>
+                    <td mat-cell *matCellDef="let element">
+                        <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(element.stage) }"
+                            [ngbTooltip]="element.stage.length > 18 ? element.stage : null" placement="top" 
+                            (click)="openFollowupLeadForm(element, Content4)">
+                            {{ capitalizeFirstLetter(element.stage) | slice: 0:18 }}
+                            <ng-container *ngIf="element.stage.length > 18">...</ng-container>
+                        </span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">Status</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="d-flex justify-content-between">
+                            <span class="badge" [ngStyle]="{ 'background-color': getStatusColor(element.status) }"
+                                [ngbTooltip]="element.status.length > 18 ? element.status : null" placement="top"
+                                (click)="openFollowupLeadForm(element, Content4)">
                                 {{ capitalizeFirstLetter(element.status) | slice: 0:18 }}
                                 <ng-container *ngIf="element.status.length > 18">...</ng-container>
                             </span>
-                            <button *ngIf="element.followUpDate || element.status === 'not connected'" class="btn btn-sm btn-link p-0 ms-2 mt-1" [ngbPopover]="followupPopoverTemplate"
-                                popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)" [autoClose]="'outside'" placement="bottom"
-                                type="button">
-                                <mat-icon fontIcon="history" class="text-secondary"></mat-icon>
+                            <button *ngIf="element.followUpDate || element.status === 'not connected'" class="btn btn-sm btn-link p-0 ms-2"
+                                [ngbPopover]="followupPopoverTemplate" popoverTitle="Follow-Ups History" (click)="openFollowUpPopover(element)"
+                                [autoClose]="'outside'" placement="bottom" type="button" popoverClass="header-primary">
+                                <i class="las la-history fs-20 text-secondary"></i>
                             </button>
-                             <ng-template #followupPopoverTemplate>
-                                <ng-container *ngIf="!!followUpDetails && followUpDetails.length > 0; else noData">
-                                    <div style="max-height: 200px; overflow-y: auto;">
-                                        <ul class="list-unstyled border-bottom" *ngFor="let followup of followUpDetails">
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">FollowupDate :</span>
-                                                {{ followup.followupDate | date: 'dd-MMM-yyyy hh:mm a' }}
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Stage :</span>
-                                                <span class="badge me-1" type="button" [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
-                                                    [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null" placement="top">
-                                                    {{ followup.stage | slice: 0:18 }}
-                                                    <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
-                                                </span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Status :</span>
-                                                <span class="badge me-1" type="button"
-                                                    [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
-                                                    [ngbTooltip]="followup.status.length > 18 ? followup.status : null" placement="top">
-                                                    {{ followup.status | slice: 0:18 }}
-                                                    <ng-container *ngIf="followup.status.length > 18">...</ng-container>
-                                                </span>
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Updated On :</span>{{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a'
-                                                }}
-                                                <span class="fw-semibold me-1">By :</span>{{ followup.followUpBy }}
-                                            </li>
-                                            <li class="mb-2">
-                                                <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </ng-container>
-                                <ng-template #noData>
-                                    <p class="text-muted"></p>
-                                </ng-template>
+                        </div>
+                        <ng-template #followupPopoverTemplate>
+                            <ng-container *ngIf="!!followUpDetails && followUpDetails.length > 0; else noData">
+                                <div style="max-height: 200px; overflow-y: auto;">
+                                    <ul class="list-unstyled border-bottom" *ngFor="let followup of followUpDetails">
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">FollowupDate :</span>
+                                            {{ followup.followupDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">Stage :</span>
+                                            <span class="badge me-1" type="button"
+                                                [ngStyle]="{ 'background-color': getStageColor(followup.stage) }"
+                                                [ngbTooltip]="followup.stage.length > 18 ? followup.stage : null"
+                                                placement="top">
+                                                {{ followup.stage | slice: 0:18 }}
+                                                <ng-container *ngIf="followup.stage.length > 18">...</ng-container>
+                                            </span>
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">Status :</span>
+                                            <span class="badge me-1" type="button"
+                                                [ngStyle]="{ 'background-color': getStatusColor(followup.status) }"
+                                                [ngbTooltip]="followup.status.length > 18 ? followup.status : null"
+                                                placement="top">
+                                                {{ followup.status | slice: 0:18 }}
+                                                <ng-container *ngIf="followup.status.length > 18">...</ng-container>
+                                            </span>
+                                        </li>
+                                        <li class="mb-2 d-flex flex-wrap align-items-center">
+                                            <span class="fw-semibold me-1">Updated On:</span>
+                                            <span class="me-3 text-primary">
+                                                {{ followup.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }}
+                                            </span>
+                                            <span class="fw-semibold me-1">By:</span>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar avatar-ttm avatar-rounded me-1 border text-white fw-bold flex-shrink-0"
+                                                    [ngClass]="getUserColor(followup)">
+                                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                                        {{ followup.followUpBy?.charAt(0) | uppercase }}
+                                                    </span>
+                                                </div>
+                                                <span>{{ followup.followUpBy }}</span>
+                                            </div>
+                                        </li>
+                                        <li class="mb-2">
+                                            <span class="fw-semibold me-1">Comments :</span>{{ followup.comments }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </ng-container>
+                            <ng-template #noData>
+                                <p class="text-muted"></p>
                             </ng-template>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="followUpDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
-                            Followup Date
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="contact">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
-                        <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-                        <td mat-cell *matCellDef="let element" [matTooltip]="element.email?.length > 20 ? element.email : ''" matTooltipPosition="above"
-                            matTooltipClass="custom-tooltip"> {{element.email ?.length > 20 
-                             ? (capitalizeFirstLetter(element.email).slice(0, 20))
-                            : capitalizeFirstLetter(element.email)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="city">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
-                        <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''"
-                            matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.city ?.length > 20
-                            ? (capitalizeFirstLetter(element.city).slice(0, 20))
-                            : capitalizeFirstLetter(element.city)}}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="completionStatus">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
-                        <td mat-cell *matCellDef="let element">
-                            <button *ngIf="element.completionStatus !== 'completed'" class="btn btn-success btn-sm"
-                                (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal" data-bs-target="#completionModal">
-                                LC
-                            </button>
-                            <button *ngIf="element.completionStatus === 'completed'" class="btn btn-danger btn-sm" disabled>
-                                LC
-                            </button>
-                        </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
+                        </ng-template>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="followUpDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
+                        Followup Date
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div>
+                            <div>
+                                {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                            </div>
+                            <div class="text-muted small">
+                                {{ element.followUpComment| slice:0:20 }}
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="contact">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+                    <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="element.email?.length > 20 ? element.email : ''"
+                        matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.email ?.length > 20
+                        ? (capitalizeFirstLetter(element.email).slice(0, 20))
+                        : capitalizeFirstLetter(element.email)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="city">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''"
+                        matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.city ?.length > 20
+                        ? (capitalizeFirstLetter(element.city).slice(0, 20))
+                        : capitalizeFirstLetter(element.city)}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedTime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Lead Updation Date</th>
+                    <td mat-cell *matCellDef="let element"> {{formatLocalDateTime(element.updatedTime)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="completionStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
+                    <td mat-cell *matCellDef="let element">
+                        <button *ngIf="element.completionStatus !== 'completed'"
+                            class="btn btn-success btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
+                            (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal"
+                            data-bs-target="#completionModal">
+                            <i class="bi bi-hourglass-split me-1"></i>
+                            <strong>LC</strong>
+                        </button>
+                        <button *ngIf="element.completionStatus === 'completed'"
+                            class="btn btn-danger btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
+                            disabled>
+                            <i class="bi bi-check-circle-fill me-1"></i>
+                            <strong>LC</strong>
+                        </button>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
                     [class.disabled-row]="row.completionStatus === 'completed'"></tr>
-                </table>
-                <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
-                    <p class="text-muted mb-0">No data found</p>
-                </div>
-
+            </table>
+            <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
+                <p class="text-muted mb-0">No data found</p>
             </div>
-            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+        
         </div>
+        <mat-paginator #paginator [pageSizeOptions]="[20, 100, 500]" showFirstLastButtons></mat-paginator>
         <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
-                    <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
-                        placeholder="Select an Executive" class="rounded-0 ng-selt">
+                    <ng-select formControlName="executive" [items]="agentUsers" bindValue="email" placeholder="Select an Executive"
+                        class="rounded-0 ng-selt border-bottom" [searchable]="true" [appendTo]="'body'" >
+                        <ng-template ng-option-tmp let-user="item" let-index="index">
+                            <div class="user-row d-flex align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold" [ngClass]="getUserColor(user)">
+                                        <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                            {{ user.email?.charAt(0) | uppercase }}
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <span class="fs-14">{{ user.email?.length > 22 ? (user.email | slice:0:22) + '...' : user.email
+                                            }}</span>
+                                        <div class="fs-11">{{ user.username }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-label-tmp let-user="item">
+                            <div class="d-flex align-items-center text-truncate w-100">
+                                <div class="avatar avatar-sm avatar-rounded me-1 border text-white fw-bold flex-shrink-0"
+                                    [ngClass]="getUserColor(user)">
+                                    <span>{{ user.email?.charAt(0) | uppercase }}</span>
+                                </div>
+                                <span class="text-truncate" style="max-width: calc(100% - 40px);">
+                                    {{ user.email?.length > 22 ? (user.email | slice:0:22) + '...' : user.email }}
+                                </span>
+                            </div>
+                        </ng-template>
                     </ng-select>
                     <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
                         id="button-addon1" data-mdb-ripple-color="dark">
@@ -323,12 +506,13 @@
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMailOffcanvas(offcanvasTemplate)"
                         data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Mail"><i class="ri-mail-line bt-icon"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
-                    
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMove(content31,selectedLeads)"
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Move To"><i class="bi bi-arrows-move"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="appointmentModal(appointment1, element)"
-                        *ngIf="adoanAiRole !== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
+                        *ngIf="adoanAiRole !== 'ADMIN' || userType== 1 || crmRole !=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1" data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Delete"><i class="ri-delete-bin-line"></i></button>
+                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Delete"><i class="ri-delete-bin-line"></i></button>
                 </div>
             </div>
         </div>
@@ -336,26 +520,40 @@
 </div>
 
 <div class="col-lg-12">
-    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'">
         <div class="col-lg-4">
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Stages</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight5(content5)" [disabled]="isAddStagesDisabled"
-                        >Add
-                        Stages</button>
+                    <button class="btn btn-primary btn-sm ms-auto" type="button" (click)="openRight5(content5)"
+                        [disabled]="isAddStagesDisabled">Add Stages</button>
                 </div>
-                <div class="card-body p-3" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
-                    <div *ngIf="stageLst?.length === 0"></div>
-                    <ul class="list-group">
-                        <li *ngFor="let stage of stageLst" class="list-group-item d-flex align-items-center">
-                            <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{ 
-                                                'width': '15px', 'height': '15px', 
-                                                'background-color': stage.color || '#ccc' 
-                                            }"></span>
-                            <span class="font-weight-bold">{{ capitalizeFirstLetter (stage.stageName) }}</span>
-                        </li>
-                    </ul>
+                <div class="card-body p-0" style="min-height: 340px; max-height: 345px; overflow-y: auto;">
+                    <div class="table-responsive" *ngIf="stageLst?.length > 0; else noData">
+                        <table class="table table-hover card-table mb-0">
+                            <tbody>
+                                <tr *ngFor="let stage of stageLst">
+                                    <td>
+                                        <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{ 
+                                            'width': '15px', 
+                                            'height': '15px', 
+                                            'background-color': stage.color || '#ccc' 
+                                        }">
+                                        </span>
+                                        <span class="font-weight-bold">
+                                            {{ capitalizeFirstLetter(stage.stageName) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ng-template #noData>
+                        <div class="p-3 text-center text-muted">
+                            No stages available.
+                        </div>
+                    </ng-template>
+                
                 </div>
                 <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStages()">Delete</button>
@@ -366,27 +564,36 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Status</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight12(content12)"
+                    <button class="btn btn-primary btn-sm ms-auto" type="button" (click)="openRight12(content12)"
                         [disabled]="shouldDisableAddStatus">Add
                         Status</button>
                 </div>
-                <div class="card-body p-3" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
-                    <div *ngIf="statusLst && statusLst.length === 0"></div>
-                    <ul class="list-unstyled">
-                        <li *ngFor="let status of statusLst" class="mb-3">
-                            <i class="bi bi-arrow-right-circle-fill text-info me-2"></i>
-                            <strong>{{ capitalizeFirstLetter(status.stage) }}</strong>
-                            <ul class="list-group mt-2">
-                                <li *ngFor="let field of status.fields"
-                                    class="list-group-item d-flex align-items-center">
-                                    <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{'width': '15px','height': '15px', 
-                                                    'background-color': field.color || '#ccc'}">
-                                    </span>
-                                    {{ capitalizeFirstLetter (field.name) }}
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                <div class="card-body p-0" style="min-height: 338px; max-height: 340px; overflow-y: auto;">
+                    <div *ngIf="statusLst?.length > 0; else noStatus">
+                        <ul class="list-unstyled">
+                            <li *ngFor="let status of statusLst" class="mb-3 mt-2">
+                                <i class="bi bi-arrow-right-circle-fill text-info me-2 ms-2"></i>
+                                <strong>{{ capitalizeFirstLetter(status.stage) }}</strong>
+                
+                                <ul class="list-group mt-2">
+                                    <li *ngFor="let field of status.fields" class="list-group-item d-flex align-items-center">
+                                        <span class="rounded-circle me-2 d-inline-block" [ngStyle]="{
+                                            'width': '15px',
+                                            'height': '15px',
+                                            'background-color': field.color || '#ccc'
+                                        }">
+                                        </span>
+                                        {{ capitalizeFirstLetter(field.name) }}
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <ng-template #noStatus>
+                        <div class="p-3 text-center text-muted">
+                            No statuses available.
+                        </div>
+                    </ng-template>
                 </div>
                 <div class="card-footer text-end">
                     <button type="button" class="btn btn-danger btn-sm" (click)="deleteLeadStatus()">Delete</button>
@@ -397,11 +604,11 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Mail Templates</div>
-                    <button class="btn btn-primary ms-auto" type="button" (click)="openRight13(content13)">Add Mail
+                    <button class="btn btn-primary btn-sm ms-auto" type="button" (click)="openRight13(content13)">Add Mail
                         Template</button>
                 </div>
-                <div class="card-body " style="min-height: 398px; max-height: 400px; overflow-y: auto;">
-                    <div *ngFor="let template of tempFormList" class="card custom-card card-bg-light mb-3">
+                <div class="card-body p-1" style="min-height: 398px; max-height: 400px; overflow-y: auto;">
+                    <div *ngFor="let template of tempFormList" class="card custom-card border mb-3">
                         <div class="card-body">
                             <h5 class="card-title fw-semibold mb-3">{{ capitalizeFirstLetter (template.templateName) }}</h5>
                             <p><strong>Subject:</strong> {{ capitalizeFirstLetter (template.subject?.slice(0,100)) }}</p>
@@ -420,7 +627,7 @@
     </div>
 </div>
 <div class="col-lg-12" >
-    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1">
+    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'">
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
@@ -442,7 +649,10 @@
                     <div class="card custom-card">
                         <div class="card-header border-bottom-0 justify-content-between">
                             <div class="card-title">
-                                {{ statusGroup.stage }}
+                                {{ statusGroup.stage }} 
+                                <span class="badge bg-black text-white rounded-pill ms-1">
+                                    {{ statusGroup.fields?.length || 0 }}
+                                </span>
                             </div>
                         </div>
                         <div class="card-body border-top">
@@ -498,7 +708,7 @@
 <ng-template #Content112 let-modal>
     <div class="modal-header">
         <h6 class="modal-title" id="exampleModalLgLabel">
-            Add Lead
+           <strong> Add Lead</strong>
         </h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
@@ -611,63 +821,82 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Save Lead</button>
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
+        <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
     </form>
 </ng-template>
 
 <ng-template #Content1 let-offcanvas>
-    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)">
-        <div class="offcanvas-header border-bottom border-block-end-dashed">
+    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)" class="offcanvas-form d-flex flex-column h-100">
+        <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
                 aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body p-0"> 
+        <div class="offcanvas-body p-0 overflow-auto" style="max-height: calc(100vh - 160px);">
             <div class="col-xl-12 pt-3">
                 <div class="row gy-3 p-4">
                     <div class="col-xl-6">
-                        <label for="name" class="form-label">Start Date</label>
-                        <input type="datetime-local" class="form-control" id="date" placeholder="" formControlName="startDate">
-                    </div>
-                    <div class="col-xl-6">
-                        <label for="name" class="form-label">End Date</label>
-                        <input type="datetime-local" class="form-control" id="date" placeholder=""
-                        formControlName="endDate">
-                    </div>
-                    <div class="col-xl-6">
-                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
-                            bindValue="stageName"  (change)="onFilterStageChange()" placeholder="Select an Stage" >
+                        <label for="name" class="form-label">Date Type</label>
+                        <ng-select formControlName="action" [items]="filterFields" bindLabel="name"
+                            [ngModel]="filterLeadForm.get('action')?.value || null" bindValue="name"
+                            placeholder="Select an Date Type">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
+                        <label for="name" class="form-label">Start Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder="Start Date"
+                            formControlName="startDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">End Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder="End Date"
+                            formControlName="endDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Stage</label>
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
+                            [ngModel]="filterLeadForm.get('stage')?.value || null" bindValue="stageName"
+                            (change)="onFilterStageChange()" placeholder="Select a Stage">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Status</label>
                         <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
                             placeholder="Select a status" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
+                        <label for="name" class="form-label">Source</label>
                         <ng-select formControlName="source" [items]="pipeLine" bindLabel="name" bindValue="name"
-                            placeholder="Select an Source" [multiple]="true">
+                            placeholder="Select a Source" [multiple]="true">
                         </ng-select>
                     </div>
-                    <div class="col-xl-6" *ngIf="adoanAiRole == 'ADMIN'">
+                    <div class="col-xl-6" *ngIf="adoanAiRole == 'ADMIN' || crmRole=='ADMIN'">
+                        <label for="name" class="form-label">Executive</label>
                         <ng-select formControlName="executive" [items]="agentUsers" bindLabel="email" bindValue="email"
                             placeholder="Select an Executive" [multiple]="true">
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
+                        <label for="name" class="form-label">City</label>
                         <ng-select formControlName="city" [items]="cityList" bindLabel="name" bindValue="name"
-                            placeholder="Select an City" [multiple]="true">
+                            placeholder="Select a City" [multiple]="true">
                         </ng-select>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-            <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-                <button class="btn btn-primary mr-3" type="submit">Filter</button>
-                <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        <div class="offcanvas-footer border-top p-4">
+            <div class="d-flex justify-content-start gap-2">
+                <button class="btn btn-primary" type="submit">Filter</button>
+                <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
             </div>
         </div>
     </form>
@@ -795,7 +1024,7 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Update Lead</button>
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
     </form>
@@ -860,9 +1089,9 @@
                                     </label>
                                 </div>
                                 <div class="col-xl-12 col-lg-12 col-md-12">
-                                    <button class="btn btn-primary me-1" type="submit"
+                                    <button class="btn btn-primary me-3" type="submit"
                                         [disabled]="uploadSpinner">Import</button>
-                                    <button class="btn btn-secondary" type="button"
+                                    <button class="btn btn-danger" type="button"
                                         (click)="offcanvas.dismiss('Cross click')">Cancel</button>
                                 </div>
                             </div>
@@ -983,9 +1212,9 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+    <div class="col-xl-12 col-lg-12 col-md-12 p-4 border-top">
+        <div class="position-relative justify-content-start d-flex gap-3 ">
+            <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
@@ -996,7 +1225,7 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvas)" class="d-flex flex-column h-100">
+    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvas)" class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 80vh;">
         <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
                 <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
@@ -1106,22 +1335,35 @@
         <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
                 <input type="text" class="form-control" id="subject" placeholder="templateName"
-                    formControlName="templateName">
+                    formControlName="templateName" [ngClass]="{ 'is-invalid': selecteTemplateFormSubmitted && k['templateName'].errors }">
+                <div *ngIf="selecteTemplateFormSubmitted && k['templateName'].errors" class="invalid-feedback">
+                    <span *ngIf="k['templateName'].errors['required']">templateName is required.</span>
+                </div>
             </div>
             <div class="mb-4">
                 <textarea class="form-control" id="subject" rows="4" placeholder="Enter Your Subject"
-                    formControlName="subject"></textarea>
+                    formControlName="subject" [ngClass]="{ 'is-invalid': selecteTemplateFormSubmitted && k['subject'].errors }"></textarea>
+                <div *ngIf="selecteTemplateFormSubmitted && k['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="k['subject'].errors['required']">subject is required.</span>
+                </div>
             </div>
             <div class="mb-4">
                 <textarea class="form-control" id="description" rows="4" placeholder="Enter Your Description"
-                    formControlName="description"></textarea>
+                    formControlName="description" [ngClass]="{ 'is-invalid': selecteTemplateFormSubmitted && k['description'].errors }"></textarea>
+                <div *ngIf="selecteTemplateFormSubmitted && k['description'].errors" class="invalid-feedback">
+                    <span *ngIf="k['description'].errors['required']">description is required.</span>
+                </div>
             </div>
         </div>
         <div class="p-4 border-top">
-            <div class="d-flex justify-content-end gap-3">
-                <button class="btn btn-primary w-50" type="submit">Save Mail Template</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
-                    type="button">Cancel</button>
+            <div class="d-flex justify-content-start gap-2">
+                    <button class="btn btn-primary w-50" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50" type="button">Cancel</button>
+            </div>
+        </div>
+        <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
     </form>
@@ -1139,11 +1381,10 @@
     <div class="d-flex pt-4 gap-3 ms-2">
         <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
         <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)" >Not Connected</button>
-
     </div>
     <div  *ngIf="showForm && selectedStatus !== 'Not Connected'" class="mt-2">
-        <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm">
-            <div class="offcanvas-body p-0 m-4 overflow-auto" style="max-height: 60vh;">
+        <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm" style="max-height: 60vh;">
+            <div class="offcanvas-body p-0 m-4 overflow-auto" >
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label for="followupDate" class="form-label">Next Follow up date</label>
@@ -1194,9 +1435,9 @@
 
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
-                <div class="d-flex justify-content-end gap-3">
-                    <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
+                <div class="d-flex justify-content-start gap-3">
+                    <button class="btn btn-primary mr-3" type="submit">Update Status</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3"
                         type="submit">Cancel</button>
                 </div>
             </div>
@@ -1208,7 +1449,6 @@
     <div class="offcanvas-header border-bottom border-block-end-dashed justify-content-between">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add Lead Stages</strong></h5>
         <div class="mb-3">
-            <button class="btn btn-primary gappp me-3" type="button" (click)="toggleAddMore()">Add Custom</button>
             <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
                 data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
@@ -1218,15 +1458,13 @@
             <li class="list-group-item">
                 <div class="container mt-3">
                     <div class="col-12">
-                        <div *ngFor="let plan of crmStaticStages; let i = index"
-                            class="form-check mb-3 d-flex align-items-center">
-                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked"
-                                [id]="'plan-' + i">
-                            <label class="form-check-label w-50" [for]="'plan-' + i">{{ plan.name }}</label>
-                            <div class="ms-2" style="width: 20px; height: 20px; border-radius: 4px;"
-                                [style.background]="plan.color" *ngIf="plan.color"></div>
-                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom"
-                                (click)="deleteLeadItem(i)">
+                        <div *ngFor="let plan of crmStaticStages; let i = index" class="form-check mb-3 d-flex align-items-center">
+                            <input class="form-check-input me-2 mt-1 kt" type="checkbox" [(ngModel)]="plan.checked" [id]="'plan-' + i">
+                            <label class="form-check-label w-50 mt-1" [for]="'plan-' + i">{{ plan.name }}</label>
+                            <span *ngIf="plan.color" class="badges ms-2" [ngClass]="plan.color">
+                                &nbsp;
+                            </span>
+                            <button class="btn btn-danger btn-sm ms-2" *ngIf="plan.isCustom" (click)="deleteLeadItem(i)">
                                 Delete
                             </button>
                         </div>
@@ -1251,11 +1489,11 @@
             </li>
         </ul>
     </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3 border-top">
+        <div class="m-4 position-relative justify-content-start d-flex gap-3 ">
             <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
                 (click)="saveCrmStages()" [disabled]="isStagesDisabled">Save Stages</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
@@ -1304,11 +1542,16 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked">Save
+    <div class="col-xl-12 col-lg-12 col-md-12 mt-3 border-top">
+        <div class="m-4 position-relative justify-content-start d-flex gap-3 ">
+            <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked || uploadSpinner">Save
                 Status</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
+    </div>
+    <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
     </div>
 </ng-template>
@@ -1333,7 +1576,7 @@
                             <span *ngIf="g['taskName'].errors['minlength']">Task Name must be at least 3 characters long.</span>
                         </div>
                     </div>
-                    <div class="col-xl-12">
+                    <!-- <div class="col-xl-12">
                         <label class="form-label">Assigned To</label>
                         <ng-select formControlName="assignedTo" [items]="agentUsers" bindLabel="email" bindValue="email"
                             placeholder="Select Project" [multiple]="true" [ngClass]="{ 'is-invalid': taskSubmitted && g['assignedTo'].errors }">
@@ -1341,7 +1584,7 @@
                         <div *ngIf="taskSubmitted && g['assignedTo'].errors" class="invalid-feedback">
                             <span *ngIf="g['assignedTo'].errors['required']">Assigned to is required.</span>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-xl-6">
                         <label class="form-label">Deadline</label>
                         <div class="form-group">
@@ -1382,7 +1625,12 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Create</button>
+            </div>
+            <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
             </div>
         </div>
     </form>
@@ -1392,7 +1640,7 @@
     <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
+                <h6 class="modal-title" id="mail-ComposeLabel"><strong>Select Campaign</strong></h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
@@ -1410,6 +1658,7 @@
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
+                <button ty3tpe="button"class="btn btn-primary ms-2" (click)="openCreateCampaign(content15)">Create Campaign</button>
             </div>
         </div>
     </form>
@@ -1490,7 +1739,7 @@
       aria-label="Close"></button>
   </div>
 
-  <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailToMultipleLeads(offcanvasRef)" class="d-flex flex-column h-100">
+  <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailToMultipleLeads(offcanvasRef)" class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 80vh;">
     <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
       <div class="mb-4">
         <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
@@ -1547,14 +1796,14 @@
 
 <ng-template #completionModal let-modal>
   <div class="modal-header">
-    <h5 class="modal-title">Close Lead</h5>
+    <h5 class="modal-title"><strong>Close Lead</strong></h5>
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
   </div>
 
-  <div class="modal-body">
+  <div class="modal-body" style="max-height: 300px;">
     <!-- Step 1 -->
     <ng-container *ngIf="currentStep === 1">
-      Do you want to close the lead <strong>{{ selectedLead?.name }}</strong>?
+      Do you want to close the  <strong>{{ selectedLead?.name }}</strong> lead ?
     </ng-container>
 
     <!-- Step 2 -->
@@ -1647,8 +1896,8 @@
             </div>
 
             <div class="col-xl-6 col-lg-6 col-md-6">
-                <label for="address" class="form-label">project Estimation</label>
-                <input type="text" class="form-control" id="address" placeholder="Enter Address" formControlName="projectEstimation"
+                <label for="address" class="form-label">Project Estimation</label>
+                <input type="text" class="form-control" id="address" placeholder="Enter ProjectEstimation" formControlName="projectEstimation"
                 [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['projectEstimation'].errors }">
                 <div *ngIf="leadCompletionsubmitted && j['projectEstimation'].errors" class="invalid-feedback">
                     <span *ngIf="j['projectEstimation'].errors['required']">
@@ -1660,20 +1909,91 @@
         </div>
     </ng-container>
   </div>
-
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
-
-    <!-- Step 1 actions -->
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Cancel</button>
     <ng-container *ngIf="currentStep === 1">
-      <button type="button" class="btn btn-danger" (click)="goToStep(2)">Yes, Close</button>
+      <button type="button" class="btn btn-primary" (click)="goToStep(2)">Yes, Close</button>
     </ng-container>
     <ng-container *ngIf="currentStep === 2">
-      <button type="button" class="btn btn-danger" (click)="goToStep(3)">Yes, Proceed</button>
+      <button type="button" class="btn btn-primary" (click)="goToStep(3)">Yes, Proceed</button>
     </ng-container>
-    <!-- Step 2 actions -->
     <ng-container *ngIf="currentStep === 3">
-      <button type="button" class="btn btn-primary" (click)="submitClose(modal);">Submit</button>
+      <button type="button" class="btn btn-primary" (click)="submitClose(modal);" [disabled]="uploadSpinner">Submit</button>
     </ng-container>
   </div>
+    <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</ng-template>
+<ng-template #content15 let-modal>
+  <form [formGroup]="campaignForm" (ngSubmit)="submitCampaign(modal)">
+    <div class="modal-content">
+     <div class="modal-header border-bottom border-block-end-dashed justify-content-between">
+        <h5 class="modal-title" id="offcanvasExampleLabel"><strong>Create Campaign</strong></h5>
+        <div class="mb-3">
+            <button (click)="modal.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+    </div>
+      <div class="offcanvas-body px-4">
+        <div class="row gy-3">
+          <div class="col-xl-6">
+            <label for="deal-name" class="form-label">Campaign Name</label>
+            <input type="text" class="form-control" id="deal-name" placeholder="Campaign Name"
+              formControlName="campaignName"
+              [ngClass]="{ 'is-invalid': campaignSubmitted && t['campaignName'].errors }">
+            <div *ngIf="campaignSubmitted && t['campaignName'].errors" class="invalid-feedback">
+              <span *ngIf="t['campaignName'].errors['required']">campaign name is required.</span>
+              <span *ngIf="t['campaignName'].errors['minlength']">campaign name must be at least 4 characters
+                long.</span>
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <label for="deal-name" class="form-label">Pipeline</label>
+            <ng-select formControlName="pipeline" [items]="pipeLine" bindLabel="name" bindValue="name"
+              placeholder="Select an option">
+            </ng-select>
+          </div>
+          <div class="col-xl-12" *ngIf="userType !== 1">
+            <label for="deal-name" class="form-label">Who will manage this Campaign</label>
+            <ng-select formControlName="campaignPoc" [items]="userList" bindLabel="email" bindValue="email"
+              placeholder="Select an Manager">
+            </ng-select>
+          </div>
+          <div class="col-xl-12" *ngIf="userType !== 1">
+            <label for="deal-name" class="form-label">Select Agents</label>
+            <ng-select formControlName="agents" [multiple]="true" placeholder="Select agents">
+              <ng-option *ngFor="let user of userList" [value]="user.email">
+                {{ user.email }}
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="col-xl-6">
+            <label for="deal-name" class="form-label">Campaign Priority</label>
+            <ng-select placeholder="Select Priority" [items]="campaignPriority" bindLabel="name" bindValue="name"
+              formControlName="campaignPriority">
+            </ng-select>
+          </div>
+          <div class="col-xl-6">
+            <label for="deal-name" class="form-label">Lead Duplicacy</label>
+            <ng-select placeholder="Select Duplicacy" [items]="leadDuplicacy" bindLabel="name" bindValue="name"
+              formControlName="leadDuplicacy">
+            </ng-select>
+          </div>
+          <div class="col-xl-6">
+            <input class="form-check-input" type="checkbox" id="primaryChecked" formControlName="isAutoCreationRequired" />
+            <label class="form-check-label" for="primaryChecked">&nbsp;
+              Project Creation
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">Create</button>
+        <button class="btn btn-danger" type="button" (click)="modal.dismiss('Cross click')">Cancel</button>
+      </div>
+    </div>
+  </form>
 </ng-template>

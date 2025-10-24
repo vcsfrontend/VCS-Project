@@ -80,11 +80,27 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   stageLst: any; showStages: boolean = false; pmntStageLst: any; showPmntStages: boolean = false;
   isStage: boolean = false; isPmntStage: boolean = false; userType: any; projectLst: any;
   isStageDel: boolean = false; isPmntStageDel: boolean = false; projPmntLst: any; quoteMarignForm!: FormGroup;
+  createRoleForm!: FormGroup; createDepartmentForm!: FormGroup; 
   projectConfigForm!:FormGroup;projectConfigList: string[] = [];projectMarginList:any;
   quotationNumber: any;previousMarginResponse: any = {};previousConfigResponse:any={};
   quotationSubmitted = false; quotationmarginsubmit:boolean=false;projectconfigsubmit:boolean=false;
   submittedQuotationNumber :any;addmargindisable:boolean=false; f1submitCount:number=0;
-  userEmail:any;
+  userEmail:any;roleForm !: FormGroup; roleLst:any; roleCreationId : number =0; roleName :string ="";
+  deptName : string ="";
+  isEditmode : boolean = false; departmentList: any[] = []; departmentId : number =0; departmentName :string ="";
+  departmentDescription : string =""; roleDescription : string ='';roleSubmitted : boolean = false;
+  createPermissionForm !:FormGroup; permissionFormSubmitted : boolean= false;
+  permissionList : any[]=[];permissionId : number = 0; permissionName : string =''; permissionDescription : string = '';
+  appointmentId : number =0;assignRoleForm ! : FormGroup;selectedDepartment: any = {};
+  selectedRole : any ={};assignedRoleLst : any[]=[]; depId : number=0;responseList:any; selectedAssignedRole: any ={};
+  selectedPermissionRole : any ={};assignRoleResponse : any ={};selectedRoleObj: any;selectedDeptObj : any;
+  selectedId: number = 0;  
+    savedRoles: { [companyCode: string]: any[] } = {};
+  savedDepartmentRoles: any[] = [];assignedPermissionLst : any[]=[];
+  assignPermissionForm ! :FormGroup;assignUserForm ! : FormGroup;assignUserEmail : string = '';
+  assignedUserLst : any[]=[];modal:any;permissiondeptroleId : number =0;assignPermissionId : number=0;
+  userdeptroleId:any;email : string ='';  departroleId:number =0;adminAccessUsersLst:any[]=[];
+  departmentIds  : any;assignedRoleIds:any;active6='Home'
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -116,6 +132,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   public sawSubmitted = false;
   public partsSubmitted = false;
   public quoteSubmitted = false;
+  public DepartmentFormSubmitted = false;
   public stockForm!: FormGroup;
   public partsForm!: FormGroup;
   StData: any;
@@ -241,15 +258,19 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
-    
+    // this.getRoles();
+    // this.getAllDepartments();
+    // this.getAllPermissions();
+    // this.getAssignedRoles();
+    // this.getAssignedDeptRolePermissions();
+    // this.getAssignedUsers();
+    // this.getUsersAccess();
+    // this.adminAccessAllUsers();
     this.userEmail = JSON.parse(this.userData).email;
-
-    
     this.saveData = {
       id: 0,
       companyName: JSON.parse(this.userData).companyName,
@@ -375,7 +396,29 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       f9:[''],
       f10:['']
     });
+    this.roleForm = this.fb.group({
+      name : [''],
+      description : [''],
+    });
+    this.assignRoleForm = this.fb.group({
+      depRole : [0],
+      roleRole : [0],
+      description : [''],
+      
+    });
+    this.assignPermissionForm = this.fb.group({
+      permissionRole :[0],
+      depRole : [0],
+      description :[''],
+    })
 
+     this.assignUserForm = this.fb.group({
+      userEmail :[''],
+      depRole : [0],
+      description :[''],
+    })
+
+    
 
     // setTimeout(() => {
 
@@ -426,16 +469,31 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       updatedTime:[],
     });
 
+    this.createRoleForm = this.fb.group({
+      name: [''],
+      description:[''],
+      companyId:['']
+    })
 
 
-
+    this.createDepartmentForm = this.fb.group({
+      name: ['', Validators.required],
+      description:['', Validators.required],
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    })
+    this.createPermissionForm = this.fb.group({
+      name: ['', Validators.required],
+      description:['', Validators.required],
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type
+    })
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
-   
     this.getMarginData();
-    
-
   }
   onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
@@ -600,10 +658,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         } else {
           this.toastr.error(res.message)
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      }
     })
   }
 
@@ -705,10 +760,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         } else {
           this.toastr.error(res.message)
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      }
     })
   }
 
@@ -1014,9 +1066,18 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     // Create an embedded view from the modal template
     this.modalRef = this.viewContainerRef.createEmbeddedView(this.modalTemplate);
   }
+  openLg(content112:any) {
+    this.isEditmode = false;
+    this.modalService.open(content112, { size: 'sm', scrollable: true, centered: true, },);
+  }
+
+  departmentModal(content113: any) {
+    this.isEditmode = false;
+    this.createDepartmentForm.reset();
+    this.modalService.open(content113, { scrollable: true, centered: true, });
+  }
 
   closeModal() {
-    // Destroy the modal view when closing
     if (this.modalRef) {
       this.modalRef.destroy();
       this.modalRef = null;
@@ -1160,6 +1221,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   openRight13(content13: any) {
     this.modalService.open(content13, { centered: true, });
+  }
+  roleModal(content16: any) {
+    this.modalService.open(content16, { centered: true, });
   }
   openRight14(content14: any) {
     this.modalService.open(content14, { centered: true, });
@@ -1774,5 +1838,681 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   get h() {
     return this.projectConfigForm.controls;
   }
+  openEditFromSelected(element: any, content112: any) {
+    this.isEditmode = true;
+    this.openEditForm(element, content112);
+  }
+
+  openEditForm(element: any, content112: any) {
+    this.isEditmode = true;
+    this.roleCreationId = element.id;
+    this.selectRole(element);
+    this.roleForm.patchValue({
+      name: element.name,
+      description: element.description
+    });
+    this.modalService.open(content112, { size: 'sm', scrollable: true, centered: true, });
+  }
+
+  selectRole(index: number) {
+    if (Array.isArray(this.roleLst) && this.roleLst.length > index) {
+      const selectedRole = this.roleLst[index];
+
+      this.roleCreationId = selectedRole.id;
+      this.roleName = selectedRole.name;
+      this.roleDescription = selectedRole.description;
+
+      console.log("Selected Role:", selectedRole);
+    }
+  }
+   selectDepartment(index: number) {
+    if (Array.isArray(this.departmentList) && this.departmentList.length > index) {
+      const selectedDept = this.departmentList[index];
+
+      this.deptName = selectedDept.name;
+      this.roleDescription = selectedDept.description;
+
+      console.log("Selected Role:", selectedDept);
+    }
+  }
+
+  get i() {
+    return this.roleForm.controls;
+  }
+
+  editDepartmentFormSelected(element: any, content113: any) {
+    this.isEditmode = true;
+    this.openEditDepartmentForm(element, content113);
+  }
+
+  openEditDepartmentForm(element: any, content113: any) {
+    this.isEditmode = true;
+    this.departmentId = element.id;
+    this.createDepartmentForm.reset();
+    this.createDepartmentForm.patchValue({
+      name: element.name,
+      description: element.description
+    });
+    const modalRef = this.modalService.open(content113, { size: 'sm', scrollable: true, centered: true });
+    modalRef.result.finally(() => {
+        this.createDepartmentForm.reset();
+        this.isEditmode = false;
+    });
+  }
+
+  editPermissionFormSelected(element: any, content114: any) {
+    this.isEditmode = true;
+    this.openEditAppointmentForm(element, content114);
+  }
+  openEditAppointmentForm(element: any, content114: any) {
+    this.isEditmode = true;
+    this.permissionId = element.id;
+    this.permissionName = element.name;
+    this.permissionDescription = element.description;
+    this.createPermissionForm.reset();
+    this.createPermissionForm.patchValue({
+      name: element.name,
+      description: element.description
+    });
+    const modalRef = this.modalService.open(content114, { size: 'sm', scrollable: true, centered: true });
+    modalRef.result.finally(() => {
+        this.createPermissionForm.reset();
+        this.isEditmode = false;
+    });
+  }
+
+  onRoleSubmit(modal ?: any){
+    if(this.isEditmode){
+      this.updateRoles();
+    }
+    else{
+      this.addRoles(modal);
+    }
+  }
+
+  onDepartmentSubmit(modal?: any) {
+    this.DepartmentFormSubmitted = true;
+
+    if (this.createDepartmentForm.invalid) {
+      return;
+    }
+
+    if (this.isEditmode) {
+      this.updateDepartment(modal);
+    } else {
+      this.createDepartment(modal);
+    }
+  }
+  onPermissionSubmit(modal?: any) {
+    this.permissionFormSubmitted = true;
+
+    if (this.createPermissionForm.invalid) {
+      return;
+    }
+
+    if (this.isEditmode) {
+      this.updatePermission(modal);
+    } else {
+      this.createPermission(modal);
+    }
+  }
+
+  addRoles(modal:any){
+    const rolesData = this.roleForm.value;
+    const roleName = this.roleForm.value.name;
+    if (this.isRoleExists(roleName)) {
+      this.toastr.error("Role already exists!");
+      return;
+    }
+    this.roleSubmitted = true
+    if (this.roleForm.invalid) {
+      this.toastr.error("Please fill all mandatory fields.");
+      return;
+    }
+    let payload ={
+      ...rolesData,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+
+    }
+    console.log(payload);
+    this.switchService.addRole(payload).subscribe({
+      next:()=>{
+        this.toastr.success('role added successfully');
+        modal.close()
+        this.roleSubmitted = false;
+        this.getRoles();
+      },
+    })
+  }
+
+  getRoles(){
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    this.switchService.getRole(companyCode).subscribe({
+      next:(res:any)=>{
+        this.roleLst = res;
+        this.roleCreationId = res.id;
+        this.roleName = res.name
+      },
+    })
+  }
+
+  updateRoles(){
+    const roleId = this.roleCreationId;
+    const roleName = this.roleForm.value.name;
+    const description = this.roleForm.value.description;
+    this.switchService.updateRole(roleId,roleName,description).subscribe({
+      next:(res:any)=>{
+        this.toastr.success('role updated successfully');
+        this.getRoles();
+      },
+    })
+  }
+  deleteRole(id: number) {
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this Role?')) {
+      this.switchService.deleteRole(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Role deleted successfully');
+          this.getRoles();
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  createDepartment(modal: any) {
+    const deptName = this.createDepartmentForm.value.name;
+    if (this.isDepartmentExists(deptName)) {
+      this.toastr.error("department already exists!");
+      return;
+    }
+    this.DepartmentFormSubmitted = true;
+    if (this.createDepartmentForm.invalid) {
+      return; 
+    }
+    const payload = this.createDepartmentForm.value;
+    console.log(payload)
+    this.switchService.createDepartment(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Department created successfully');
+        this.DepartmentFormSubmitted = false;
+        if (modal) {modal.close(); } 
+        modal.dismiss();
+        this.getAllDepartments();
+      }
+    });
+  }
+
+  getAllDepartments() {
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    this.switchService.getDepartment(companyCode).subscribe({
+      next: (res: any[]) => {
+        this.departmentList = res;
+        if (res.length > 0) {
+          this.departmentId = res[0].id;
+          this.departmentName = res[0].name;
+          this.departmentDescription = res[0].description;
+        }
+        const departmentIds: number[] = Array.from(
+      new Set(
+        this.departmentList
+          .map((dept: any) => Number(dept?.id))
+          .filter((id: any) => !isNaN(id))
+      )
+    );
+
+    console.log('✅ Unique Department IDs from API:', departmentIds);
+        this.departmentIds = departmentIds;
+
+    // 👇 Then use these IDs in your next payload
+    this.getAssignedRoles(departmentIds);
+      }
+    });
+  }
+
+  updateDepartment(modal:any) {
+    const departmentId = this.departmentId;
+    const departmentName = this.departmentName;
+    const description = this.departmentDescription;
+    console.log(departmentId, departmentName, description);
+    this.switchService.updateDepartment(departmentId, departmentName, description).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Department updated successfully');
+        modal.close();
+        this.getAllDepartments();
+      },
+    });
+  }
+
+  deleteDepartment(id: number) {
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteDepartment(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Department deleted successfully');
+          this.getAllDepartments();
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  showRoles  = false;
+
+ 
   
+
+  backToDepartments() {
+    this.showRoles = false;
+  }
+   backToPermissions() {
+    this.showPermissions = false;
+  }
+
+  get df() {
+    return this.createDepartmentForm.controls;
+  }
+
+  getDeptColor(name: string): string {
+    if (!name) return 'bg-secondary';
+    const colors = [
+      'bg-primary',
+      'bg-success',
+      'bg-danger',
+      'bg-warning',
+      'bg-info',
+      'bg-dark'
+    ];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
+  }
+  get pf() {
+    return this.createPermissionForm.controls;
+  }
+
+  createPermission(modal?:any) {
+    const permissionName = this.createPermissionForm.value.name;
+    if (this.isPermissionExists(permissionName)) {
+      this.toastr.error("permission already exists!");
+      return;
+    }
+    this.permissionFormSubmitted = true;
+    if (this.createPermissionForm.invalid) {
+      return; 
+    }
+    const payload = this.createPermissionForm.value;
+    console.log(payload)
+    this.switchService.createPermission(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Permission created successfully');
+        this.permissionFormSubmitted = false;
+        modal.close();
+        this.getAllPermissions();
+      }
+    });
+  }
+
+  getAllPermissions() {
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    this.switchService.getPermissions(companyCode).subscribe({
+      next: (res: any[]) => {
+        this.permissionList = res;
+        if (res.length > 0) {
+          this.permissionId = res[0].id;
+          this.permissionName = res[0].name;
+          this.permissionDescription = res[0].description;
+        }
+      }
+    });
+  }
+  updatePermission(modal:any) {
+    const permissionId = this.permissionId;
+    const permissionName = this.permissionName;
+    const description = this.permissionDescription;
+    console.log(permissionId, permissionName, description);
+    this.switchService.updatePermission(permissionId, permissionName, description).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Department updated successfully');
+        this.getAllPermissions();
+        modal.close()
+      },
+    });
+  }
+  deletePermission(id: number) {
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this Permission?')) {
+      this.switchService.deletePermission(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('permission deleted successfully');
+          this.getAllPermissions();
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+  isRoleExists(roleName: string): boolean {
+    return this.roleLst.some(
+      (role:any) => role.name.toLowerCase() === roleName.toLowerCase()
+    );
+  }
+  isDepartmentExists(deptName: string): boolean {
+    return this.departmentList.some(
+      (dept:any) => dept.name.toLowerCase() === deptName.toLowerCase()
+    );
+  }
+   isPermissionExists(permissionName: string): boolean {
+    return this.permissionList.some(
+      (permission:any) => permission.name.toLowerCase() === permissionName.toLowerCase()
+    );
+  }
+  // assignRole(modal:any) {
+  //   const payload = {
+  //     depRole: this.assignRoleForm.value.depRole,
+  //     roleRole: this.assignRoleForm.value.roleRole,
+  //     department: this.selectedDepartment,
+  //     role: this.selectedRole,
+  //     description: this.assignRoleForm.value.description,
+  //     companyName: JSON.parse(this.userData)?.companyName,
+  //     companyCode: JSON.parse(this.userData)?.companyCode,
+  //     type: JSON.parse(this.userData)?.type,
+  //   };
+
+  //   console.log('Payload:', payload);
+
+  //   this.switchService.assignRoleToDepartment(payload).subscribe({
+  //     next: (res) => {
+  //       this.toastr.success('Assigned successfully');
+  //       modal.close();
+  //       this.assignRoleResponse = res;
+  //       this.savedDepartmentRoles.push(res);
+  //       this.depId = res.id;
+  //       console.log('Department ID from response:', this.depId);
+  //       this.getAssignedRoles();
+  //     },
+  //     error: (err) => {
+  //       this.toastr.error('Assignment failed');
+  //       console.error(err);
+  //     }
+  //   });
+  // }
+   assignRole(modal:any) {
+    const payload = {
+      depRole:  this.selectedDepartment.id,
+      roleRole: this.assignRoleForm.value.roleRole,
+      department: this.selectedDepartment,
+      role: this.selectedRole,
+      description: this.assignRoleForm.value.description,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+    };
+
+    console.log('Payload:', payload);
+
+    // this.switchService.assignRoleToDepartment(payload).subscribe({
+    //   next: (res) => {
+    //     this.toastr.success('Assigned successfully');
+    //     modal.close();
+    //     this.assignRoleResponse = res;
+    //     this.savedDepartmentRoles.push(res);
+    //     this.depId = res.id;
+    //     console.log('Department ID from response:', this.depId);
+    //     this.getAssignedRoles();
+    //   },
+    //   error: (err) => {
+    //     this.toastr.error('Assignment failed');
+    //     console.error(err);
+    //   }
+    // });
+  }
+
+  onDepartmentChange(id: number) {
+    console.log('Selected Department ID:', id);
+    this.selectedDepartment = id;
+  }
+   toggleTable(department?: any) {
+    console.log('Selected Department Object:', department);
+  this.selectedDepartment = department;
+  this.showRoles = true;
+
+  }
+  showPermissions =false;
+  tablePermissionView(assignedRole?:any){
+    this.showPermissions = true;
+  }
+
+  onRoleChange(id: number) {
+    console.log('Selected Department ID:', id);
+    this.selectedRole = id;
+  }
+
+  getAssignedRoles(departmentIds ?: number[]){
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    const idsToUse = departmentIds && departmentIds.length > 0 ? departmentIds : this.departmentIds;
+
+    if (!idsToUse || idsToUse.length === 0) {
+      console.warn('No department IDs found to fetch roles.');
+      return;
+    }
+
+    console.log('✅ Unique Department IDs:', idsToUse, 'Company Code:', companyCode);  console.log('Unique Department IDs:', departmentIds, 'Company Code:', companyCode);
+    this.switchService.getAssignedRoles(idsToUse,companyCode).subscribe({
+      next: (res) => {
+        this.assignedRoleLst = res;
+        this. departroleId = res[0].departmentId;
+        console.log('All saved department roles:', this.assignedRoleLst);
+        const assignedRoleIds: number[] = Array.from(
+        new Set(
+          this.assignedRoleLst
+            .map((dept: any) => Number(dept?.id))
+            .filter((id: any) => !isNaN(id))
+        )
+      );
+
+      console.log('✅ Unique Department IDs from API:', assignedRoleIds);
+      this.assignedRoleIds = departmentIds;
+
+    
+    this.getAssignedDeptRolePermissions(assignedRoleIds);
+      }
+    });
+  }
+
+  deleteDepartmentRole(id: number) {
+    if (!id) return;
+      const companyCode = JSON.parse(this.userData)?.companyCode;
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteAssignedRoles(id).subscribe({
+        next: (res: any) => {
+          this.toastr.success('permission deleted successfully');
+          this.getAssignedRoles();
+          if (this.savedRoles[companyCode]) {
+        this.savedRoles[companyCode] = this.savedRoles[companyCode].filter(
+          (r: any) => r.id !== id
+        );
+      }
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  onAssignRoleChange(id: any) {
+    this.selectedRoleObj = this.assignedRoleLst.find((r: any) => r.id === id);
+    console.log('Selected Role Object:', this.selectedRoleObj);
+  }
+ 
+  onPermissionChange(id: number) {
+    console.log('Selected Department ID:', id);
+    this.selectedPermissionRole = id;
+  }
+  getSavedDepartmentRoleById(companyCode: string, selectedId: any) {
+    return this.assignedRoleLst.find(
+      (role) => role.companyCode === companyCode && role.departmentId === selectedId
+    );
+  }
+  assignPermission(modal:any){
+    let companyCode = JSON.parse(this.userData)?.companyCode;
+    let selectedId = this.assignPermissionForm.value.depRole;
+    console.log(selectedId);
+    const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
+    const payload = {
+      depRole : this.assignPermissionForm.value.depRole,
+      permissionRole : this.assignPermissionForm.value.permissionRole,
+      departmentRole : departmentRole,
+      permission : this.selectedPermissionRole,
+      description : this.assignPermissionForm.value.description,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+    }
+    console.log(payload)
+    this.switchService.assignPermissionToRole(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('assigned successfully');
+        modal.close();
+        console.log('All saved department roles:', this.assignedRoleLst);
+        this.getAssignedRoles();
+      }
+    });
+  }
+
+  getAssignedDeptRolePermissions(assignedRoleIds ?: number[]){
+     const companyCode = JSON.parse(this.userData)?.companyCode;
+      const idsToUse = assignedRoleIds && assignedRoleIds.length > 0 ? assignedRoleIds : this.assignedRoleIds;
+
+      if (!idsToUse || idsToUse.length === 0) {
+        console.warn('No department IDs found to fetch roles.');
+        return;
+      }
+
+  console.log('✅ Unique Department IDs:', idsToUse, 'Company Code:', companyCode);  console.log('Unique Department IDs:', assignedRoleIds, 'Company Code:', companyCode);
+    this.switchService.getAssignPermissions(idsToUse,companyCode).subscribe({
+      next: (res) => {
+        this.assignedPermissionLst = res;
+         if (this.assignedPermissionLst.length > 0) {
+          this.permissiondeptroleId = this.assignedPermissionLst[0].departmentRoleId;
+          this.assignPermissionId = this.assignedPermissionLst[0].permissionId;
+        }
+        console.log('Assigned Permissions:', this.assignPermissionId);
+        console.log('Department Role ID:', this.permissiondeptroleId);
+      }
+    });
+  }
+  deleteAssignPermission(assignedPermission:any) {
+    const deptRoleId  = assignedPermission?.departmentRoleId || assignedPermission?.depRoleId;
+    const permissionId  = assignedPermission?.permissionId || assignedPermission?.id;
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    console.log(deptRoleId,permissionId,companyCode);
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteAssignedPermission(deptRoleId,permissionId,companyCode).subscribe({
+        next: (res: any) => {
+          this.toastr.success('permission deleted successfully');
+          this.getAssignedRoles();
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete department');
+          console.error(err);
+        }
+      });
+    }
+  }
+  assignUserToDeptRole(modal?: any){
+    let companyCode = JSON.parse(this.userData)?.companyCode;
+    let selectedId = this.assignUserForm.value.depRole;
+    console.log(selectedId);
+    const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
+    const payload = {
+      userEmail : this.assignUserForm.value.userEmail,
+      depRole : this.assignUserForm.value.depRole,
+      departmentRole : departmentRole,
+      description : this.assignUserForm.value.description,
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+    }
+    console.log(payload)
+    this.switchService.assignUserToDeptRole(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('assigned User to department Role successfully');
+         const userEmail = res?.userEmail || res?.email;
+         if (userEmail) {
+          localStorage.setItem('userEmail', userEmail);
+          console.log('✅ Stored user email in local storage:', userEmail);
+          }
+        modal.close();
+        this.getAssignedUsers();
+        this.adminAccessAllUsers();
+        
+      }
+    });
+  }
+  getAssignedUsers(){
+     const email =JSON.parse(this.userData).email;
+     const companyCode = JSON.parse(this.userData)?.companyCode;
+      console.log('assigned users',email,companyCode);
+    this.switchService.getAssignUser(email,companyCode).subscribe({
+      next: (res) => {
+        this.assignedUserLst = res;
+         if (this.assignedUserLst.length > 0) {
+          this.userdeptroleId = this.assignedUserLst[0].departmentRoleId;
+          this.email = this.assignedUserLst[0].userEmail;
+        }
+        console.log('Assigned Role:', this.userdeptroleId);
+        console.log('Department email:', this.email);
+      }
+    });
+  }
+
+  deleteAssignUsers(){
+    const email =JSON.parse(this.userData).email;
+    const companyCode = JSON.parse(this.userData)?.companyCode;
+    const deptRoleId  =  this.userdeptroleId;
+    console.log(deptRoleId,email ,companyCode);
+    if (confirm('Are you sure you want to delete this department?')) {
+      this.switchService.deleteAssignUser(email,companyCode,deptRoleId,).subscribe({
+        next:(res:any)=>{
+          this.toastr.success('user deleted successfully');
+          this.getAssignedUsers();
+        }
+      })
+    }
+  }
+  getUsersAccess(){
+     const email =JSON.parse(this.userData).email;
+      console.log('assigned users',email);
+    this.switchService.getUserAccess(email).subscribe({
+      next: (res) => {
+        
+      }
+    });
+  }
+
+  adminAccessAllUsers() {
+    const companyCode = JSON.parse(this.userData).companyCode;
+    this.switchService.adminAccessAllUsers(companyCode).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.adminAccessUsersLst = res;
+          console.log(this.adminAccessUsersLst);
+        }
+      }
+    });
+  }
+
 }
+

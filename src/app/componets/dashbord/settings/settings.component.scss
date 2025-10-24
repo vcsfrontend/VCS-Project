@@ -278,4 +278,65 @@ button:disabled {
   max-width: 200px; 
 }
 
+table thead.custom-header th {
+  background-color: #006699;   
+  color: white;             
+  font-size: 15.2px;       
+  font-family: "Poppins", sans-serif; 
+  font-weight: 500;            
+  padding: 8px 12px;          
+  text-align: left; 
+  border: none;
+}
+/* Sticky left sidebar */
+.sticky-sidebar {
+  position: sticky;
+  top: 180px; 
+  align-self: flex-start;
+  height: fit-content; 
+  background-color: #fff;
+  z-index: 10;
+}
+.nav-style-5 {
+  border-right: 1px solid #e5e5e5;
+  padding-right: 10px;
+}
+/* Fix overall card height */
+.fixed-layout-card {
+  height: 85vh; /* You can adjust to your need */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sidebar column */
+.sidebar-container {
+  border-right: 1px solid #eaeaea;
+  background: #fff;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Scrollable content section (right side) */
+.scrollable-section {
+  height: 85vh; /* Same as card height */
+  overflow-y: auto;
+  padding: 1rem;
+  background: #fff;
+}
+
+/* Sticky left navigation inside the sidebar */
+.sticky-sidebar {
+  position: sticky;
+  top: 0;
+}
+
+/* Optional: smooth scrolling feel */
+.scrollable-section::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollable-section::-webkit-scrollbar-thumb {
+  background-color: #c7c7c7;
+  border-radius: 5px;
+}
+
 

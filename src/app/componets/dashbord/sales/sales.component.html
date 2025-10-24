@@ -1,665 +1,1029 @@
-
-<!-- Page Header -->
-<div class="d-flex align-items-center justify-content-between my-4 page-header-breadcrumb flex-wrap gap-2">
-    <div >
-      <h4 class="fw-medium fs-20 mb-0 mt-0">Welcome, VCS</h4>
-      <p class="fs-13 text-muted mb-0">Let's check your today's stats!</p>
+<!-- <div class="d-flex align-items-center justify-content-between my-4 page-header-breadcrumb flex-wrap gap-2">
+    <div>
+        <h4 class="fw-medium fs-20 mb-0 mt-0">Welcome, VCS</h4>
+        <p class="fs-13 text-muted mb-0">Let's check your today's stats!</p>
     </div>
     <div class="btn-list">
-      <button class="btn btn-primary-light btn-wave me-2">
-          <i class="bx bx-crown align-middle"></i> Plan Upgrade
-      </button>
-      <button class="btn btn-secondary-light btn-wave me-0">
-          <i class="ri-upload-cloud-line align-middle"></i> Export Report
-      </button>
+        <button class="btn btn-primary-light btn-wave me-2">
+            <i class="bx bx-crown align-middle"></i> Plan Upgrade
+        </button>
+        <button class="btn btn-secondary-light btn-wave me-0">
+            <i class="ri-upload-cloud-line align-middle"></i> Export Report
+        </button>
     </div>
-  </div>
+</div> -->
 
-  
-  <!-- End Page Header -->
-   <!-- Start::row-1 -->
-   <div class="row">
-    <!-- <iframe width="800" height="425" src="https://www.youtube.com/embed/e_ra0TePr_I?1&autoplay=1&mute=1&playlist=e_ra0TePr_I&loop=1" title="🎥 How to upload a floor plan" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
+<div class="row pt-3">
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between"><div>
+                    <span class="avatar avatar-md text-primary border bg-light">
+                        <i class="ti ti-users fs-18"></i></span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Total Leads</p>
+                                <h4 class="mt-1">{{ totalLeadCount ?? 0 }}<span class="text-muted op-7 fs-11 ms-2">Leads</span></h4>
+                            </div>
+                            <p class="mb-0 pt-2">
+                                <i class="ri-arrow-up-line text-primary fs-15 align-middle"></i>
+                                <span class="text-primary fs-12"> 26.35% last month</span>
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+40%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-top justify-content-between pt-4 border-top">
+                    <div>
+                        <span class="avatar bg-danger-transparent svg-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
+                                viewBox="0 0 24 24" width="24px" fill="#000000">
+                                <g>
+                                    <rect fill="none" height="24" width="24" />
+                                </g>
+                                <g>
+                                    <g>
+                                        <g>
+                                            <path
+                                                d="M7.5,4C5.57,4,4,5.57,4,7.5S5.57,11,7.5,11S11,9.43,11,7.5S9.43,4,7.5,4z M7.5,9C6.67,9,6,8.33,6,7.5S6.67,6,7.5,6 S9,6.67,9,7.5S8.33,9,7.5,9z M16.5,13c-1.93,0-3.5,1.57-3.5,3.5s1.57,3.5,3.5,3.5s3.5-1.57,3.5-3.5S18.43,13,16.5,13z M16.5,18 c-0.83,0-1.5-0.67-1.5-1.5s0.67-1.5,1.5-1.5s1.5,0.67,1.5,1.5S17.33,18,16.5,18z M5.41,20L4,18.59L18.59,4L20,5.41L5.41,20z" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Assigned Leads</p>
+                                <h4 class="mt-1">12.08%</h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-danger">-12%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-top justify-content-between pt-4 border-top">
+                    <div>
+                        <span class="avatar bg-warning-transparent svg-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#000000">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M15 17H9v-1H5v3h14v-3h-4zM4 14h5v-3h6v3h5V9H4z" opacity=".3" />
+                                <path
+                                    d="M20 7h-4V5l-2-2h-4L8 5v2H4c-1.1 0-2 .9-2 2v5c0 .75.4 1.38 1 1.73V19c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2v-3.28c.59-.35 1-.99 1-1.72V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm9 14H5v-3h4v1h6v-1h4v3zm-8-4v-2h2v2h-2zm9-1h-5v-3H9v3H4V9h16v5z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Followup Leads</p>
+                                <h4 class="mt-1">2,543</h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+19%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Today's Performance</div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div echarts [options]="options25" class="echart-charts" style="width: 280px; height: 235px;"></div>
+                    <div echarts [options]="options25" class="echart-charts" style="width: 280px; height: 235px;"></div>
+                </div>
+                <div class="row gy-4">
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 flex-wrap">
+                            <div>
+                                <span class="avatar bg-primary-transparent">
+                                    <i class="ti ti-currency-dollar fs-5"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="fs-12 mb-1 d-block text-muted">Total revenue</span>
+                                <span class="d-block fw-medium mb-0 fs-14">$32,993</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 flex-wrap">
+                            <div>
+                                <span class="avatar bg-secondary-transparent">
+                                    <i class="ti ti-percentage fs-5"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="fs-12 mb-1 d-block text-muted">Conversion Rate</span>
+                                <span class="d-block fw-medium mb-0 fs-14">71%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 flex-wrap">
+                            <div>
+                                <span class="avatar bg-success-transparent">
+                                    <i class="ti ti-report-analytics fs-5"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="fs-12 mb-1 d-block text-muted">Gross Profit</span>
+                                <span class="d-block fw-medium mb-0 fs-14">$1.85M</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-start gap-3 flex-wrap">
+                            <div>
+                                <span class="avatar bg-danger-transparent">
+                                    <i class="ti ti-user-plus fs-5"></i>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="fs-12 mb-1 d-block text-muted">New Customers</span>
+                                <span class="d-block fw-medium mb-0 fs-14">48,242</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xxl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Campaigns <span class="badge bg-dark text-white">{{ campaignCount ?? 0 }}</span></div>
+                <div ngbDropdown class="dropdown no-caret">
+                    <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);">
+                        <i class="ri-more-fill fs-18 text-muted"></i>
+                    </a>
+                    <ul ngbDropdownMenu class="dropdown-menu" role="menu">
+                        <li *ngFor="let campaign of campaignList">
+                            <a ngbDropdownItem class="dropdown-item" href="javascript:void(0);"
+                                (click)="selectCampaign(campaign.campgnId)">
+                                {{ campaign.campaignName }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body" *ngIf="selectedCampaignId" style="height: 320px;">
+                <ul class="list-unstyled visitors-country"
+                    [ngClass]="{ 'scrollable-list': expandedStages[selectedCampaignId] }">
+                    <li>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">Total Leads: </span>
+                                    <span class="d-block fs-12 text-muted">{{ leadCounts[selectedCampaignId] || 0
+                                        }}</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="85"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-primary" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li *ngFor="let stage of stageCounts[selectedCampaignId] | keyvalue; let i = index"
+                        [hidden]="!expandedStages[selectedCampaignId] && i >= 5">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">{{ stage.key }}</span>
+                                    <span class="d-block fs-12 text-muted">{{ stage.value }}</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="80"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-secondary" style="width: 80%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
 
-      <div class="col-md-12 col-xl-12">
-          <div class="row">
-              <div class="col-md-6 col-lg-3 col-xl-3">
-                  <div class="card custom-card overflow-hidden">
-                      <div class="card-body p-0">
-                          <div class="mb-2 p-3 pb-0">
-                              <div class="flex-fill fs-15">Total Sales</div>
-                          </div>
-                          <div class="d-flex align-items-center ps-3">
-                              <div class="flex-fill">
-                                  <div class="fs-25 fw-normal mb-2">$170k+</div>
-                                  <p class="mb-0">
-                                      <i class="ri-arrow-up-line text-primary fs-15 align-middle"></i>
-                                      <span  class="text-primary fs-12"> 26.35% last month</span>
-                                  </p>
-                              </div>
-                              <div id="sales-card" class="crm-card-chart">
-                                  <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart"
-                                  [xaxis]="chartOptions.xaxis" [colors]="chartOptions.colors" [fill]="chartOptions.fill"
-                                  [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
-                                  [dataLabels]="chartOptions.dataLabels" [grid]="chartOptions.grid"
-                                  [yaxis]="chartOptions.yaxis">
-                              </apx-chart>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-6 col-lg-3 col-xl-3">
-                  <div class="card custom-card overflow-hidden">
-                      <div class="card-body p-0">
-                          <div class="mb-2 p-3 pb-0">
-                              <div class="flex-fill fs-15">Revenue Generated</div>
-                          </div>
-                          <div class="d-flex align-items-center ps-3">
-                              <div class="flex-fill">
-                                  <div class="fs-25 fw-normal mb-2">$115k</div>
-                                  <p class="mb-0">
-                                      <i class="ri-arrow-down-line text-danger fs-15 align-middle"></i>
-                                      <span  class="text-danger fs-12"> 11.35% last month</span>
-                                  </p>
-                              </div>
-                              <div id="revenue-card" class="crm-card-chart">
-                                  <apx-chart [series]="chartOptions1.series" [chart]="chartOptions1.chart"
-                                  [xaxis]="chartOptions1.xaxis" [colors]="chartOptions1.colors" [fill]="chartOptions1.fill"
-                                  [stroke]="chartOptions1.stroke" [tooltip]="chartOptions1.tooltip"
-                                  [dataLabels]="chartOptions1.dataLabels" [grid]="chartOptions1.grid"
-                                  [yaxis]="chartOptions1.yaxis">
-                              </apx-chart>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-6 col-lg-3 col-xl-3">
-                  <div class="card custom-card overflow-hidden">
-                      <div class="card-body p-0">
-                          <div class="mb-2 p-3 pb-0">
-                              <div class="flex-fill fs-15">New Customers</div>
-                          </div>
-                          <div class="d-flex align-items-center ps-3">
-                              <div class="flex-fill">
-                                  <div class="fs-25 fw-normal mb-2">1500+</div>
-                                  <p class="mb-0">
-                                      <i class="ri-arrow-up-line text-secondary fs-15 align-middle"></i>
-                                      <span  class="text-secondary fs-12"> 26.35% last month</span>
-                                  </p>
-                              </div>
-                              <div id="customers-card" class="crm-card-chart">
-                                  <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
-                                  [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors" [fill]="chartOptions2.fill"
-                                  [stroke]="chartOptions2.stroke" [tooltip]="chartOptions2.tooltip"
-                                  [dataLabels]="chartOptions2.dataLabels" [grid]="chartOptions2.grid"
-                                  [yaxis]="chartOptions2.yaxis">
-                              </apx-chart>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-6 col-lg-3 col-xl-3">
-                  <div class="card custom-card overflow-hidden">
-                      <div class="card-body p-0">
-                          <div class="mb-2 p-3 pb-0">
-                              <div class="flex-fill fs-15">Orders Received</div>
-                          </div>
-                          <div class="d-flex align-items-center ps-3">
-                              <div class="flex-fill">
-                                  <div class="fs-25 fw-normal mb-2">30k+</div>
-                                  <p class="mb-0">
-                                      <i class="ri-arrow-up-line text-info fs-15 align-middle"></i>
-                                      <span  class="text-info fs-12"> 16.35% last month</span>
-                                  </p>
-                              </div>
-                              <div id="orders-card" class="crm-card-chart">
-                                  <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
-                                  [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors" [fill]="chartOptions3.fill"
-                                  [stroke]="chartOptions3.stroke" [tooltip]="chartOptions3.tooltip"
-                                  [dataLabels]="chartOptions3.dataLabels" [grid]="chartOptions3.grid"
-                                  [yaxis]="chartOptions3.yaxis">
-                              </apx-chart>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div> 
-  <!-- End::row-1 -->
-  
-  <!-- Start::row-2 -->
-  <div class="row">
-      <div class="col-lg-12 col-xxl-3">
-          <div class="card custom-card overflow-hidden">
-              <div class="card-header justify-content-between">
-                  <div class="card-title">Visitors By Country</div>
-                  <div ngbDropdown  class="dropdown no-caret">
-                      <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
-                          <i class="ri-more-fill fs-18 text-muted"></i>
-                      </a>
-                      <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="card-body">
-                  <ul class="list-unstyled visitors-country">
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">U.S.A</span>
-                                      <span class="d-block fs-12 text-muted">559/896</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-primary" style="width: 85%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">Germany</span>
-                                      <span class="d-block fs-12 text-muted">358/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-secondary" style="width: 80%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">Russia</span>
-                                      <span class="d-block fs-12 text-muted">296/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-warning" style="width: 75%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">Brazil</span>
-                                      <span class="d-block fs-12 text-muted">185/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-info" style="width: 70%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">France</span>
-                                      <span class="d-block fs-12 text-muted">095/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-danger" style="width: 65%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                      <li>
-                          <div class="d-flex align-items-center"> 
-                              <div class="flex-fill">
-                                  <div class="d-flex align-items-center justify-content-between mb-2">
-                                      <span class="d-block fs-14">China</span>
-                                      <span class="d-block fs-12 text-muted">068/786</span>
-                                  </div>
-                                  <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                      <div class="progress-bar progress-bar-striped bg-success" style="width: 60%"></div>
-                                  </div>
-                              </div>
-                          </div>
-                      </li>
-                  </ul>
-              </div>
-              <div class="card-footer">
-                  <div class="text-center">
-                      <a href="javascript:void(0);" class="text-secondary">Full Details <i class="ri-share-box-line align-middle"></i></a>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="col-lg-12 col-xxl-6">
-          <div class="card custom-card overflow-hidden">
-              <div class="card-header justify-content-between">
-                  <div class="card-title">
-                      Earning Reports
-                  </div>
-                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" checked>
-                      <label class="btn btn-outline-light" for="btnradio1">Week</label>
-  
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio2">
-                      <label class="btn btn-outline-light" for="btnradio2">Month</label>     
-  
-                      <input type="radio" class="btn-check" name="btnradio" id="btnradio3">
-                      <label class="btn btn-outline-light" for="btnradio3">Year</label>
-                  </div>
-              </div>
-              <div class="card-body">
-                  <div id="earning-reports">
-                      <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart"
-                                  [xaxis]="chartOptions4.xaxis" [colors]="chartOptions4.colors" [fill]="chartOptions4.fill"
-                                  [stroke]="chartOptions4.stroke" [tooltip]="chartOptions4.tooltip" [legend]="chartOptions4.legend"
-                                  [dataLabels]="chartOptions4.dataLabels" [grid]="chartOptions4.grid"
-                                  [yaxis]="chartOptions4.yaxis"></apx-chart>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="col-md-12 col-xl-12 col-xxl-3">
-          <div class="card custom-card overflow-hidden">
-              <div class="card-header justify-content-between">
-                  <div class="card-title">Visitors</div>
-                  <div  ngbDropdown >
-                      <a href="javascript:void(0);" class="p-2 fs-12 text-muted"  ngbDropdownToggle aria-expanded="false">
-                          Sort By
-                      </a>
-                      <ul ngbDropdownMenu >
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">This Week</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Last Week</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">This Month</a></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="card-body p-0 pt-2">
-                  <div id="visitors" class="py-3 my-2">
-                      <apx-chart [series]="chartOptions5.series" [chart]="chartOptions5.chart"
-                                  [xaxis]="chartOptions5.xaxis" [colors]="chartOptions5.colors" [labels]="chartOptions5.labels"
-                                  [stroke]="chartOptions5.stroke" [tooltip]="chartOptions5.tooltip" [legend]="chartOptions5.legend"
-                                  [dataLabels]="chartOptions5.dataLabels" [grid]="chartOptions5.grid"  [plotOptions]="chartOptions5.plotOptions"
-                                  [yaxis]="chartOptions5.yaxis">
-                              </apx-chart>
-                  </div>
-                  <div class="row border-top border-block-start-dashed">
-                      <div class="col border-end border-inline-end-dashed">
-                          <div class="text-center p-3">
-                              <span class="fs-14 visit-gender male">Male</span>
-                              <div class="mt-1">
-                                  <span class="fs-18">1,654</span>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="col border-end border-inline-end-dashed">
-                          <div class="text-center p-3">
-                              <span class="fs-14 visit-gender female">Female</span>
-                              <div class="mt-1">
-                                  <span class="fs-18">1,234</span>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div> 
+                </ul>
+            </div>
+            <div class="card-footer"
+                *ngIf="selectedCampaignId && stageCounts[selectedCampaignId] && (stageCounts[selectedCampaignId] | keyvalue).length">
+                <div class="text-center">
+                    <a href="javascript:void(0);" class="text-secondary" (click)="toggleStages(selectedCampaignId)">
+                        {{ expandedStages[selectedCampaignId] ? 'View Less' : 'Full Details' }}
+                        <i class="ri-share-box-line align-middle"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-xl-6">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Revenue This Week</div>
+            </div>
+            <div class="card-body">
+                <canvas style="height: 500px; width: 100%;" id="chartjs-line" class="chartjs-chart" baseChart [data]="lineChartData"
+                [options]="lineChartOptions" [type]="lineChartType"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body p-0">
+                <div class="mb-2 p-3 pb-0 align-items-start justify-content-between d-flex">
+                    <div class="flex-fill fs-15">Toda's Leads</div>
+                    <span class="badge bg-success-transparent"> +7.20%</span>
+                </div>
+                <div class="d-flex align-items-center ps-3">
+                    <div class="flex-fill">
+                        <div class="fs-29 fw-normal">122 <span class="fs-10">New</span></div>
+                    </div>
+                </div>
+                <div class="m-3">
+                    <div class="mb-1 fs-10">Spent This Month :</div>
+                    <div class="position-relative">
+                        <div class="progress rounded-pill bg-dark-subtle" style="height: 6px;">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="69" aria-valuemin="0"
+                                aria-valuemax="100" style="width: 69%">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <span class="text-info fw-bold fs-8">69%</span>
+                            <span class="text-muted fs-8">5k</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center ps-3 pt-4 pb-3">
+                    <div class="flex-fill">
+                        <div class="fs-29 fw-normal">19 <span class="fs-10">Waited> 2min</span></div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center ps-3 pt-4">
+                    <div class="flex-fill">
+                        <div class="fs-29 fw-normal">12 <span class="fs-10">Currently Unassigned</span></div>
+                        <p class="mb-0 pt-2">
+                            <i class="ri-arrow-up-line text-primary fs-15 align-middle"></i>
+                            <span class="text-primary fs-12"> 26.35% last month</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar bg-secondary-transparent svg-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#000000">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M13 17c-1.1 0-2-.9-2-2V9c0-1.1.9-2 2-2h6V5H5v14h14v-2h-6z" opacity=".3" />
+                                <path
+                                    d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.35 1-.98 1-1.72V9c0-.74-.41-1.38-1-1.72zM20 9v6h-7V9h7zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z" />
+                                <circle cx="16" cy="12" r="1.5" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Total Leads</p>
+                                <h4 class="mt-1">{{ totalLeadCount ?? 0 }}</h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+25%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar bg-danger-transparent svg-danger">
+                            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px"
+                                viewBox="0 0 24 24" width="24px" fill="#000000">
+                                <g>
+                                    <rect fill="none" height="24" width="24" />
+                                </g>
+                                <g>
+                                    <g>
+                                        <g>
+                                            <path
+                                                d="M7.5,4C5.57,4,4,5.57,4,7.5S5.57,11,7.5,11S11,9.43,11,7.5S9.43,4,7.5,4z M7.5,9C6.67,9,6,8.33,6,7.5S6.67,6,7.5,6 S9,6.67,9,7.5S8.33,9,7.5,9z M16.5,13c-1.93,0-3.5,1.57-3.5,3.5s1.57,3.5,3.5,3.5s3.5-1.57,3.5-3.5S18.43,13,16.5,13z M16.5,18 c-0.83,0-1.5-0.67-1.5-1.5s0.67-1.5,1.5-1.5s1.5,0.67,1.5,1.5S17.33,18,16.5,18z M5.41,20L4,18.59L18.59,4L20,5.41L5.41,20z" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Assigned Leads</p>
+                                <h4 class="mt-1">12.08%</h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-danger">-12%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body">
+                <div class="d-flex align-items-top justify-content-between">
+                    <div>
+                        <span class="avatar bg-warning-transparent svg-warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                fill="#000000">
+                                <path d="M0 0h24v24H0V0z" fill="none" />
+                                <path d="M15 17H9v-1H5v3h14v-3h-4zM4 14h5v-3h6v3h5V9H4z" opacity=".3" />
+                                <path
+                                    d="M20 7h-4V5l-2-2h-4L8 5v2H4c-1.1 0-2 .9-2 2v5c0 .75.4 1.38 1 1.73V19c0 1.11.89 2 2 2h14c1.11 0 2-.89 2-2v-3.28c.59-.35 1-.99 1-1.72V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm9 14H5v-3h4v1h6v-1h4v3zm-8-4v-2h2v2h-2zm9-1h-5v-3H9v3H4V9h16v5z" />
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap">
+                            <div>
+                                <p class="text-muted mb-3">Followup Leads</p>
+                                <h4 class="mt-1">2,543</h4>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-1">
+                            <div class="text-end">
+                                <p class="mb-0 text-success">+19%</p>
+                                <span class="text-muted op-7 fs-11">this month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+
+<div class="row">
+    <div class="col-lg-6 col-xl-6">
+        <div class="row">
+            <div class="col-lg-6 col-xl-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="mb-2 p-3 pb-0 align-items-start justify-content-between d-flex">
+                            <div class="flex-fill fs-15">Google Ads</div>
+                            <span class="badge bg-success-transparent"> +7.20%</span>
+                        </div>
+                        <div class="d-flex align-items-center ps-3">
+                            <div class="flex-fill">
+                                <div class="fs-29 fw-normal">₹170k+</div>
+                            </div>
+                        </div>
+                        <div class="m-3">
+                            <div class="mb-1 fs-10">Spent This Month :</div>
+                            <div class="position-relative">
+                                <div class="progress rounded-pill bg-dark-subtle" style="height: 6px;">
+                                    <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="69" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: 69%">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <span class="text-info fw-bold fs-8">69%</span>
+                                    <span class="text-muted fs-8">5k</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3 pt-5">
+                            <div class="flex-fill">
+                                <div class="fs-29 fw-normal">₹5000</div>
+                                <div class="text-muted">300 Conversions</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3 pt-5 pb-3">
+                            <div class="flex-fill">
+                                <div class="fs-29 fw-normal">₹52.43</div>
+                                 <div class="text-muted">300 Conversions</div>
+                                <p class="mb-0 pt-2">
+                                    <i class="ri-arrow-up-line text-primary fs-15 align-middle"></i>
+                                    <span  class="text-primary fs-12"> 26.35% last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-3">
+                        <div class="mb-4">
+                           <div class="fs-29 fw-normal">₹22.43</div>
+                            <div class="text-muted">sessions</div>
+                        </div>
+                        <div>
+                            <div class="fs-29 fw-normal">₹22.43</div>
+                            <div class="text-muted">Cost per click</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="mb-2 p-3 pb-0 align-items-start justify-content-between d-flex">
+                            <div class="flex-fill fs-15">Facebook Ads</div>
+                            <span class="badge bg-success-transparent"> +7.20%</span>
+                        </div>
+                        <div class="d-flex align-items-center ps-3">
+                            <div class="flex-fill">
+                                <div class="fs-29 fw-normal">₹170k+</div>
+                            </div>
+                        </div>
+                        <div class="m-3">
+                            <div class="mb-1 fs-10">Spent This Month :</div>
+                            <div class="position-relative">
+                                <div class="progress rounded-pill bg-dark-subtle" style="height: 6px;">
+                                    <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="69" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: 69%">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between mt-1">
+                                    <span class="text-info fw-bold fs-8">69%</span>
+                                    <span class="text-muted fs-8">5k</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3 pt-5">
+                            <div class="flex-fill">
+                                <div class="fs-29 fw-normal">₹5000</div>
+                                <div class="text-muted">300 Conversions</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3 pt-5 pb-3">
+                            <div class="flex-fill">
+                                <div class="fs-29 fw-normal">₹52.43</div>
+                                 <div class="text-muted">300 Conversions</div>
+                                <p class="mb-0 pt-2">
+                                    <i class="ri-arrow-up-line text-primary fs-15 align-middle"></i>
+                                    <span  class="text-primary fs-12"> 26.35% last month</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-3">
+                        <div class="mb-4">
+                           <div class="fs-29 fw-normal">₹22.43</div>
+                            <div class="text-muted">sessions</div>
+                        </div>
+                        <div>
+                            <div class="fs-29 fw-normal">₹22.43</div>
+                            <div class="text-muted">Cost per click</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="mb-2 p-3 pb-0">
+                            <div class="flex-fill fs-15">Instagram Ads</div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3">
+                            <div class="flex-fill">
+                                <div class="fs-25 fw-normal mb-2">1500+</div>
+                                <p class="mb-0">
+                                    <i class="ri-arrow-up-line text-secondary fs-15 align-middle"></i>
+                                    <span  class="text-secondary fs-12"> 26.35% last month</span>
+                                </p>
+                            </div>
+                            <div id="customers-card" class="crm-card-chart">
+                                <apx-chart [series]="chartOptions2.series" [chart]="chartOptions2.chart"
+                                [xaxis]="chartOptions2.xaxis" [colors]="chartOptions2.colors" [fill]="chartOptions2.fill"
+                                [stroke]="chartOptions2.stroke" [tooltip]="chartOptions2.tooltip"
+                                [dataLabels]="chartOptions2.dataLabels" [grid]="chartOptions2.grid"
+                                [yaxis]="chartOptions2.yaxis">
+                            </apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-6">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="mb-2 p-3 pb-0">
+                            <div class="flex-fill fs-15">LinkedIn Ads</div>
+                        </div>
+                        <div class="d-flex align-items-center ps-3">
+                            <div class="flex-fill">
+                                <div class="fs-25 fw-normal mb-2">30k+</div>
+                                <p class="mb-0">
+                                    <i class="ri-arrow-up-line text-info fs-15 align-middle"></i>
+                                    <span  class="text-info fs-12"> 16.35% last month</span>
+                                </p>
+                            </div>
+                            <div id="orders-card" class="crm-card-chart">
+                                <apx-chart [series]="chartOptions3.series" [chart]="chartOptions3.chart"
+                                [xaxis]="chartOptions3.xaxis" [colors]="chartOptions3.colors" [fill]="chartOptions3.fill"
+                                [stroke]="chartOptions3.stroke" [tooltip]="chartOptions3.tooltip"
+                                [dataLabels]="chartOptions3.dataLabels" [grid]="chartOptions3.grid"
+                                [yaxis]="chartOptions3.yaxis">
+                            </apx-chart>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <div class="col-xl-6 col-lg-6">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-header justify-content-between">
+                <div class="card-title">
+                    Conversions by Campaign
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" checked>
+                    <label class="btn btn-outline-light" for="btnradio1">Week</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2">
+                    <label class="btn btn-outline-light" for="btnradio2">Month</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3">
+                    <label class="btn btn-outline-light" for="btnradio3">Year</label>
+                </div>
+            </div>
+            <div class="card-body">
+                <div id="earning-reports">
+                    <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart"
+                        [xaxis]="chartOptions4.xaxis" [colors]="chartOptions4.colors" [fill]="chartOptions4.fill"
+                        [stroke]="chartOptions4.stroke" [tooltip]="chartOptions4.tooltip"
+                        [legend]="chartOptions4.legend" [dataLabels]="chartOptions4.dataLabels"
+                        [grid]="chartOptions4.grid" [yaxis]="chartOptions4.yaxis"></apx-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-xl-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-body p-0">
+                <div class="mb-2 p-3 pb-0 align-items-start justify-content-between d-flex">
+                    <div class="flex-fill fs-15">This Quarter</div>
+                    <span class="badge bg-success-transparent"> +7.20%</span>
+                </div>
+                <div class="d-flex align-items-center ps-3 mt-4">
+                    <div class="flex-fill">
+                        <div class="fs-29 fw-normal">₹240k+</div>
+                    </div>
+                </div>
+                <div class="m-3">
+                    <div class="mb-1 fs-10">Total Revenue :</div>
+                    <div class="position-relative">
+                        <div class="progress rounded-pill bg-dark-subtle" style="height: 6px;">
+                            <div class="progress-bar bg-secondary" role="progressbar" aria-valuenow="69"
+                                aria-valuemin="0" aria-valuemax="100" style="width: 69%">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <span class="text-info fw-bold fs-8">69%</span>
+                            <span class="text-muted fs-8">5k</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center ps-3 pt-5">
+                    <div class="flex-fill">
+                        <div class="fs-29 fw-normal">10.0%</div>
+                        <div class="text-muted">Conversion rate</div>
+                    </div>
+                </div>
+                <div class="card-body mt-5">
+                    <div id="circular-semi">
+                        <apx-chart [series]="chartOptions7.series" [chart]="chartOptions7.chart"
+                            [colors]="chartOptions7.colors" [plotOptions]="chartOptions7.plotOptions"
+                            [labels]="chartOptions7.labels" [fill]="chartOptions7.fill"></apx-chart>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="row">
+            <div class="col-xl-7">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">
+                            Revenue
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="crm-table-th1">User</th>
+                                        <th class="crm-table-th2">Revenue</th>
+                                        <th class="crm-table-th2">Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="active-tab">
+                                    <tr *ngFor="let user of userList">
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center fw-medium">
+                                                    <!-- <span class="avatar avatar-sm bg-success-transparent me-1">
+                                                    <i class="ti ti-trending-up fs-18"></i>
+                                                </span> -->
+                                                    <div class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                        [ngClass]="getUserColor(user)">
+                                                        <span
+                                                            class="d-flex align-items-center justify-content-center w-100 h-100">
+                                                            {{ user.email?.charAt(0) | uppercase }}
+                                                        </span>
+                                                    </div>
+                                                    <span class="ms-2 mt-1">{{ user.username }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">30,000</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-danger-transparent ps-3 fs-11 order-status cancel">
+                                                ₹10,0000
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">Target Achieved</div>
+                        <div ngbDropdown class="dropdown no-caret">
+                            <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);"
+                                data-bs-toggle="dropdown">
+                                <i class="ri-more-fill fs-18 text-muted"></i>
+                            </a>
+                            <ul ngbDropdownMenu class="dropdown-menu" role="menu">
+                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another
+                                        Action</a></li>
+                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something
+                                        Else</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled visitors-country">
+                            <li *ngFor="let user of userList" class="mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-sm avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center me-2"
+                                            [ngClass]="getUserColor(user)">
+                                            {{ user.username?.charAt(0) | uppercase }}
+                                        </div>
+                                        <span class="fw-semibold">{{ user.username }}</span>
+                                    </div>
+                                    <span class="fs-12 text-muted">{{ getProgressPercent(user) }}%</span>
+                                </div>
+                                <div class="progress progress-xs mt-2 rounded-pill bg-dark-subtle" style="height: 2px;">
+                                    <div class="progress-bar progress-bar-striped" [ngClass]="getProgressColor(user)"
+                                        [style.width.%]="getProgressPercent(user)">
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-7">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">
+                            Conversions
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table card-table table-vcenter text-nowrap mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="crm-table-th1">User</th>
+                                        <th class="crm-table-th2">Leads</th>
+                                        <th class="crm-table-th2">Won</th>
+                                        <th class="crm-table-th2">Conv.rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="active-tab">
+                                    <tr *ngFor="let user of userList">
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <div class="d-flex align-items-center fw-medium">
+                                                    <div class="avatar avatar-sm avatar-rounded mt-1 text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                        [ngClass]="getUserColor(user)">
+                                                        <span
+                                                            class="d-flex align-items-center justify-content-center w-100 h-100">
+                                                            {{ user.email?.charAt(0) | uppercase }}
+                                                        </span>
+                                                    </div>
+                                                    <span class="ms-2 mt-1">{{ user.username }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">350</span>
+                                        </td>
+                                        <td>
+                                            <span class="text-muted">34</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-danger-transparent ps-3 fs-11 order-status cancel">
+                                                9.7%
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5">
+                <div class="card custom-card overflow-hidden">
+                    <div class="card-header justify-content-between">
+                        <div class="card-title">Avarage Sale Value</div>
+                        <div ngbDropdown class="dropdown no-caret">
+                            <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);"
+                                data-bs-toggle="dropdown">
+                                <i class="ri-more-fill fs-18 text-muted"></i>
+                            </a>
+                            <ul ngbDropdownMenu class="dropdown-menu" role="menu">
+                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another
+                                        Action</a></li>
+                                <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something
+                                        Else</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled visitors-country">
+                            <li *ngFor="let user of userList" class="mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-sm avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center me-2"
+                                            [ngClass]="getUserColor(user)">
+                                            {{ user.username?.charAt(0) | uppercase }}
+                                        </div>
+                                        <span class="fw-semibold">{{ user.username }}</span>
+                                    </div>
+                                    <span class="fs-12 text-muted">{{ getProgressPercent(user) }}%</span>
+                                </div>
+                                <div class="progress progress-xs mt-2 rounded-pill bg-dark-subtle" style="height: 2px;">
+                                    <div class="progress-bar progress-bar-striped" [ngClass]="getProgressColor(user)"
+                                        [style.width.%]="getProgressPercent(user)">
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xl-6">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Activities This Week</div>
+            </div>
+            <div class="card-body">
+                <div id="columns-distributed">
+                    <apx-chart
+                      [series]="chartOptions9.series!"
+                      [chart]="chartOptions9.chart!"
+                      [dataLabels]="chartOptions9.dataLabels!"
+                      [plotOptions]="chartOptions9.plotOptions!"
+                      [yaxis]="chartOptions9.yaxis!"
+                      [xaxis]="chartOptions9.xaxis!"
+                      [legend]="chartOptions9.legend!"
+                      [colors]="chartOptions9.colors!"
+                      [grid]="chartOptions9.grid!"
+                    ></apx-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="card custom-card overflow-hidden">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Website Visits</div>
+                <div ngbDropdown  class="dropdown no-caret">
+                    <a ngbDropdownToggle aria-label="anchor" href="javascript:void(0);" data-bs-toggle="dropdown">
+                        <i class="ri-more-fill fs-18 text-muted"></i>
+                    </a>
+                    <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another Action</a></li>
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something Else</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled visitors-country">
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">U.S.A</span>
+                                    <span class="d-block fs-12 text-muted">559/896</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-primary" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">Germany</span>
+                                    <span class="d-block fs-12 text-muted">358/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-secondary" style="width: 80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">Russia</span>
+                                    <span class="d-block fs-12 text-muted">296/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-warning" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">Brazil</span>
+                                    <span class="d-block fs-12 text-muted">185/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-info" style="width: 70%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">France</span>
+                                    <span class="d-block fs-12 text-muted">095/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-danger" style="width: 65%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="d-flex align-items-center"> 
+                            <div class="flex-fill">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <span class="d-block fs-14">China</span>
+                                    <span class="d-block fs-12 text-muted">068/786</span>
+                                </div>
+                                <div class="progress progress-animate progress-xs" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="progress-bar progress-bar-striped bg-success" style="width: 60%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <div class="text-center">
+                    <a href="javascript:void(0);" class="text-secondary">Full Details <i class="ri-share-box-line align-middle"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4">
+        <div class="card custom-card">
+            <div class="card-header">
+                <div class="card-title">Total Reach</div>
+                <div ngbDropdown class="ms-auto">
+                    <a ngbDropdownToggle href="javascript:void(0);" class="btn btn-sm btn-primary-light dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Details
+                    </a>
+                    <ul ngbDropdownMenu class="dropdown-menu">
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Action</a></li>
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Another action</a></li>
+                        <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Something else here</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card-body pb-3">
+                <div class="mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="float-end text-primary" fill="currentColor"
+                        width="36px" height="36px" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M11,9h4a1,1,0,0,0,0-2H13V6a1,1,0,0,0-2,0V7a3,3,0,0,0,0,6h2a1,1,0,0,1,0,2H9a1,1,0,0,0,0,2h2v1a1,1,0,0,0,2,0V17a3,3,0,0,0,0-6H11a1,1,0,0,1,0-2Zm1-8A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,20a9,9,0,1,1,9-9A9,9,0,0,1,12,21Z" />
+                    </svg>
+                    <p class="text-primary fw-500 mb-2">Total Reach by week</p>
+                    <h4 class="mb-2 fw-medium">$54,125.03</h4>
+                    <span class="text-danger me-1 fs-14"> - 1.3%<i class="ri-arrow-down-s-fill align-middle ms-1"></i>
+                    </span>
+                    <span class="text-muted fs-12">33% of target reached</span>
+                </div>
+                <div id="report">
+                    <apx-chart [series]="chartOptions12.series" [chart]="chartOptions12.chart"
+                        [xaxis]="chartOptions12.xaxis" [yaxis]="chartOptions12.yaxis" [colors]="chartOptions12.colors"
+                        [fill]="chartOptions12.fill" [dataLabels]="chartOptions12.dataLabels"
+                        [plotOptions]="chartOptions12.plotOptions" [title]="chartOptions12.title"
+                        [grid]="chartOptions12.grid" [yaxis]="chartOptions12.yaxis"></apx-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
    <!-- End::row-2 -->
   
   <!-- Start::row-3 -->
   
-  <div class="row">
-    <!-- <iframe width="800" height="425" src="https://www.youtube.com/embed/e_ra0TePr_I?1&autoplay=1&mute=1&playlist=e_ra0TePr_I&loop=1" title="🎥 How to upload a floor plan" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> -->
-      <div class="col-md-12 col-xl-12 col-xxl-8">
-          <div class="card custom-card">
-              <div class="card-header justify-content-between">
-                  <div class="card-title">Recent Orders</div>
-                  <div ngbDropdown  class="dropdown">
-                      <a href="javascript:void(0);" class="btn btn-primary-light" ngbDropdownToggle data-bs-toggle="dropdown" aria-expanded="false">
-                          Sort By 
-                          
-                      </a>
-                      <ul ngbDropdownMenu  class="dropdown-menu" role="menu">
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">This Week</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">Last Week</a></li>
-                          <li><a ngbDropdownItem class="dropdown-item" href="javascript:void(0);">This Month</a></li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="card-body p-0">
-                  <div class="table-responsive overflow-scroll">
-                      <table class="table text-nowrap table-hover">
-                          <thead>
-                              <tr>
-                                  <th class="text-center">S.No</th>
-                                  <th class="crm-table-th1">Role</th>
-                                  <th class="crm-table-th2">Project</th>
-                                  <th class="crm-table-th2">workflow</th>
-                                  <th class="crm-table-th2">Reviewer</th>
-                                  <th class="crm-table-th2">Status</th>
-                                  <th class="crm-table-th2">Action</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                              <tr>
-                                  <td class="text-center">1</td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <div class="avatar avatar-md avatar-rounded me-2">
-                                              <img src="./assets/images/faces/15.jpg" alt="img">
-                                          </div>
-                                          <div>
-                                              <h6 class="mb-0 fs-14">Christopher</h6>
-                                              <p class="mb-0 text-muted">Christopher&#64;mailer.com</p>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>
-                                      <span class="badge bg-success-transparent ps-3 fs-11 order-status complete">
-                                          Completed
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave me-3" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Edit"><i class="ri-pencil-line"></i></a>
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave" data-bs-toggle="tooltip" placement="top" ngbTooltip="Delete"><i class="ri-delete-bin-line"></i></a>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="text-center">2</td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <div class="avatar avatar-md avatar-rounded me-2">
-                                              <img src="./assets/images/faces/11.jpg" alt="img">
-                                          </div>
-                                          <div>
-                                              <h6 class="mb-0 fs-14">William</h6>
-                                              <p class="mb-0 text-muted">William&#64;mailer.com</p>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>
-                                      <span class="badge bg-danger-transparent ps-3 fs-11 order-status cancel">
-                                          Cancelled
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave me-3" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Edit"><i class="ri-pencil-line"></i></a>
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave" data-bs-toggle="tooltip" placement="top" ngbTooltip="Delete"><i class="ri-delete-bin-line"></i></a>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="text-center">3</td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <div class="avatar avatar-md avatar-rounded me-2">
-                                              <img src="./assets/images/faces/5.jpg" alt="img">
-                                          </div>
-                                          <div>
-                                              <h6 class="mb-0 fs-14">Isabella</h6>
-                                              <p class="mb-0 text-muted">Isabella&#64;mailer.com</p>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>
-                                      <span class="badge bg-warning-transparent ps-3 fs-11 order-status pending">
-                                          Pending
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave me-3" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Edit"><i class="ri-pencil-line"></i></a>
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave" data-bs-toggle="tooltip" placement="top" ngbTooltip="Delete"><i class="ri-delete-bin-line"></i></a>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="text-center">4</td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <div class="avatar avatar-md avatar-rounded me-2">
-                                              <img src="./assets/images/faces/10.jpg" alt="img">
-                                          </div>
-                                          <div>
-                                              <h6 class="mb-0 fs-14">Richard</h6>
-                                              <p class="mb-0 text-muted">Richard&#64;mailer.com</p>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>
-                                      <span class="badge bg-success-transparent ps-3 fs-11 order-status complete">
-                                          Completed
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave me-3" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Edit"><i class="ri-pencil-line"></i></a>
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave" data-bs-toggle="tooltip" placement="top" ngbTooltip="Delete"><i class="ri-delete-bin-line"></i></a>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="text-center">5</td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <div class="avatar avatar-md avatar-rounded me-2">
-                                              <img src="./assets/images/faces/11.jpg" alt="img">
-                                          </div>
-                                          <div>
-                                              <h6 class="mb-0 fs-14">Michael</h6>
-                                              <p class="mb-0 text-muted">Michael&#64;mailer.com</p>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>
-                                      <span class="badge bg-danger-transparent ps-3 fs-11 order-status cancel">
-                                          Cancelled
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave me-3" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Edit"><i class="ri-pencil-line"></i></a>
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave" data-bs-toggle="tooltip" placement="top" ngbTooltip="Delete"><i class="ri-delete-bin-line"></i></a>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="text-center">6</td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <div class="avatar avatar-md avatar-rounded me-2">
-                                              <img src="./assets/images/faces/8.jpg" alt="img">
-                                          </div>
-                                          <div>
-                                              <h6 class="mb-0 fs-14">Scarlett</h6>
-                                              <p class="mb-0 text-muted">Scarlett&#64;mailer.com</p>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>NA</td>
-                                  <td>
-                                      <span class="badge bg-warning-transparent ps-3 fs-11 order-status pending">
-                                          Pending
-                                      </span>
-                                  </td>
-                                  <td>
-                                      <div class="d-flex align-items-center">
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave me-3" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Edit"><i class="ri-pencil-line"></i></a>
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave" data-bs-toggle="tooltip" placement="top" ngbTooltip="Delete"><i class="ri-delete-bin-line"></i></a>
-                                      </div>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td class="text-center border-bottom-0">7</td>
-                                  <td class="border-bottom-0">
-                                      <div class="d-flex align-items-center">
-                                          <div class="avatar avatar-md avatar-rounded me-2">
-                                              <img src="./assets/images/faces/7.jpg" alt="img">
-                                          </div>
-                                          <div>
-                                              <h6 class="mb-0 fs-14">Olivia</h6>
-                                              <p class="mb-0 text-muted">Olivia&#64;mailer.com</p>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td class="border-bottom-0">NA</td>
-                                  <td class="border-bottom-0">NA</td>
-                                  <td class="border-bottom-0">NA</td>
-                                  <td class="border-bottom-0">
-                                      <span class="badge bg-success-transparent ps-3 fs-11 order-status complete">
-                                          Completed
-                                      </span>
-                                  </td>
-                                  <td class="border-bottom-0">
-                                      <div class="d-flex align-items-center">
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light btn-wave me-3" data-bs-toggle="tooltip" data-bs-placement="top" ngbTooltip="Edit"><i class="ri-pencil-line"></i></a>
-                                          <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave" data-bs-toggle="tooltip" placement="top" ngbTooltip="Delete"><i class="ri-delete-bin-line"></i></a>
-                                      </div>
-                                  </td>
-                              </tr>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="col-md-12 col-xl-12 col-xxl-4">
-          <div class="card custom-card overflow-hidden">
-              <div class="card-header justify-content-between">
-                  <div class="card-title">
-                      Customers Activity
-                  </div>
-              </div>
-              <div class="card-body p-0 crm-card-chart">
-                  <div id="customers-activity" class="px-3">
-                      <apx-chart [series]="chartOptions6.series" [chart]="chartOptions6.chart"
-                                  [xaxis]="chartOptions6.xaxis" [colors]="chartOptions6.colors" [legend]="chartOptions6.legend"
-                                  [stroke]="chartOptions6.stroke" [tooltip]="chartOptions6.tooltip"
-                                  [dataLabels]="chartOptions6.dataLabels" [grid]="chartOptions6.grid"
-                                  [yaxis]="chartOptions6.yaxis">
-                              </apx-chart>
-                  </div>
-                  <div class="row border-bottom pb-3">
-                      <div class="col ps-3 p-0">
-                          <div class="text-center">
-                              <span class="fs-18 customer-count new">1586</span>
-                              <div class="fs-14">New Customers</div>
-                          </div>
-                      </div>
-                      <div class="col pe-3 p-0">
-                          <div class="text-center">
-                              <span class="fs-18 customer-count return">486</span>
-                              <div class="fs-14">Return Customers</div>
-                          </div>
-                      </div>
-                  </div>
-                  <div>
-                      <ul class="list-group list-group-flush">
-                          <li class="list-group-item">
-                              <a href="javascript:void(0);">
-                                  <div class="d-flex align-items-center">
-                                      <div class="avatar avatar-md online avatar-rounded me-2">
-                                          <img src="./assets/images/faces/12.jpg" alt="img">
-                                      </div>
-                                      <div class="flex-fill">
-                                          <span class="fs-14">Charlette</span>
-                                          <div class="fs-12 text-muted">New Account Created</div>
-                                      </div>
-                                      <div>
-                                          <span>5 mins ago</span>
-                                      </div>
-                                  </div>
-                              </a>
-                          </li>
-                          <li class="list-group-item">
-                              <a href="javascript:void(0);">
-                                  <div class="d-flex align-items-center">
-                                      <div class="avatar avatar-md online avatar-rounded me-2">
-                                          <img src="./assets/images/faces/14.jpg" alt="img">
-                                      </div>
-                                      <div class="flex-fill">
-                                          <span class="fs-14">Nicholas James</span>
-                                          <div class="fs-12 text-muted">Upgraded to Premium</div>
-                                      </div>
-                                      <div>
-                                          <span>15 min ago</span>
-                                      </div>
-                                  </div>
-                              </a>
-                          </li>
-                          <li class="list-group-item">
-                              <a href="javascript:void(0);">
-                                  <div class="d-flex align-items-center">
-                                      <div class="avatar avatar-md avatar-rounded me-2">
-                                          <img src="./assets/images/faces/16.jpg" alt="img">
-                                      </div>
-                                      <div class="flex-fill">
-                                          <span class="fs-14">Gabe Lackman</span>
-                                          <div class="fs-12 text-muted">New Device LoggedIn</div>
-                                      </div>
-                                      <div>
-                                          <span>31 min ago</span>
-                                      </div>
-                                  </div>
-                              </a>
-                          </li>
-                          <li class="list-group-item">
-                              <a href="javascript:void(0);">
-                                  <div class="d-flex align-items-center">
-                                      <div class="avatar avatar-md online avatar-rounded me-2">
-                                          <img src="./assets/images/faces/9.jpg" alt="img">
-                                      </div>
-                                      <div class="flex-fill">
-                                          <span class="fs-14">Manuel Labor</span>
-                                          <div class="fs-12 text-muted">New Account Created</div>
-                                      </div>
-                                      <div>
-                                          <span>1 hour ago</span>
-                                      </div>
-                                  </div>
-                              </a>
-                          </li>
-                      </ul>
-                  </div>
-              </div>
-              <div class="card-footer">
-                  <div class="text-center">
-                      <a href="javascript:void(0);">
-                          <span class="text-secondary">View All <i class="ri-share-box-line align-middle"></i></span>
-                      </a>
-                  </div>
-              </div>
-          </div>
-      </div>
-      
-  </div>
   
-  <!-- End::row-3 -->
+
+<!-- <div class="d-flex align-items-center border rounded p-2">
+    <button class="btn btn-outline-secondary btn-sm me-2" (click)="scrollLeft(scrollContent)">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+    <div #scrollContent class="d-flex flex-nowrap overflow-auto flex-fill" style="scroll-behavior:smooth;">
+        <div *ngFor="let item of items" class="badge bg-light text-dark border mx-1 p-2 d-flex align-items-center">
+            <span class="me-2">{{ item.label }}</span>
+            <span class="badge bg-secondary">{{ item.count }}</span>
+        </div>
+    </div>
+    <button class="btn btn-outline-secondary btn-sm ms-2" (click)="scrollRight(scrollContent)">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+</div> -->

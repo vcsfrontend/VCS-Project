@@ -16,6 +16,7 @@ export class SwitherService {
   // private apiUrl = 'https://sasi-vcs-repo.onrender.com/auth/get_all_vcs_users';
   // GET request
   private apiUrl = environment.webURL;
+  private bizUrl = environment.bizPortal;
   private adonaiURL = environment.masterURL;
   getCall(url: string): Observable<any> {
     return this.http.get<any>(url);
@@ -64,6 +65,8 @@ export class SwitherService {
   onAdonaiUpdate(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/update_subscription`, data); }
   adonaiHstry(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/sub_scription_history/${email}`); }
   userInfo(email:any): Observable<any> { return this.http.get(`${this.apiUrl}auth/fetch_user_info/${email}`); }
+  updateProfilePic(data:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/upload_profile`,data); }
+  updateUserCompany(data:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/update_user_company`,data); }
   // super admin Crm apis 
   onCrmView(email:any): Observable<any> { return this.http.get(`${this.apiUrl}auth/fetch_data_crm/${email}`); }
   onCrmUpdate(data:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/update_subscription_crm`, data); }
@@ -184,7 +187,12 @@ export class SwitherService {
   fetchAppointment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_scheduled_appointments`, data); } 
   createTask(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/create_task`, data); } 
   fetchTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks`, data); } 
-  fetchTasksCreatedBy(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks_created_by`, data); } 
+  fetchTasksCreatedBy(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/fetch_tasks_created_by`, data); }
+  update_existing_campaign(leadIds: string[] | string, campaignId: string): Observable<any> {
+    const leadIdsParam = Array.isArray(leadIds) ? leadIds.join('&leadIds=') : leadIds;
+    const url = `${this.apiUrl}designation/add_leads_exsting_campaign?leadIds=${leadIdsParam}&campaignId=${campaignId}`;
+    return this.http.get(url);
+  }
   updateTasks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}designation/edit_task`, data); } 
   updateLeadCompletion(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/update_lead_completion_status`, data); } 
 
@@ -208,6 +216,56 @@ export class SwitherService {
   fetchRecceData(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/get_recce_data`, data); }
   fetchAssgnAdonaiDesign(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/get_proj_design`, data); }
   updateAssgnAdonaiDesign(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/update_project_details`, data); }
+  getLibrarayData(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/items/get/all`); }
+  getLibrarayNames(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/shared`); }
+  addRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/roles/createRole`, data); }
+  getRole(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/roles/listRoles?companyCode=${companyCode}`); }  
+  updateRole(id:any,name:any,description :any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/${id}?name=${name}&description=${description}`,"");} 
+  deleteRole(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/roles/deleteRole/${id}`); }  
+
+  createDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/departments/createDepartment`, data); }
+  getDepartment(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/departments/listDepartments?companyCode=${companyCode}`); }  
+  updateDepartment(id: any, name: any, description: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}api/departments/updateDepartment/${id}?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`, null);
+  }  
+  deleteDepartment(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/departments/deleteDepartment/${id}`); }  
+
+  createPermission(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/permissions/createPermission`, data); }
+  getPermissions(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/permissions/listPermissions?companyCode=${companyCode}`); }  
+  updatePermission(id:any,name:any,description :any): Observable<any> { return this.http.put(`${this.apiUrl}api/permissions/updatePermission/${id}?name=${name}&description=${description}`,"");} 
+  deletePermission(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/permissions/deletePermission/${id}`); }  
+
+  assignRoleToDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/department-roles/assignRoleToDepartment`, data); }
+  getAssignedRoles(departmentIds:number[] ,companyCode : any): Observable<any> { 
+    const deptRoleParams = departmentIds.map(id => `departmentIds=${id}`).join('&');
+    const url =`${this.apiUrl}api/department-roles/listRolesByDepartment?${deptRoleParams}&companyCode=${companyCode}`;
+    return this.http.get(url); 
+  } 
+  deleteAssignedRoles(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/department-roles/deleteDepartmentRole/${id}`); }  
+
+  assignPermissionToRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/role-permissions/assignPermissionToDeptRole`, data); }
+  getAssignPermissions(deptRoleIds: number[], companyCode: string): Observable<any> {
+    const deptRoleParams = deptRoleIds.map(id => `deptRoleIds=${id}`).join('&');
+    const url = `${this.apiUrl}api/role-permissions/listPermissionsByDeptRole?${deptRoleParams}&companyCode=${companyCode}`;
+
+    return this.http.get(url);
+  }
+  deleteAssignedPermission(deptRoleId  :any,permissionId :any,companyCode :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/role-permissions/removePermissionFromDeptRole?deptRoleId=${deptRoleId}&permissionId=${permissionId}&companyCode=${companyCode}`); }  
+
+
+  assignUserToDeptRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/user-mapping/assign`, data); }
+  getAssignUser(email  :any ,companyCode : any): Observable<any> { return this.http.get(`${this.apiUrl}api/user-mapping/${email }?companyCode=${companyCode}`); } 
+  deleteAssignUser(email :any,companyCode:any,deptRoleId :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/user-mapping/remove?email=${email }&deptRoleId=${deptRoleId}&companyCode=${companyCode}`); } 
+  deleteAssignTask(askId: number, taskId: number, deptRoleId: number, assignmentId: number, companyCode: string): Observable<any> {
+  const url = `${this.apiUrl}tasks/assign/removal?taskId=${taskId}&deptRoleId=${deptRoleId}&assignmentId=${assignmentId}&companyCode=${companyCode}`;
+  return this.http.delete(url);
+}
+
+
+  getUserAccess(email :any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/${email}/access`); }  
+
+  
+  
   createRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {
@@ -241,6 +299,15 @@ export class SwitherService {
     return this.http.post(`${this.adonaiURL}projo_boq/update_recce`, formData);
   }
 
+
+  createGloabalTaks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/globalTasks/createGlobalTask`, data); }
+  getAllGlobalTasks(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/globalTasks/listGlobalTaskData?companyCode=${companyCode}`);}
+  updateGlobalTask(taskData: any): Observable<any> { return this.http.put(`${this.apiUrl}api/globalTasks/update/${taskData.id}`, taskData);}
+  deleteGlobalTaskById(taskId: number): Observable<any> { return this.http.delete(`${this.apiUrl}api/globalTasks/delete/${taskId}`);}
+
+  assignTasksRoles(data:any): Observable<any> { return this.http.post(`${this.apiUrl}tasks/assign/user-or-roles`, data); }
+  getAllassignTasks(userDeptRole:any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listAssignedTasksOnUserDeptId?userDeptRole=${userDeptRole}&companyCode=${companyCode}`); }
+  adminAccessAllUsers(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/admin/access?companyCode=${companyCode}`); }
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }

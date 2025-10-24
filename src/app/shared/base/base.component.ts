@@ -324,7 +324,7 @@ export class BaseComponent {
       {"name":"Others"}    
     ]
 
-    pipeLine = [{"name":"Sales"},
+    pipeLine = [{"name":"Sales"}, 
       {"name":"Direct mail"},
       {"name":"Adwords"},
       {"name":"Leadform"},
@@ -647,7 +647,39 @@ export class BaseComponent {
   designStatus = [
     { "name": "Complete" },
   ];
+  filterFields = [
+    { "name": "followUp" },
+    { "name": "last_updated" },
+  ];
+ 
+  roomNameList = [
+    { "name": "Livinig Room" },
+    { "name": "Kitchen" },
+    { "name": "Hall" },
+  ];
 
+  itemCodeLst = [
+    { "name": "AK_PA" },
+    { "name": "AK_KC" },
+    { "name": "AK_SH" },
+    { "name": "AK_AP" },
+  ];
+  permissionCategories =[
+    { "name": "CRM" },
+    { "name": "Projects" },
+    {"name" : 'optimizer'},
+  ]
 
+  recurringStatusItems = [{ "name": "DAILY" },
+  { "name": "WEEKLY" },
+  { "name": "SATURDAY" },
+  { "name": "SUNDAY" },
+  { "name": "MONTHLY" },
+  { "name": "SAT_SUN" },
+  ]
+
+    activityStatus = [{"name":"Yes"},
+      {"name":"No"},
+    ]
 
 }

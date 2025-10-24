@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -53,7 +53,7 @@ export class DealsComponent extends BaseComponent {
   userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
   taskSubmitted : boolean = false;
-  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city',];
+  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city', 'updatedTime','completionStatus'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -73,7 +73,7 @@ export class DealsComponent extends BaseComponent {
   tempFormList: any; selectTemplateForm!: FormGroup; allTemplateGenIds: string[] = [];
   selectedStatusCount: number | null = null;statusCounts: { status: string; count: number }[] = [];
   rotateCharts = true;showMore = true; topshowMore = false;  dynamicFields: { value: string }[] = [];
-  selectedLeads: number[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
+  selectedLeads: any[] = []; currentPhoneNumber: string = ''; readonlyMode:boolean=false;
   showForm : boolean=false;selectedStatus: string = '';originalConnectedForm: any = {}; selectedUser: any = null;
   shouldDisableAddStatus = false;companyLst:any;selectedFileName:any;  offcanvasRef: any; individualEmail :any;
   phoneNumber: string = '';originalStatus: string = '';  notconnectedstatusClicked = false; hasSelectedInvalid = false;
@@ -84,6 +84,13 @@ export class DealsComponent extends BaseComponent {
   completionForm!:FormGroup;
   selectedLeadForAppointment:any;appointmentId: number | null = null;selectedLeadForAppointmentObject:any;
   filteredUserList: any[] = [];leadCompletionsubmitted : boolean = false;
+  leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
+  notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;selecteTemplateFormSubmitted:boolean=false;
+  crmRole:string = '';LeadToCampaignForm!: FormGroup;leadList :any[]=[];  selectedLeadData: any;
+  campaignList: any[] = [];selectedCampaign: any;
+  campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
+  campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
+  isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -108,7 +115,8 @@ export class DealsComponent extends BaseComponent {
   @ViewChild('sort2') sort2!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
   @ViewChild('followupModal') followupModal!: TemplateRef<any>;
-  
+  firstModalRef!: NgbModalRef;
+  secondModalRef!: NgbModalRef;
 
   public leadForm!: FormGroup;
   public submitted = false;
@@ -179,6 +187,7 @@ export class DealsComponent extends BaseComponent {
 
     this.userData = localStorage.getItem('userDetails');
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+    this.crmRole = JSON.parse(this.userData).crmRole;
     this.chartOptions={
       series: [44, 55, 13, 43, 22],
       chart: {
@@ -258,12 +267,18 @@ export class DealsComponent extends BaseComponent {
     this.modalService.open(content1, { centered: true });
   }
   openRight(content: any) {
+    this.filterLeadForm.reset();
     this.offcanvasRef = this.offcanvasService.open(content, {
       position: 'end',
+      scroll : true
     });
   }
   openRight1(content1: any) {
     this.offcanvasService.open(content1, { position: 'end' });
+  }
+  openRight3(content31: any, element: any) {
+    this.selectedLeadData = element;
+    this.modalService.open(content31, { centered: true });
   }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
@@ -284,6 +299,7 @@ export class DealsComponent extends BaseComponent {
   openFollowupLeadForm(element: any, content4: any): void {
     this.followupName = element.name;
     this.notconnectedstatusClicked = false;
+    this.showForm = false;
     let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
@@ -362,7 +378,8 @@ export class DealsComponent extends BaseComponent {
     this.getFormTemplate();
     this.getAllEmailTemplates();
     this.getLeadEntry();
-
+    this.getCampaignData();
+    this.selectedLeads = [];
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
     const yyyy = now.getFullYear();
@@ -414,7 +431,33 @@ export class DealsComponent extends BaseComponent {
       followUpBy: [''],
     });
 
+    this.LeadToCampaignForm = this.fb.group({
+      campaignId: [this.campaignId,],
+    });
+
+    this.campaignForm = this.fb.group({
+      campaignId: [0],
+      campaignName: ['', [Validators.required, Validators.minLength(4)]],
+      pipeline: ['',],
+      campaignPoc: [''],
+      agents: [[]],
+      campaignPriority: [''],
+      leadDuplicacy: [''],
+      companyName: [this.userCompanyName],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
+      isAutoCreationRequired:[false],
+      createdDate: new Date().toISOString(),
+      campgnId: [''],
+
+    });
+    if (this.userType === 1) {
+      this.campaignForm.patchValue({ campaignPoc: this.userEmail });
+    }
+
     this.filterLeadForm = this.fb.group({
+      action:[''],
       stage: [''],
       status: [''],
       source: [''],
@@ -438,16 +481,16 @@ export class DealsComponent extends BaseComponent {
 
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
-      executive: ['', [Validators.required]]
+      executive: [, [Validators.required]]
     });
 
     //Send Email
     this.selectTemplateForm = this.fb.group({
       campaignId: [0],
       templateGenId: [''],
-      templateName: [''],
-      subject: [''],
-      description: [''],
+      templateName: ['',Validators.required],
+      subject: ['',Validators.required],
+      description: ['',Validators.required],
       createdDate: [new Date().toISOString()],
       companyCode: this.userCompanyCode,
       email: this.userEmail,
@@ -509,7 +552,8 @@ export class DealsComponent extends BaseComponent {
       username: ['',Validators.required],
       clientName: ['',Validators.required],
       mobileNumber: ['',Validators.required],
-      endDate : ['',Validators.required]
+      endDate : ['',Validators.required],
+      projectEstimation : ['',Validators.required]
     });
 
     this.getUsers();
@@ -708,7 +752,12 @@ export class DealsComponent extends BaseComponent {
   get j() {
     return this.completionForm.controls;
   }
-
+  get k() {
+    return this.selectTemplateForm.controls;
+  }
+  get t() {
+    return this.campaignForm.controls;
+  }
   onSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue ((JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
     this.leadForm.get('executive')?.setValue('');
@@ -721,6 +770,7 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
+    this.uploadSpinner = true
     if (this.leadForm?.valid) {
       this.switchService.AddCrmLeads(payload).subscribe({
         next: (res: any) => {
@@ -734,6 +784,7 @@ export class DealsComponent extends BaseComponent {
             this.submitted = false;
             this.leadForm.reset();
             this.getfetchLeadsIndividual();
+                this.uploadSpinner = false;
             this.toastr.success(res.message, 'lead', {
               timeOut: 3000,
               positionClass: 'toast-top-right',
@@ -790,7 +841,26 @@ export class DealsComponent extends BaseComponent {
           }));
           const combined = [...executiveList, ...entryList];
           this.leadCount = combined.length;
+           this.leadStatusCount = combined;
+          const statusCounts: { [status: string]: number } = {};
+          const statusCompletion : { [completionStatus: string]: number } = {};
+          combined.forEach(lead => {
+            const status = lead.status?.trim() || 'Unknown';
+            statusCounts[status] = (statusCounts[status] || 0) + 1;
+            const completionStatus = lead.completionStatus;
+            statusCompletion[completionStatus]= (statusCompletion[completionStatus] || 0) + 1;
+
+          });
+
+          this.activeCount = statusCounts['active'] || 0;
+          this.connectedCount = statusCounts['completed'] || 0;
+          this.notConnectedCount = statusCounts['Not Connected'] || 0;
+          this.statusCompletion = statusCompletion['completed'] || 0 ;
+
           this.dataSource.data = combined;
+           this.followUpCount = combined.filter(
+            (item) => item.followUpDue
+          ).length;
           if (combined.length > 0 && combined[0].contact) {
             this.phoneNumber = combined[0].contact;
           }
@@ -1138,11 +1208,12 @@ export class DealsComponent extends BaseComponent {
             this.uploadLead.reset();
             this.uploadSubmitted = false;
             this.uploadSpinner = false;
-            this.toastr.success(res.message, 'Bulk Lead Upload Successful');
+            this.toastr.success('Bulk Lead Uploaded Successful');
             this.getfetchLeadsIndividual();
           } else {
             this.uploadSpinner = false;
-            this.toastr.error(res.message, 'lead');
+            // this.toastr.error(res.message, 'lead');
+            this.toastr.warning('invalid file');
           }
         },
         error: (err: any) => {
@@ -1295,18 +1366,72 @@ export class DealsComponent extends BaseComponent {
     this.followupLeadSubmitted = true;
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
-
-    
-
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
-      let followUpDetails = this.followupLeadForm.value;
-      followUpDetails.leadEntry = { leadId: this.leadId };
-      this.switchService.CRMAddFollowupLead(this.followupLeadForm.value).subscribe({
+      const formValue = this.followupLeadForm.value;
+       const date = new Date(formValue.followupDate);
+
+       let formattedDate: string | null = null;
+
+      if (formValue.followupDate) {
+      const date = new Date(formValue.followupDate);
+
+      if (!isNaN(date.getTime())) {
+        formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
+          .getHours()
+          .toString()
+          .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+      }
+      }
+      const updatedTime = this.getFormattedNow();
+      const followUpDetails = {
+        followupDate: formattedDate,
+        followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
+        stage: formValue.stage,
+        status: formValue.status,
+        comments: formValue.comments,
+        followUpBy: this.executiveName,
+        updatedTime: updatedTime,
+        currentStage: formValue.stage,
+        leadEntry: {
+          leadId: this.leadId,
+          name: formValue.name || '',
+          companyName: formValue.companyName || '',
+          executive: formValue.executive || this.executiveName || '',
+          products: formValue.products || '',
+          country: formValue.country || '',
+          stage: formValue.stage,
+          status: formValue.status,
+          leadSource: formValue.leadSource || '',
+          zipCode: formValue.zipCode || '',
+          followUpDate: formValue.followupDate || '',
+          state: formValue.state || '',
+          city: formValue.city || '',
+          address: formValue.address || '',
+          contact: formValue.contact || '',
+          email: formValue.email || '',
+          currentStage: formValue.stage,
+          updatedBy: this.executiveName || '',
+          updatedTime: updatedTime,
+          entryBy: formValue.entryBy || '',
+          campaignId: formValue.campaignId || '',
+          companyCode: formValue.companyCode || '',
+          individualEmail: formValue.individualEmail || '',
+          type: formValue.type || 0,
+          taskGenId: formValue.taskGenId || '',
+          completionStatus: formValue.completionStatus || '',
+          completedBy: formValue.completedBy || '',
+          completionTime: formValue.completionTime || ''
+        }
+      };
+      this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             modal.close();
             this.followupLeadSubmitted = false;
+            this.showForm = false;
             this.followupLeadForm.reset();
             this.executiveName = '';
             this.followupName = '';
@@ -1323,6 +1448,28 @@ export class DealsComponent extends BaseComponent {
         }
       })
     }
+  }
+
+   private getFormattedNow(): string {
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const yyyy = now.getFullYear();
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const mi = pad(now.getMinutes());
+    const ss = pad(now.getSeconds());
+
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  }
+  convertTo12HourFormat(time24: string): string {
+    if (!time24) return '';
+    const [hourStr, minuteStr] = time24.split(':');
+    let hour = parseInt(hourStr, 10);
+    const suffix = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour.toString().padStart(2, '0')}:${minuteStr} ${suffix}`;
   }
 
   getUsers() {
@@ -1366,62 +1513,76 @@ export class DealsComponent extends BaseComponent {
     return this.allocateForm.controls;
   }
 
-  onAllocateSubmit() {
+   onAllocateSubmit() {
     this.allocateSubmitted = true;
-    if (this.selectedLeads.length == 0) {
-      this.toastr.warning('Please choose at least one', 'lead', {
-        timeOut: 3000, positionClass: 'toast-top-right'
-      });
+    const selectedExecutive = this.allocateForm.get('executive')?.value;
+    const hasSelectedLeads = this.selectedLeads.length > 0;
+    if ((selectedExecutive == null || selectedExecutive === '') && !hasSelectedLeads) {
+      this.toastr.warning('Please select executive and one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      return;
+    }
+    if (selectedExecutive == null || selectedExecutive === '') {
+      this.toastr.warning('Please select executive', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      return;
+    }
+    if (!hasSelectedLeads) {
+      this.toastr.warning('Please choose one lead', 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      return;
     }
     if (this.allocateForm?.valid) {
-      this.allocateForm.patchValue({ idList: this.allocateForm });
-      let allocateData = { idList: [...this.selectedLeads], executive: this.allocateForm.get('executive')?.value }
+      this.allocateForm.patchValue({
+        idList: this.selectedLeads.map((lead: any) => lead.leadId)
+      });
+      let allocateData = { 
+        idList: this.selectedLeads.map((lead: any) => lead.leadId), 
+        executive: this.allocateForm.get('executive')?.value 
+      };      
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
             this.selectedLeads=[];
-            this.toastr.success(res.message, 'lead');
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
             this.getfetchLeadsIndividual();
           } else {
-            this.toastr.error(res.message, 'lead', );
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           }
         },
         error: (error) => {
           this.toastr.error(error.statusText);
         },
-      })
-
+      });
     }
   }
 
    onRowCheckboxChange(lead: any, event: any) {
     if (event.checked) {
-      if (!this.selectedLeads.includes(lead.leadId)) {
-        this.selectedLeads.push(lead.leadId);
+      if (!this.selectedLeads.some(l => l.leadId === lead.leadId)) {
+        this.selectedLeads.push(lead);
       }
       this.selectedLeadForAppointment = lead;
     } else {
-      this.selectedLeads = this.selectedLeads.filter(id => id !== lead.leadId);
+      this.selectedLeads = this.selectedLeads.filter(l => l.leadId !== lead.leadId);
       if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
         this.selectedLeadForAppointment = null;
       }
     }
   }
 
-  onSelectAllChange(event: any) {
+   onSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedLeads = this.dataSource.data
-        .filter((row: any) => row.completionStatus !== 'completed') // ✅ exclude closed
+        .filter((row: any) => row.completionStatus !== 'completed')
         .map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
     }
   }
 
+
   isSelected(leadId: number): boolean {
-    return this.selectedLeads.includes(leadId);
+    return this.selectedLeads.some(l => l.leadId === leadId);
   }
 
   isAllSelected(): boolean {
@@ -1781,6 +1942,7 @@ export class DealsComponent extends BaseComponent {
       color: opt.color,
       isCustom: opt.isCustom || false
     }));
+    this.uploadSpinner = true;
     // this.crmStatusData = {
     //   stage: this.selectedStage,
     //   customStatuses: selectedOptions.filter(opt => opt.isCustom).map(opt => opt.name),
@@ -1796,6 +1958,7 @@ export class DealsComponent extends BaseComponent {
         if (res) {
           this.toastr.success('Status saved successfully');
           this.offcanvasService.dismiss();
+          this.uploadSpinner = false;
           this.getCrmStages();
           
         } else {
@@ -2024,8 +2187,10 @@ export class DealsComponent extends BaseComponent {
 
 
   selectFormTemplateSubmit() {
+    this.selecteTemplateFormSubmitted = true;
     if (this.selectTemplateForm.invalid) {
       this.selectTemplateForm.markAllAsTouched();
+      this.toastr.warning('please fill all mandatory fields');
       return;
     }
     const payload = this.selectTemplateForm.value;
@@ -2033,6 +2198,7 @@ export class DealsComponent extends BaseComponent {
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         this.getFormTemplate();
+        this.selecteTemplateFormSubmitted = false;
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
@@ -2057,6 +2223,9 @@ export class DealsComponent extends BaseComponent {
   }
 
   openRight13(content13: any) {
+    this.selectTemplateForm.reset();
+    this.selecteTemplateFormSubmitted = false;
+
     this.offcanvasService.open(content13, { position: 'end' });
   }
 
@@ -2144,8 +2313,9 @@ export class DealsComponent extends BaseComponent {
     }
     return hash >>> 0;
   }
-  getUserColor(user: any): string {
-    const index = this.hashString(user.email) % this.userColors.length;
+  getUserColor(followup: any): string {
+    const key = followup.email || followup.followUpBy || 'default';
+    const index = this.hashString(key) % this.userColors.length;
     return this.userColors[index];
   }
 
@@ -2501,9 +2671,9 @@ export class DealsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-
+    const selectedIds = this.selectedLeads.map((l: any) => l.leadId);
     const selectedLeadObjects = this.dataSource.data.filter((lead: any) =>
-      this.selectedLeads.includes(lead.leadId)
+      selectedIds.includes(lead.leadId)
     );
     const emailList = selectedLeadObjects.map((lead: any) => lead.email).filter(Boolean);
     const emailString = emailList.join(', ');
@@ -2561,33 +2731,38 @@ export class DealsComponent extends BaseComponent {
   }
 
   
-  createTaskSubmit(modal: any) {
-    this.taskSubmitted = true;
+ createTaskSubmit(modal: any) {
     if (!this.selectedLeads || this.selectedLeads.length === 0) {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    let payload = { ...this.taskForm.value };
-    payload.leadIdList = this.selectedLeads
-      .filter((id: any) => id !== '' && id !== null && id !== undefined)
-      .map((id: any) => Number(id));
-    if (Array.isArray(payload.assignedTo)) {
-      payload.assignedTo = payload.assignedTo.join(',');
+    const leadsWithoutExecutive = this.selectedLeads.filter(lead => !lead.executive);
+    if (leadsWithoutExecutive.length > 0) {
+      this.toastr.warning('Please assign an executive before creating the task.');
+      return;
     }
-    if(this.taskForm?.valid){
-      this.switchService.createTask(payload).subscribe({
-        next: (res) => {
-          this.toastr.success('Task created successfully!');
-          this.taskForm.reset();
-          this.selectedLeads = [];
-          modal.close();
-        },
-        error: (err) => {
-          this.toastr.error('Something went wrong!');
-        }
-      });
-    }
+    this.taskSubmitted = true;
+    let payload: any = {
+      ...this.taskForm.value,
+      leadIdList: this.selectedLeads.map((lead: any) => lead.leadId),
+      assignedTo: this.selectedLeads
+        .filter((lead: any) => lead.executive)
+        .map((lead: any) => lead.executive)  
+        .join(',')                        
+    };
+    this.switchService.createTask(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Task created successfully!');
+        this.taskForm.reset();
+        this.selectedLeads = [];
+        this.selectedLeadForAppointment = null;
+        this.taskSubmitted = false;
+        modal.close();
+        this.getfetchLeadsIndividual();
+      }
+    });
   }
+
 
   getTaskStatusColor(status: string): string {
     switch (status) {
@@ -2667,9 +2842,8 @@ export class DealsComponent extends BaseComponent {
   openCompletionModal(content: any, lead: any) {
     this.selectedLead = lead;
     this.leadId = lead.leadId;
-    console.log(this.leadId);
     this.currentStep = 1;  
-    this.modalService.open(content, { centered: true });
+    this.modalService.open(content, { centered: true,scrollable: true });
   }
 
 
@@ -2688,7 +2862,7 @@ export class DealsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType
     };
-    console.log('status',payload);
+    this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {
         this.toastr.success('lead completed successfully');
@@ -2697,6 +2871,8 @@ export class DealsComponent extends BaseComponent {
           this.selectedLead.completionStatus = "completed"; 
         }
         modal.close();
+        this.uploadSpinner = false;
+
       },
       error: (err) => {
         this.toastr.error('Something went wrong!');
@@ -2717,6 +2893,234 @@ export class DealsComponent extends BaseComponent {
     modal.close();
     this.currentStep = 1;
   }
+
+  getfullDaysLeft(task: any): string {
+    if (!task.deadline) return '';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) {
+      return `${Math.abs(diffDays)} day's Due`;
+    } else if (diffDays === 0) {
+      return `Due today`;
+    } else {
+      return `${diffDays} day's left`;
+    }
+  }
+
+  getTaskBgColor(task: any): string {
+    if (!task.deadline) return 'bg-secondary-transparent';
+    const deadlineDate = new Date(task.deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    deadlineDate.setHours(0, 0, 0, 0);
+    if (deadlineDate < today) {
+      return 'bg-danger-transparent';
+    }
+    if (deadlineDate.getTime() === today.getTime()) {
+      return 'bg-warning-transparent';
+    }
+    const diffTime = deadlineDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 2) {
+      return 'bg-warning-transparent';
+    }
+    return 'bg-success-transparent';
+  }
+  
+  
+formatLocalDateTime(dateTime: string | Date): string {
+    if (!dateTime) return "";
+
+    let dateTimeString = dateTime.toString();
+
+    if (typeof dateTime === "object" && dateTime instanceof Date) {
+        dateTimeString = dateTime.toISOString();
+    }
+
+    const normalized = dateTimeString.split('.')[0];
+    const date = new Date(normalized + "Z");
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const dd = pad(date.getDate());
+    const mmm = months[date.getMonth()];
+    const yyyy = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = pad(date.getMinutes());
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  }
+  openBulkMove(content31: any, selectedLeads: any[]) {
+    if (!selectedLeads || selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead.');
+      return;
+    }
+
+    this.selectedLeads = selectedLeads;
+    this.getCampaignData();
+    this.firstModalRef = this.modalService.open(content31, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+  }
+ openCreateCampaign(content15: any) {
+    this.isCreateCampaignOpen = true;
+    this.secondModalRef = this.modalService.open(content15, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    this.secondModalRef.result.finally(() => {
+      this.isCreateCampaignOpen = false;
+    });
+  }
+  submitCampaign(modal: any) {
+    this.campaignSubmitted = true;
+    if (this.campaignForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    this.isSubmitting = true;
+    let agents = this.campaignForm.get('agents')?.value;
+    if (Array.isArray(agents)) {
+      agents = agents.join(',');
+    }
+    let payload = {
+      ...this.campaignForm.value,
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+      agents: agents,
+      isAutoCreationRequired: this.campaignForm.value.isAutoCreationRequired ?? false
+    };
+    if (this.selectedCampgnId && this.selectedCampaignId) {
+      payload.campgnId = this.selectedCampgnId;
+      payload.campaignId = this.selectedCampaignId;
+    }
+    this.switchService.saveCampaignData(payload).subscribe({
+      next: (res: any) => {
+        this.isSubmitting = false;
+        if (res.status === true || res.campaignId || res.createdDate) {
+          const name = res.campaignName;
+          this.toastr.success(`${name} created successfully!`);
+          modal.close();
+          this.campaignForm.reset();
+          this.campaignForm.patchValue({
+            companyName: this.userCompanyName,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+          });
+          this.getCampaignData();
+          this.selectedCampgnId = null;
+          this.selectedCampaignId = null;
+        } 
+      }
+    });
+  }
+  getCampaignData() {
+    const payload = {
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    this.switchService.displayCampaignData(payload).subscribe({
+      next: (res: any[]) => {
+        if (Array.isArray(res)) {
+          this.campaignList = res.map((c: any) => ({
+            id: c.campgnId,
+            campaignName: c.campaignName,
+            agents: c.agents,
+          }));
+          const campaign = res.find((c) => c.campgnId === this.campaignId);
+          if (campaign) {
+            this.selectedCampaign = campaign;
+            const agentEmails = campaign.agents
+              ?.split(',')
+              ?.map((email: string) => email.trim())
+              ?.filter((email: string) => email);
+           
+          }
+        } else {
+          this.toastr.error('Unexpected response format.');
+        }
+      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error while fetching campaigns.');
+      // },
+    });
+  }
+  
+  openCreateModal(content: any) {
+  this.isEditMode = false;
+  this.selectedCampgnId = null;
+  this.selectedCampaignId = null;
+  this.campaignForm.reset();
+  this.open(content);
+  }
+  leadToCampaignSubmit(modal: any) {
+    const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+    const currentCampaignId = this.campaignId;
+    let payloadArray: any[] = [];
+    if (this.selectedLeads && this.selectedLeads.length > 0) {
+      payloadArray = this.selectedLeads.map((lead: any) => ({
+        leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
+        campaignId: selectedCampaignId
+      }));
+    }
+    else if (this.selectedLeadData) {
+      payloadArray = [
+        {
+          leadId: this.selectedLeadData.leadId.toString(),
+          campaignId: selectedCampaignId
+        }
+      ];
+    }
+    this.moveLeadToAnotherCampaign(payloadArray, modal);
+     if (!this.isCreateCampaignOpen) {
+    this.getfetchLeadsIndividual();
+     }
+    this.campaignId = selectedCampaignId;
+  }
+  moveLeadToAnotherCampaign(
+    data: { leadId: string; campaignId: string } | any[],
+    modal: any
+  ) {
+    const payloadArray = Array.isArray(data) ? data : [data];
+    this.currentCampaignId = this.campaignId;
+    const leadIds = payloadArray.map(item => item.leadId);
+    const campaignId = payloadArray[0].campaignId;
+    console.log(campaignId, leadIds);
+     if (!this.isCreateCampaignOpen) {
+    this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
+      next: (res) => {
+        this.leadList = this.leadList.filter(
+          (lead: any) => !leadIds.includes(lead.leadId)
+        );
+        this.toastr.success(`Leads moved successfully!`);
+        modal.close();
+        this.submitted = false;
+        this.leadForm.reset();
+        this.getfetchLeadsIndividual();
+      },
+      error: (err) => {
+        console.error('Error moving leads:', err);
+      }
+    });
+    }
+  }
+
 
 
 }

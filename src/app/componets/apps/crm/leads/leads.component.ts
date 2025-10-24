@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation,} from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule,} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModalRef, NgbModule,} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -12,12 +12,12 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators,} from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute,Router, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 import { FirebaseService } from '../../../../shared/services/firebase.service';
 import { FormControl } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, flatMap } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { NgbOffcanvas, OffcanvasDismissReasons,} from '@ng-bootstrap/ng-bootstrap';
 import { SwitherService } from '../../../../shared/services/swither.service';
@@ -45,12 +45,12 @@ import { errorRoutingModule } from '../../../error/error.route';
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','completionStatus'];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
   pageSize = 10; appointmentDataList: any[] = [];selectedAppointment: any = null; selectedLead: any;
-  Crmusers: any[] = []; selectedLeads: number[] = [];
+  Crmusers: any[] = []; selectedLeads: any[] = [];
   CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
   stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any;
@@ -88,13 +88,19 @@ export class LeadsComponent extends BaseComponent {
   displayedLeads: any[] = []; override cityList:any[]=[];
   filterApplied: boolean = false;moveCampaign:string ='';editMode:boolean= false;
   appointmentId: number | null = null; taskPriorityList :any;taskList:any; appointmentFormSubmitted : boolean = false;
-  selectedLeadForAppointment:any;selectedLeadForAppointmentObject:any;
-  leadCompletionsubmitted : boolean = false;
-  crmStaticStages = [ 
-    {  name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
-    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
-    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff',},
+  selectedLeadForAppointment:any; selectedLeadForAppointmentObject:any;
+  leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
+  notConnectedCount:Number =0;statusCompletion:Number =0 ;crmRole:any;selecteTemplateFormSubmitted : boolean = false;
+  currentCampaignId : string ='';
+  campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
+  campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
+  filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
+  crmStaticStages = [
+    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-secondary text-secondary' },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-danger text-danger' },
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-primary text-primary' }
   ];
+
   stageColor: { [key: string]: string } = { open: '#007bff',};
   statusColor: { [key: string]: string } = { active: '#007bff', };
   uploadStageDisplay: { name: string; color: string } = { name: '', color: '' };
@@ -108,7 +114,8 @@ export class LeadsComponent extends BaseComponent {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('sort2') sort2!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
-
+  firstModalRef!: NgbModalRef;
+  secondModalRef!: NgbModalRef;
   public leadForm!: FormGroup;
   public sendMultiMailSubmitted = false;
   public taskSubmitted = false;
@@ -158,7 +165,8 @@ export class LeadsComponent extends BaseComponent {
     public switchService: SwitherService,
     private toastr: ToastrService,
     private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) {
     super();
     this.statusOptionsByStage = 
@@ -169,6 +177,7 @@ export class LeadsComponent extends BaseComponent {
     };
     this.userData = localStorage.getItem('userDetails');
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+    this.crmRole = JSON.parse(this.userData).crmRole;
     this.chartOptions = {
       series: [44, 55, 13, 43, 22],
       chart: {
@@ -195,7 +204,6 @@ export class LeadsComponent extends BaseComponent {
   }
   appointmentModal(appointment1: any, element: any, appointmentData: any = null) {
    this.selectedLeadForAppointmentObject = element; // full lead object
-  console.log('Selected for appointment:', this.selectedLeadForAppointmentObject);
   if (!this.selectedLeads || this.selectedLeads.length === 0) {
       this.toastr.warning('Please select at least one lead');
       return;
@@ -243,12 +251,13 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     this.modalService.open(content, { backdrop: 'static' });
+
   }
   
   offcanvasRef: any;
   openRight(content: any) {
     this.offcanvasRef = this.offcanvasService.open(content, {
-      position: 'end',
+      position: 'end',scroll: true,
     });
   }
 
@@ -435,6 +444,7 @@ export class LeadsComponent extends BaseComponent {
 
       // filterLeadForm
       this.filterLeadForm = this.fb.group({
+        action : [''],
         stage: [''],
         status: [''],
         source: [''],
@@ -447,6 +457,27 @@ export class LeadsComponent extends BaseComponent {
         email: this.userEmail,
         type: this.userType
       });
+
+      this.campaignForm = this.fb.group({
+      campaignId: [0],
+      campaignName: ['', [Validators.required, Validators.minLength(4)]],
+      pipeline: ['',],
+      campaignPoc: [''],
+      agents: [[]],
+      campaignPriority: [''],
+      leadDuplicacy: [''],
+      companyName: [this.userCompanyName],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
+      isAutoCreationRequired:[false],
+      createdDate: new Date().toISOString(),
+      campgnId: [''],
+
+    });
+    if (this.userType === 1) {
+      this.campaignForm.patchValue({ campaignPoc: this.userEmail });
+    }
 
       this.sendLeadForm.get('template')
         ?.valueChanges.subscribe((templateGenId) => {
@@ -472,9 +503,9 @@ export class LeadsComponent extends BaseComponent {
     this.selectTemplateForm = this.fb.group({
       campaignId: [0],
       templateGenId: [''],
-      templateName: [''],
-      subject: [''],
-      description: [''],
+      templateName: ['',Validators.required],
+      subject: ['',Validators.required],
+      description: ['',Validators.required],
       createdDate: [new Date().toISOString()],
       companyCode: this.userCompanyCode,
       email: this.userEmail,
@@ -509,7 +540,7 @@ export class LeadsComponent extends BaseComponent {
 
     //Allocate Lead Executive
     this.allocateForm = this.fb.group({
-      executive: ['', [Validators.required]],
+      executive: [ [Validators.required]],
     });
 
     // lead Move to Campaign
@@ -724,23 +755,13 @@ export class LeadsComponent extends BaseComponent {
     this.leadStatusitems.push({ checked: false, label: '' });
   }
   inPorgressLeads = [
-    {
-      name: 'Quotataion Shared',
-      checked: false,
-      isDefault: true,
-      color: '#28a745',
-    },
-    {
-      name: 'Commercial Discussion',
-      checked: false,
-      isDefault: true,
-      color: '#007bff',
-    },
-    { name: 'Office Visit', checked: false, isDefault: true, color: '#ffc107' },
-    { name: 'Hot', checked: false, isDefault: true, color: '#dc3545' },
-    { name: 'Cold', checked: false, isDefault: true, color: '#6c757d' },
-    { name: 'Warm', checked: false, isDefault: true, color: '#fd7e14' },
-    { name: 'Call Back', checked: false, isDefault: true, color: '#17a2b8' },
+    { name: 'Quotation Shared', checked: false, isDefault: true, color: 'badge bg-secondary-transparent text-secondary' },
+    { name: 'Commercial Discussion', checked: false, isDefault: true, color: 'badge bg-primary-transparent text-primary' },
+    { name: 'Office Visit', checked: false, isDefault: true, color: 'badge bg-warning-transparent text-warning' },
+    { name: 'Hot', checked: false, isDefault: true, color: 'badge bg-danger-transparent text-danger' },
+    { name: 'Cold', checked: false, isDefault: true, color: 'badge bg-secondary-transparent text-secondary' },
+    { name: 'Warm', checked: false, isDefault: true, color: 'badge bg-orange-transparent text-orange' },
+    { name: 'Call Back', checked: false, isDefault: true, color: 'badge bg-info-transparent text-info' },
   ];
 
   lostLeads = [
@@ -748,14 +769,14 @@ export class LeadsComponent extends BaseComponent {
       name: 'Not Interested',
       checked: false,
       isDefault: true,
-      color: '#dc3545',
+      color: 'badge bg-danger-transparent text-danger',
     },
     { name: 'Irrelevant', checked: false, isDefault: true, color: '#6c757d' },
     {
       name: 'Given to others',
       checked: false,
       isDefault: true,
-      color: '#fd7e14',
+      color: 'badge bg-warning-transparent text-danger',
     },
   ];
 
@@ -825,8 +846,12 @@ export class LeadsComponent extends BaseComponent {
   get j() {
     return this.completionForm.controls;
   }
-
-
+  get k() {
+    return this.selectTemplateForm.controls;
+  }
+  get t() {
+    return this.campaignForm.controls;
+  }
   onSubmit(modal: any) {
     const followUpDate = this.leadForm.get('followUpDate')?.value;
     if (followUpDate) {
@@ -865,9 +890,9 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -899,16 +924,15 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
 
   appointmentFormSubmit(modal: any) {  
     const formData = this.appointmentForm.value;
-    console.log('the',this.leadId)
     const payload = {
       appointmenType: formData.appointmenType,
       date: formData.date,
@@ -947,7 +971,6 @@ export class LeadsComponent extends BaseComponent {
         type: this.selectedLeadForAppointment.type,
       }  : null  
     };
-    console.log('payload',payload);
     this.appointmentFormSubmitted = true;
     if(this.appointmentForm?.valid){
       this.switchService.saveAppointment(payload).subscribe({
@@ -976,29 +999,34 @@ export class LeadsComponent extends BaseComponent {
         this.appointmentId= res.appointmentId;
         
       },
-      error: (err) => {
-        this.toastr.error('Failed to fetch appointment');
-      }
+      // error: (err) => {
+      //   this.toastr.error('Failed to fetch appointment');
+      // }
     });
   }
 
   selectFormTemplateSubmit() {
+    this.selecteTemplateFormSubmitted = true;
     if (this.selectTemplateForm.invalid) {
       this.selectTemplateForm.markAllAsTouched();
+      this.toastr.warning('please fill all mandatory fields');
       return;
     }
+   this.uploadSpinner = true;
     const payload = this.selectTemplateForm.value;
     this.switchService.selectFormTemplate(payload).subscribe({
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
         // this.getFormTemplate();
         this.getAllEmailTemplates();
+        this.selecteTemplateFormSubmitted = false;
+           this.uploadSpinner = false;
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Error submitting the template.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error submitting the template.');
+      // },
     });
   }
 
@@ -1018,9 +1046,9 @@ export class LeadsComponent extends BaseComponent {
           // this.getFormTemplate();
         }
       },
-      error: (error) => {
-        this.toastr.error('Error fetching product data');
-      },
+      // error: (error) => {
+      //   this.toastr.error('Error fetching product data');
+      // },
     });
   }
 
@@ -1047,9 +1075,6 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.allEmailTemplates(payload).subscribe({
       next: (res: any[]) => {
         this.tempFormList = res;
-      },
-      error: (err) => {
-        this.toastr.error('Error fetching template details');
       },
     });
   }
@@ -1078,8 +1103,9 @@ export class LeadsComponent extends BaseComponent {
     return this.sendwhatsLeadForm.controls;
   }
 
-  getUserColor(user: any): string {
-    const index = this.hashString(user.email) % this.userColors.length;
+  getUserColor(followup: any): string {
+    const key = followup.email || followup.followUpBy || 'default';
+    const index = this.hashString(key) % this.userColors.length;
     return this.userColors[index];
   }
 
@@ -1159,20 +1185,22 @@ export class LeadsComponent extends BaseComponent {
       color: opt.color,
       isCustom: opt.isCustom || false
     }));
+    this.uploadSpinner = true;
     this.switchService.SaveCrmStatus(this.crmStatusData).subscribe({
       next: (res: any) => {
         if (res) {
           this.toastr.success('Status saved successfully');
           this.offcanvasService.dismiss();
+          this.uploadSpinner = false;
           this.getCrmStages();
           this.getCrmStatus();
         } else {
           this.toastr.error(res.message);
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // },
     });
   }
 
@@ -1241,15 +1269,16 @@ export class LeadsComponent extends BaseComponent {
           if (completedRequests === this.stageLst.length) {
             this.statusLst = [];
 
-            // ✅ Push valid status lists only
             for (const [stage, fields] of Object.entries(
               this.statusOptionsByStageforDisplay
             )) {
-              const clonedFields = JSON.parse(JSON.stringify(fields)); // avoid reference bugs
-              this.statusLst.push({ stage, fields: clonedFields });
+              const clonedFields = JSON.parse(JSON.stringify(fields));
+              this.statusLst.push({
+                stage,
+                fields: clonedFields,
+                count: clonedFields.length 
+              });
             }
-
-            // ✅ Inject OPEN stage if not already
             const openExists = this.statusLst.some(
               (s: any) => s.stage.toLowerCase() === 'open'
             );
@@ -1263,7 +1292,6 @@ export class LeadsComponent extends BaseComponent {
               );
             }
 
-            // ✅ Sort 'open' to the top
             this.statusLst.sort(
               (
                 a: { stage: string; fields: any[] },
@@ -1275,7 +1303,6 @@ export class LeadsComponent extends BaseComponent {
               }
             );
 
-            // ✅ Default selections
             this.defaultStageName =
               this.statusLst.find(
                 (s: { stage: string }) => s.stage.toLowerCase() === 'open'
@@ -1284,7 +1311,6 @@ export class LeadsComponent extends BaseComponent {
               '';
             this.defaultStatusName = 'active';
 
-            // ✅ Button Disable Logic
             this.shouldDisableAddStatus =
               this.stageLst.length > 0 &&
               this.stageLst.every((stage: any) => {
@@ -1344,23 +1370,18 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     this.prepareCrmStageData();
-    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Stages saved successfully');
-          this.isStagesDisabled = false;
-          this.offcanvasService.dismiss();
-          this.getCrmStages();
-          this.isAddStagesDisabled = true;
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-        this.isStagesDisabled = false;
-      },
-    });
+    console.log(this.crmStageData)
+    // this.switchService.SaveCrmStages(this.crmStageData).subscribe({
+    //   next: (res: any) => {
+    //     if (res) {
+    //       this.toastr.success('Stages saved successfully');
+    //       this.isStagesDisabled = false;
+    //       this.offcanvasService.dismiss();
+    //       this.getCrmStages();
+    //       this.isAddStagesDisabled = true;
+    //     }
+    //   },
+    // });
   }
 
   getCrmStages(): void {
@@ -1408,7 +1429,6 @@ export class LeadsComponent extends BaseComponent {
           }
           const defaultStageName = 'open';
           const defaultStageColor = '#007bff';
-
           if (
             !this.stageLst.find((s: any) => s.stageName === defaultStageName)
           ) {
@@ -1417,29 +1437,23 @@ export class LeadsComponent extends BaseComponent {
               color: defaultStageColor,
             });
           }
-
           this.getCrmStatus();
           this.isAddStagesDisabled = true;
         } else {
           this.stageLst = [];
           this.isAddStagesDisabled = false;
         }
-      },
-      error: (err) => {
-        this.toastr.error('Failed to fetch CRM stages.');
-      },
+      }
     });
   }
 
   addNewOption(): void {
     const newName = this.newOptionName?.trim();
     const newColor = this.newOptionColor;
-
     if (!newName) {
       this.toastr.warning('Please enter a status name.');
       return;
     }
-
     if (!newColor) {
       this.toastr.warning('Please select a color.');
       return;
@@ -1448,11 +1462,9 @@ export class LeadsComponent extends BaseComponent {
       this.statusOptionsByStage[this.selectedStage] || [];
     const currentDisplayOptions =
       this.statusOptionsByStageforDisplay[this.selectedStage] || [];
-
     const isDuplicate = currentStageOptions.some(
       (opt: any) => opt.name.toLowerCase() === newName.toLowerCase()
     );
-
     if (!isDuplicate) {
       const newOption = {
         name: newName,
@@ -1460,12 +1472,8 @@ export class LeadsComponent extends BaseComponent {
         isCustom: true,
         color: newColor,
       };
-
-      // Push to both arrays
       currentStageOptions.push(newOption);
       currentDisplayOptions.push(newOption);
-
-      // Reassign for binding
       this.statusOptionsByStage[this.selectedStage] = [...currentStageOptions];
       this.statusOptionsByStageforDisplay[this.selectedStage] = [
         ...currentDisplayOptions,
@@ -1612,7 +1620,6 @@ export class LeadsComponent extends BaseComponent {
 
   onFollowupStatusChange(): void {
     const selectedStage = this.followupLeadForm.get('stage')?.value;
-
     if (selectedStage === 'open') {
       this.checkboxStageOptions = this.openStage.map((opt) => ({
         ...opt,
@@ -1625,12 +1632,10 @@ export class LeadsComponent extends BaseComponent {
           (opt) => opt.name !== 'Invalid'
         );
       }
-
       const firstStatus = this.checkboxStageOptions[0]?.name || null;
       this.followupLeadForm.patchValue({ status: firstStatus });
       return;
     }
-
     if (selectedStage && this.statusOptionsByStageforDisplay[selectedStage]) {
       this.checkboxStageOptions = this.statusOptionsByStageforDisplay[selectedStage];
 
@@ -1639,7 +1644,6 @@ export class LeadsComponent extends BaseComponent {
           (opt) => opt.name !== 'Invalid'
         );
       }
-
       const currentStatus = this.followupLeadForm.get('status')?.value;
       const statusExists = this.checkboxStageOptions.some(
         (option) => option.name === currentStatus
@@ -1770,10 +1774,27 @@ export class LeadsComponent extends BaseComponent {
           }));
           const combined = [...executiveList, ...entryList];
           this.leadCount = combined.length;
+          this.leadStatusCount = combined;
+          const statusCounts: { [status: string]: number } = {};
+          const statusCompletion : { [completionStatus: string]: number } = {};
+          combined.forEach(lead => {
+            const status = lead.status?.trim() || 'Unknown';
+            statusCounts[status] = (statusCounts[status] || 0) + 1;
+            const completionStatus = lead.completionStatus;
+            statusCompletion[completionStatus]= (statusCompletion[completionStatus] || 0) + 1;
+
+          });
+
+          this.activeCount = statusCounts['active'] || 0;
+          this.connectedCount = statusCounts['completed'] || 0;
+          this.notConnectedCount = statusCounts['not connected'] || 0;
+          this.statusCompletion = statusCompletion['completed'] || 0 ;
+
           this.followUpCount = combined.filter(
             (item) => item.followUpDue
           ).length;
           this.dataSource.data = combined;
+          
           this.updateColumns();
           if (combined.length > 0 && combined[0].contact) {
             this.phoneNumber = combined[0].contact;
@@ -1802,9 +1823,9 @@ export class LeadsComponent extends BaseComponent {
             this.dataSource.paginator = this.paginator;
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText || 'Server Error');
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText || 'Server Error');
+        // },
       });
   }
   
@@ -1829,9 +1850,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error('Unexpected response format.');
         }
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Server error.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Server error.');
+      // },
     });
   }
 
@@ -2122,9 +2143,9 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -2166,9 +2187,9 @@ export class LeadsComponent extends BaseComponent {
           this.filterApplied = false;
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText || 'Something went wrong', 'Error');
-      }
+      // error: (error) => {
+      //   this.toastr.error(error.statusText || 'Something went wrong', 'Error');
+      // }
     });
   }
 
@@ -2176,41 +2197,102 @@ export class LeadsComponent extends BaseComponent {
     return this.followupLeadForm.controls;
   }
 
+  private getFormattedNow(): string {
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+
+    const yyyy = now.getFullYear();
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const mi = pad(now.getMinutes());
+    const ss = pad(now.getSeconds());
+
+    return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+  }
+
   followupLeadSubmit(modal: any) {
     this.followupLeadSubmitted = true;
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
-
-    
-   
     if (this.followupLeadForm?.valid) {
       this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
-      let followUpDetails = this.followupLeadForm.value;
-      followUpDetails.leadEntry = { leadId: this.leadId };
-      followUpDetails.followupTime = this.convertTo12HourFormat(
-        followUpDetails.followupTime
-      );
-      this.switchService
-        .CRMAddFollowupLead(this.followupLeadForm.value)
-        .subscribe({
-          next: (res: any) => {
-            if (res.status == true) {
-              modal.close();
-              this.followupLeadSubmitted = false;
-              this.followupLeadForm.reset();
-              this.executiveName = '';
-              this.followupName = '';
-              this.leadId = 0;
-              this.toastr.success(res.message, 'lead');
-              this.getFetchLeadData();
-            } else {
-              this.toastr.error(res.message, 'lead');
-            }
-          },
-        });
+      const formValue = this.followupLeadForm.value;
+       const date = new Date(formValue.followupDate);
+          let formattedDate: string | null = null;
+
+      if (formValue.followupDate) {
+      const date = new Date(formValue.followupDate);
+
+      if (!isNaN(date.getTime())) {
+        formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+          .toString()
+          .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
+          .getHours()
+          .toString()
+          .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+      }
+      }
+
+    const updatedTime = this.getFormattedNow();
+      const followUpDetails = {
+        followupDate: formattedDate,
+        followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
+        stage: formValue.stage,
+        status: formValue.status,
+        comments: formValue.comments,
+        followUpBy: this.executiveName,
+        updatedTime: updatedTime,
+        currentStage: formValue.stage,
+        leadEntry: {
+          leadId: this.leadId,
+          name: formValue.name || '',
+          companyName: formValue.companyName || '',
+          executive: formValue.executive || this.executiveName || '',
+          products: formValue.products || '',
+          country: formValue.country || '',
+          stage: formValue.stage,
+          status: formValue.status,
+          leadSource: formValue.leadSource || '',
+          zipCode: formValue.zipCode || '',
+          followUpDate: formValue.followupDate || '',
+          state: formValue.state || '',
+          city: formValue.city || '',
+          address: formValue.address || '',
+          contact: formValue.contact || '',
+          email: formValue.email || '',
+          currentStage: formValue.stage,
+          updatedBy: this.executiveName || '',
+          updatedTime: updatedTime,
+          entryBy: formValue.entryBy || '',
+          campaignId: formValue.campaignId || '',
+          companyCode: formValue.companyCode || '',
+          individualEmail: formValue.individualEmail || '',
+          type: formValue.type || 0,
+          taskGenId: formValue.taskGenId || '',
+          completionStatus: formValue.completionStatus || '',
+          completedBy: formValue.completedBy || '',
+          completionTime: formValue.completionTime || ''
+        }
+      };
+      this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            modal.close();
+            this.followupLeadSubmitted = false;
+            this.showForm = false;
+            this.followupLeadForm.reset();
+            this.executiveName = '';
+            this.followupName = '';
+            this.leadId = 0;
+            this.toastr.success(res.message, 'lead');
+            this.getFetchLeadData();
+          }
+        },
+      });
     }
   }
-  
+
   convertTo12HourFormat(time24: string): string {
     if (!time24) return '';
     const [hourStr, minuteStr] = time24.split(':');
@@ -2235,9 +2317,9 @@ export class LeadsComponent extends BaseComponent {
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -2260,15 +2342,26 @@ export class LeadsComponent extends BaseComponent {
   }
 
   leadToCampaignSubmit(modal: any) {
-    const currentCampaignId = this.campaignId;
-    this.selectedLeadId = this.selectedLeadData.leadId;
     const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
-    const payload = {
-      leadId: this.selectedLeadId.toString(),
-      campaignId: selectedCampaignId,
-    };
-    this.moveLeadToAnotherCampaign(payload, modal);
-    this.getFetchLeadData(currentCampaignId);
+    const currentCampaignId = this.campaignId;
+    let payloadArray: any[] = [];
+    if (this.selectedLeads && this.selectedLeads.length > 0) {
+      payloadArray = this.selectedLeads.map((lead: any) => ({
+        leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
+        campaignId: selectedCampaignId
+      }));
+    }
+    else if (this.selectedLeadData) {
+      payloadArray = [
+        {
+          leadId: this.selectedLeadData.leadId.toString(),
+          campaignId: selectedCampaignId
+        }
+      ];
+    }
+    this.moveLeadToAnotherCampaign(payloadArray, modal);
+
+    this.getFetchLeadData(this.currentCampaignId);
     this.campaignId = selectedCampaignId;
   }
 
@@ -2289,11 +2382,13 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     if (this.allocateForm?.valid) {
-      this.allocateForm.patchValue({ idList: [...this.selectedLeads] });
-      const allocateData = {
-        idList: [...this.selectedLeads],
-        executive: selectedExecutive,
-      };
+      this.allocateForm.patchValue({
+        idList: this.selectedLeads.map((lead: any) => lead.leadId)
+      });
+      let allocateData = { 
+        idList: this.selectedLeads.map((lead: any) => lead.leadId), 
+        executive: this.allocateForm.get('executive')?.value 
+      };      
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2306,9 +2401,9 @@ export class LeadsComponent extends BaseComponent {
             this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+        // error: (error) => {
+        //   this.toastr.error(error.statusText);
+        // },
       });
     }
   }
@@ -2354,9 +2449,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error('Unexpected response format.');
         }
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Error while fetching campaigns.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error while fetching campaigns.');
+      // },
     });
   }
 
@@ -2373,38 +2468,40 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error('Unexpected user data format.');
         }
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Error while fetching users.');
-      },
+      // error: (err) => {
+      //   this.toastr.error(err.statusText || 'Error while fetching users.');
+      // },
     });
   }
-    onRowCheckboxChange(lead: any, event: any) {
+  onRowCheckboxChange(lead: any, event: any) {
     if (event.checked) {
-      if (!this.selectedLeads.includes(lead.leadId)) {
-        this.selectedLeads.push(lead.leadId);
+      if (!this.selectedLeads.some(l => l.leadId === lead.leadId)) {
+        this.selectedLeads.push(lead);
       }
       this.selectedLeadForAppointment = lead;
     } else {
-      this.selectedLeads = this.selectedLeads.filter(id => id !== lead.leadId);
+      this.selectedLeads = this.selectedLeads.filter(l => l.leadId !== lead.leadId);
       if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
         this.selectedLeadForAppointment = null;
       }
     }
   }
 
+ isSelected(leadId: number): boolean {
+  return this.selectedLeads.some((l: any) =>
+    typeof l === 'object' ? l.leadId === leadId : l === leadId
+  );
+}
+
+
   onSelectAllChange(event: any) {
     if (event.checked) {
       this.selectedLeads = this.dataSource.data
-        .filter((row: any) => row.completionStatus !== 'completed') // ✅ exclude closed
+        .filter((row: any) => row.completionStatus !== 'completed')
         .map((row: any) => row.leadId);
     } else {
       this.selectedLeads = [];
     }
-  }
-
-
-  isSelected(leadId: number): boolean {
-    return this.selectedLeads.includes(leadId);
   }
 
   isAllSelected(): boolean {
@@ -2530,6 +2627,7 @@ export class LeadsComponent extends BaseComponent {
   openFollowupLeadForm(element: any, content4: any): void {
     this.followupName = element.name;
     this.notconnectedstatusClicked = false;
+    this.showForm = false;
     let executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
@@ -2545,6 +2643,8 @@ export class LeadsComponent extends BaseComponent {
     this.offcanvasService.open(content12, { position: 'end' });
   }
   openRight13(content13: any) {
+    this.selectTemplateForm.reset();
+    this.selecteTemplateFormSubmitted = false;
     this.offcanvasService.open(content13, { position: 'end' });
   }
   updateTopDisplayedCards(): void {
@@ -2650,9 +2750,9 @@ export class LeadsComponent extends BaseComponent {
           this.getCrmStages();
           this.getCrmStatus();
         },
-        error: (error) => {
-          this.toastr.error('Failed to delete Lead stages.');
-        },
+        // error: (error) => {
+        //   this.toastr.error('Failed to delete Lead stages.');
+        // },
       });
     }
   }
@@ -2688,8 +2788,9 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
+    let leadList= this.selectedLeads.map((lead: any) => lead.leadId)
     if (confirm('Are you sure you want to delete the selected leads?')) {
-      this.switchService.deleteLeads({ leadList: this.selectedLeads }).subscribe({
+      this.switchService.deleteLeads({ leadList}).subscribe({
         next: (res: any) => {
           this.toastr.success('Leads deleted successfully');
           this.getFetchLeadData();
@@ -2728,9 +2829,9 @@ export class LeadsComponent extends BaseComponent {
       next: (res: any) => {
         this.companyLst = res;
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      }
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // }
     });
   }
   
@@ -2772,34 +2873,36 @@ export class LeadsComponent extends BaseComponent {
     this.filterApplied= false;
   }
 
-  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string },modal:any) {
-    this.switchService.ViewCrmLeads(data.leadId).subscribe(
-    (res) => {
-      const leadsEntry = res.leadsEntry;
-      leadsEntry.campaignId = data.campaignId;
-      // moveCampaign = data.campaignId;
-      leadsEntry.updatedBy = JSON.parse(this.userData).email;
-      leadsEntry.updatedTime = new Date().toISOString();
-      this.switchService.EditCrmLeads(leadsEntry).subscribe(
-        (res) => {
-          modal.close();
-            this.submitted = false;
-            this.leadForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          this.leadList = this.leadList.filter(
-          (lead: any) => lead.leadId !== leadsEntry.leadId
-          );
-        },
-        (err) => {
-          
-        }
-      );
-    },
-  );
+  moveLeadToAnotherCampaign(
+    data: { leadId: string; campaignId: string } | any[],
+    modal: any
+  ) {
+    const payloadArray = Array.isArray(data) ? data : [data];
+    this.currentCampaignId = this.campaignId;
+    const leadIds = payloadArray.map(item => item.leadId);
+    const campaignId = payloadArray[0].campaignId;
+    console.log(campaignId, leadIds);
+     if (!this.isCreateCampaignOpen) {
+    this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
+      next: (res) => {
+        this.leadList = this.leadList.filter(
+          (lead: any) => !leadIds.includes(lead.leadId)
+        );
+        this.toastr.success(`Leads moved successfully!`);
+        modal.close();
+        this.submitted = false;
+        this.leadForm.reset();
+        this.getFetchLeadData(this.currentCampaignId);
+      },
+      error: (err) => {
+        console.error('Error moving leads:', err);
+      }
+    });
+    }
   }
+
+
+
   onAppointmentSelect(selectedAppointment: any) {
   if (selectedAppointment) {
     this.appointmentForm.patchValue({
@@ -2831,13 +2934,13 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-
+    const selectedIds = this.selectedLeads.map((l: any) => l.leadId);
     const selectedLeadObjects = this.dataSource.data.filter((lead: any) =>
-      this.selectedLeads.includes(lead.leadId)
+      selectedIds.includes(lead.leadId)
     );
+
     const emailList = selectedLeadObjects.map((lead: any) => lead.email).filter(Boolean);
     const emailString = emailList.join(', ');
-
     this.sendLeadForm.patchValue({
       email: emailString
     });
@@ -2884,9 +2987,9 @@ export class LeadsComponent extends BaseComponent {
           this.toastr.error(res.message || 'Mail sending failed.');
         }
       },
-      error: () => {
-        this.toastr.error('An error occurred while sending mail.');
-      }
+      // error: () => {
+      //   this.toastr.error('An error occurred while sending mail.');
+      // }
     });
   }
 
@@ -2895,35 +2998,31 @@ export class LeadsComponent extends BaseComponent {
       this.toastr.warning('Please select at least one lead');
       return;
     }
-    // const duplicateLead = this.selectedLeads.find((lead: any) =>
-    //   this.taskList.some((task: any) => task.leadId === lead.id)
-    // );
-
-    // if (duplicateLead) {
-    //   this.toastr.warning(`Task already created for lead`);
-    //   return; 
-    // }
-    let payload = { ...this.taskForm.value };
-    this.taskSubmitted = true;
-    payload.leadIdList = this.selectedLeads
-      .filter((id: any) => id !== '' && id !== null && id !== undefined)
-      .map((id: any) => Number(id));
-    if (Array.isArray(payload.assignedTo)) {
-      payload.assignedTo = payload.assignedTo.join(',');
+    const leadsWithoutExecutive = this.selectedLeads.filter(lead => !lead.executive);
+    if (leadsWithoutExecutive.length > 0) {
+      this.toastr.warning('Please assign an executive before creating the task.');
+      return;
     }
-      this.switchService.createTask(payload).subscribe({
-        next: (res) => {
-          this.toastr.success('Task created successfully!');
-          this.taskForm.reset();
-          this.selectedLeads = [];
-          this.taskSubmitted = false;
-          modal.close();
-          this.getFetchLeadData();
-        },
-        error: (err) => {
-          this.toastr.error('Something went wrong!');
-        }
-      });
+    this.taskSubmitted = true;
+    let payload: any = {
+      ...this.taskForm.value,
+      leadIdList: this.selectedLeads.map((lead: any) => lead.leadId),
+      assignedTo: this.selectedLeads
+        .filter((lead: any) => lead.executive)
+        .map((lead: any) => lead.executive)  
+        .join(',')                        
+    };
+    this.switchService.createTask(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Task created successfully!');
+        this.taskForm.reset();
+        this.selectedLeads = [];
+        this.selectedLeadForAppointment = null;
+        this.taskSubmitted = false;
+        modal.close();
+        this.getFetchLeadData();
+      }
+    });
   }
 
   getTaskStatusColor(status: string): string {
@@ -3047,19 +3146,18 @@ export class LeadsComponent extends BaseComponent {
           ...(res.assignedTaskList || [])
         ];
       },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
-      }
+      // error: (err) => {
+      //   this.toastr.error('Something went wrong!');
+      // }
     });
   }
   openCompletionModal(content: any, lead: any) {
     this.selectedLead = lead;
     this.leadId = lead.leadId;
-    console.log(this.leadId);
     this.currentStep = 1;  
     this.completionForm.reset();
     this.leadCompletionsubmitted = false;
-    this.modalService.open(content, { centered: true });
+    this.modalService.open(content, { centered: true,scrollable : true });
   }
 
 
@@ -3078,7 +3176,7 @@ export class LeadsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType
     };
-    console.log('status',payload);
+    this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {
         this.toastr.success('lead completed successfully');
@@ -3086,11 +3184,13 @@ export class LeadsComponent extends BaseComponent {
         if (this.selectedLead) {
           this.selectedLead.completionStatus = "completed"; 
         }
+        this.uploadSpinner = false;
         modal.close();
+        this.currentStep = 1;
       },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
-      }
+      // error: (err) => {
+      //   this.toastr.error('Something went wrong!');
+      // }
     });
   }
 
@@ -3104,8 +3204,251 @@ export class LeadsComponent extends BaseComponent {
     }
     this.updateCompletionStatus(modal);
 
-    modal.close();
-    this.currentStep = 1;
+    
   }
+  chartOptions2:any = {
+  series: [{
+    data: [0, 32, 18, 58]
+  }],
+  chart: {
+    height: 115,
+    width: 180,
+    type: 'area',
+    fontFamily: 'Roboto, Arial, sans-serif',
+    foreColor: '#5d6162',
+    zoom: {
+      enabled: false
+    },
+    sparkline: {
+      enabled: true
+    }
+  },
+  tooltip: {
+    enabled: true,
+    x: {
+      show: false
+    },
+    y: {
+      title: {
+        formatter: function (seriesName: any) {
+          return ''
+        }
+      }
+    },
+    marker: {
+      show: false
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  stroke: {
+    curve: 'smooth',
+    width: [1],
+  },
+  title: {
+    text: undefined,
+  },
+  grid: {
+    borderColor: 'transparent',
+  },
+  xaxis: {
+    crosshairs: {
+      show: false,
+    }
+  },
+  colors: ["rgb(69, 214, 91)"],
+
+  fill: {
+    type: 'gradient',
+    gradient: {
+      opacityFrom: 0.5,
+      opacityTo: 0.2,
+      stops: [0, 60],
+    }
+  },
+  };
+  chartOptions3:any = {
+    series: [{
+      data: [0, 32, 18, 58]
+    }],
+    chart: {
+      height: 115,
+      width: 180,
+      type: 'area',
+      fontFamily: 'Roboto, Arial, sans-serif',
+      foreColor: '#5d6162',
+      zoom: {
+        enabled: false
+      },
+      sparkline: {
+        enabled: true
+      }
+    },
+    tooltip: {
+      enabled: true,
+      x: {
+        show: false
+      },
+      y: {
+        title: {
+          formatter: function (seriesName: any) {
+            return ''
+          }
+        }
+      },
+      marker: {
+        show: false
+      }
+    },
+    dataLabels: {
+      enabled: false
+    },
+    stroke: {
+      curve: 'smooth',
+      width: [1],
+    },
+    title: {
+      text: undefined,
+    },
+    grid: {
+      borderColor: 'transparent',
+    },
+    xaxis: {
+      crosshairs: {
+        show: false,
+      }
+    },
+    colors: ["rgb(231, 76, 60)"],
+
+    fill: {
+      type: 'gradient',
+      gradient: {
+        opacityFrom: 0.5,
+        opacityTo: 0.2,
+        stops: [0, 60],
+      }
+    },
+  };
+
+  formatLocalDateTime(dateTime: string | Date): string {
+    if (!dateTime) return "";
+
+    let dateTimeString = dateTime.toString();
+
+    if (typeof dateTime === "object" && dateTime instanceof Date) {
+        dateTimeString = dateTime.toISOString();
+    }
+
+    const normalized = dateTimeString.split('.')[0];
+    const date = new Date(normalized + "Z");
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const dd = pad(date.getDate());
+    const mmm = months[date.getMonth()];
+    const yyyy = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = pad(date.getMinutes());
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  }
+
+  goBackToCampaigns() {
+    this.router.navigate(['/dashboard/campaigns']);
+  }
+
+ openBulkMove(content31: any, selectedLeads: any[]) {
+    if (!selectedLeads || selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead.');
+      return;
+    }
+
+    this.selectedLeads = selectedLeads;
+    this.getCampaignData(); // load campaigns
+    this.firstModalRef = this.modalService.open(content31, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+  }
+  openCreateCampaign(content15: any) {
+    this.isCreateCampaignOpen = true;
+    this.secondModalRef = this.modalService.open(content15, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    this.secondModalRef.result.finally(() => {
+      this.isCreateCampaignOpen = false;
+    });
+  }
+   submitCampaign(modal: any) {
+    this.campaignSubmitted = true;
+    if (this.campaignForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    this.isSubmitting = true;
+    let agents = this.campaignForm.get('agents')?.value;
+    if (Array.isArray(agents)) {
+      agents = agents.join(',');
+    }
+    let payload = {
+      ...this.campaignForm.value,
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+      agents: agents,
+      isAutoCreationRequired: this.campaignForm.value.isAutoCreationRequired ?? false
+    };
+    if (this.selectedCampgnId && this.selectedCampaignId) {
+      payload.campgnId = this.selectedCampgnId;
+      payload.campaignId = this.selectedCampaignId;
+    }
+    this.switchService.saveCampaignData(payload).subscribe({
+      next: (res: any) => {
+        this.isSubmitting = false;
+        if (res.status === true || res.campaignId || res.createdDate) {
+          const name = res.campaignName;
+          this.toastr.success(`${name} created successfully!`);
+          modal.close();
+          this.campaignForm.reset();
+          this.campaignForm.patchValue({
+            companyName: this.userCompanyName,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+          });
+          this.getCampaignData();
+          this.selectedCampgnId = null;
+          this.selectedCampaignId = null;
+        } 
+      }
+    });
+  }
+  
+  openCreateModal(content: any) {
+  // Clear previously selected campaign IDs
+   this.isEditMode = false;
+  this.selectedCampgnId = null;
+  this.selectedCampaignId = null;
+
+  // Reset the form completely
+  this.campaignForm.reset();
+
+  // Open the modal using your existing open method
+  this.open(content);
+  }
+
+  
+
+
 
 }
