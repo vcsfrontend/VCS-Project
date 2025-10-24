@@ -138,8 +138,11 @@ export class BoqComponent extends BaseComponent {
     orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
     projectLst: any = []; boqproject: any; showAllProposals = false; libraryList: any[] = [];
     libraryListData: any[] = [];objectKeys = Object.keys;
-    showLeftArrow = false; showRightArrow = false;
-    thumbsSwiper: any;
+    showLeftArrow = false; showRightArrow = false;step = 1;submittedStep1:boolean=false;
+    submitted: boolean = false; projectConfigList: string[] = []; 
+    showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
+    // selectedColumns: Set<string> = new Set();
+    thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -244,7 +247,7 @@ export class BoqComponent extends BaseComponent {
     }
 
     openRights4(content4: any) {
-        this.modalService.open(content4, { centered: true, size: 'lg' });
+        this.modalService.open(content4, { centered: true, size: 'md' });
     }
 
     openRights5(content6: any, proposal: any) {
@@ -322,6 +325,22 @@ export class BoqComponent extends BaseComponent {
             type: this.userType
         });
         this.proposalForm = this.fb.group({
+            margin:[''],
+            discount: [0, [Validators.required]],
+            others: [0, [Validators.required]],
+            clientName: ['',],
+            clientAddress: ['',],
+            clientEmail:[''],
+            projectConfig: [''],
+            dedEmail: [''],
+            dedMobile: [''],
+            dedName: [''],
+            rmdEmail: [''],
+            rmdMobile: [''],
+            projectName: [''],
+            flatNo: [''],
+            rmdName: [''],
+            clientMobileNumber:['',[Validators.required]],
             orderFrom: [''],
             orderFor: [this.userCompanyName],
             vendorId: [''],
@@ -333,6 +352,12 @@ export class BoqComponent extends BaseComponent {
             proposalContId: [''],
             designId: [''],
             companyCode: this.userCompanyCode,
+            tdmc: [0.0, [Validators.required]],
+            gmc: [0.0, [Validators.required]],
+            gsc: [0.0, [Validators.required]],
+            tdsc: [0.0, [Validators.required]],
+            gpa: [0.0, [Validators.required]],
+            tdpa: [0.0, [Validators.required]],
             email: this.userEmail,
             type: this.userType,
             updatedBy: this.userName,
@@ -1781,5 +1806,169 @@ scrollTabs(direction: 'left' | 'right') {
     this.showRightArrow = container.scrollWidth > container.clientWidth + container.scrollLeft;
   }
 
+  prevStep() {
+    if (this.step > 1) {
+      this.step--;
+    }
+  }
+  nextStep() {
+  if (this.step === 1) {
+    if (
+      this.proposalForm.get('clientName')?.invalid ||
+      this.proposalForm.get('clientAddress')?.invalid ||
+      this.proposalForm.get('clientMobileNumber')?.invalid
+    ) {
+      this.submittedStep1 = true; 
+      return;
+    }
+    this.step = 2;
+  } 
+  else if (this.step === 2) {
+    if (this.proposalForm.get('others')?.invalid) {
+      return;
+    }
+    this.step =3;
+    }
+    else if ( this.step ===3){
+        this.step =4 ;
+    }
+    else if(this.step===4){
+        return;
+        }
+    }
+    
+
+  allowOnlyNumbers(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '');
+  }
+  allowOnlynum(event: KeyboardEvent) {
+    const allowedChars = '0123456789.';
+    const inputChar = event.key;
+
+    if (
+      ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
+    ) {
+      return;
+    }
+
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
+      event.preventDefault();
+    }
+  }
+  get g() {
+    return this.proposalForm.controls;
+  }
+   onDedSelected(selectedUser: any): void {
+    if (selectedUser?.email === 'Other') {
+    this.showOtherDesignerFields = true;
+
+    // Clear auto-fill fields
+    this.proposalForm.patchValue({
+      dedMobile: '',
+      dedName: ''
+    });
+    } else {
+    this.showOtherDesignerFields = false;
+    if (selectedUser) {
+      this.proposalForm.patchValue({
+        dedMobile: selectedUser.phoneNumber || '',
+        dedName: selectedUser.username || ''
+      });
+    } else {
+      this.proposalForm.patchValue({
+        dedMobile: '',
+        dedName: ''
+      });
+    }
+  }
+  }
+
+  onUserSelected(selectedUser: any): void {
+  if (selectedUser?.email === 'Other') {
+    this.showOtherRelationshipFields = true;
+
+    // Clear auto-fill fields
+    this.proposalForm.patchValue({
+      rmdMobile: '',
+      rmdName: ''
+    });
+    } else {
+      this.showOtherRelationshipFields = false;
+      if (selectedUser) {
+        this.proposalForm.patchValue({
+          rmdMobile: selectedUser.phoneNumber || '',
+          rmdName: selectedUser.username || ''
+        });
+      } else {
+        this.proposalForm.patchValue({
+          rmdMobile: '',
+          rmdName: ''
+        });
+      }
+    }
+  }
+  getProjectConfig(){
+    let payload = {
+      companyCode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchProjectConfig(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+           const configs: string[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const value = res[`f${i}`];
+            if (value) configs.push(value);
+          }
+          this.projectConfigList = configs;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        // this.toastr.error(error.statusText || "An error occurred while saving the product.");
+      }
+    });
+  }
+   toggleGraniteFields() {
+    this.graniteEnabled = !this.graniteEnabled;
+    if (!this.graniteEnabled) {
+      this.proposalForm.patchValue({ gpa: 0, gsc: 0,gmc:0 });
+    }
+  }
+  toggleTDMCFields() {
+    this.TDMCEnabled = !this.TDMCEnabled;
+    if (!this.TDMCEnabled) {
+      this.proposalForm.patchValue({ tdmc: 0, tdpa: 0,tdsc:0 });
+    }
+  }
+
+  getMarginData(){
+    let payload = {
+      companycode: JSON.parse(this.userData).companyCode,
+      email: JSON.parse(this.userData).email,
+      type: JSON.parse(this.userData).type
+    };
+    this.switchService.fetchDynamicMargin(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          const configs: { name: string, percent: number }[] = [];
+          for (let i = 1; i <= 10; i++) {
+            const name = res[`f${i}`];
+            const percent = res[`f${i}Percent`];
+            if (name) {
+              configs.push({ name, percent: percent || 0 });
+            }
+          }
+          this.projectMarginList = configs;
+        }
+      },
+      error: (error) => {
+      }
+    });
+  }
 
 }

@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
-import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -88,6 +88,9 @@ export class DealsComponent extends BaseComponent {
   notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;selecteTemplateFormSubmitted:boolean=false;
   crmRole:string = '';LeadToCampaignForm!: FormGroup;leadList :any[]=[];  selectedLeadData: any;
   campaignList: any[] = [];selectedCampaign: any;
+  campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
+  campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
+  isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -112,7 +115,8 @@ export class DealsComponent extends BaseComponent {
   @ViewChild('sort2') sort2!: MatSort;
   @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;
   @ViewChild('followupModal') followupModal!: TemplateRef<any>;
-  
+  firstModalRef!: NgbModalRef;
+  secondModalRef!: NgbModalRef;
 
   public leadForm!: FormGroup;
   public submitted = false;
@@ -431,6 +435,26 @@ export class DealsComponent extends BaseComponent {
       campaignId: [this.campaignId,],
     });
 
+    this.campaignForm = this.fb.group({
+      campaignId: [0],
+      campaignName: ['', [Validators.required, Validators.minLength(4)]],
+      pipeline: ['',],
+      campaignPoc: [''],
+      agents: [[]],
+      campaignPriority: [''],
+      leadDuplicacy: [''],
+      companyName: [this.userCompanyName],
+      companyCode: [this.userCompanyCode],
+      email: [this.userEmail],
+      type: [this.userType],
+      isAutoCreationRequired:[false],
+      createdDate: new Date().toISOString(),
+      campgnId: [''],
+
+    });
+    if (this.userType === 1) {
+      this.campaignForm.patchValue({ campaignPoc: this.userEmail });
+    }
 
     this.filterLeadForm = this.fb.group({
       action:[''],
@@ -731,7 +755,9 @@ export class DealsComponent extends BaseComponent {
   get k() {
     return this.selectTemplateForm.controls;
   }
-
+  get t() {
+    return this.campaignForm.controls;
+  }
   onSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue ((JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
     this.leadForm.get('executive')?.setValue('');
@@ -2933,7 +2959,76 @@ formatLocalDateTime(dateTime: string | Date): string {
 
     return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
   }
+  openBulkMove(content31: any, selectedLeads: any[]) {
+    if (!selectedLeads || selectedLeads.length === 0) {
+      this.toastr.warning('Please select at least one lead.');
+      return;
+    }
 
+    this.selectedLeads = selectedLeads;
+    this.getCampaignData();
+    this.firstModalRef = this.modalService.open(content31, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+  }
+ openCreateCampaign(content15: any) {
+    this.isCreateCampaignOpen = true;
+    this.secondModalRef = this.modalService.open(content15, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: false,
+    });
+
+    this.secondModalRef.result.finally(() => {
+      this.isCreateCampaignOpen = false;
+    });
+  }
+  submitCampaign(modal: any) {
+    this.campaignSubmitted = true;
+    if (this.campaignForm.invalid) {
+      this.toastr.error("Please fill in all required fields.");
+      return;
+    }
+    this.isSubmitting = true;
+    let agents = this.campaignForm.get('agents')?.value;
+    if (Array.isArray(agents)) {
+      agents = agents.join(',');
+    }
+    let payload = {
+      ...this.campaignForm.value,
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+      agents: agents,
+      isAutoCreationRequired: this.campaignForm.value.isAutoCreationRequired ?? false
+    };
+    if (this.selectedCampgnId && this.selectedCampaignId) {
+      payload.campgnId = this.selectedCampgnId;
+      payload.campaignId = this.selectedCampaignId;
+    }
+    this.switchService.saveCampaignData(payload).subscribe({
+      next: (res: any) => {
+        this.isSubmitting = false;
+        if (res.status === true || res.campaignId || res.createdDate) {
+          const name = res.campaignName;
+          this.toastr.success(`${name} created successfully!`);
+          modal.close();
+          this.campaignForm.reset();
+          this.campaignForm.patchValue({
+            companyName: this.userCompanyName,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+          });
+          this.getCampaignData();
+          this.selectedCampgnId = null;
+          this.selectedCampaignId = null;
+        } 
+      }
+    });
+  }
   getCampaignData() {
     const payload = {
       email: this.userEmail,
@@ -2966,98 +3061,66 @@ formatLocalDateTime(dateTime: string | Date): string {
       // },
     });
   }
-
-  leadToCampaignSubmit(modal: any) {
-  const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
-  const currentCampaignId = this.campaignId;
-  let payloadArray: any[] = [];
-  if (this.selectedLeads && this.selectedLeads.length > 0) {
-    payloadArray = this.selectedLeads.map((lead: any) => ({
-      leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
-      campaignId: selectedCampaignId
-    }));
-  }
-  else if (this.selectedLeadData) {
-    payloadArray = [
-      {
-        leadId: this.selectedLeadData.leadId.toString(),
-        campaignId: selectedCampaignId
-      }
-    ];
-  }
-    this.moveLeadToAnotherCampaign(payloadArray, modal);
   
-
-  this.getfetchLeadsIndividual();
+  openCreateModal(content: any) {
+  this.isEditMode = false;
+  this.selectedCampgnId = null;
+  this.selectedCampaignId = null;
+  this.campaignForm.reset();
+  this.open(content);
+  }
+  leadToCampaignSubmit(modal: any) {
+    const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
+    const currentCampaignId = this.campaignId;
+    let payloadArray: any[] = [];
+    if (this.selectedLeads && this.selectedLeads.length > 0) {
+      payloadArray = this.selectedLeads.map((lead: any) => ({
+        leadId: typeof lead === 'object' ? lead.leadId.toString() : lead.toString(),
+        campaignId: selectedCampaignId
+      }));
+    }
+    else if (this.selectedLeadData) {
+      payloadArray = [
+        {
+          leadId: this.selectedLeadData.leadId.toString(),
+          campaignId: selectedCampaignId
+        }
+      ];
+    }
+    this.moveLeadToAnotherCampaign(payloadArray, modal);
+     if (!this.isCreateCampaignOpen) {
+    this.getfetchLeadsIndividual();
+     }
     this.campaignId = selectedCampaignId;
   }
-
-  moveLeadToAnotherCampaign(data: { leadId: string; campaignId: string } | any[], modal: any) {
-  const payloadArray = Array.isArray(data) ? data : [data];
-
-  let processedCount = 0;
-
-  payloadArray.forEach((item) => {
-    this.switchService.ViewCrmLeads(item.leadId).subscribe({
+  moveLeadToAnotherCampaign(
+    data: { leadId: string; campaignId: string } | any[],
+    modal: any
+  ) {
+    const payloadArray = Array.isArray(data) ? data : [data];
+    this.currentCampaignId = this.campaignId;
+    const leadIds = payloadArray.map(item => item.leadId);
+    const campaignId = payloadArray[0].campaignId;
+    console.log(campaignId, leadIds);
+     if (!this.isCreateCampaignOpen) {
+    this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
       next: (res) => {
-        const leadsEntry = res.leadsEntry;
-        leadsEntry.campaignId = item.campaignId;
-        leadsEntry.updatedBy = JSON.parse(this.userData).email;
-        leadsEntry.updatedTime = new Date().toISOString();
-
-        this.switchService.EditCrmLeads(leadsEntry).subscribe({
-          next: (res) => {
-            this.leadList = this.leadList.filter(
-              (lead: any) => lead.leadId !== leadsEntry.leadId
-            );
-
-            this.toastr.success(
-              `Lead ${leadsEntry.leadId} moved successfully!`,
-              'Lead Movement',
-              {
-                timeOut: 3000,
-                positionClass: 'toast-top-right',
-              }
-              
-            );
-            processedCount++;
-            // Close modal only after all leads are processed
-            if (processedCount === payloadArray.length) {
-              modal.close();
-              this.submitted = false;
-              this.leadForm.reset();
-            }
-            this.getfetchLeadsIndividual();
-          },
-          error: (err) => {
-            this.toastr.error(
-              `Failed to move lead ${item.leadId}`,
-              'Error',
-              { timeOut: 3000 }
-            );
-          },
-        });
-      },
-      
-      error: () => {
-        this.toastr.error(
-          `Failed to fetch lead ${item.leadId} details`,
-          'Error',
-          { timeOut: 3000 }
+        this.leadList = this.leadList.filter(
+          (lead: any) => !leadIds.includes(lead.leadId)
         );
+        this.toastr.success(`Leads moved successfully!`);
+        modal.close();
+        this.submitted = false;
+        this.leadForm.reset();
+        this.getfetchLeadsIndividual();
       },
+      error: (err) => {
+        console.error('Error moving leads:', err);
+      }
     });
-  });
+    }
   }
-  
-  openBulkMove(content31: any, selectedLeads: any[]) {
-  if (!selectedLeads || selectedLeads.length === 0) {
-    this.toastr.warning('Please select at least one lead.');
-    return;
-  }
-  this.selectedLeads = selectedLeads;
-  this.modalService.open(content31, { centered: true });
-  }
+
 
 
 }
