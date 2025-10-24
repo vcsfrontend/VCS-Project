@@ -115,7 +115,7 @@
         'transition': 'max-height 0.5s ease' }" *ngIf="((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList?.length : listNew?.length) > 0">
     <div class="row">
       <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"  *ngFor="let campaign of ((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList : listNew)">
-        <div class="card custom-card fixed-height-card kt shadow-sm card-hover-zoom" (click)="viewCampaignLeads(campaign)">
+        <div class="card custom-card fixed-height-card kt shadow-sm card-hover-zoom">
           <div class="card-header d-flex align-items-start justify-content-between">
             <div class="align-items-center">
               <!-- <span class="avatar avatar-rounded p-1 bg-light" ngbTooltip="{{ campaign.campaignPoc }}" placement="top">
@@ -164,7 +164,7 @@
               </div>
             </div>
           </div>
-          <div class="card-body card-scroll">
+          <div class="card-body card-scroll " (click)="viewCampaignLeads(campaign)">
             <div class="mb-1">Total Leads : <span class="badge bg-info-transparent">{{ leadCounts[campaign.campgnId] ||
                 0 }}</span></div>
             <div>
