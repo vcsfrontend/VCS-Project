@@ -229,20 +229,15 @@
                                     <div *ngIf="f['phoneNumber'].errors['required']">Phone Number is required</div>
                                 </div>
                             </div>
-
                             <div class="col-xl-6" *ngIf="showCity">
                                 <label for="signup-city" class="form-label text-default"><strong>City</strong><span
                                         class="text-danger">*</span></label>
-                                <select class="form-select form-control form-control-lg " id="city"
-                                    formControlName="city" [(ngModel)]="city"
-                                    [ngClass]="{ 'is-invalid': submitted && f['city'].errors }">
-                                    <option value="" disabled selected>Select</option>
-                                    <option *ngFor="let c of cityList" [value]="c.city">{{c.city}} </option>
-                                    <!-- <option value="Bangalore">Bangalore</option>
-                                        <option value="Chennai">Chennai</option>
-                                        <option value="Delhi">Delhi</option>
-                                        <option value="Hyderabad">Hyderabad</option> -->
-                                </select>
+                            
+                                <ng-select [items]="cityList" bindLabel="city" bindValue="city" placeholder="Select"
+                                    [ngClass]="{ 'is-invalid': submitted && f['city'].errors }" formControlName="city" [(ngModel)]="city"
+                                    [clearable]="true" [searchable]="true">
+                                </ng-select>
+                            
                                 <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
                                     <div *ngIf="f['city'].errors['required']">City is required</div>
                                 </div>
@@ -284,8 +279,7 @@
                                 <div *ngIf="submitted && isOtherOrReferral" class="text-danger">
                                     <div *ngIf="!ref">This field is required</div>
                                 </div>
-                            </div>                            
-
+                            </div>      
                             <div class="col-xl-12">
                                 <input type="checkbox" class="check-box" [(ngModel)]="agree"
                                     [ngModelOptions]="{standalone:true}">&nbsp;
@@ -300,7 +294,7 @@
                         </div>
                         <div class="d-grid gap-2 col-8 mx-auto mt-4">
                             <button
-                                class="btn btn-lg bg-light p-2 font-weight-bold text-dark bg-opacity-25 border border-dark"
+                                class="btn-grad"
                                 (click)="onSignup()" [disabled]="btnDisable">Create Account</button>
                         </div>
                     </form>

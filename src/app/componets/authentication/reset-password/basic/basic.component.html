@@ -9,7 +9,7 @@
                     <div class="row gy-3">
                         <div *ngIf="submt">
                             <div class="col-xl-12" *ngIf="isEmail">
-                                <label for="signin-username" class="form-label text-default"><strong>Email</strong></label>
+                                <label for="signin-username" class="form-label text-default d-block"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail h-4 w-4 text-indigo-600"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg><span>Email</span></label>
                                 <input type="text" class="form-control form-control-lg " id="signin-username"  
                                 [(ngModel)]="email" [ngModelOptions]="{standalone: true}" placeholder="Enter your registered Email">
                                 <!-- formControlName="email" [ngModel]="email" placeholder="email"> -->
@@ -25,7 +25,7 @@
                                 </div> -->
                             </div>
                             <div class="d-grid mt-4" *ngIf="isEmail">
-                                <button  class="btn btn-lg border-dark p-2 " 
+                                <button  class="btn-grad"
                                 (click)="onEmail()"><strong>Verify</strong></button>
                             </div>
                             <div class="col-xl-12" *ngIf="!isEmail">
@@ -99,7 +99,7 @@
                     </div>
                 </form>
                     <div class="text-center">
-                        <p class="text-dark mt-3"><strong>Already have an account? </strong><a routerLink="/auth/login" class="text-primary"><strong> Sign In</strong></a></p>
+                        <p class="fw-normal mt-3">Already have an account? <a routerLink="/auth/login" class="text-primary"><strong> Sign In</strong></a></p>
                     </div>
                 </div>
             </div>

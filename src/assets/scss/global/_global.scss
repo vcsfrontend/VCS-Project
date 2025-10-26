@@ -744,10 +744,8 @@ div:where(.swal2-container) div:where(.swal2-validation-message) {
 
 .ng-pristine {
   background-color: var(--custom-white);
-  // border: 1px solid $default-border;
-  border-radius: 0.85rem;
-  // padding-inline-start: 0.5rem;
-  color: $default-text-color;
+  border-radius: 0.5rem;
+  color: var(--default-text-color);
 }
 
 .filepond--file-status {

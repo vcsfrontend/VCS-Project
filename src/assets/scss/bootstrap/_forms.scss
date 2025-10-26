@@ -1,15 +1,14 @@
 .form-control {
-  border-color: $input-border;
+  border-color: #bdb8b8;
   color: $default-text-color;
   background-color: $form-control-bg;
   font-size: 0.875rem;
   font-weight: $default-font-weight;
   line-height: 1.8;
-  border-radius: 0.85rem;
+  border-radius: 0.5rem;
 
   &:focus {
     box-shadow: none;
-    border-color: $input-border;
     background-color: $custom-white;
     box-shadow: 1px 0px 0.125rem 0 rgba(0,0,0,.05);
     color: $default-text-color;
