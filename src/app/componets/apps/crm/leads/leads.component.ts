@@ -95,6 +95,7 @@ export class LeadsComponent extends BaseComponent {
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
+  moveCampaignSubmit:boolean=false;
   crmStaticStages = [
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-secondary text-secondary' },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-danger text-danger' },
@@ -2292,7 +2293,6 @@ export class LeadsComponent extends BaseComponent {
       });
     }
   }
-
   convertTo12HourFormat(time24: string): string {
     if (!time24) return '';
     const [hourStr, minuteStr] = time24.split(':');
@@ -2360,8 +2360,9 @@ export class LeadsComponent extends BaseComponent {
       ];
     }
     this.moveLeadToAnotherCampaign(payloadArray, modal);
-
-    this.getFetchLeadData(this.currentCampaignId);
+    if(this.moveCampaignSubmit){
+        this.getFetchLeadData(this.currentCampaignId);
+    }
     this.campaignId = selectedCampaignId;
   }
 
@@ -2877,6 +2878,7 @@ export class LeadsComponent extends BaseComponent {
     data: { leadId: string; campaignId: string } | any[],
     modal: any
   ) {
+    this.moveCampaignSubmit=true
     const payloadArray = Array.isArray(data) ? data : [data];
     this.currentCampaignId = this.campaignId;
     const leadIds = payloadArray.map(item => item.leadId);
@@ -2892,7 +2894,7 @@ export class LeadsComponent extends BaseComponent {
         modal.close();
         this.submitted = false;
         this.leadForm.reset();
-        this.getFetchLeadData(this.currentCampaignId);
+        // this.getFetchLeadData(this.currentCampaignId);
       },
       error: (err) => {
         console.error('Error moving leads:', err);
