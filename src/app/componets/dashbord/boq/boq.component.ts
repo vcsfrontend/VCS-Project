@@ -1038,7 +1038,16 @@ export class BoqComponent extends BaseComponent {
     }
 
     proposalFormSubmit(modal: any) {
+        console.log('proposal form submutte')
+        if (this.proposalForm.invalid) {
+            this.proposalForm.markAllAsTouched();
+            return;
+        }  
         const formValue = this.proposalForm.value;
+        console.log('Proposal Form Data (Formatted):');
+        console.log(JSON.stringify(formValue, null, 2));
+        console.log('Submitted Form:', formValue);
+        console.log(formValue);
         const selectedData: any = {};
         let totalAmount = 0;
         const seenBoqIds = new Set<number>();
@@ -1123,11 +1132,11 @@ export class BoqComponent extends BaseComponent {
                 inProposal: "inprop",
             };
         });
-        this.switchService.updateElementData(payloads).subscribe({
-            next: () => {
-                this.createProposal(proposalPayload, modal);
-            },
-        });
+        // this.switchService.updateElementData(payloads).subscribe({
+        //     next: () => {
+        //         this.createProposal(proposalPayload, modal);
+        //     },
+        // });
     }
 
     private createProposal(proposalPayload: any, modal: any) {

@@ -436,7 +436,7 @@ export class DealsComponent extends BaseComponent {
     });
 
     this.campaignForm = this.fb.group({
-      campaignId: [0],
+      campaignId: [],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
       pipeline: ['',],
       campaignPoc: [''],
