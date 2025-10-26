@@ -416,7 +416,7 @@ color: #dfdfdf;
     font-size: 0.875rem;
     font-weight: var(--default-font-weight);
     line-height: 1.8;
-    border-radius: 0.85rem;
+    border-radius: 0.5rem;
   
     &:focus {
       box-shadow: none;
@@ -513,7 +513,8 @@ textarea:focus {
 }
 
 .ng-select {
-  border-radius: 0.85rem !important;
+  border-radius: 0.5rem !important;
+  border-color: #aaa5a5;
 }
 
 .ng-select.ng-select-focused .ng-select-container {

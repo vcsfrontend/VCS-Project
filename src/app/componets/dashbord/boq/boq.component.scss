@@ -446,3 +446,35 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 //   color: #000 !important;           
 //   border: 1px solid #006699 !important; 
 // }
+.hover-select-wrapper {
+  position: relative;
+  display: inline-block;
+  min-width: 200px;
+}
+
+.code-display {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.hover-select-wrapper:hover .code-display {
+  background-color: #f8f9fa;
+}
+
+.hover-select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 220px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hover-select.ng-select-opened {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 999;
+}

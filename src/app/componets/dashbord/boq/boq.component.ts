@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, FormArray } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
 import { SharedModule } from '../../../../app/shared/common/sharedmodule';
@@ -236,8 +236,6 @@ export class BoqComponent extends BaseComponent {
         this.modalService.open(content45, { backdrop: 'static' });
     }
 
-
-
     onCreateProposalClick(content: any) {
         if (!this.selectedElement || this.selectedElement.length === 0) {
             this.toastr.warning("Please select at least one Element");
@@ -290,7 +288,7 @@ export class BoqComponent extends BaseComponent {
             elementUrl: [''],
             elementName: [''],
             elementDescription: [''],
-            codeAndCategory: [''],
+            codeAndCategory: [],
             orderStatus: [''],
             itemType: [''],
             source: [''],
@@ -543,72 +541,87 @@ export class BoqComponent extends BaseComponent {
     }
 
     updateDropdownField(
-        field: 'itemType' | 'orderStatus' | 'uom' | 'status' | 'codeAndCategory',
-        selectedValue: string | { name?: string, code?: string },
-        element: any
-    ) {
-        if (!element?.boqId) {
-            this.toastr.warning('Invalid element selected');
-            return;
-        }
-        let fieldValue: string;
-        if (typeof selectedValue === 'string') {
-            fieldValue = selectedValue;
-        } else if (field === 'codeAndCategory') {
-            fieldValue = selectedValue?.code || '';
-        } else {
-            fieldValue = selectedValue?.name || '';
-        }
-        this.elementForm.patchValue({ [field]: fieldValue });
-        let brandOrMake = element.brandOrMake;
-        if (field === 'itemType' && !brandOrMake && element.elementNameAndDescription) {
-            const brandLine = element.elementNameAndDescription.split('\n')[1];
-            if (brandLine?.includes(':')) {
-                brandOrMake = brandLine.split(':')[1]?.trim() || '';
-            }
-        }
-        const payload = [{
-            boqId: element.boqId ?? 0,
-            elementUrl: element.elementUrl ?? '',
-            elementNameAndDescription: element.elementNameAndDescription ?? '',
-            codeAndCategory: field === 'codeAndCategory' ? fieldValue : element.codeAndCategory ?? '',
-            orderStatus: field === 'orderStatus' ? fieldValue : element.orderStatus ?? '',
-            itemType: field === 'itemType' ? fieldValue : element.itemType ?? '',
-            uom: field === 'uom' ? fieldValue : element.uom ?? '',
-            status: field === 'status' ? fieldValue : element.status ?? '',
-            source: element.source ?? '',
-            length: element.length ?? 0,
-            breadth: element.breadth ?? 0,
-            height: element.height ?? 0,
-            quantity: element.quantity ?? 0,
-            draftQuantity: element.draftQuantity ?? 0,
-            clientRate: element.clientRate ?? 0,
-            finalAmount: element.finalAmount ?? 0,
-            brandOrMake: brandOrMake ?? element.brandOrMake ?? '',
-            discount: element.discount ?? 0,
-            serviceCharge: element.serviceCharge ?? 0,
-            baseAmount: element.baseAmount ?? 0,
-            budgetRate: element.budgetRate ?? 0,
-            hsn: element.hsn ?? 0,
-            gstPrecent: element.gstPrecent ?? 0,
-            amountWithoutGst: element.amountWithoutGst ?? 0,
-            designId: element.designId ?? '',
-            roomName: element.roomName ?? '',
-            itemCode: element.itemCode ?? '',
-            companyCode: element.companyCode ?? '',
-            email: element.email ?? '',
-            type: element.type ?? 0
-        }];
-        this.switchService.updateElementData(payload).subscribe({
-            next: (res: any) => {
-                if (res?.status) {
-                    this.toastr.success(`${field} updated successfully`);
-                    element[field] = fieldValue;
-                    if (field === 'itemType') element.brandOrMake = brandOrMake;
-                }
-            }
-        });
+  field: 'itemType' | 'orderStatus' | 'uom' | 'status' | 'codeAndCategory',
+  selectedValue: string | { name?: string; code?: string },
+  element: any
+) {
+  // Validate element
+  if (!element?.boqId) {
+    this.toastr.warning('Invalid element selected');
+    return;
+  }
+
+  // Determine correct field value
+  let fieldValue = '';
+  if (typeof selectedValue === 'string') {
+    fieldValue = selectedValue;
+  } else if (field === 'codeAndCategory') {
+    fieldValue = selectedValue?.code ?? '';
+  } else {
+    fieldValue = selectedValue?.name ?? '';
+  }
+
+  // Update local form state
+  this.elementForm.patchValue({ [field]: fieldValue });
+
+  // Extract brand/make logic for itemType
+  let brandOrMake = element.brandOrMake ?? '';
+  if (field === 'itemType' && !brandOrMake && element.elementNameAndDescription) {
+    const [, brandLine] = element.elementNameAndDescription.split('\n');
+    if (brandLine?.includes(':')) {
+      brandOrMake = brandLine.split(':')[1]?.trim() || '';
     }
+  }
+  const payload = [{
+    boqId: element.boqId,
+    elementUrl: element.elementUrl ?? '',
+    elementNameAndDescription: element.elementNameAndDescription ?? '',
+    codeAndCategory: field === 'codeAndCategory' ? fieldValue : element.codeAndCategory ?? '',
+    orderStatus: field === 'orderStatus' ? fieldValue : element.orderStatus ?? '',
+    itemType: field === 'itemType' ? fieldValue : element.itemType ?? '',
+    uom: field === 'uom' ? fieldValue : element.uom ?? '',
+    status: field === 'status' ? fieldValue : element.status ?? '',
+    source: element.source ?? '',
+    length: element.length ?? 0,
+    breadth: element.breadth ?? 0,
+    height: element.height ?? 0,
+    quantity: element.quantity ?? 0,
+    draftQuantity: element.draftQuantity ?? 0,
+    clientRate: element.clientRate ?? 0,
+    finalAmount: element.finalAmount ?? 0,
+    brandOrMake,
+    discount: element.discount ?? 0,
+    serviceCharge: element.serviceCharge ?? 0,
+    baseAmount: element.baseAmount ?? 0,
+    budgetRate: element.budgetRate ?? 0,
+    hsn: element.hsn ?? 0,
+    gstPrecent: element.gstPrecent ?? 0,
+    amountWithoutGst: element.amountWithoutGst ?? 0,
+    designId: element.designId ?? '',
+    roomName: element.roomName ?? '',
+    itemCode: element.itemCode ?? '',
+    companyCode: element.companyCode ?? '',
+    email: element.email ?? '',
+    type: element.type ?? 0
+  }];
+
+  // Send update request
+  this.switchService.updateElementData(payload).subscribe({
+    next: (res: any) => {
+      if (res?.status) {
+        this.toastr.success(`${field} updated successfully`);
+        element[field] = fieldValue;
+        if (field === 'itemType') {
+          element.brandOrMake = brandOrMake;
+        }
+      } else {
+        this.toastr.error(`Failed to update ${field}`);
+      }
+    },
+    error: () => this.toastr.error(`Error while updating ${field}`)
+  });
+}
+
 
     proposalApprovalSubmit(modal: any) {
         if (this.proposalApprovalForm.invalid) {
@@ -1559,7 +1572,6 @@ export class BoqComponent extends BaseComponent {
             companycode: this.userCompanyCode,
             projectId: this.projectId
         };
-
         if (this.userRole === 'ADMIN') {
             payload.currentUserEmail = '';
             payload.requestFrom = 'Admin';
@@ -1580,7 +1592,6 @@ export class BoqComponent extends BaseComponent {
                             p => p.assignedDesigner === this.userEmail
                         );
                     }
-
                     this.designerDataSource.data = this.projectLst;
                 } else {
                     this.projectLst = [];
@@ -1970,5 +1981,14 @@ scrollTabs(direction: 'left' | 'right') {
       }
     });
   }
+
+  openSelect(select: NgSelectComponent) {
+    setTimeout(() => select.open(), 100);
+  }
+
+  closeSelect(select: NgSelectComponent) {
+    setTimeout(() => select.close(), 150);
+  }
+  
 
 }

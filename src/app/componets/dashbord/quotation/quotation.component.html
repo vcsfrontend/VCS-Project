@@ -1,14 +1,4 @@
-<div class="my-4 page-header-breadcrumb d-flex align-items-center justify-content-between flex-wrap gap-2">
-    <h1 class="page-title fw-medium fs-18 mb-2">Quotation</h1>
-    <nav>
-        <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="javascript:void(0);">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Quotation</li>
-        </ol>
-    </nav>
-</div>
-
-<div class="row">
+<div class="row mt-4">
     <div class="col-xxl-12">
         <div class="row">
             <div class="col-xl-4 col-sm-6">
@@ -69,7 +59,7 @@
 </div>
 <div class="col-xl-12">
     <div class="row">
-        <div class="col-xl-6">
+        <div class="col-xl-4">
             <div class="card custom-card">
                 <div class="card-body p-0">
                     <div class="d-flex p-3 align-items-center">
@@ -90,15 +80,77 @@
                                                         </div>
                                                         <div class="card-body">
                                                             <div id="timeline-grouped">
-                                                                <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart" [plotOptions]="chartOptions4.plotOptions"
-                                                                    [xaxis]="chartOptions4.xaxis" [colors]="chartOptions4.colors" [fill]="chartOptions4.fill"
-                                                                    [yaxis]="chartOptions4.yaxis" [legend]="chartOptions4.legend" [grid]="chartOptions4.grid">
+                                                                <apx-chart [series]="chartOptions4.series"
+                                                                    [chart]="chartOptions4.chart"
+                                                                    [plotOptions]="chartOptions4.plotOptions"
+                                                                    [xaxis]="chartOptions4.xaxis"
+                                                                    [colors]="chartOptions4.colors"
+                                                                    [fill]="chartOptions4.fill"
+                                                                    [yaxis]="chartOptions4.yaxis"
+                                                                    [legend]="chartOptions4.legend"
+                                                                    [grid]="chartOptions4.grid">
                                                                 </apx-chart>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-xl-6 mb-4">
+                                                <div class="col-xl-6 col-sm-6">
+                                                    <div class="card custom-card overflow-hidden">
+                                                        <div class="card-body">
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-start mb-2">
+                                                                <div><strong class="fs-18">Scope</strong>
+                                                                </div>
+                                                                <div><strong class="fs-18">Amount</strong>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div *ngFor="let key of tabKeys"
+                                                                class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium">{{ key }}</strong>
+                                                                </div>
+                                                                <div><strong class="fs-14 fw-medium">{{
+                                                                        getRoomTotal(key) | currency:'INR'}}</strong>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium">Total</strong>
+                                                                </div>
+                                                                <div><strong class="fs-14 fw-medium">{{ totalPrice |
+                                                                        currency:'INR'
+                                                                        }}</strong></div>
+                                                            </div>
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium">Design and Handling
+                                                                        Fees</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">INR
+                                                                        1000.00</strong></div>
+                                                            </div>
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium text-primary">Total
+                                                                        Discount</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">INR
+                                                                        5,000.00</strong></div>
+                                                            </div>
+                                                            <hr>
+                                                            <div
+                                                                class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium text-primary">Total
+                                                                        Project Estimate</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">{{
+                                                                        (totalPrice + 10000 - 5000) |
+                                                                        currency:'INR' }}</strong></div>
+                                                            </div>
+                                                            <hr>
+                                                            <small>*All prices are inclusive of GST</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-xl-6 mb-4">
                                                     <div class="card custom-card h-100">
                                                         <div class="card-header">
                                                             <div class="card-title">Simple Donut Chart</div>
@@ -115,8 +167,8 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
+                                                </div> -->
+                                                <!-- <div class="row">
                                                     <div class="col-xxl-12">
                                                         <div class="row">
                                                             <div class="col-xl-6 col-sm-6">
@@ -132,19 +184,26 @@
                                                                         <hr>
                                                                         <div *ngFor="let key of tabKeys"
                                                                             class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">{{ key }}</strong></div>
-                                                                            <div><strong class="fs-14 fw-medium">{{ getRoomTotal(key) | currency:'INR'}}</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">{{ key
+                                                                                    }}</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">{{
+                                                                                    getRoomTotal(key) |
+                                                                                    currency:'INR'}}</strong></div>
                                                                         </div>
                                                                         <hr>
-                                                                        <div class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Total</strong>
+                                                                        <div
+                                                                            class="d-flex justify-content-between align-items-start mb-3">
+                                                                            <div><strong
+                                                                                    class="fs-14 fw-medium">Total</strong>
                                                                             </div>
-                                                                            <div><strong class="fs-14 fw-medium">{{ totalPrice | currency:'INR'
+                                                                            <div><strong class="fs-14 fw-medium">{{
+                                                                                    totalPrice | currency:'INR'
                                                                                     }}</strong></div>
                                                                         </div>
                                                                         <div
                                                                             class="d-flex justify-content-between align-items-start mb-3">
-                                                                            <div><strong class="fs-14 fw-medium">Design and Handling Fees</strong></div>
+                                                                            <div><strong class="fs-14 fw-medium">Design
+                                                                                    and Handling Fees</strong></div>
                                                                             <div><strong class="fs-14 fw-medium">INR
                                                                                     1000.00</strong></div>
                                                                         </div>
@@ -236,7 +295,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </ng-template>
@@ -251,99 +310,133 @@
                                                     <li [ngbNavItem]="i + 1" class="nav-item m-1 me-2 p-1">
                                                         <a ngbNavLink class="nav-link border-end border-dark"
                                                             data-bs-toggle="tab" role="tab" aria-selected="true">{{ key
-                                                            }}
-                                                            <span class="badge bg-white text-black ms-1">{{
+                                                            }} <span class="badge bg-white text-black ms-1">{{
                                                                 boqDataSources[key].length }}</span>
                                                         </a>
                                                         <ng-template ngbNavContent>
                                                             <div class="card custom-card overflow-hidden">
                                                                 <div class="table-container">
-                                                                     <div class="flex-grow-1 position-relative">
-                                                    <ul #tabContainer ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex  flex-nowrap"
-                                                        style="scroll-behavior: smooth;" (scroll)="checkArrows()">
-                                                                    <table class="table table-hover text-nowrap my-table">
-                                                                        <thead class="table-light sticky-header">
-                                                                            <tr class="in">
-                                                                                <th class="sticky-col-left">Element Name & Description</th>
-                                                                                <th>Brand/Make</th>
-                                                                                <th>Category</th>
-                                                                                <th>Order Status</th>
-                                                                                <th>Item Type</th>
-                                                                                <th>Source</th>
-                                                                                <th>Status</th>
-                                                                                <th>Length</th>
-                                                                                <th>Breadth</th>
-                                                                                <th>Height</th>
-                                                                                <th>Quantity</th>
-                                                                                <th>UOM</th>
-                                                                                <th>Draft Qty</th>
-                                                                                <th>Client Rate</th>
-                                                                                <th>Service Charge</th>
-                                                                                <th>Base Amount</th>
-                                                                                <th>Budget Rate</th>
-                                                                                <th>HSN</th>
-                                                                                <th>GST %</th>
-                                                                                <th>Amt w/o GST</th>
-                                                                                <th>Discount</th>
-                                                                                <th class="sticky-col-right">Final Amount</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr *ngFor="let row of boqDataSources[key]; let j = index">
-                                                                                <td class="sticky-col-left" style="max-width: 750px;">
-                                                                                    <div class="d-flex align-items-center" style="cursor: pointer;">
-                                                                                        <span class="avatar avatar-xl me-3">
-                                                                                            <img [src]="row.elementUrl || '/assets/images/placeholder.png'" class="img-thumbnail" alt="Project Image">
-                                                                                        </span>
-                                                                                        <div>
-                                                                                            <span class="fw-medium d-block">
-                                                                                                {{ row.elementNameAndDescription.split('\n')[0].length > 30
-                                                                                                ? (row.elementNameAndDescription.split('\n')[0] | slice:0:30) + '...'
-                                                                                                : row.elementNameAndDescription.split('\n')[0] }}
-                                                                                            </span>
-                                                                                            <div class="text-muted small">
-                                                                                                {{ row.elementNameAndDescription.split('\n')[1] }}
+                                                                    <div class="flex-grow-1 position-relative">
+                                                                        <ul #tabContainer ngbNav #nav2="ngbNav"
+                                                                            [activeId]="1"
+                                                                            class="nav-tabs d-flex  flex-nowrap"
+                                                                            style="scroll-behavior: smooth;"
+                                                                            (scroll)="checkArrows()">
+                                                                            <table
+                                                                                class="table table-hover text-nowrap my-table">
+                                                                                <thead
+                                                                                    class="table-light sticky-header">
+                                                                                    <tr class="in">
+                                                                                        <th class="sticky-col-left">
+                                                                                            Element Name & Description
+                                                                                        </th>
+                                                                                        <th>Brand/Make</th>
+                                                                                        <th>Category</th>
+                                                                                        <th>Order Status</th>
+                                                                                        <th>Item Type</th>
+                                                                                        <th>Source</th>
+                                                                                        <th>Status</th>
+                                                                                        <th>Length</th>
+                                                                                        <th>Breadth</th>
+                                                                                        <th>Height</th>
+                                                                                        <th>Quantity</th>
+                                                                                        <th>UOM</th>
+                                                                                        <th>Draft Qty</th>
+                                                                                        <th>Client Rate</th>
+                                                                                        <th>Service Charge</th>
+                                                                                        <th>Base Amount</th>
+                                                                                        <th>Budget Rate</th>
+                                                                                        <th>HSN</th>
+                                                                                        <th>GST %</th>
+                                                                                        <th>Amt w/o GST</th>
+                                                                                        <th>Discount</th>
+                                                                                        <th class="sticky-col-right">
+                                                                                            Final Amount</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr
+                                                                                        *ngFor="let row of boqDataSources[key]; let j = index">
+                                                                                        <td class="sticky-col-left"
+                                                                                            style="max-width: 750px;">
+                                                                                            <div class="d-flex align-items-center"
+                                                                                                style="cursor: pointer;">
+                                                                                                <span
+                                                                                                    class="avatar avatar-xl me-3">
+                                                                                                    <img [src]="row.elementUrl || '/assets/images/placeholder.png'"
+                                                                                                        class="img-thumbnail"
+                                                                                                        alt="Project Image">
+                                                                                                </span>
+                                                                                                <div>
+                                                                                                    <span
+                                                                                                        class="fw-medium d-block">
+                                                                                                        {{
+                                                                                                        row.elementNameAndDescription.split('\n')[0].length
+                                                                                                        > 30
+                                                                                                        ?
+                                                                                                        (row.elementNameAndDescription.split('\n')[0]
+                                                                                                        | slice:0:30) +
+                                                                                                        '...'
+                                                                                                        :
+                                                                                                        row.elementNameAndDescription.split('\n')[0]
+                                                                                                        }}
+                                                                                                    </span>
+                                                                                                    <div
+                                                                                                        class="text-muted small">
+                                                                                                        {{
+                                                                                                        row.elementNameAndDescription.split('\n')[1]
+                                                                                                        }}
+                                                                                                    </div>
+                                                                                                    <div class="text-muted small"
+                                                                                                        *ngIf="row.elementNameAndDescription.split('\n')[2]">
+                                                                                                        {{
+                                                                                                        row.elementNameAndDescription.split('\n')[2]
+                                                                                                        }}
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </div>
-                                                                                            <div class="text-muted small" *ngIf="row.elementNameAndDescription.split('\n')[2]">
-                                                                                                {{ row.elementNameAndDescription.split('\n')[2] }}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </td>
-                                                                                <td>{{ row.brandOrMake }}</td>
-                                                                                <td>{{ row.codeAndCategory }}</td>
-                                                                                <td>{{ row.orderStatus }}</td>
-                                                                                <td>{{ row.itemType }}</td>
-                                                                                <td>{{ row.source }}</td>
-                                                                                <td>{{ row.status }}</td>
-                                                                                <td>{{ row.length }}</td>
-                                                                                <td>{{ row.breadth }}</td>
-                                                                                <td>{{ row.height }}</td>
-                                                                                <td>{{ row.quantity }}</td>
-                                                                                <td>{{ row.uom }}</td>
-                                                                                <td>{{ row.draftQuantity }}</td>
-                                                                                <td>{{ row.clientRate }}</td>
-                                                                                <td>{{ row.serviceCharge }}</td>
-                                                                                <td>{{ row.baseAmount }}</td>
-                                                                                <td>{{ row.budgetRate }}</td>
-                                                                                <td>{{ row.hsn }}</td>
-                                                                                <td>{{ row.gstPrecent }}</td>
-                                                                                <td>{{ row.amountWithoutGst }}</td>
-                                                                                <td>{{ row.discount }}</td>
-                                                                                <td class="sticky-col-right">{{ row.finalAmount }}</td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </ul>
-                                                                </div>
-                                                                <div class="ms-2 d-flex">
-                                                                    <button class="btn btn-light border me-1" *ngIf="showLeftArrow" (click)="scrollTabs('left')">
-                                                                        ‹
-                                                                    </button>
-                                                                    <button class="btn btn-light border" *ngIf="showRightArrow" (click)="scrollTabs('right')">
-                                                                        ›
-                                                                    </button>
-                                                                </div>
+                                                                                        </td>
+                                                                                        <td>{{ row.brandOrMake }}</td>
+                                                                                        <td>{{ row.codeAndCategory }}
+                                                                                        </td>
+                                                                                        <td>{{ row.orderStatus }}</td>
+                                                                                        <td>{{ row.itemType }}</td>
+                                                                                        <td>{{ row.source }}</td>
+                                                                                        <td>{{ row.status }}</td>
+                                                                                        <td>{{ row.length }}</td>
+                                                                                        <td>{{ row.breadth }}</td>
+                                                                                        <td>{{ row.height }}</td>
+                                                                                        <td>{{ row.quantity }}</td>
+                                                                                        <td>{{ row.uom }}</td>
+                                                                                        <td>{{ row.draftQuantity }}</td>
+                                                                                        <td>{{ row.clientRate }}</td>
+                                                                                        <td>{{ row.serviceCharge }}</td>
+                                                                                        <td>{{ row.baseAmount }}</td>
+                                                                                        <td>{{ row.budgetRate }}</td>
+                                                                                        <td>{{ row.hsn }}</td>
+                                                                                        <td>{{ row.gstPrecent }}</td>
+                                                                                        <td>{{ row.amountWithoutGst }}
+                                                                                        </td>
+                                                                                        <td>{{ row.discount }}</td>
+                                                                                        <td class="sticky-col-right">{{
+                                                                                            row.finalAmount }}</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div class="ms-2 d-flex">
+                                                                        <button class="btn btn-light border me-1"
+                                                                            *ngIf="showLeftArrow"
+                                                                            (click)="scrollTabs('left')">
+                                                                            ‹
+                                                                        </button>
+                                                                        <button class="btn btn-light border"
+                                                                            *ngIf="showRightArrow"
+                                                                            (click)="scrollTabs('right')">
+                                                                            ›
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                                 <div class="card-footer border-top-0">
                                                                     <div class="d-flex align-items-center">
@@ -351,11 +444,30 @@
                                                                             <strong>Sub Total</strong>
                                                                         </div>
                                                                         <div class="ms-auto">
-                                                                            <nav aria-label="Page navigation" class="pagination-style-4">
-                                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                            <nav aria-label="Page navigation"
+                                                                                class="pagination-style-4">
+                                                                                <div
+                                                                                    class="d-flex justify-content-between align-items-center">
                                                                                     <div>
-                                                                                        <span class="fw-bold">INR {{ totalPrice | currency:'INR' }}</span>
-                                                                                        <div class="small text-muted">*All prices are inclusive of taxes</div>
+                                                                                        <div
+                                                                                            class="fw-bold text-primary">
+                                                                                            {{ tabKeys[nav.activeId - 1]
+                                                                                            || 'Select Room' }}
+                                                                                            <span
+                                                                                                *ngIf="tabKeys[nav.activeId - 1]"
+                                                                                                class="fw-semibold text-dark">
+                                                                                                (₹ {{
+                                                                                                getRoomTotal(tabKeys[nav.activeId
+                                                                                                - 1]) | number:'1.0-0'
+                                                                                                }} / {{
+                                                                                                boqDataSources[tabKeys[nav.activeId
+                                                                                                - 1]].length
+                                                                                                }} items)
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        <div class="small text-muted">
+                                                                                            *All prices are inclusive of
+                                                                                            taxes</div>
                                                                                     </div>
                                                                                 </div>
                                                                             </nav>
@@ -367,6 +479,23 @@
                                                     </li>
                                                 </ng-container>
                                             </ul>
+                                            <div class="d-flex align-items-center justify-content-between gap-3 shadow-sm rounded-3 p-2 bg-white w-100 ps-4 pe-4"
+                                                style="width: fit-content;">
+                                                <div class="fw-bold text-primary">
+                                                    {{ tabKeys[nav.activeId - 1] || 'Select Room' }}
+                                                </div>
+                                                <div class="input-group shadow-sm rounded-3" style="width: 280px;">
+                                                    <button
+                                                        class="btn btn-primary d-flex align-items-center justify-content-center rounded-start"
+                                                        type="button" id="button-addon2">
+                                                        <i class="ri-search-line text-white fs-5"></i>
+                                                    </button>
+                                                    <input type="text" class="form-control border rounded-end"
+                                                        placeholder="Search in {{ tabKeys[nav.activeId - 1] || 'Room' }}..."
+                                                        aria-describedby="button-addon2" (keyup)="applyFilter($event)"
+                                                        #input />
+                                                </div>
+                                            </div>
                                             <div [ngbNavOutlet]="nav"></div>
                                         </div>
                                     </ng-template>
@@ -377,31 +506,52 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-6 col-sm-6">
+        <div class="col-lg-8">
             <div class="card custom-card overflow-hidden">
-                <div class="card-body pb-1">
-                    <div class="d-flex gap-3  align-items-start">
-                        <div>
-                            <p class="mb-2">Quote Includes</p>
-                            <p><strong>{{ totalRooms }} Rooms , {{ totalProducts }} Products</strong></p>
-                        </div>
-                        <div class="ps-2 vertical-line">
-                            <p class="mb-2">Total Price</p>
-                            <p><strong>{{ totalPrice | currency:'INR' }}</strong></p>
-                        </div>
-                        <div class="ps-2 vertical-line">
-                            <p class="mb-2">
-                                Quote Valid Till
+                <div class="card-body ">
+                    <div class="d-flex flex-wrap align-items-stretch justify-content-between text-center text-md-start">
+                        <div class="flex-fill border-end px-3">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <p class="text-primary fw-semibold mb-0 text-uppercase small">Quote Includes</p>
+                                <i class="bi bi-file-earmark-text text-primary fs-5"></i>
+                            </div>
+                            <p class="text-muted mb-0 small">
+                                <strong class="text-dark">{{ totalRooms }}</strong> rooms,
+                                <strong class="text-dark">{{ totalProducts }}</strong> products
                             </p>
-                            <p><strong>{{ quoteValidTill | date:'dd-MMM-yyyy' }}</strong> </p>
                         </div>
-                        <div class="ps-2 vertical-line">
-                            <p class="mb-2">
-                               Approve Status
+                        <div class="flex-fill border-end px-3">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <p class="text-primary fw-semibold mb-0 text-uppercase small">Total Price</p>
+                                <i class="bi bi-cash-coin text-success fs-5"></i>
+                            </div>
+                            <p class="text-muted mb-0 small">
+                                <strong class="text-dark">{{ totalPrice | currency:'INR' }}</strong>
                             </p>
-                            <p><strong>{{ proposalStatus }}</strong> </p>
                         </div>
-
+                        <div class="flex-fill border-end px-3">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <p class="text-primary fw-semibold mb-0 text-uppercase small">Quote Valid Till
+                                </p><i class="bi bi-calendar3 fs-5 text-success"></i> 
+                            </div>
+                            <p class="text-muted mb-0 small">
+                                <strong class="text-dark">{{ quoteValidTill | date:'dd-MMM-yyyy' }}</strong>
+                            </p>
+                        </div>
+                        <div class="flex-fill border-end px-3">
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <p class="text-primary fw-semibold mb-0 text-uppercase small">Approve Status
+                                </p><i class="bi bi-check2-circle fs-5 text-warning"></i> 
+                            </div>
+                            <p class="mb-0 small">
+                                <span class="badge 
+                                           {{ proposalStatus === 'Approved' ? 'bg-success-transparent' : 
+                                               proposalStatus === 'Pending' ? 'bg-warning-transparent' : 
+                                               proposalStatus === 'Rejected' ? 'bg-danger-transparent' : 'bg-secondary' }}">
+                                    {{ proposalStatus }}
+                                </span>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

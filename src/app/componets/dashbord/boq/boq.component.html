@@ -302,16 +302,62 @@
             <ng-template ngbNavContent>
                 <div class="col-xl-12 mt-2">
                     <div class="card custom-card">
+                        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 fw-bold">Basic Details</h6>
+                            <i class="bi bi-pencil-fill text-danger" role="button"></i>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Project Name</small>
+                                        <span class="fw-semibold">Pavan Test project</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Business Category</small>
+                                        <span class="fw-semibold">IR Residential</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Project Address Line 1</small>
+                                        <span class="fw-semibold">Kesavatowers, KPHB 9th phase, Hyderabad 500085</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Project Address Line 2</small>
+                                        <span class="fw-semibold">-</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Country</small>
+                                        <span class="fw-semibold">India</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Client</small>
+                                        <span class="fw-semibold">AA Builders</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">State</small>
+                                        <span class="fw-semibold">Telangana</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">City</small>
+                                        <span class="fw-semibold">Hyderabad</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <small class="text-muted d-block">Zipcode</small>
+                                        <span class="fw-semibold">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-xl-12 mt-2">
+                    <div class="card custom-card">
                         <div class="card-header justify-content-between">
                             <div class="card-title">
                                 My Projects
                             </div>
-                            <!-- <div class="d-flex flex-wrap gap-3">
-                                <mat-form-field class="filter-field">
-                                    <mat-label>Fliter</mat-label>
-                                    <input matInput (keyup)="applyDesignerFilter($event)" #input>
-                                </mat-form-field>
-                            </div> -->
                         </div>
                         <div class="card-body p-0">
                             <div class="table-container mat-elevation-z8">
@@ -372,7 +418,6 @@
                                             <button *ngIf="element.designCompletionStatus === 'Complete'" class="btn btn-success btn-sm">
                                                 Completed
                                             </button>
-                                            <!-- If Empty -->
                                             <button *ngIf="!element.designCompletionStatus" class="btn btn-warning btn-sm">
                                                 Pending
                                             </button>
@@ -393,13 +438,10 @@
                                     <tr mat-row *matRowDef="let row; columns: designerColumns;"
                                         style="height:47px; vertical-align:middle;"></tr>
                                 </table>
-                                <!-- <mat-paginator #myProjectPaginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-                                    aria-label="Select page of periodic elements">
-                                </mat-paginator> -->
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </ng-template>
         </li>
         <li [ngbNavItem]="3" class="nav-item me-0" role="presentation">
@@ -531,7 +573,7 @@
                                                     <div class="card-title">Order Details</div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
-                                                        <!-- <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button> -->
+                                                        <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button>
                                                         <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
                                                             <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
                                                         </button>
@@ -1661,59 +1703,60 @@
                                                                                             {{ element.elementNameAndDescription.split('\n')[1]?.split(':')[1]?.trim() }}
                                                                                         </td>
                                                                                     </ng-container>
-                                                                                    <ng-container matColumnDef="codeAndCategory" >
-                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-left-4"> Code & Category
+                                                                                    <ng-container matColumnDef="codeAndCategory">
+                                                                                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-left-4">
+                                                                                            Code & Category
                                                                                         </th>
                                                                                         <td mat-cell *matCellDef="let element" class="sticky-col-left-4">
-                                                                                            <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                                <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                                    {{
-                                                                                                    element.codeAndCategory }}
-                                                                                                </button>
-                                                                                                <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                                    <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select"
-                                                                                                    [ngModel]="element.codeAndCategory" (change)="updateDropdownField('codeAndCategory', $event, element)" >
-                                                                                                        <ng-template ng-option-tmp let-item="item">
-                                                                                                            <div class="d-flex justify-content-between align-items-center w-100">
-                                                                                                                <span>{{ item.name }}</span>
-                                                                                                                <span>{{ item.code }}</span>
-                                                                                                            </div>
-                                                                                                        </ng-template>
-                                                                                                        <ng-template ng-label-tmp let-item="item">
-                                                                                                            {{ item.name }} ({{item.code }})
-                                                                                                        </ng-template>
-                                                                                                    </ng-select>
-                                                                                                </ul>
+                                                                                            <div class="hover-select-wrapper" (mouseenter)="openSelect(select)" (mouseleave)="closeSelect(select)">
+                                                                                                <div class="code-display">
+                                                                                                    {{ element.codeAndCategory || 'N/A' }}
+                                                                                                </div>
+                                                                                                <ng-select #select class="hover-select" [items]="codeAndCategory" bindValue="code" [clearable]="false"
+                                                                                                    placeholder="Select" [ngModel]="element.codeAndCategory"
+                                                                                                    (change)="updateDropdownField('codeAndCategory', $event, element)">
+                                                                                                    <ng-template ng-option-tmp let-item="item">
+                                                                                                        <div class="d-flex justify-content-between align-items-center w-100">
+                                                                                                            <span>{{ item.name }}</span>
+                                                                                                            <span>{{ item.code }}</span>
+                                                                                                        </div>
+                                                                                                    </ng-template>
+                                                                                                </ng-select>
                                                                                             </div>
                                                                                         </td>
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="orderStatus">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Order Status </th>
                                                                                         <td mat-cell *matCellDef="let element">
-                                                                                            <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                                <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                                    {{ element.orderStatus }}
-                                                                                                </button>
-                                                                                                <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                                    <ng-select [items]="orderStatus" bindLabel="name" bindValue="name" [ngModel]="element.orderStatus"
-                                                                                                        (change)="updateDropdownField('orderStatus', $event, element)" placeholder="Select Status">
-                                                                                                    </ng-select>
-                                                                                                </ul>
+                                                                                            <div class="hover-select-wrapper" (mouseenter)="openSelect(statusSelect)"
+                                                                                                (mouseleave)="closeSelect(statusSelect)">
+                                                                                                <div class="status-display">
+                                                                                                    {{ element.orderStatus || 'N/A' }}
+                                                                                                </div>
+                                                                                                <ng-select #statusSelect class="hover-select" [items]="orderStatus" bindLabel="name" bindValue="name"
+                                                                                                    [clearable]="false" [ngModel]="element.orderStatus" placeholder="Select Status"
+                                                                                                    (change)="updateDropdownField('orderStatus', $event, element)">
+                                                                                                </ng-select>
                                                                                             </div>
                                                                                         </td>
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="itemType">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Type </th>
                                                                                         <td mat-cell *matCellDef="let element">
-                                                                                            <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                                <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                                    {{ element.itemType }}
-                                                                                                </button>
-                                                                                                <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                                    <ng-select [items]="itemType" bindLabel="name" bindValue="name" [ngModel]="element.itemType"
-                                                                                                        (change)="updateDropdownField('itemType', $event, element)">
-                                                                                                    </ng-select>
-                                                                                                </ul>
+                                                                                            <div class="hover-select-wrapper" (mouseenter)="openSelect(itemTypeSelect)"
+                                                                                                (mouseleave)="closeSelect(itemTypeSelect)">
+                                                                                                <div class="code-display">
+                                                                                                    {{ element.itemType || 'N/A' }}
+                                                                                                </div>
+                                                                                                <ng-select #itemTypeSelect class="hover-select" [items]="itemType" bindLabel="name" bindValue="name"
+                                                                                                    [clearable]="false" placeholder="Select" [ngModel]="element.itemType"
+                                                                                                    (change)="updateDropdownField('itemType', $event, element)">
+                                                                                                    <ng-template ng-option-tmp let-item="item">
+                                                                                                        <div class="d-flex justify-content-between align-items-center w-100">
+                                                                                                            <span>{{ item.name }}</span>
+                                                                                                        </div>
+                                                                                                    </ng-template>
+                                                                                                </ng-select>
                                                                                             </div>
                                                                                         </td>
                                                                                     </ng-container>
@@ -1724,15 +1767,15 @@
                                                                                     <ng-container matColumnDef="status">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
                                                                                         <td mat-cell *matCellDef="let element">
-                                                                                            <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                                <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                                    {{  element.status }}
-                                                                                                </button>
-                                                                                                <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                                    <ng-select [items]="boqStatus" bindLabel="name" bindValue="name" [ngModel]="element.status"
-                                                                                                        (change)="updateDropdownField('status', $event, element)" placeholder="Select Status">
-                                                                                                    </ng-select>
-                                                                                                </ul>
+                                                                                            <div class="hover-select-wrapper" (mouseenter)="openSelect(statusSelect)"
+                                                                                                (mouseleave)="closeSelect(statusSelect)">
+                                                                                                <div class="status-display">
+                                                                                                    {{ element.status || 'N/A' }}
+                                                                                                </div>
+                                                                                                <ng-select #statusSelect class="hover-select" [items]="boqStatus" bindLabel="name" bindValue="name"
+                                                                                                    [clearable]="false" [ngModel]="element.status" placeholder="Select Status"
+                                                                                                    (change)="updateDropdownField('status', $event, element)">
+                                                                                                </ng-select>
                                                                                             </div>
                                                                                         </td>
                                                                                     </ng-container>
@@ -1768,15 +1811,14 @@
                                                                                     <ng-container matColumnDef="uom">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> UOM </th>
                                                                                         <td mat-cell *matCellDef="let element">
-                                                                                            <div class="btn-group d-flex flex-column" ngbDropdown>
-                                                                                                <button type="button" class="btn custom-btn" ngbDropdownToggle>
-                                                                                                    {{ element.uom }}
-                                                                                                </button>
-                                                                                                <ul class="dropdown-menu cuw" ngbDropdownMenu>
-                                                                                                    <ng-select [items]="UOM" bindLabel="name" bindValue="name" [ngModel]="element.uom"
-                                                                                                        (change)="updateDropdownField('uom', $event, element)" placeholder="Select UOM">
-                                                                                                    </ng-select>
-                                                                                                </ul>
+                                                                                            <div class="hover-select-wrapper" (mouseenter)="openSelect(uomSelect)" (mouseleave)="closeSelect(uomSelect)">
+                                                                                                <div class="uom-display">
+                                                                                                    {{ element.uom || 'N/A' }}
+                                                                                                </div>
+                                                                                                <ng-select #uomSelect class="hover-select" [items]="UOM" bindLabel="name" bindValue="name"
+                                                                                                    [clearable]="false" [ngModel]="element.uom" placeholder="Select UOM"
+                                                                                                    (change)="updateDropdownField('uom', $event, element)">
+                                                                                                </ng-select>
                                                                                             </div>
                                                                                         </td>
                                                                                     </ng-container>
@@ -1867,7 +1909,7 @@
                                                                                     </tr>
                                                                                 </table>
                                                                             </div>
-                                                                            <div class="d-flex align-items-center mx-4 my-2">
+                                                                            <div class="d-flex align-items-center justify-content-between mx-4 my-2 pt-2">
                                                                                 <div>
                                                                                     <strong>Sub Total</strong>
                                                                                 </div>
@@ -1994,20 +2036,22 @@
         </div>
         <div class="offcanvas-body p-4 overflow-auto" style="max-height: 76vh;">
             <div class="col-xl-12">
-                <div class="row gy-1">
+                <div class="row gy-3">
                     <div class="col-xl-6">
-                        <label class="form-label">Element Name</label>
-                        <input type="text" class="form-control" formControlName="elementName">
+                        <div class="mb-3">
+                            <label class="form-label">Element Name</label>
+                            <input type="text" class="form-control" formControlName="elementName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Brand/Make</label>
+                            <input type="text" class="form-control" formControlName="brandOrMake" placeholder="Enter Description">
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Element Description</label>
-                        <input type="text" class="form-control" formControlName="elementDescription">
+                        <textarea class="form-control" formControlName="elementDescription" rows="4"></textarea>
                     </div>
-                    <div class="col-xl-6">
-                        <label class="form-label">Brand/Make</label>
-                        <input type="text" class="form-control" formControlName="brandOrMake"
-                            placeholder="Enter Description">
-                    </div>
+
                     <div class="col-xl-6">
                         <label class="form-label">Length</label>
                         <input type="number" class="form-control" formControlName="length" placeholder="Enter Length">

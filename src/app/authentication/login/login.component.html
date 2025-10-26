@@ -8,11 +8,11 @@
                         class="nav-tabs  justify-content-center border-bottom-0 mb-2 mt-0 ">
                         <li ngbNavItem="Angular">
                             <ng-template ngbNavContent>
-                                <p class="h5 mb-2 text-center"><strong>Sign In</strong></p>
+                                <p class="h5 mb-2 text-center"><strong>SIGN IN</strong></p>
                                 <form class="p-2" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                                     <div class="row gy-3">
                                         <div class="col-xl-12">
-                                            <label for="signin-username" class="form-label text-default"><strong>Email</strong></label>
+                                            <label for="signin-username" class="form-label text-default d-block"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail h-4 w-4 text-indigo-600"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg><span>Email</span></label>
                                             <!-- <div class="input-group">
                                                 <div class="input-group-text text-muted bg-light pl-4 font-weight-bold bg-opacity-25 border border-dark "> <i class="ri-user-line"></i> </div> -->
                                             <input type="text" class="form-control form-control-lg" id="signin-username"
@@ -21,9 +21,8 @@
                                             <!-- </div> -->
                                         </div>
                                         <div class="col-xl-12 mb-2">
-                                            
                                             <label for="signin-password"
-                                                class="form-label text-default d-block"><strong>Password</strong></label>
+                                                class="form-label text-default d-block"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock h-4 w-4 text-indigo-600"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Password</label>
                                             <div class="position-relative">
                                                 <!-- <div class="input-group">
                                                     <div class="input-group-text text-muted bg-light pl-4 font-weight-bold bg-opacity-25 border border-dark"> <i class="ri-lock-line"></i> </div> -->
@@ -42,24 +41,23 @@
                                                 <div class="form-check">
                                                     <input class="form-check-input form-checked-dark" type="checkbox" value=""
                                                         id="darkChecked">
-                                                    <label class=" form-check-label text-dark fw-normal d-block"
+                                                    <label class="form-check-label fw-normal d-block"
                                                         for="darkChecked">
-                                                        <strong>Remember me</strong><a
+                                                       Remember me<a
                                                             routerLink="/authentication/reset-password/basic"
-                                                            class=" float-end text-danger"><strong>Forgot password ?</strong></a>
+                                                            class="float-end text-danger fw-semibold">Forgot password ?</a>
                                                     </label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="d-grid mt-4">
-                                        <button type="submit" class="btn btn-lg bg-light p-2 font-weight-bold text-dark bg-opacity-25 border border-dark" 
-                                            autofocus [disabled]="btnDisable"><strong>Sign In</strong></button>
+                                        <button type="submit" class="btn-grad" autofocus [disabled]="btnDisable">SIGN IN</button>
                                     </div>
                                 </form>
                                 <div class="text-center">
-                                    <p class="h6 font-weight-bold mt-3 mb-0"><strong>Don't have an account? </strong>
-                                        <a routerLink="/authentication/sign-up/basic" class=" font-weight-bold text-primary"><strong> Sign Up</strong></a>
+                                    <p class="fw-normal mt-3 mb-0">Don't have an account ?&nbsp;
+                                        <a routerLink="/authentication/sign-up/basic" class="fw-semibold text-primary"><strong> Sign Up</strong></a>
                                     </p>
                                 </div>
                             </ng-template>
