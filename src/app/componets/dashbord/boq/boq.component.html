@@ -301,51 +301,83 @@
                 aria-selected="false" (click)="getAssignProjects()">Design</button>
             <ng-template ngbNavContent>
                 <div class="col-xl-12 mt-2">
-                    <div class="card custom-card">
+                    <div class="card custom-card" *ngFor="let project of filteredDesignerData; let i = index">
                         <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0 fw-bold">Basic Details</h6>
-                            <i class="bi bi-pencil-fill text-danger" role="button"></i>
+                            <h6 class="mb-0 fw-bold">Project Details</h6>
+                            <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-wave btn-secondary rounded-circle"
+                                (click)="openProjectModal(content45, project)">
+                                <i class="ri-edit-line"></i>
+                                {{ project.projectId | slice: 0:14 }}
+                            </a>
                         </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Project Name</small>
-                                        <span class="fw-semibold">Pavan Test project</span>
+                        <div class="card-body p-4">
+                            <div *ngFor="let project of filteredDesignerData; let i = index">
+                                <div class="row g-4">
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Project ID</small>
+                                            <a href="javascript:void(0)" class="fw-semibold text-decoration-none text-dark"
+                                                (click)="openProjectModal(content45, project)">
+                                                {{ project.projectId | slice: 0:14 }}
+                                            </a>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Project Name</small>
+                                            <span class="fw-semibold text-dark">{{ project.projectName }}</span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Business Category</small>
+                                            <span class="fw-semibold text-dark">{{ project.businessCategory }}</span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Project Address</small>
+                                            <span class="fw-semibold text-dark">{{ project.projectAddress }}</span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">City / State</small>
+                                            <span class="fw-semibold text-dark">{{ project.city }}, {{ project.state }}</span>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Business Category</small>
-                                        <span class="fw-semibold">IR Residential</span>
+                                    <div class="col-lg-4 col-md-6">
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Client</small>
+                                            <span class="fw-semibold text-dark">{{ project.clientName }}</span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Company</small>
+                                            <span class="fw-semibold text-dark">{{ project.companyName }}</span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Created</small>
+                                            <span class="fw-semibold text-dark">{{ project.createdDate | date: 'dd-MMM-yyyy' }}</span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Timeline</small>
+                                            <span class="fw-semibold text-dark">
+                                                {{ project.projectStartDate | date: 'dd-MMM-yyyy' }} →
+                                                {{ project.projectEndDate | date: 'dd-MMM-yyyy' }}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Project Address Line 1</small>
-                                        <span class="fw-semibold">Kesavatowers, KPHB 9th phase, Hyderabad 500085</span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Project Address Line 2</small>
-                                        <span class="fw-semibold">-</span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Country</small>
-                                        <span class="fw-semibold">India</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Client</small>
-                                        <span class="fw-semibold">AA Builders</span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">State</small>
-                                        <span class="fw-semibold">Telangana</span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">City</small>
-                                        <span class="fw-semibold">Hyderabad</span>
-                                    </div>
-                                    <div class="mb-3">
-                                        <small class="text-muted d-block">Zipcode</small>
-                                        <span class="fw-semibold">-</span>
+                                    <div class="col-lg-4">
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Project Area</small>
+                                            <span class="fw-semibold text-dark">{{ project.projectArea }} sq.ft</span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Estimation</small>
+                                            <span class="fw-semibold text-success">
+                                                ₹ {{ project.projectEstimation | number: '1.0-0' }}
+                                            </span>
+                                        </div>
+                                        <div class="info-item mb-2">
+                                            <small class="text-muted d-block">Design Link</small>
+                                            <button class="btn btn-primary btn-sm mt-1"
+                                                *ngIf="(project.assignedDesigner === userEmail || userRole === 'ADMIN') && project.designUrl"
+                                                (click)="openDesignLink(project.designUrl)">
+                                                <i class="bi bi-box-arrow-up-right me-1"></i> Open Design
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -2429,7 +2461,7 @@
                 </div>
                 <div class="col-xl-12">
                     <label for="projectAddress" class="form-label">Client Email</label>
-                    <input type="text" class="form-control" id="projectAddress" placeholder="Enter Client Email"
+                    <input type="email" class="form-control" id="projectAddress" placeholder="Enter Client Email"
                     formControlName="clientEmail">
                 </div>
                 <div class="modal-footer">

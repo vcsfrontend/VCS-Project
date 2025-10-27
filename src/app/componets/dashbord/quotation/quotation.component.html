@@ -1,55 +1,77 @@
 <div class="row mt-4">
     <div class="col-xxl-12">
         <div class="row">
-            <div class="col-xl-4 col-sm-6">
+            <div class="col-lg-4">
                 <div class="card custom-card overflow-hidden">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>Hi Sana</div>
-                            <div>INCO767815</div>
+                            <div>Hi {{ userContent.clientName }}</div>
+                            <!-- <div>INCO767815</div> -->
                         </div>
-                        <p class="text-muted mb-0">
-                            Thanks for showing interest for your home decor. We have created a quote as requested by you
-                            in our
-                            previous
-                            communication. Please review and reach out to
-                            <strong>Salura Anuhya</strong> your personalized designer.
+                        <p class="text-dark mb-5 mt-4">
+                            We’ve prepared a quotation based on our previous discussion. Please take a moment to review it, and feel free to
+                            reach out to your dedicated designer at  <strong>{{ userContent.clientEmail }}</strong>
+                            for any questions or customizations.
                         </p>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-sm-6">
+            <div class="col-lg-4">
                 <div class="card custom-card overflow-hidden">
-                    <div class="card-body">
-                        <div class="align-items-start mb-3">
-                            <div>J Jenny Rejlin</div>
-                            <div>(Relationship manager)</div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div><strong> 9876543210 </strong></div>
-                            <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div><strong> test&#64;gmail.com </strong></div>
-                            <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
+                    <div class="card-body d-flex justify-content-between flex-wrap">
+                        <div class="me-4 mb-3 flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div><strong>Client Name : </strong>{{ userContent.clientName }}<span class="text-muted"></span></div>
+                                <div class="d-flex gap-2">
+                                    <div><img src="/assets/images/brand-logos/mail.png" alt="Email" class="whatsapp"></div>
+                                    <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="WhatsApp" class="whatsapp"></div>
+                                </div>
+                            </div>
+                            <div class="mb-2">
+                                <div><strong>Client Number : </strong>{{ userContent.clientMobileNumber }}<span class="text-muted"></span></div>
+                            </div>
+                            <div class="mb-2">
+                                <div><strong>Client Address : </strong>{{ userContent.clientAddress }}<span class="text-muted"></span></div>
+                            </div>
+                            <div class="mb-2 d-flex justify-content-between align-items-center">
+                                <div><strong>Client Email : </strong>{{ userContent.clientEmail }}<span class="text-muted"></span></div>
+                            </div>
+                            <div class="mb-2">
+                                <div><strong>Project Config : </strong>{{ userContent.projectConfig }}<span class="text-muted"></span></div>
+                            </div>
+                            <div class="">
+                                <div><strong>Flat No : </strong>{{ userContent.flatNo }}<span class="text-muted"></span></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-xl-4 col-sm-6">
+            <div class="col-lg-4">
                 <div class="card custom-card overflow-hidden">
-                    <div class="card-body">
-                        <div class="align-items-start mb-3">
-                            <div>J Jenny Rejlin</div>
-                            <div>(Relationship manager)</div>
+                    <div class="card-body d-flex justify-content-between flex-wrap">
+                        <div class="me-4 mb-3 flex-grow-1">
+                            <div class="mb-2 mt-3">
+                                <div><strong>Relationship Manager : </strong>{{ userContent.rmdName }}<span class="text-muted"></span></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div><strong>Number : </strong>{{ userContent.rmdMobile}}</div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><strong>Email : </strong>{{ userContent.rmdEmail }}</div>
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div><strong> 9876543210 </strong></div>
-                            <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="" class="whatsapp"></div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div><strong> test&#64;gmail.com </strong></div>
-                            <div><img src="/assets/images/brand-logos/mail.png" alt="" class="whatsapp"></div>
+                        <div class="flex-grow-1 mb-3 border-top">
+                            <div class="mb-2 mt-2">
+                                <div><strong>Designer : </strong>{{ userContent.dedName }}<span class="text-muted"></span></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <div><strong>Number : </strong>{{ userContent.rmdMobile}}</div>
+                                <!-- <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="WhatsApp" class="whatsapp"></div> -->
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><strong>Email : </strong>{{ userContent.rmdEmail }}</div>
+                                <!-- <div><img src="/assets/images/brand-logos/mail.png" alt="Email" class="whatsapp"></div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,7 +121,7 @@
                                                         <div class="card-body">
                                                             <div
                                                                 class="d-flex justify-content-between align-items-start mb-2">
-                                                                <div><strong class="fs-18">Scope</strong>
+                                                                <div><strong class="fs-18">Project Scope</strong>
                                                                 </div>
                                                                 <div><strong class="fs-18">Amount</strong>
                                                                 </div>
@@ -113,28 +135,26 @@
                                                                         getRoomTotal(key) | currency:'INR'}}</strong>
                                                                 </div>
                                                             </div>
+                                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium">Design and Handling
+                                                                        Fees</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">₹
+                                                                        1000.00</strong></div>
+                                                            </div>
+                                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium">
+                                                                        Discount</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">₹
+                                                                     {{userContent.discount}}</strong></div>
+                                                            </div>
                                                             <hr>
                                                             <div
                                                                 class="d-flex justify-content-between align-items-start mb-3">
-                                                                <div><strong class="fs-14 fw-medium">Total</strong>
+                                                                <div><strong class="fs-14 fw-medium text-primary">Total</strong>
                                                                 </div>
                                                                 <div><strong class="fs-14 fw-medium">{{ totalPrice |
                                                                         currency:'INR'
                                                                         }}</strong></div>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-start mb-3">
-                                                                <div><strong class="fs-14 fw-medium">Design and Handling
-                                                                        Fees</strong></div>
-                                                                <div><strong class="fs-14 fw-medium">INR
-                                                                        1000.00</strong></div>
-                                                            </div>
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-start mb-3">
-                                                                <div><strong class="fs-14 fw-medium text-primary">Total
-                                                                        Discount</strong></div>
-                                                                <div><strong class="fs-14 fw-medium">INR
-                                                                        5,000.00</strong></div>
                                                             </div>
                                                             <hr>
                                                             <div
@@ -538,7 +558,7 @@
                                 <strong class="text-dark">{{ quoteValidTill | date:'dd-MMM-yyyy' }}</strong>
                             </p>
                         </div>
-                        <div class="flex-fill border-end px-3">
+                        <div class="flex-fill px-3">
                             <div class="d-flex align-items-center justify-content-between mb-1">
                                 <p class="text-primary fw-semibold mb-0 text-uppercase small">Approve Status
                                 </p><i class="bi bi-check2-circle fs-5 text-warning"></i> 

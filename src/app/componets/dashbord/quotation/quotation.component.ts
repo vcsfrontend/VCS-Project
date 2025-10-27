@@ -47,7 +47,7 @@ export class QuotationComponent {
   tabKeys: string[] = []; boqDataSources: { [key: string]: any[] } = {};
   selectedCategory: any; editIndex: number | null = null; designId: any;
   totalRooms: number = 0;
-  totalProducts: number = 0;
+  totalProducts: number = 0; userContentKeys: string[] = []; userContent: any = {};  
   totalPrice: number = 0; proposalStatus: string = ''; proposalContentDataSources: any;
   proposalTabCounts: any; showLeftArrow = false; showRightArrow = false;
 
@@ -169,7 +169,10 @@ export class QuotationComponent {
         this.proposalStatus = res.proposalStatus;
         try {
           const parsedContent = JSON.parse(res.contentJs || "{}");
+          this.userContent = JSON.parse(res.clientDataJs || "{}");
+          this.userContentKeys = Object.keys(this.userContent);
           const flattened = Object.values(parsedContent).flat();
+          this.userContentKeys = Object.keys(this.userContent);
           const uniqueFlattened = Array.from(
             new Map(flattened.map((item: any) => [item.boqId, item])).values()
           );
@@ -193,7 +196,6 @@ export class QuotationComponent {
           const roomKeys = Object.keys(parsedContent).filter(
             (k) => k !== 'All'
           );
-
           roomKeys.forEach((key) => {
             const items = parsedContent[key] || [];
             this.boqDataSources[key] = parsedContent[key] || [];
@@ -209,9 +211,7 @@ export class QuotationComponent {
                 };
               }
             );
-
             this.totalProducts += items.length;
-
             const roomTotal = items.reduce(
               (sum: number, item: any) =>
                 sum +
@@ -247,7 +247,6 @@ export class QuotationComponent {
               }),
             },
           ];
-
           this.chartOptions4 = {
             ...this.chartOptions4,
             series: seriesData,
@@ -260,12 +259,12 @@ export class QuotationComponent {
               title: { text: 'Items Count' },
             },
           };
-
-
         } catch (e) {
           this.boqDataSources = { All: [] };
           this.tabKeys = ["All"];
           this.totalPrice = 0;
+          this.userContent = {};
+          this.userContentKeys = [];
         }
       },
     });
