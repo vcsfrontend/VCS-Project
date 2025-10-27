@@ -478,3 +478,16 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   pointer-events: auto;
   z-index: 999;
 }
+.project-card {
+  transition: all 0.25s ease-in-out;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+.info-item small {
+  letter-spacing: 0.3px;
+}
+.info-item span {
+  display: block;
+}
