@@ -637,7 +637,7 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Update Lead</button>
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
     </form>
@@ -765,7 +765,7 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Save Lead</button>
-            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
                 data-bs-dismiss="modal">cancel</button>
         </div>
         <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
@@ -842,7 +842,7 @@
                                 <div class="col-xl-12 col-lg-12 col-md-12">
                                     <button class="btn btn-primary me-1" type="submit"
                                         [disabled]="uploadSpinner">Import</button>
-                                    <button class="btn btn-secondary" type="button"
+                                    <button class="btn btn-danger" type="button"
                                         (click)="offcanvas.dismiss('Cross click')">Cancel</button>
                                 </div>
                             </div>
@@ -859,51 +859,74 @@
     </div>
 </ng-template>
 
-<ng-template #content1 let-offcanvas>
-    <div class="offcanvas-header border-bottom border-block-end-dashed">
-        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
-        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
-            aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body p-0">
-        <div class="col-xl-12 pt-3">
-            <div class="card custom-card">
-                <div class="card-header justify-content-between">
-                    <div class="text-center">
-                        <div class="btn-list">
-                            <button type="button" class="btn btn-primary btn-wave">New Leads</button>
-                            <button type="button" class="btn btn-secondary btn-wave">Active</button>
-                            <button type="button" class="btn btn-purple btn-wave">Spoke</button>
-                            <button type="button" class="btn btn-danger btn-wave">Closed</button>
-                            <button type="button" class="btn btn-warning btn-wave">Proposal sent</button>
-                            <button type="button" class="btn btn-dark btn-wave text-white">Meeting Fixed</button>
-                        </div>
+<ng-template #Content1 let-offcanvas>
+    <form [formGroup]="filterLeadForm" (ngSubmit)="filterLeads(offcanvas)" class="offcanvas-form d-flex flex-column h-100">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Filter Leads</strong></h5>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body p-0 overflow-auto" style="max-height: calc(100vh - 160px);">
+            <div class="col-xl-12 pt-3">
+                <div class="row gy-3 p-4">
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Date Type</label>
+                        <ng-select formControlName="action" [items]="filterFields" bindLabel="name"
+                            [ngModel]="filterLeadForm.get('action')?.value || null" bindValue="name"
+                            placeholder="Select an Date Type">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Start Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder="Start Date"
+                            formControlName="startDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">End Date</label>
+                        <input type="datetime-local" class="form-control" id="date" placeholder="End Date"
+                            formControlName="endDate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Stage</label>
+                        <ng-select formControlName="stage" [items]="stageLst" bindLabel="stageName"
+                            [ngModel]="filterLeadForm.get('stage')?.value || null" bindValue="stageName"
+                            (change)="onFilterStageChange()" placeholder="Select a Stage">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Status</label>
+                        <ng-select formControlName="status" [items]="checkboxStageOptions" bindLabel="name" bindValue="name"
+                            placeholder="Select a status" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">Source</label>
+                        <ng-select formControlName="source" [items]="pipeLine" bindLabel="name" bindValue="name"
+                            placeholder="Select a Source" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6" *ngIf="adoanAiRole == 'ADMIN' || crmRole=='ADMIN'">
+                        <label for="name" class="form-label">Executive</label>
+                        <ng-select formControlName="executive" [items]="userList" bindLabel="email" bindValue="email"
+                            placeholder="Select an Executive" [multiple]="true">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="name" class="form-label">City</label>
+                        <ng-select formControlName="city" [items]="cityList" bindLabel="name" bindValue="name"
+                            placeholder="Select a City" [multiple]="true">
+                        </ng-select>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- <div>
-            <ul class="list-group list-group-flush mb-0">
-                <li class="list-group-item">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-fill">
-                            <button type="button" class="btn btn-info-gradient btn-wave mb-2 d-grid w-100">Download Demo
-                                Format</button>
-                            <p>Kindly download the Leads Format and fill your bulk Leads in the proper format and then
-                                upload it for proper importing of the data.</p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div> -->
-    </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
-            <button class="btn btn-primary mr-3" type="submit">Filter</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Reset
-                Filters</button>
+        <div class="offcanvas-footer border-top p-4">
+            <div class="d-flex justify-content-start gap-2">
+                <button class="btn btn-primary" type="submit">Filter</button>
+                <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            </div>
         </div>
-    </div>
+    </form>
 </ng-template>
 
 <ng-template #content3 let-offcanvas>
@@ -1065,7 +1088,7 @@
         <div class="p-4 border-top">
             <div class="d-flex justify-content-end gap-3">
                 <button class="btn btn-primary w-50" type="submit">Send Mail</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50"
                     type="button">Cancel</button>
             </div>
         </div>
@@ -1141,7 +1164,7 @@
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
                 <div class="d-flex justify-content-end gap-3">
                     <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-primary-light mr-3 w-50"
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger mr-3 w-50"
                         type="submit">Cancel</button>
                 </div>
             </div>
@@ -1384,7 +1407,7 @@
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
             <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
                 (click)="saveCrmStages()">Save Stages</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>
@@ -1437,7 +1460,7 @@
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
             <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked || uploadSpinner">Save
                 Status</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
     <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
@@ -1480,7 +1503,7 @@
         <div class="p-4 border-top">
             <div class="d-flex justify-content-end gap-3">
                 <button class="btn btn-primary w-50" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50"
                     type="button">Cancel</button>
             </div>
         </div>
@@ -1586,7 +1609,7 @@
         <div class="p-4 border-top">
             <div class="d-flex justify-content-end gap-3">
                 <button class="btn btn-success w-50" type="submit">Send to WhatsApp</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50"
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50"
                     type="button">Cancel</button>
             </div>
         </div>
@@ -1647,7 +1670,7 @@
         <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
             <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
                 <button class="btn btn-primary mr-3" type="submit">Filter</button>
-                <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+                <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
             </div>
         </div>
     </form>
@@ -1769,7 +1792,7 @@
       <div class="d-flex justify-content-end gap-3">
         <button class="btn btn-primary w-50" type="submit"
           >Send Mail</button>
-        <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-light w-50" type="button">Cancel</button>
+        <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50" type="button">Cancel</button>
       </div>
     </div>
   </form>
@@ -1841,7 +1864,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
                 <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Create</button>
             </div>
@@ -1969,7 +1992,7 @@
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Cancel</button>
     <ng-container *ngIf="currentStep === 1">
       <button type="button" class="btn btn-danger" (click)="goToStep(2)">Yes, Close</button>
     </ng-container>
@@ -2000,7 +2023,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button ty3tpe="button"class="btn btn-primary ms-2" (click)="openCreateCampaign(content15)">Create Campaign</button>

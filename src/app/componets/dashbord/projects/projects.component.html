@@ -695,7 +695,7 @@
             <button class="btn btn-primary btn-wave waves-effect waves-light" type="submit" (click)="onSubmit()"
                 [disabled]="btnDisable">
                 Create Project</button>
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                 (click)="modal.close('Cross click')">Cancel</button>
         </div>
     </div>
@@ -777,7 +777,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                 (click)="modal.close('Cross click')">Cancel</button>
         </div>
     </div>
@@ -874,7 +874,7 @@
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-primary" (click)="savePaymentDetails()">Submit</button>
-            <button type="button" class="btn btn-light" data-bs-dismiss="modal"
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                 (click)="modal.close('Cross click')">Cancel</button>
         </div>
     </div>
@@ -927,7 +927,7 @@
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
         <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
             <button class="btn btn-primary mr-3" type="submit">Save Stages</button>
-            <button class="btn btn-secondary" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+            <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
 </ng-template>

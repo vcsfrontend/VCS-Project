@@ -91,7 +91,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   departmentDescription : string =""; roleDescription : string ='';roleSubmitted : boolean = false;
   createPermissionForm !:FormGroup; permissionFormSubmitted : boolean= false;
   permissionList : any[]=[];permissionId : number = 0; permissionName : string =''; permissionDescription : string = '';
-  appointmentId : number =0;assignRoleForm ! : FormGroup;selectedDepartment: any = {};
+  appointmentId : number =0;assignRoleForm ! : FormGroup;selectedDepartment: any = {};selectedPermission:any={};
   selectedRole : any ={};assignedRoleLst : any[]=[]; depId : number=0;responseList:any; selectedAssignedRole: any ={};
   selectedPermissionRole : any ={};assignRoleResponse : any ={};selectedRoleObj: any;selectedDeptObj : any;
   selectedId: number = 0;  
@@ -100,7 +100,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   assignPermissionForm ! :FormGroup;assignUserForm ! : FormGroup;assignUserEmail : string = '';
   assignedUserLst : any[]=[];modal:any;permissiondeptroleId : number =0;assignPermissionId : number=0;
   userdeptroleId:any;email : string ='';  departroleId:number =0;adminAccessUsersLst:any[]=[];
-  departmentIds  : any;assignedRoleIds:any;active6='Home'
+  departmentIds  : any;assignedRoleIds:any;active6='Home';filteredRoleList: any[] = [];filteredPermissionList:any[]=[];
+  assignPerm:any;filteredUserList:any[]=[];showUser:boolean= false;selectedUser:any;
+  departmentListTable : any[]= [];
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -262,14 +264,18 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
-    // this.getRoles();
-    // this.getAllDepartments();
-    // this.getAllPermissions();
-    // this.getAssignedRoles();
-    // this.getAssignedDeptRolePermissions();
-    // this.getAssignedUsers();
-    // this.getUsersAccess();
-    // this.adminAccessAllUsers();
+    this.getRoles();
+    this.getAllDepartments();
+    this.getAllPermissions();
+    this.getAssignedRoles();
+    this.getAssignedDeptRolePermissions();
+    this.getAssignedUsers();
+    this.getUsersAccess();
+    this.adminAccessAllUsers();
+        console.log('Raw adminAccessUsersLst', this.adminAccessUsersLst);
+    this.buildDepartmentView();
+    console.log('Built departmentList', this.departmentList);
+
     this.userEmail = JSON.parse(this.userData).email;
     this.saveData = {
       id: 0,
@@ -2107,14 +2113,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
   showRoles  = false;
 
- 
-  
-
   backToDepartments() {
     this.showRoles = false;
   }
    backToPermissions() {
     this.showPermissions = false;
+  }
+  backToUsers() {
+    this.showUser = false;
   }
 
   get df() {
@@ -2260,38 +2266,47 @@ export class SettingsComponent extends BaseComponent implements OnInit {
 
     console.log('Payload:', payload);
 
-    // this.switchService.assignRoleToDepartment(payload).subscribe({
-    //   next: (res) => {
-    //     this.toastr.success('Assigned successfully');
-    //     modal.close();
-    //     this.assignRoleResponse = res;
-    //     this.savedDepartmentRoles.push(res);
-    //     this.depId = res.id;
-    //     console.log('Department ID from response:', this.depId);
-    //     this.getAssignedRoles();
-    //   },
-    //   error: (err) => {
-    //     this.toastr.error('Assignment failed');
-    //     console.error(err);
-    //   }
-    // });
+    this.switchService.assignRoleToDepartment(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Assigned successfully');
+        modal.close();
+        this.assignRoleResponse = res;
+        this.savedDepartmentRoles.push(res);
+        this.depId = res.department.id;
+        console.log('Department ID from response:', this.depId);
+        this.getAssignedRoles([this.depId]);
+      },
+      error: (err) => {
+        this.toastr.error('Assignment failed');
+        console.error(err);
+      }
+    });
   }
 
   onDepartmentChange(id: number) {
     console.log('Selected Department ID:', id);
     this.selectedDepartment = id;
   }
-   toggleTable(department?: any) {
-    console.log('Selected Department Object:', department);
+  toggleTable(department?: any) {
+    this.filteredRoleList = this.assignedRoleLst.filter(
+    role => role.departmentId === department.id
+    );
+    console.log('Selected Department Object:',this.filteredRoleList);
   this.selectedDepartment = department;
   this.showRoles = true;
 
   }
   showPermissions =false;
   tablePermissionView(assignedRole?:any){
+    this.filteredPermissionList = this.assignedPermissionLst.filter(
+    permission => permission.departmentRoleId === assignedRole.id
+    );
+    console.log('Selected Department Object:',this.filteredRoleList);
     this.showPermissions = true;
+    this.selectedPermission = assignedRole;
+    console.log('selected permissions',this.selectedPermission);
   }
-
+  
   onRoleChange(id: number) {
     console.log('Selected Department ID:', id);
     this.selectedRole = id;
@@ -2310,6 +2325,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.getAssignedRoles(idsToUse,companyCode).subscribe({
       next: (res) => {
         this.assignedRoleLst = res;
+        this.filteredRoleList = this.assignedRoleLst;
         this. departroleId = res[0].departmentId;
         console.log('All saved department roles:', this.assignedRoleLst);
         const assignedRoleIds: number[] = Array.from(
@@ -2354,6 +2370,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   onAssignRoleChange(id: any) {
     this.selectedRoleObj = this.assignedRoleLst.find((r: any) => r.id === id);
     console.log('Selected Role Object:', this.selectedRoleObj);
+    this.selectedPermission=id
   }
  
   onPermissionChange(id: number) {
@@ -2365,13 +2382,39 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       (role) => role.companyCode === companyCode && role.departmentId === selectedId
     );
   }
+  // assignPermission(modal:any){
+  //   let companyCode = JSON.parse(this.userData)?.companyCode;
+  //   let selectedId = this.assignPermissionForm.value.depRole;
+  //   console.log(selectedId);
+  //   const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
+  //   const payload = {
+  //     depRole : this.assignPermissionForm.value.depRole,
+  //     permissionRole : this.assignPermissionForm.value.permissionRole,
+  //     departmentRole : departmentRole,
+  //     permission : this.selectedPermissionRole,
+  //     description : this.assignPermissionForm.value.description,
+  //     companyName: JSON.parse(this.userData)?.companyName,
+  //     companyCode: JSON.parse(this.userData)?.companyCode,
+  //     type: JSON.parse(this.userData)?.type,
+  //   }
+  //   console.log(payload)
+  //   this.switchService.assignPermissionToRole(payload).subscribe({
+  //     next: (res) => {
+  //       this.toastr.success('assigned successfully');
+  //       modal.close();
+  //       console.log('All saved department roles:', this.assignedRoleLst);
+  //       this.getAssignedRoles();
+  //     }
+  //   });
+  // }
+
   assignPermission(modal:any){
     let companyCode = JSON.parse(this.userData)?.companyCode;
-    let selectedId = this.assignPermissionForm.value.depRole;
+    let selectedId = this.selectedPermission.id;
     console.log(selectedId);
     const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
     const payload = {
-      depRole : this.assignPermissionForm.value.depRole,
+      depRole : this.selectedPermission.id,
       permissionRole : this.assignPermissionForm.value.permissionRole,
       departmentRole : departmentRole,
       permission : this.selectedPermissionRole,
@@ -2390,7 +2433,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       }
     });
   }
-
   getAssignedDeptRolePermissions(assignedRoleIds ?: number[]){
      const companyCode = JSON.parse(this.userData)?.companyCode;
       const idsToUse = assignedRoleIds && assignedRoleIds.length > 0 ? assignedRoleIds : this.assignedRoleIds;
@@ -2404,6 +2446,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.getAssignPermissions(idsToUse,companyCode).subscribe({
       next: (res) => {
         this.assignedPermissionLst = res;
+        this.filteredPermissionList = this.assignedPermissionLst;
          if (this.assignedPermissionLst.length > 0) {
           this.permissiondeptroleId = this.assignedPermissionLst[0].departmentRoleId;
           this.assignPermissionId = this.assignedPermissionLst[0].permissionId;
@@ -2431,14 +2474,20 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       });
     }
   }
+    
+   tableUserView(assigneUser?:any){
+    this.showUser = true;
+    this.selectedUser = assigneUser;
+    console.log('selected permissions',this.selectedPermission);
+  }
   assignUserToDeptRole(modal?: any){
     let companyCode = JSON.parse(this.userData)?.companyCode;
-    let selectedId = this.assignUserForm.value.depRole;
+    let selectedId = this.selectedPermission.id;
     console.log(selectedId);
     const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
     const payload = {
       userEmail : this.assignUserForm.value.userEmail,
-      depRole : this.assignUserForm.value.depRole,
+      depRole : this.selectedPermission.id,
       departmentRole : departmentRole,
       description : this.assignUserForm.value.description,
       companyName: JSON.parse(this.userData)?.companyName,
@@ -2452,7 +2501,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
          const userEmail = res?.userEmail || res?.email;
          if (userEmail) {
           localStorage.setItem('userEmail', userEmail);
-          console.log('✅ Stored user email in local storage:', userEmail);
           }
         modal.close();
         this.getAssignedUsers();
@@ -2509,10 +2557,89 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         if (res) {
           this.adminAccessUsersLst = res;
           console.log(this.adminAccessUsersLst);
+          this.buildDepartmentView(); 
         }
       }
     });
   }
+
+  openDepartments: { [key: string]: boolean } = {};
+openRoles: { [key: string]: boolean } = {};
+ toggleDepartment(deptIndex: number) {
+    this.openDepartments[deptIndex] = !this.openDepartments[deptIndex];
+  }
+  isDepartmentOpen(deptIndex: number): boolean {
+    return this.openDepartments[deptIndex];
+  }
+
+  toggleRole(deptIndex: number, roleIndex: number) {
+    const key = `${deptIndex}-${roleIndex}`;
+    this.openRoles[key] = !this.openRoles[key];
+  }
+  isRoleOpen(deptIndex: number, roleIndex: number): boolean {
+    return this.openRoles[`${deptIndex}-${roleIndex}`];
+  }
+  getTotalPermissions(dept: any): number {
+    if (!dept?.roles) return 0;
+    return dept.roles.reduce(
+      (sum: number, role: any) => sum + ((role.permissions?.length ?? 0)),
+      0
+    );
+  }
+
+  getTotalUsers(dept: any): number {
+    return dept.users?.length || 0;
+  }
+  
+  buildDepartmentView() {
+  const deptMap = new Map<string, any>();
+
+  for (const user of this.adminAccessUsersLst || []) {
+    for (const dept of user.departments || []) {
+      if (!deptMap.has(dept.departmentName)) {
+        deptMap.set(dept.departmentName, {
+          departmentName: dept.departmentName,
+          roles: [],
+          users: new Set()
+        });
+      }
+
+      const deptEntry = deptMap.get(dept.departmentName);
+      deptEntry.users.add(user.userEmail);
+
+      for (const role of dept.roles || []) {
+        const existingRole = deptEntry.roles.find(
+          (r: any) => r.roleName === role.roleName
+        );
+
+        const safePermissions = Array.isArray(role.permissions)
+          ? role.permissions
+          : [];
+
+        if (existingRole) {
+          for (const perm of safePermissions) {
+            if (!existingRole.permissions.includes(perm)) {
+              existingRole.permissions.push(perm);
+            }
+          }
+        } else {
+          deptEntry.roles.push({
+            roleName: role.roleName,
+            permissions: [...safePermissions]
+          });
+        }
+      }
+    }
+  }
+
+  this.departmentListTable = Array.from(deptMap.values()).map((d) => ({
+    ...d,
+    users: Array.from(d.users)
+  }));
+
+  console.log("Department View:", this.departmentListTable);
+}
+
 
 }
 
