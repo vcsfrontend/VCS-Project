@@ -460,7 +460,7 @@ export class LeadsComponent extends BaseComponent {
       });
 
       this.campaignForm = this.fb.group({
-      campaignId: [0],
+      campaignId: [],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
       pipeline: ['',],
       campaignPoc: [''],
@@ -1372,17 +1372,17 @@ export class LeadsComponent extends BaseComponent {
     }
     this.prepareCrmStageData();
     console.log(this.crmStageData)
-    // this.switchService.SaveCrmStages(this.crmStageData).subscribe({
-    //   next: (res: any) => {
-    //     if (res) {
-    //       this.toastr.success('Stages saved successfully');
-    //       this.isStagesDisabled = false;
-    //       this.offcanvasService.dismiss();
-    //       this.getCrmStages();
-    //       this.isAddStagesDisabled = true;
-    //     }
-    //   },
-    // });
+    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Stages saved successfully');
+          this.isStagesDisabled = false;
+          this.offcanvasService.dismiss();
+          this.getCrmStages();
+          this.isAddStagesDisabled = true;
+        }
+      },
+    });
   }
 
   getCrmStages(): void {

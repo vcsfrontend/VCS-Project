@@ -1782,7 +1782,7 @@ export class DealsComponent extends BaseComponent {
     this.addMoreVisible = !this.addMoreVisible;
   }
 
-   saveCrmStages() {
+  saveCrmStages() {
     const selectedStages = this.crmStaticStages.filter(
       (stage) => stage.checked
     );
