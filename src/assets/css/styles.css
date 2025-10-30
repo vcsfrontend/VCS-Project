@@ -35359,3 +35359,12 @@ ng-select {
   background-color: #e0f2fe; 
   color: #0ea5e9; 
 }
+
+app-sidebar, 
+.sidebar, 
+.sidebar-wrapper {
+  position: relative;
+  z-index: 5000 !important;
+  overflow: hidden !important;
+}
+

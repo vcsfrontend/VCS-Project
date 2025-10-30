@@ -4,9 +4,11 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">All Tasks  <span class="badge bg-primary">{{globalTaskCount}}</span></div>
-                <button class="btn btn-primary" (click)="openGlobalTaskModal(content1)">
-                    <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Create Task
-                </button>
+                <div class="d-flex flex-wrap gap-3">
+                    <button class="btn btn-primary" (click)="openGlobalTaskModal(content1)">
+                        <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Create Task
+                    </button>
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive overflow-scroll">
@@ -53,7 +55,78 @@
                                             <i class="ri-pencil-line"></i>
                                         </a>
                                         <a aria-label="anchor" href="javascript:void(0);"
-                                            class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0" (click)="deleteTask(task.id)">
+                                            class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0" (click)="deleteGlobalTask(task.id)">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Manual Tasks <span class="badge bg-primary">{{manualTaskCount}}</span></div>
+                <div class="d-flex flex-wrap gap-3">
+                    <button class="btn btn-primary mt-1" (click)="openManualTaskModal(content3)">
+                        <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Manual Task
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive overflow-scroll">
+                    <table class="table text-nowrap table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="crm-table-th1">Task Name</th>
+                                <th class="crm-table-th2">Task Description</th>
+                                <th class="crm-table-th2">Task Result</th>
+                                <th class="crm-table-th2">Lead Approval</th>
+                                <th class="crm-table-th2">Manager Approval</th>
+                                <th class="crm-table-th2">Task Status</th>
+                                <th class="crm-table-th2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let task of manualTaskList; let i = index">
+                                <td class="text-center">{{ i + 1 }}</td>
+                                <td>{{ task.name }}</td>
+                                <td>{{ task.description }}</td>
+                                <td>{{ task.result }}</td>
+                                <td>
+                                    <span class="badge" [ngClass]="{
+                                    'bg-success-transparent ps-3 fs-11 order-status complete': task.leadApproval === 'COMPLETED',
+                                    'bg-danger-transparent ps-3 fs-11 order-status pending': task.leadApproval === 'PENDING' }">
+                                        {{ task.leadApproval === 'COMPLETED' ? 'Completed' : 'Pending' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge" [ngClass]="{
+                                    'bg-success-transparent ps-3 fs-11 order-status complete': task.managerApproval === 'COMPLETED',
+                                    'bg-danger-transparent ps-3 fs-11 order-status pending': task.managerApproval === 'PENDING' }">
+                                        {{ task.managerApproval === 'COMPLETED' ? 'Completed' : 'Pending' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge" [ngClass]="{
+                                    'bg-success-transparent ps-3 fs-11 order-status complete': task.currentStatus === 'COMPLETED',
+                                    'bg-danger-transparent ps-3 fs-11 order-status pending': task.currentStatus === 'PENDING' }">
+                                        {{ task.currentStatus === 'COMPLETED' ? 'Completed' : 'Pending' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"
+                                            (click)="updateManualTask(content3)">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                        <a aria-label="anchor" href="javascript:void(0);"
+                                            class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0" (click)="deleteManualTask(task.id)">
                                             <i class="ri-delete-bin-line"></i>
                                         </a>
                                     </div>
@@ -72,9 +145,12 @@
         <div class="card custom-card">
             <div class="card-body p-0">
                 <div class="p-3 d-grid border-bottom border-block-end-dashed">
-                    <button class="btn btn-primary d-flex align-items-center justify-content-center" (click)="assignTaskModal(content2)">
-                        <i class="ri-add-circle-line fs-16 align-middle me-1 mb-1 mt-1"></i>Assign Task
+                    <button class="btn btn-primary mt-1" (click)="assignTaskModal(content2)">
+                        <i class="ri-add-circle-line fs-16 align-middle me-1"></i>Assign Task
                     </button>
+                    <!-- <button class="btn btn-primary mt-1" (click)="manulaTaskModal(content3)">
+                        <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Manual Task
+                    </button> -->
                 </div>
                 <div class="p-3 border-bottom border-block-end-dashed">
                     <div class="input-group">
@@ -86,46 +162,6 @@
                 </div>
                 <div class="p-3 task-navigation border-bottom border-block-end-dashed">
                     <ul class="list-unstyled task-main-nav mb-0">
-                        <li class="px-0 pt-0">
-                            <span class="fs-11 text-muted op-7 fw-medium">TASKS</span>
-                        </li>
-                        <li class="active">
-                            <a href="javascript:void(0);">
-                                <div class="d-flex align-items-center">
-                                    <span class="me-2 lh-1">
-                                        <i class="ri-task-line align-middle fs-14"></i>
-                                    </span>
-                                    <span class="flex-fill text-nowrap">
-                                        All Tasks
-                                    </span>
-                                    <span class="badge bg-success-transparent rounded-pill">167</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <div class="d-flex align-items-center">
-                                    <span class="me-2 lh-1">
-                                        <i class="ri-star-line align-middle fs-14"></i>
-                                    </span>
-                                    <span class="flex-fill text-nowrap">
-                                        Starred
-                                    </span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0);">
-                                <div class="d-flex align-items-center">
-                                    <span class="me-2 lh-1">
-                                        <i class="ri-delete-bin-5-line align-middle fs-14"></i>
-                                    </span>
-                                    <span class="flex-fill text-nowrap">
-                                        Trash
-                                    </span>
-                                </div>
-                            </a>
-                        </li>
                         <li class="px-0 pt-2">
                             <span class="fs-11 text-muted op-7 fw-medium">CATEGORIES</span>
                         </li>
@@ -211,10 +247,10 @@
                                             <ng-template ngbNavContent>
                                                 <div class=" p-0" id="all-tasks" role="tabpanel">
                                                     <div class="row" id="tasks-container">
-                                                        <div class="col-xl-4 task-card">
+                                                        <div class="col-xl-4 task-card" *ngFor="let task of assignedTasksList">
                                                             <div class="card custom-card task-pending-card">
                                                                 <div class="card-body">
-                                                                    <div class="d-flex justify-content-between flex-wrap gap-2" *ngFor="let task of assignedTasksList">
+                                                                    <div class="d-flex justify-content-between flex-wrap gap-2">
                                                                         <div>
                                                                             <p class="fw-medium mb-3 d-flex align-items-center">
                                                                                 <a href="javascript:void(0);">
@@ -419,6 +455,69 @@
                         <label for="globaltaskList" class="form-label">Assigned To</label>
                         <ng-select formControlName="userDeptId" [items]="adminAccessUsers" bindLabel="userEmail" bindValue="userEmail"
                             placeholder="Select User" (change)="onUserChange($event)">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content3 let-modal>
+    <form [formGroup]="manualTaskForm" (ngSubmit)="manualTaskSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3"><strong>{{ selectedTaskId ? 'Edit Task' : 'Create Manual Task' }}</strong></h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-lg-6">
+                        <label for="projectAddress" class="form-label">Task Name</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="name"
+                            placeholder="Enter Task Name" [ngClass]="{ 'is-invalid': manualTaskSubmitted && mf['name'].errors }">
+                        <div *ngIf="manualTaskSubmitted && mf['name'].errors" class="invalid-feedback">
+                            <div *ngIf="mf['name'].errors['required']">Task Name is required</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="projectAddress" class="form-label">AssignedTo</label>
+                        <ng-select formControlName="assignedTo" [items]="userList" bindLabel="email" bindValue="email"
+                            placeholder="Select User">
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-12">
+                        <label for="projectAddress" class="form-label">Task Description</label>
+                        <textarea class="form-control" id="projectAddress" formControlName="description"
+                            placeholder="Enter Task Description" rows="3" [ngClass]="{ 'is-invalid': manualTaskSubmitted && mf['description'].errors }"></textarea>
+                        <div *ngIf="manualTaskSubmitted && mf['description'].errors" class="invalid-feedback">
+                            <div *ngIf="mf['description'].errors['required']">Task Description is required</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <label for="projectResult" class="form-label">Task Result</label>
+                        <textarea class="form-control" id="projectResult" formControlName="result" placeholder="Enter Task Result" rows="3"
+                            [ngClass]="{ 'is-invalid': manualTaskSubmitted && mf['result'].errors }"></textarea>
+                        <div *ngIf="manualTaskSubmitted && mf['result'].errors" class="invalid-feedback">
+                            <div *ngIf="mf['result'].errors['required']">Task Result is required</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6" *ngIf="selectedTaskId">
+                        <label for="projectAddress" class="form-label">Lead Approval</label>
+                        <ng-select formControlName="leadApproval" [items]="designStatus" bindLabel="name" bindValue="name"
+                            placeholder="Select Decision">
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-6" *ngIf="selectedTaskId">
+                        <label for="projectAddress" class="form-label">Manager Approval</label>
+                        <ng-select formControlName="managerApproval" [items]="designStatus" bindLabel="name" bindValue="name"
+                            placeholder="Select Decision">
                         </ng-select>
                     </div>
                 </div>

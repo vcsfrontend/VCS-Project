@@ -299,15 +299,24 @@ export class SwitherService {
     return this.http.post(`${this.adonaiURL}projo_boq/update_recce`, formData);
   }
 
-
   createGloabalTaks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/globalTasks/createGlobalTask`, data); }
   getAllGlobalTasks(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/globalTasks/listGlobalTaskData?companyCode=${companyCode}`);}
   updateGlobalTask(taskData: any): Observable<any> { return this.http.put(`${this.apiUrl}api/globalTasks/update/${taskData.id}`, taskData);}
   deleteGlobalTaskById(taskId: number): Observable<any> { return this.http.delete(`${this.apiUrl}api/globalTasks/delete/${taskId}`);}
 
+  createManualTask(data:any): Observable<any> { return this.http.post(`${this.apiUrl}tasks/schedule/createManualTask`, data); }
+  getManualTasks(): Observable<any> { return this.http.get(`${this.apiUrl}tasks/schedule/getScheduledTasksData`); }
+  updateManualTask(payload: any): Observable<any> { return this.http.put(`${this.apiUrl}tasks/schedule/updateManualTask/${payload.id}`, payload);}
+
+
+  deleteManualTaskById(taskId:any): Observable<any> { return this.http.delete(`${this.apiUrl}tasks/schedule/deleteManualTask/${taskId}`); }
+
   assignTasksRoles(data:any): Observable<any> { return this.http.post(`${this.apiUrl}tasks/assign/user-or-roles`, data); }
-  getAllassignTasks(userDeptRole:any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listAssignedTasksOnUserDeptId?userDeptRole=${userDeptRole}&companyCode=${companyCode}`); }
+  getAllAssignTasks(userDeptRole:any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listAssignedTasksOnUserDeptId?userDeptRole=${userDeptRole}&companyCode=${companyCode}`); }
+  deleteAssignTasks(taskId :any, deptRoleId :any, assignmentId:any, companyCode:any): Observable<any> { return this.http.delete(`${this.apiUrl}tasks/assign/removal?taskId=${taskId}&deptRoleId=${deptRoleId}&assignmentId=${assignmentId}&companyCode=${companyCode}`); }
   adminAccessAllUsers(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/admin/access?companyCode=${companyCode}`); }
 
+
+  crmClients(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/getCompletedClientData`, data); }
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
