@@ -39,7 +39,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
   encapsulation: ViewEncapsulation.None
 })
 export class ClientsComponent extends BaseComponent {
-  displayedColumns: string[] = ['slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
+  displayedColumns1: string[] = ['slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
+  displayedColumns: string[] = [ 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
   dataSource = new MatTableDataSource<any>();
   pageSize = 10;
   element: any = {};
@@ -229,6 +230,82 @@ export class ClientsComponent extends BaseComponent {
       })
     }
   }
+
   
+  dataSources = [
+  {
+    slNo: 1,
+    name: 'John Doe',
+    role: 'Sales Executive',
+    number: '9876543210',
+    date: '2024-05-20',
+    totalCallsAttempted: 50,
+    totalCallsConnectd: 35,
+    totalCallsNotConnectd: 15,
+    totalInprogressLeads: 5,
+    totalConvertedLeads: 8,
+    totalLostleads: 2,
+    email: 'john.doe@example.com',
+    city: 'New York'
+  },
+  {
+    slNo: 2,
+    name: 'Jane Smith',
+    role: 'Sales Manager',
+    number: '9876512340',
+    date: '2024-05-21',
+    totalCallsAttempted: 60,
+    totalCallsConnectd: 45,
+    totalCallsNotConnectd: 15,
+    totalInprogressLeads: 7,
+    totalConvertedLeads: 10,
+    totalLostleads: 3,
+    email: 'jane.smith@example.com',
+    city: 'Los Angeles'
+  },
+  {
+    slNo: 3,
+    name: 'Mike Johnson',
+    role: 'Account Manager',
+    number: '9876523451',
+    date: '2024-05-22',
+    totalCallsAttempted: 70,
+    totalCallsConnectd: 50,
+    totalCallsNotConnectd: 20,
+    totalInprogressLeads: 6,
+    totalConvertedLeads: 12,
+    totalLostleads: 4,
+    email: 'mike.johnson@example.com',
+    city: 'Chicago'
+  },
+  ];
+  
+  formatLocalDateTime(dateTime: string | Date): string {
+    if (!dateTime) return "";
+
+    let dateTimeString = dateTime.toString();
+
+    if (typeof dateTime === "object" && dateTime instanceof Date) {
+        dateTimeString = dateTime.toISOString();
+    }
+
+    const normalized = dateTimeString.split('.')[0];
+    const date = new Date(normalized + "Z");
+
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    const dd = pad(date.getDate());
+    const mmm = months[date.getMonth()];
+    const yyyy = date.getFullYear();
+
+    let hours = date.getHours();
+    const minutes = pad(date.getMinutes());
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+
+    return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  }
   
 }
