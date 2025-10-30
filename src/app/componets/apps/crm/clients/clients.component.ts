@@ -39,22 +39,28 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
   encapsulation: ViewEncapsulation.None
 })
 export class ClientsComponent extends BaseComponent {
+  userDataStorage = localStorage.getItem('userDetails');
+  userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
+  userEmail: string = this.userData ? this.userData.email : '';
+  userName: string = this.userData ? this.userData.username : '';
+  userCompanyCode: string = this.userData ? this.userData.companyCode : '';
+  userCompanyName: string = this.userData ? this.userData.companyName : '';
+  userType: string = this.userData ? this.userData.type : '';
   displayedColumns1: string[] = ['slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
-  displayedColumns: string[] = [ 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
-  dataSource = new MatTableDataSource<any>();
+  displayedColumns: string[] = [ 'slNo', 'name', 'executive', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
+  dataSource = new MatTableDataSource<any>(); crmClientsList: any[] = [];
   pageSize = 10;
   element: any = {};
+  userColors = [ 'bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary', 'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark','bg-light', ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>;  // Access the ng-template
+  @ViewChild('modalTemplate') modalTemplate!: TemplateRef<any>; 
   
  
   public clientsCount = 0;
   public clientsId = 0;
   public clientForm!: FormGroup;
-
-  public userData: any;
   public userList: any;
 
 
@@ -113,7 +119,7 @@ export class ClientsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
-
+    this.getCrmClients();
     this.getProposal();
 
     this.getUsers();
@@ -190,10 +196,26 @@ export class ClientsComponent extends BaseComponent {
     // })
   }
 
+  getCrmClients() {
+    const payload = {
+      status: "completed",
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType
+    }
+    this.switchService.crmClients(payload).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.crmClientsList = res;
+          this.dataSource = new MatTableDataSource(this.crmClientsList);
+        }
+      }
+    })
+  }
 
   formatMobileNumber(mobile: any): string {
     if (!mobile) return "";
-    return Number(mobile).toFixed(0); // Convert to normal number
+    return Number(mobile).toFixed(0); 
   }
 
   formatDateTime(dateTimeString: string): string {
@@ -215,7 +237,6 @@ export class ClientsComponent extends BaseComponent {
       this.switchService.cmpnyUsers(cn, cc).subscribe({
         next: (res: any) => {
           if (res) {
-            console.log(res);
             this.userList = res;
           } else {
             this.toastr.error(res.message, 'signup', {
@@ -231,54 +252,6 @@ export class ClientsComponent extends BaseComponent {
     }
   }
 
-  
-  dataSources = [
-  {
-    slNo: 1,
-    name: 'John Doe',
-    role: 'Sales Executive',
-    number: '9876543210',
-    date: '2024-05-20',
-    totalCallsAttempted: 50,
-    totalCallsConnectd: 35,
-    totalCallsNotConnectd: 15,
-    totalInprogressLeads: 5,
-    totalConvertedLeads: 8,
-    totalLostleads: 2,
-    email: 'john.doe@example.com',
-    city: 'New York'
-  },
-  {
-    slNo: 2,
-    name: 'Jane Smith',
-    role: 'Sales Manager',
-    number: '9876512340',
-    date: '2024-05-21',
-    totalCallsAttempted: 60,
-    totalCallsConnectd: 45,
-    totalCallsNotConnectd: 15,
-    totalInprogressLeads: 7,
-    totalConvertedLeads: 10,
-    totalLostleads: 3,
-    email: 'jane.smith@example.com',
-    city: 'Los Angeles'
-  },
-  {
-    slNo: 3,
-    name: 'Mike Johnson',
-    role: 'Account Manager',
-    number: '9876523451',
-    date: '2024-05-22',
-    totalCallsAttempted: 70,
-    totalCallsConnectd: 50,
-    totalCallsNotConnectd: 20,
-    totalInprogressLeads: 6,
-    totalConvertedLeads: 12,
-    totalLostleads: 4,
-    email: 'mike.johnson@example.com',
-    city: 'Chicago'
-  },
-  ];
   
   formatLocalDateTime(dateTime: string | Date): string {
     if (!dateTime) return "";
@@ -307,5 +280,18 @@ export class ClientsComponent extends BaseComponent {
 
     return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
   }
+
+  getUserColor(followup: any): string {
+    const key = followup.email || followup.followUpBy || 'default';
+    const index = this.hashString(key) % this.userColors.length;
+    return this.userColors[index];
+  }
   
+  private hashString(str: string): number {
+    let hash = 5381;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash * 33) ^ str.charCodeAt(i);
+    }
+    return hash >>> 0;
+  }
 }

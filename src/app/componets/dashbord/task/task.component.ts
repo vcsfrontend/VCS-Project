@@ -27,10 +27,14 @@ export class TaskComponent extends BaseComponent{
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
-  globalTaskForm!: FormGroup; globaltaskList: any[] = []; globalTaskCount:any; selectedTaskId: string | null = null;
+  globalTaskForm!: FormGroup; manualTaskForm!: FormGroup; globaltaskList: any[] = []; 
+  manualTaskList: any[] = []; manualTaskCount: any
+  globalTaskCount:any; selectedTaskId: string | null = null;
   assignedUserLst : any[]=[]; assignTaskForm!: FormGroup; selectedTask: any; selectedUserEmail: string = '';
   assignedTasksList: any[] = []; adminAccessUsers: any[] = []; assignedUserId: number | null = null;
+  userList:any[]=[];
   public globalTaskSubmitted = false;
+  public manualTaskSubmitted = false;
   public assignTaskSubmitted = false;
   constructor(
     private modalService: NgbModal,
@@ -41,8 +45,10 @@ export class TaskComponent extends BaseComponent{
   }
   
   ngOnInit(): void {
+    this.getALLManualTasks();
     this.getAssignedUsers();
     this.adminAccessAllUsers();
+    this.getUsers();
     this.globalTaskForm = this.fb.group({
       name: ['',Validators.required],
       description:['',Validators.required],
@@ -55,9 +61,21 @@ export class TaskComponent extends BaseComponent{
       type: [this.userType],
     });
 
+    this.manualTaskForm = this.fb.group({
+      name: ['',Validators.required],
+      description: ['',Validators.required],
+      assignedTo:['',Validators.required],
+      result:[''],
+      leadApproval:[''],
+      managerApproval:[''],
+      companyName: [this.userCompanyName],
+      companyCode: [this.userCompanyCode],
+      type: [this.userType],
+    });
+
     this.assignTaskForm = this.fb.group({
-      taskId: [0,Validators.required],
-      userDeptId:[0,Validators.required],
+      taskId: [Validators.required],
+      userDeptId:[Validators.required],
       assignedBy:[this.userEmail],
       assignedAt:[new Date().toISOString()],
       activityStatus:[''],
@@ -72,11 +90,14 @@ export class TaskComponent extends BaseComponent{
   taskModal(content1:any) {
 		this.modalService.open(content1,{ centered: true });
 	}
+
   get gf() {
     return this.globalTaskForm.controls;
   }
 
- 
+  get mf() {
+    return this.manualTaskForm.controls;
+  }
 
   openGlobalTaskModal(content1: TemplateRef<any>, task?: any): void {
     this.globalTaskForm.reset();
@@ -85,7 +106,7 @@ export class TaskComponent extends BaseComponent{
       this.selectedTaskId = task.id;
       this.globalTaskForm.patchValue({
         name: task.name,
-        recurringStatus: task.recurringStatus,
+        recurringStatus: task.recurringStatus ? task.recurringStatus : 'NONE',
         description: task.description,
         result: task.result,
         activityStatus: task.activityStatus === 1
@@ -93,11 +114,95 @@ export class TaskComponent extends BaseComponent{
     } else {
       this.selectedTaskId = null;
     }
-    this.modalService.open(content1, {  backdrop: 'static' });
+    this.modalService.open(content1, { backdrop: 'static' });
+  }
+
+  openManualTaskModal(content3: TemplateRef<any>, task?: any): void {
+    this.manualTaskForm.reset();
+    this.globalTaskSubmitted = false;
+    if (task) {
+      this.selectedTaskId = task.id;
+      this.manualTaskForm.patchValue({
+        name: task.name,
+        description: task.description,
+        result: task.result,
+        leadApproval: task.leadApproval,
+        managerApproval: task.managerApproval
+      });
+    } else {
+      this.selectedTaskId = null;
+    }
+    this.modalService.open(content3, { backdrop: 'static' });
+  }
+
+  manulaTaskModal(content3:any) {
+    this.modalService.open(content3, { scrollable: true, centered: true, },);
   }
 
   assignTaskModal(content2:any) {
     this.modalService.open(content2, { scrollable: true, centered: true, },);
+  }
+
+  manualTaskSubmit(modal: any) {
+    this.manualTaskSubmitted = true;
+    if (this.manualTaskForm.invalid) {
+      this.toastr.error('Please fill in all required fields.');
+      return;
+    }
+    const payload: any = {
+      ...this.manualTaskForm.value,
+      companyName: this.userCompanyName,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+    };
+    if (!this.selectedTaskId) {
+      delete payload.leadApproval;
+      delete payload.managerApproval;
+    } else {
+      payload.id = this.selectedTaskId;
+    }
+    this.switchService.createManualTask(payload).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Task submitted successfully!');
+        this.manualTaskForm.reset();
+        this.manualTaskSubmitted = false;
+        modal.close();
+      }
+    });
+  }
+
+  updateManualTask(modal: any) {
+    this.manualTaskSubmitted = true;
+    if (this.manualTaskForm.invalid) {
+      this.toastr.error('Please fill in all required fields.');
+      return;
+    }
+    const payload: any = {
+      ...this.manualTaskForm.value,
+      companyName: this.userCompanyName,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+      id: this.selectedTaskId, 
+    };
+    console.log(payload)
+    // this.switchService.updateManualTask(payload).subscribe({
+    //   next: (res: any) => {
+    //     this.toastr.success('Task updated successfully!');
+    //     this.manualTaskForm.reset();
+    //     this.manualTaskSubmitted = false;
+    //     this.selectedTaskId = null;
+    //     modal.close();
+    //   }
+    // });
+  }
+
+  deleteManualTask(taskId: number): void {
+    if (confirm('Are you sure you want to delete this task?')) {
+      this.switchService.deleteManualTaskById(taskId).subscribe((res: any) => {
+        this.toastr.success('Task deleted successfully');
+        this.getALLManualTasks();
+      });
+    }
   }
 
   globalTaskSubmit(modal: any): void {
@@ -111,7 +216,8 @@ export class TaskComponent extends BaseComponent{
       companyName: this.userCompanyName,
       companyCode: this.userCompanyCode,
       type: this.userType,
-      activityStatus: this.globalTaskForm.value.activityStatus ? 1 : 0
+      activityStatus: this.globalTaskForm.value.activityStatus ? 1 : 0,
+      recurringStatus: this.globalTaskForm.value.recurringStatus || 'NONE'
     };
     if (this.selectedTaskId) {
       payload['id'] = this.selectedTaskId;
@@ -137,7 +243,6 @@ export class TaskComponent extends BaseComponent{
     }
   }
 
-
   getAllGlobalTask() {
     const companyCode = this.userCompanyCode;
     this.switchService.getAllGlobalTasks(companyCode).subscribe({
@@ -145,6 +250,17 @@ export class TaskComponent extends BaseComponent{
         if (res) {
           this.globaltaskList = res.data || res;
           this.globalTaskCount = this.globaltaskList.length;
+        }
+      }
+    });
+  }
+
+  getALLManualTasks() {
+    this.switchService.getManualTasks().subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.manualTaskList = res.data || res;
+          this.manualTaskCount = this.manualTaskList.length;
         }
       }
     });
@@ -168,37 +284,31 @@ export class TaskComponent extends BaseComponent{
     });
   }
 
-
-  deleteTask(taskId: number): void {
+  deleteGlobalTask(taskId: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
       this.switchService.deleteGlobalTaskById(taskId).subscribe((res: any) => {
-        this.toastr.success(res.message || 'Task deleted successfully');
+        this.toastr.success('Task deleted successfully');
         this.getAllGlobalTask();
       });
     }
   }
 
   deleteAssignTask(selectedTask: any): void {
-    if (!selectedTask) return; const payload = {
-      taskId: selectedTask.taskId,
-      deptRoleId: selectedTask.userDeptId,
-      assignmentId: selectedTask.id,
-      companyCode: this.userCompanyCode
-    };
-    if (confirm('Are you sure you want to delete this Assign task?')) {
-      console.log(payload)
-      // this.switchService.deleteAssignTask(payload).subscribe({
-      //   next: (res: any) => {
-      //     this.toastr.success(res.message || 'Task deleted successfully');
-      //     this.getAllGlobalTask();
-      //   },
-      //   error: (err) => {
-      //     this.toastr.error(err.message || 'Failed to delete task');
-      //   }
-      // });
+    if (!selectedTask) return;
+    const taskId = selectedTask.taskId;
+    const deptRoleId = selectedTask.userDeptId;
+    const assignmentId = selectedTask.id;
+    const companyCode = this.userCompanyCode;
+    if (confirm('Are you sure you want to delete this assigned task?')) {
+      this.switchService.deleteAssignTasks(taskId, deptRoleId, assignmentId, companyCode).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Task deleted successfully');
+          this.getAllGlobalTask();
+          this.loadAssignedTasks();
+        }
+      });
     }
   }
-
 
   getAssignedUsers() {
     const email = this.userEmail;
@@ -219,7 +329,7 @@ export class TaskComponent extends BaseComponent{
   }
 
   assignTaskSubmit(modal: any) {
-    this.assignTaskSubmitted = true; 
+    this.assignTaskSubmitted = true;
     if (this.assignTaskForm.invalid) {
       this.toastr.error('Please fill in all required fields.');
       return;
@@ -252,14 +362,15 @@ export class TaskComponent extends BaseComponent{
           if (res.length > 0) {
             const assignedUser = res[0];
             this.assignedUserId = assignedUser.id;
+
             this.assignTaskForm.patchValue({
-              userDeptId: assignedUser.id,
-              userEmail: assignedUser.userEmail
+              userDeptId: selectedUser.userEmail,
+              userEmail: selectedUser.userEmail
             });
           } else {
             this.assignedUserId = null;
             this.assignTaskForm.patchValue({
-              userDeptId: null,
+              userDeptId: selectedUser.userEmail,
               userEmail: selectedUser.userEmail
             });
           }
@@ -276,36 +387,46 @@ export class TaskComponent extends BaseComponent{
     }
   }
 
+  getUsers() {
+    let cn = this.userCompanyName;
+    let cc = this.userCompanyCode;
+    this.switchService.cmpnyUsers(cn, cc).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.userList = res;
+        }
+      }
+    })
+  }
+
   loadAssignedTasks() {
     const userDeptRole = this.assignTaskForm.get('userDeptId')?.value;
     const companyCode = this.userCompanyCode;
-    this.switchService.getAllassignTasks(userDeptRole, companyCode).subscribe({
+    const userEmail = this.userEmail;
+    this.switchService.getAllAssignTasks(userDeptRole, companyCode).subscribe({
       next: (assignedRes) => {
-        const assignedTasks = assignedRes.data || assignedRes;
-        const today = new Date().toLocaleString('en-US', { weekday: 'long' }).toUpperCase();
-        this.assignedTasksList = assignedTasks
-          .map((assigned: any) => {
-            const matched = this.globaltaskList.find((task: any) => task.id === assigned.taskId);
-            return {
-              ...assigned,
-              taskName: matched?.name || 'N/A',
-              description: matched?.description || 'N/A',
-              result: matched?.result || 'N/A',
-              recurringStatus: matched?.recurringStatus?.toUpperCase() || 'N/A',
-            };
-          })
-          .filter((task: any) => {
-            const status = task.recurringStatus;
-            if (status === 'DAILY') return true;
-            if (status === 'WEEKLY' && today === 'MONDAY') return true;
-            if (status === today) return true;
-            if (status === 'SAT_SUN' && (today === 'SATURDAY' || today === 'SUNDAY')) return true;
-            if (status === 'MONTHLY' && new Date().getDate() === 1) return true;
-            return false;
-          });
-      }
+        const allAssignedTasks = assignedRes.data || assignedRes;
+        const filteredTasks = allAssignedTasks.filter(
+          (task: any) => task.userEmail === userEmail
+        );
+        this.assignedTasksList = filteredTasks.map((assigned: any) => {
+          const matched = this.globaltaskList.find(
+            (task: any) => task.id === assigned.taskId
+          );
+          return {
+            ...assigned,
+            taskName: matched?.name || 'N/A',
+            description: matched?.description || 'N/A',
+            result: matched?.result || 'N/A',
+            recurringStatus:
+              matched?.recurringStatus?.toUpperCase() || 'N/A',
+          };
+        });
+      },
     });
   }
+
+
 
 
 
