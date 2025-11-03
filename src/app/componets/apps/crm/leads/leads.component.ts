@@ -755,14 +755,13 @@ export class LeadsComponent extends BaseComponent {
   addLeadStatusItem() {
     this.leadStatusitems.push({ checked: false, label: '' });
   }
-  inPorgressLeads = [
-    { name: 'Quotation Shared', checked: false, isDefault: true, color: 'badge bg-secondary-transparent text-secondary' },
-    { name: 'Commercial Discussion', checked: false, isDefault: true, color: 'badge bg-primary-transparent text-primary' },
-    { name: 'Office Visit', checked: false, isDefault: true, color: 'badge bg-warning-transparent text-warning' },
-    { name: 'Hot', checked: false, isDefault: true, color: 'badge bg-danger-transparent text-danger' },
-    { name: 'Cold', checked: false, isDefault: true, color: 'badge bg-secondary-transparent text-secondary' },
-    { name: 'Warm', checked: false, isDefault: true, color: 'badge bg-orange-transparent text-orange' },
-    { name: 'Call Back', checked: false, isDefault: true, color: 'badge bg-info-transparent text-info' },
+  inPorgressLeads = [ {  name: 'Quotataion Shared',checked: false,  isDefault: true, color: '#28a745',},
+    { name: 'Commercial Discussion', checked: false, isDefault: true, color: '#007bff',},
+    { name: 'Office Visit', checked: false, isDefault: true, color: '#ffc107' },
+    { name: 'Hot', checked: false, isDefault: true, color: '#dc3545' },
+    { name: 'Cold', checked: false, isDefault: true, color: '#6c757d' },
+    { name: 'Warm', checked: false, isDefault: true, color: '#fd7e14' },
+    { name: 'Call Back', checked: false, isDefault: true, color: '#17a2b8' },
   ];
 
   lostLeads = [
@@ -770,14 +769,14 @@ export class LeadsComponent extends BaseComponent {
       name: 'Not Interested',
       checked: false,
       isDefault: true,
-      color: 'badge bg-danger-transparent text-danger',
+      color: '#dc3545',
     },
     { name: 'Irrelevant', checked: false, isDefault: true, color: '#6c757d' },
     {
       name: 'Given to others',
       checked: false,
       isDefault: true,
-      color: 'badge bg-warning-transparent text-danger',
+      color: '#fd7e14',
     },
   ];
 

@@ -1225,7 +1225,7 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvas)" class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 80vh;">
+    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvas)" class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 100vh;">
         <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
                 <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
@@ -1271,9 +1271,9 @@
             </div> -->
         </div>
         <div class="p-4 border-top">
-            <div class="d-flex justify-content-end gap-3">
-                <button class="btn btn-primary w-50" type="submit">Send Mail</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50"
+            <div class="d-flex justify-content-start gap-3">
+                <button class="btn btn-primary" type="submit">Send Mail</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger"
                     type="button">Cancel</button>
             </div>
         </div>
@@ -1357,8 +1357,8 @@
         </div>
         <div class="p-4 border-top">
             <div class="d-flex justify-content-start gap-2">
-                    <button class="btn btn-primary w-50" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50" type="button">Cancel</button>
+                    <button class="btn btn-primary" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger" type="button">Cancel</button>
             </div>
         </div>
         <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
@@ -1370,7 +1370,6 @@
 </ng-template>
 
 
-<!-- Followup lead-->
 <ng-template #Content4 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Add New Follow up Date For
