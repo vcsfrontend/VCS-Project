@@ -1,12 +1,15 @@
 
 <div class="row mt-4">
-    <div class="col-lg-12">
+    <div class="col-lg-12" *ngIf="adonaiRole=== 'ADMIN'">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">All Tasks  <span class="badge bg-primary">{{globalTaskCount}}</span></div>
                 <div class="d-flex flex-wrap gap-3">
                     <button class="btn btn-primary" (click)="openGlobalTaskModal(content1)">
                         <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Create Task
+                    </button>
+                    <button class="btn btn-primary" (click)="assignTaskModal(content2)">
+                        <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i>Assign Task
                     </button>
                 </div>
             </div>
@@ -31,7 +34,11 @@
                                 <td>{{ task.name }}</td>
                                 <td>{{ task.description }}</td>
                                 <td>{{ task.result }}</td>
-                                <td>{{task.recurringStatus}}</td>
+                                <td>
+                                    <span class="badge" [ngClass]="getRecurringStatusBadge(task.recurringStatus)">
+                                        {{ task.recurringStatus | titlecase}}
+                                    </span>
+                                </td>
                                 <td>
                                     <span class="badge" [ngClass]="{
                                         'bg-success-transparent ps-3 fs-11 order-status complete': task.activityStatus === 1,
@@ -54,8 +61,7 @@
                                             (click)="openGlobalTaskModal(content1, task)">
                                             <i class="ri-pencil-line"></i>
                                         </a>
-                                        <a aria-label="anchor" href="javascript:void(0);"
-                                            class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0" (click)="deleteGlobalTask(task.id)">
+                                        <a class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0" (click)="deleteAssignTask(task)">
                                             <i class="ri-delete-bin-line"></i>
                                         </a>
                                     </div>
@@ -67,13 +73,14 @@
             </div>
         </div>
     </div>
+
     <div class="col-lg-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <div class="card-title">Manual Tasks <span class="badge bg-primary">{{manualTaskCount}}</span></div>
+                <div class="card-title">Current Taks <span class="badge bg-primary">{{assignedTasksCount}}</span></div>
                 <div class="d-flex flex-wrap gap-3">
                     <button class="btn btn-primary mt-1" (click)="openManualTaskModal(content3)">
-                        <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Manual Task
+                        <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Manual Task
                     </button>
                 </div>
             </div>
@@ -86,31 +93,31 @@
                                 <th class="crm-table-th1">Task Name</th>
                                 <th class="crm-table-th2">Task Description</th>
                                 <th class="crm-table-th2">Task Result</th>
-                                <th class="crm-table-th2">Lead Approval</th>
+                                <th class="crm-table-th2">Assigned By</th>
+                                <th class="crm-table-th2">Recurring Status</th>
                                 <th class="crm-table-th2">Manager Approval</th>
                                 <th class="crm-table-th2">Task Status</th>
                                 <th class="crm-table-th2">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let task of manualTaskList; let i = index">
+                            <tr *ngFor="let task of assignedTasksList let i = index">
                                 <td class="text-center">{{ i + 1 }}</td>
-                                <td>{{ task.name }}</td>
+                                <td>{{ task.taskName }}</td>
                                 <td>{{ task.description }}</td>
                                 <td>{{ task.result }}</td>
                                 <td>
-                                    <span class="badge" [ngClass]="{
-                                    'bg-success-transparent ps-3 fs-11 order-status complete': task.leadApproval === 'COMPLETED',
-                                    'bg-danger-transparent ps-3 fs-11 order-status pending': task.leadApproval === 'PENDING' }">
-                                        {{ task.leadApproval === 'COMPLETED' ? 'Completed' : 'Pending' }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="badge" [ngClass]="{
-                                    'bg-success-transparent ps-3 fs-11 order-status complete': task.managerApproval === 'COMPLETED',
-                                    'bg-danger-transparent ps-3 fs-11 order-status pending': task.managerApproval === 'PENDING' }">
-                                        {{ task.managerApproval === 'COMPLETED' ? 'Completed' : 'Pending' }}
-                                    </span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar avatar-sm avatar-rounded border fw-bold text-white shadow-sm" [ngClass]="getUserColor(task)">
+                                            <span>{{ task?.assignedBy?.charAt(0) | uppercase }}</span>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold text-dark">{{ task.assignedBy }}</span>
+                                            <small class="text-muted">
+                                                {{ task.assignedAt | date:'dd-MMM-yyyy • hh:mm a' }}
+                                            </small>
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
                                     <span class="badge" [ngClass]="{
@@ -122,7 +129,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"
-                                            (click)="updateManualTask(content3)">
+                                            (click)="openManualTaskModal(content3, task)">
                                             <i class="ri-pencil-line"></i>
                                         </a>
                                         <a aria-label="anchor" href="javascript:void(0);"
@@ -137,10 +144,13 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 </div>
 
-<div class="row mt-4">
+
+
+
+<!-- <div class="row mt-4">
     <div class="col-xl-3">
         <div class="card custom-card">
             <div class="card-body p-0">
@@ -148,9 +158,6 @@
                     <button class="btn btn-primary mt-1" (click)="assignTaskModal(content2)">
                         <i class="ri-add-circle-line fs-16 align-middle me-1"></i>Assign Task
                     </button>
-                    <!-- <button class="btn btn-primary mt-1" (click)="manulaTaskModal(content3)">
-                        <i class="ri-add-circle-line fs-16 align-middle me-1"></i> Manual Task
-                    </button> -->
                 </div>
                 <div class="p-3 border-bottom border-block-end-dashed">
                     <div class="input-group">
@@ -276,11 +283,9 @@
                                                                                     {{ task.result }}
                                                                                 </span>
                                                                             </p>
-                                                                            <p class="mb-0">
-                                                                                Assigned To :
-                                                                                <span class="fs-12 mb-1 text-muted">
-                                                                                    {{ task.userEmail || 'N/A' }}
-                                                                                </span>
+                                                                            <p class="mb-3">Assin By:
+                                                                                <span class="fs-12 mb-1 text-muted">{{ task.assignedBy || 'N/A' }}</span>
+                                                                                Assign To: <span class="text-dark">{{ task.userEmail || 'N/A' }}</span>
                                                                             </p>
                                                                         </div>
                                                                         <div>
@@ -363,19 +368,8 @@
                 <div [ngbNavOutlet]="nav" class="mt-2"></div>
             </div>
         </div>
-        <!-- <ul class="pagination justify-content-end">
-            <li class="page-item disabled">
-                <a class="page-link">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="javascript:void(0);">1</a></li>
-            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-            <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="javascript:void(0);">Next</a>
-            </li>
-        </ul> -->
     </div>
-</div>
+</div> -->
 
 
 <ng-template #content1 let-modal>
@@ -442,7 +436,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
-        <div class="modal-body overflowImportant" style="min-height: 200px;">
+        <div class="modal-body overflowImportant" style="min-height: 300px;">
             <div class="col-xl-12">
                 <div class="row gy-2">
                     <div class="col-lg-6">
@@ -452,9 +446,27 @@
                         </ng-select>
                     </div>
                     <div class="col-lg-6">
-                        <label for="globaltaskList" class="form-label">Assigned To</label>
-                        <ng-select formControlName="userDeptId" [items]="adminAccessUsers" bindLabel="userEmail" bindValue="userEmail"
-                            placeholder="Select User" (change)="onUserChange($event)">
+                        <label class="form-label">Assigned To</label>
+                        <input type="checkbox" (change)="toggleAllUsers($event)"> Show All Users
+                        <ng-select *ngIf="!showAllUsers" formControlName="userDeptId" [items]="adminAccessUsers" bindLabel="userEmail"
+                            bindValue="id" placeholder="Select User" (change)="onUserChange($event)">
+                        </ng-select>
+                        <ng-select *ngIf="showAllUsers" formControlName="userDeptId" [items]="userList" bindValue="email" bindLabel="email"
+                            placeholder="Select User" [searchable]="true" (change)="onUserChange($event)">
+                            <ng-template ng-option-tmp let-user="item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold"
+                                        [ngClass]="getUserColor(user)">
+                                        <span>{{ user?.email?.charAt(0) | uppercase }}</span>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <span class="fs-14">
+                                            {{ user.email?.length > 15 ? (user.email | slice:0:15) + '...' : user.email }}
+                                        </span>
+                                        <div class="fs-11">{{ user.username }}</div>
+                                    </div>
+                                </div>
+                            </ng-template>
                         </ng-select>
                     </div>
                 </div>
@@ -471,7 +483,7 @@
 <ng-template #content3 let-modal>
     <form [formGroup]="manualTaskForm" (ngSubmit)="manualTaskSubmit(modal)">
         <div class="modal-header justify-content-center">
-            <h6 class="modal-title" id="staticBackdropLabel3"><strong>{{ selectedTaskId ? 'Edit Task' : 'Create Manual Task' }}</strong></h6>
+            <h6 class="modal-title" id="staticBackdropLabel3"><strong>{{ selectedTaskId ? 'Edit Manual Task' : 'Create Manual Task' }}</strong></h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
@@ -487,9 +499,36 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <label for="projectAddress" class="form-label">AssignedTo</label>
-                        <ng-select formControlName="assignedTo" [items]="userList" bindLabel="email" bindValue="email"
-                            placeholder="Select User">
+                        <label for="assignedTo" class="form-label">Assigned To</label>
+                        <ng-select formControlName="assignedTo" [items]="userList" bindValue="email" placeholder="Select User"
+                            class="rounded-0 ng-select border-bottom" [searchable]="true">
+                            <ng-template ng-option-tmp let-user="item" let-index="index">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold"
+                                        [ngClass]="getUserColor(user)">
+                                        <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                            {{ user.email?.charAt(0) | uppercase }}
+                                        </span>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <span class="fs-14">
+                                            {{ user.email?.length > 15 ? (user.email | slice:0:15) + '...' : user.email }}
+                                        </span>
+                                        <div class="fs-11">{{ user.username }}</div>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <ng-template ng-label-tmp let-user="item">
+                                <div class="d-flex align-items-center text-truncate w-100">
+                                    <div class="avatar avatar-sm avatar-rounded me-1 border text-white fw-bold flex-shrink-0"
+                                        [ngClass]="getUserColor(user)">
+                                        <span>{{ user.email?.charAt(0) | uppercase }}</span>
+                                    </div>
+                                    <span class="text-truncate" style="max-width: calc(100% - 40px);">
+                                        {{ user.email?.length > 15 ? (user.email | slice:0:15) + '...' : user.email }}
+                                    </span>
+                                </div>
+                            </ng-template>
                         </ng-select>
                     </div>
                     <div class="col-lg-12">

@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SwitherService } from '../../../shared/services/swither.service';
 import { CommonModule } from '@angular/common';
 import { BaseComponent } from '../../../shared/base/base.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-task',
@@ -27,12 +28,16 @@ export class TaskComponent extends BaseComponent{
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
+  adonaiRole: string =  this.userData ? this.userData.adonaiRole : '';
+  crmRole: string =  this.userData ? this.userData.crmRole : '';
   globalTaskForm!: FormGroup; manualTaskForm!: FormGroup; globaltaskList: any[] = []; 
   manualTaskList: any[] = []; manualTaskCount: any
   globalTaskCount:any; selectedTaskId: string | null = null;
   assignedUserLst : any[]=[]; assignTaskForm!: FormGroup; selectedTask: any; selectedUserEmail: string = '';
   assignedTasksList: any[] = []; adminAccessUsers: any[] = []; assignedUserId: number | null = null;
-  userList:any[]=[];
+  userList:any[]=[]; adminList: any;  assignedTasksCount: any
+   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
+    'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'];
   public globalTaskSubmitted = false;
   public manualTaskSubmitted = false;
   public assignTaskSubmitted = false;
@@ -45,10 +50,6 @@ export class TaskComponent extends BaseComponent{
   }
   
   ngOnInit(): void {
-    this.getALLManualTasks();
-    this.getAssignedUsers();
-    this.adminAccessAllUsers();
-    this.getUsers();
     this.globalTaskForm = this.fb.group({
       name: ['',Validators.required],
       description:['',Validators.required],
@@ -83,8 +84,15 @@ export class TaskComponent extends BaseComponent{
       userEmail:[''],
       type: [this.userType],
     });
-
+    
+    this.adminAccessAllUsers();
+    this.getUsers();
+    this.getAssignedUsers();
     this.getAllGlobalTask();
+    this.getALLManualTasks();
+    if (this.adonaiRole === 'ADMIN' || this.crmRole === 'ADMIN') {
+      this.fetchTasksAssignedBy();
+    }
   }
 
   taskModal(content1:any) {
@@ -119,13 +127,14 @@ export class TaskComponent extends BaseComponent{
 
   openManualTaskModal(content3: TemplateRef<any>, task?: any): void {
     this.manualTaskForm.reset();
-    this.globalTaskSubmitted = false;
+    this.manualTaskSubmitted = false;
     if (task) {
       this.selectedTaskId = task.id;
       this.manualTaskForm.patchValue({
         name: task.name,
         description: task.description,
         result: task.result,
+        assignedTo: task.assignedTo,
         leadApproval: task.leadApproval,
         managerApproval: task.managerApproval
       });
@@ -135,12 +144,40 @@ export class TaskComponent extends BaseComponent{
     this.modalService.open(content3, { backdrop: 'static' });
   }
 
-  manulaTaskModal(content3:any) {
-    this.modalService.open(content3, { scrollable: true, centered: true, },);
-  }
-
   assignTaskModal(content2:any) {
     this.modalService.open(content2, { scrollable: true, centered: true, },);
+  }
+
+  adminAccessAllUsers() {
+    const companyCode = this.userCompanyCode;
+    this.switchService.adminAccessAllUsers(companyCode).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.adminAccessUsers = res.data || res;
+          const currentValue = this.assignTaskForm.get('userDeptId')?.value;
+          if (!currentValue && this.adminAccessUsers.length > 0) {
+            const firstUser = this.adminAccessUsers[0];
+            this.assignTaskForm.patchValue({
+              userDeptId: firstUser.id,
+              userEmail: firstUser.userEmail
+            });
+          }
+        }
+      }
+    });
+  }
+
+
+  getUsers() {
+    let cn = this.userCompanyName;
+    let cc = this.userCompanyCode;
+    this.switchService.cmpnyUsers(cn, cc).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.userList = res;
+        }
+      }
+    })
   }
 
   manualTaskSubmit(modal: any) {
@@ -155,51 +192,33 @@ export class TaskComponent extends BaseComponent{
       companyCode: this.userCompanyCode,
       type: this.userType,
     };
-    if (!this.selectedTaskId) {
+    if (this.selectedTaskId) {
+      payload.id = this.selectedTaskId;
+    } else {
       delete payload.leadApproval;
       delete payload.managerApproval;
-    } else {
-      payload.id = this.selectedTaskId;
     }
-    this.switchService.createManualTask(payload).subscribe({
+    const apiCall = this.selectedTaskId
+      ? this.switchService.updateManualTask(payload)
+      : this.switchService.createManualTask(payload);
+    apiCall.subscribe({
       next: (res: any) => {
-        this.toastr.success('Task submitted successfully!');
+        this.toastr.success(
+          this.selectedTaskId ? 'Task updated' : 'Task created'
+        );
         this.manualTaskForm.reset();
         this.manualTaskSubmitted = false;
+        this.selectedTaskId = null;
         modal.close();
+        this.getALLManualTasks();
       }
     });
-  }
-
-  updateManualTask(modal: any) {
-    this.manualTaskSubmitted = true;
-    if (this.manualTaskForm.invalid) {
-      this.toastr.error('Please fill in all required fields.');
-      return;
-    }
-    const payload: any = {
-      ...this.manualTaskForm.value,
-      companyName: this.userCompanyName,
-      companyCode: this.userCompanyCode,
-      type: this.userType,
-      id: this.selectedTaskId, 
-    };
-    console.log(payload)
-    // this.switchService.updateManualTask(payload).subscribe({
-    //   next: (res: any) => {
-    //     this.toastr.success('Task updated successfully!');
-    //     this.manualTaskForm.reset();
-    //     this.manualTaskSubmitted = false;
-    //     this.selectedTaskId = null;
-    //     modal.close();
-    //   }
-    // });
   }
 
   deleteManualTask(taskId: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
       this.switchService.deleteManualTaskById(taskId).subscribe((res: any) => {
-        this.toastr.success('Task deleted successfully');
+        this.toastr.success('Task deleted');
         this.getALLManualTasks();
       });
     }
@@ -224,7 +243,7 @@ export class TaskComponent extends BaseComponent{
       payload['updatedBy'] = this.userName;
       delete payload.createdBy;
       this.switchService.updateGlobalTask(payload).subscribe((res: any) => {
-        this.toastr.success(res.message || 'Task updated successfully');
+        this.toastr.success(res.message || 'Task updated');
         modal.close();
         this.globalTaskForm.reset();
         this.selectedTaskId = null;
@@ -234,7 +253,7 @@ export class TaskComponent extends BaseComponent{
     } else {
       payload.createdBy = this.userName;
       this.switchService.createGloabalTaks(payload).subscribe((res: any) => {
-        this.toastr.success(res.message || 'Task created successfully');
+        this.toastr.success(res.message || 'Task created');
         modal.close();
         this.globalTaskForm.reset();
         this.globalTaskSubmitted = false;
@@ -266,28 +285,12 @@ export class TaskComponent extends BaseComponent{
     });
   }
 
-  adminAccessAllUsers() {
-    const companyCode = this.userCompanyCode;
-    this.switchService.adminAccessAllUsers(companyCode).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.adminAccessUsers = res.data || res;
-          if (this.adminAccessUsers.length > 0) {
-            const firstUser = this.adminAccessUsers[0];
-            this.assignTaskForm.patchValue({
-              userDeptId: firstUser.id,       
-              userEmail: firstUser.userEmail
-            });
-          }
-        }
-      }
-    });
-  }
+  
 
   deleteGlobalTask(taskId: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
       this.switchService.deleteGlobalTaskById(taskId).subscribe((res: any) => {
-        this.toastr.success('Task deleted successfully');
+        this.toastr.success('Task deleted');
         this.getAllGlobalTask();
       });
     }
@@ -302,7 +305,7 @@ export class TaskComponent extends BaseComponent{
     if (confirm('Are you sure you want to delete this assigned task?')) {
       this.switchService.deleteAssignTasks(taskId, deptRoleId, assignmentId, companyCode).subscribe({
         next: (res: any) => {
-          this.toastr.success('Task deleted successfully');
+          this.toastr.success('Task deleted');
           this.getAllGlobalTask();
           this.loadAssignedTasks();
         }
@@ -346,9 +349,9 @@ export class TaskComponent extends BaseComponent{
     console.log(payload)
     // this.switchService.assignTasksRoles(payload).subscribe({
     //   next: (res: any) => {
-    //     this.toastr.success(res.message || 'Task assigned successfully');
+    //     this.toastr.success(res.message || 'Task assigned');
     //     modal.close();
-    //     this.loadAssignedTasks();
+    //     // this.loadAssignedTasks();
     //     this.assignTaskForm.reset();
     //     this.assignTaskSubmitted = false;
     //   },
@@ -362,7 +365,6 @@ export class TaskComponent extends BaseComponent{
           if (res.length > 0) {
             const assignedUser = res[0];
             this.assignedUserId = assignedUser.id;
-
             this.assignTaskForm.patchValue({
               userDeptId: selectedUser.userEmail,
               userEmail: selectedUser.userEmail
@@ -387,18 +389,6 @@ export class TaskComponent extends BaseComponent{
     }
   }
 
-  getUsers() {
-    let cn = this.userCompanyName;
-    let cc = this.userCompanyCode;
-    this.switchService.cmpnyUsers(cn, cc).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.userList = res;
-        }
-      }
-    })
-  }
-
   loadAssignedTasks() {
     const userDeptRole = this.assignTaskForm.get('userDeptId')?.value;
     const companyCode = this.userCompanyCode;
@@ -415,16 +405,92 @@ export class TaskComponent extends BaseComponent{
           );
           return {
             ...assigned,
-            taskName: matched?.name || 'N/A',
-            description: matched?.description || 'N/A',
-            result: matched?.result || 'N/A',
-            recurringStatus:
-              matched?.recurringStatus?.toUpperCase() || 'N/A',
+            taskName: matched?.name ,
+            description: matched?.description,
+            result: matched?.result,
+            recurringStatus: matched?.recurringStatus?.toUpperCase() ,
           };
         });
+        this.assignedTasksCount = this.assignedTasksList.length;
       },
     });
   }
+
+  fetchTasksAssignedBy() {
+    const email = this.userEmail;
+    const companyCode = this.userCompanyCode;
+    this.switchService.fetchTasksAssignedBy(email, companyCode).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.adminList = res;
+        }
+      }
+    });
+  }
+
+  getUserColor(followup: any): string {
+  const key =
+    followup?.email ||
+    followup?.followUpBy ||
+    followup?.executive ||
+    followup?.assignedTo ||
+    followup?.assignedBy ||
+    'default';
+
+  const index = this.hashString(key) % this.userColors.length;
+  return this.userColors[index];
+}
+
+
+  private hashString(str: string): number {
+    let hash = 5381;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash * 33) ^ str.charCodeAt(i);
+    }
+    return hash >>> 0;
+  }
+
+  getRecurringStatusBadge(status: string): string {
+    switch (status) {
+      case 'DAILY':
+        return 'bg-primary-transparent';
+      case 'WEEKLY':
+        return 'bg-success-transparent';
+      case 'SATURDAY':
+        return 'bg-warning-transparent';
+      case 'SUNDAY':
+        return 'bg-danger-transparent';
+      case 'MONTHLY':
+        return 'bg-info-transparent';
+      case 'SAT_SUN':
+        return 'bg-secondary-transparent';
+      default:
+        return 'bg-light-transparent';
+    }
+  }
+
+
+  showAllUsers: boolean = false;
+
+ toggleAllUsers(event: any) {
+  this.showAllUsers = event.target.checked;
+
+  if (this.showAllUsers) {
+    this.assignTaskForm.patchValue({
+      userDeptId: 0,
+      userEmail: null
+    });
+    this.assignedUserId = 0;
+  } else {
+    this.assignTaskForm.patchValue({
+      userDeptId: null,
+      userEmail: null
+    });
+    this.assignedUserId = null;
+  }
+}
+
+
 
 
 

@@ -518,7 +518,7 @@
 <ng-template #Content14 let-modal>
     <div class="modal-header">
         <h6 class="modal-title" id="exampleModalLgLabel">
-            Edit Lead
+            <strong>Edit Lead</strong>
         </h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
@@ -646,7 +646,7 @@
 <ng-template #Content112 let-modal>
     <div class="modal-header">
         <h6 class="modal-title" id="exampleModalLgLabel">
-            Add Lead
+           <strong>Add Lead</strong>
         </h6>
         <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
             aria-label="Close"></button>
@@ -1040,7 +1040,7 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvasRef)" class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 80vh;">
+    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailLeadSubmit(offcanvasRef)" class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 100vh;">
         <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
             <div class="mb-4">
                 <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
@@ -1086,9 +1086,9 @@
             </div> -->
         </div>
         <div class="p-4 border-top">
-            <div class="d-flex justify-content-end gap-3">
-                <button class="btn btn-primary w-50" type="submit">Send Mail</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50"
+            <div class="d-flex justify-content-start gap-3">
+                <button class="btn btn-primary" type="submit">Send Mail</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger"
                     type="button">Cancel</button>
             </div>
         </div>
@@ -1107,11 +1107,10 @@
     <div class="d-flex pt-4 gap-3 ms-2">
         <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
         <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)" [disabled]="notconnectedstatusClicked">Not Connected</button>
-
     </div>
     <div  *ngIf="showForm && selectedStatus !== 'not connected'" class="mt-2">
         <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm" style="max-height: 70vh;">
-            <div class="offcanvas-body p-0 m-4 ">
+            <div class="offcanvas-body p-0 m-4 h-100" style="max-height: 100vh;">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label for="followupDate" class="form-label">Next Follow up date</label>
@@ -1162,9 +1161,9 @@
 
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
-                <div class="d-flex justify-content-end gap-3">
-                    <button class="btn btn-primary mr-3 w-50" type="submit">Update Status</button>
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger mr-3 w-50"
+                <div class="d-flex justify-content-start gap-3">
+                    <button class="btn btn-primary mr-3" type="submit">Update Status</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger mr-3"
                         type="submit">Cancel</button>
                 </div>
             </div>
@@ -1365,7 +1364,7 @@
                 data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body p-0 h-100" style="max-height: 100vh;">
         <ul class="list-group list-group-flush mb-0">
             <li class="list-group-item">
                 <div class="container mt-3">
@@ -1404,7 +1403,7 @@
         </ul>
     </div>
     <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+        <div class="position-relative justify-content-end d-flex gap-3 ">
             <button class="btn btn-primary btn-wave waves-effect waves-light" type="button"
                 (click)="saveCrmStages()">Save Stages</button>
             <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
@@ -1420,7 +1419,7 @@
                 data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body p-0 d-flex flex-column h-100" style="max-height: 100vh;">
         <div class="col-lg-6 pt-4 ps-4" *ngIf="stageLst.length > 0">
             <ng-select [(ngModel)]="selectedStage" placeholder="Select Stage" [items]="stageLst" bindLabel="stageName"
                 bindValue="stageName" [multiple]="false" (change)="onStageChange()" required>
@@ -1456,8 +1455,8 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-12 col-lg-12 col-md-12 mt-3">
-        <div class="m-4 position-relative justify-content-end d-flex gap-3 ">
+    <div class="p-4 border-top">
+        <div class="position-relative justify-content-start d-flex gap-3 ">
             <button class="btn btn-primary" type="button" (click)="saveCrmStatus()" [disabled]="anyChecked || uploadSpinner">Save
                 Status</button>
             <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
@@ -1501,9 +1500,9 @@
             </div>
         </div>
         <div class="p-4 border-top">
-            <div class="d-flex justify-content-end gap-3">
-                <button class="btn btn-primary w-50" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
-                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50"
+            <div class="d-flex justify-content-start gap-3">
+                <button class="btn btn-primary" type="submit" [disabled]="uploadSpinner">Save Mail Template</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger"
                     type="button">Cancel</button>
             </div>
         </div>
@@ -1736,73 +1735,68 @@
     </div>
     </form>
 </ng-template>
+
 <ng-template #offcanvasTemplate let-offcanvas>
-  <div class="offcanvas-header border-bottom border-block-end-dashed">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Bulk Email</strong></h5>
-    <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
-      aria-label="Close"></button>
-  </div>
-
-  <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailToMultipleLeads(offcanvasRef)" class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 80vh;">
-    <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
-      <div class="mb-4">
-        <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
-          bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
-          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['template'].errors }">
-        </ng-select>
-        <div *ngIf="sendMultiMailSubmitted && s['template'].errors" class="invalid-feedback">
-          <div *ngIf="s['template'].errors['required']">Template is required</div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email"
-          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['email'].errors }">
-        <div *ngIf="sendMultiMailSubmitted && s['email'].errors" class="invalid-feedback">
-          <div *ngIf="s['email'].errors['required']">Email is required</div>
-        </div>
-      </div>
-
-      <!-- CC -->
-      <div class="mb-4">
-        <input type="text" class="form-control" id="cc" placeholder="CC" formControlName="cc"
-          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['cc'].errors }">
-        <div *ngIf="sendMultiMailSubmitted && s['cc'].errors" class="invalid-feedback">
-          <span *ngIf="s['cc'].errors['required']">CC is required.</span>
-          <span *ngIf="s['cc'].errors['email']">Invalid email address.</span>
-        </div>
-      </div>
-
-      <!-- Subject -->
-      <div class="mb-4">
-        <textarea class="form-control" id="subject" rows="4" placeholder="Subject" formControlName="subject"
-          [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['subject'].errors }"></textarea>
-        <div *ngIf="sendMultiMailSubmitted && s['subject'].errors" class="invalid-feedback">
-          <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
-          <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
-        </div>
-      </div>
-
-      <!-- Content -->
-      <div class="mb-4">
-        <textarea class="form-control" id="description" rows="4" placeholder="Description"
-          formControlName="content"></textarea>
-      </div>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Send Bulk Email</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
     </div>
-    <div class="p-4 border-top">
-      <div class="d-flex justify-content-end gap-3">
-        <button class="btn btn-primary w-50" type="submit"
-          >Send Mail</button>
-        <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger w-50" type="button">Cancel</button>
-      </div>
-    </div>
-  </form>
+    <form [formGroup]="sendLeadForm" (ngSubmit)="sendMailToMultipleLeads(offcanvasRef)"
+        class="d-flex flex-column h-100 overflowSendMailForm" style="max-height: 100vh;">
+        <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
+            <div class="mb-4">
+                <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList"
+                    bindLabel="templateName" (change)="onTemplateChange($event)" class="border rounded"
+                    [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['template'].errors }">
+                </ng-select>
+                <div *ngIf="sendMultiMailSubmitted && s['template'].errors" class="invalid-feedback">
+                    <div *ngIf="s['template'].errors['required']">Template is required</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="email" placeholder="Email" formControlName="email"
+                    [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['email'].errors }">
+                <div *ngIf="sendMultiMailSubmitted && s['email'].errors" class="invalid-feedback">
+                    <div *ngIf="s['email'].errors['required']">Email is required</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <input type="text" class="form-control" id="cc" placeholder="CC" formControlName="cc"
+                    [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['cc'].errors }">
+                <div *ngIf="sendMultiMailSubmitted && s['cc'].errors" class="invalid-feedback">
+                    <span *ngIf="s['cc'].errors['required']">CC is required.</span>
+                    <span *ngIf="s['cc'].errors['email']">Invalid email address.</span>
+                </div>
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="subject" rows="4" placeholder="Subject" formControlName="subject"
+                    [ngClass]="{ 'is-invalid': sendMultiMailSubmitted && s['subject'].errors }"></textarea>
+                <div *ngIf="sendMultiMailSubmitted && s['subject'].errors" class="invalid-feedback">
+                    <span *ngIf="s['subject'].errors['required']">Subject is required.</span>
+                    <span *ngIf="s['subject'].errors['minlength']">Subject must be at least 3 characters long.</span>
+                </div>
+            </div>
+            <div class="mb-4">
+                <textarea class="form-control" id="description" rows="4" placeholder="Description"
+                    formControlName="content"></textarea>
+            </div>
+        </div>
+        <div class="p-4 border-top">
+            <div class="d-flex justify-content-start gap-3">
+                <button class="btn btn-primary" type="submit">Send Mail</button>
+                <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger"
+                    type="button">Cancel</button>
+            </div>
+        </div>
+    </form>
 </ng-template>
 
 <ng-template #content30 id="addtask" let-modal>
     <form [formGroup]="taskForm" (ngSubmit)="createTaskSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="mail-ComposeLabel">Create Task</h6>
+                <h6 class="modal-title" id="mail-ComposeLabel"><strong>Create Task</strong></h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
@@ -2008,7 +2002,7 @@
     <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="mail-ComposeLabel">Select Campaign</h6>
+                <h6 class="modal-title" id="mail-ComposeLabel"><strong>Select Campaign</strong></h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
