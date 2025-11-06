@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, HostListener } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, FormArray,Validators  } from '@angular/forms';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
@@ -18,7 +18,7 @@ import { SwitherService } from '../../../shared/services/swither.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
-import { emptyDoc, Validators } from 'ngx-editor';
+import { emptyDoc } from 'ngx-editor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SwiperModule, } from 'swiper/angular';
 import SwiperCore, {
@@ -77,7 +77,7 @@ SwiperCore.use([
     styleUrl: './boq.component.scss'
 })
 export class BoqComponent extends BaseComponent {
-    displayedColumns: string[] = ['sourceFlag', 'select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'l1', 'l2', 'w1', 'w2', 'cl', 'cw', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
+    displayedColumns: string[] = ['sourceFlag', 'select', 'elementUrl', 'brandOrMake', 'codeAndCategory', 'orderStatus', 'itemType', 'source', 'status', 'length', 'breadth', 'height', 'quantity', 'uom', 'draftQuantity', 'clientRate', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gstPrecent', 'amountWithoutGst', 'discount', 'finalAmount',];
     // optionalColumns: string[] = ['brandOrMake', 'discount', 'serviceCharge', 'baseAmount', 'budgetRate', 'hsn', 'gst', 'amountWithoutGST'];
     displayedClientProposal: string[] = ['slNo', 'referenceNo', 'proposalRequestType', 'proposalFor', 'createdBy', 'createdDate', 'status', 'amount'];
     displayedClientOrder: string[] = ['slNo', 'orderNo', 'ordertType', 'orderFrom', 'issuedBy', 'issueDate', 'dueDate', 'orderStatus', 'poStatus', 'progress', 'amount'];
@@ -117,7 +117,8 @@ export class BoqComponent extends BaseComponent {
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
     filteredRecce: any[] = []; blockedStages: string[] = [];
     selectedProposalCount: any = null;
-    isReadOnly :boolean = false;
+    isReadOnly :boolean = false; skipClientForm:boolean=false; clientData: any = null;
+    skipProposalForm : boolean = false;minDateTime: string = '';
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -139,6 +140,7 @@ export class BoqComponent extends BaseComponent {
     projectLst: any = []; boqproject: any; showAllProposals = false; libraryList: any[] = [];
     libraryListData: any[] = [];objectKeys = Object.keys;
     showLeftArrow = false; showRightArrow = false;step = 1;submittedStep1:boolean=false;
+    submittedStep2 : boolean = false;submittedStep3 : boolean = false;
     submitted: boolean = false; projectConfigList: string[] = []; 
     showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
     thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
@@ -243,6 +245,9 @@ export class BoqComponent extends BaseComponent {
     }
 
     onCreateProposalClick(content: any) {
+          const storedClientData = localStorage.getItem("storedClientData");
+            console.log('stored data',storedClientData);
+        this.getProposal();
         if (!this.selectedElement || this.selectedElement.length === 0) {
             this.toastr.warning("Please select at least one Element");
             return;
@@ -275,6 +280,15 @@ export class BoqComponent extends BaseComponent {
     };
 
     ngOnInit(): void {
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const mm = pad(now.getMonth() + 1);
+    const dd = pad(now.getDate());
+    const hh = pad(now.getHours());
+    const mi = pad(now.getMinutes());
+
+    this.minDateTime = `${yyyy}-${mm}-${dd}`;
         this.route.queryParams.subscribe(params => {
             this.projectId = params['projectId'];
             this.projectName = params['projectName'];
@@ -330,27 +344,30 @@ export class BoqComponent extends BaseComponent {
         });
         this.proposalForm = this.fb.group({
             margin:[''],
-            discount: [0, [Validators.required]],
+            discount: [0,],
             others: [0, [Validators.required]],
-            clientName: ['',],
-            clientAddress: ['',],
-            clientEmail:[''],
-            projectConfig: [''],
-            dedEmail: [''],
-            dedMobile: [''],
-            dedName: [''],
-            rmdEmail: [''],
-            rmdMobile: [''],
+            clientName: ['',[Validators.required]],
+            clientAddress: ['',[Validators.required]],
+            clientEmail:['',[Validators.required, Validators.email]],
+            projectConfig: ['',[Validators.required]],
+            dedEmail: ['',[Validators.required]],
+            dedMobile: ['',[Validators.required]],
+            dedName: ['',[Validators.required]],
+            rmdEmail: ['',[Validators.required]],
+            rmdMobile: ['',[Validators.required]],
             projectName: [''],
             flatNo: [''],
-            rmdName: [''],
-            clientMobileNumber:['',[Validators.required]],
-            orderFrom: [''],
+            rmdName: ['',[Validators.required]],
+            clientMobileNumber:['',[
+                Validators.required,
+                 Validators.pattern(/^[0-9]{10}$/)
+            ]],
+            orderFrom: ['',[Validators.required]],
             orderFor: [this.userCompanyName],
-            vendorId: [''],
-            shippingAddress: [''],
-            startDate: [''],
-            dueDate: [''],
+            vendorId: ['',[Validators.required]],
+            shippingAddress: ['',[Validators.required]],
+            startDate: ['',[Validators.required]],
+            dueDate: ['',[Validators.required]],
             gstNo: [''],
             contentJs: [''],
             proposalContId: [''],
@@ -422,6 +439,8 @@ export class BoqComponent extends BaseComponent {
         });
         this.getUsers();
         this.getAssignProjects();
+        this.getProjectConfig();
+        this.getMarginData();
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
@@ -647,6 +666,11 @@ export class BoqComponent extends BaseComponent {
             next: () => {
                 this.toastr.success("Proposal Created successfully");
                 modal.close();
+                const contentPayload = {
+                    proposalContentId: payload.proposalContentId,
+                    designId: payload.designId
+                };
+                this.getProposalContent(contentPayload);
             },
         });
     }
@@ -737,11 +761,30 @@ export class BoqComponent extends BaseComponent {
             next: (res: any) => {
                 this.proposals = res.boqProposalList || [];
                 this.filteredProposals = [...this.proposals];
+                 if (this.proposals.length > 0) {
+                    this.skipClientForm = true;  
+                    this.skipProposalForm = true;
+                    this.step = 3;
+                    this.step = 3;  
+                    const firstProposal = this.proposals[0];
+                    const payload = {
+                        proposalContentId: firstProposal.proposalContentId,
+                        designId: firstProposal.designId
+                    };   
+                    this.getProposalContent(payload);           
+                } else {
+                    this.skipClientForm = false; 
+                    this.skipProposalForm = false;
+                    this.step = 1;              
+                }
+
+                console.log("Proposal List:", this.proposals);
+                console.log("skipClientForm =", this.skipClientForm);
             },
         });
     }
 
-    getProposalContent(element: any) {
+    getProposalContent(element ?: any) {
         if (!element?.proposalContentId || !element?.designId) {
             this.toastr.warning('Invalid proposal data');
             return;
@@ -753,6 +796,9 @@ export class BoqComponent extends BaseComponent {
         this.switchService.fetchProposalContent(payload).subscribe({
             next: (res: any) => {
                 this.selectedProposalContent = res;
+                if(this.selectedProposalContent.clientDataJs){
+                    localStorage.setItem("storedClientData", this.selectedProposalContent.clientDataJs);
+                }
                 try {
                     const parsedContent = JSON.parse(res.contentJs || "{}");
                     const flattened = Object.values(parsedContent).flat();
@@ -788,6 +834,7 @@ export class BoqComponent extends BaseComponent {
                     });
 
                     this.proposalTabKeys = ["All", ...roomKeys];
+                   
 
                 } catch (e) {
                     this.proposalContentDataSources = {
@@ -796,6 +843,7 @@ export class BoqComponent extends BaseComponent {
                     this.proposalTabKeys = ["All"];
                     this.proposalTabCounts = { All: 0 };
                     this.proposalApprovalForm.patchValue({ amount: 0 });
+                   
                 }
             },
         });
@@ -1044,10 +1092,16 @@ export class BoqComponent extends BaseComponent {
     }
 
     proposalFormSubmit(modal: any) {
-        if (this.proposalForm.invalid) {
-            this.proposalForm.markAllAsTouched();
+        this.submittedStep3 = true;
+
+        const step3Fields = ['orderFrom', 'vendorId', 'shippingAddress', 'startDate', 'dueDate'];
+
+        const invalidStep3 = step3Fields.some(field => this.proposalForm.get(field)?.invalid);
+        if (invalidStep3) {
+            this.toastr.warning('Please fill all required fields in Step 3.');
             return;
         }
+        console.log('after validation its working ');
         const formValue = this.proposalForm.value;
         const selectedData: any = {};
         const seenBoqIds = new Set<number>();
@@ -1075,6 +1129,17 @@ export class BoqComponent extends BaseComponent {
             dedEmail, dedMobile, dedName, rmdEmail, rmdMobile, projectName, flatNo, rmdName, clientMobileNumber,
             tdmc, gmc, gsc, tdsc, gpa, tdpa
         };
+          const storedClientData = localStorage.getItem("storedClientData");
+          let clientDataToSend = {};
+           if (this.skipClientForm ==true ) {
+            if (storedClientData) {
+                clientDataToSend = JSON.parse(storedClientData);
+                console.log('if block executed');
+            }
+            } else {
+            clientDataToSend = selectedData || {};
+            }
+          console.log(storedClientData);
         const proposalPayload = {
             email: this.userEmail,
             type: this.userType,
@@ -1090,8 +1155,9 @@ export class BoqComponent extends BaseComponent {
             contentJs: JSON.stringify(selectedData),
             currentAmount: totalAmount,
             designId: this.designingId,
-            clientDataJs: JSON.stringify(clientData),
+            clientDataJs: JSON.stringify(clientDataToSend),
         };
+        console.log('ghdfghfhjfdfh',proposalPayload);
         this.updateElementsAndCreateProposal(proposalPayload, modal);
     }
 
@@ -1170,10 +1236,6 @@ export class BoqComponent extends BaseComponent {
         });
         console.log(proposalPayload)
     }
-
-
-
-
 
     extraContentProposalSubmit(modal: any) {
         if (this.extraContentProposalForm.invalid) {
@@ -1864,32 +1926,47 @@ scrollTabs(direction: 'left' | 'right') {
     }
   }
   nextStep() {
+  if (this.skipClientForm) {
+    if (this.step === 1) {
+      this.step = 2;
+      return;
+    }
+  }
   if (this.step === 1) {
-    if (
-      this.proposalForm.get('clientName')?.invalid ||
-      this.proposalForm.get('clientAddress')?.invalid ||
-      this.proposalForm.get('clientMobileNumber')?.invalid
-    ) {
-      this.submittedStep1 = true; 
+    this.submittedStep1 = true;
+    const step1Fields = ['clientName', 'clientAddress', 'clientMobileNumber', 'clientEmail'];
+    step1Fields.forEach(field => {
+      const control = this.proposalForm.get(field);
+      control?.markAsTouched();
+      control?.updateValueAndValidity();
+    });
+     const invalidStep1 = step1Fields.some(field => this.proposalForm.get(field)?.invalid);
+    if (invalidStep1) {
+      this.toastr.warning('Please fill all required fields in Step 1.');
       return;
     }
     this.step = 2;
-  } 
+  }
   else if (this.step === 2) {
-    if (this.proposalForm.get('others')?.invalid) {
+    this.submittedStep2 = true;
+    const step2Fields = ['projectConfig', 'dedEmail', 'rmdEmail',];
+    step2Fields.forEach(field => {
+      const control = this.proposalForm.get(field);
+      control?.markAsTouched();
+      control?.updateValueAndValidity();
+    });
+     const invalidStep2 = step2Fields.some(field => this.proposalForm.get(field)?.invalid);
+    if (invalidStep2) {
+      this.toastr.warning('Please fill all required fields in Step 2.');
       return;
     }
-    this.step =3;
-    }
-    else if ( this.step ===3){
-        this.step =4 ;
-    }
-    else if(this.step===4){
-        return;
-        }
-    }
-    
+    this.step = 3;
+  }
+  else if (this.step === 3) {
+  return
+}
 
+    }
   allowOnlyNumbers(event: any) {
     event.target.value = event.target.value.replace(/[^0-9]/g, '');
   }
@@ -1960,24 +2037,25 @@ scrollTabs(direction: 'left' | 'right') {
         }
     }
     
-  getProjectConfig(){
+   getProjectConfig(){
     let payload = {
-      companyCode: JSON.parse(this.userData).companyCode,
+      companycode: JSON.parse(this.userData).companyCode,
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
     this.switchService.fetchProjectConfig(payload).subscribe({
       next: (res: any) => {
-        if (res) {
+        if (res && res.configId) {
            const configs: string[] = [];
           for (let i = 1; i <= 10; i++) {
             const value = res[`f${i}`];
             if (value) configs.push(value);
           }
           this.projectConfigList = configs;
-        } else {
-          this.toastr.error(res.message);
-        }
+        } 
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
@@ -2026,6 +2104,14 @@ scrollTabs(direction: 'left' | 'right') {
   closeSelect(select: NgSelectComponent) {
     setTimeout(() => select.close(), 150);
   }
-  
+  goBackToProjects() {
+    this.router.navigate(['/dashboard/projects']);
+  }
+    statusDisplayMap: { [key: string]: string } = {
+    'Approve': 'Approved',
+    'Pending for Approval': 'Pending for Approval',
+    'Rejected': 'Rejected'
+    };
+
 
 }

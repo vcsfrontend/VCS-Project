@@ -1253,7 +1253,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   selectedOption: string = '';
 
 
-  filterUserData() {
+  filterUserData(value?: string) {
     if (this.userLst.length > 0) {
       return this.userLst.filter((item: { firstName: string; lastName: string; email: string; }) =>
         item.firstName.toLowerCase().includes(this.searchUser.toLowerCase()) ||

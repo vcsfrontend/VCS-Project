@@ -81,6 +81,7 @@ export class LeadsComponent extends BaseComponent {
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any[] = [];
   imageFileSrcData: any; followUpDetails: any[] = []; nextLeadStatus: any; minDateTime: string = '';
+  minimumDate : string ='';
   selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
   fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
@@ -381,6 +382,7 @@ export class LeadsComponent extends BaseComponent {
     const mi = pad(now.getMinutes());
 
     this.minDateTime = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+    this.minimumDate = `${yyyy}-${mm}-${dd}`;
     this.route.queryParams.subscribe((params) => {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
@@ -556,7 +558,10 @@ export class LeadsComponent extends BaseComponent {
       address: ['' , Validators.required],
       username: ['',Validators.required],
       clientName: ['',Validators.required],
-      mobileNumber: ['',Validators.required],
+      mobileNumber: ['',[
+                Validators.required,
+                 Validators.pattern(/^[0-9]{10}$/)
+            ]],
       endDate : ['',Validators.required],
       projectEstimation : ['',Validators.required]
     });
@@ -3448,6 +3453,25 @@ export class LeadsComponent extends BaseComponent {
   this.open(content);
   }
 
+  allowOnlyNumbers(event: any) {
+    event.target.value = event.target.value.replace(/[^0-9]/g, '');
+  }
+  allowOnlynum(event: KeyboardEvent) {
+    const allowedChars = '0123456789.';
+    const inputChar = event.key;
+
+    if (
+      ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
+    ) {
+      return;
+    }
+
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
+      event.preventDefault();
+    }
+  }
   
 
 

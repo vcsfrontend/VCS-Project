@@ -90,6 +90,7 @@ export class DealsComponent extends BaseComponent {
   campaignList: any[] = [];selectedCampaign: any;
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
+  override cityList:any[]=[];
   isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
@@ -838,7 +839,13 @@ export class DealsComponent extends BaseComponent {
               ? new Date(item.followUpDate)
               : null,
             source: 'entry',
+            
           }));
+          const cities = res.entryList
+              .map((lead: any) => lead.city?.trim())
+              .filter((city: any) => !!city); 
+            const uniqueCities = [...new Set(cities)];
+            this.cityList = uniqueCities.map(city => ({ name: city }));
           const combined = [...executiveList, ...entryList];
           this.leadCount = combined.length;
            this.leadStatusCount = combined;

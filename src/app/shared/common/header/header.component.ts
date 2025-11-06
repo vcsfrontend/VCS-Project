@@ -252,7 +252,9 @@ export class HeaderComponent implements OnInit {
         this.loadLeadData();
       }
     });
+    if(this.userData.email === this.userEmail){
     this.profilePic = localStorage.getItem("profilePic");
+    }
     this.loggedInUser = JSON.parse(this.userData);
     this.userName = this.loggedInUser?.name || this.loggedInUser?.username;
     this.intervalSub = interval(5000).subscribe(() => this.loadLeadData());
@@ -462,6 +464,7 @@ export class HeaderComponent implements OnInit {
       next: (res: any) => {
         if (res) {
           this.userData = res;
+          this.profilePic = this.userData.profilePic;
         }
       },
     });

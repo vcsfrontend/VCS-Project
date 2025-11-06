@@ -312,6 +312,7 @@ export class SwitherService {
 
   assignTasksRoles(data:any): Observable<any> { return this.http.post(`${this.apiUrl}tasks/assign/user-or-roles`, data); }
   fetchTasksAssignedBy(userEmail:any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listTasksAssignedBy?userEmail=${userEmail}&companyCode=${companyCode}`); }
+  getTasksAssignTo(currentUserEmail :any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listTasksAssignedTo?currentUserEmail=${currentUserEmail}&companyCode=${companyCode}`); }
   getAllAssignTasks(userDeptRole:any, companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}tasks/assign/listAssignedTasksOnUserDeptId?userDeptRole=${userDeptRole}&companyCode=${companyCode}`); }
   deleteAssignTasks(taskId :any, deptRoleId :any, assignmentId:any, companyCode:any): Observable<any> { return this.http.delete(`${this.apiUrl}tasks/assign/removal?taskId=${taskId}&deptRoleId=${deptRoleId}&assignmentId=${assignmentId}&companyCode=${companyCode}`); }
   adminAccessAllUsers(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/admin/access?companyCode=${companyCode}`); }

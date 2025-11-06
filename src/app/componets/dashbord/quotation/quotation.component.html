@@ -24,7 +24,7 @@
                                 <div><strong>Client Name : </strong>{{ userContent.clientName }}<span class="text-muted"></span></div>
                                 <div class="d-flex gap-2">
                                     <div><img src="/assets/images/brand-logos/mail.png" alt="Email" class="whatsapp"></div>
-                                    <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="WhatsApp" class="whatsapp"></div>
+                                    <div><img src="/assets/images/brand-logos/whatsappicon.png" alt="WhatsApp" class="whatsapp" (click)="sendWhatsAppMessage()"></div>
                                 </div>
                             </div>
                             <div class="mb-2">
@@ -144,25 +144,34 @@
                                                             <div class="d-flex justify-content-between align-items-start mb-3">
                                                                 <div><strong class="fs-14 fw-medium">
                                                                         Discount</strong></div>
-                                                                <div><strong class="fs-14 fw-medium">₹
-                                                                     {{userContent.discount}}</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">
+                                                                     {{userContent.discount}}%</strong></div>
                                                             </div>
                                                             <hr>
-                                                            <div
-                                                                class="d-flex justify-content-between align-items-start mb-3">
-                                                                <div><strong class="fs-14 fw-medium text-primary">Total</strong>
-                                                                </div>
-                                                                <div><strong class="fs-14 fw-medium">{{ totalPrice |
-                                                                        currency:'INR'
-                                                                        }}</strong></div>
+                                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                                <div><strong class="fs-14 fw-medium">Subtotal</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">{{ totalBeforeDiscount | currency:'INR' }}</strong></div>
                                                             </div>
                                                             <hr>
+                                                            
+                                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium text-primary">Discounted Amount</strong></div>
+                                                                <div><strong class="fs-14 fw-medium text-primary">{{ discountedAmount | currency:'INR' }}</strong></div>
+                                                            </div>
+                                                            
+                                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                                <div><strong class="fs-14 fw-medium text-primary">Total</strong></div>
+                                                                <div><strong class="fs-14 fw-medium">{{ totalPrice1 | currency:'INR' }}</strong></div>
+                                                            </div>
+                                                            
+                                                            <hr>
+
                                                             <div
                                                                 class="d-flex justify-content-between align-items-start mb-3">
                                                                 <div><strong class="fs-14 fw-medium text-primary">Total
                                                                         Project Estimate</strong></div>
                                                                 <div><strong class="fs-14 fw-medium">{{
-                                                                        (totalPrice + 10000 - 5000) |
+                                                                        (totalPrice1 + 10000 - 5000) |
                                                                         currency:'INR' }}</strong></div>
                                                             </div>
                                                             <hr>

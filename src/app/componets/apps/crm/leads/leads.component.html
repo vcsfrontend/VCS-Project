@@ -1835,11 +1835,13 @@
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="contact" class="form-label">Contact</label>
                 <input type="text" class="form-control" id="contact" placeholder="Enter Contact Number"
-                    formControlName="mobileNumber" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['mobileNumber'].errors }">
+                    formControlName="mobileNumber" (keypress)="allowOnlynum($event)" maxlength="10" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['mobileNumber'].errors }">
                 <div *ngIf="leadCompletionsubmitted && j['mobileNumber'].errors" class="invalid-feedback">
                     <span *ngIf="j['mobileNumber'].errors['required']">
                         client Mobile number is required.
                     </span>
+                    <span *ngIf="j['mobileNumber'].errors['pattern']">Enter a valid 10-digit mobile number.</span>
+
                 </div>
             </div>
              <div class="col-xl-6 col-lg-6 col-md-6">
@@ -1886,7 +1888,7 @@
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="contact" class="form-label">End Date</label>
                 <input type="date" class="form-control" id="contact" placeholder="Enter Contact Number"
-                    formControlName="endDate" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }">
+                    formControlName="endDate" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }" [min]="minimumDate" />
                 <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback">
                     <span *ngIf="j['endDate'].errors['required']">
                         endDate  is required.
@@ -1897,7 +1899,7 @@
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="address" class="form-label">Project Estimation</label>
                 <input type="text" class="form-control" id="address" placeholder="Enter ProjectEstimation" formControlName="projectEstimation"
-                [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['projectEstimation'].errors }">
+                (keypress)="allowOnlynum($event)" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['projectEstimation'].errors }">
                 <div *ngIf="leadCompletionsubmitted && j['projectEstimation'].errors" class="invalid-feedback">
                     <span *ngIf="j['projectEstimation'].errors['required']">
                         projectEstimation  is required.
