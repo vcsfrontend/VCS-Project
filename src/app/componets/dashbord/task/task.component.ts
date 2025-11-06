@@ -35,7 +35,8 @@ export class TaskComponent extends BaseComponent{
   globalTaskCount:any; selectedTaskId: string | null = null;
   assignedUserLst : any[]=[]; assignTaskForm!: FormGroup; selectedTask: any; selectedUserEmail: string = '';
   assignedTasksList: any[] = []; adminAccessUsers: any[] = []; assignedUserId: number | null = null;
-  userList:any[]=[]; adminList: any;  assignedTasksCount: any
+  userList:any[]=[]; adminList: any;  assignedTasksCount: any;filteredAllUsers: any[] = [];
+  manualAssignTaskList : any[]=[];isAdmin : boolean = false;manualAssignTaskCount : number =0;
    userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
     'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'];
   public globalTaskSubmitted = false;
@@ -89,10 +90,17 @@ export class TaskComponent extends BaseComponent{
     this.getUsers();
     this.getAssignedUsers();
     this.getAllGlobalTask();
-    this.getALLManualTasks();
     if (this.adonaiRole === 'ADMIN' || this.crmRole === 'ADMIN') {
+      this.isAdmin = true;
+      console.log(this.isAdmin);
+    this.getALLManualTasks();
       this.fetchTasksAssignedBy();
     }
+    else{
+      this.isAdmin = false;
+      this.fetchTasksAssignedTo();
+    }
+    
   }
 
   taskModal(content1:any) {
@@ -278,8 +286,10 @@ export class TaskComponent extends BaseComponent{
     this.switchService.getManualTasks().subscribe({
       next: (res: any) => {
         if (res) {
-          this.manualTaskList = res.data || res;
+            this.manualTaskList = res.data || res;
           this.manualTaskCount = this.manualTaskList.length;
+          
+          
         }
       }
     });
@@ -351,7 +361,7 @@ export class TaskComponent extends BaseComponent{
     //   next: (res: any) => {
     //     this.toastr.success(res.message || 'Task assigned');
     //     modal.close();
-    //     // this.loadAssignedTasks();
+    //     this.loadAssignedTasks();
     //     this.assignTaskForm.reset();
     //     this.assignTaskSubmitted = false;
     //   },
@@ -360,6 +370,7 @@ export class TaskComponent extends BaseComponent{
 
   onUserChange(selectedUser: any) {
     if (selectedUser) {
+    const email = this.showAllUsers ? selectedUser : selectedUser.userEmail;
       this.switchService.getAssignUser(selectedUser.userEmail, this.userCompanyCode)
         .subscribe((res: any[]) => {
           if (res.length > 0) {
@@ -370,10 +381,10 @@ export class TaskComponent extends BaseComponent{
               userEmail: selectedUser.userEmail
             });
           } else {
-            this.assignedUserId = null;
+            this.assignedUserId = 0;
             this.assignTaskForm.patchValue({
               userDeptId: selectedUser.userEmail,
-              userEmail: selectedUser.userEmail
+              userEmail: selectedUser.email
             });
           }
         });
@@ -428,18 +439,33 @@ export class TaskComponent extends BaseComponent{
     });
   }
 
-  getUserColor(followup: any): string {
+  fetchTasksAssignedTo() {
+    const email = this.userEmail;
+    const companyCode = this.userCompanyCode;
+    this.switchService.getTasksAssignTo(email, companyCode).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.manualAssignTaskList =  res.data || res;
+          this.manualAssignTaskCount = this.manualAssignTaskList.length;
+        }
+      }
+    });
+  }
+
+  getUserColor(user: any): string {
   const key =
-    followup?.email ||
-    followup?.followUpBy ||
-    followup?.executive ||
-    followup?.assignedTo ||
-    followup?.assignedBy ||
+    user?.email ||
+    user?.userEmail ||
+    user?.followUpBy ||
+    user?.executive ||
+    user?.assignedTo ||
+    user?.assignedBy ||
     'default';
 
   const index = this.hashString(key) % this.userColors.length;
   return this.userColors[index];
 }
+
 
 
   private hashString(str: string): number {
@@ -469,31 +495,22 @@ export class TaskComponent extends BaseComponent{
     }
   }
 
-
   showAllUsers: boolean = false;
-
- toggleAllUsers(event: any) {
+  toggleAllUsers(event: any) {
   this.showAllUsers = event.target.checked;
 
-  if (this.showAllUsers) {
-    this.assignTaskForm.patchValue({
-      userDeptId: 0,
-      userEmail: null
-    });
-    this.assignedUserId = 0;
-  } else {
-    this.assignTaskForm.patchValue({
-      userDeptId: null,
-      userEmail: null
-    });
-    this.assignedUserId = null;
+    if (this.showAllUsers) {
+      const deptUserIds = this.adminAccessUsers.map(u => u.id);
+      const deptUserEmails = this.adminAccessUsers.map(u => u.userEmail);
+      this.filteredAllUsers = this.userList.filter(
+        (user: any) =>
+          !deptUserIds.includes(user.id) && !deptUserEmails.includes(user.email)
+      );
+
+    } else {
+      this.filteredAllUsers = [];
+    }
   }
-}
-
-
-
-
-
 
 
 

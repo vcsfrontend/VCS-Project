@@ -15,7 +15,15 @@
                     Team
                 </div>
                 <div class="d-flex flex-wrap gap-3">
-                    <input type="text" [(ngModel)]="searchUser" placeholder="Search..." class="form-control w-auto" />
+                    <div class="input-group shadow-sm rounded-3" style="width: 280px;">
+                        <button class="btn btn-primary d-flex align-items-center justify-content-center rounded-start" type="button"
+                            id="button-addon2">
+                            <i class="ri-search-line text-white fs-5"></i>
+                        </button>
+                        <input type="text" class="form-control border rounded-end" placeholder="Search Here..."
+                            aria-describedby="button-addon2" [(ngModel)]="searchUser"
+                            (input)="filterUserData(searchUser)"  #input />
+                    </div>
                     <button type="button" class="btn btn-primary text-center" (click)="isAddEdt=!isAddEdt;aeTyp='a';onRst()">Add Team
                     </button>
                     <button class="btn btn-primary" (click)="toggleTopShowMore()">

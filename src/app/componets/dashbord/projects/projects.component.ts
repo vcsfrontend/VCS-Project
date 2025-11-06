@@ -206,8 +206,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.getLst(); this.getMatCardLst();    this.getUsers();    this.getUserInfo(this.userEmail);
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
-    this.getProjectConfig();
     this.getMarginData();
+    this.getProjectConfig();
     this.createProjectForm = this.fb.group({
       projectName: ['', Validators.required],
       clientName: ['', Validators.required],
@@ -1988,12 +1988,13 @@ downloadButtons: { label: string; url: string }[] = [];
 
   getProjectConfig(){
     let payload = {
-      companyCode: JSON.parse(this.userData).companyCode,
+      companycode: JSON.parse(this.userData).companyCode,
       email: JSON.parse(this.userData).email,
       type: JSON.parse(this.userData).type
     };
     this.switchService.fetchProjectConfig(payload).subscribe({
       next: (res: any) => {
+        console.log('🔍 Full API response:', res);
         if (res) {
            const configs: string[] = [];
           for (let i = 1; i <= 10; i++) {

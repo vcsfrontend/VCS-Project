@@ -49,7 +49,7 @@ export class ClientsComponent extends BaseComponent {
   displayedColumns1: string[] = ['slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
   displayedColumns: string[] = [ 'slNo', 'name', 'executive', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
   dataSource = new MatTableDataSource<any>(); crmClientsList: any[] = [];
-  pageSize = 10;
+  pageSize = 10;clientCount:number=0;
   element: any = {};
   userColors = [ 'bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary', 'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark','bg-light', ];
 
@@ -120,8 +120,6 @@ export class ClientsComponent extends BaseComponent {
 
   ngOnInit(): void {
     this.getCrmClients();
-    this.getProposal();
-
     this.getUsers();
     // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
@@ -179,22 +177,7 @@ export class ClientsComponent extends BaseComponent {
     }
   }
 
-  getProposal() {
-    // this.switchService.CrmLeads().subscribe({
-    //   next: (res: any) => {
-    //     if (res) {          
-    //       this.dataSource.data = res;
-    //       this.clientsCount = res.length;
-    //       console.log(res);
-    //     } else {
-    //       this.toastr.error(res.message);
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.toastr.error(error.statusText);
-    //   },
-    // })
-  }
+  
 
   getCrmClients() {
     const payload = {
@@ -207,8 +190,12 @@ export class ClientsComponent extends BaseComponent {
       next: (res: any) => {
         if (res) {
           this.crmClientsList = res;
+          this.clientCount=this.crmClientsList.length
           this.dataSource = new MatTableDataSource(this.crmClientsList);
         }
+        if (this.paginator) {
+            this.dataSource.paginator = this.paginator;
+          }
       }
     })
   }

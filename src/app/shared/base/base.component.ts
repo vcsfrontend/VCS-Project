@@ -665,6 +665,7 @@ export class BaseComponent {
     { "name": "AK_AP" },
   ];
   permissionCategories =[
+    {"name" : 'taskApproval'},
     { "name": "CRM" },
     { "name": "Projects" },
     {"name" : 'optimizer'},

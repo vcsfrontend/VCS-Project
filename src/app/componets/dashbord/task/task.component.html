@@ -51,7 +51,7 @@
                                     <div class="d-flex align-items-center">
                                         <div>
                                             <h6 class="mb-1 fs-14">{{ task.createdBy }}</h6>
-                                            <p class="mb-0 text-muted fs-12">{{ task.createdAt | date:'dd-MMM-yyyy hh:mm a' }}</p>
+                                            <p class="mb-0 text-muted fs-12">{{ task.createdAt + 'Z' | date:'dd-MMM-yyyy hh:mm a' }}</p>
                                         </div>
                                     </div>
                                 </td>
@@ -77,7 +77,7 @@
     <div class="col-lg-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <div class="card-title">Current Taks <span class="badge bg-primary">{{assignedTasksCount}}</span></div>
+                <div class="card-title">Assigned Taks <span class="badge bg-primary">{{assignedTasksCount}}</span></div>
                 <div class="d-flex flex-wrap gap-3">
                     <button class="btn btn-primary mt-1" (click)="openManualTaskModal(content3)">
                         <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Manual Task
@@ -144,7 +144,85 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
+    
+    <div class="col-lg-12">
+        <div class="card custom-card">
+            <div class="card-header justify-content-between">
+                <div class="card-title">Manual Taks <span class="badge bg-primary">{{isAdmin ? manualTaskCount : manualAssignTaskCount}}</span></div>
+                <div class="d-flex flex-wrap gap-3">
+                    <button class="btn btn-primary mt-1" (click)="openManualTaskModal(content3)">
+                        <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Manual Task
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive overflow-scroll">
+                    <table class="table text-nowrap table-hover">
+                        <thead>
+                            <tr>
+                                <th class="text-center">S.No</th>
+                                <th class="crm-table-th1">Task Name</th>
+                                <th class="crm-table-th2">Task Description</th>
+                                <th class="crm-table-th2">Task Result</th>
+                                <th class="crm-table-th2" *ngIf="isAdmin === true">assignedTo</th>
+                                <th class="crm-table-th2">Manager Approval</th>
+                                <th class="crm-table-th2">Current Status</th>
+                                <th class="crm-table-th2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let task of (isAdmin ? manualTaskList : manualAssignTaskList);  let i = index">
+                                <td class="text-center">{{ i + 1 }}</td>
+                                <td>{{ task.name }}</td>
+                                <td>{{ task.description | slice:0:20}}</td>
+                                <td>{{ task.result | slice:0:20 }}</td>
+                                <td *ngIf="isAdmin === true">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="avatar avatar-sm avatar-rounded border fw-bold text-white shadow-sm" [ngClass]="getUserColor(task)">
+                                            <span>{{ task?.assignedTo?.charAt(0) | uppercase }}</span>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <span class="fw-semibold text-dark">{{ task.assignedTo }}</span>
+                                            <small class="text-muted">
+                                                {{ task.assignedAt | date:'dd-MMM-yyyy • hh:mm a' }}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge" [ngClass]="{
+                                    'bg-success-transparent ps-3 fs-11 order-status complete': task.managerApproval === 'COMPLETED',
+                                    'bg-danger-transparent ps-3 fs-11 order-status pending': task.managerApproval === 'PENDING' }">
+                                        {{ task.managerApproval === 'COMPLETED' ? 'Completed' : 'Pending' }}
+                                    </span>
+                                </td>
+                                 <td>
+                                    <span class="badge" [ngClass]="{
+                                    'bg-success-transparent ps-3 fs-11 order-status complete': task.currentStatus === 'COMPLETED',
+                                    'bg-danger-transparent ps-3 fs-11 order-status pending': task.currentStatus === 'PENDING' }">
+                                        {{ task.currentStatus === 'COMPLETED' ? 'Completed' : 'Pending' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"
+                                            (click)="openManualTaskModal(content3, task)">
+                                            <i class="ri-pencil-line"></i>
+                                        </a>
+                                        <a aria-label="anchor" href="javascript:void(0);"
+                                            class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0" (click)="deleteManualTask(task.id)">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -446,13 +524,28 @@
                         </ng-select>
                     </div>
                     <div class="col-lg-6">
-                        <label class="form-label">Assigned To</label>
+                        <label class="form-label me-3">Assigned To</label>
                         <input type="checkbox" (change)="toggleAllUsers($event)"> Show All Users
+                        <!-- Default view: Department users -->
                         <ng-select *ngIf="!showAllUsers" formControlName="userDeptId" [items]="adminAccessUsers" bindLabel="userEmail"
                             bindValue="id" placeholder="Select User" (change)="onUserChange($event)">
+                            <ng-template ng-option-tmp let-user="item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold" [ngClass]="getUserColor(user)">
+                                        <span>{{ user?.userEmail?.charAt(0) | uppercase }}</span>
+                                    </div>
+                                    <div class="flex-fill">
+                                        <span class="fs-14">
+                                            {{ user.userEmail?.length > 15 ? (user.userEmail | slice:0:15) + '...' : user.userEmail }}
+                                        </span>
+                                        <div class="fs-11">{{ user.username }}</div>
+                                    </div>
+                                </div>
+                            </ng-template>
                         </ng-select>
-                        <ng-select *ngIf="showAllUsers" formControlName="userDeptId" [items]="userList" bindValue="email" bindLabel="email"
-                            placeholder="Select User" [searchable]="true" (change)="onUserChange($event)">
+                        <!-- All users except department ones -->
+                        <ng-select *ngIf="showAllUsers" formControlName="userDeptId" [items]="filteredAllUsers" bindValue="userEmail"
+                            bindLabel="email" placeholder="Select User" [searchable]="true" (change)="onUserChange($event)">
                             <ng-template ng-option-tmp let-user="item">
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold"
@@ -469,6 +562,7 @@
                             </ng-template>
                         </ng-select>
                     </div>
+
                 </div>
             </div>
         </div>

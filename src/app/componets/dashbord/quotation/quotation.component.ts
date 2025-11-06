@@ -50,7 +50,8 @@ export class QuotationComponent {
   totalProducts: number = 0; userContentKeys: string[] = []; userContent: any = {};  
   totalPrice: number = 0; proposalStatus: string = ''; proposalContentDataSources: any;
   proposalTabCounts: any; showLeftArrow = false; showRightArrow = false;
-
+  totalBeforeDiscount: number = 0;discountedAmount: number = 0;finalAmount:number=0;
+  totalPrice1: number =0;
   boqList: any;
   categories = [
     { id: 1, name: 'Acoustic', code: 'AT' },
@@ -171,11 +172,23 @@ export class QuotationComponent {
           const parsedContent = JSON.parse(res.contentJs || "{}");
           this.userContent = JSON.parse(res.clientDataJs || "{}");
           this.userContentKeys = Object.keys(this.userContent);
+              const discount: number = Number(this.userContent?.discount || 0);
           const flattened = Object.values(parsedContent).flat();
           this.userContentKeys = Object.keys(this.userContent);
           const uniqueFlattened = Array.from(
             new Map(flattened.map((item: any) => [item.boqId, item])).values()
           );
+          const totalAmount: number = uniqueFlattened.reduce(
+          (sum: number, item: any) => sum + (Number(item.clientRate) || 0),
+          0
+          );
+
+          const discountedAmount: number = (totalAmount * discount) / 100;
+          const finalAmount: number = totalAmount - discountedAmount;
+          this.totalBeforeDiscount = totalAmount;
+          this.totalPrice1 = finalAmount;
+          this.discountedAmount = discountedAmount;
+   
           this.boqDataSources = {};
           this.tabKeys = [];
           this.boqDataSources["All"] = uniqueFlattened;
@@ -300,5 +313,46 @@ export class QuotationComponent {
     this.showLeftArrow = container.scrollLeft > 0;
     this.showRightArrow = container.scrollWidth > container.clientWidth + container.scrollLeft;
   }
+
+  sendWhatsAppMessage() {
+  if (!this.userContent || !this.userContent.clientMobileNumber) {
+    console.error('Client mobile number not found');
+    return;
+  }
+
+  const clientNumber = this.userContent.clientMobileNumber.toString().replace(/\D/g, ''); // clean digits only
+
+  // ✅ Get IDs safely
+  const designId =
+    this.selectedProposalContent?.designId ||
+    this.selectedProposalContent?.design_Id ||
+    this.designId ||
+    '';
+  const proposalContentId =
+    this.selectedProposalContent?.proposalContentId ||
+    this.selectedProposalContent?.proposalContId ||
+    '';
+
+  if (!designId || !proposalContentId) {
+    console.warn('Design ID or Proposal Content ID missing.');
+    console.log('Selected proposal content:', this.selectedProposalContent);
+    return;
+  }
+
+  // ✅ Your production domain
+  const domain = 'https://vcs.plus';
+  const quotationUrl = `${domain}/dashboard/quotation?designId=${designId}&proposalContentId=${proposalContentId}`;
+
+  // ✅ WhatsApp message text
+  const message = `Hello ${this.userContent.clientName || ''},\n\nHere is your quotation link:\n${quotationUrl}\n\nThank you,\nAdonai Design Team`;
+
+  // ✅ Encode and send via WhatsApp
+  const whatsappUrl = `https://api.whatsapp.com/send?phone=91${clientNumber}&text=${encodeURIComponent(message)}`;
+
+  window.open(whatsappUrl, '_blank');
+}
+
+
+  
 
 }
