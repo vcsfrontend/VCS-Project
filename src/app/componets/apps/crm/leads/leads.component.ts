@@ -563,7 +563,7 @@ export class LeadsComponent extends BaseComponent {
                  Validators.pattern(/^[0-9]{10}$/)
             ]],
       endDate : ['',Validators.required],
-      projectEstimation : ['',Validators.required]
+      projectEstimation : ['',Validators.required],
     });
 
     this.getUsers();
@@ -3166,10 +3166,13 @@ export class LeadsComponent extends BaseComponent {
     this.modalService.open(content, { centered: true,scrollable : true });
   }
 
+  closeLeadWithoutProject(modal : any) {
+  this.updateCompletionStatus(null, false);  
+  }
 
-   updateCompletionStatus(modal: any) {
+   updateCompletionStatus(modal: any,autoProjectCreation: boolean) {
     this.leadCompletionsubmitted = true;
-    if (this.completionForm.invalid) {
+    if (autoProjectCreation && this.completionForm.invalid) {
       return; 
     }
     const payload = {
@@ -3180,7 +3183,8 @@ export class LeadsComponent extends BaseComponent {
       companyCode:this.userCompanyCode,
       companyName: this.userCompanyName,
       email: this.userEmail,
-      type: this.userType
+      type: this.userType,
+      autoCreationRequired: autoProjectCreation,
     };
     this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
@@ -3191,12 +3195,19 @@ export class LeadsComponent extends BaseComponent {
           this.selectedLead.completionStatus = "completed"; 
         }
         this.uploadSpinner = false;
-        modal.close();
-        this.currentStep = 1;
+        if (modal) {
+          modal.close('closed'); 
+        } else {
+          this.modalService.dismissAll();
+        }
+        setTimeout(() => {
+          this.currentStep = 1;
+        }, 300);
+
       },
-      // error: (err) => {
-      //   this.toastr.error('Something went wrong!');
-      // }
+      error: (err) => {
+        this.toastr.error('Something went wrong!');
+      }
     });
   }
 
@@ -3208,7 +3219,7 @@ export class LeadsComponent extends BaseComponent {
     if (this.completionForm.invalid) {
       return; 
     }
-    this.updateCompletionStatus(modal);
+    this.updateCompletionStatus(modal,true);
 
     
   }

@@ -1808,7 +1808,6 @@
     <!-- Step 2 -->
     <ng-container *ngIf="currentStep === 2">
       <p>Do  you want to Proceed to the Project</p>
-      
     </ng-container>
     <ng-container *ngIf="currentStep === 3" [formGroup]="completionForm">
         <div class="row gy-3 scrollable-content">
@@ -1912,10 +1911,12 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Cancel</button>
+    
     <ng-container *ngIf="currentStep === 1">
       <button type="button" class="btn btn-primary" (click)="goToStep(2)">Yes, Close</button>
     </ng-container>
     <ng-container *ngIf="currentStep === 2">
+        <button type="button" class="btn btn-primary" (click)="closeLeadWithoutProject(modal)">No</button>
       <button type="button" class="btn btn-primary" (click)="goToStep(3)">Yes, Proceed</button>
     </ng-container>
     <ng-container *ngIf="currentStep === 3">

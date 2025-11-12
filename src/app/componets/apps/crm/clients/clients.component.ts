@@ -47,7 +47,7 @@ export class ClientsComponent extends BaseComponent {
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
   displayedColumns1: string[] = ['slNo', 'action', 'name', 'executive', 'status', 'followUpDate', 'contact', 'email'];
-  displayedColumns: string[] = [ 'slNo', 'name', 'executive', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
+  displayedColumns: string[] = [ 'slNo', 'name', 'executive', 'contact', 'email', 'city','updatedTime','completedBy','completionStatus',];
   dataSource = new MatTableDataSource<any>(); crmClientsList: any[] = [];
   pageSize = 10;clientCount:number=0;
   element: any = {};
@@ -281,4 +281,5 @@ export class ClientsComponent extends BaseComponent {
     }
     return hash >>> 0;
   }
+  
 }
