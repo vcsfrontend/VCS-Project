@@ -78,10 +78,11 @@ export class BoqComponent extends BaseComponent {
     proposalTabCounts: { [key: string]: number } = {}; recceData: any; activeStage: string = '';
     public userList: any; filteredUserList: any[] = []; recceStage: string = '';
     proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {}; recceList: any[] = [];
-    filteredRecce: any[] = []; blockedStages: string[] = [];
+    filteredRecce: any[] = []; blockedStages: string[] = [];selectedModel : string ='';
     selectedProposalCount: any = null;
     isReadOnly :boolean = false; skipClientForm:boolean=false; clientData: any = null;
-    skipProposalForm : boolean = false;minDateTime: string = '';
+    skipProposalForm : boolean = false;minDateTime: string = '';showPanelFields : boolean = false;
+    showShutterFields : boolean = false;dimensionsList : any[] = [];currentStep : number =1;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -142,7 +143,12 @@ export class BoqComponent extends BaseComponent {
         { name: 'Civil', checked: false, isDefault: true, },
         { name: 'Electrical', checked: false, isDefault: true }
     ];
-
+    extraFields = [
+        { label: 'Shutter Length 1', control: 'l1' },
+        { label: 'Shutter Width 1', control: 'w1' },
+        { label: 'Shutter Length 2', control: 'l2' },
+        { label: 'Shutter Width 2', control: 'w2' }
+    ];
     constructor(
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
@@ -951,7 +957,7 @@ export class BoqComponent extends BaseComponent {
     }
 
     cutList(content46: any) {
-        this.modalService.open(content46, { centered: true });
+        this.modalService.open(content46, { centered: true,scrollable : true });
     }
 
     openCreateForm(content: any) {
@@ -2134,21 +2140,27 @@ scrollTabs(direction: 'left' | 'right') {
     sendCutsToAnotherApi() {
         const specification = this.generateCutListForm.get('specification')?.value;
         if (specification === 'manual') {
+            const dimensionObj = {
+            modelName: this.generateCutListForm.get('code')?.value,
+            l1: Math.floor(this.generateCutListForm.get('l1')?.value),
+            l2: Math.floor(this.generateCutListForm.get('l2')?.value),
+            w1: Math.floor(this.generateCutListForm.get('w1')?.value),
+            w2: Math.floor(this.generateCutListForm.get('w2')?.value),
+        };
+        console.log('dimension object',dimensionObj);
+        if (!this.dimensionsList) {
+            this.dimensionsList = [];
+        }
+        this.dimensionsList.push(dimensionObj);
+        console.log(this.dimensionsList);
             const payload = {
                 specification: specification,
-                dimesions: [
-                    {
-                        modelName: this.generateCutListForm.get('code')?.value,
-                        l1: Math.floor(this.generateCutListForm.get('l1')?.value),
-                        l2: Math.floor(this.generateCutListForm.get('l2')?.value),
-                        w1: Math.floor(this.generateCutListForm.get('w1')?.value),
-                        w2: Math.floor(this.generateCutListForm.get('w2')?.value),
-                    },
-                ],
+                // 
+                dimesions: this.dimensionsList,
                 companyCode: this.userCompanyCode,
                 email: this.userEmail,
                 type: this.userType,
-                designId: this.designId,
+                designId: this.designingId,
             };
             console.log('📦 Manual Payload:', payload);
         }
@@ -2170,7 +2182,7 @@ scrollTabs(direction: 'left' | 'right') {
                 companyCode: this.userCompanyCode,
                 email: this.userEmail,
                 type: this.userType,
-                designId: this.designId,
+                designId: this.designingId,
             };
             console.log('📦 Default Payload:', payload);
             // this.switchService.sendToAnotherApi(payload).subscribe({
@@ -2226,6 +2238,53 @@ scrollTabs(direction: 'left' | 'right') {
         Object.values(controls).forEach(control => control.updateValueAndValidity());
     }
 
+   onModelChange(selected: any) {
+    this.selectedModel = selected;
+    }
+
+    nextPanelStep() {
+    if (this.generateCutListForm.invalid) {
+        this.generateCutListForm.markAllAsTouched();
+        return;
+    }
+    const code = this.generateCutListForm.get('code')?.value;
+    const formValue = this.generateCutListForm.value;
+
+    const dimensionObj = {
+        modelName: code,
+        l1: Math.floor(formValue.l1 || 0),
+        l2: Math.floor(formValue.l2 || 0),
+        w1: Math.floor(formValue.w1 || 0),
+        w2: Math.floor(formValue.w2 || 0),
+    };
+
+
+    this.dimensionsList.push(dimensionObj);
+    console.log('✅ Saved step data:', this.dimensionsList);
+    
+    if (this.selectedModel === 'Panel') {
+        this.selectedModel = 'Shutter';
+        this.generateCutListForm.patchValue({ code: 'Shutter' });
+    } else {
+        this.selectedModel = 'Panel';
+        this.generateCutListForm.patchValue({ code: 'Panel' });
+    }
+
+
+    if (this.currentStep < 2) {
+        this.currentStep++;
+        this.generateCutListForm.patchValue({
+        l1: '',
+        l2: '',
+        w1: '',
+        w2: ''
+    });
+
+    }
+}
+previousStep() {
+  if (this.currentStep > 1) this.currentStep--;
+}
 
 
 
