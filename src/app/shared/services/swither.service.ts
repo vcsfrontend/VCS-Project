@@ -148,6 +148,7 @@ export class SwitherService {
   getEdgeContentData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_edge_content`, data); }
   deleteEdgeContentData(optimizer_edge_band_id: any): Observable<any> { return this.http.get(`${this.adonaiURL}optimizer/delete_optimizer_edge_band/${optimizer_edge_band_id}`); }
   deleteEdgeData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/delete_edge_content`, data); }
+  panelListData(data: any): Observable<any> { return this.http.post(`${this.adonaiURL}/projo_boq/generate_bom__detailed_pannel_data`, data); }
   //crm 
   CrmUsers(): Observable<any> { return this.http.get(`${this.apiUrl}auth/get_all_crm_users`); }  
   CrmLeads(campaignId:any): Observable<any> { return this.http.get(`${this.apiUrl}crmActions/getLeadData?campaignId=${campaignId}`); }  
@@ -307,7 +308,6 @@ export class SwitherService {
   createManualTask(data:any): Observable<any> { return this.http.post(`${this.apiUrl}tasks/schedule/createManualTask`, data); }
   getManualTasks(): Observable<any> { return this.http.get(`${this.apiUrl}tasks/schedule/getScheduledTasksData`); }
   updateManualTask(payload: any): Observable<any> { return this.http.put(`${this.apiUrl}tasks/schedule/updateManualTask/${payload.id}`, payload);}
-
   deleteManualTaskById(taskId:any): Observable<any> { return this.http.delete(`${this.apiUrl}tasks/schedule/deleteManualTask/${taskId}`); }
 
   assignTasksRoles(data:any): Observable<any> { return this.http.post(`${this.apiUrl}tasks/assign/user-or-roles`, data); }
@@ -319,5 +319,11 @@ export class SwitherService {
 
 
   crmClients(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/getCompletedClientData`, data); }
+
+
+  //cutlist
+  saveOptimizerCut(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_optimizer_cut`, data); }
+  getOptimizerCut(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_optimizer_cut`, data); }
+  deleteOptimizerCut(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/delete_optimizer_cut`, data); }
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }

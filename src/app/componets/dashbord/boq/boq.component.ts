@@ -21,49 +21,12 @@ import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyDoc } from 'ngx-editor';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SwiperModule, } from 'swiper/angular';
-import SwiperCore, {
-    Navigation,
-    Pagination,
-    Scrollbar,
-    A11y,
-    Virtual,
-    Zoom,
-    Autoplay,
-    Thumbs,
-    Mousewheel,
-    Keyboard,
-    EffectCube,
-    EffectFade,
-    EffectFlip,
-    EffectCoverflow,
-    SwiperOptions,
-    Swiper,
-
-
-} from 'swiper';
-interface Plan {
-    name: string;
-    checked: boolean;
-    isDefault: boolean;
-    isCustom?: boolean;   // optional flag for custom items
-}
-
-SwiperCore.use([
-    Navigation,
-    Pagination,
-    Scrollbar,
-    A11y,
-    Virtual,
-    Mousewheel,
-    Zoom,
-    Autoplay,
-    Thumbs,
-    Keyboard,
-    EffectCube,
-    EffectFade,
-    EffectFlip,
-    EffectCoverflow,
-]);
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, Virtual, Zoom, Autoplay,
+    Thumbs, Mousewheel, Keyboard, EffectCube, EffectFade, EffectFlip, EffectCoverflow,
+    SwiperOptions, Swiper, } from 'swiper';
+interface Plan { name: string; checked: boolean; isDefault: boolean; isCustom?: boolean; }
+SwiperCore.use([ Navigation, Pagination, Scrollbar, A11y, Virtual, Mousewheel, Zoom, Autoplay,
+    Thumbs, Keyboard, EffectCube, EffectFade, EffectFlip, EffectCoverflow,]);
 
 @Component({
     selector: 'app-boq',
@@ -129,7 +92,7 @@ export class BoqComponent extends BaseComponent {
     selectedCategory: any; editIndex: number | null = null; designId: any;
     boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
     proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; recceForm!: FormGroup;
-    updateRecceForm!: FormGroup; updateProjectForm!: FormGroup;
+    updateRecceForm!: FormGroup; updateProjectForm!: FormGroup; cutListForm!: FormGroup; generateCutListForm!: FormGroup;
     addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null;
@@ -144,7 +107,8 @@ export class BoqComponent extends BaseComponent {
     submitted: boolean = false; projectConfigList: string[] = []; 
     showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
     thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
-    designerData: any[] = []; filteredDesignerData: any[] = [];
+    designerData: any[] = []; filteredDesignerData: any[] = [];   override panelList: any[] = [];
+    allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = [];
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -204,11 +168,8 @@ export class BoqComponent extends BaseComponent {
 
     openProjectModal(content45: any, project: any) {
         if (!project) {
-            console.warn('Project data is missing');
             return;
         }
-
-        // Patch form safely
         this.updateProjectForm.patchValue({
             projectId: project.projectId || '',
             designId: project.designId || '',
@@ -245,8 +206,7 @@ export class BoqComponent extends BaseComponent {
     }
 
     onCreateProposalClick(content: any) {
-          const storedClientData = localStorage.getItem("storedClientData");
-            console.log('stored data',storedClientData);
+        const storedClientData = localStorage.getItem("storedClientData");
         this.getProposal();
         if (!this.selectedElement || this.selectedElement.length === 0) {
             this.toastr.warning("Please select at least one Element");
@@ -437,6 +397,23 @@ export class BoqComponent extends BaseComponent {
             assignedDesigner: [''],
             designCompletionStatus: ['']
         });
+        this.cutListForm = this.fb.group({
+            l1: [0],
+            l2: [0],
+            w1: [0],
+            w2: [0],
+            code:[''],
+            email:this.userEmail,
+            companyCode:this.userCompanyCode,
+            companyName:this.userCompanyName
+        });
+        this.generateCutListForm = this.fb.group({
+            specification: [''],
+            dimesions: [''],
+            email: this.userEmail,
+            companyCode: this.userCompanyCode,
+            designId: this.designId
+        });
         this.getUsers();
         this.getAssignProjects();
         this.getProjectConfig();
@@ -463,6 +440,7 @@ export class BoqComponent extends BaseComponent {
         });
         this.getLibraryData();
         this.getLibraryNames();
+        this.getOptimizerCut();
     }
 
     getUsers() {
@@ -567,87 +545,83 @@ export class BoqComponent extends BaseComponent {
     }
 
     updateDropdownField(
-  field: 'itemType' | 'orderStatus' | 'uom' | 'status' | 'codeAndCategory',
-  selectedValue: string | { name?: string; code?: string },
-  element: any
-) {
-  // Validate element
-  if (!element?.boqId) {
-    this.toastr.warning('Invalid element selected');
-    return;
-  }
-
-  // Determine correct field value
-  let fieldValue = '';
-  if (typeof selectedValue === 'string') {
-    fieldValue = selectedValue;
-  } else if (field === 'codeAndCategory') {
-    fieldValue = selectedValue?.code ?? '';
-  } else {
-    fieldValue = selectedValue?.name ?? '';
-  }
-
-  // Update local form state
-  this.elementForm.patchValue({ [field]: fieldValue });
-
-  // Extract brand/make logic for itemType
-  let brandOrMake = element.brandOrMake ?? '';
-  if (field === 'itemType' && !brandOrMake && element.elementNameAndDescription) {
-    const [, brandLine] = element.elementNameAndDescription.split('\n');
-    if (brandLine?.includes(':')) {
-      brandOrMake = brandLine.split(':')[1]?.trim() || '';
-    }
-  }
-  const payload = [{
-    boqId: element.boqId,
-    elementUrl: element.elementUrl ?? '',
-    elementNameAndDescription: element.elementNameAndDescription ?? '',
-    codeAndCategory: field === 'codeAndCategory' ? fieldValue : element.codeAndCategory ?? '',
-    orderStatus: field === 'orderStatus' ? fieldValue : element.orderStatus ?? '',
-    itemType: field === 'itemType' ? fieldValue : element.itemType ?? '',
-    uom: field === 'uom' ? fieldValue : element.uom ?? '',
-    status: field === 'status' ? fieldValue : element.status ?? '',
-    source: element.source ?? '',
-    length: element.length ?? 0,
-    breadth: element.breadth ?? 0,
-    height: element.height ?? 0,
-    quantity: element.quantity ?? 0,
-    draftQuantity: element.draftQuantity ?? 0,
-    clientRate: element.clientRate ?? 0,
-    finalAmount: element.finalAmount ?? 0,
-    brandOrMake,
-    discount: element.discount ?? 0,
-    serviceCharge: element.serviceCharge ?? 0,
-    baseAmount: element.baseAmount ?? 0,
-    budgetRate: element.budgetRate ?? 0,
-    hsn: element.hsn ?? 0,
-    gstPrecent: element.gstPrecent ?? 0,
-    amountWithoutGst: element.amountWithoutGst ?? 0,
-    designId: element.designId ?? '',
-    roomName: element.roomName ?? '',
-    itemCode: element.itemCode ?? '',
-    companyCode: element.companyCode ?? '',
-    email: element.email ?? '',
-    type: element.type ?? 0
-  }];
-
-  // Send update request
-  this.switchService.updateElementData(payload).subscribe({
-    next: (res: any) => {
-      if (res?.status) {
-        this.toastr.success(`${field} updated successfully`);
-        element[field] = fieldValue;
-        if (field === 'itemType') {
-          element.brandOrMake = brandOrMake;
+        field: 'itemType' | 'orderStatus' | 'uom' | 'status' | 'codeAndCategory',
+        selectedValue: string | { name?: string; code?: string },
+        element: any
+    ) {
+        // Validate element
+        if (!element?.boqId) {
+            this.toastr.warning('Invalid element selected');
+            return;
         }
-      } else {
-        this.toastr.error(`Failed to update ${field}`);
-      }
-    },
-    error: () => this.toastr.error(`Error while updating ${field}`)
-  });
-}
 
+        // Determine correct field value
+        let fieldValue = '';
+        if (typeof selectedValue === 'string') {
+            fieldValue = selectedValue;
+        } else if (field === 'codeAndCategory') {
+            fieldValue = selectedValue?.code ?? '';
+        } else {
+            fieldValue = selectedValue?.name ?? '';
+        }
+
+        // Update local form state
+        this.elementForm.patchValue({ [field]: fieldValue });
+
+        // Extract brand/make logic for itemType
+        let brandOrMake = element.brandOrMake ?? '';
+        if (field === 'itemType' && !brandOrMake && element.elementNameAndDescription) {
+            const [, brandLine] = element.elementNameAndDescription.split('\n');
+            if (brandLine?.includes(':')) {
+                brandOrMake = brandLine.split(':')[1]?.trim() || '';
+            }
+        }
+        const payload = [{
+            boqId: element.boqId,
+            elementUrl: element.elementUrl ?? '',
+            elementNameAndDescription: element.elementNameAndDescription ?? '',
+            codeAndCategory: field === 'codeAndCategory' ? fieldValue : element.codeAndCategory ?? '',
+            orderStatus: field === 'orderStatus' ? fieldValue : element.orderStatus ?? '',
+            itemType: field === 'itemType' ? fieldValue : element.itemType ?? '',
+            uom: field === 'uom' ? fieldValue : element.uom ?? '',
+            status: field === 'status' ? fieldValue : element.status ?? '',
+            source: element.source ?? '',
+            length: element.length ?? 0,
+            breadth: element.breadth ?? 0,
+            height: element.height ?? 0,
+            quantity: element.quantity ?? 0,
+            draftQuantity: element.draftQuantity ?? 0,
+            clientRate: element.clientRate ?? 0,
+            finalAmount: element.finalAmount ?? 0,
+            brandOrMake,
+            discount: element.discount ?? 0,
+            serviceCharge: element.serviceCharge ?? 0,
+            baseAmount: element.baseAmount ?? 0,
+            budgetRate: element.budgetRate ?? 0,
+            hsn: element.hsn ?? 0,
+            gstPrecent: element.gstPrecent ?? 0,
+            amountWithoutGst: element.amountWithoutGst ?? 0,
+            designId: element.designId ?? '',
+            roomName: element.roomName ?? '',
+            itemCode: element.itemCode ?? '',
+            companyCode: element.companyCode ?? '',
+            email: element.email ?? '',
+            type: element.type ?? 0
+        }];
+
+        // Send update request
+        this.switchService.updateElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status) {
+                    this.toastr.success(`${field} updated successfully`);
+                    element[field] = fieldValue;
+                    if (field === 'itemType') {
+                        element.brandOrMake = brandOrMake;
+                    }
+                }
+            }
+        });
+    }
 
     proposalApprovalSubmit(modal: any) {
         if (this.proposalApprovalForm.invalid) {
@@ -706,22 +680,19 @@ export class BoqComponent extends BaseComponent {
     boqData() {
         const payload = {
             email: this.userEmail,
-            // designId: "3FO3EWPJHYSK",
-            designId: this.designingId,
-            bomRequired: true,
+            designId: '3FO3ILENXV7I',
+            bomRequired: false,
             wardrobeRequired: true,
             kbRequired: true
         };
         this.switchService.fetchBoqData(payload).subscribe({
             next: (res) => {
-                const boqData = res?.boqData || {};
+                const boqData = res?.boqResponse?.boqData || {};
+                const pannelResponse = res?.pannelResponse?.pannelResponse || [];
                 this.tabKeys = Object.keys(boqData);
-                this.boqDataSources = {};
-                this.tabCounts = {};
-                this.tabTotals = {};
                 let allItems: any[] = [];
-                this.tabKeys.forEach((key) => {
-                    const items = boqData[key] || [];
+                this.tabKeys.forEach((key: string) => {
+                    const items: any[] = boqData[key] || [];
                     this.boqDataSources[key] = new MatTableDataSource(
                         items.map((item: any, index: number) => ({
                             slNo: index + 1,
@@ -729,25 +700,35 @@ export class BoqComponent extends BaseComponent {
                         }))
                     );
                     this.tabCounts[key] = items.length;
-                    const total = items.reduce((sum: number, item: any) => {
-                        return sum + (item.clientRate || 0);
-                    }, 0);
-                    this.tabTotals[key] = total;
+                    this.tabTotals[key] = items.reduce(
+                        (sum: number, item: any) => sum + (item.clientRate || 0),
+                        0
+                    );
                     allItems = [
                         ...allItems,
-                        ...items.map((item: any, index: number) => ({
-                            slNo: index + 1,
+                        ...items.map((item: any, i: number) => ({
+                            slNo: i + 1,
                             roomName: key,
                             ...item
                         }))
                     ];
                 });
                 this.boqDataSources['All'] = new MatTableDataSource(allItems);
-                this.tabCounts['All'] = allItems.length;
-                this.tabTotals['All'] = allItems.reduce((sum, item) => sum + (item.clientRate || 0), 0);
                 this.tabKeys = ['All', ...this.tabKeys];
-            },
+                this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({
+                    order: i + 1,
+                    ...item
+                }));
+            }
         });
+    }
+
+    onShowPanelList() {
+        this.showPanelList = true;
+    }
+
+    onHidePanelList() {
+        this.showPanelList = false;
     }
 
     getProposal() {
@@ -777,9 +758,6 @@ export class BoqComponent extends BaseComponent {
                     this.skipProposalForm = false;
                     this.step = 1;              
                 }
-
-                console.log("Proposal List:", this.proposals);
-                console.log("skipClientForm =", this.skipClientForm);
             },
         });
     }
@@ -960,9 +938,14 @@ export class BoqComponent extends BaseComponent {
     openLg2(content2: any) {
         this.offcanvasService.open(content2, { position: 'end', panelClass: 'custom-offcanvas' });
     }
+
     openLg5(content5: any) {
         this.selectedProposal = this.selectedProposalContent;
         this.modalService.open(content5, { centered: true });
+    }
+
+    cutList(content46: any) {
+        this.modalService.open(content46, { centered: true });
     }
 
     openCreateForm(content: any) {
@@ -1101,7 +1084,6 @@ export class BoqComponent extends BaseComponent {
             this.toastr.warning('Please fill all required fields in Step 3.');
             return;
         }
-        console.log('after validation its working ');
         const formValue = this.proposalForm.value;
         const selectedData: any = {};
         const seenBoqIds = new Set<number>();
@@ -1134,12 +1116,10 @@ export class BoqComponent extends BaseComponent {
            if (this.skipClientForm ==true ) {
             if (storedClientData) {
                 clientDataToSend = JSON.parse(storedClientData);
-                console.log('if block executed');
             }
             } else {
             clientDataToSend = selectedData || {};
             }
-          console.log(storedClientData);
         const proposalPayload = {
             email: this.userEmail,
             type: this.userType,
@@ -1157,7 +1137,6 @@ export class BoqComponent extends BaseComponent {
             designId: this.designingId,
             clientDataJs: JSON.stringify(clientDataToSend),
         };
-        console.log('ghdfghfhjfdfh',proposalPayload);
         this.updateElementsAndCreateProposal(proposalPayload, modal);
     }
 
@@ -1216,7 +1195,6 @@ export class BoqComponent extends BaseComponent {
                 inProposal: "inprop",
             };
         });
-        console.log(proposalPayload,payloads)
         this.switchService.updateElementData(payloads).subscribe({
             next: () => {
                 this.createProposal(proposalPayload, modal);
@@ -1234,7 +1212,6 @@ export class BoqComponent extends BaseComponent {
                 }
             },
         });
-        console.log(proposalPayload)
     }
 
     extraContentProposalSubmit(modal: any) {
@@ -2053,9 +2030,6 @@ scrollTabs(direction: 'left' | 'right') {
           }
           this.projectConfigList = configs;
         } 
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
@@ -2091,8 +2065,6 @@ scrollTabs(direction: 'left' | 'right') {
           }
           this.projectMarginList = configs;
         }
-      },
-      error: (error) => {
       }
     });
   }
@@ -2107,11 +2079,86 @@ scrollTabs(direction: 'left' | 'right') {
   goBackToProjects() {
     this.router.navigate(['/dashboard/projects']);
   }
-    statusDisplayMap: { [key: string]: string } = {
+  statusDisplayMap: { [key: string]: string } = {
     'Approve': 'Approved',
     'Pending for Approval': 'Pending for Approval',
     'Rejected': 'Rejected'
-    };
+  };
+  
+    getPanelList() {
+        const payload = {
+            designId: this.designId,
+            email: this.userEmail,
+            bomRequired: false,
+            wardrobeRequired: true,
+            kbRequired: true
+        };
+        this.switchService.panelListData(payload).subscribe({
+            next: (res: any) => {
+                if (Array.isArray(res)) {
+                    this.panelList = res;
+                    this.allPanels = [];
+                    res.forEach((room: any) => {
+                        room.detailedList?.forEach((cab: any) => {
+                            const panels = cab.pannelDataList || [];
+                            this.allPanels.push(...panels);
+                        });
+                    });
+                }
+            }
+        });
+    }
 
+    getOptimizerCut() {
+        const payload = {
+            companyName: JSON.parse(this.userData)?.companyName,
+            companyCode: JSON.parse(this.userData)?.companyCode,
+            email: JSON.parse(this.userData)?.email,
+            type: JSON.parse(this.userData)?.type,
+        };
+        this.switchService.getOptimizerCut(payload).subscribe({
+            next: (res: any) => {
+                this.optimizerCuts = Array.isArray(res) ? res : [];
+            },
+        });
+    }
+
+    sendCutsToAnotherApi() {
+        const specification = this.generateCutListForm.get('specification')?.value || '';
+        const dimesions = this.optimizerCuts.map(cut => ({
+            modelName: cut.code,
+            l1: Math.floor(cut.l1),
+            l2: Math.floor(cut.l2),
+            w1: Math.floor(cut.w1),
+            w2: Math.floor(cut.w2),
+        }));
+        const payload = {
+            specification: specification,
+            dimesions: dimesions,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+            designId: '3FO3ILENXV7I',
+        };
+        console.log('Payload to send:', payload);
+        // this.switchService.sendToAnotherApi(payload).subscribe({
+        //     next: () => this.toastr.success('Data sent successfully'),
+        //     error: (err) => {
+        //         console.error(err);
+        //         this.toastr.error('Error sending data');
+        //     },
+        // });
+    }
+
+
+    cutListSubmit() {
+        const payload = {
+            ...this.cutListForm.value,
+            companyName:this.userCompanyName,
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+        };
+        console.log(payload)
+    }
 
 }

@@ -1,8 +1,8 @@
-import { Component,TemplateRef } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import flatpickr from 'flatpickr';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { NgbDropdownModule,NgbNavModule,NgbModal, NgbModalConfig, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbNavModule, NgbModal, NgbModalConfig, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { ToastrService } from 'ngx-toastr';
@@ -14,13 +14,13 @@ import { forkJoin } from 'rxjs';
 @Component({
   selector: 'app-task',
   standalone: true,
-  imports: [SharedModule,NgSelectModule,NgbModule,NgbNavModule,NgbDropdownModule,FlatpickrModule,
-    FormsModule,ReactiveFormsModule,CommonModule],
-  providers: [NgbModalConfig, NgbModal,FlatpickrDefaults],
+  imports: [SharedModule, NgSelectModule, NgbModule, NgbNavModule, NgbDropdownModule, FlatpickrModule,
+    FormsModule, ReactiveFormsModule, CommonModule],
+  providers: [NgbModalConfig, NgbModal, FlatpickrDefaults],
   templateUrl: './task.component.html',
   styleUrl: './task.component.scss'
 })
-export class TaskComponent extends BaseComponent{
+export class TaskComponent extends BaseComponent {
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
@@ -28,16 +28,18 @@ export class TaskComponent extends BaseComponent{
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: string = this.userData ? this.userData.type : '';
-  adonaiRole: string =  this.userData ? this.userData.adonaiRole : '';
-  crmRole: string =  this.userData ? this.userData.crmRole : '';
-  globalTaskForm!: FormGroup; manualTaskForm!: FormGroup; globaltaskList: any[] = []; 
-  manualTaskList: any[] = []; manualTaskCount: any
-  globalTaskCount:any; selectedTaskId: string | null = null;
-  assignedUserLst : any[]=[]; assignTaskForm!: FormGroup; selectedTask: any; selectedUserEmail: string = '';
+  adonaiRole: string = this.userData ? this.userData.adonaiRole : '';
+  crmRole: string = this.userData ? this.userData.crmRole : '';
+  globalTaskForm!: FormGroup; manualTaskForm!: FormGroup; globaltaskList: any[] = [];
+  manualTaskList: any[] = []; manualTaskCount: any; selectedManualTaskId: string | null = null;
+  globalTaskCount: any; selectedTaskId: string | null = null;
+  assignedUserLst: any[] = []; assignTaskForm!: FormGroup; selectedTask: any; selectedUserEmail: string = '';
   assignedTasksList: any[] = []; adminAccessUsers: any[] = []; assignedUserId: number | null = null;
-  userList:any[]=[]; adminList: any;  assignedTasksCount: any;filteredAllUsers: any[] = [];
-  manualAssignTaskList : any[]=[];isAdmin : boolean = false;manualAssignTaskCount : number =0;
-   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
+  userList: any[] = []; adminList: any; assignedTasksCount: any; filteredAllUsers: any[] = [];
+  manualAssignTaskList: any[] = []; isAdmin: boolean = false; manualAssignTaskCount: number = 0;
+  showAllUsers: boolean = false;  todayTasks: any[] = []; yesterdayTasks: any[] = []; thisWeekTasks: any[] = [];
+
+  userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
     'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'];
   public globalTaskSubmitted = false;
   public manualTaskSubmitted = false;
@@ -49,27 +51,29 @@ export class TaskComponent extends BaseComponent{
     private toastr: ToastrService,) {
     super();
   }
-  
+
   ngOnInit(): void {
+    this.isAdmin = this.adonaiRole === 'ADMIN';
     this.globalTaskForm = this.fb.group({
-      name: ['',Validators.required],
-      description:['',Validators.required],
-      result:['',Validators.required],
-      activityStatus:[0],
-      recurringStatus:['',],
-      createdBy:[this.userName],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      result: ['', Validators.required],
+      activityStatus: [0],
+      recurringStatus: ['',],
+      createdBy: [this.userName],
       companyName: [this.userCompanyName],
       companyCode: [this.userCompanyCode],
       type: [this.userType],
     });
 
     this.manualTaskForm = this.fb.group({
-      name: ['',Validators.required],
-      description: ['',Validators.required],
-      assignedTo:['',Validators.required],
-      result:[''],
-      leadApproval:[''],
-      managerApproval:[''],
+      name: [''],
+      description: [''],
+      assignedTo: [''],
+      result: [''],
+      leadApproval: [''],
+      managerApproval: [''],
+      currentStatus: [''],
       companyName: [this.userCompanyName],
       companyCode: [this.userCompanyCode],
       type: [this.userType],
@@ -77,35 +81,34 @@ export class TaskComponent extends BaseComponent{
 
     this.assignTaskForm = this.fb.group({
       taskId: [Validators.required],
-      userDeptId:[Validators.required],
-      assignedBy:[this.userEmail],
-      assignedAt:[new Date().toISOString()],
-      activityStatus:[''],
+      userDeptId: [Validators.required],
+      assignedBy: [this.userEmail],
+      assignedAt: [new Date().toISOString()],
+      activityStatus: [''],
       companyCode: [this.userCompanyCode],
-      userEmail:[''],
+      userEmail: [''],
       type: [this.userType],
     });
-    
+
     this.adminAccessAllUsers();
     this.getUsers();
     this.getAssignedUsers();
     this.getAllGlobalTask();
     if (this.adonaiRole === 'ADMIN' || this.crmRole === 'ADMIN') {
       this.isAdmin = true;
-      console.log(this.isAdmin);
-    this.getALLManualTasks();
+      this.getALLManualTasks();
       this.fetchTasksAssignedBy();
     }
-    else{
+    else {
       this.isAdmin = false;
       this.fetchTasksAssignedTo();
     }
-    
+
   }
 
-  taskModal(content1:any) {
-		this.modalService.open(content1,{ centered: true });
-	}
+  taskModal(content1: any) {
+    this.modalService.open(content1, { centered: true });
+  }
 
   get gf() {
     return this.globalTaskForm.controls;
@@ -137,22 +140,33 @@ export class TaskComponent extends BaseComponent{
     this.manualTaskForm.reset();
     this.manualTaskSubmitted = false;
     if (task) {
-      this.selectedTaskId = task.id;
+      this.selectedManualTaskId = task.id ?? task.taskId ?? null;
+      const matchedUser = this.userList?.find(
+        (u: any) => u.email === task.assignedTo
+      );
       this.manualTaskForm.patchValue({
-        name: task.name,
-        description: task.description,
-        result: task.result,
-        assignedTo: task.assignedTo,
-        leadApproval: task.leadApproval,
-        managerApproval: task.managerApproval
+        name: task.name || '',
+        description: task.description || '',
+        result: task.result || '',
+        assignedTo: matchedUser ? matchedUser.email : task.assignedTo || '',
+        currentStatus: task.currentStatus || '',
+        leadApproval: task.leadApproval || '',
+        managerApproval: task.managerApproval || ''
       });
+      if (this.adonaiRole === 'ADMIN') {
+        this.manualTaskForm.enable();
+      } else {
+        this.manualTaskForm.disable();
+        this.manualTaskForm.get('currentStatus')?.enable();
+      }
     } else {
-      this.selectedTaskId = null;
+      this.selectedManualTaskId = null;
+      this.manualTaskForm.enable();
     }
-    this.modalService.open(content3, { backdrop: 'static' });
+    this.modalService.open(content3, { backdrop: 'static', });
   }
 
-  assignTaskModal(content2:any) {
+  assignTaskModal(content2: any) {
     this.modalService.open(content2, { scrollable: true, centered: true, },);
   }
 
@@ -175,7 +189,6 @@ export class TaskComponent extends BaseComponent{
     });
   }
 
-
   getUsers() {
     let cn = this.userCompanyName;
     let cc = this.userCompanyCode;
@@ -188,45 +201,89 @@ export class TaskComponent extends BaseComponent{
     })
   }
 
-  manualTaskSubmit(modal: any) {
+  createManualTask(modal: any): void {
     this.manualTaskSubmitted = true;
     if (this.manualTaskForm.invalid) {
-      this.toastr.error('Please fill in all required fields.');
+      this.toastr.error('Please fill in required fields.');
       return;
     }
-    const payload: any = {
-      ...this.manualTaskForm.value,
+    const payload = {
+      name: this.manualTaskForm.value.name,
+      description: this.manualTaskForm.value.description,
+      assignedTo: this.manualTaskForm.value.assignedTo,
+      result: this.manualTaskForm.value.result,
       companyName: this.userCompanyName,
       companyCode: this.userCompanyCode,
-      type: this.userType,
+      type: this.userType
     };
-    if (this.selectedTaskId) {
-      payload.id = this.selectedTaskId;
-    } else {
-      delete payload.leadApproval;
-      delete payload.managerApproval;
-    }
-    const apiCall = this.selectedTaskId
-      ? this.switchService.updateManualTask(payload)
-      : this.switchService.createManualTask(payload);
-    apiCall.subscribe({
-      next: (res: any) => {
-        this.toastr.success(
-          this.selectedTaskId ? 'Task updated' : 'Task created'
-        );
-        this.manualTaskForm.reset();
-        this.manualTaskSubmitted = false;
-        this.selectedTaskId = null;
-        modal.close();
+    console.log(payload)
+    this.switchService.createManualTask(payload).subscribe({
+      next: () => {
+        this.toastr.success('Manual Task Created ');
         this.getALLManualTasks();
+        modal.close();
       }
     });
   }
 
+  updateManualTask(modal: any): void {
+    this.manualTaskSubmitted = true;
+    if (this.manualTaskForm.invalid) {
+      this.toastr.error('Please fill in required fields.');
+      return;
+    }
+    const formValue = this.manualTaskForm.getRawValue();
+    const existingTask = this.manualAssignTaskList?.find(
+      (task: any) => task.id === this.selectedManualTaskId
+    );
+    let payload: any;
+    if (this.adonaiRole === 'ADMIN') {
+      payload = {
+        ...formValue,
+        id: this.selectedManualTaskId,
+        companyName: this.userCompanyName,
+        companyCode: this.userCompanyCode,
+        type: this.userType
+      };
+    } else {
+      payload = {
+        id: this.selectedManualTaskId,
+        name: existingTask?.name,
+        description: existingTask?.description,
+        result: existingTask?.result,
+        assignedTo: existingTask?.assignedTo,
+        leadApproval: existingTask?.leadApproval,
+        managerApproval: existingTask?.managerApproval,
+        companyName: this.userCompanyName,
+        companyCode: this.userCompanyCode,
+        type: this.userType,
+        currentStatus: formValue.currentStatus
+      };
+    }
+    console.log('Payload sent to backend:', payload);
+    // this.switchService.updateManualTask(payload).subscribe({
+    //   next: () => {
+    //     this.toastr.success('Task updated successfully');
+    //     this.adonaiRole === 'ADMIN' ? this.getALLManualTasks() : this.loadAssignedTasks();
+    //     modal.close();
+    //   }
+    // });
+  }
+
+  resetManualTaskForm(modal: any) {
+    this.manualTaskForm.reset();
+    this.manualTaskSubmitted = false;
+    this.selectedManualTaskId = null;
+    modal.close();
+  }
+
+
+
+
   deleteManualTask(taskId: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
       this.switchService.deleteManualTaskById(taskId).subscribe((res: any) => {
-        this.toastr.success('Task deleted');
+        this.toastr.success('Manual Task deleted');
         this.getALLManualTasks();
       });
     }
@@ -286,21 +343,58 @@ export class TaskComponent extends BaseComponent{
     this.switchService.getManualTasks().subscribe({
       next: (res: any) => {
         if (res) {
-            this.manualTaskList = res.data || res;
+          this.manualTaskList = res.data || res;
           this.manualTaskCount = this.manualTaskList.length;
-          
-          
+          this.categorizeTasks();
         }
       }
     });
   }
 
-  
+  fetchTasksAssignedTo() {
+    const email = this.userEmail;
+    const companyCode = this.userCompanyCode;
+    this.switchService.getTasksAssignTo(email, companyCode).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.manualAssignTaskList = res.data || res;
+          this.manualAssignTaskCount = this.manualAssignTaskList.length;
+          this.categorizeTasks();
+        }
+      }
+    });
+  }
+
+ categorizeTasks() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const weekStart = new Date(today);
+  weekStart.setDate(today.getDate() - 7);
+  weekStart.setHours(0, 0, 0, 0);
+  const list = this.isAdmin ? this.manualTaskList : this.manualAssignTaskList;
+  this.yesterdayTasks = [];
+  this.todayTasks = [];
+  this.thisWeekTasks = [];
+  list.forEach(task => {
+    const taskDate = new Date(task.createdTime);
+    const taskDay = new Date(taskDate.getFullYear(), taskDate.getMonth(), taskDate.getDate()).getTime();
+    if (taskDay === today.getTime()) {
+      this.todayTasks.push(task);
+    } else if (taskDay === yesterday.getTime()) {
+      this.yesterdayTasks.push(task);
+    }
+    else if (taskDay >= weekStart.getTime() && taskDay < yesterday.getTime()) {
+      this.thisWeekTasks.push(task);
+    }
+  });
+}
 
   deleteGlobalTask(taskId: number): void {
     if (confirm('Are you sure you want to delete this task?')) {
       this.switchService.deleteGlobalTaskById(taskId).subscribe((res: any) => {
-        this.toastr.success('Task deleted');
+        this.toastr.success('Global Task deleted');
         this.getAllGlobalTask();
       });
     }
@@ -356,21 +450,20 @@ export class TaskComponent extends BaseComponent{
       activityStatus: String(this.assignTaskForm.value.activityStatus),
       userDeptId: this.assignedUserId
     };
-    console.log(payload)
-    // this.switchService.assignTasksRoles(payload).subscribe({
-    //   next: (res: any) => {
-    //     this.toastr.success(res.message || 'Task assigned');
-    //     modal.close();
-    //     this.loadAssignedTasks();
-    //     this.assignTaskForm.reset();
-    //     this.assignTaskSubmitted = false;
-    //   },
-    // });
+    this.switchService.assignTasksRoles(payload).subscribe({
+      next: (res: any) => {
+        this.toastr.success(res.message || 'Task assigned');
+        modal.close();
+        this.loadAssignedTasks();
+        this.assignTaskForm.reset();
+        this.assignTaskSubmitted = false;
+      },
+    });
   }
 
   onUserChange(selectedUser: any) {
     if (selectedUser) {
-    const email = this.showAllUsers ? selectedUser : selectedUser.userEmail;
+      const email = this.showAllUsers ? selectedUser : selectedUser.userEmail;
       this.switchService.getAssignUser(selectedUser.userEmail, this.userCompanyCode)
         .subscribe((res: any[]) => {
           if (res.length > 0) {
@@ -416,10 +509,10 @@ export class TaskComponent extends BaseComponent{
           );
           return {
             ...assigned,
-            taskName: matched?.name ,
+            taskName: matched?.name,
             description: matched?.description,
             result: matched?.result,
-            recurringStatus: matched?.recurringStatus?.toUpperCase() ,
+            recurringStatus: matched?.recurringStatus?.toUpperCase(),
           };
         });
         this.assignedTasksCount = this.assignedTasksList.length;
@@ -439,34 +532,18 @@ export class TaskComponent extends BaseComponent{
     });
   }
 
-  fetchTasksAssignedTo() {
-    const email = this.userEmail;
-    const companyCode = this.userCompanyCode;
-    this.switchService.getTasksAssignTo(email, companyCode).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.manualAssignTaskList =  res.data || res;
-          this.manualAssignTaskCount = this.manualAssignTaskList.length;
-        }
-      }
-    });
-  }
-
   getUserColor(user: any): string {
-  const key =
-    user?.email ||
-    user?.userEmail ||
-    user?.followUpBy ||
-    user?.executive ||
-    user?.assignedTo ||
-    user?.assignedBy ||
-    'default';
-
-  const index = this.hashString(key) % this.userColors.length;
-  return this.userColors[index];
-}
-
-
+    const key =
+      user?.email ||
+      user?.userEmail ||
+      user?.followUpBy ||
+      user?.executive ||
+      user?.assignedTo ||
+      user?.assignedBy ||
+      'default';
+    const index = this.hashString(key) % this.userColors.length;
+    return this.userColors[index];
+  }
 
   private hashString(str: string): number {
     let hash = 5381;
@@ -495,10 +572,9 @@ export class TaskComponent extends BaseComponent{
     }
   }
 
-  showAllUsers: boolean = false;
+  
   toggleAllUsers(event: any) {
-  this.showAllUsers = event.target.checked;
-
+    this.showAllUsers = event.target.checked;
     if (this.showAllUsers) {
       const deptUserIds = this.adminAccessUsers.map(u => u.id);
       const deptUserEmails = this.adminAccessUsers.map(u => u.userEmail);
@@ -506,11 +582,30 @@ export class TaskComponent extends BaseComponent{
         (user: any) =>
           !deptUserIds.includes(user.id) && !deptUserEmails.includes(user.email)
       );
-
     } else {
       this.filteredAllUsers = [];
     }
   }
+
+  getStageClass(status: string): string {
+    if (!status) return 'badge';
+    const s = status.toLowerCase();
+    if (s.includes('progress')) return 'badge badge-stage in-progress';
+    if (s.includes('start')) return 'badge badge-stage not-started';
+    if (s.includes('complete') || s.includes('done')) return 'badge badge-stage completed';
+    return 'badge badge-stage';
+  }
+
+  getPriorityClass(priority: string): string {
+    if (!priority) return 'badge';
+    const p = priority.toLowerCase();
+    if (p === 'high') return 'badge badge-priority high';
+    if (p === 'medium') return 'badge badge-priority medium';
+    if (p === 'low') return 'badge badge-priority low';
+    return 'badge badge-priority';
+  }
+
+
 
 
 
