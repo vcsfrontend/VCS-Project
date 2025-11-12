@@ -108,7 +108,8 @@ export class BoqComponent extends BaseComponent {
     showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
     thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
     designerData: any[] = []; filteredDesignerData: any[] = [];   override panelList: any[] = [];
-    allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = [];
+    allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
+    showManualFields = false;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -408,12 +409,17 @@ export class BoqComponent extends BaseComponent {
             companyName:this.userCompanyName
         });
         this.generateCutListForm = this.fb.group({
-            specification: [''],
-            dimesions: [''],
-            email: this.userEmail,
-            companyCode: this.userCompanyCode,
-            designId: this.designId
+            specification: ['', Validators.required],
+            code: [{ value: '', disabled: true }],
+            l1: [{ value: '', disabled: true }],
+            l2: [{ value: '', disabled: true }],
+            w1: [{ value: '', disabled: true }],
+            w2: [{ value: '', disabled: true }],
+            email: [this.userEmail],
+            companyCode: [this.userCompanyCode],
+            designId: [this.designId],
         });
+
         this.getUsers();
         this.getAssignProjects();
         this.getProjectConfig();
@@ -680,7 +686,7 @@ export class BoqComponent extends BaseComponent {
     boqData() {
         const payload = {
             email: this.userEmail,
-            designId: '3FO3ILENXV7I',
+            designId: this.designingId,
             bomRequired: false,
             wardrobeRequired: true,
             kbRequired: true
@@ -2076,9 +2082,11 @@ scrollTabs(direction: 'left' | 'right') {
   closeSelect(select: NgSelectComponent) {
     setTimeout(() => select.close(), 150);
   }
+
   goBackToProjects() {
     this.router.navigate(['/dashboard/projects']);
   }
+
   statusDisplayMap: { [key: string]: string } = {
     'Approve': 'Approved',
     'Pending for Approval': 'Pending for Approval',
@@ -2111,8 +2119,8 @@ scrollTabs(direction: 'left' | 'right') {
 
     getOptimizerCut() {
         const payload = {
-            companyName: JSON.parse(this.userData)?.companyName,
-            companyCode: JSON.parse(this.userData)?.companyCode,
+            companyname: JSON.parse(this.userData)?.companyName,
+            companycode: JSON.parse(this.userData)?.companyCode,
             email: JSON.parse(this.userData)?.email,
             type: JSON.parse(this.userData)?.type,
         };
@@ -2124,32 +2132,56 @@ scrollTabs(direction: 'left' | 'right') {
     }
 
     sendCutsToAnotherApi() {
-        const specification = this.generateCutListForm.get('specification')?.value || '';
-        const dimesions = this.optimizerCuts.map(cut => ({
-            modelName: cut.code,
-            l1: Math.floor(cut.l1),
-            l2: Math.floor(cut.l2),
-            w1: Math.floor(cut.w1),
-            w2: Math.floor(cut.w2),
-        }));
-        const payload = {
-            specification: specification,
-            dimesions: dimesions,
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType,
-            designId: '3FO3ILENXV7I',
-        };
-        console.log('Payload to send:', payload);
-        // this.switchService.sendToAnotherApi(payload).subscribe({
-        //     next: () => this.toastr.success('Data sent successfully'),
-        //     error: (err) => {
-        //         console.error(err);
-        //         this.toastr.error('Error sending data');
-        //     },
-        // });
+        const specification = this.generateCutListForm.get('specification')?.value;
+        if (specification === 'manual') {
+            const payload = {
+                specification: specification,
+                dimesions: [
+                    {
+                        modelName: this.generateCutListForm.get('code')?.value,
+                        l1: Math.floor(this.generateCutListForm.get('l1')?.value),
+                        l2: Math.floor(this.generateCutListForm.get('l2')?.value),
+                        w1: Math.floor(this.generateCutListForm.get('w1')?.value),
+                        w2: Math.floor(this.generateCutListForm.get('w2')?.value),
+                    },
+                ],
+                companyCode: this.userCompanyCode,
+                email: this.userEmail,
+                type: this.userType,
+                designId: this.designId,
+            };
+            console.log('📦 Manual Payload:', payload);
+        }
+        else {
+            if (!this.optimizerCuts?.length) {
+                console.warn('No cuts available to send');
+                return;
+            }
+            const dimesions = this.optimizerCuts.map(cut => ({
+                modelName: cut.code,
+                l1: Math.floor(cut.l1),
+                l2: Math.floor(cut.l2),
+                w1: Math.floor(cut.w1),
+                w2: Math.floor(cut.w2),
+            }));
+            const payload = {
+                specification: specification,
+                dimesions: dimesions,
+                companyCode: this.userCompanyCode,
+                email: this.userEmail,
+                type: this.userType,
+                designId: this.designId,
+            };
+            console.log('📦 Default Payload:', payload);
+            // this.switchService.sendToAnotherApi(payload).subscribe({
+            //     next: () => this.toastr.success('Data sent successfully'),
+            //     error: (err) => {
+            //         console.error(err);
+            //         this.toastr.error('Error sending data');
+            //     },
+            // });
+        }
     }
-
 
     cutListSubmit() {
         const payload = {
@@ -2160,5 +2192,41 @@ scrollTabs(direction: 'left' | 'right') {
         };
         console.log(payload)
     }
+
+
+    onSpecificationChange(selectedItem: any) {
+        const selectedValue = selectedItem?.name;
+        const controls = this.generateCutListForm.controls;
+        if (selectedValue === 'manual') {
+            this.showManualFields = true;
+            controls['code'].enable();
+            controls['l1'].enable();
+            controls['l2'].enable();
+            controls['w1'].enable();
+            controls['w2'].enable();
+            controls['code'].setValidators([Validators.required]);
+            controls['l1'].setValidators([Validators.required, Validators.pattern('^[0-9]+$')]);
+            controls['l2'].setValidators([Validators.required, Validators.pattern('^[0-9]+$')]);
+            controls['w1'].setValidators([Validators.required, Validators.pattern('^[0-9]+$')]);
+            controls['w2'].setValidators([Validators.required, Validators.pattern('^[0-9]+$')]);
+        } else {
+            this.showManualFields = false;
+            controls['code'].disable();
+            controls['l1'].disable();
+            controls['l2'].disable();
+            controls['w1'].disable();
+            controls['w2'].disable();
+            controls['code'].clearValidators();
+            controls['l1'].clearValidators();
+            controls['l2'].clearValidators();
+            controls['w1'].clearValidators();
+            controls['w2'].clearValidators();
+            this.getOptimizerCut();
+        }
+        Object.values(controls).forEach(control => control.updateValueAndValidity());
+    }
+
+
+
 
 }

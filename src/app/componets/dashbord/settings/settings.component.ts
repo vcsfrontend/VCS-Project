@@ -102,7 +102,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   userdeptroleId: any; email: string = ''; departroleId: number = 0; adminAccessUsersLst: any[] = [];
   departmentIds: any; assignedRoleIds: any; active6 = 'Home'; filteredRoleList: any[] = []; filteredPermissionList: any[] = [];
   assignPerm: any; filteredUserList: any[] = []; showUser: boolean = false; selectedUser: any;
-  departmentListTable: any[] = []; optimizerCuts: any[] = [];
+  departmentListTable: any[] = []; optimizerCuts: any[] = []; 
+  codeLabels: { [key: string]: string } = { AK_PA: 'Panel', AK_SH: 'Shutter'};
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -2102,10 +2103,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         next: (res: any) => {
           this.toastr.success('Department deleted successfully');
           this.getAllDepartments();
-        },
-        error: (err) => {
-          this.toastr.error('Failed to delete department');
-          console.error(err);
         }
       });
     }
@@ -2197,10 +2194,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         next: (res: any) => {
           this.toastr.success('permission deleted successfully');
           this.getAllPermissions();
-        },
-        error: (err) => {
-          this.toastr.error('Failed to delete department');
-          console.error(err);
         }
       });
     }
@@ -2240,10 +2233,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   //       this.depId = res.id;
   //       this.getAssignedRoles();
   //     },
-  //     error: (err) => {
-  //       this.toastr.error('Assignment failed');
-  //       console.error(err);
-  //     }
   //   });
   // }
   assignRole(modal: any) {
@@ -2331,10 +2320,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
               (r: any) => r.id !== id
             );
           }
-        },
-        error: (err) => {
-          this.toastr.error('Failed to delete department');
-          console.error(err);
         }
       });
     }
@@ -2425,10 +2410,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         next: (res: any) => {
           this.toastr.success('permission deleted successfully');
           this.getAssignedRoles();
-        },
-        error: (err) => {
-          this.toastr.error('Failed to delete department');
-          console.error(err);
         }
       });
     }

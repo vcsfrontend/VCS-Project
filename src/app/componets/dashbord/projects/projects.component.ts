@@ -1994,7 +1994,6 @@ downloadButtons: { label: string; url: string }[] = [];
     };
     this.switchService.fetchProjectConfig(payload).subscribe({
       next: (res: any) => {
-        console.log('🔍 Full API response:', res);
         if (res) {
            const configs: string[] = [];
           for (let i = 1; i <= 10; i++) {

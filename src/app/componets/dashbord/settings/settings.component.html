@@ -1184,7 +1184,7 @@
                         <table class="table text-nowrap">
                             <thead>
                                 <tr>
-                                    <th scope="col">Modal</th>
+                                    <th scope="col">Model</th>
                                     <th scope="col">L1</th>
                                     <th scope="col">L2</th>
                                     <th scope="col">W1</th>
@@ -1193,7 +1193,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let cut of optimizerCuts">
-                                    <td>{{ cut.code }}</td>
+                                    <td>{{ codeLabels[cut.code] || cut.code }}</td>
                                     <td>{{ cut.l1 }}</td>
                                     <td>{{ cut.l2 }}</td>
                                     <td>{{ cut.w1 }}</td>
