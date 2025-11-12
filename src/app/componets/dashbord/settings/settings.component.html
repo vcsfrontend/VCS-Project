@@ -1074,7 +1074,7 @@
                 </button>
                 </div>
                 <div class="container mt-4 mb-4" *ngIf="showPmntStages" >
-                    <div style="max-height: 260px; overflow-y: auto;">
+                    <div style="max-height: 260px; overflow-y: auto; overflow-x: hidden;">
                         <div *ngFor="let field of dynamicPmntFields; let i = index" class="row mb-3 align-items-center">
                             <div class="col-sm-8">
                                 <input type="text" class="form-control form-control-sm p-2 font-weight-bold border" [ngModel]="field.value"

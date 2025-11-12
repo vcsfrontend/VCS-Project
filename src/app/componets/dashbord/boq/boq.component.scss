@@ -468,3 +468,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .info-item span {
   display: block;
 }
+.scrollable-modal-body {
+  overflow-y: auto;
+  max-height: 45vh;
+  padding-right: 10px;
+}

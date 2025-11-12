@@ -2000,19 +2000,18 @@
                                                                                         <tr>
                                                                                             <th>S.No</th>
                                                                                             <th>Panel Name</th>
-                                                                                            <th>Code</th>
                                                                                             <th>Material</th>
-                                                                                            <th>Width</th>
-                                                                                            <th>Depth</th>
                                                                                             <th>Height</th>
+                                                                                            <th>Width</th>
+                                                                                            <th>Thickness</th>
                                                                                             <th>Quantity</th>
-                                                                                            <th>Groove</th>
                                                                                             <th>L1</th>
                                                                                             <th>W1</th>
                                                                                             <th>L2</th>
                                                                                             <th>W2</th>
                                                                                             <th>CL</th>
                                                                                             <th>CW</th>
+                                                                                            <th>Groove</th>
                                                                                         </tr>
                                                                                     </thead>
                                                                                     <tbody>
@@ -2021,19 +2020,24 @@
                                                                                             <td class="text-primary" style="cursor: pointer;">
                                                                                                 {{ panel.pannelName }}
                                                                                             </td>
-                                                                                            <td>{{ panel.model }}</td>
                                                                                             <td>{{ panel.coreMaterial }}_{{ panel.skin1 }}_{{ panel.skin2 }}</td>
                                                                                             <td>{{ panel.width }}</td>
                                                                                             <td>{{ panel.depth }}</td>
                                                                                             <td>{{ panel.height }}</td>
                                                                                             <td>{{ panel.quantity }}</td>
-                                                                                            <td>{{ panel.grove }}</td>
-                                                                                            <td>{{ panel.l1 }}</td>
-                                                                                            <td>{{ panel.w1 }}</td>
-                                                                                            <td>{{ panel.l2 }}</td>
-                                                                                            <td>{{ panel.w2 }}</td>
+                                                                                            <td style="width: 80px;">{{ panel.l1 }} MM</td>
+                                                                                            <td style="width: 80px;">{{ panel.w1 }} MM</td>
+                                                                                            <td style="width: 80px;">{{ panel.l2 }} MM</td>
+                                                                                            <td style="width: 80px;">{{ panel.w2 }} MM</td>
                                                                                             <td>{{ panel.cl }}</td>
                                                                                             <td>{{ panel.cw }}</td>
+                                                                                            <td>
+                                                                                                <div *ngIf="panel.grove === 'YES';  else noGrove;">
+                                                                                                    GR-{{ panel.width }}
+                                                                                                </div>
+                                                                                                <ng-template #noGrove>
+                                                                                                    
+                                                                                                </ng-template>
                                                                                         </tr>
                                                                                     </tbody>
                                                                                 </table>
@@ -3227,9 +3231,9 @@
             <h6 class="modal-title"><strong>Generate Cut List</strong></h6>
             <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
         </div>
-        <div class="modal-body overflowImportant">
-            <div class="row gy-3">
-                <div class="col-lg-12">
+        <div class="modal-body scrollable-modal-body">
+            <div class="row gy-3" style="max-height: 100vh;">
+                <div class="col-lg-12" *ngIf="currentStep !== 2">
                     <label class="form-label">Cut List Type</label>
                     <ng-select [items]="specificationItems" bindLabel="label" bindValue="name" placeholder="Select any"
                         formControlName="specification" (change)="onSpecificationChange($event)">
@@ -3239,7 +3243,7 @@
                     <div class="col-xl-12">
                         <label class="form-label">Model</label>
                         <ng-select [items]="cutListItems" bindLabel="name" bindValue="code" formControlName="code"
-                            placeholder="Select any" [ngClass]="{
+                            placeholder="Select any" (change)="onModelChange($event)" [ngClass]="{
                 'is-invalid': generateCutListForm.get('code')?.invalid &&
                   generateCutListForm.get('code')?.touched
               }">
@@ -3249,71 +3253,141 @@
                             Model is required
                         </div>
                     </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Length 1</label>
-                        <input type="text" class="form-control" formControlName="l1" [ngClass]="{
-                'is-invalid': generateCutListForm.get('l1')?.invalid &&
-                  generateCutListForm.get('l1')?.touched
-              }" />
-                        <div *ngIf="generateCutListForm.get('l1')?.invalid && generateCutListForm.get('l1')?.touched"
-                            class="invalid-feedback">
-                            <div *ngIf="generateCutListForm.get('l1')?.errors?.['required']">
-                                Length 1 is required
+                    <div *ngIf="currentStep === 1" class="row gy-3">
+                        <div class="col-lg-6">
+                            <label class="form-label">Length 1</label>
+                            <input type="text" class="form-control" formControlName="l1" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('l1')?.invalid &&
+                                          generateCutListForm.get('l1')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('l1')?.invalid && generateCutListForm.get('l1')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('l1')?.errors?.['required']">
+                                    Length 1 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('l1')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
                             </div>
-                            <div *ngIf="generateCutListForm.get('l1')?.errors?.['pattern']">
-                                Only numbers allowed
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <label class="form-label">Width 1</label>
+                            <input type="text" class="form-control" formControlName="w1" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('w1')?.invalid &&
+                                          generateCutListForm.get('w1')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('w1')?.invalid && generateCutListForm.get('w1')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('w1')?.errors?.['required']">
+                                    Width 1 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('w1')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <label class="form-label">Length 2</label>
+                            <input type="text" class="form-control" formControlName="l2" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('l2')?.invalid &&
+                                          generateCutListForm.get('l2')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('l2')?.invalid && generateCutListForm.get('l2')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('l2')?.errors?.['required']">
+                                    Length 2 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('l2')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <label class="form-label">Width 2</label>
+                            <input type="text" class="form-control" formControlName="w2" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('w2')?.invalid &&
+                                          generateCutListForm.get('w2')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('w2')?.invalid && generateCutListForm.get('w2')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('w2')?.errors?.['required']">
+                                    Width 2 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('w2')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Width 1</label>
-                        <input type="text" class="form-control" formControlName="w1" [ngClass]="{
-                'is-invalid': generateCutListForm.get('w1')?.invalid &&
-                  generateCutListForm.get('w1')?.touched
-              }" />
-                        <div *ngIf="generateCutListForm.get('w1')?.invalid && generateCutListForm.get('w1')?.touched"
-                            class="invalid-feedback">
-                            <div *ngIf="generateCutListForm.get('w1')?.errors?.['required']">
-                                Width 1 is required
-                            </div>
-                            <div *ngIf="generateCutListForm.get('w1')?.errors?.['pattern']">
-                                Only numbers allowed
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Length 2</label>
-                        <input type="text" class="form-control" formControlName="l2" [ngClass]="{
-                'is-invalid': generateCutListForm.get('l2')?.invalid &&
-                  generateCutListForm.get('l2')?.touched
-              }" />
-                        <div *ngIf="generateCutListForm.get('l2')?.invalid && generateCutListForm.get('l2')?.touched"
-                            class="invalid-feedback">
-                            <div *ngIf="generateCutListForm.get('l2')?.errors?.['required']">
-                                Length 2 is required
-                            </div>
-                            <div *ngIf="generateCutListForm.get('l2')?.errors?.['pattern']">
-                                Only numbers allowed
+                    <div *ngIf="currentStep === 2 && showManualFields" class="row gy-3">
+                        <div class="col-lg-6">
+                            <label class="form-label">Length 1</label>
+                            <input type="text" class="form-control" formControlName="l1" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('l1')?.invalid &&
+                                          generateCutListForm.get('l1')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('l1')?.invalid && generateCutListForm.get('l1')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('l1')?.errors?.['required']">
+                                    Length 1 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('l1')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-lg-6">
-                        <label class="form-label">Width 2</label>
-                        <input type="text" class="form-control" formControlName="w2" [ngClass]="{
-                'is-invalid': generateCutListForm.get('w2')?.invalid &&
-                  generateCutListForm.get('w2')?.touched
-              }" />
-                        <div *ngIf="generateCutListForm.get('w2')?.invalid && generateCutListForm.get('w2')?.touched"
-                            class="invalid-feedback">
-                            <div *ngIf="generateCutListForm.get('w2')?.errors?.['required']">
-                                Width 2 is required
+                        
+                        <div class="col-lg-6">
+                            <label class="form-label">Width 1</label>
+                            <input type="text" class="form-control" formControlName="w1" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('w1')?.invalid &&
+                                          generateCutListForm.get('w1')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('w1')?.invalid && generateCutListForm.get('w1')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('w1')?.errors?.['required']">
+                                    Width 1 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('w1')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
                             </div>
-                            <div *ngIf="generateCutListForm.get('w2')?.errors?.['pattern']">
-                                Only numbers allowed
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <label class="form-label">Length 2</label>
+                            <input type="text" class="form-control" formControlName="l2" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('l2')?.invalid &&
+                                          generateCutListForm.get('l2')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('l2')?.invalid && generateCutListForm.get('l2')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('l2')?.errors?.['required']">
+                                    Length 2 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('l2')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <label class="form-label">Width 2</label>
+                            <input type="text" class="form-control" formControlName="w2" [ngClass]="{
+                                        'is-invalid': generateCutListForm.get('w2')?.invalid &&
+                                          generateCutListForm.get('w2')?.touched
+                                      }" />
+                            <div *ngIf="generateCutListForm.get('w2')?.invalid && generateCutListForm.get('w2')?.touched"
+                                class="invalid-feedback">
+                                <div *ngIf="generateCutListForm.get('w2')?.errors?.['required']">
+                                    Width 2 is required
+                                </div>
+                                <div *ngIf="generateCutListForm.get('w2')?.errors?.['pattern']">
+                                    Only numbers allowed
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3321,7 +3395,9 @@
             </div>
         </div>
         <div class="modal-footer">
+            <button *ngIf="currentStep === 1 && showManualFields" class="btn btn-primary mt-3" (click)="nextPanelStep()">Next</button>
             <button type="submit" class="btn btn-primary">Submit</button>
+            <button class="btn btn-secondary"*ngIf="currentStep === 2 && showManualFields" (click)="previousStep()">Back</button>
             <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
         </div>
     </form>
