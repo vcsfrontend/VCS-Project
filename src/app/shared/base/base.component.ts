@@ -645,8 +645,20 @@ export class BaseComponent {
   ];
 
   designStatus = [
-    { "name": "Complete" },
+    { "name": "COMPLETED" },
   ];
+
+  cutListItems = [
+    { name: 'Panel', code: 'AK_PA' },
+    { name: 'Shutter', code: 'AK_SH' }
+  ];
+
+  specificationItems = [
+    { name: 'auto_generate', },
+    { name: 'manual' }
+  ];
+
+  
   filterFields = [
     { "name": "followUp" },
     { "name": "last_updated" },

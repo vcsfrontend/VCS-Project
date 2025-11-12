@@ -1099,13 +1099,13 @@
 </div>
 <div *ngIf="roleid==5">
     <div class="row">
-        <div class="col-xl-5">
+        <div class="col-xl-4">
             <div class="card custom-card overflow-hidden">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
                         Margin
                     </div>
-                    <button  class="btn btn-primary" (click)="openRight13(content13)">
+                    <button  class="btn btn-primary btn-sm" (click)="openRight13(content13)">
                         Add Margin
                     </button>
                 </div>
@@ -1135,7 +1135,7 @@
                     <div class="card-title">
                     Project Configuration
                     </div>
-                    <a href="javascript:void(0);" class="btn btn-primary" (click)="openRight14(content14)">Add
+                    <a href="javascript:void(0);" class="btn btn-primary btn-sm" (click)="openRight14(content14)">Add
                         Configuration</a>
                 </div>
                 <div class="card-body px-0 pt-2 pb-0">
@@ -1159,6 +1159,48 @@
                             </tbody>
                         </table>
 
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="card custom-card overflow-hidden">
+                <div class="card-header justify-content-between">
+                    <div class="card-title">
+                        Cut List
+                    </div>
+                    <div class=" d-flex justify-content-end align-items-center">
+                        <a href="javascript:void(0);" class="btn btn-primary btn-sm me-2" (click)="cutList(content46)">
+                            Add Configuration
+                        </a>
+                        <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger" *ngIf="optimizerCuts!.length > 0"
+                            (click)="deleteOptimizerCut()">
+                            <i class="ri-delete-bin-line"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body px-0 pt-2 pb-0">
+                    <div class="table-responsive">
+                        <table class="table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Modal</th>
+                                    <th scope="col">L1</th>
+                                    <th scope="col">L2</th>
+                                    <th scope="col">W1</th>
+                                    <th scope="col">W2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let cut of optimizerCuts">
+                                    <td>{{ cut.code }}</td>
+                                    <td>{{ cut.l1 }}</td>
+                                    <td>{{ cut.l2 }}</td>
+                                    <td>{{ cut.w1 }}</td>
+                                    <td>{{ cut.w2 }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -1235,6 +1277,72 @@
         </div>
     </form>
 </ng-template>
+
+<ng-template #content46 let-modal>
+    <form [formGroup]="cutListForm" (ngSubmit)="cutListSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title"><strong>Cut List</strong></h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3">
+                <div class="col-xl-12"> <label class="form-label">Model</label>
+                    <ng-select [items]="cutListItems" bindLabel="name" bindValue="code" placeholder="Select any" formControlName="code"
+                        [ngClass]="{ 'is-invalid': cutListSubmitted && cl['code'].errors }"> 
+                    </ng-select>
+                    <div *ngIf="cutListSubmitted && cl['code'].errors" class="invalid-feedback">
+                        <div *ngIf="cl['code'].errors['required']">Model is required</div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Length 1</label>
+                    <input type="text" class="form-control" formControlName="l1"
+                        [ngClass]="{ 'is-invalid': cutListSubmitted && cl['l1'].errors }">
+                    <div *ngIf="cutListSubmitted && cl['l1']?.errors" class="invalid-feedback">
+                        <div *ngIf="cl['l1']?.errors?.['required']">Length 1 is required</div>
+                        <div *ngIf="cl['l1']?.errors?.['pattern']">Only numbers allowed</div>
+                    </div>
+                </div>
+            
+                <div class="col-lg-6">
+                    <label class="form-label">Width 1</label>
+                    <input type="text" class="form-control" formControlName="w1"
+                        [ngClass]="{ 'is-invalid': cutListSubmitted && cl['w1'].errors }">
+                    <div *ngIf="cutListSubmitted && cl['w1']?.errors" class="invalid-feedback">
+                        <div *ngIf="cl['w1']?.errors?.['required']">Width 1 is required</div>
+                        <div *ngIf="cl['w1']?.errors?.['pattern']">Only numbers allowed</div>
+                    </div>
+                </div>
+            
+                <div class="col-lg-6">
+                    <label class="form-label">Length 2</label>
+                    <input type="text" class="form-control" formControlName="l2"
+                        [ngClass]="{ 'is-invalid': cutListSubmitted && cl['l2'].errors }">
+                    <div *ngIf="cutListSubmitted && cl['l2']?.errors" class="invalid-feedback">
+                        <div *ngIf="cl['l2']?.errors?.['required']">Length 2 is required</div>
+                        <div *ngIf="cl['l2']?.errors?.['pattern']">Only numbers allowed</div>
+                    </div>
+                </div>
+            
+                <div class="col-lg-6">
+                    <label class="form-label">Width 2</label>
+                    <input type="text" class="form-control" formControlName="w2"
+                        [ngClass]="{ 'is-invalid': cutListSubmitted && cl['w2'].errors }">
+                    <div *ngIf="cutListSubmitted && cl['w2']?.errors" class="invalid-feedback">
+                        <div *ngIf="cl['w2']?.errors?.['required']">Width 2 is required</div>
+                        <div *ngIf="cl['w2']?.errors?.['pattern']">Only numbers allowed</div>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
+        </div>
+    </form>
+</ng-template>
+
 <!-- <div class="row">
     <div class="col-lg-12">
         <div class="card custom-card">
@@ -2779,6 +2887,7 @@
     </div>
   </div>
 </div> -->
+
 
 
 
