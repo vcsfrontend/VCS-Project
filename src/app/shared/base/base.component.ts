@@ -654,11 +654,10 @@ export class BaseComponent {
   ];
 
   specificationItems = [
-    { name: 'auto_generate', },
-    { name: 'manual' }
+    { name: 'auto_generate',label: 'Default' },
+    { name: 'manual', label: 'Manual' }
   ];
 
-  
   filterFields = [
     { "name": "followUp" },
     { "name": "last_updated" },
