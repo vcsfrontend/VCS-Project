@@ -325,5 +325,6 @@ export class SwitherService {
   saveOptimizerCut(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/save_optimizer_cut`, data); }
   getOptimizerCut(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/get_optimizer_cut`, data); }
   deleteOptimizerCut(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}optimizer/delete_optimizer_cut`, data); }
+  generateCutList(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}projo_boq/generate_cut_list`, data); }
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
