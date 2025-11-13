@@ -957,7 +957,7 @@ export class BoqComponent extends BaseComponent {
     }
 
     cutList(content46: any) {
-        this.modalService.open(content46, { centered: true,scrollable : true });
+        this.modalService.open(content46, { centered: true });
     }
 
     openCreateForm(content: any) {
@@ -2261,15 +2261,31 @@ scrollTabs(direction: 'left' | 'right') {
 
     this.dimensionsList.push(dimensionObj);
     console.log('✅ Saved step data:', this.dimensionsList);
-    
-    if (this.selectedModel === 'Panel') {
-        this.selectedModel = 'Shutter';
-        this.generateCutListForm.patchValue({ code: 'Shutter' });
-    } else {
-        this.selectedModel = 'Panel';
-        this.generateCutListForm.patchValue({ code: 'Panel' });
+   let nextModelCode = '';
+
+    const selectedItem = this.cutListItems.find(i => i.code === code);
+    if (selectedItem?.name.toLowerCase().includes('panel')) {
+    nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('shutter'))?.code || '';
+    } else if (selectedItem?.name.toLowerCase().includes('shutter')) {
+    nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('panel'))?.code || '';
     }
 
+    if (nextModelCode) {
+    this.generateCutListForm.patchValue({
+    code: nextModelCode,
+    l1: '',
+    l2: '',
+    w1: '',
+    w2: ''
+    });
+    }
+
+
+   ['l1', 'l2', 'w1', 'w2'].forEach(ctrl => {
+    this.generateCutListForm.get(ctrl)?.markAsPristine();
+    this.generateCutListForm.get(ctrl)?.markAsUntouched();
+    this.generateCutListForm.get(ctrl)?.updateValueAndValidity();
+  });
 
     if (this.currentStep < 2) {
         this.currentStep++;

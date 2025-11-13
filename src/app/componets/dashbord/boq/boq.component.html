@@ -3232,7 +3232,7 @@
             <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
         </div>
         <div class="modal-body scrollable-modal-body">
-            <div class="row gy-3" style="max-height: 100vh;">
+            <div style="max-height: 100vh;">
                 <div class="col-lg-12" *ngIf="currentStep !== 2">
                     <label class="form-label">Cut List Type</label>
                     <ng-select [items]="specificationItems" bindLabel="label" bindValue="name" placeholder="Select any"
