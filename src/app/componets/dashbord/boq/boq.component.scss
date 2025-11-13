@@ -473,3 +473,34 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   max-height: 45vh;
   padding-right: 10px;
 }
+
+.scroll-wrapper {
+  position: relative;
+}
+
+.scroll-container {
+  overflow-x: auto;
+  flex: 1;
+  scroll-behavior: smooth;
+}
+
+.scroll-btn {
+  background-color: #006699 !important; 
+  border: none;
+  color: white;
+  padding: 6px 7px;
+  font-size: 18px;
+  border-radius: 10%;
+  cursor: pointer;
+  z-index: 2; 
+  flex-shrink: 0;
+}
+
+.scroll-btn:hover {
+  background-color: #0056b3;
+}
+
+.scroll-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

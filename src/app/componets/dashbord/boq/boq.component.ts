@@ -87,7 +87,6 @@ export class BoqComponent extends BaseComponent {
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
-    @ViewChild('tabContainer', { static: false }) tabContainer!: ElementRef;
 
     @ViewChild(MatSort) sort!: MatSort;
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
@@ -111,7 +110,7 @@ export class BoqComponent extends BaseComponent {
     thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
     designerData: any[] = []; filteredDesignerData: any[] = [];   override panelList: any[] = [];
     allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
-    showManualFields = false;
+    showManualFields = false; boqKeys: string[] = [];
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -674,7 +673,6 @@ export class BoqComponent extends BaseComponent {
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.proposaldataSource.paginator = this.paginator;
-        this.checkArrows();
         // this.dataSource.sort = this.sort;
     }
 
@@ -1892,24 +1890,7 @@ export class BoqComponent extends BaseComponent {
     this.elementForm.enable();
   }
 }
-scrollTabs(direction: 'left' | 'right') {
-    const container = this.tabContainer.nativeElement;
-    const scrollAmount = 150;
-    if (direction === 'left') {
-      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    } else {
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-    setTimeout(() => this.checkArrows(), 300);
-  }
 
-  checkArrows() {
-    const container = this.tabContainer?.nativeElement;
-    if (!container) return;
-
-    this.showLeftArrow = container.scrollLeft > 0;
-    this.showRightArrow = container.scrollWidth > container.clientWidth + container.scrollLeft;
-  }
 
   prevStep() {
     if (this.step > 1) {
@@ -2329,4 +2310,37 @@ scrollTabs(direction: 'left' | 'right') {
     this.showShutterFields = false;
     this.dimensionsList = [];
     }
+
+    scrollLeft() {
+        this.scrollContainer.nativeElement.scrollBy({
+            left: -200,
+            behavior: 'smooth'
+        });
+    }
+
+    scrollRight() {
+        this.scrollContainer.nativeElement.scrollBy({
+            left: 200,
+            behavior: 'smooth'
+        });
+    }
+  items = [
+  { id: 1, name: 'Dashboard' },
+  { id: 2, name: 'Projects' },
+  { id: 3, name: 'Teams' },
+  { id: 4, name: 'Reports' },
+  { id: 5, name: 'Settings' },
+  { id: 6, name: 'Profile' },
+  { id: 7, name: 'Notifications' },
+  { id: 8, name: 'Help' },
+  { id: 2, name: 'Projects' },
+  { id: 3, name: 'Teams' },
+  { id: 4, name: 'Reports' },
+  { id: 5, name: 'Settings' },
+  { id: 6, name: 'Profile' },
+  { id: 7, name: 'Notifications' },
+  { id: 8, name: 'Help' }
+];
+
+
 }

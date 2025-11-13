@@ -556,19 +556,21 @@ export class TaskComponent extends BaseComponent {
   getRecurringStatusBadge(status: string): string {
     switch (status) {
       case 'DAILY':
-        return 'bg-primary-transparent';
+        return 'bg-primary';
       case 'WEEKLY':
-        return 'bg-success-transparent';
+        return 'bg-success';
       case 'SATURDAY':
-        return 'bg-warning-transparent';
+        return 'bg-warning';
       case 'SUNDAY':
-        return 'bg-danger-transparent';
+        return 'bg-danger';
       case 'MONTHLY':
-        return 'bg-info-transparent';
+        return 'bg-info';
       case 'SAT_SUN':
-        return 'bg-secondary-transparent';
+        return 'bg-secondary';
+      case 'NONE':
+        return 'bg-danger';
       default:
-        return 'bg-light-transparent';
+        return 'bg-light';
     }
   }
 

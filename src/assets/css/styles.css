@@ -106,7 +106,7 @@ typography
   --header-bg: #fff;
   --header-prime-color: #6f778e;
   --header-border-color: #e8e8e8;
-  --custom-white: #fff;
+  --custom-white: #ffffff;
   --custom-black: #000;
   --bootstrap-card-border: #e8e8e8;
   --list-hover-focus-bg: #f5f6f7;
@@ -4954,6 +4954,9 @@ fieldset:disabled .btn {
   background-color: var(--bs-btn-disabled-bg);
   border-color: var(--bs-btn-disabled-border-color);
   opacity: var(--bs-btn-disabled-opacity);
+  cursor: not-allowed !important;  
+  opacity: 0.6;
+  pointer-events: all !important;   
 }
 
 .btn-primary {
@@ -17503,7 +17506,7 @@ html[dir=rtl] .translate-middle {
 .card.custom-card {
   border-radius: 0.85rem;
   background-color: var(--custom-white);
-  box-shadow: 0px 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
   position: relative;
   margin-block-end: 1.5rem;
   width: 100%;
@@ -35366,3 +35369,6 @@ app-sidebar,
   z-index: 5000 !important;
 }
 
+.cu{
+  cursor: pointer;
+}

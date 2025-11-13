@@ -2,7 +2,7 @@
     <div class="col-lg-12" *ngIf="adonaiRole=== 'ADMIN'">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
-                <div class="card-title">All Tasks <span class="badges bg-primary">{{globalTaskCount}}</span></div>
+                <div class="card-title">All Tasks <span class="badges bg-primary text-white">{{globalTaskCount}}</span></div>
                 <div class="d-flex flex-wrap gap-3">
                     <button class="btn btn-primary" (click)="openGlobalTaskModal(content1)">
                         <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Create Task
@@ -33,8 +33,18 @@
                         <tbody>
                             <tr *ngFor="let task of globaltaskList">
                                 <td>{{ task.name }}</td>
-                                <td>{{ task.description }}</td>
-                                <td>{{ task.result }}</td>
+                                <td>
+                                  <span class="cu" [ngbTooltip]="task.description?.length > 25 ? task.description : null" placement="top" triggers="hover"
+                                    container="body">
+                                    {{ task.description?.length > 25 ? (task.description | slice:0:25) + '...' : task.description }}
+                                  </span>
+                                </td>
+                                <td>
+                                  <span class="cu" [ngbTooltip]="task.result?.length > 25 ? task.result : null" placement="top" triggers="hover"
+                                    container="body">
+                                    {{ task.result?.length > 25 ? (task.result | slice:0:25) + '...' : task.result }}
+                                  </span>
+                                </td>
                                 <td>
                                     <span class="badge" [ngClass]="getRecurringStatusBadge(task.recurringStatus)">
                                         {{ task.recurringStatus | titlecase}}
@@ -42,8 +52,8 @@
                                 </td>
                                 <td>
                                     <span class="badge" [ngClass]="{
-                                        'bg-success-transparent ps-3 fs-11': task.activityStatus === 1,
-                                        'bg-danger-transparent ps-3 fs-11': task.activityStatus === 0
+                                        'bg-success ps-3 fs-11': task.activityStatus === 1,
+                                        'bg-danger ps-3 fs-11': task.activityStatus === 0
                                         }">
                                         {{ task.activityStatus === 1 ? 'Active' : 'In Active' }}
                                     </span>
@@ -60,11 +70,11 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <a aria-label="anchor" href="javascript:void(0);"
-                                            class="btn btn-icon btn-sm btn-secondary-light btn-wave me-3"
+                                            class="btn btn-icon btn-sm btn-secondary btn-wave me-3"
                                             (click)="openGlobalTaskModal(content1, task)">
                                             <i class="ri-pencil-line"></i>
                                         </a>
-                                        <a class="btn btn-sm btn-icon btn-wave btn-danger-light rounded-circle me-0"
+                                        <a class="btn btn-sm btn-icon btn-wave btn-danger rounded-circle me-0"
                                             (click)="deleteGlobalTask(task.id)">
                                             <i class="ri-delete-bin-line"></i>
                                         </a>
@@ -106,16 +116,16 @@
                         </div>
                     </td>
                     <td>
-                        <span [ngbPopover]="task.description" popoverClass="popover-primary only-body" placement="top" triggers="hover"
-                            *ngIf="task.description">
-                            {{ task.description.length > 20 ? (task.description | slice:0:20) + '...' : task.description }}
-                        </span>
+                      <span class="cu" [ngbTooltip]="task.description?.length > 25 ? task.description : null" placement="top"
+                        triggers="hover" container="body">
+                        {{ task.description?.length > 25 ? (task.description | slice:0:25) + '...' : task.description }}
+                      </span>
                     </td>
                     <td>
-                        <span [ngbPopover]="task.result" popoverClass="popover-primary only-body" placement="top" triggers="hover"
-                            *ngIf="task.result">
-                            {{ task.result.length > 20 ? (task.result | slice:0:20) + '...' : task.result }}
-                        </span>
+                      <span class="cu" [ngbTooltip]="task.result?.length > 25 ? task.result : null" placement="top" triggers="hover"
+                        container="body">
+                        {{ task.result?.length > 25 ? (task.result | slice:0:25) + '...' : task.result }}
+                      </span>
                     </td>
                     <td>
                         <span class="badge" [ngClass]="{
@@ -204,8 +214,18 @@
               <span class="mt-1">{{ task.name }}</span>
             </div>
           </td>
-          <td>{{ task.description | slice: 0: 20 }}</td>
-          <td>{{ task.result | slice: 0: 20 }}</td>
+          <td>
+            <span class="cu" [ngbTooltip]="task.description?.length > 25 ? task.description : null" placement="top"
+              triggers="hover" container="body">
+              {{ task.description?.length > 25 ? (task.description | slice:0:25) + '...' : task.description }}
+            </span>
+          </td>
+          <td>
+            <span class="cu" [ngbTooltip]="task.result?.length > 25 ? task.result : null" placement="top" triggers="hover"
+              container="body">
+              {{ task.result?.length > 25 ? (task.result | slice:0:25) + '...' : task.result }}
+            </span>
+          </td>
           <td>
             <span
               class="badge"
@@ -264,14 +284,7 @@
             <div class="d-flex align-items-center">
               <a
                 href="javascript:void(0);"
-                class="btn btn-icon btn-sm btn-secondary-light btn-wave me-2"
-                (click)="openManualTaskModal(content3, task)"
-              >
-                <i class="ri-pencil-line"></i>
-              </a>
-              <a
-                href="javascript:void(0);"
-                class="btn btn-icon btn-sm btn-danger-light rounded-circle"
+                class="btn btn-icon btn-sm btn-danger rounded-circle"
                 *ngIf="isAdmin === true"
                 (click)="deleteManualTask(task.id)"
               >
@@ -318,8 +331,8 @@
               <span class="mt-1">{{ task.name }}</span>
             </div>
           </td>
-          <td>{{ task.description | slice: 0: 20 }}</td>
-          <td>{{ task.result | slice: 0: 20 }}</td>
+          <td>{{ task.description | slice: 0: 15 }}</td>
+          <td>{{ task.result | slice: 0: 15 }}</td>
           <td>
             <span
               class="badge"
@@ -376,19 +389,8 @@
           </td>
           <td *ngIf="isAdmin === true">
             <div class="d-flex align-items-center">
-              <a
-                href="javascript:void(0);"
-                class="btn btn-icon btn-sm btn-secondary-light btn-wave me-2"
-                (click)="openManualTaskModal(content3, task)"
-              >
-                <i class="ri-pencil-line"></i>
-              </a>
-              <a
-                href="javascript:void(0);"
-                class="btn btn-icon btn-sm btn-danger-light rounded-circle"
-                *ngIf="isAdmin === true"
-                (click)="deleteManualTask(task.id)"
-              >
+              <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger rounded-circle" *ngIf="isAdmin === true"
+                (click)="deleteManualTask(task.id)">
                 <i class="ri-delete-bin-line"></i>
               </a>
             </div>
@@ -485,7 +487,8 @@
                     </div>
                     <div class="col-lg-6">
                         <label class="form-label me-3">Assigned To</label>
-                        <input type="checkbox" (change)="toggleAllUsers($event)"> Show All Users
+                        <input class="form-check-input me-1" type="checkbox" id="inlineCheckbox1" value="option1"
+                        (change)="toggleAllUsers($event)">All Users
                         <ng-select *ngIf="!showAllUsers" formControlName="userDeptId" [items]="adminAccessUsers"
                             bindLabel="userEmail" bindValue="id" placeholder="Select User"
                             (change)="onUserChange($event)">
