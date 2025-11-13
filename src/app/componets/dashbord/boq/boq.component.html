@@ -3226,7 +3226,7 @@
 </ng-template>
 
 <ng-template #content47 let-modal>
-    <form [formGroup]="generateCutListForm" (ngSubmit)="sendCutsToAnotherApi()">
+    <form [formGroup]="generateCutListForm" (ngSubmit)="generateCutList()">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title"><strong>Generate Cut List</strong></h6>
             <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>

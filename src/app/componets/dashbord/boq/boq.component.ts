@@ -2137,7 +2137,7 @@ scrollTabs(direction: 'left' | 'right') {
         });
     }
 
-    sendCutsToAnotherApi() {
+    generateCutList() {
         const specification = this.generateCutListForm.get('specification')?.value;
         if (specification === 'manual') {
             const dimensionObj = {
@@ -2185,13 +2185,13 @@ scrollTabs(direction: 'left' | 'right') {
                 designId: this.designingId,
             };
             console.log('📦 Default Payload:', payload);
-            // this.switchService.sendToAnotherApi(payload).subscribe({
-            //     next: () => this.toastr.success('Data sent successfully'),
-            //     error: (err) => {
-            //         console.error(err);
-            //         this.toastr.error('Error sending data');
-            //     },
-            // });
+            this.switchService.generateCutList(payload).subscribe({
+                next: () => this.toastr.success('Data sent successfully'),
+                error: (err) => {
+                    console.error(err);
+                    this.toastr.error('Error sending data');
+                },
+            });
         }
     }
 
