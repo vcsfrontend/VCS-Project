@@ -83,6 +83,7 @@ export class BoqComponent extends BaseComponent {
     isReadOnly :boolean = false; skipClientForm:boolean=false; clientData: any = null;
     skipProposalForm : boolean = false;minDateTime: string = '';showPanelFields : boolean = false;
     showShutterFields : boolean = false;dimensionsList : any[] = [];currentStep : number =1;
+    step1Data : any[]=[];
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -957,6 +958,7 @@ export class BoqComponent extends BaseComponent {
     }
 
     cutList(content46: any) {
+        this.resetFormState();
         this.modalService.open(content46, { centered: true });
     }
 
@@ -2137,8 +2139,9 @@ scrollTabs(direction: 'left' | 'right') {
         });
     }
 
-    generateCutList() {
+    sendCutsToAnotherApi(modal:any) {
         const specification = this.generateCutListForm.get('specification')?.value;
+        let dimesions: any[] = [];
         if (specification === 'manual') {
             const dimensionObj = {
             modelName: this.generateCutListForm.get('code')?.value,
@@ -2152,16 +2155,16 @@ scrollTabs(direction: 'left' | 'right') {
             this.dimensionsList = [];
         }
         this.dimensionsList.push(dimensionObj);
-        console.log(this.dimensionsList);
+        dimesions = this.dimensionsList;
             const payload = {
                 specification: specification,
-                // 
                 dimesions: this.dimensionsList,
                 companyCode: this.userCompanyCode,
                 email: this.userEmail,
                 type: this.userType,
                 designId: this.designingId,
             };
+            dimesions = [...this.dimensionsList];
             console.log('📦 Manual Payload:', payload);
         }
         else {
@@ -2169,14 +2172,16 @@ scrollTabs(direction: 'left' | 'right') {
                 console.warn('No cuts available to send');
                 return;
             }
-            const dimesions = this.optimizerCuts.map(cut => ({
+            dimesions = this.optimizerCuts.map(cut => ({
                 modelName: cut.code,
                 l1: Math.floor(cut.l1),
                 l2: Math.floor(cut.l2),
                 w1: Math.floor(cut.w1),
                 w2: Math.floor(cut.w2),
             }));
-            const payload = {
+            
+        }
+        const payload = {
                 specification: specification,
                 dimesions: dimesions,
                 companyCode: this.userCompanyCode,
@@ -2184,15 +2189,18 @@ scrollTabs(direction: 'left' | 'right') {
                 type: this.userType,
                 designId: this.designingId,
             };
-            console.log('📦 Default Payload:', payload);
-            this.switchService.generateCutList(payload).subscribe({
-                next: () => this.toastr.success('Data sent successfully'),
-                error: (err) => {
-                    console.error(err);
-                    this.toastr.error('Error sending data');
-                },
-            });
-        }
+            console.log('final payload',payload);
+            // this.switchService.generateCutList(payload).subscribe({
+            //     next: () => {
+            //         this.toastr.success('Data sent successfully');
+            //         this.modalService.dismissAll();
+            //         this.getPanelList();
+            //     },
+            //     error: (err) => {
+            //         console.error(err);
+            //         this.toastr.error('Error sending data');
+            //     },
+            // });
     }
 
     cutListSubmit() {
@@ -2247,6 +2255,8 @@ scrollTabs(direction: 'left' | 'right') {
         this.generateCutListForm.markAllAsTouched();
         return;
     }
+    this.step1Data = { ...this.generateCutListForm.value };
+
     const code = this.generateCutListForm.get('code')?.value;
     const formValue = this.generateCutListForm.value;
 
@@ -2257,51 +2267,66 @@ scrollTabs(direction: 'left' | 'right') {
         w1: Math.floor(formValue.w1 || 0),
         w2: Math.floor(formValue.w2 || 0),
     };
-
-
     this.dimensionsList.push(dimensionObj);
     console.log('✅ Saved step data:', this.dimensionsList);
-   let nextModelCode = '';
-
+    let nextModelCode = '';
     const selectedItem = this.cutListItems.find(i => i.code === code);
+
     if (selectedItem?.name.toLowerCase().includes('panel')) {
-    nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('shutter'))?.code || '';
+        nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('shutter'))?.code || '';
     } else if (selectedItem?.name.toLowerCase().includes('shutter')) {
-    nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('panel'))?.code || '';
+        nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('panel'))?.code || '';
     }
-
-    if (nextModelCode) {
-    this.generateCutListForm.patchValue({
-    code: nextModelCode,
-    l1: '',
-    l2: '',
-    w1: '',
-    w2: ''
-    });
-    }
-
-
-   ['l1', 'l2', 'w1', 'w2'].forEach(ctrl => {
-    this.generateCutListForm.get(ctrl)?.markAsPristine();
-    this.generateCutListForm.get(ctrl)?.markAsUntouched();
-    this.generateCutListForm.get(ctrl)?.updateValueAndValidity();
-  });
-
     if (this.currentStep < 2) {
         this.currentStep++;
+
+        if (nextModelCode) {
+        // only update model code for step 2
         this.generateCutListForm.patchValue({
-        l1: '',
-        l2: '',
-        w1: '',
-        w2: ''
+            code: nextModelCode,
+            l1: '',
+            l2: '',
+            w1: '',
+            w2: ''
+        });
+        }
+
+        // reset touched status for Step 2 inputs
+        ['l1', 'l2', 'w1', 'w2'].forEach(ctrl => {
+        const control = this.generateCutListForm.get(ctrl);
+        control?.markAsPristine();
+        control?.markAsUntouched();
+        control?.updateValueAndValidity();
+        });
+    }
+    }
+
+    previousStep() {
+    if (this.currentStep > 1) {
+        this.currentStep--;
+        if (this.step1Data) {
+        this.generateCutListForm.patchValue(this.step1Data);
+        }
+    }
+    }
+
+    resetFormState() {
+    this.generateCutListForm.reset({
+        specification: '', 
+        code: '', 
+        l1: '', 
+        l2: '', 
+        w1: '', 
+        w2: '', 
+        email: this.userEmail, 
+        companyCode: this.userCompanyCode, 
+        designId: this.designId
     });
 
+    this.currentStep = 1;
+    this.showManualFields = false;
+    this.showPanelFields = false;
+    this.showShutterFields = false;
+    this.dimensionsList = [];
     }
-}
-previousStep() {
-  if (this.currentStep > 1) this.currentStep--;
-}
-
-
-
 }

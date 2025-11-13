@@ -1625,7 +1625,7 @@
                                                                 </a>
                                                                 <div class="tt"></div>
                                                                 <ng-template ngbNavContent>
-                                                                    <div class="col-xl-12 mt-2" *ngIf="!showPanelList">
+                                                                    <div class="col-xl-12" *ngIf="!showPanelList">
                                                                         <div class="card custom-card bg-white">
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="card-title col-xl-4">{{ key | titlecase }}</div>
@@ -2025,12 +2025,12 @@
                                                                                             <td>{{ panel.depth }}</td>
                                                                                             <td>{{ panel.height }}</td>
                                                                                             <td>{{ panel.quantity }}</td>
-                                                                                            <td style="width: 80px;">{{ panel.l1 }} MM</td>
-                                                                                            <td style="width: 80px;">{{ panel.w1 }} MM</td>
-                                                                                            <td style="width: 80px;">{{ panel.l2 }} MM</td>
-                                                                                            <td style="width: 80px;">{{ panel.w2 }} MM</td>
-                                                                                            <td>{{ panel.cl }}</td>
-                                                                                            <td>{{ panel.cw }}</td>
+                                                                                            <td style="width: 80px;">{{ panel.l1 !== 0 ? panel.l1 + ' MM' : '–' }}</td>
+                                                                                            <td style="width: 80px;">{{ panel.w1 !== 0 ? panel.w1 + ' MM' : '–' }}</td>
+                                                                                            <td style="width: 80px;">{{ panel.l2 !== 0 ? panel.l2 + ' MM' : '–' }}</td>
+                                                                                            <td style="width: 80px;">{{ panel.w2 !== 0 ? panel.w2 + ' MM' : '–' }}</td>
+                                                                                            <td>{{ panel.cl !== 0 ? panel.cl : '–' }}</td>
+                                                                                            <td>{{ panel.cw !== 0 ? panel.cw : '–' }}</td>
                                                                                             <td>
                                                                                                 <div *ngIf="panel.grove === 'YES';  else noGrove;">
                                                                                                     GR-{{ panel.width }}
@@ -2069,7 +2069,7 @@
                                                 </div>
                                             </div>
                                         </nav>
-                                        <div [ngbNavOutlet]="nav2" class="mt-2"></div>
+                                        <div [ngbNavOutlet]="nav2" class=""></div>
                                     </div>
                                 </div>
                             </ng-template>
@@ -3226,13 +3226,13 @@
 </ng-template>
 
 <ng-template #content47 let-modal>
-    <form [formGroup]="generateCutListForm" (ngSubmit)="generateCutList()">
+    <form [formGroup]="generateCutListForm" (ngSubmit)="sendCutsToAnotherApi(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title"><strong>Generate Cut List</strong></h6>
             <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
         </div>
-        <div class="modal-body scrollable-modal-body">
-            <div style="max-height: 100vh;">
+        <div class="modal-body scrollable-modal-body"  style="min-height: 300px;">
+            <div>
                 <div class="col-lg-12" *ngIf="currentStep !== 2">
                     <label class="form-label">Cut List Type</label>
                     <ng-select [items]="specificationItems" bindLabel="label" bindValue="name" placeholder="Select any"
@@ -3253,7 +3253,7 @@
                             Model is required
                         </div>
                     </div>
-                    <div *ngIf="currentStep === 1" class="row gy-3">
+                    <div *ngIf="currentStep === 1" class="row m-0 p-0">
                         <div class="col-lg-6">
                             <label class="form-label">Length 1</label>
                             <input type="text" class="form-control" formControlName="l1" [ngClass]="{
@@ -3322,7 +3322,7 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="currentStep === 2 && showManualFields" class="row gy-3">
+                    <div *ngIf="currentStep === 2 && showManualFields" class="row m-0 p-0">
                         <div class="col-lg-6">
                             <label class="form-label">Length 1</label>
                             <input type="text" class="form-control" formControlName="l1" [ngClass]="{
@@ -3395,9 +3395,9 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button *ngIf="currentStep === 1 && showManualFields" class="btn btn-primary mt-3" (click)="nextPanelStep()">Next</button>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button *ngIf="currentStep === 1 && showManualFields" class="btn btn-primary" (click)="nextPanelStep()">Next</button>
             <button class="btn btn-secondary"*ngIf="currentStep === 2 && showManualFields" (click)="previousStep()">Back</button>
+            <button type="submit" class="btn btn-primary" *ngIf="currentStep === 2 ||  !showManualFields">Submit</button>
             <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
         </div>
     </form>
