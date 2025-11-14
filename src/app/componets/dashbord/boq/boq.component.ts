@@ -83,7 +83,7 @@ export class BoqComponent extends BaseComponent {
     isReadOnly :boolean = false; skipClientForm:boolean=false; clientData: any = null;
     skipProposalForm : boolean = false;minDateTime: string = '';showPanelFields : boolean = false;
     showShutterFields : boolean = false;dimensionsList : any[] = [];currentStep : number =1;
-    step1Data : any[]=[];
+    step1Data : any[]=[];step2Data: any = null;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -2120,48 +2120,52 @@ export class BoqComponent extends BaseComponent {
         });
     }
 
-    sendCutsToAnotherApi(modal:any) {
-        const specification = this.generateCutListForm.get('specification')?.value;
-        let dimesions: any[] = [];
-        if (specification === 'manual') {
-            const dimensionObj = {
-            modelName: this.generateCutListForm.get('code')?.value,
-            l1: Math.floor(this.generateCutListForm.get('l1')?.value),
-            l2: Math.floor(this.generateCutListForm.get('l2')?.value),
-            w1: Math.floor(this.generateCutListForm.get('w1')?.value),
-            w2: Math.floor(this.generateCutListForm.get('w2')?.value),
-        };
-        console.log('dimension object',dimensionObj);
-        if (!this.dimensionsList) {
-            this.dimensionsList = [];
+   sendCutsToAnotherApi(modal: any) {
+  // 🔹 Validate before submitting
+  if (this.generateCutListForm.invalid) {
+    this.generateCutListForm.markAllAsTouched();
+    this.toastr.warning('Please fill all required fields before submitting');
+    return;
+  }
+
+  const specification = this.generateCutListForm.get('specification')?.value;
+  let dimesions: any[] = [];
+  if (specification === 'manual') {
+    const modelName = this.generateCutListForm.get('code')?.value;
+    const l1 = Math.floor(this.generateCutListForm.get('l1')?.value || 0);
+    const l2 = Math.floor(this.generateCutListForm.get('l2')?.value || 0);
+    const w1 = Math.floor(this.generateCutListForm.get('w1')?.value || 0);
+    const w2 = Math.floor(this.generateCutListForm.get('w2')?.value || 0);
+    const dimensionObj = { modelName, l1, l2, w1, w2 };
+    if (!this.dimensionsList) {
+      this.dimensionsList = [];
+    }
+    const existingIndex = this.dimensionsList.findIndex(
+      d => d.modelName === modelName
+    );
+
+    if (existingIndex !== -1) {
+      this.dimensionsList[existingIndex] = dimensionObj;
+    } else {
+      this.dimensionsList.push(dimensionObj);
+    }
+
+    dimesions = [...this.dimensionsList];
+    } 
+    else {
+        if (!this.optimizerCuts?.length) {
+        this.toastr.warning('No optimized cuts available to send.');
+        return;
         }
-        this.dimensionsList.push(dimensionObj);
-        dimesions = this.dimensionsList;
-            const payload = {
-                specification: specification,
-                dimesions: this.dimensionsList,
-                companyCode: this.userCompanyCode,
-                email: this.userEmail,
-                type: this.userType,
-                designId: this.designingId,
-            };
-            dimesions = [...this.dimensionsList];
-            console.log('📦 Manual Payload:', payload);
-        }
-        else {
-            if (!this.optimizerCuts?.length) {
-                console.warn('No cuts available to send');
-                return;
-            }
-            dimesions = this.optimizerCuts.map(cut => ({
-                modelName: cut.code,
-                l1: Math.floor(cut.l1),
-                l2: Math.floor(cut.l2),
-                w1: Math.floor(cut.w1),
-                w2: Math.floor(cut.w2),
-            }));
-            
-        }
+
+        dimesions = this.optimizerCuts.map(cut => ({
+        modelName: cut.code,
+        l1: Math.floor(cut.l1 || 0),
+        l2: Math.floor(cut.l2 || 0),
+        w1: Math.floor(cut.w1 || 0),
+        w2: Math.floor(cut.w2 || 0),
+        }));
+    }
         const payload = {
                 specification: specification,
                 dimesions: dimesions,
@@ -2170,18 +2174,16 @@ export class BoqComponent extends BaseComponent {
                 type: this.userType,
                 designId: this.designingId,
             };
-            console.log('final payload',payload);
-            // this.switchService.generateCutList(payload).subscribe({
-            //     next: () => {
-            //         this.toastr.success('Data sent successfully');
-            //         this.modalService.dismissAll();
-            //         this.getPanelList();
-            //     },
-            //     error: (err) => {
-            //         console.error(err);
-            //         this.toastr.error('Error sending data');
-            //     },
-            // });
+            this.switchService.generateCutList(payload).subscribe({
+                next: () => {
+                    this.toastr.success('Data sent successfully');
+                    this.modalService.dismissAll();
+                },
+                error: (err) => {
+                    console.error(err);
+                    this.toastr.error('Error sending data');
+                },
+            });
     }
 
     cutListSubmit() {
@@ -2231,65 +2233,109 @@ export class BoqComponent extends BaseComponent {
     this.selectedModel = selected;
     }
 
-    nextPanelStep() {
-    if (this.generateCutListForm.invalid) {
-        this.generateCutListForm.markAllAsTouched();
-        return;
-    }
-    this.step1Data = { ...this.generateCutListForm.value };
+   nextPanelStep() {
+  if (this.generateCutListForm.invalid) {
+    this.generateCutListForm.markAllAsTouched();
+    this.toastr.warning('Please fill all required fields before proceeding');
+    return;
+  }
 
-    const code = this.generateCutListForm.get('code')?.value;
-    const formValue = this.generateCutListForm.value;
+  const formValue = this.generateCutListForm.value;
+  const code = formValue.code;
 
-    const dimensionObj = {
-        modelName: code,
-        l1: Math.floor(formValue.l1 || 0),
-        l2: Math.floor(formValue.l2 || 0),
-        w1: Math.floor(formValue.w1 || 0),
-        w2: Math.floor(formValue.w2 || 0),
-    };
+  // Save the current step data
+  if (this.currentStep === 1) {
+    this.step1Data = { ...formValue };
+  } else if (this.currentStep === 2) {
+    this.step2Data = { ...formValue };
+  }
+
+  // Create the dimension object
+  const dimensionObj = {
+    modelName: code,
+    l1: Math.floor(formValue.l1 || 0),
+    l2: Math.floor(formValue.l2 || 0),
+    w1: Math.floor(formValue.w1 || 0),
+    w2: Math.floor(formValue.w2 || 0),
+  };
+
+  // Update or insert dimension
+  const existingIndex = this.dimensionsList.findIndex(d => d.modelName === code);
+  if (existingIndex !== -1) {
+    this.dimensionsList[existingIndex] = dimensionObj;
+  } else {
     this.dimensionsList.push(dimensionObj);
-    console.log('✅ Saved step data:', this.dimensionsList);
-    let nextModelCode = '';
-    const selectedItem = this.cutListItems.find(i => i.code === code);
+  }
 
-    if (selectedItem?.name.toLowerCase().includes('panel')) {
-        nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('shutter'))?.code || '';
-    } else if (selectedItem?.name.toLowerCase().includes('shutter')) {
-        nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('panel'))?.code || '';
-    }
-    if (this.currentStep < 2) {
-        this.currentStep++;
+  // Figure out the next model type
+  let nextModelCode = '';
+  const selectedItem = this.cutListItems.find(i => i.code === code);
 
-        if (nextModelCode) {
-        // only update model code for step 2
-        this.generateCutListForm.patchValue({
-            code: nextModelCode,
-            l1: '',
-            l2: '',
-            w1: '',
-            w2: ''
-        });
-        }
+  if (selectedItem?.name.toLowerCase().includes('panel')) {
+    nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('shutter'))?.code || '';
+  } else if (selectedItem?.name.toLowerCase().includes('shutter')) {
+    nextModelCode = this.cutListItems.find(i => i.name.toLowerCase().includes('panel'))?.code || '';
+  }
 
-        // reset touched status for Step 2 inputs
-        ['l1', 'l2', 'w1', 'w2'].forEach(ctrl => {
-        const control = this.generateCutListForm.get(ctrl);
-        control?.markAsPristine();
-        control?.markAsUntouched();
-        control?.updateValueAndValidity();
-        });
-    }
+  // Go to next step only if < 2
+  if (this.currentStep < 2) {
+    this.currentStep++;
+
+     const existing = this.dimensionsList.find(d => d.modelName === nextModelCode);
+    if (existing) {
+      // Restore previous values
+      this.generateCutListForm.patchValue({
+        code: nextModelCode,
+        l1: existing.l1,
+        l2: existing.l2,
+        w1: existing.w1,
+        w2: existing.w2
+      });
+    } else {
+      // Fresh step (no saved data)
+      this.generateCutListForm.patchValue({
+        code: nextModelCode,
+        l1: '',
+        l2: '',
+        w1: '',
+        w2: ''
+      });
     }
 
-    previousStep() {
-    if (this.currentStep > 1) {
-        this.currentStep--;
-        if (this.step1Data) {
-        this.generateCutListForm.patchValue(this.step1Data);
-        }
+    // Reset validation
+    ['l1', 'l2', 'w1', 'w2'].forEach(ctrl => {
+      const control = this.generateCutListForm.get(ctrl);
+      control?.markAsPristine();
+      control?.markAsUntouched();
+      control?.updateValueAndValidity();
+    });
+
+    // Restore step2 data if already exists
+    if (this.currentStep === 2 && this.step2Data) {
+      this.generateCutListForm.patchValue(this.step2Data);
     }
+  }
+}
+
+previousStep() {
+  if (this.currentStep > 1) {
+    this.currentStep--;
+    const formValue = this.generateCutListForm.value;
+    this.step2Data = { ...formValue };
+    if (this.currentStep === 1 && this.step1Data) {
+      this.generateCutListForm.patchValue(this.step1Data);
+    } else if (this.currentStep === 2 && this.step2Data) {
+      this.generateCutListForm.patchValue(this.step2Data);
+      this.step2Data = [];
     }
+    Object.keys(this.generateCutListForm.controls).forEach(key => {
+      const control = this.generateCutListForm.get(key);
+      control?.markAsPristine();
+      control?.markAsUntouched();
+    });
+  }
+}
+
 
     resetFormState() {
     this.generateCutListForm.reset({

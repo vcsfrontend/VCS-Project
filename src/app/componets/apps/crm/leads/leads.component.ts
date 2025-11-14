@@ -97,10 +97,11 @@ export class LeadsComponent extends BaseComponent {
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
   moveCampaignSubmit:boolean=false;
-  crmStaticStages = [
-    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-secondary text-secondary' },
-    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-danger text-danger' },
-    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: 'bg-primary text-primary' }
+  crmStaticStages = [ 
+    { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
+    { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
+    { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
+
   ];
 
   stageColor: { [key: string]: string } = { open: '#007bff',};
@@ -176,6 +177,7 @@ export class LeadsComponent extends BaseComponent {
        'Lost Leads': [...this.lostLeads],
       'Converted Leads': [...this.convertedLeads],
       'open Stage': [...this.openStage],
+      'proposal Stage': [...this.proposalStage]
     };
     this.userData = localStorage.getItem('userDetails');
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
@@ -805,6 +807,17 @@ export class LeadsComponent extends BaseComponent {
     },
     { name: 'Invalid', checked: false, isDefault: true, color: '#dc3545' },
   ];
+  proposalStage = [
+    { name: 'proposal Required', checked: false, isDefault: true, color: '#486a1bff' },
+    { name: 'proposal sent', checked: false, isDefault: true, color: '#28a743' },
+    {
+      name: 'proposal Approved',
+      checked: false,
+      isDefault: true,
+      color: '#ffc107',
+    },
+    { name: 'proposal Under Review', checked: false, isDefault: true, color: '#dc3545' },
+  ];
 
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible;
@@ -1375,12 +1388,13 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     this.prepareCrmStageData();
-    console.log(this.crmStageData)
+    this.uploadSpinner = true;
     this.switchService.SaveCrmStages(this.crmStageData).subscribe({
       next: (res: any) => {
         if (res) {
           this.toastr.success('Stages saved successfully');
           this.isStagesDisabled = false;
+           this.uploadSpinner = false;
           this.offcanvasService.dismiss();
           this.getCrmStages();
           this.isAddStagesDisabled = true;
@@ -1421,12 +1435,25 @@ export class LeadsComponent extends BaseComponent {
           const defaultStageExists = this.stageLst.some(
             (s: any) => s.stageName === 'Design Stage'
           );
+           const defaultProposalStageExists = this.stageLst.some(
+            (s: any) => s.stageName === 'proposalStage'
+          );
 
           if (isAdonaiUser && !defaultStageExists) {
             const insertIndex = Math.max(1, this.stageLst.length - 2); // ensures index is at least 1
             const defaultStage = {
               stageName: 'Design Stage',
               color: '#000000',
+              createdBy: this.userEmail,
+              companyCode: this.userCompanyCode,
+            };
+            this.stageLst.splice(insertIndex, 0, defaultStage);
+          }
+           if (isAdonaiUser && !defaultProposalStageExists) {
+            const insertIndex = Math.max(1, this.stageLst.length - 2); // ensures index is at least 1
+            const defaultStage = {
+              stageName: 'proposal Stage',
+              color: '#187edeff',
               createdBy: this.userEmail,
               companyCode: this.userCompanyCode,
             };
@@ -2645,6 +2672,12 @@ export class LeadsComponent extends BaseComponent {
     this.offcanvasService.open(content5, { position: 'end' });
   }
   openRight12(content12: any) {
+    if (this.stageLst.length === 0) {
+    this.toastr.warning("please add alteleast one stage");
+    return;
+  }
+    
+
     this.offcanvasService.open(content12, { position: 'end' });
   }
   openRight13(content13: any) {
@@ -2887,7 +2920,6 @@ export class LeadsComponent extends BaseComponent {
     this.currentCampaignId = this.campaignId;
     const leadIds = payloadArray.map(item => item.leadId);
     const campaignId = payloadArray[0].campaignId;
-    console.log(campaignId, leadIds);
      if (!this.isCreateCampaignOpen) {
     this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
       next: (res) => {
