@@ -26,10 +26,7 @@ export type ChartOptions = {
   labels: string[];
   legend: ApexLegend;
   subtitle: ApexTitleSubtitle;
- tooltip: ApexTooltip;
- plotOptions: ApexPlotOptions;
  responsive: ApexResponsive[];
- fill:ApexFill;
  grid: any; //ApexGrid;
   colors: any;
   toolbar: any;

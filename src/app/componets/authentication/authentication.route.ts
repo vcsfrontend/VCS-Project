@@ -7,28 +7,6 @@ export const admin: Routes = [
     path: 'authentication',
     children: [
       {
-        path: 'coming-soon',
-        loadComponent: () =>
-          import('./coming-soon/coming-soon.component').then(
-            (m) => m.ComingSoonComponent
-          ),
-      },
-      {
-        path: 'create-password/basic',
-        loadComponent: () =>
-          import('./create-password/basic/basic.component').then(
-            (m) => m.BasicComponent
-          ),
-      },
-      {
-        path: 'create-password/cover',
-        loadComponent: () =>
-          import('./create-password/cover/cover.component').then(
-            (m) => m.CoverComponent
-          ),
-      },
-
-      {
         path: 'lock-screen/basic',
         loadComponent: () =>
           import('./lock-screen/basic/basic.component').then(
@@ -96,13 +74,6 @@ export const admin: Routes = [
         loadComponent: () =>
           import('./two-step-verification/cover/cover.component').then(
             (m) => m.CoverComponent
-          ),
-      },
-      {
-        path: 'under-maintanace',
-        loadComponent: () =>
-          import('./under-maintanace/under-maintanace.component').then(
-            (m) => m.UnderMaintanaceComponent
           ),
       },
     ],

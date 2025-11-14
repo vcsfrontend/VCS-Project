@@ -25,7 +25,6 @@ import { MatTableModule } from '@angular/material/table'; // Import MatTableModu
 import { MatButtonModule } from '@angular/material/button'; 
 import { SwitherService } from '../../../shared/services/swither.service';
 import { AuthService } from '../../../shared/services/auth.service';
-import { CoolTheme, data } from '../../../componets/charts/echart-charts/echarts';
 import { MatCommonModule } from '@angular/material/core';
 import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
 import type { EChartsOption } from 'echarts';
@@ -44,6 +43,9 @@ import {
   ApexLegend,
   ApexResponsive,
   NgApexchartsModule,
+  ApexPlotOptions,
+  ApexTooltip,
+  ApexFill,
 } from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 export type ChartOptions = {

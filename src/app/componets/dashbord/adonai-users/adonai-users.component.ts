@@ -26,6 +26,9 @@ import {
   ApexLegend,
   ApexResponsive,
   NgApexchartsModule,
+  ApexTooltip,
+  ApexPlotOptions,
+  ApexFill,
 } from 'ng-apexcharts';
 export type ChartOptions = {
   series: ApexAxisChartSeries;

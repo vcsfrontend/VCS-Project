@@ -509,7 +509,7 @@ export class NavService implements OnDestroy {
         },
 
         {
-          title: 'clients',
+          title: 'Clients',
           icon: 'bi-suitcase-lg side-menu__icon',
           dirchange: false,
           type: 'link',

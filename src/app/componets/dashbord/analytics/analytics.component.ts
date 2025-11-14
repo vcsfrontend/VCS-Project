@@ -12,6 +12,9 @@ import {
   ApexLegend,
   ApexResponsive,
   NgApexchartsModule,
+  ApexTooltip,
+  ApexPlotOptions,
+  ApexFill,
 } from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 export type ChartOptions = {

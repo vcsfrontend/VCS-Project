@@ -232,12 +232,10 @@
                             <div class="col-xl-6" *ngIf="showCity">
                                 <label for="signup-city" class="form-label text-default"><strong>City</strong><span
                                         class="text-danger">*</span></label>
-                            
                                 <ng-select [items]="cityList" bindLabel="city" bindValue="city" placeholder="Select"
                                     [ngClass]="{ 'is-invalid': submitted && f['city'].errors }" formControlName="city" [(ngModel)]="city"
                                     [clearable]="true" [searchable]="true">
                                 </ng-select>
-                            
                                 <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
                                     <div *ngIf="f['city'].errors['required']">City is required</div>
                                 </div>
