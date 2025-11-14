@@ -11,6 +11,9 @@ import {
   ApexLegend,
   ApexResponsive,
   NgApexchartsModule,
+  ApexTooltip,
+  ApexFill,
+  ApexPlotOptions,
 } from 'ng-apexcharts';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';

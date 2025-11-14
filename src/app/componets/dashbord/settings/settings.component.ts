@@ -2584,14 +2584,13 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       companyCode: JSON.parse(this.userData)?.companyCode,
       email: JSON.parse(this.userData)?.email,
     };
-    console.log(payload)
-    // this.switchService.saveOptimizerCut(payload).subscribe({
-    //   next: () => {
-    //     this.toastr.success('Optimizer Cut saved');
-    //     modal.close();
-    //     this.getOptimizerCut();
-    //   },
-    // });
+    this.switchService.saveOptimizerCut(payload).subscribe({
+      next: () => {
+        this.toastr.success('Optimizer Cut saved');
+        modal.close();
+        this.getOptimizerCut();
+      },
+    });
   }
 
   getOptimizerCut() {
@@ -2601,7 +2600,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       email: JSON.parse(this.userData)?.email,
       type: JSON.parse(this.userData)?.type,
     };
-    console.log(payload)
     this.switchService.getOptimizerCut(payload).subscribe({
       next: (res: any) => {
         this.optimizerCuts = Array.isArray(res) ? res : [];
@@ -2616,7 +2614,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       email: JSON.parse(this.userData)?.email,
       type: JSON.parse(this.userData)?.type,
     };
-    console.log(payload)
     this.switchService.deleteOptimizerCut(payload).subscribe({
       next: () => {
         this.toastr.success('Optimizer Cut Deleted');

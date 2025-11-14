@@ -29,7 +29,6 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { forkJoin } from 'rxjs';
-import { errorRoutingModule } from '../../../error/error.route';
 
 @Component({
   selector: 'app-leads',
