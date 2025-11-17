@@ -427,7 +427,7 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   display: inline-block;
   min-width: 200px;
   overflow: visible !important; 
-  z-index: 999999 !important;
+  // z-index: 999999 !important;
 }
 
 .code-display {
@@ -510,4 +510,15 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .ng-dropdown-panel {
   position: absolute !important;
   z-index: 999999 !important;
+}
+.panel-scroll-container {
+  max-height: 450px; 
+  overflow-y: auto;
+  width: 100%;
+}
+.sticky-cabinet-header {
+  position: sticky;
+  top: 0;
+  background: #d1e7ff; 
+  z-index: 2;
 }

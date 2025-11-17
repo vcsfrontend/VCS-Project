@@ -1165,7 +1165,8 @@
                         Cut List
                     </div>
                     <div class=" d-flex justify-content-end align-items-center">
-                        <a href="javascript:void(0);" class="btn btn-primary btn-sm me-2" (click)="cutList(content46)">
+                        <a href="javascript:void(0);" class="btn btn-primary btn-sm me-2" (click)="!isCutListFull && cutList(content46)"
+                        [class.disabled]="isCutListFull">
                             Add Cut List
                         </a>
                         <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger" *ngIf="optimizerCuts!.length > 0"

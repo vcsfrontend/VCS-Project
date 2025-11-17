@@ -95,7 +95,7 @@ export class LeadsComponent extends BaseComponent {
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
-  moveCampaignSubmit:boolean=false;
+  moveCampaignSubmit:boolean=false;currentStage : string ='';sendProposalEnable : boolean= false;
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -1775,6 +1775,14 @@ export class LeadsComponent extends BaseComponent {
         next: (res: any) => {
           if (res.entryList) {
             this.leadList = res.entryList; 
+            console.log('response lead list',this.leadList);
+            for(const lead of this.leadList){
+               this.currentStage = lead.stage;
+              if(this.currentStage === 'proposal Stage'){
+                this.sendProposalEnable= true;
+              }
+               console.log('current stage', this.currentStage);
+            }
             this.dataSource = new MatTableDataSource(res.entryList);
             const cities = res.entryList
               .map((lead: any) => lead.city?.trim())
@@ -3515,7 +3523,9 @@ export class LeadsComponent extends BaseComponent {
     }
   }
   
-
+sentProposal(){
+  this.router.navigate(['apps/crm/proposal']);
+}
 
 
 }
