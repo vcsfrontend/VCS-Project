@@ -1,6 +1,6 @@
 <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
     <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
-        class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom mt-3" role="tablist">
+        class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom" role="tablist">
         <ng-container ngbNavItem="1">
             <a ngbNavLink class="nav-link ms-1" (click)="getProposal()">Proposal For Client</a>
             <div class="tt"></div>
@@ -427,7 +427,7 @@
                                     (navChange)="onRoomTabChange($event.nextId)">
                                     <ng-container *ngFor="let key of tabKeys; let i = index">
                                         <ng-container [ngbNavItem]="i+1">
-                                            <a ngbNavLink class="nav-link me-2 ms-1 my-2">{{ key | titlecase }}
+                                            <a ngbNavLink class="nav-link mx-2 my-1">{{ key | titlecase }}
                                                 <span class="badge bg-black text-white ms-1">
                                                     {{ boqDataSources[key].data.length }}
                                                 </span>
@@ -1504,18 +1504,25 @@
 </ng-template>
 
 <ng-template #content22 let-modal>
-    <div class="modal-header justify-content-center">
-        <h6 class="modal-title"><strong>Move to Other Room </strong></h6>
-        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
-    </div>
-    <div class="modal-body overflowImportant" style="min-height: 200px;">
-        <div class="row gy-3">
-            <div class="col-lg-12">
-                <label class="form-label">Select Room Name</label>
-                <ng-select formControlName="stage" [items]="rmList" bindLabel="stageName" bindValue="stageName"
-                    placeholder="Select a stage">
-                </ng-select>
+    <form [formGroup]="elementForm" (ngSubmit)="moveToRoomSubmit()">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title"><strong>Move to Other Room </strong></h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant" style="min-height: 200px;">
+            <div class="row gy-3">
+                <div class="col-lg-12">
+                    <label class="form-label">Select Room Name</label>
+                    <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
+                        placeholder="Select a stage">
+                    </ng-select>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
 </ng-template>

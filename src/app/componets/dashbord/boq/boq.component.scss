@@ -3,15 +3,6 @@
     width: 20px;
     cursor: pointer;
 }
-.mmt{
-    margin-top: -30px;
-}
-.vertical-line{
-    border-left: 1px solid #717171;
-  height: 50px; 
-  margin: 0 20px;
-}
-
 table.mat-mdc-table .mdc-data-table__header-cell {
   position: sticky !important;
   top: 0;
@@ -182,12 +173,12 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   top: 0;
   z-index: 100;
 }
-.nav-link.m-2.active {
-  background-color: 006699 !important;
-  color: #000000 !important;
-  border-radius: 6px;
-  font-weight: 600;
-}
+// .nav-link.m-2.active {
+//   background-color: 006699 !important;
+//   color: #000000 !important;
+//   border-radius: 6px;
+//   font-weight: 600;
+// }
 
 .table thead th {
   background-color: #006699 !important;
@@ -419,7 +410,7 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   transform: translateY(-50%); 
   height: 50%;               
   width: 2px;                 
-  background-color: rgb(0,0,0); 
+  background-color: rgb(40, 38, 38); 
 }
 
 .hover-select-wrapper {
@@ -522,3 +513,70 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   background: #d1e7ff; 
   z-index: 2;
 }
+
+.custom-progress-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px !important;   
+  padding-top: 10px !important; 
+  padding-bottom: 10px !important;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
+  position: relative;
+  width: 100%;
+  border: 0px;
+}
+
+.custom-progress-nav .nav-item {
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+}
+
+.custom-step {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  background: transparent !important;
+  border: none !important;
+}
+
+.step-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: inline-block;
+}
+
+.active-circle {
+  background-color: #0099cc;
+  border-color: #0099cc;
+  box-shadow: 0 0 8px #0099cc;
+}
+
+.completed-circle {
+  background-color: #00c4b4;
+  border-color: #00c4b4;
+}
+
+.active-text {
+  color: black;
+  font-weight: 700;
+}
+
+.step-line {
+  width: 55px;
+  border-bottom: 2px dashed #999;
+  display: inline-block;
+}
+
+.small-btn {
+  padding: 4px 10px !important;
+  font-size: 12px;
+  border-radius: 4px;
+  line-height: 1.2;
+}
+
