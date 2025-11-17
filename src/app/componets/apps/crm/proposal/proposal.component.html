@@ -1,118 +1,1521 @@
-<div class="col-xl-12">
-    <div class="card custom-card">
-        <div class="card-header justify-content-between">
-            <div class="title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">
-                {{proposalCount}} Proposal found
-            </div>
-            <mat-form-field class="filter-field">
-                <mat-label>Seach</mat-label>
-                <input matInput (keyup)="applyFilter($event)" #input>
-            </mat-form-field>
-            <div class="text-center">
-                <div class="btn-group" role="group" aria-label="Basic outlined example">
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-                         data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Filter</button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="offcanvas"
-                         data-bs-target="#offcanvasRight"
-                        aria-controls="offcanvasRight">Bulk Upload</button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg">Add New</button>
+<div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+    <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
+        class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom mt-3" role="tablist">
+        <ng-container ngbNavItem="1">
+            <a ngbNavLink class="nav-link ms-1" (click)="getProposal()">Proposal For Client</a>
+            <div class="tt"></div>
+            <ng-template ngbNavContent>
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-body p-0" *ngIf="!selectedProposalContent">
+                            <div class="table-container">
+                                <table class="table table-hover text-nowrap my-table">
+                                    <thead class="sticky: true">
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>Reference No</th>
+                                            <th>Proposal Request Type</th>
+                                            <th>Proposal For</th>
+                                            <th>Created By</th>
+                                            <th>Created Date</th>
+                                            <th>Status</th>
+                                            <th>₹ Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let element of filteredProposals; let i = index">
+                                            <tr (click)="getProposalContent(element)" style="cursor: pointer;">
+                                                <td>{{ i + 1 }}</td>
+                                                <td>{{ element.referenceNo }}</td>
+                                                <td><a href="javascript:void(0)">
+                                                        {{ element.proposalRequestType }}</a></td>
+                                                <td>{{ element.proposalFor }}</td>
+                                                <td>{{ element.createdBy }}</td>
+                                                <td>{{ element.createdDate + 'Z' | date:'dd-MMM-yyyy hh:mm a' }}</td>
+                                                <td>
+                                                    <span class="badge" [ngClass]="{
+                                                                        'bg-warning': element.status === 'Pending for Approval',
+                                                                        'bg-success': element.status === 'Approve',
+                                                                        'bg-danger': element.status === 'Rejected'
+                                                                        }">
+                                                        {{ statusDisplayMap[element.status] || element.status }}
+                                                    </span>
+                                                    <div *ngIf="element?.status && element.updatedBy"
+                                                        class="d-flex align-items-center mt-1">
+                                                        <span
+                                                            class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                            [ngClass]="getAgentColor(element.updatedBy)">
+                                                            {{ element.updatedBy.trim().charAt(0) | uppercase }}
+                                                        </span>
+                                                        <span class="small ms-2">{{ element.updatedBy }}</span>
+                                                    </div>
+                                                </td>
+                                                <td>{{ element.amount | number }}</td>
+                                            </tr>
+                                            <tr class="table-footer-row bg-light">
+                                                <td colspan="8"
+                                                    style="padding:4px 8px; border-top:none; font-size:12px; line-height:1.2;">
+                                                    <div
+                                                        class="d-flex align-items-center justify-content-between flex-wrap small text-muted">
+                                                        <div class="d-flex align-items-center">
+                                                            <span *ngIf="element.tags?.length">
+                                                                <span *ngFor="let tag of element.tags"
+                                                                    class="badge rounded-pill border me-1 px-2 py-1 text-dark">
+                                                                    {{ tag }}
+                                                                </span>
+                                                            </span>
+                                                            <div class="ms-3">
+                                                                Proposal Status:
+                                                                <span class="badge text-white" [ngClass]="{
+                                                                                    'bg-warning': element.status === 'Pending for Approval',
+                                                                                    'bg-success': element.status === 'Approve',
+                                                                                    'bg-danger': element.status === 'Rejected'
+                                                                                    }">
+                                                                    {{ statusDisplayMap[element.status] ||
+                                                                    element.status }}
+                                                                </span>
+                                                            </div>
+                                                            <div *ngIf="selectedProposalContent?.createdBy"
+                                                                class="d-flex align-items-center mt-1">
+                                                                <span class="me-2">Created By:</span>
+                                                                <div
+                                                                    class="d-flex align-items-center flex-wrap avatar-list-stacked">
+                                                                    <span
+                                                                        class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                        [ngClass]="getAgentColor(selectedProposalContent.createdBy)">
+                                                                        {{
+                                                                        selectedProposalContent.createdBy.trim().charAt(0)
+                                                                        | uppercase }}
+                                                                    </span>
+                                                                    <span class="small ms-3">{{
+                                                                        selectedProposalContent.createdBy }}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            Last Updated On {{ element.updatedDate | date:'dd MMM yyyy'
+                                                            }}
+                                                            by
+                                                            <span class="fw-bold">
+                                                                {{ element.updatedBy }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="fw-bold">
+                                            <td colspan="7" class="text-end">Total:</td>
+                                            <td>{{ getTotalAmount() | number }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card custom-card bg-light p-0 pt-1" *ngIf="selectedProposalContent">
+                            <div class="card custom-card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button class="btn btn-link p-0 me-2" (click)="backToLibrary()">
+                                            <i class="bi bi-arrow-left"></i>
+                                        </button>
+                                        <div class="card-title"> Proposal for New Order ({{
+                                            selectedProposalContent?.orderNo }})</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card custom-card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="card-title">Order Details</div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button class="btn btn-danger btn-sm"
+                                            (click)="openLg5(content5)">Approve</button>
+                                        <button class="btn btn-primary btn-sm"
+                                            (click)="onShare(selectedProposalContent)">Share</button>
+                                        <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
+                                            <i class="bi"
+                                                [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" *ngIf="!isCollapsed">
+                                    <div class="row g-3">
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Order No.</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderNo }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Order From</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderFrom }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Vendor ID</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.vendorId }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Job ID</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.jobId }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Created By</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.createdBy }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Order For</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderFor }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Shipping Address</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.shippingAddress }}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Start Date</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.startDate | date:'dd
+                                                MMM yyyy' }}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">Due Date</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.dueDate | date:'dd
+                                                MMM yyyy' }}</p>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <small class="text-muted">GST Number</small>
+                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.gstNo }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="bi bi-plus-circle me-1 text-success"></i>
+                                        Proposal Status:
+                                        <span class="fw-bold text-success">{{ selectedProposalContent?.proposalStatus
+                                            }}</span>
+                                    </div>
+                                    <div *ngIf="selectedProposalContent?.createdBy"
+                                        class="d-flex align-items-center mt-1">
+                                        <span class="me-2">Created By:</span>
+                                        <div class="d-flex align-items-center flex-wrap avatar-list-stacked">
+                                            <span
+                                                class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                [ngClass]="getAgentColor(selectedProposalContent.createdBy)">
+                                                {{ selectedProposalContent.createdBy.trim().charAt(0) | uppercase }}
+                                            </span>
+                                            <span class="small ms-3">{{ selectedProposalContent.createdBy }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <ul ngbNav #nav="ngbNav" class="nav-tabs bg-white">
+                                <ng-container *ngFor="let key of proposalTabKeys; let i = index">
+                                    <li [ngbNavItem]="i + 1">
+                                        <a ngbNavLink class="nav-link m-2">
+                                            {{ key }}<span class="badge bg-white text-dark ms-1">
+                                                {{ proposalTabCounts[key] || 0 }}</span>
+                                        </a>
+                                        <ng-template ngbNavContent>
+                                            <div class="card custom-card">
+                                                <div class="table-container mat-elevation-z8">
+                                                    <table mat-table [dataSource]="proposalContentDataSources[key]"
+                                                        matSort class="mat-table w-100">
+                                                        <ng-container matColumnDef="elementUrl">
+                                                            <th mat-header-cell *matHeaderCellDef
+                                                                class="sticky-col-left" style="max-width: 750px;">
+                                                                Element Name & Description
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="sticky-col-left" style="max-width: 750px;">
+                                                                <div class="d-flex align-items-center"
+                                                                    (click)="openEditFromSelected(element, content1)"
+                                                                    style="cursor: pointer;">
+                                                                    <span class="avatar avatar-xl me-3">
+                                                                        <img [src]="element.elementUrl"
+                                                                            class="img-thumbnail" alt="Project Image">
+                                                                    </span>
+                                                                    <div>
+                                                                        <span class="fw-medium d-block">
+                                                                            {{
+                                                                            element.elementNameAndDescription.split('\n')[0].length
+                                                                            > 30
+                                                                            ?
+                                                                            (element.elementNameAndDescription.split('\n')[0]
+                                                                            |
+                                                                            slice:0:30) +
+                                                                            '...'
+                                                                            :
+                                                                            element.elementNameAndDescription.split('\n')[0]
+                                                                            }}
+                                                                        </span>
+                                                                        <div class="text-muted small">
+                                                                            {{
+                                                                            element.elementNameAndDescription.split('\n')[1]
+                                                                            }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="brandOrMake">
+                                                            <th mat-header-cell *matHeaderCellDef> Brand / Make </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.brandOrMake }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="codeAndCategory">
+                                                            <th mat-header-cell *matHeaderCellDef> Code & Category </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.codeAndCategory }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="orderStatus">
+                                                            <th mat-header-cell *matHeaderCellDef> Order Status </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.orderStatus }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="itemType">
+                                                            <th mat-header-cell *matHeaderCellDef> Item Type </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.itemType
+                                                                }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="source">
+                                                            <th mat-header-cell *matHeaderCellDef> Source </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.source }}
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="status">
+                                                            <th mat-header-cell *matHeaderCellDef> Status </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.status }}
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="length">
+                                                            <th mat-header-cell *matHeaderCellDef> Length </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.length }}
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="breadth">
+                                                            <th mat-header-cell *matHeaderCellDef> Breadth </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.breadth
+                                                                }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="height">
+                                                            <th mat-header-cell *matHeaderCellDef> Height </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.height }}
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="quantity">
+                                                            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.quantity
+                                                                }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="uom">
+                                                            <th mat-header-cell *matHeaderCellDef> UOM </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.uom }}
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="draftQuantity">
+                                                            <th mat-header-cell *matHeaderCellDef> Draft Qty </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.draftQuantity }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="clientRate">
+                                                            <th mat-header-cell *matHeaderCellDef> Client Rate </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.clientRate }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="serviceCharge">
+                                                            <th mat-header-cell *matHeaderCellDef> Service Charge </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.serviceCharge }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="baseAmount">
+                                                            <th mat-header-cell *matHeaderCellDef> Base Amount </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.baseAmount }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="budgetRate">
+                                                            <th mat-header-cell *matHeaderCellDef> Budget Rate </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.budgetRate }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="hsn">
+                                                            <th mat-header-cell *matHeaderCellDef> HSN </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.hsn }}
+                                                            </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="gstPrecent">
+                                                            <th mat-header-cell *matHeaderCellDef> GST % </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.gstPrecent }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="amountWithoutGst">
+                                                            <th mat-header-cell *matHeaderCellDef> Amt w/o GST </th>
+                                                            <td mat-cell *matCellDef="let element"> {{
+                                                                element.amountWithoutGst }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="discount">
+                                                            <th mat-header-cell *matHeaderCellDef> Discount </th>
+                                                            <td mat-cell *matCellDef="let element"> {{ element.discount
+                                                                }} </td>
+                                                        </ng-container>
+                                                        <ng-container matColumnDef="finalAmount">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                                                                class="sticky-col-right">
+                                                                Final Amount (₹)
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let element"
+                                                                class="sticky-col-right">
+                                                                {{ element.finalAmount }}
+                                                            </td>
+                                                        </ng-container>
+                                                        <tr mat-header-row *matHeaderRowDef="proposalContentColumns">
+                                                        </tr>
+                                                        <tr mat-row
+                                                            *matRowDef="let row; columns: proposalContentColumns"></tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </li>
+                                </ng-container>
+                            </ul>
+                            <div [ngbNavOutlet]="nav" class=""></div>
+
+                            <div class="card custom-card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="card-title mb-0">Terms & Condition</div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
+                                            <i class="bi"
+                                                [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body" *ngIf="!isCollapsed">
+                                    <div class="form-check form-switch mb-0">
+                                        <input class="form-check-input form-checked-success" type="checkbox"
+                                            role="switch" id="switch-dark" checked="">
+                                        <label class="form-check-label" for="Payment-Terms">Payment Terms</label>
+                                    </div>
+                                    <div class="form-check form-switch mb-0 pt-2">
+                                        <input class="form-check-input form-checked-success" type="checkbox"
+                                            role="switch" id="switch-dark" checked="">
+                                        <label class="form-check-label" for="Other-Terms&Condition">Other Terms &
+                                            Condition</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+        <ng-container [ngbNavItem]="5">
+            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab" aria-selected="false">Project Scope</a>
+            <div class="tt"></div>
+            <ng-template class="tab-content" ngbNavContent>
+                <div class="row">
+                    <div class="col-xl-12">
+                        <nav class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
+                            <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
+                                <button class="scroll-btn me-2" (click)="scrollLeft()">&#10094;</button>
+                                <ul #scrollContainer ngbNav #nav2="ngbNav" [activeId]="1"
+                                    class="nav-tabs d-flex flex-nowrap m-0 p-0"
+                                    style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;"
+                                    (navChange)="onRoomTabChange($event.nextId)">
+                                    <ng-container *ngFor="let key of tabKeys; let i = index">
+                                        <ng-container [ngbNavItem]="i+1">
+                                            <a ngbNavLink class="nav-link me-2 ms-1 my-2">{{ key | titlecase }}
+                                                <span class="badge bg-black text-white ms-1">
+                                                    {{ boqDataSources[key].data.length }}
+                                                </span>
+                                            </a>
+                                            <div class="tt"></div>
+                                            <ng-template ngbNavContent>
+                                                <div class="col-xl-12">
+                                                    <div class="card custom-card bg-white">
+                                                        <div
+                                                            class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <div class="card-title">{{ key | titlecase }}</div>
+                                                                <button type="button"
+                                                                    class="btn btn-outline-primary btn-sm btn-wave"
+                                                                    (click)="moveToRoom(content22)">
+                                                                    <i class="bi bi-arrows-move"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="dropdown col-xl-7" ngbDropdown>
+                                                                <div class="d-flex justify-content-end gap-3">
+                                                                    <div class="input-group shadow-sm rounded-3"
+                                                                        style="width: 280px;">
+                                                                        <button
+                                                                            class="btn btn-primary d-flex align-items-center justify-content-center rounded-start"
+                                                                            type="button" id="button-addon2">
+                                                                            <i
+                                                                                class="ri-search-line text-white fs-14"></i>
+                                                                        </button>
+                                                                        <input type="text"
+                                                                            class="form-control border rounded-end"
+                                                                            placeholder="Search Here..."
+                                                                            aria-describedby="button-addon2"
+                                                                            (keyup)="applyGlobalFilter($event)"
+                                                                            #input />
+                                                                    </div>
+                                                                    <div ngbDropdown class="d-inline-block">
+                                                                        <button type="button" class="btn btn-primary"
+                                                                            (click)="getProposal()" ngbDropdownToggle>
+                                                                            <i class="ri-edit-line me-2"></i>Edit
+                                                                            Proposal
+                                                                        </button>
+                                                                        <ul ngbDropdownMenu class="dropdown-menu cuu"
+                                                                            [ngStyle]="{ 'max-height': '300px', 'overflow-y': 'auto' }">
+                                                                            <li
+                                                                                *ngFor="let proposal of proposals | slice:0:5">
+                                                                                <a ngbDropdownItem
+                                                                                    class="dropdown-item d-flex justify-content-between align-items-center border"
+                                                                                    (click)="openRights5(content6, proposal)">
+                                                                                    <div>
+                                                                                        <div class="fw-bold">{{
+                                                                                            proposal.referenceNo }}
+                                                                                        </div>
+                                                                                        <small class="text-muted">
+                                                                                            {{
+                                                                                            proposal.proposalRequestType
+                                                                                            }} →
+                                                                                            {{ proposal.status }}
+                                                                                        </small>
+                                                                                    </div>
+                                                                                    <div class="text-end">
+                                                                                        <div>{{ proposal.amount |
+                                                                                            currency:'INR'
+                                                                                            }}</div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                    <div ngbDropdown class="d-inline-block">
+                                                                        <button type="button" class="btn btn-primary" ngbDropdownToggle aria-expanded="false"
+                                                                            [hidden]="currentRoomName === 'All'">
+                                                                            <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>
+                                                                            Actions
+                                                                        </button>
+                                                                        <ul class="dropdown-menu cuu" ngbDropdownMenu
+                                                                            aria-labelledby="dropdownMenuButton1">
+                                                                            <li><a ngbDropdownItem
+                                                                                    class="dropdown-item p-3 border"
+                                                                                    (click)="onCreateProposalClick(content4)">
+                                                                                    Create Proposal</a></li>
+                                                                            <li><a ngbDropdownItem
+                                                                                    class="dropdown-item p-3 border"
+                                                                                    (click)="openLg1(content1)">
+                                                                                    Add Custom Element</a></li>
+                                                                            <li><a ngbDropdownItem
+                                                                                    class="dropdown-item p-3 border"
+                                                                                    (click)="openLg2(content2); getLibraryData()">Import
+                                                                                    Items From</a></li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="table-container mat-elevation-z8 boq-table-wrapper">
+                                                            <table mat-table [dataSource]="boqDataSources[key]" matSort
+                                                                class="mat-table1 w-100">
+                                                                <ng-container matColumnDef="sourceFlag">
+                                                                    <th mat-header-cell *matHeaderCellDef></th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        <i *ngIf="element.inProposal === 'inprop'"
+                                                                            class="ri-flag-2-line text-warning me-1"
+                                                                            title="This element is already in a proposal">
+                                                                        </i>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="select">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="sticky-col-left"
+                                                                        style="max-width: 750px;">
+                                                                        <mat-checkbox [checked]="isAllSelected(key)"
+                                                                            [indeterminate]="isIndeterminate(key)"
+                                                                            (change)="onSelectAllChange($event, key); moveToRoom(content22)">
+                                                                        </mat-checkbox>
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element"
+                                                                        class="sticky-col-left"
+                                                                        style="max-width: 750px;">
+                                                                        <mat-checkbox
+                                                                            [checked]="selectedElement?.includes(element.boqId) ?? false"
+                                                                            (change)="onRowCheckboxChange(element, $event)"
+                                                                            [disabled]="element.inProposal === 'inprop'"
+                                                                            class="custom-checkbox">
+                                                                        </mat-checkbox>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="Roomname">
+                                                                    <th mat-header-cell *matHeaderCellDef>Roomname
+                                                                    </th>
+                                                                    <td mat-cell
+                                                                        *matCellDef="let element; let i = index">
+                                                                        {{ element.Roomname }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="elementUrl">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        class="sticky-col-left-2"
+                                                                        style="max-width: 750px;">
+                                                                        Element
+                                                                        Name & Description </th>
+                                                                    <td mat-cell *matCellDef="let element"
+                                                                        class="sticky-col-left-2"
+                                                                        style="max-width: 750px;">
+                                                                        <div class="d-flex align-items-center"
+                                                                            (click)="openEditFromSelected(element, content1)"
+                                                                            style="cursor: pointer;">
+                                                                            <span class="avatar avatar-xl me-3">
+                                                                                <img [src]="element.elementUrl"
+                                                                                    class="img-thumbnail"
+                                                                                    alt="Project Image">
+                                                                            </span>
+                                                                            <div>
+                                                                                <span class="fw-medium d-block">
+                                                                                    {{
+                                                                                    element.elementNameAndDescription.split('\n')[0].length
+                                                                                    >
+                                                                                    30?(element.elementNameAndDescription.split('\n')[0]
+                                                                                    |slice:0:30)+ '...'
+                                                                                    :element.elementNameAndDescription.split('\n')[0]}}
+                                                                                </span>
+                                                                                <div class="text-muted small">
+                                                                                    {{
+                                                                                    element.elementNameAndDescription.split('\n')[1]}}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="brandOrMake">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header class="sticky-col-left-3">
+                                                                        Brand Or Make
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element"
+                                                                        class="sticky-col-left-3">
+                                                                        {{
+                                                                        element.elementNameAndDescription.split('\n')[1]?.split(':')[1]?.trim()
+                                                                        }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="codeAndCategory">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header class="sticky-col-left-4">
+                                                                        Code & Category
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element"
+                                                                        class="sticky-col-left-4">
+                                                                        <div class="hover-select-wrapper"
+                                                                            (mouseenter)="openSelect(select)"
+                                                                            (mouseleave)="closeSelect(select)">
+                                                                            <div class="code-display">
+                                                                                {{ element.codeAndCategory || '_' }}
+                                                                            </div>
+                                                                            <ng-select #select class="hover-select"
+                                                                                [items]="codeAndCategory"
+                                                                                bindValue="name" [clearable]="false"
+                                                                                placeholder="Select"
+                                                                                [ngModel]="element.codeAndCategory"
+                                                                                (change)="updateDropdownField('codeAndCategory', $event, element)">
+                                                                                <ng-template ng-option-tmp
+                                                                                    let-item="item">
+                                                                                    <div
+                                                                                        class="d-flex justify-content-between align-items-center w-100">
+                                                                                        <span>{{ item.name }}</span>
+                                                                                        <span>{{ item.code }}</span>
+                                                                                    </div>
+                                                                                </ng-template>
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="orderStatus">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Order
+                                                                        Status </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        <div class="hover-select-wrapper"
+                                                                            (mouseenter)="openSelect(statusSelect)"
+                                                                            (mouseleave)="closeSelect(statusSelect)">
+                                                                            <div class="status-display">
+                                                                                {{ element.orderStatus || '_' }}
+                                                                            </div>
+                                                                            <ng-select #statusSelect
+                                                                                class="hover-select"
+                                                                                [items]="orderStatus" bindLabel="name"
+                                                                                bindValue="name" [clearable]="false"
+                                                                                [ngModel]="element.orderStatus"
+                                                                                placeholder="Select Status"
+                                                                                (change)="updateDropdownField('orderStatus', $event, element)">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="itemType">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Item
+                                                                        Type </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        <div class="hover-select-wrapper"
+                                                                            (mouseenter)="openSelect(itemTypeSelect)"
+                                                                            (mouseleave)="closeSelect(itemTypeSelect)">
+                                                                            <div class="code-display">
+                                                                                {{ element.itemType || '_' }}
+                                                                            </div>
+                                                                            <ng-select #itemTypeSelect
+                                                                                class="hover-select" [items]="itemType"
+                                                                                bindLabel="name" bindValue="name"
+                                                                                [clearable]="false" placeholder="Select"
+                                                                                [ngModel]="element.itemType"
+                                                                                (change)="updateDropdownField('itemType', $event, element)">
+                                                                                <ng-template ng-option-tmp
+                                                                                    let-item="item">
+                                                                                    <div
+                                                                                        class="d-flex justify-content-between align-items-center w-100">
+                                                                                        <span>{{ item.name }}</span>
+                                                                                    </div>
+                                                                                </ng-template>
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="source">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Source </th>
+                                                                    <td mat-cell *matCellDef="let element">{{
+                                                                        element.source }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="status">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Status </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        <div class="hover-select-wrapper"
+                                                                            (mouseenter)="openSelect(statusSelect)"
+                                                                            (mouseleave)="closeSelect(statusSelect)">
+                                                                            <div class="status-display">
+                                                                                {{ element.status || '_' }}
+                                                                            </div>
+                                                                            <ng-select #statusSelect
+                                                                                class="hover-select" [items]="boqStatus"
+                                                                                bindLabel="name" bindValue="name"
+                                                                                [clearable]="false"
+                                                                                [ngModel]="element.status"
+                                                                                placeholder="Select Status"
+                                                                                (change)="updateDropdownField('status', $event, element)">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="length">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Length
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        {{ element.length }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="breadth">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Breadth
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        {{ element.breadth }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="height">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Height
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        {{ element.height }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="quantity">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Quantity
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        {{ element.quantity }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="uom">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> UOM
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element">
+                                                                        <div class="hover-select-wrapper"
+                                                                            (mouseenter)="openSelect(uomSelect)"
+                                                                            (mouseleave)="closeSelect(uomSelect)">
+                                                                            <div class="uom-display">
+                                                                                {{ element.uom || '_' }}
+                                                                            </div>
+                                                                            <ng-select #uomSelect class="hover-select"
+                                                                                [items]="UOM" bindLabel="name"
+                                                                                bindValue="name" [clearable]="false"
+                                                                                [ngModel]="element.uom"
+                                                                                placeholder="Select UOM"
+                                                                                (change)="updateDropdownField('uom', $event, element)">
+                                                                            </ng-select>
+                                                                        </div>
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="draftQuantity">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Draft Quantity
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element"
+                                                                        class="editable-cell">
+                                                                        <span class="cell-text">{{ element.draftQuantity
+                                                                            }}</span>
+                                                                        <input type="text" class="cell-input"
+                                                                            [(ngModel)]="element.draftQuantity"
+                                                                            (keydown.enter)="editElement(element)"
+                                                                            (click)="$event.stopPropagation()" />
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="clientRate">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Client Rate (₹) </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.clientRate }} </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="serviceCharge">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Service Charge </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.serviceCharge }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="baseAmount">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> Base
+                                                                        Amount </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.baseAmount }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="budgetRate">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Budget Rate </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.budgetRate }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="hsn">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> HSN
+                                                                    </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.hsn }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="gstPrecent">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header> GST
+                                                                        Precent </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.gstPrecent }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="amountWithoutGst">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Amount Without Gst </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.amountWithoutGst }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="discount">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header>
+                                                                        Discount </th>
+                                                                    <td mat-cell *matCellDef="let element"> {{
+                                                                        element.discount
+                                                                        }}</td>
+                                                                </ng-container>
+                                                                <ng-container matColumnDef="finalAmount">
+                                                                    <th mat-header-cell *matHeaderCellDef
+                                                                        mat-sort-header class="sticky-col-right"> Final
+                                                                        Amount (₹) </th>
+                                                                    <td mat-cell *matCellDef="let element"
+                                                                        class="sticky-col-right">
+                                                                        {{ element.finalAmount }}
+                                                                    </td>
+                                                                </ng-container>
+                                                                <tr mat-header-row
+                                                                    *matHeaderRowDef="displayedColumns sticky: true">
+                                                                </tr>
+                                                                <tr class="static-row">
+                                                                    <td [attr.colspan]="displayedColumns.length">
+                                                                        (always below header, before data)
+                                                                    </td>
+                                                                </tr>
+                                                                <tr mat-row
+                                                                    *matRowDef="let row; columns: displayedColumns;">
+                                                                </tr>
+                                                                <tr class="mat-row" *matNoDataRow>
+                                                                    <td class="mat-cell text-center"
+                                                                        [attr.colspan]="displayedColumns.length">
+                                                                        No data found
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-between mx-4 my-2 pt-2">
+                                                            <div>
+                                                                <strong>Sub Total</strong>
+                                                            </div>
+                                                            <div class="ms-auto">
+                                                                <nav aria-label="Page navigation"
+                                                                    class="pagination-style-4">
+                                                                    <div
+                                                                        class="d-flex justify-content-between align-items-center">
+                                                                        <div>
+                                                                            <span class="fw-bold">INR ({{ key |
+                                                                                titlecase }}):
+                                                                                {{ tabTotals[key] | number:'1.0-2'
+                                                                                }}</span>
+                                                                            <div class="small text-muted">*Inclusive of
+                                                                                Taxes
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </nav>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-template>
+                                        </ng-container>
+                                    </ng-container>
+                                </ul>
+                                <button class="scroll-btn ms-2" (click)="scrollRight()">&#10095;</button>
+                            </div>
+                        </nav>
+                        <div [ngbNavOutlet]="nav2" class=""></div>
+                    </div>
+                </div>
+            </ng-template>
+        </ng-container>
+    </nav>
+    <div [ngbNavOutlet]="nav2" class=""></div>
+</div>
+
+<ng-template #content1 let-offcanvas>
+    <form [formGroup]="elementForm" (ngSubmit)="onSubmit()">
+        <div class="offcanvas-header border-bottom">
+            <h5 class="offcanvas-title"><strong> {{ isEditMode ? 'Edit Element' : 'Create Element' }}</strong>
+            </h5>
+            <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close"
+                data-bs-dismiss="offcanvas" aria-label="Close">
+            </button>
+        </div>
+        <div class="offcanvas-body p-4 overflow-auto" style="max-height: 76vh;">
+            <div class="col-xl-12">
+                <div class="row gy-3">
+                    <div class="col-xl-6">
+                        <div class="mb-3">
+                            <label class="form-label">Element Name</label>
+                            <input type="text" class="form-control" formControlName="elementName">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Brand/Make</label>
+                            <input type="text" class="form-control" formControlName="brandOrMake"
+                                placeholder="Enter Description">
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Element Description</label>
+                        <textarea class="form-control" formControlName="elementDescription" rows="4"></textarea>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Length</label>
+                        <input type="number" class="form-control" formControlName="length" placeholder="Enter Length">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Breadth</label>
+                        <input type="number" class="form-control" formControlName="breadth" placeholder="Enter Breadth">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Height</label>
+                        <input type="number" class="form-control" formControlName="height" placeholder="Enter Height">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Code & Category</label>
+                        <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select"
+                            formControlName="codeAndCategory">
+                            <ng-template ng-option-tmp let-item="item">
+                                <div class="d-flex justify-content-between w-100">
+                                    <span>{{ item.name }}</span>
+                                    <span>{{ item.code }}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template ng-label-tmp let-item="item">
+                                {{ item.name }} ({{ item.code }})
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">UOM</label>
+                        <ng-select [items]="UOM" bindLabel="name" bindValue="name" placeholder="Select any"
+                            formControlName="uom">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" class="form-control" formControlName="quantity"
+                            placeholder="Enter Quantity">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Item Type</label>
+                        <ng-select [items]="itemType" bindLabel="name" bindValue="name" placeholder="Select any"
+                            formControlName="itemType">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Room Name</label>
+                        <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
+                            placeholder="Select Room Name"
+                            [ngClass]="{ 'is-invalid': elementFormSubmitted && es['roomName'].errors }">
+                        </ng-select>
+                        <div *ngIf="elementFormSubmitted && es['roomName'].errors" class="invalid-feedback">
+                            <div *ngIf="es['roomName'].errors['required']">Room Name required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Draft Quantity</label>
+                        <input type="number" class="form-control" formControlName="draftQuantity"
+                            placeholder="Enter Draft Quantity">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Client Rate (₹)</label>
+                        <input type="number" class="form-control" formControlName="clientRate"
+                            placeholder="Enter Client Rate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Budget Rate (₹)</label>
+                        <input type="number" class="form-control" formControlName="budgetRate"
+                            placeholder="Enter Budget Rate">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">HSN</label>
+                        <input type="text" class="form-control" formControlName="hsn" placeholder="Enter HSN">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Item Code</label>
+                        <ng-select formControlName="itemCode" [items]="itemCodeLst" bindLabel="name" bindValue="code"
+                            placeholder="Select Item Code"
+                            [ngClass]="{ 'is-invalid': elementFormSubmitted && es['itemCode'].errors }">
+                        </ng-select>
+                        <div *ngIf="elementFormSubmitted && es['itemCode'].errors" class="invalid-feedback">
+                            <div *ngIf="es['itemCode'].errors['required']">Item Code required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">GST %</label>
+                        <ng-select [items]="GST" bindLabel="name" bindValue="name" placeholder="Select any"
+                            formControlName="gstPrecent">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Upload Image</label>
+                        <input class="form-control" type="file" (change)="onFileChange($event)">
+                    </div>
+                    <div *ngIf="previewUrl">
+                        <img [src]="previewUrl" alt="Existing Image" class="img-thumbnail mt-2" width="100">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort>                    
-                    <ng-container matColumnDef="slNo">
-                        <th mat-header-cell *matHeaderCellDef> S.No. </th>
-                        <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef>Actions</th>
-                        <td mat-cell *matCellDef="let element">
-                            <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                ata-bs-toggle="offcanvas" 
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                <i class="ri-alarm-line"></i>
-                            </a>
-                            <a href="javascript:void(0);"
-                                class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1"
-                                ata-bs-toggle="offcanvas" 
-                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-                                <i class="ri-eye-line"></i>
-                            </a>
-                            <span class="m-1" ngbDropdown placement="right-top">
-                                <i class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
-                                    ngbDropdownToggle></i>
-                                <ul class="dropdown-menu z-1" ngbDropdownMenu>
-                                    <li class="m-2">
-                                        <button class="btn btn-warning label-btn label-end w-100"
-                                             data-bs-toggle="offcanvas"
-                                            data-bs-target="#offcanvasRight"
-                                            aria-controls="offcanvasRight">
-                                            Send Mail<i class="ri-mail-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                    <li class="m-2">
-                                        <button class="btn btn-success label-btn label-end w-100"
-                                            >
-                                            Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                    <li class="m-2">
-                                        <button class="btn btn-danger label-btn label-end w-100">
-                                            Delete<i class="ri-delete-bin-line label-btn-icon"></i>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </span>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
-                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                    </ng-container>
-                   
-                    <ng-container matColumnDef="executive">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
-                        <td mat-cell *matCellDef="let element"><a href="javascript:void(0);" data-bs-toggle="tooltip"
-                                ngbTooltip="{{element.executive}}" tooltipClass="tooltip-primary"
-                                class="avatar avatar-sm online avatar-rounded">
-                                <img src="./assets/images/brand-logos/profile1.jpg" alt="img">
-                            </a></td>
+        <div class="offcanvas-footer border-top p-3">
+            <button type="submit" class="btn btn-primary me-3">
+                {{ isEditMode ? 'Update' : 'Save' }}
+            </button>
+            <button type="button" class="btn btn-danger" (click)="offcanvas.dismiss('Close click')">
+                Cancel
+            </button>
+        </div>
+    </form>
+</ng-template>
 
-                    </ng-container>
-                    <ng-container matColumnDef="products">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Products</th>
-                        <td mat-cell *matCellDef="let element"> {{element.products}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                        <td mat-cell *matCellDef="let element">
-                            <span class="badge me-1" [ngClass]="getStatusClass(element.status)">
-                                {{ element.status }}
-                            </span>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="followUpDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>FollowUpDate</th>
-                        <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date:'dd-MM-yy' }} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="contact">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
-                        <td mat-cell *matCellDef="let element"> {{formatMobileNumber(element.contact)}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="email">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
-                        <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-                    </ng-container>                    
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
-            </div>
-            <mat-paginator #paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
-        </div>        
+
+<ng-template #content2 let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Import From Library</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
     </div>
-</div>
+    <div class="offcanvas-body p-2">
+        <div class="col-xl-12 mt-2">
+            <div class="card custom-card">
+                <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                    <h6 class="mb-0">Please Select Library/Project type You Want To Import From</h6>
+                    <button class="btn btn-primary" (click)="saveLibraryItem()" [disabled]="!isImportChecked">
+                        Import
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-container" *ngIf="libraryListData?.length">
+                        <table class="table table-hover text-nowrap my-table">
+                            <thead>
+                                <tr>
+                                    <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox"
+                                            id="checkboxNoLabel1" value="" aria-label="..."></th>
+                                    <th>S.No.</th>
+                                    <th>Element Name & Description</th>
+                                    <th>Brand Make</th>
+                                    <th>Category</th>
+                                    <th>UOM</th>
+                                    <th>Quantity</th>
+                                    <th>Standard Rate</th>
+                                    <th>Budget Rate</th>
+                                    <th>HSN</th>
+                                    <th>GST</th>
+                                    <th>Library Type</th>
+                                    <th>Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let item of libraryListData; let i = index">
+                                    <tr>
+                                        <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox"
+                                                id="checkboxNoLabel2" value="" aria-label="..."
+                                                (change)="toggleSelect($event, i)"></th>
+                                        <td>{{ i + 1 }}</td>
+                                        <td style="max-width: 750px;">
+                                            <div class="d-flex align-items-center">
+                                                <span class="avatar avatar-xl me-3">
+                                                    <img [src]="item.imageUrl || 'assets/images/brand-logos/no-image.png'"
+                                                        class="img-thumbnail" alt="Project Image">
+                                                </span>
+                                                <div>
+                                                    <span class="fw-medium d-block">
+                                                        {{ item.name.length > 30 ? (item.name | slice:0:15) + '...' :
+                                                        item.name }}
+                                                    </span>
+                                                    <div class="text-muted small">
+                                                        {{ item.description ? (item.description | slice:0:15) + '...' :
+                                                        'No description available' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ item.brandMake }}</td>
+                                        <td>{{ item.categoryId }}</td>
+                                        <td>{{ item.uom }}</td>
+                                        <td>{{ item.standardQuantity }}</td>
+                                        <td>{{ item.standardRate }}</td>
+                                        <td>{{ item.budgetRate }}</td>
+                                        <td>{{ item.hsn }}</td>
+                                        <td>{{ item.gst }}</td>
+                                        <td>{{ item.type }}</td>
+                                        <td>{{ item.createdAt | date:'dd-MMM-yyyy hh:mm a' }}</td>
+                                    </tr>
+                                </ng-container>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #content4 let-modal>
+    <form [formGroup]="proposalForm" (ngSubmit)="proposalFormSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title"><strong>Create Proposal</strong></h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div *ngIf="step === 1">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label for="clientName" class="form-label">Client Name</label>
+                        <input type="text" class="form-control" id="clientName" formControlName="clientName"
+                            placeholder="Enter Client Name"
+                            [ngClass]="{ 'is-invalid': submittedStep1 && g['clientName'].errors }" maxlength="50" />
+                        <div *ngIf="submittedStep1 && g['clientName'].errors" class="invalid-feedback">
+                            <div *ngIf="g['clientName'].errors['required']">
+                                Client name is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="projectAddress" class="form-label">Client Address</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="clientAddress"
+                            placeholder="Enter Client Address"
+                            [ngClass]="{ 'is-invalid': submittedStep1 && g['clientAddress'].errors }" maxlength="50">
+                        <div *ngIf="submittedStep1 && g['clientAddress'].errors" class="invalid-feedback">
+                            <div *ngIf="g['clientAddress'].errors['required']">client Address is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="projectAddress" class="form-label">Client Mobile Number</label>
+                        <input type="text" class="form-control" id="projectAddress"
+                            placeholder="Enter Client Mobile Number" formControlName="clientMobileNumber"
+                            (keypress)="allowOnlynum($event)" maxlength="10"
+                            [ngClass]="{ 'is-invalid': submittedStep1 && g['clientMobileNumber'].invalid }">
+                        <div class="invalid-feedback" *ngIf="submittedStep1 && g['clientMobileNumber'].errors">
+                            <span *ngIf="g['clientMobileNumber'].errors['required']">Mobile number is required.</span>
+                            <span *ngIf="g['clientMobileNumber'].errors['pattern']">Enter a valid 10-digit mobile
+                                number.</span>
+                        </div>
+                    </div>
+                    <div class="col-xl-12">
+                        <label for="projectAddress" class="form-label">Client Email</label>
+                        <input type="email" class="form-control" id="projectAddress" placeholder="Enter Client Email"
+                            formControlName="clientEmail"
+                            [ngClass]="{ 'is-invalid': submittedStep1 && g['clientEmail'].invalid }">
+                        <div *ngIf="submittedStep1 && g['clientEmail'].errors" class="invalid-feedback">
+                            <div *ngIf="g['clientEmail'].errors['required']">Email is required.</div>
+                            <div *ngIf="g['clientEmail'].errors['email']">Enter a valid email address.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="step === 2">
+                <div class="row gy-2">
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Project Name</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="projectName"
+                            placeholder="Enter Client Address"
+                            [ngClass]="{ 'is-invalid': submittedStep2 && g['projectName'].errors }" maxlength="50">
+                        <div *ngIf="submittedStep2 && g['projectName'].errors" class="invalid-feedback">
+                            <div *ngIf="g['projectName'].errors['required']">project Name is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Flat_No</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="flatNo"
+                            placeholder="Enter Flat_No" [ngClass]="{ 'is-invalid': submitted && g['flatNo'].errors }">
+                        <div *ngIf="submitted && g['flatNo'].errors" class="invalid-feedback">
+                            <div *ngIf="g['flatNo'].errors['required']">flatNo is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Project_Config</label>
+                        <ng-select formControlName="projectConfig" [items]="projectConfigList"
+                            placeholder="Select Project Configuration"
+                            [ngClass]="{ 'is-invalid': submittedStep2 && g['projectConfig'].errors }">
+                        </ng-select>
+                        <div *ngIf="submittedStep2 && g['projectConfig'].errors" class="invalid-feedback">
+                            <div *ngIf="g['projectConfig'].errors['required']">project Config is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="dedEmail" class="form-label">Project Designer</label>
+                        <ng-select formControlName="dedEmail" [items]="userList" bindLabel="email" bindValue="email"
+                            placeholder="Select DED_Email" (change)="onDedSelected($event)"
+                            [ngClass]="{ 'is-invalid': submittedStep2 && g['dedEmail'].errors }">
+                        </ng-select>
+                        <div *ngIf="submittedStep2 && g['dedEmail'].errors" class="invalid-feedback">
+                            <div *ngIf="g['dedEmail'].errors['required']">DED Email is required</div>
+                        </div>
+                    </div>
+                    <div *ngIf="showOtherDesignerFields" class="row">
+                        <div class="col-xl-6">
+                            <label for="dedEmail" class="form-label">Designer Name</label>
+                            <input type="text" class="form-control" formControlName="otherDesignerName" placeholder="">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="dedEmail" class="form-label">Designer Email</label>
+                            <input type="email" class="form-control" formControlName="otherDesignerEmail">
+                        </div>
+                        <div class="col-xl-6">
+                            <label for="dedEmail" class="form-label">Designer Phone</label>
+                            <input type="text" class="form-control" formControlName="otherDesignerPhone"
+                                (keypress)="allowOnlyNumbers($event)">
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">RelationShip Manager</label>
+                        <ng-select formControlName="rmdEmail" [items]="userList" bindLabel="email" bindValue="email"
+                            placeholder="Select an Manager" (change)="onUserSelected($event)"
+                            [ngClass]="{ 'is-invalid': submittedStep2 && g['rmdEmail'].errors }">
+                        </ng-select>
+                        <div *ngIf="submittedStep2 && g['rmdEmail'].errors" class="invalid-feedback">
+                            <div *ngIf="g['rmdEmail'].errors['required']">rmdEmail is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="showOtherRelationshipFields" class="row">
+                        <div class="col-xl-6">
+                            <label>RelationShip Manger Name</label>
+                            <input type="text" class="form-control" formControlName="otherRmdName">
+                        </div>
+                        <div class="col-xl-6">
+                            <label>RelationShip Manger Email</label>
+                            <input type="email" class="form-control" formControlName="otherRmdEmail">
+                        </div>
+                        <div class="col-xl-6">
+                            <label>RelationShip Manger Phone</label>
+                            <input type="text" class="form-control" formControlName="otherRmdPhone"
+                                (keypress)="allowOnlyNumbers($event)">
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Margin</label>
+                        <ng-select formControlName="margin" [items]="projectMarginList" bindLabel="name" bindValue=""
+                            placeholder="Select Project Configuration"
+                            [ngClass]="{ 'is-invalid': submitted && g['projectConfig'].errors }">
+                        </ng-select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Discount</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="discount"
+                            placeholder="Enter Discount" [ngClass]="{ 'is-invalid': submitted && g['discount'].errors }"
+                            (keypress)="allowOnlynum($event)">
+                        <div *ngIf="submitted && g['discount'].errors" class="invalid-feedback">
+                            <div *ngIf="g['discount'].errors['required']">discount is required </div>
+                            <div *ngIf="g['discount'].errors['pattern']">Only numbers are allowed.</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Others</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="others"
+                            placeholder="Enter Others" [ngClass]="{ 'is-invalid': submitted && g['others'].errors }"
+                            (keypress)="allowOnlynum($event)">
+                        <div *ngIf="submitted && g['others'].errors" class="invalid-feedback">
+                            <div *ngIf="g['others'].errors['required']">others is required </div>
+                            <div *ngIf="g['others'].errors['pattern']">Only numbers are allowed.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary me-2 ct" type="button" (click)="prevStep()">Back</button>
+                        <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="step === 3">
+                <div class="row gy-3">
+                    <div class="col-xl-6">
+                        <label class="form-label">Proposal From</label>
+                        <input type="text" class="form-control" formControlName="orderFrom"
+                            placeholder="Enter Proposal From"
+                            [ngClass]="{ 'is-invalid': submittedStep3 && g['orderFrom'].errors }">
+                        <div *ngIf="submittedStep3 && g['orderFrom'].errors" class="invalid-feedback">
+                            <div *ngIf="g['orderFrom'].errors['required']">Proposal From is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Vendor ID</label>
+                        <input type="text" class="form-control" formControlName="vendorId" placeholder="Enter Vendor ID"
+                            [ngClass]="{ 'is-invalid': submittedStep3 && g['vendorId'].errors }">
+                        <div *ngIf="submittedStep3 && g['vendorId'].errors" class="invalid-feedback">
+                            <div *ngIf="g['vendorId'].errors['required']">Vendor Id is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Shipping Address</label>
+                        <input type="text" class="form-control" formControlName="shippingAddress"
+                            placeholder="Enter Shipping Address"
+                            [ngClass]="{ 'is-invalid': submittedStep3 && g['shippingAddress'].errors }">
+                        <div *ngIf="submittedStep3 && g['shippingAddress'].errors" class="invalid-feedback">
+                            <div *ngIf="g['shippingAddress'].errors['required']">Shipping Address is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Execution Start Date</label>
+                        <input type="date" class="form-control" formControlName="startDate"
+                            placeholder="Execution Start Date"
+                            [ngClass]="{ 'is-invalid': submittedStep3 && g['startDate'].errors }">
+                        <div *ngIf="submittedStep3 && g['startDate'].errors" class="invalid-feedback">
+                            <div *ngIf="g['startDate'].errors['required']">startDate is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Execution End Date</label>
+                        <input type="date" class="form-control" formControlName="dueDate"
+                            placeholder="Execution End Date"
+                            [ngClass]="{ 'is-invalid': submittedStep3 && g['dueDate'].errors }" [min]="minDateTime" />
+                        <div *ngIf="submittedStep3 && g['dueDate'].errors" class="invalid-feedback">
+                            <div *ngIf="g['dueDate'].errors['required']">dueDate is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">GST No</label>
+                        <input type="text" class="form-control" formControlName="gstNo" placeholder="Enter GST No">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary me-2 ct" type="button" (click)="prevStep()"
+                            *ngIf="skipClientForm == false">Back</button>
+                        <button class="btn btn-primary ct" type="submit">submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content5 let-modal>
+    <form [formGroup]="proposalApprovalForm" (ngSubmit)="proposalApprovalSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title" id="staticBackdropLabel3">Approve Proposal</h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+                aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="col-xl-12">
+                <div class="row gy-2">
+                    <div class="col-xl-6">
+                        <label class="form-label">Start Date</label>
+                        <input type="date" class="form-control" formControlName="startDate"
+                            placeholder="Enter Start Date">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">End Date</label>
+                        <input type="date" class="form-control" formControlName="endDate" placeholder="Enter End Date">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Shipping Address</label>
+                        <input type="text" class="form-control" formControlName="shippingAddress"
+                            placeholder="Enter Shipping Address">
+                    </div>
+                    <div class="col-xl-6">
+                        <label for="projectAddress" class="form-label">Desicion</label>
+                        <ng-select formControlName="desicion" [items]="desicion" bindLabel="name" bindValue="name"
+                            placeholder="Select Skin Brand">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content6 let-modal>
+    <form [formGroup]="extraContentProposalForm" (ngSubmit)="extraContentProposalSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title">Edit Proposal</h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3">
+                <div class="col-xl-6">
+                    <label class="form-label">Execution Start Date</label>
+                    <input type="date" class="form-control" formControlName="startDate"
+                        placeholder="Execution Start Date">
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Execution End Date</label>
+                    <input type="date" class="form-control" formControlName="endDate" placeholder="Execution End Date">
+                </div>
+                <div class="col-xl-6">
+                    <label class="form-label">Shipping Adddress</label>
+                    <input type="text" class="form-control" formControlName="shippingAdddress"
+                        placeholder="Enter Shipping Adddress">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content45 let-modal>
+    <form [formGroup]="updateProjectForm" (ngSubmit)="updateProjectSubmit(modal)">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title"><strong>Update Project</strong></h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant">
+            <div class="row gy-3">
+                <div class="col-lg-6">
+                    <label class="form-label">Design ID</label>
+                    <input type="text" class="form-control" formControlName="designId">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Project Stage</label>
+                    <input type="text" class="form-control" formControlName="projectStage">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Project Area</label>
+                    <input type="text" class="form-control" formControlName="projectArea">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Design URL</label>
+                    <input type="text" class="form-control" formControlName="designUrl">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Assigned Designer</label>
+                    <ng-select [items]="userList" bindLabel="email" bindValue="email" formControlName="assignedDesigner"
+                        placeholder="Select a user">
+                    </ng-select>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <label class="form-label">Update Project Status</label>
+                    <ng-select formControlName="designCompletionStatus" [items]="designStatus" bindLabel="name"
+                        bindValue="name">
+                    </ng-select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"
+                    [disabled]="updateProjectForm.invalid || updateProjectForm.disabled">Submit</button>
+                <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
+            </div>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content22 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title"><strong>Move to Other Room </strong></h6>
+        <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+    </div>
+    <div class="modal-body overflowImportant" style="min-height: 200px;">
+        <div class="row gy-3">
+            <div class="col-lg-12">
+                <label class="form-label">Select Room Name</label>
+                <ng-select formControlName="stage" [items]="rmList" bindLabel="stageName" bindValue="stageName"
+                    placeholder="Select a stage">
+                </ng-select>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -478,7 +478,7 @@
                         aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
                         All Projects
                     </button>
-                    <a class="btn btn-secondary btn-wave mt-2" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    <a class="btn btn-primary btn-wave mt-2" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
                         (click)="openLg(Content10);submitted=false"><i
                             class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
                 </div>
@@ -567,132 +567,113 @@
 <ng-template #Content10 id="addtask" let-modal>
     <div class="modal-content">
         <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">Create Project</h6>
+            <h6 class="modal-title" id="mail-ComposeLabel"><strong>Create Project</strong></h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                 aria-label="Close"></button>
         </div>
         <div class="modal-body px-4">
             <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card custom-card">
-                            <div class="card-body">
-                                <div class="row gy-3">
-                                    <div class="col-xl-4">
-                                        <label for="projectName" class="form-label">Project Name:</label>
-                                        <input type="text" class="form-control" id="projectName"
-                                            formControlName="projectName" placeholder="Enter Project Name"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectName'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['projectName'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectName'].errors['required']">Project name is
-                                                required
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="clientName" class="form-label">Client Name:</label>
-                                        <input type="text" class="form-control" id="clientName"
-                                            formControlName="clientName" placeholder="Enter Client Name"
-                                            [ngClass]="{ 'is-invalid': submitted && f['clientName'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['clientName'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['clientName'].errors['required']">Client name is required
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="businessCategory" class="form-label">Business Category:</label>
-                                        <select class="form-select" aria-label="Default select example"
-                                            formControlName='businessCategory'
-                                            [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }">
-                                            <option value="" disabled selected>select type</option>
-                                            <option value="Commercial">Commercial</option>
-                                            <option value="Residential">Residential</option>
-                                        </select>
-                                        <div *ngIf="submitted && f['businessCategory'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['businessCategory'].errors['required']">Business Category
-                                                is
-                                                required</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="projectAddress" class="form-label">Project Address:</label>
-                                        <input type="text" class="form-control" id="projectAddress"
-                                            formControlName="projectAddress" placeholder="Enter Project Address"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectAddress'].errors }"
-                                            maxlength="50">
-                                        <div *ngIf="submitted && f['projectAddress'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectAddress'].errors['required']">Project Address is
-                                                required</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="state" class="form-label">State:</label>
-                                        <input type="text" class="form-control" id="state" formControlName="state"
-                                            placeholder="Enter State"
-                                            [ngClass]="{ 'is-invalid': submitted && f['state'].errors }" maxlength="50">
-                                        <div *ngIf="submitted && f['state'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['state'].errors['required']">State is required</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="city" class="form-label">City:</label>
-                                        <input type="text" class="form-control" id="city" formControlName="city"
-                                            placeholder="Enter City"
-                                            [ngClass]="{ 'is-invalid': submitted && f['city'].errors }" maxlength="50">
-                                        <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['city'].errors['required']">City is required</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="projectEstimation" class="form-label">Project
-                                            Estimation:</label>
-                                        <input type="tel" class="form-control" id="projectEstimation" maxlength="10"
-                                            formControlName="projectEstimation" placeholder="Enter Estimation"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectEstimation'].errors }"
-                                            onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
-                                        <div *ngIf="submitted && f['projectEstimation'].errors"
-                                            class="invalid-feedback">
-                                            <div *ngIf="f['projectEstimation'].errors['required']">Project
-                                                Estimation is required</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="projectArea" class="form-label">Project Area (SFT):</label>
-                                        <input type="tel" class="form-control" id="projectArea"
-                                            formControlName="projectArea" placeholder="Enter Project Area"
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectArea'].errors }"
-                                            maxlength="6">
-                                        <div *ngIf="submitted && f['projectArea'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectArea'].errors['required']">Project Area is
-                                                required</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="startDate" class="form-label">Start Date:</label>
-                                        <input type="date" class="form-control" id='startDate'
-                                            formControlName='projectStartDate'
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectStartDate'].errors }"
-                                            (change)="onStartDateChange($event)">
-                                        <div *ngIf="submitted && f['projectStartDate'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectStartDate'].errors['required']">Start Date is
-                                                required
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4">
-                                        <label for="endDate" class="form-label">End Date:</label>
-                                        <input type="date" class="form-control" id='endDate'
-                                            formControlName='projectEndDate'
-                                            [ngClass]="{ 'is-invalid': submitted && f['projectEndDate'].errors }"
-                                            [min]="minEndDate">
-                                        <div *ngIf="submitted && f['projectEndDate'].errors" class="invalid-feedback">
-                                            <div *ngIf="f['projectEndDate'].errors['required']">End Date is required
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="row gy-3">
+                    <div class="col-xl-4">
+                        <label for="projectName" class="form-label">Project Name:</label>
+                        <input type="text" class="form-control" id="projectName" formControlName="projectName"
+                            placeholder="Enter Project Name" [ngClass]="{ 'is-invalid': submitted && f['projectName'].errors }"
+                            maxlength="50">
+                        <div *ngIf="submitted && f['projectName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['projectName'].errors['required']">Project name is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="clientName" class="form-label">Client Name:</label>
+                        <input type="text" class="form-control" id="clientName" formControlName="clientName"
+                            placeholder="Enter Client Name" [ngClass]="{ 'is-invalid': submitted && f['clientName'].errors }"
+                            maxlength="50">
+                        <div *ngIf="submitted && f['clientName'].errors" class="invalid-feedback">
+                            <div *ngIf="f['clientName'].errors['required']">Client name is required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="businessCategory" class="form-label">Business Category:</label>
+                        <select class="form-select" aria-label="Default select example" formControlName='businessCategory'
+                            [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }">
+                            <option value="" disabled selected>select type</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Residential">Residential</option>
+                        </select>
+                        <div *ngIf="submitted && f['businessCategory'].errors" class="invalid-feedback">
+                            <div *ngIf="f['businessCategory'].errors['required']">Business Category
+                                is
+                                required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="projectAddress" class="form-label">Project Address:</label>
+                        <input type="text" class="form-control" id="projectAddress" formControlName="projectAddress"
+                            placeholder="Enter Project Address"
+                            [ngClass]="{ 'is-invalid': submitted && f['projectAddress'].errors }" maxlength="50">
+                        <div *ngIf="submitted && f['projectAddress'].errors" class="invalid-feedback">
+                            <div *ngIf="f['projectAddress'].errors['required']">Project Address is
+                                required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="state" class="form-label">State:</label>
+                        <input type="text" class="form-control" id="state" formControlName="state" placeholder="Enter State"
+                            [ngClass]="{ 'is-invalid': submitted && f['state'].errors }" maxlength="50">
+                        <div *ngIf="submitted && f['state'].errors" class="invalid-feedback">
+                            <div *ngIf="f['state'].errors['required']">State is required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="city" class="form-label">City:</label>
+                        <input type="text" class="form-control" id="city" formControlName="city" placeholder="Enter City"
+                            [ngClass]="{ 'is-invalid': submitted && f['city'].errors }" maxlength="50">
+                        <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
+                            <div *ngIf="f['city'].errors['required']">City is required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="projectEstimation" class="form-label">Project
+                            Estimation:</label>
+                        <input type="tel" class="form-control" id="projectEstimation" maxlength="10"
+                            formControlName="projectEstimation" placeholder="Enter Estimation"
+                            [ngClass]="{ 'is-invalid': submitted && f['projectEstimation'].errors }"
+                            onkeypress="return ((event.charCode >= 48 && event.charCode <= 57) || event.charCode == 8)">
+                        <div *ngIf="submitted && f['projectEstimation'].errors" class="invalid-feedback">
+                            <div *ngIf="f['projectEstimation'].errors['required']">Project
+                                Estimation is required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="projectArea" class="form-label">Project Area (SFT):</label>
+                        <input type="tel" class="form-control" id="projectArea" formControlName="projectArea"
+                            placeholder="Enter Project Area" [ngClass]="{ 'is-invalid': submitted && f['projectArea'].errors }"
+                            maxlength="6">
+                        <div *ngIf="submitted && f['projectArea'].errors" class="invalid-feedback">
+                            <div *ngIf="f['projectArea'].errors['required']">Project Area is
+                                required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="startDate" class="form-label">Start Date:</label>
+                        <input type="date" class="form-control" id='startDate' formControlName='projectStartDate'
+                            [ngClass]="{ 'is-invalid': submitted && f['projectStartDate'].errors }"
+                            (change)="onStartDateChange($event)">
+                        <div *ngIf="submitted && f['projectStartDate'].errors" class="invalid-feedback">
+                            <div *ngIf="f['projectStartDate'].errors['required']">Start Date is
+                                required
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <label for="endDate" class="form-label">End Date:</label>
+                        <input type="date" class="form-control" id='endDate' formControlName='projectEndDate'
+                            [ngClass]="{ 'is-invalid': submitted && f['projectEndDate'].errors }" [min]="minEndDate">
+                        <div *ngIf="submitted && f['projectEndDate'].errors" class="invalid-feedback">
+                            <div *ngIf="f['projectEndDate'].errors['required']">End Date is required
                             </div>
                         </div>
                     </div>
