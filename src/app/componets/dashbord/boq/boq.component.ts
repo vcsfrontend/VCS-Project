@@ -6,7 +6,6 @@ import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
 import { SharedModule } from '../../../../app/shared/common/sharedmodule';
 import { NgbDropdownModule, NgbNavModule, NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { MatCommonModule } from '@angular/material/core';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -33,7 +32,7 @@ SwiperCore.use([ Navigation, Pagination, Scrollbar, A11y, Virtual, Mousewheel, Z
     standalone: true,
     imports: [SharedModule, NgSelectModule, NgbModule,
         NgbNavModule, NgbDropdownModule, FlatpickrModule, FormsModule, ReactiveFormsModule,
-        NgApexchartsModule, MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,
+         MatPaginatorModule, MaterialModuleModule, CommonModule, ToastrModule,
         NgbOffcanvasModule, SwiperModule],
     providers: [NgbModalConfig, NgbModal, FlatpickrDefaults,],
     templateUrl: './boq.component.html',
@@ -66,7 +65,7 @@ export class BoqComponent extends BaseComponent {
     userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
     innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
     selectedOrderContent: any = null; actstatus: any;
-    adoanAiRole: string = ''; 
+    adoanAiRole: string = '';  
     itemId: any; currentSection: any; proposals: any[] = []; clientOrders: any[] = [];
     dataSource = new MatTableDataSource<any>(); projectId: any; projectName!: any;
     designingId: any; designCompletionStatus: string = '';
@@ -91,7 +90,7 @@ export class BoqComponent extends BaseComponent {
     @ViewChild(MatSort) sort!: MatSort;
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
     selectedCategory: any; editIndex: number | null = null; designId: any;
-    boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup
+    boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup;
     proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; recceForm!: FormGroup;
     updateRecceForm!: FormGroup; updateProjectForm!: FormGroup; cutListForm!: FormGroup; generateCutListForm!: FormGroup;
     manualCutListForm!:FormGroup; 
@@ -107,11 +106,13 @@ export class BoqComponent extends BaseComponent {
     showLeftArrow = false; showRightArrow = false;step = 1;submittedStep1:boolean=false;
     submittedStep2 : boolean = false;submittedStep3 : boolean = false;
     submitted: boolean = false; projectConfigList: string[] = []; 
-    showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
+    showOtherDesignerFields : boolean =false; showOtherRelationshipFields: boolean=false;
     thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
     designerData: any[] = []; filteredDesignerData: any[] = [];   override panelList: any[] = [];
     allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
-    showManualFields = false; boqKeys: string[] = [];
+    showManualFields = false; boqKeys: string[] = []; roomNameList: any[] = []; isImportChecked: boolean = false;
+    selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any;
+    uomList: any[] = [];
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -305,8 +306,8 @@ export class BoqComponent extends BaseComponent {
             gstPrecent: [0],
             amountWithoutGst: [0],
             designId: [''],
-            roomName: [''],
-            itemCode: [''],
+            roomName: ['', [Validators.required]],
+            itemCode: ['', [Validators.required]],
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType
@@ -452,7 +453,6 @@ export class BoqComponent extends BaseComponent {
             type: this.userType,
             createdBy: this.userName
         });
-        this.getLibraryData();
         this.getLibraryNames();
         this.getOptimizerCut();
     }
@@ -615,18 +615,17 @@ export class BoqComponent extends BaseComponent {
             email: element.email ?? '',
             type: element.type ?? 0
         }];
-        console.log(payload)
-        // this.switchService.updateElementData(payload).subscribe({
-        //     next: (res: any) => {
-        //         if (res?.status) {
-        //             this.toastr.success(`${field} updated successfully`);
-        //             element[field] = fieldValue;
-        //             if (field === 'itemType') {
-        //                 element.brandOrMake = brandOrMake;
-        //             }
-        //         }
-        //     }
-        // });
+        this.switchService.updateElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status) {
+                    this.toastr.success(`${field} updated`);
+                    element[field] = fieldValue;
+                    if (field === 'itemType') {
+                        element.brandOrMake = brandOrMake;
+                    }
+                }
+            }
+        });
     }
 
     proposalApprovalSubmit(modal: any) {
@@ -644,7 +643,7 @@ export class BoqComponent extends BaseComponent {
         };
         this.switchService.approveProposal(payload).subscribe({
             next: () => {
-                this.toastr.success("Proposal Created successfully");
+                this.toastr.success("Proposal Created");
                 modal.close();
                 const contentPayload = {
                     proposalContentId: payload.proposalContentId,
@@ -720,10 +719,14 @@ export class BoqComponent extends BaseComponent {
                 });
                 this.boqDataSources['All'] = new MatTableDataSource(allItems);
                 this.tabKeys = ['All', ...this.tabKeys];
+                this.currentRoomName = 'All'; 
                 this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({
                     order: i + 1,
                     ...item
                 }));
+                this.roomNameList = this.tabKeys
+                    .filter(k => k !== 'All')
+                    .map(name => ({ name }));
             }
         });
     }
@@ -974,6 +977,11 @@ export class BoqComponent extends BaseComponent {
     }
 
     elementSubmit() {
+        this.elementFormSubmitted = true;
+        if (this.elementForm.invalid) {
+            this.toastr.warning("Please fill in all required fields.");
+            return;
+        }
         const formValue = { ...this.elementForm.value };
         delete formValue.elementName;
         delete formValue.elementDescription;
@@ -981,34 +989,22 @@ export class BoqComponent extends BaseComponent {
         const lengthNum = Number(this.elementForm.value.length || 0);
         const heightNum = Number(this.elementForm.value.height || 0);
         const quantityNum = Number(this.elementForm.value.quantity || 0);
-        const w1Num = Number(this.elementForm.value.w1 || 0);
-        const w2Num = Number(this.elementForm.value.w2 || 0);
-        const l1Num = Number(this.elementForm.value.l1 || 0);
-        const l2Num = Number(this.elementForm.value.l2 || 0);
-        const clNum = breadthNum - (w1Num + w2Num);
-        const cwNum = lengthNum - (l1Num + l2Num); 
         const payload = {
             ...formValue,
             elementNameAndDescription:
                 `${this.elementForm.value.elementName || ''}` +
                 `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}` +
                 `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`,
-            budgetRate: Number(this.elementForm.value.budgetRate || 0).toString(),
-            clientRate: Number(this.elementForm.value.clientRate || 0).toString(),
-            gstPrecent: Number(this.elementForm.value.gstPrecent || 0).toString(),
-            hsn: Number(this.elementForm.value.hsn || 0).toString(),
+            budgetRate: Number(this.elementForm.value.budgetRate ),
+            clientRate: Number(this.elementForm.value.clientRate),
+            gstPrecent: Number(this.elementForm.value.gstPrecent),
+            hsn: Number(this.elementForm.value.hsn),
             breadth: breadthNum,
             height: heightNum,
             length: lengthNum,
             quantity: quantityNum,
             codeAndCategory: formValue.codeAndCategory?.name || '',
             brandOrMake: this.elementForm.value.brandOrMake || '',
-            w1: w1Num.toString(),
-            w2: w2Num.toString(),
-            l1: l1Num.toString(),
-            l2: l2Num.toString(),
-            cl: clNum.toString(),
-            cw: cwNum.toString(),
             designId:this.designingId,
             companyCode: this.userCompanyCode,
             email: this.userEmail,
@@ -1017,12 +1013,63 @@ export class BoqComponent extends BaseComponent {
         this.switchService.saveElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
-                    this.toastr.success(res.message || 'Data Saved Successfully');
+                    this.toastr.success(res.message || 'Element Saved ');
                     this.elementForm.reset();
                     this.elementFormSubmitted = false;
                 }
             }
         });
+    }
+
+    saveLibraryItem() {
+        if (this.selectedItems.length === 0) {
+            this.toastr.warning("Please select an item");
+            return;
+        }
+        const item = this.selectedItems[0];
+        const combinedDescription = [
+            item.description || '',
+            item.carcassMaterial ? `Carcass Material: ${item.carcassMaterial}` : '',
+            item.carcassFinish ? `Carcass Finish: ${item.carcassFinish}` : '',
+            item.shutterMaterial ? `Shutter Material: ${item.shutterMaterial}` : '',
+            item.shutterFinish ? `Shutter Finish: ${item.shutterFinish}` : ''
+        ]
+        .filter(x => x && x.trim() !== '')  
+        .join(" | ");
+        const payload = {
+            libraryId: item.libraryId?._id || item.libraryId || null,
+            name: item.name || '',
+            description: combinedDescription,
+            brandMake: item.brandMake || '',
+            categoryId: item.categoryId?._id || item.categoryId || null,
+            uom: this.getUomNameById(item.uom),
+            quantity: Number(item.standardQuantity) || 1,
+            standardRate: Number(item.standardRate) || 0,
+            budgetRate: Number(item.budgetRate) || 0,
+            hsn: item.hsn || '',
+            gstPrecent: item.gst ?? null,
+            roomName: item.roomName,
+            itemCode: item.itemTypeId?.name || '',
+            elementUrl:item.imageUrl || '',
+            length: item.dimensions?.width || 0,
+            breadth: item.dimensions?.depth || 0,
+            height: item.dimensions?.height || 0,
+            designId:this.designingId
+        };
+        console.log(payload);
+        this.switchService.saveElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status === true) {
+                    this.toastr.success(res.message || 'Elements Imported');
+                    this.boqData();
+                }
+            }
+        });
+
+    }
+
+    get es() {
+        return this.elementForm.controls;
     }
 
     editElement(element?: any) {
@@ -1039,7 +1086,6 @@ export class BoqComponent extends BaseComponent {
                     `Shutter Finish : ${formValue.shutterFinish || ''}\n` +
                     `Brand : ${formValue.brandOrMake || ''}`
                 ).trim(),
-
                 codeAndCategory: formValue.codeAndCategory || element?.codeAndCategory || '',
                 orderStatus: formValue.orderStatus || element?.orderStatus || '',
                 itemType: formValue.itemType || element?.itemType || '',
@@ -1050,10 +1096,7 @@ export class BoqComponent extends BaseComponent {
                 height: Number(element?.height ?? formValue.height) || 0,
                 quantity: Number(element?.quantity ?? formValue.quantity) || 0,
                 uom: formValue.uom || element?.uom || '',
-
-                // 🔹 Draft Quantity from table row
                 draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
-
                 clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
                 finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
                 brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
@@ -1075,7 +1118,7 @@ export class BoqComponent extends BaseComponent {
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
-                    this.toastr.success(res.message || 'Data Updated Successfully');
+                    this.toastr.success(res.message || 'Data Updated ');
                     this.elementForm.reset();
                     this.offcanvasService.dismiss();
                     this.elementFormSubmitted = false;
@@ -1088,9 +1131,7 @@ export class BoqComponent extends BaseComponent {
 
     proposalFormSubmit(modal: any) {
         this.submittedStep3 = true;
-
         const step3Fields = ['orderFrom', 'vendorId', 'shippingAddress', 'startDate', 'dueDate'];
-
         const invalidStep3 = step3Fields.some(field => this.proposalForm.get(field)?.invalid);
         if (invalidStep3) {
             this.toastr.warning('Please fill all required fields in Step 3.');
@@ -1151,7 +1192,6 @@ export class BoqComponent extends BaseComponent {
         };
         this.updateElementsAndCreateProposal(proposalPayload, modal);
     }
-
     private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
         if (!this.selectedElement || this.selectedElement.length === 0) return;
         const formValue = this.elementForm?.value ?? {};
@@ -1218,7 +1258,7 @@ export class BoqComponent extends BaseComponent {
         this.switchService.createProposal(proposalPayload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
-                    this.toastr.success(res.message || "Proposal created successfully");
+                    this.toastr.success(res.message || "Proposal created ");
                     modal.close();
                     this.boqData();
                 }
@@ -1250,7 +1290,7 @@ export class BoqComponent extends BaseComponent {
         };
         this.switchService.extraContentProposal(payload).subscribe({
             next: (res) => {
-                this.toastr.success("Proposal updated successfully");
+                this.toastr.success("Proposal updated");
                 modal.close();
             }
         });
@@ -1404,8 +1444,6 @@ export class BoqComponent extends BaseComponent {
         const input = event.target as HTMLInputElement;
         if (input.files && input.files.length > 0) {
             this.selectedFile = input.files[0];
-
-            // show preview
             const reader = new FileReader();
             reader.onload = () => {
                 this.previewUrl = reader.result;
@@ -1547,7 +1585,7 @@ export class BoqComponent extends BaseComponent {
         if (input.files && input.files.length > 0) {
             this.fileName = input.files[0].name;
         } else {
-            this.fileName = null; // Reset if no file selected
+            this.fileName = null; 
         }
     }
     active5 = 'Home';
@@ -1720,7 +1758,7 @@ export class BoqComponent extends BaseComponent {
         };
         this.switchService.createRecce(payload).subscribe({
             next: () => {
-                this.toastr.success('Recce created successfully!');
+                this.toastr.success('Recce created');
                 this.getRecceData();
                 modal.close();
                 this.recceForm.reset();
@@ -1808,7 +1846,7 @@ export class BoqComponent extends BaseComponent {
         };
         this.switchService.updateRecce(payload).subscribe({
             next: (res: any) => {
-                this.toastr.success('Recce updated successfully');
+                this.toastr.success('Recce updated');
                 this.getRecceData();
             },
         });
@@ -1824,7 +1862,7 @@ export class BoqComponent extends BaseComponent {
             };
             this.switchService.updateAssgnAdonaiDesign(payload).subscribe({
                 next: (res: any) => {
-                    this.toastr.success('Project updated successfully');
+                    this.toastr.success('Project updated');
                     modal.close();
                     this.getAssignProjects();
                 }
@@ -1863,10 +1901,20 @@ export class BoqComponent extends BaseComponent {
             next: (res: any) => {
                 if (res && res.items) {
                     this.libraryListData = res.items;
+                    this.getUomNames();
                 }
             }
         });
     }
+
+    getUomNames() {
+        this.switchService.getUomNames().subscribe({
+            next: (res: any) => {
+                this.uomList = res.uoms || [];
+            }
+        });
+    }
+
     
     getLibraryNames() {
         this.switchService.getLibrarayNames().subscribe({
@@ -2173,10 +2221,9 @@ export class BoqComponent extends BaseComponent {
             designId: this.designingId,
             applyOn : 'multiple'
         };
-        console.log(payload)
         this.switchService.generateCutList(payload).subscribe({
             next: () => {
-                this.toastr.success('Data sent successfully');
+                this.toastr.success('Data sent');
                 this.modalService.dismissAll();
             },
         });
@@ -2379,10 +2426,9 @@ export class BoqComponent extends BaseComponent {
             code: this.selectedPanel?.model,
             designId: this.designingId,
         };
-        console.log(payload);
         this.switchService.generateCutList(payload).subscribe({
             next: () => {
-                this.toastr.success('Data sent successfully');
+                this.toastr.success('Data sent');
                 this.modalService.dismissAll();
                 this.boqData();
             },
@@ -2392,4 +2438,32 @@ export class BoqComponent extends BaseComponent {
     get cl() {
         return this.manualCutListForm.controls;
     }
+
+    toggleSelect(event: any, index: number) {
+        const item = this.libraryListData[index];
+        if (event.target.checked) {
+            this.selectedItems.push({
+                ...item,
+                roomName: this.currentRoomName  
+            });
+        } else {
+            this.selectedItems = this.selectedItems.filter(
+                x => x.itemCode !== item.itemCode
+            );
+        }
+        this.isImportChecked = this.selectedItems.length > 0;
+    }
+
+    onRoomTabChange(id: number) {
+        this.currentRoomName = this.tabKeys[id - 1];
+    }
+
+    getUomNameById(id: string): string {
+        const uom = this.uomList.find(x => x._id === id);
+        return uom ? uom.name : '';
+    }
+
+
+
+
 }

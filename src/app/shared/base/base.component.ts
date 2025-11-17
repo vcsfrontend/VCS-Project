@@ -663,17 +663,17 @@ export class BaseComponent {
     { "name": "last_updated" },
   ];
  
-  roomNameList = [
-    { "name": "Livinig Room" },
-    { "name": "Kitchen" },
-    { "name": "Hall" },
-  ];
+  // roomNameList = [
+  //   { "name": "Livinig Room" },
+  //   { "name": "Kitchen" },
+  //   { "name": "Hall" },
+  // ];
 
   itemCodeLst = [
-    { "name": "AK_PA" },
-    { "name": "AK_KC" },
-    { "name": "AK_SH" },
-    { "name": "AK_AP" },
+    { "name": "Cabinet", "code": "AK_KC" },
+    { "name": "Appliances", "code": "AK_AP" },
+    { "name": "Accessories", "code": "AK_AC" },
+    { "name": "Hardware", "code": "AK_HA" },
   ];
   permissionCategories =[
     {"name" : 'taskApproval'},

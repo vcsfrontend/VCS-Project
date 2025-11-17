@@ -210,7 +210,11 @@ export const admin: Routes = [
     loadComponent: () =>
     import('../apps/crm/leads/leads.component').then((m) => m.LeadsComponent),
   },
-  
+  {
+    path: 'Proposal',
+    loadComponent: () =>
+    import('../apps/crm/proposal/proposal.component').then((m) => m.ProposalComponent),
+  },
   {
     path: 'crm-settings',
     loadComponent: () =>

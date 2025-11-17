@@ -426,6 +426,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   position: relative;
   display: inline-block;
   min-width: 200px;
+  overflow: visible !important; 
+  z-index: 999999 !important;
 }
 
 .code-display {
@@ -503,4 +505,9 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .scroll-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.ng-dropdown-panel {
+  position: absolute !important;
+  z-index: 999999 !important;
 }
