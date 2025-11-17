@@ -1448,7 +1448,7 @@
                                     <div class="col-xl-12">
                                         <nav class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
                                             <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
-                                                <button class="scroll-btn me-2" (click)="scrollLeft()">&#10094;</button>
+                                                <button class="scroll-btn me-2" *ngIf="tabKeys.length >= 7" (click)="scrollLeft()">&#10094;</button>
                                                 <ul #scrollContainer ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex flex-nowrap m-0 p-0"
                                                     style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;" (navChange)="onRoomTabChange($event.nextId)">
                                                     <ng-container *ngFor="let key of tabKeys; let i = index">
@@ -1476,7 +1476,7 @@
                                                                                             aria-describedby="button-addon2" (keyup)="applyGlobalFilter($event)" #input />
                                                                                     </div>
                                                                                     <div ngbDropdown class="d-inline-block">
-                                                                                        <button type="button" class="btn btn-primary" (click)="getProposal()" ngbDropdownToggle>
+                                                                                        <button type="button" class="btn btn-primary" (click)="getProposal()" *ngIf="proposals.length > 0" ngbDropdownToggle>
                                                                                             <i class="ri-edit-line me-2"></i>Edit Proposal
                                                                                         </button>
                                                                                         <ul ngbDropdownMenu class="dropdown-menu cuu"
@@ -1592,7 +1592,7 @@
                                                                                         Code & Category
                                                                                     </th>
                                                                                     <td mat-cell *matCellDef="let element" class="sticky-col-left-4">
-                                                                                        <div class="hover-select-wrapper" (mouseenter)="openSelect(select)"
+                                                                                        <div class="hover-select-wrapper" (mouseleave)="openSelect(select)"
                                                                                             (mouseleave)="closeSelect(select)">
                                                                                             <div class="code-display">
                                                                                                 {{ element.codeAndCategory || '_' }}
@@ -1825,36 +1825,50 @@
                                                                         <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                             <div class="card-title col-xl-4">Cut List</div>
                                                                             <div class="d-flex">
-                                                                                <button class="btn btn-primary" (click)="cutList(content47)">
+                                                                                <button class="btn btn-primary"  (click)="cutList(content47)">
                                                                                     <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Cut List
                                                                                 </button>
+                                                                                <!-- <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger" *ngIf="isCutListAlreadySubmitted"
+                                                                                    (click)="deleteOptimizerCut()">
+                                                                                    <i class="ri-delete-bin-line"></i>
+                                                                                </a> -->
                                                                             </div>
                                                                         </div>
-                                                                        <div class="table-container" *ngIf="allPanels.length > 0; else noPanelData">
+                                                                        <div class="table-container"  style="max-height: 500px; overflow-y: auto;" *ngIf="allPanels.length > 0; else noPanelData">
                                                                             <table class="table table-bordered table-hover align-middle">
                                                                                 <thead class="table-light">
                                                                                     <tr>
-                                                                                        <th>S.No</th>
-                                                                                        <th>Cabinet Name</th>
-                                                                                        <th>Panel Name</th>
-                                                                                        <th>Material</th>
-                                                                                        <th>Height</th>
-                                                                                        <th>Width</th>
-                                                                                        <th>Thickness</th>
-                                                                                        <th>Quantity</th>
-                                                                                        <th>L1</th>
-                                                                                        <th>W1</th>
-                                                                                        <th>L2</th>
-                                                                                        <th>W2</th>
-                                                                                        <th>CL</th>
-                                                                                        <th>CW</th>
-                                                                                        <th>Groove</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">S.No</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Panel Name</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Material</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Height</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Width</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Thickness</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Quantity</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">L1</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">W1</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">L2</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">W2</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">CL</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">CW</th>
+                                                                                        <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Groove</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
-                                                                                    <tr *ngFor="let panel of allPanels; let i = index">
+                                                                                    <ng-container *ngFor="let cab of (groupedPanels | keyvalue)">
+                                                                                        <tr class="table-primary">
+                                                                                            <td colspan="15" class="fw-bold" style="
+                                                                                                            position: sticky;
+                                                                                                            top: 45px;
+                                                                                                            background: #d1e7ff;
+                                                                                                            z-index: 90;
+                                                                                                            font-weight: bold;
+                                                                                                        ">
+                                                                                                {{ cab.key }} ({{ cab.value.length }})
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    <tr *ngFor="let panel of cab.value; let i = index">
                                                                                         <td>{{ i + 1 }}</td>
-                                                                                        <td>{{panel.cabinetName}}</td>
                                                                                         <td class="text-primary" style="cursor: pointer;"
                                                                                         (click)="manualCutList(content46, panel)">
                                                                                             {{ panel.pannelName }}
@@ -1878,6 +1892,8 @@
                                                                                                 
                                                                                             </ng-template>
                                                                                     </tr>
+                                                                                    
+                                                                                    </ng-container>
                                                                                 </tbody>
                                                                             </table>
                                                                         </div>
@@ -1897,7 +1913,7 @@
                                                         </button>
                                                     </div>
                                                 </ul>
-                                                <button class="scroll-btn ms-2" (click)="scrollRight()">&#10095;</button>
+                                                <button class="scroll-btn ms-2" *ngIf="tabKeys.length >= 7" (click)="scrollRight()">&#10095;</button>
                                             </div>
                                         </nav>
                                         <div [ngbNavOutlet]="nav2" class=""></div>

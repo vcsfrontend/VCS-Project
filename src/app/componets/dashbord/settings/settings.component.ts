@@ -102,7 +102,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   userdeptroleId: any; email: string = ''; departroleId: number = 0; adminAccessUsersLst: any[] = [];
   departmentIds: any; assignedRoleIds: any; active6 = 'Home'; filteredRoleList: any[] = []; filteredPermissionList: any[] = [];
   assignPerm: any; filteredUserList: any[] = []; showUser: boolean = false; selectedUser: any;
-  departmentListTable: any[] = []; optimizerCuts: any[] = []; 
+  departmentListTable: any[] = []; optimizerCuts: any[] = []; submittedModels: string[] = [];fullCutListItems :any[]=[];
+  isCutListFull : boolean = false;existingCuts: any[] = []; originalCutItems : any[]=[];
   codeLabels: { [key: string]: string } = { AK_PA: 'Panel', AK_SH: 'Shutter'};
   userForm: FormGroup = this.fb.group({
     type: [2],
@@ -1089,6 +1090,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   cutList(content46: any) {
+    // this.cutListSubmitted = false; 
+    this.cutListForm.reset();
+    this.filterDropdownUsingSavedValues();
     this.modalService.open(content46, { centered: true });
   }
 
@@ -2574,6 +2578,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       this.toastr.warning('Please enter required fields');
       return;
     }
+    const selectedCode = this.cutListForm.get('code')?.value;
+    if (selectedCode && !this.submittedModels.includes(selectedCode)) {
+      this.submittedModels.push(selectedCode);
+    }
     const payload = {
       ...this.cutListForm.value,
       l1: parseInt(this.cutListForm.value.l1, 10),
@@ -2589,6 +2597,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
         this.toastr.success('Optimizer Cut saved');
         modal.close();
         this.getOptimizerCut();
+        this.cutListForm.reset();
       },
     });
   }
@@ -2600,13 +2609,29 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       email: JSON.parse(this.userData)?.email,
       type: JSON.parse(this.userData)?.type,
     };
+    this.originalCutItems = [...this.cutListItems];
     this.switchService.getOptimizerCut(payload).subscribe({
       next: (res: any) => {
         this.optimizerCuts = Array.isArray(res) ? res : [];
-      },
+        this.fullCutListItems = [...this.originalCutItems];
+          this.filterDropdownUsingSavedValues();
+          this.isCutListFull = this.optimizerCuts.length >= 2;
+        },
     });
   }
+ filterDropdownUsingSavedValues() {
+  if (!this.optimizerCuts || this.optimizerCuts.length === 0) {
+    this.cutListItems = [...this.fullCutListItems]; 
+    return;
+  }
+  const savedCodes = this.optimizerCuts.map(x => x.code);
 
+  this.cutListItems = this.fullCutListItems.filter(
+    item => !savedCodes.includes(item.code)
+  );
+}
+
+   
   deleteOptimizerCut() {
     const payload = {
       companycame: JSON.parse(this.userData)?.companyName,
@@ -2617,7 +2642,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.switchService.deleteOptimizerCut(payload).subscribe({
       next: () => {
         this.toastr.success('Optimizer Cut Deleted');
+         this.optimizerCuts = [];
         this.getOptimizerCut();
+        this.submittedModels = [];
+
       },
     });
   }
