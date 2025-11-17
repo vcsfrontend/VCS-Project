@@ -579,4 +579,81 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   border-radius: 4px;
   line-height: 1.2;
 }
+.horizontal-wrapper {
+    position: relative;
+    width: 100%;
+}
 
+.scroll-area {
+    overflow-x: auto;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    padding: 8px 40px;
+}
+
+.scroll-left-btn,
+.scroll-right-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 99;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.scroll-left-btn {
+    left: 0;
+}
+
+.scroll-right-btn {
+    right: 0;
+}
+.tab-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.scroll-box {
+    overflow-x: auto;
+    white-space: nowrap;
+    scroll-behavior: smooth;
+    width: 100%;
+    padding: 0 40px; /* space for arrows */
+}
+
+.tab-item {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #f3f3f3;
+    margin-right: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid #aaa;
+    background: white;
+    cursor: pointer;
+}
+
+.arrow.left {
+    left: 5px;
+}
+
+.arrow.right {
+    right: 5px;
+}

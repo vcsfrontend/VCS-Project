@@ -85,9 +85,10 @@ export class BoqComponent extends BaseComponent {
     step1Data : any[]=[];step2Data: any = null; fullCutListItems : any[]=[];
     modelValues: any = {};autoSwitchDone = false;optimizerSubmit : boolean = false;
     isCutListAlreadySubmitted : boolean = false;groupedPanels: { [key: string]: any[] } = {};
+    showLeftArrow = false;showRightArrow = false;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+    @ViewChild('scrollContainer',{static:false}) scrollContainer!: ElementRef;
 
     @ViewChild(MatSort) sort!: MatSort;
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
@@ -104,8 +105,7 @@ export class BoqComponent extends BaseComponent {
     orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
     projectLst: any = []; boqproject: any; showAllProposals = false; libraryList: any[] = [];
-    libraryListData: any[] = [];objectKeys = Object.keys;
-    showLeftArrow = false; showRightArrow = false;step = 1;submittedStep1:boolean=false;
+    libraryListData: any[] = [];objectKeys = Object.keys;step = 1;submittedStep1:boolean=false;
     submittedStep2 : boolean = false;submittedStep3 : boolean = false;
     submitted: boolean = false; projectConfigList: string[] = []; 
     showOtherDesignerFields : boolean =false; showOtherRelationshipFields: boolean=false;
@@ -666,10 +666,14 @@ export class BoqComponent extends BaseComponent {
         this.isCollapsed = !this.isCollapsed;
     }
 
-    ngAfterViewInit() {
+   ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.proposaldataSource.paginator = this.paginator;
+        setTimeout(() => this.checkArrows(), 150);
         // this.dataSource.sort = this.sort;
+    }
+    ngAfterViewChecked() {
+        setTimeout(() => this.checkArrows(), 300);
     }
 
     applyFilter(event: Event) {
@@ -2468,7 +2472,16 @@ export class BoqComponent extends BaseComponent {
 setStage(id: number) {
   this.currentStage = id;
 }
-
+ onScroll() {
+    this.checkArrows();
+    }
+   checkArrows() {
+    if (!this.scrollContainer?.nativeElement) return;
+    const el = this.scrollContainer.nativeElement;
+    this.showLeftArrow = el.scrollLeft > 0;
+    this.showRightArrow = el.scrollWidth > el.clientWidth &&
+    el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
+    }
 
 
 }
