@@ -113,8 +113,9 @@ export class BoqComponent extends BaseComponent {
     designerData: any[] = []; filteredDesignerData: any[] = [];   override panelList: any[] = [];
     allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
     showManualFields = false; boqKeys: string[] = []; roomNameList: any[] = []; isImportChecked: boolean = false;
-    selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any;
-    uomList: any[] = [];
+    selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any; currentStage = 1;
+    uomList: any[] = []; stages = [{ id: 1, name: 'Recce' }, { id: 2, name: 'Design' }, { id: 3, name: 'BOQ' },
+];
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -2464,6 +2465,9 @@ export class BoqComponent extends BaseComponent {
   }, {});
 }
 
+setStage(id: number) {
+  this.currentStage = id;
+}
 
 
 

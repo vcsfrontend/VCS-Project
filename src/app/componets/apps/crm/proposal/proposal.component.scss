@@ -509,3 +509,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.nav-tabs,
+.nav-tabs .nav-link {
+  border-color: transparent !important;
+}

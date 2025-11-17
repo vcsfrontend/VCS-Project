@@ -1,10 +1,15 @@
 <div class="col-lg-12">
-    <ul ngbNav #nav13="ngbNav" [activeId]="1" class="nav nav-tabs justify-content-center tab-style-3 bg-white pb-5 "
-        id="myTab2" role="tablist">
-        <li [ngbNavItem]="1" class="nav-item me-0" role="presentation">
-            <button ngbNavLink class="nav-link  home py-1" id="home-tab" data-bs-toggle="tab"
-                data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
-                aria-selected="true" (click)="getRecceData()">Recce</button>
+    <ul ngbNav #nav13="ngbNav" [activeId]="1" class="nav custom-progress-nav">
+        <li [ngbNavItem]="1" class="nav-item">
+            <button ngbNavLink class="nav-link custom-step" (click)="setStage(1); getRecceData()">
+                <span class="step-circle" [ngClass]="{
+                        'completed-circle': currentStage > 1,
+                        'active-circle': currentStage === 1
+                      }">
+                </span>
+                 <strong [class.active-text]="currentStage === 1">Recce</strong>
+                <span class="step-line"></span>
+            </button>
             <ng-template ngbNavContent>
                 <div class="row">
                     <div class="col-xl-12">
@@ -32,8 +37,7 @@
                                         <nav ngbNav #nav6="ngbNav" [activeId]="active6" orientation="vertical"
                                             class="nav nav-tabs flex-column nav-style-5" role="tablist">
                                             <ng-container ngbNavItem="Home">
-                                                <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="false"><i
-                                                        class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Recce Details
+                                                <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page" aria-selected="false">Recce Details
                                                 </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0"  >
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Recce Details')"
@@ -62,8 +66,7 @@
                                             </ng-container>
                                             <ng-container ngbNavItem="About">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
-                                                    aria-selected="false"><i
-                                                        class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>External
+                                                    aria-selected="false">External
                                                 </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('External Environment')"
@@ -93,8 +96,7 @@
                                             </ng-container>
                                             <ng-container ngbNavItem="Services">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
-                                                    aria-selected="true"><i
-                                                        class="ri-bank-line me-2 align-middle d-inline-block"></i>Internal </a>
+                                                    aria-selected="true">Internal </a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Internal Environment')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
@@ -123,8 +125,7 @@
                                             </ng-container>
                                             <ng-container ngbNavItem="Contacts">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
-                                                    aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Capture Spaces</a>
+                                                    aria-selected="false">Capture Spaces</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Capture Spaces')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
@@ -153,8 +154,7 @@
                                             </ng-container>
                                             <ng-container ngbNavItem="gallery">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
-                                                    aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Signage & Facade</a>
+                                                    aria-selected="false">Signage & Facade</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Signage and Facade')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
@@ -183,8 +183,7 @@
                                             </ng-container>
                                             <ng-container ngbNavItem="Layout and Sketches">
                                                 <a ngbNavLink class="nav-link mt-2" data-bs-toggle="tab" role="tab" aria-current="page"
-                                                    aria-selected="false"><i
-                                                        class="ri-contacts-book-2-line me-2 align-middle d-inline-block"></i>Layout & Sketches</a>
+                                                    aria-selected="false">Layout & Sketches</a>
                                                 <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                                     <div class="d-flex" *ngFor="let recce of getRecceByStage('Layout and Sketches')"
                                                         style="min-height:250px; max-height:400px; overflow-y:auto; overflow-x:hidden;">
@@ -223,10 +222,16 @@
                 </div>
             </ng-template>
         </li>
-        <li [ngbNavItem]="2" class="nav-item me-0" role="presentation">
-            <button ngbNavLink class="nav-link about py-1" id="profile-tab" data-bs-toggle="tab"
-                data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
-                aria-selected="false" (click)="getAssignProjects()">Design</button>
+        <li [ngbNavItem]="2" class="nav-item">
+             <button ngbNavLink class="nav-link custom-step" (click)="setStage(2); getAssignProjects()">
+                <span class="step-circle" [ngClass]="{
+                        'completed-circle': currentStage > 2,
+                        'active-circle': currentStage === 2
+                      }">
+                </span>
+                <strong [class.active-text]="currentStage === 2">Design</strong>
+                <span class="step-line"></span>
+            </button>
             <ng-template ngbNavContent>
                 <div class="col-xl-12 mt-2">
                     <div class="card custom-card" *ngFor="let project of filteredDesignerData; let i = index">
@@ -314,16 +319,22 @@
                 </div>
             </ng-template>
         </li>
-        <li [ngbNavItem]="3" class="nav-item me-0" role="presentation">
-            <button ngbNavLink class="nav-link services py-1" id="contact-tab" data-bs-toggle="tab"
-                data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane"
-                aria-selected="false" (click)="boqData()">BOQ</button>
+        <li [ngbNavItem]="3" class="nav-item">
+           <button ngbNavLink class="nav-link custom-step" (click)="setStage(3); boqData()">
+                <span class="step-circle" [ngClass]="{
+                        'completed-circle': currentStage > 3,
+                        'active-circle': currentStage === 3
+                      }">
+                </span>
+                <strong [class.active-text]="currentStage === 3">BOQ</strong>
+                <span class="step-line"></span>
+            </button>
             <ng-template ngbNavContent>
                 <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
                     <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
-                        class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom" role="tablist">
+                        class="nav nav-style-1 nav-pills bg-white p-2 border-bottom" role="tablist">
                         <ng-container ngbNavItem="1">
-                            <a ngbNavLink class="nav-link ms-1" (click)="getProposal()">Proposal For Client</a>
+                            <a ngbNavLink class="ms-1 btn btn-light" (click)="getProposal()">Proposal For Client</a>
                             <div class="tt"></div>
                             <ng-template ngbNavContent>
                                 <div class="col-xl-12">
@@ -684,7 +695,7 @@
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="2">
-                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
                                 aria-selected="true" (click)="getClientOrders()">Client Orders
                                 <!-- <span class="badge bg-secondary ms-1 rounded-pill">32</span> -->
                             </a>
@@ -993,7 +1004,7 @@
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="3">
-                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
                                 aria-selected="true">Client Invoices</a>
                                 <div class="tt"></div>
                             <ng-template class="tab-content bg-white" ngbNavContent>
@@ -1216,7 +1227,7 @@
                             </ng-template>
                         </ng-container>
                         <ng-container ngbNavItem="4">
-                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
                                 aria-selected="false">Payments From
                                 Client</a>
                                 <div class="tt"></div>
@@ -1440,20 +1451,20 @@
                             </ng-template>
                         </ng-container>
                         <ng-container [ngbNavItem]="5">
-                            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab"
+                            <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
                                 aria-selected="false">Project Scope</a>
                                  <div class="tt"></div>
                             <ng-template class="tab-content" ngbNavContent>
                                 <div class="row">
                                     <div class="col-xl-12">
-                                        <nav class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
+                                        <nav class="nav nav-style-1 nav-pills bg-white" role="tablist">
                                             <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
                                                 <button class="scroll-btn me-2" *ngIf="tabKeys.length >= 7" (click)="scrollLeft()">&#10094;</button>
                                                 <ul #scrollContainer ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex flex-nowrap m-0 p-0"
                                                     style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;" (navChange)="onRoomTabChange($event.nextId)">
                                                     <ng-container *ngFor="let key of tabKeys; let i = index">
                                                         <ng-container [ngbNavItem]="i+1">
-                                                            <a ngbNavLink class="nav-link me-2 ms-1 my-2" (click)="onHidePanelList()">{{ key | titlecase }}
+                                                            <a ngbNavLink class="ms-1 btn btn-light me-2 ms-1 my-2" (click)="onHidePanelList()">{{ key | titlecase }}
                                                                 <span class="badge bg-black text-white ms-1">
                                                                     {{ boqDataSources[key].data.length }}
                                                                 </span>
@@ -1908,7 +1919,7 @@
                                                         </ng-container>
                                                     </ng-container>
                                                     <div class="text-end">
-                                                        <button class="btn btn-primary ms-2 mt-2" (click)="onShowPanelList()">
+                                                        <button class="btn btn-light ms-2 mt-2" (click)="onShowPanelList()">
                                                             Cut List
                                                         </button>
                                                     </div>
