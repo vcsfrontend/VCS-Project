@@ -12,7 +12,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BaseComponent } from '../../../../shared/base/base.component';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule,Router } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { MaterialModuleModule } from '../../../../material-module/material-module.module';
 import { FirebaseService } from '../../../../shared/services/firebase.service';
@@ -175,7 +175,7 @@ export class DealsComponent extends BaseComponent {
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,private router: Router,
   ) {
     super();
 
@@ -183,7 +183,8 @@ export class DealsComponent extends BaseComponent {
       'In Progress Leads': [...this.inPorgressLeads],
       'Lost Leads': [...this.lostLeads],
       'Converted Leads': [...this.convertedLeads],
-      'open Stage':[...this.openStage]
+      'open Stage':[...this.openStage],
+      'proposal Stage': [...this.proposalStage]
     };
 
     this.userData = localStorage.getItem('userDetails');
@@ -258,6 +259,17 @@ export class DealsComponent extends BaseComponent {
     {name:'connected',checked: false, isDefault: true,color:'#28a743'},
     { name: 'Not Connected', checked: false, isDefault: true,color: '#ffc107' },
     { name: 'Invalid', checked: false, isDefault: true,color: '#dc3545' },
+  ];
+   proposalStage = [
+    { name: 'proposal Required', checked: false, isDefault: true, color: '#486a1bff' },
+    { name: 'proposal sent', checked: false, isDefault: true, color: '#28a743' },
+    {
+      name: 'proposal Approved',
+      checked: false,
+      isDefault: true,
+      color: '#ffc107',
+    },
+    { name: 'proposal Under Review', checked: false, isDefault: true, color: '#dc3545' },
   ];
 
   open(content7: any) {
@@ -1859,6 +1871,9 @@ export class DealsComponent extends BaseComponent {
           const isAdonaiUser = this.Adonai;
           // this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
           const defaultStageExists = this.stageLst.some((s: any) => s.stageName === 'Design Stage');
+           const defaultProposalStageExists = this.stageLst.some(
+            (s: any) => s.stageName === 'proposalStage'
+          );
 
           if (isAdonaiUser && !defaultStageExists) {
             const insertIndex = Math.max(1, this.stageLst.length - 2);  // ensures index is at least 1
@@ -1869,6 +1884,16 @@ export class DealsComponent extends BaseComponent {
               companyCode: this.userCompanyCode,
             };
             this.stageLst.splice(insertIndex, 0, defaultStage); 
+          }
+           if (isAdonaiUser && !defaultProposalStageExists) {
+            const insertIndex = Math.max(1, this.stageLst.length - 2); // ensures index is at least 1
+            const defaultStage = {
+              stageName: 'proposal Stage',
+              color: '#187edeff',
+              createdBy: this.userEmail,
+              companyCode: this.userCompanyCode,
+            };
+            this.stageLst.splice(insertIndex, 0, defaultStage);
           }
           const defaultStageName = 'open';
           const defaultStageColor = '#007bff'; 
@@ -3127,7 +3152,9 @@ formatLocalDateTime(dateTime: string | Date): string {
     });
     }
   }
-
+sentProposal(){
+  this.router.navigate(['apps/crm/proposal']);
+}
 
 
 }

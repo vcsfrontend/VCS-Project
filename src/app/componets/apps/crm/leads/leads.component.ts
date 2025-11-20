@@ -1427,14 +1427,12 @@ export class LeadsComponent extends BaseComponent {
           const firstStageKey = stageKeys.find(
             (key) => stageObj[key]?.trim() !== ''
           );
-          // this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
           this.defaultStageName = 'open';
           const isAdonaiUser = this.Adonai;
-          // this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
           const defaultStageExists = this.stageLst.some(
             (s: any) => s.stageName === 'Design Stage'
           );
-           const defaultProposalStageExists = this.stageLst.some(
+          const defaultProposalStageExists = this.stageLst.some(
             (s: any) => s.stageName === 'proposalStage'
           );
 
@@ -1448,7 +1446,7 @@ export class LeadsComponent extends BaseComponent {
             };
             this.stageLst.splice(insertIndex, 0, defaultStage);
           }
-           if (isAdonaiUser && !defaultProposalStageExists) {
+           if (!defaultProposalStageExists) {
             const insertIndex = Math.max(1, this.stageLst.length - 2); // ensures index is at least 1
             const defaultStage = {
               stageName: 'proposal Stage',

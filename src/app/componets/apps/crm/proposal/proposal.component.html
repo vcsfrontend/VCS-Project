@@ -420,8 +420,8 @@
                     <div class="col-xl-12">
                         <nav class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
                             <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
-                                <button class="scroll-btn me-2" (click)="scrollLeft()">&#10094;</button>
-                                <ul #scrollContainer ngbNav #nav2="ngbNav" [activeId]="1"
+                                <button class="scroll-btn me-2" *ngIf="showLeftArrow" (click)="scrollLeft()">&#10094;</button>
+                                <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="1"
                                     class="nav-tabs d-flex flex-nowrap m-0 p-0"
                                     style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;"
                                     (navChange)="onRoomTabChange($event.nextId)">
@@ -465,8 +465,8 @@
                                                                     </div>
                                                                     <div ngbDropdown class="d-inline-block">
                                                                         <button type="button" class="btn btn-primary"
-                                                                            (click)="getProposal()" ngbDropdownToggle>
-                                                                            <i class="ri-edit-line me-2"></i>Edit
+                                                                            (click)="getProposal()" *ngIf="proposals.length > 0" ngbDropdownToggle>
+                                                                            <i class="ri-edit-line me-2"></i> Edit
                                                                             Proposal
                                                                         </button>
                                                                         <ul ngbDropdownMenu class="dropdown-menu cuu"
@@ -904,7 +904,7 @@
                                         </ng-container>
                                     </ng-container>
                                 </ul>
-                                <button class="scroll-btn ms-2" (click)="scrollRight()">&#10095;</button>
+                                <button class="scroll-btn ms-2" *ngIf="showRightArrow" (click)="scrollRight()">&#10095;</button>
                             </div>
                         </nav>
                         <div [ngbNavOutlet]="nav2" class=""></div>

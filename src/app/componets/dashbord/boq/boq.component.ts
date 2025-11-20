@@ -2435,18 +2435,28 @@ export class BoqComponent extends BaseComponent {
     }
 
     toggleSelect(event: any, index: number) {
-        const item = this.libraryListData[index];
-        if (event.target.checked) {
-            this.selectedItems.push({
-                ...item,
-                roomName: this.currentRoomName  
-            });
-        } else {
-            this.selectedItems = this.selectedItems.filter(
-                x => x.itemCode !== item.itemCode
-            );
-        }
-        this.isImportChecked = this.selectedItems.length > 0;
+
+    const item = this.libraryListData[index];
+
+    if (event.target.checked) {
+
+        // Uncheck all other items
+        this.libraryListData.forEach((x, i) => {
+            if (i !== index) x.checked = false;
+        });
+
+        // Allow only 1 selected item
+        this.selectedItems = [{
+            ...item,
+            roomName: this.currentRoomName
+        }];
+
+    } else {
+        // Unchecking → empty selection
+        this.selectedItems = [];
+    }
+
+    this.isImportChecked = this.selectedItems.length > 0;
     }
 
     onRoomTabChange(id: number) {
@@ -2474,7 +2484,7 @@ setStage(id: number) {
 }
  onScroll() {
     this.checkArrows();
-    }
+}
    checkArrows() {
     if (!this.scrollContainer?.nativeElement) return;
     const el = this.scrollContainer.nativeElement;
@@ -2482,6 +2492,12 @@ setStage(id: number) {
     this.showRightArrow = el.scrollWidth > el.clientWidth &&
     el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
     }
+    forceBlur(select: any) {
+        if (select && select.blur) {
+            select.blur();
+        }
+    }
+
 
 
 }
