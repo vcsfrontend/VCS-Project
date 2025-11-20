@@ -86,7 +86,7 @@ export class ProposalComponent extends BaseComponent {
   step1Data: any[] = []; step2Data: any = null;
   // selectedColumns: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('scrollContainer',{static:false}) scrollContainer!: ElementRef;
 
   @ViewChild(MatSort) sort!: MatSort;
   tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
@@ -208,14 +208,14 @@ export class ProposalComponent extends BaseComponent {
     this.modalService.open(content45, { backdrop: 'static' });
   }
 
-  onCreateProposalClick(content: any) {
+  onCreateProposalClick(content4: any) {
     const storedClientData = localStorage.getItem("storedClientData");
     this.getProposal();
     if (!this.selectedElement || this.selectedElement.length === 0) {
       this.toastr.warning("Please select at least one Element");
       return;
     }
-    this.openRights4(content);
+    this.openRights4(content4);
   }
 
   openRights4(content4: any) {
@@ -601,9 +601,13 @@ export class ProposalComponent extends BaseComponent {
   }
 
   ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.proposaldataSource.paginator = this.paginator;
-    // this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+        this.proposaldataSource.paginator = this.paginator;
+        setTimeout(() => this.checkArrows(), 150);
+        // this.dataSource.sort = this.sort;
+  }
+  ngAfterViewChecked() {
+      setTimeout(() => this.checkArrows(), 300);
   }
 
   applyFilter(event: Event) {
@@ -631,6 +635,7 @@ export class ProposalComponent extends BaseComponent {
         const boqData = res?.boqResponse?.boqData || {};
         const pannelResponse = res?.pannelResponse?.pannelResponse || [];
         this.tabKeys = Object.keys(boqData);
+        this.getProposal();
         let allItems: any[] = [];
         this.tabKeys.forEach((key: string) => {
           const items: any[] = boqData[key] || [];
@@ -660,6 +665,7 @@ export class ProposalComponent extends BaseComponent {
         this.roomNameList = this.tabKeys
           .filter(k => k !== 'All')
           .map(name => ({ name }));
+
       }
     });
   }
@@ -1877,6 +1883,16 @@ export class ProposalComponent extends BaseComponent {
 
   moveToRoom(content22: any) {
     this.modalService.open(content22, { centered: true });
+  }
+  onScroll() {
+    this.checkArrows();
+  }
+  checkArrows() {
+    if (!this.scrollContainer?.nativeElement) return;
+    const el = this.scrollContainer.nativeElement;
+    this.showLeftArrow = el.scrollLeft > 0;
+    this.showRightArrow = el.scrollWidth > el.clientWidth &&
+    el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
   }
 
 }

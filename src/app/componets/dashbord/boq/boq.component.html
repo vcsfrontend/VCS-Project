@@ -1574,16 +1574,15 @@
                                                                                             <div>
                                                                                                 <span class="fw-medium d-block">
                                                                                                     {{
-                                                                                                    element.elementNameAndDescription.split('\n')[0].length
-                                                                                                    >
-                                                                                                    30?(element.elementNameAndDescription.split('\n')[0]
-                                                                                                    |slice:0:30)+ '...'
-                                                                                                    :element.elementNameAndDescription.split('\n')[0]}}
+                                                                                                    (element.elementNameAndDescription?.split('\n')[0] || '').length > 30
+                                                                                                    ? ((element.elementNameAndDescription?.split('\n')[0] || '') | slice:0:30) + '...'
+                                                                                                    : (element.elementNameAndDescription?.split('\n')[0] || '')
+                                                                                                    }}
                                                                                                 </span>
-                                                                                                <div class="text-muted small">
-                                                                                                    {{
-                                                                                                    element.elementNameAndDescription.split('\n')[1]}}
-                                                                                                </div>
+
+                                                                                            <div class="text-muted small">
+                                                                                                {{ element.elementNameAndDescription?.split('\n')[1] || '' }}
+                                                                                            </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </td>
@@ -1594,7 +1593,7 @@
                                                                                     </th>
                                                                                     <td mat-cell *matCellDef="let element" class="sticky-col-left-3">
                                                                                         {{
-                                                                                        element.elementNameAndDescription.split('\n')[1]?.split(':')[1]?.trim()
+                                                                                        element.elementNameAndDescription?.split('\n')[1]?.split(':')[1]?.trim()
                                                                                         }}
                                                                                     </td>
                                                                                 </ng-container>
@@ -1603,53 +1602,58 @@
                                                                                         Code & Category
                                                                                     </th>
                                                                                     <td mat-cell *matCellDef="let element" class="sticky-col-left-4">
-                                                                                        <div class="hover-select-wrapper" (mouseleave)="openSelect(select)"
-                                                                                            (mouseleave)="closeSelect(select)">
+                                                                                
+                                                                                        <div class="hover-select-wrapper" (mouseleave)="forceBlur(select)">
                                                                                             <div class="code-display">
-                                                                                                {{ element.codeAndCategory || '_' }}
+                                                                                                {{ element.codeAndCategory ? element.codeAndCategory : '–' }}
                                                                                             </div>
-                                                                                            <ng-select #select class="hover-select" [items]="codeAndCategory" bindValue="name" 
-                                                                                                [clearable]="false" placeholder="Select" [ngModel]="element.codeAndCategory"
+                                                                                            <ng-select #select class="hover-select" [items]="codeAndCategory" bindValue="name" [clearable]="false"
+                                                                                                placeholder="Select" [ngModel]="element.codeAndCategory"
                                                                                                 (change)="updateDropdownField('codeAndCategory', $event, element)">
+                                                                                
                                                                                                 <ng-template ng-option-tmp let-item="item">
                                                                                                     <div class="d-flex justify-content-between align-items-center w-100">
                                                                                                         <span>{{ item.name }}</span>
                                                                                                         <span>{{ item.code }}</span>
                                                                                                     </div>
                                                                                                 </ng-template>
+                                                                                
                                                                                             </ng-select>
+                                                                                
                                                                                         </div>
                                                                                     </td>
                                                                                 </ng-container>
                                                                                 <ng-container matColumnDef="orderStatus">
-                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Order
-                                                                                        Status </th>
+                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                                                        Order Status
+                                                                                    </th>
+                                                                                
                                                                                     <td mat-cell *matCellDef="let element">
-                                                                                        <div class="hover-select-wrapper" (mouseenter)="openSelect(statusSelect)"
-                                                                                            (mouseleave)="closeSelect(statusSelect)">
-                                                                                            <div class="status-display">
-                                                                                                {{ element.orderStatus || '_' }}
+                                                                                        <div class="hover-select-wrapper">
+                                                                                            <div class="display-label" (click)="statusSelect.open()">
+                                                                                                {{ element.orderStatus ? element.orderStatus : '–' }}
                                                                                             </div>
-                                                                                            <ng-select #statusSelect class="hover-select" [items]="orderStatus" bindLabel="name"
-                                                                                                bindValue="name" [clearable]="false" [ngModel]="element.orderStatus"
-                                                                                                placeholder="Select Status"
+                                                                                            <ng-select #statusSelect class="hover-select" [items]="orderStatus" bindLabel="name" bindValue="name"
+                                                                                                [clearable]="false" [ngModel]="element.orderStatus" placeholder="Select Status"
                                                                                                 (change)="updateDropdownField('orderStatus', $event, element)">
                                                                                             </ng-select>
                                                                                         </div>
                                                                                     </td>
                                                                                 </ng-container>
                                                                                 <ng-container matColumnDef="itemType">
-                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Item
-                                                                                        Type </th>
+                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Type</th>
+
                                                                                     <td mat-cell *matCellDef="let element">
-                                                                                        <div class="hover-select-wrapper" (mouseenter)="openSelect(itemTypeSelect)"
-                                                                                            (mouseleave)="closeSelect(itemTypeSelect)">
+                                                                                        <div class="hover-select-wrapper">
+
+                                                                                            <!-- Default Display (text only) -->
                                                                                             <div class="code-display">
-                                                                                                {{ element.itemType || '_' }}
+                                                                                                {{ element.itemType ? element.itemType : '–' }}
                                                                                             </div>
-                                                                                            <ng-select #itemTypeSelect class="hover-select" [items]="itemType" bindLabel="name"
-                                                                                                bindValue="name" [clearable]="false" placeholder="Select"
-                                                                                                [ngModel]="element.itemType"
+
+                                                                                            <!-- Select appears only on hover -->
+                                                                                            <ng-select #itemTypeSelect class="hover-select" [items]="itemType" bindLabel="name" bindValue="name"
+                                                                                                [clearable]="false" placeholder="Select" [ngModel]="element.itemType"
                                                                                                 (change)="updateDropdownField('itemType', $event, element)">
                                                                                                 <ng-template ng-option-tmp let-item="item">
                                                                                                     <div class="d-flex justify-content-between align-items-center w-100">
@@ -1657,6 +1661,7 @@
                                                                                                     </div>
                                                                                                 </ng-template>
                                                                                             </ng-select>
+
                                                                                         </div>
                                                                                     </td>
                                                                                 </ng-container>
@@ -1667,22 +1672,26 @@
                                                                                     </td>
                                                                                 </ng-container>
                                                                                 <ng-container matColumnDef="status">
-                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                                                                        Status </th>
+                                                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                                                                
                                                                                     <td mat-cell *matCellDef="let element">
-                                                                                        <div class="hover-select-wrapper" (mouseenter)="openSelect(statusSelect)"
-                                                                                            (mouseleave)="closeSelect(statusSelect)">
-                                                                                            <div class="status-display">
-                                                                                                {{ element.status || '_' }}
+                                                                                        <div class="hover-select-wrapper">
+                                                                                
+                                                                                            <!-- Text display (default view) -->
+                                                                                            <div class="status-display" style="height=20px;">
+                                                                                                {{ element.status ? element.status : '–' }}
                                                                                             </div>
-                                                                                            <ng-select #statusSelect class="hover-select" [items]="boqStatus" bindLabel="name"
-                                                                                                bindValue="name" [clearable]="false" [ngModel]="element.status"
-                                                                                                placeholder="Select Status"
+                                                                                
+                                                                                            <!-- Select box (only on hover) -->
+                                                                                            <ng-select #statusSelect class="hover-select" [items]="boqStatus" bindLabel="name" bindValue="name"
+                                                                                                [clearable]="false" placeholder="Select Status" [ngModel]="element.status"
                                                                                                 (change)="updateDropdownField('status', $event, element)">
                                                                                             </ng-select>
+                                                                                
                                                                                         </div>
                                                                                     </td>
                                                                                 </ng-container>
+
                                                                                 <ng-container matColumnDef="length">
                                                                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                                                         Length
@@ -2145,7 +2154,6 @@
     </form>
 </ng-template>
 
-
 <ng-template #content2 let-offcanvas>
     <div class="offcanvas-header border-bottom border-block-end-dashed">
         <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>Import From Library</strong></h5>
@@ -2186,7 +2194,7 @@
                                 <ng-container *ngFor="let item of libraryListData; let i = index">
                                     <tr>
                                         <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel2" value="" aria-label="..."
-                                            (change)="toggleSelect($event, i)"></th>
+                                            (change)="toggleSelect($event, i)" [(ngModel)]="item.checked"></th>
                                         <td>{{ i + 1 }}</td>
                                         <td style="max-width: 750px;">
                                             <div class="d-flex align-items-center">
