@@ -64,7 +64,7 @@ export type ChartOptions = {
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['sourceFlag','slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate',   ];
+    'projectArea', 'projectStartDate', 'projectEndDate', 'assign'  ];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
@@ -96,7 +96,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   pageSize = 5;
   modal: any; ttlAmtToBeRcvd: any; projectLst: any = []; userDetails: any; dateDiff: any;
   roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
-  pondOptions: FilePondOptions; lastField: any; ProDataList: any; onQuotationSubmitted: boolean = false;
+  pondOptions: FilePondOptions; lastField: any; ProDataList: any; onQuotationSubmitted: boolean = false; assignToUserForm!: FormGroup;
   spinnerLoading = false;
   pendingRequests = 0;
   adonaiURL: any;
@@ -142,6 +142,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   boqmodal(content17: any) {
     this.modalService.open(content17, { size: 'sm', centered: true },);
+  }
+
+  assignToUser(content18: any) {
+    this.modalService.open(content18, { centered: true },);
   }
 
   openLg2(content13: any) {
@@ -228,6 +232,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       percentage: ['']
     });
 
+    this.assignToUserForm = this.fb.group({
+      type: ['', Validators.required],
+      user: ['', Validators.required],
+    });
 
     this.quotationForm = this.fb.group({
       clientName: ['',],
@@ -1638,7 +1646,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           }));
 
           this.eliteDataSource.data = this.projectList;
-          this.elitePaginator.length = this.projectList.length;
+          if (this.elitePaginator) {
+            this.elitePaginator.length = this.projectList.length;
+          }
         }
         this.stopLoading();
       },

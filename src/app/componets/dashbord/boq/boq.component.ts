@@ -114,8 +114,11 @@ export class BoqComponent extends BaseComponent {
     allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
     showManualFields = false; boqKeys: string[] = []; roomNameList: any[] = []; isImportChecked: boolean = false;
     selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any; currentStage = 1;
-    uomList: any[] = []; stages = [{ id: 1, name: 'Recce' }, { id: 2, name: 'Design' }, { id: 3, name: 'BOQ' },
-];
+    uomList: any[] = []; stages = [{ id: 1, name: 'Recce' }, { id: 2, name: 'Design' }, { id: 3, name: 'BOQ' },];
+    stageNames: any = {1: 'Recce Status', 2: 'Design Status', 3: 'BOQ Status', };
+    statusNames: any = {1: 'Recce', 2: 'Design', 3: 'BOQ', };
+    recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
+    selectedStageTab: string = '';
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -1823,6 +1826,9 @@ export class BoqComponent extends BaseComponent {
                         recceClientPocEmail: recce.recceClientPoc
                             ? recce.recceClientPoc.split(',')[0].trim() : '',
                     }));
+                    this.recceStagesList = [
+                        ...new Set(this.recceList.map(r => r.recceStage))];
+                    this.selectedStageTab = this.recceStagesList[0];
                     this.blockedStages = [];
                     this.recceList.forEach(recce => {
                         if (recce.recceStage) {
@@ -2469,34 +2475,44 @@ export class BoqComponent extends BaseComponent {
     }
 
     groupCabinetNames() {
-  this.groupedPanels = this.allPanels.reduce((groups: any, panel: any) => {
-    const name = panel.cabinetName;
-    if (!groups[name]) {
-      groups[name] = [];
+        this.groupedPanels = this.allPanels.reduce((groups: any, panel: any) => {
+            const name = panel.cabinetName;
+            if (!groups[name]) {
+                groups[name] = [];
+            }
+            groups[name].push(panel);
+            return groups;
+        }, {});
     }
-    groups[name].push(panel);
-    return groups;
-  }, {});
-}
 
-setStage(id: number) {
-  this.currentStage = id;
-}
- onScroll() {
-    this.checkArrows();
-}
-   checkArrows() {
-    if (!this.scrollContainer?.nativeElement) return;
-    const el = this.scrollContainer.nativeElement;
-    this.showLeftArrow = el.scrollLeft > 0;
-    this.showRightArrow = el.scrollWidth > el.clientWidth &&
-    el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
+    setStage(id: number) {
+        this.currentStage = id;
+    }
+    onScroll() {
+        this.checkArrows();
+    }
+    checkArrows() {
+        if (!this.scrollContainer?.nativeElement) return;
+        const el = this.scrollContainer.nativeElement;
+        this.showLeftArrow = el.scrollLeft > 0;
+        this.showRightArrow = el.scrollWidth > el.clientWidth &&
+            el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
     }
     forceBlur(select: any) {
         if (select && select.blur) {
             select.blur();
         }
     }
+
+    openImageViewer(images: string[], index: number) {
+        this.router.navigate(['/dashboard/recceimagesviewer'], {
+            state: {
+                images: images,
+                index: index
+            }
+        });
+    }
+
 
 
 
