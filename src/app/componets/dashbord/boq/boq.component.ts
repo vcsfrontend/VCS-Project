@@ -968,6 +968,10 @@ export class BoqComponent extends BaseComponent {
         this.modalService.open(content47, { centered: true });
     }
 
+    newSection(content48: any) {
+        this.modalService.open(content48, { centered: true });
+    }
+
     manualCutList(content46: any, panel:any) {
         this.resetFormState();
         this.selectedPanel = panel;
@@ -2512,6 +2516,36 @@ export class BoqComponent extends BaseComponent {
             }
         });
     }
+
+    getFileType(url: string): string {
+        if (!url) return 'File';
+        const cleanUrl = url.split('/').pop()?.split('?')[0] || '';
+        const ext = cleanUrl.includes('.')
+            ? cleanUrl.substring(cleanUrl.lastIndexOf('.') + 1).toLowerCase()
+            : '';
+        if (['jpg', 'jpeg'].includes(ext)) return 'JPG';
+        if (ext === 'png') return 'PNG';
+        if (ext === 'webp') return 'WEBP';
+        if (['mp4', 'mov', 'avi', 'mkv'].includes(ext)) return 'VIDEO';
+        if (ext === 'pdf') return 'PDF';
+        return 'FILE';
+    }
+
+    downloadImage(url: string) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = url.split('/').pop() || 'image';
+        link.click();
+    }
+
+    deleteImage(recce: any, index: number) {
+        recce.imageList.splice(index, 1);
+    }
+
+    onAdd(index: number) {
+        console.log("Add button clicked for index:", index);
+    }
+
 
 
 

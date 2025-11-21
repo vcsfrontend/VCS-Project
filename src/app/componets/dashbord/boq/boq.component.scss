@@ -716,3 +716,15 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   padding: 6px 0;
 }
 
+.overlay-icons {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35); 
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
