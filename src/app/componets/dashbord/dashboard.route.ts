@@ -220,8 +220,13 @@ export const admin: Routes = [
     loadComponent: () =>
       import('./crm-settings/crm-settings.component').then((m) => m.CrmSettingsComponent),
   },
-  
-  
+
+   {
+     path: 'recceimagesviewer',
+     loadComponent: () =>
+       import('./recceimagesviewer/recceimagesviewer.component').then((m) => m.RecceimagesviewerComponent),
+   },
+
   
   // {
   //   path: 'contacts',
