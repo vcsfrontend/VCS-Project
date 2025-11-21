@@ -1,4 +1,43 @@
-<!-- <div *ngFor="let img of images; let i = index">
-  <img [src]="img" (click)="openViewer(images, i)">
+<div class=" viewer-header d-flex justify-content-between align-items-center px-3 py-2 shadow-sm">
+  <div class="d-flex align-items-center gap-3">
+    <button class="btn bg-white rounded-circle shadow-sm d-flex justify-content-center align-items-center"
+      style="width: 42px; height: 42px; border: 1px solid #f0f0f0;" (click)="goBack()">
+      <i class="ti ti-arrow-big-left" style="font-size: 1.1rem; color: #444;"></i>
+    </button>
+    <div class="fw-medium text-dark breadcrumb-title">
+      Recce > {{ currentStage }} > {{ currentFileName }}
+    </div>
+  </div>
+  <div class="d-flex align-items-center gap-3">
+    <div class="d-flex align-items-center gap-1 fs-6">
+      <span>{{ currentIndex + 1 }}</span>
+      <span>/</span>
+      <span>{{ images.length }}</span>
+    </div>
+    <div class="zoom-controls d-flex align-items-center gap-2">
+      <button class="btn btn-outline-dark btn-sm" (click)="zoomOut()" [disabled]="zoomLevel <= 100">
+        –
+      </button>
+      <span class="zoom-value">{{ zoomLevel }}%</span>
+      <button class="btn btn-outline-dark btn-sm" (click)="zoomIn()">
+        +
+      </button>
+      <button class="btn btn-outline-dark btn-sm" (click)="rotateImage()">
+        <i class="bi bi-arrow-clockwise"></i>
+      </button>
+    </div>
+  </div>
+  <div class="d-flex align-items-center gap-3 fs-5">
+    <i class="bi bi-info-circle cu"></i>
+    <i class="bi bi-pin-angle cu"></i>
+    <i class="bi bi-chat-left-text cu"></i>
+    <i class="bi bi-download cu" (click)="downloadImage(images[currentIndex])"></i>
+    <i class="bi bi-arrows-fullscreen cu" (click)="toggleFullscreen()"></i>
+  </div>
 </div>
- -->
+<div class="viewer-container d-flex flex-column" style="height:100vh; background:#e9ecef;">
+  <div class="image-wrapper d-flex justify-content-center align-items-center" style="flex:1; padding:0; margin:0;">
+    <img [src]="images[currentIndex]" class="main-image"
+      [style.transform]="'scale(' + zoomLevel/100 + ') rotate(' + rotation + 'deg)'" />
+  </div>
+</div>

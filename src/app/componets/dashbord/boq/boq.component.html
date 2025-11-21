@@ -17,7 +17,7 @@
                             <div class="card custom-card">
                                 <div class="card-header d-flex align-items-center justify-content-between p-2 px-3">
                                     <div class="d-flex align-items-center gap-3">
-                                        <button type="button" class="btn btn-sm btn-danger" *ngIf="adoanAiRole === 'ADMIN'"
+                                        <button type="button" class="btn btn-sm btn-primary" *ngIf="adoanAiRole === 'ADMIN'"
                                             (click)="openModal2(recceContent2)">
                                             <i class="ri-edit-line"></i> Create Recce
                                         </button>
@@ -38,7 +38,7 @@
                                                 popoverClass="p-0">
                                             </i>
                                         </div>
-                                        <button type="button" class="btn btn-sm btn-danger">
+                                        <button type="button" class="btn btn-sm btn-primary">
                                             <i class="bi bi-check-circle"></i> Mark Submit
                                         </button>
                                         <div ngbDropdown class="d-inline-block" placement="left-top" role="group">
@@ -146,35 +146,53 @@
                                             <ul ngbNav #nav="ngbNav" orientation="vertical" class="nav flex-column nav-pills" [activeId]="selectedStageTab">
                                                 <ng-container *ngFor="let stage of recceStagesList">
                                                     <ng-container [ngbNavItem]="stage">
-                                                        <a ngbNavLink class="nav-link">{{ stage }}</a>
+                                                        <a ngbNavLink class="nav-link btn btn-light btn-sm mt-2">{{ stage }}</a>
                                                         <ng-template ngbNavContent>
                                                             <div *ngFor="let recce of getRecceByStage(stage)" class="">
                                                                 <div class="border-bottom mt-3">
                                                                     <h6>
-                                                                        <div class="card-title"><strong>{{ recce.recceName }}</strong></div>
+                                                                        <div class="card-title"><strong>{{ recce.recceStage }}</strong></div>
                                                                     </h6>
                                                                 </div>
                                                                 <div class="d-flex justify-content-between mt-3">
-                                                                    <div class="card-title text-dark large fs-15">{{ recce.recceName }} Photos and Videos</div>
-                                                                    <button class="btn btn-danger btn-sm"
+                                                                    <div class="card-title text-dark large fs-15">{{ recce.recceStage }} Photos and Videos</div>
+                                                                    <button class="btn btn-primary btn-sm"
                                                                         *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)"
                                                                         (click)="openRecce(content44, recce.recceStage)">
                                                                         <i class="bi bi-plus-circle me-1"></i>Upload Images
                                                                     </button>
                                                                 </div>
-                                                                <div class="d-flex flex-wrap gap-4 mt-3">
+                                                                <div class="d-flex flex-wrap gap-4 mt-3" style="max-height: 200px; overflow-y: auto;">
                                                                     <div class="col-lg-2 col-md-3" *ngFor="let img of recce.imageList; let i = index">
-                                                                        <div class="card custom-card" (click)="openImageViewer(recce.imageList, i)">
-                                                                            <img [src]="img" class="card-img-top rounded">
+                                                                        <div class="card custom-card position-relative cu" style="overflow: hidden; border-radius: 12px;"
+                                                                            (click)="openImageViewer(recce.imageList, i)">
+                                                                            <!-- <input type="checkbox" class="form-check-input position-absolute top-0 start-0 m-2"> -->
+                                                                            <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
+                                                                                {{ getFileType(img) }}
+                                                                            </span>
+                                                                            <img [src]="img" class="card-img-top rounded" style="height:150px; object-fit:cover;">
+                                                                            <div class="overlay-icons d-flex justify-content-center gap-3">
+                                                                                <i class="bi bi-plus-circle text-white cu" (click)="onAdd(i); $event.stopPropagation()"></i>
+                                                                                <i class="bi bi-download text-white cu" (click)="downloadImage(img); $event.stopPropagation()"></i>
+                                                                                <i class="bi bi-trash text-danger cu" (click)="deleteImage(recce, i); $event.stopPropagation()"></i>
+                                                                            </div>
                                                                         </div>
-                                                                        <p class="fs-13 mt-1">
-                                                                            {{ recce.description }}
+                                                                        <p class="fs-13 mt-1" [ngbTooltip]="recce.description?.length > 25 ? recce.description : null" placement="top"
+                                                                            triggers="hover" container="body">
+                                                                            {{ recce.description?.length > 25 ? (recce.description | slice:0:25) + '...' : recce.description }}
                                                                         </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </ng-template>
                                                     </ng-container>
+                                                </ng-container>
+                                                <div style="height:250px;"></div>
+                                                <ng-container>
+                                                    <a class="btn btn-primary btn-sm mt-2" (click)="newSection(content48)">
+                                                        <i class="bi bi-plus-circle me-1"></i>
+                                                        Add New Section
+                                                    </a>
                                                 </ng-container>
                                             </ul>
                                         </div>
@@ -3251,3 +3269,23 @@
 </ng-template>
 
 
+<ng-template #content48 let-modal>
+    <div class="modal-header justify-content-center">
+        <h6 class="modal-title" id="staticBackdropLabel3"><strong>Add New Section</strong></h6>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
+            aria-label="Close"></button>
+    </div>
+    <div class="modal-body overflowImportant">
+        <div class="row gy-3">
+            <div class="col-lg-12">
+                <label class="form-label">Section Name</label>
+                <input type="text" class="form-control" formControlName="l1">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+            data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</ng-template>
