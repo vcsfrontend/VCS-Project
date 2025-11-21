@@ -2876,14 +2876,23 @@
                         <div class="col-lg-4 nav flex-column me-3 border-end align-items-start" id="v-pills-tab"
                             role="tablist" aria-orientation="vertical">
                             <div class="mb-3 col-lg-11">
-                                <label class="form-label">Select reacce Type</label>
-                        <ng-select formControlName="recceStage" placeholder="Select recce">
-                            <ng-option *ngFor="let item of recceTemplate" [value]="item.name"
-                                [disabled]="blockedStages.includes((item.name || '').trim())">
-                                {{ item.name }}
-                            </ng-option>
-                        </ng-select>
+                                <label class="form-label">Select recce Type</label>
+                            
+                                <ng-select formControlName="recceStage" placeholder="Select recce"
+                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceStage'].errors }">
+                                    <ng-option *ngFor="let item of recceTemplate" [value]="item.name"
+                                        [disabled]="blockedStages.includes((item.name || '').trim())">
+                                        {{ item.name }}
+                                    </ng-option>
+                                </ng-select>
+                            
+                                <div *ngIf="recceSubmitted && f['recceStage'].errors" class="invalid-feedback">
+                                    <span *ngIf="f['recceStage']?.errors?.['required']">
+                                        Plese select recce type
+                                    </span>
+                                </div>
                             </div>
+
                         </div>
                         <div class="col-lg-8 pe-3">
                             <div class="modal-body scrollable-body">
@@ -2896,28 +2905,56 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Recce Name</label>
                                                     <input type="text" class="form-control" placeholder="Recce name"
-                                                        aria-label="First name" formControlName="recceName">
+                                                        aria-label="First name" formControlName="recceName" [ngClass]="{ 'is-invalid': recceSubmitted && f['recceStage'].errors }">
+                                                    <div *ngIf="recceSubmitted && f['recceName'].errors" class="invalid-feedback">
+                                                        <span *ngIf="f['recceName']?.errors?.['required']">
+                                                            Recce Name is required
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Recce Due Date</label>
                                                     <input type="date" class="form-control" formControlName="recceDueDate"
-                                                        placeholder="select due date">
+                                                        placeholder="select due date" [ngClass]="{ 'is-invalid': recceSubmitted && f['recceDueDate'].errors }">
+                                                    <div *ngIf="recceSubmitted && f['recceDueDate'].errors" class="invalid-feedback">
+                                                        <span *ngIf="f['recceDueDate']?.errors?.['required']">
+                                                            Recce Due is required
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Assign Recce to(will receive recce
                                                         link)</label>
-                                                    <ng-select [items]="userList" bindLabel="email" formControlName="recceAssigne" placeholder="Select a user">
+                                                    <ng-select [items]="userList" bindLabel="email" formControlName="recceAssigne" placeholder="Select a user"
+                                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceAssigne'].errors }">
                                                     </ng-select>
+                                                    <div *ngIf="recceSubmitted && f['recceAssigne'].errors" class="invalid-feedback">
+                                                        <span *ngIf="f['recceAssigne']?.errors?.['required']">
+                                                            Recce Assigne is required
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Project Stakeholders to be contacted</label>
-                                                    <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email" placeholder="Select a user">
+                                                    <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email" placeholder="Select a user"
+                                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceStakeHolders'].errors }">
                                                     </ng-select>
+                                                    <div *ngIf="recceSubmitted && f['recceStakeHolders'].errors" class="invalid-feedback">
+                                                        <span *ngIf="f['recceStakeHolders']?.errors?.['required']">
+                                                            Recce StakeHolders is required
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Client POC to be contacted</label>
-                                                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email" placeholder="Select a user">
+                                                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email" placeholder="Select a user"
+                                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceClientPoc'].errors }">
                                                     </ng-select>
+                                                    <div *ngIf="recceSubmitted && f['recceClientPoc'].errors" class="invalid-feedback">
+                                                        <span *ngIf="f['recceClientPoc']?.errors?.['required']">
+                                                            ecceClientPoc is required
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Instruction for Recce </label>
@@ -2945,7 +2982,6 @@
         </div>
     </form>
 </ng-template>
-
 <ng-template #recceContent3 id="addimage" let-modal >
     <div class="col-xxl-12 col-xl-10 col-lg-6 col-md-6 col-sm-12 modal-body px-1 border-0 "  >
         <div class="card custom-card product-card">
