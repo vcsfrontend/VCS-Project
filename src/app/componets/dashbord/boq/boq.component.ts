@@ -118,7 +118,7 @@ export class BoqComponent extends BaseComponent {
     stageNames: any = {1: 'Recce Status', 2: 'Design Status', 3: 'BOQ Status', };
     statusNames: any = {1: 'Recce', 2: 'Design', 3: 'BOQ', };
     recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
-    selectedStageTab: string = '';
+    selectedStageTab: string = '';recceSubmitted : boolean = false;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -446,14 +446,14 @@ export class BoqComponent extends BaseComponent {
         this.recceForm = this.fb.group({
             projectName: [''],
             projectId: [''],
-            recceName: [''],
-            recceStage: [''],
-            recceDueDate: [''],
-            recceAssigne: [''],
-            recceStakeHolders: [''],
-            recceClientPoc: [''],
+            recceName: ['',[Validators.required]],
+            recceStage: ['',Validators.required],
+            recceDueDate: ['',Validators.required],
+            recceAssigne: ['',Validators.required],
+            recceStakeHolders: ['',Validators.required],
+            recceClientPoc: ['',Validators.required],
             description: [''],
-            files: this.fb.array([]),
+            files: this.fb.array([],Validators.required),
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType,
@@ -1753,6 +1753,7 @@ export class BoqComponent extends BaseComponent {
 
 
     recceSubmit(modal: any) {
+        this.recceSubmitted = true;
         if (this.recceForm.invalid) {
             this.toastr.warning('Please fill all required fields');
             return;
@@ -2026,6 +2027,9 @@ export class BoqComponent extends BaseComponent {
   }
   get g() {
     return this.proposalForm.controls;
+  }
+  get f() {
+    return this.recceForm.controls;
   }
    onDedSelected(selectedUser: any): void {
     if (selectedUser?.email === 'Other') {
