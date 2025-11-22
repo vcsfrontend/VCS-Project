@@ -95,7 +95,7 @@ export class LeadsComponent extends BaseComponent {
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
-  moveCampaignSubmit:boolean=false;currentStage : string ='';sendProposalEnable : boolean= false;
+  moveCampaignSubmit:boolean=false;currentStage : string ='';sendProposalEnable : boolean= false;proposalsentSubmitted : boolean=false;
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -1982,6 +1982,15 @@ export class LeadsComponent extends BaseComponent {
                 currentStage: followup.currentStage || '',
               })) || [],
           };
+          if(this.proposalsentSubmitted){
+             this.router.navigate(
+          ['apps/crm/proposal'],
+          {
+            state: { lead: this.CrmLeads }
+          }
+        );
+          }
+          
           this.element = this.CrmLeads;
           this.followupLeadForm.patchValue({
             stage: res.leadsEntry.stage || '',
@@ -1995,6 +2004,7 @@ export class LeadsComponent extends BaseComponent {
           }, 0);
 
           this.onFollowupStatusChange();
+         
         } else {
         }
       },
@@ -3521,9 +3531,11 @@ export class LeadsComponent extends BaseComponent {
     }
   }
   
-sentProposal(){
-  this.router.navigate(['apps/crm/proposal']);
-}
+  sentProposal(element : any) {
+    this.proposalsentSubmitted = true;
+    this.ViewCrmLeads(element);
+   console.log('gdgd',this.CrmLeads) ;
+  }
 
 
 }

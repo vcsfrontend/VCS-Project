@@ -53,7 +53,7 @@ export class DealsComponent extends BaseComponent {
   userType: any = this.userData ? this.userData.type : '';
   Adonai: boolean = this.userData ? this.userData.adonai : false;
   taskSubmitted : boolean = false;
-  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','city', 'updatedTime','completionStatus'];
+  displayedColumns: string[] = ['sourceFlag','select', 'slNo', 'action', 'name', 'executive','stage', 'status', 'followUpDate', 'contact', 'email','companyName','city', 'updatedTime','completionStatus'];
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -91,7 +91,7 @@ export class DealsComponent extends BaseComponent {
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   override cityList:any[]=[];
-  isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';
+  isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';proposalsentSubmitted : boolean = false;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -1153,6 +1153,13 @@ export class DealsComponent extends BaseComponent {
                 currentStage: followup.currentStage || '',
               })) || [],
           };
+          if(this.proposalsentSubmitted){
+             this.router.navigate(
+          ['apps/crm/proposal'],
+          {
+            state: { lead: this.CrmLeads }
+          }
+        )}
           this.element = this.CrmLeads;
           this.followupLeadForm.patchValue({
             stage: res.leadsEntry.stage || '',
@@ -3152,9 +3159,11 @@ formatLocalDateTime(dateTime: string | Date): string {
     });
     }
   }
-sentProposal(){
-  this.router.navigate(['apps/crm/proposal']);
-}
+  sentProposal(element : any) {
+    this.proposalsentSubmitted = true;
+    this.ViewCrmLeads(element);
+   console.log('gdgd',this.CrmLeads) ;
+  }
 
 
 }
