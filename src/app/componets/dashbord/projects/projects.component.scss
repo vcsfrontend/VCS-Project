@@ -567,6 +567,9 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   color: #fff !important;
 }
 
-
+.scrollable-body {
+  max-height: 70vh;  
+  overflow-y: auto;
+}
 
 

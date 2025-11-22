@@ -518,8 +518,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   align-items: center;
   justify-content: flex-start;
   gap: 2px !important;   
-  padding-top: 10px !important; 
-  padding-bottom: 10px !important;
+  padding-top: 4px !important; 
+  padding-bottom: 4px !important;
   background-color: rgb(255, 255, 255);
   box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
   position: relative;
@@ -727,4 +727,16 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   display: flex;
   justify-content: center;
   gap: 15px;
+}
+
+.no-data-img {
+  width: auto;
+  max-width: 260px;
+  max-height: 260px;
+  border-radius: 16px; 
+  object-fit: contain;
+  padding: 4px;
+  background: #ffffff;
+  border: 2px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
 }

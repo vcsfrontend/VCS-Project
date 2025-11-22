@@ -67,14 +67,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     'projectArea', 'projectStartDate', 'projectEndDate', 'assign'  ];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
-  pjData: any = {}; isSts: boolean = true; submitted: boolean = false; 
+  pjData: any = {}; isSts: boolean = true; submitted: boolean = false; recceSubmitted : boolean = false;
   projectName: string = ''; clientName: string = ''; businessCategory: string = '';
   projectAddress: string = ''; state: string = ''; city: string = ''; projectArea: string = '';
   action: string = ''; designId: any; companyName: string = ''; matcardLst: any; addFilter: string = '1';
   projName: string = ''; projId: string = ''; paymentStages: any; lstData: any; active = "Angular"; btnDisable = false;
   estamount: any; hasAddedRow: boolean = false; displayedCards: any; showMore = true; topshowMore = false; topDisplayedCards: any;
   des: string = "3FO3LL66G60B"; adonaiSubEndDate: any; adonaiData: any; adonaiDaysLeft: string = '';
-  selectedRow: any;userList: any; quotationHistoryVisible = false;
+  selectedRow: any;userList: any; quotationHistoryVisible = false; recceForm!: FormGroup; updateRecceForm!: FormGroup;
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
@@ -86,18 +86,22 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
   projectConfigList: string[] = []; quotationHistoryList: any[] = [];
   quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
-  projectMarginList:any; isLoading = false;projectShare !: FormGroup;
+  projectMarginList:any; isLoading = false;projectShare !: FormGroup; updateProjectForm!: FormGroup; 
+  selectedFile: File | null = null; previewUrl: string | ArrayBuffer | null = null; projectId: any;
+  selectedProjectId: string = ''; selectedProjectName: string = '';
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
   @ViewChild('myProjectPaginator') myProjectPaginator!: MatPaginator;
   @ViewChild('elitePaginator') elitePaginator!: MatPaginator;
+  @ViewChild('recceContent2') recceModal: any;
+  @ViewChild('content45') designModal: any;
 
   pageSize = 5;
   modal: any; ttlAmtToBeRcvd: any; projectLst: any = []; userDetails: any; dateDiff: any;
   roleid: any; actstatus: any; stageLst: any; pmntStageLst: any; createProjectForm!: FormGroup; inventoryForm!: FormGroup; inventorySubmitted: boolean = false; projectList: any = [];
   pondOptions: FilePondOptions; lastField: any; ProDataList: any; onQuotationSubmitted: boolean = false; assignToUserForm!: FormGroup;
-  spinnerLoading = false;
+  spinnerLoading = false; selectedType: string = ''; blockedStages: string[] = [];
   pendingRequests = 0;
   adonaiURL: any;
   quotationForm!: FormGroup; boqForm!: FormGroup;
@@ -144,8 +148,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.modalService.open(content17, { size: 'sm', centered: true },);
   }
 
-  assignToUser(content18: any) {
-    this.modalService.open(content18, { centered: true },);
+  assignToUser(content18: any, element: any) {
+    this.selectedProjectId = element.projectId;
+    this.selectedProjectName = element.projectName;
+    this.recceForm.patchValue({
+      projectId: element.projectId,
+      projectName: element.projectName
+    });
+    this.modalService.open(content18, { size: 'lg', centered: true });
   }
 
   openLg2(content13: any) {
@@ -234,7 +244,45 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
     this.assignToUserForm = this.fb.group({
       type: ['', Validators.required],
-      user: ['', Validators.required],
+    });
+
+    this.updateRecceForm = this.fb.group({
+      files: this.fb.array([]),
+      updatedBy: [''],
+      updatedTime: [new Date().toISOString()],
+      projectId: [''],
+      recceStage: [''],
+    });
+
+    this.recceForm = this.fb.group({
+      projectName: [''],
+      projectId: [''],
+      recceName: ['', [Validators.required]],
+      recceStage: ['', Validators.required],
+      recceDueDate: ['', Validators.required],
+      recceAssigne: ['', Validators.required],
+      recceStakeHolders: ['', Validators.required],
+      recceClientPoc: ['', Validators.required],
+      description: [''],
+      files: this.fb.array([]),
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      createdBy: this.userName
+    });
+
+    this.updateProjectForm = this.fb.group({
+      designId: [''],
+      projectId: this.projectId,
+      email: this.userEmail,
+      companycode: this.userCompanyCode,
+      updatedBy: this.userName,
+      type: this.userType,
+      projectStage: [''],
+      projectArea: [''],
+      designUrl: [''],
+      assignedDesigner: [''],
+      designCompletionStatus: ['']
     });
 
     this.quotationForm = this.fb.group({
@@ -333,6 +381,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   get f() {
     return this.createProjectForm.controls;
   }
+  
 
 
   minEndDate: string = '';
@@ -2148,9 +2197,108 @@ downloadButtons: { label: string; url: string }[] = [];
     );
   }
 
-  
+  onTypeChange(type: any) {
+    this.selectedType = type;
+  }
+
+  continueToForm() {
+    if (!this.selectedType) return;
+  }
 
 
+  submitFinalForm(modal: any) {
+    if (this.selectedType === 'recce') {
+      this.recceSubmit(modal);  
+    }
+    else if (this.selectedType === 'design') {
+      this.updateProjectSubmit(modal); 
+    }
+    else {
+      console.warn("Type not selected");
+    }
+  }
+
+  updateProjectSubmit(modal: any) {
+    if (this.updateProjectForm.valid) {
+      const formValue = this.updateProjectForm.getRawValue();
+      const payload = {
+        ...formValue,
+        updatedBy: `${this.userName},${this.userEmail}`,
+      };
+      console.log(payload)
+      // this.switchService.updateAssgnAdonaiDesign(payload).subscribe({
+      //   next: (res: any) => {
+      //     this.toastr.success('Project updated');
+      //     modal.close();
+      //   }
+      // });
+    }
+  }
+
+  recceSubmit(modal: any) {
+    this.recceSubmitted = true;
+    if (this.recceForm.invalid) {
+      this.toastr.warning('Please fill all required fields');
+      return;
+    }
+    const formValue = this.recceForm.value;
+    const payload = {
+      ...formValue,
+      recceAssigne: formValue.recceAssigne
+        ? `${formValue.recceAssigne.email},${formValue.recceAssigne.username}`
+        : '',
+      recceStakeHolders: formValue.recceStakeHolders
+        ? `${formValue.recceStakeHolders.email},${formValue.recceStakeHolders.username}`
+        : '',
+      recceClientPoc: formValue.recceClientPoc
+        ? `${formValue.recceClientPoc.email},${formValue.recceClientPoc.username}`
+        : '',
+      files: this.files.value
+    };
+    console.log(payload)
+    // this.switchService.createRecce(payload).subscribe({
+    //   next: () => {
+    //     this.toastr.success('Recce created');
+    //     modal.close();
+    //     this.recceForm.reset();
+    //   },
+    // });
+  }
+
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    }
+  }
+
+  onFilesChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
+    this.files.clear();
+    Array.from(input.files).forEach(file => {
+      this.files.push(this.fb.control(file));
+    });
+  }
+
+  activeTab: string = 'tab1';
+
+  isBlocked(stageName: string): boolean {
+    return this.blockedStages.includes(stageName);
+  }
+
+  get r() {
+    return this.recceForm.controls;
+  }
+
+  get files(): FormArray {
+    return this.recceForm.get('files') as FormArray;
+  }
 
 
 }

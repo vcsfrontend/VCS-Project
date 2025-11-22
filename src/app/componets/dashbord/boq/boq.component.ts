@@ -782,10 +782,6 @@ export class BoqComponent extends BaseComponent {
     }
 
     getProposalContent(element ?: any) {
-        if (!element?.proposalContentId || !element?.designId) {
-            this.toastr.warning('Invalid proposal data');
-            return;
-        }
         const payload = {
             designId: element.designId,
             proposalContentId: element.proposalContentId

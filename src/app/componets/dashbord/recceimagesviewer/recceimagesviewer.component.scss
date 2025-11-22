@@ -1,14 +1,33 @@
-.image-wrapper {
-  overflow: hidden;
-  background: #e9ecef;
-}
 
 .main-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out;
   display: block;
   margin: 0;
   padding: 0;
 }
+
+.viewer-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #fff;
+}
+
+.viewer-container {
+  overflow: auto;
+  height: calc(100vh - 60px); 
+  background: #e9ecef;
+}
+
+.image-wrapper {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
