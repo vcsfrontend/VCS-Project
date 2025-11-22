@@ -83,7 +83,7 @@ export class ProposalComponent extends BaseComponent {
   isReadOnly: boolean = false; skipClientForm: boolean = false; clientData: any = null;
   skipProposalForm: boolean = false; minDateTime: string = ''; 
   showShutterFields: boolean = false; dimensionsList: any[] = []; currentStep: number = 1;
-  step1Data: any[] = []; step2Data: any = null;
+  step1Data: any[] = []; step2Data: any = null;leadData : any;
   // selectedColumns: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('scrollContainer',{static:false}) scrollContainer!: ElementRef;
@@ -250,6 +250,9 @@ export class ProposalComponent extends BaseComponent {
     const dd = pad(now.getDate());
     const hh = pad(now.getHours());
     const mi = pad(now.getMinutes());
+    this.leadData = history.state.lead;
+    console.log("Received Lead:", this.leadData);
+
 
     this.minDateTime = `${yyyy}-${mm}-${dd}`;
     this.route.queryParams.subscribe(params => {
@@ -672,7 +675,7 @@ export class ProposalComponent extends BaseComponent {
 
   getProposal() {
     const payload = {
-      designId: this.designingId,
+      designId: '3FO3ILENXV7I',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
@@ -687,11 +690,6 @@ export class ProposalComponent extends BaseComponent {
           this.step = 3;
           this.step = 3;
           const firstProposal = this.proposals[0];
-          const payload = {
-            proposalContentId: firstProposal.proposalContentId,
-            designId: firstProposal.designId
-          };
-          this.getProposalContent(payload);
         } else {
           this.skipClientForm = false;
           this.skipProposalForm = false;
@@ -775,7 +773,7 @@ export class ProposalComponent extends BaseComponent {
 
   getClientOrders() {
     const payload = {
-      designId: this.designingId,
+      designId:'3FO3ILENXV7I',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
@@ -925,7 +923,7 @@ export class ProposalComponent extends BaseComponent {
       quantity: quantityNum,
       codeAndCategory: formValue.codeAndCategory?.name || '',
       brandOrMake: this.elementForm.value.brandOrMake || '',
-      designId: this.designingId,
+      designId:'3FO3ILENXV7I',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType
@@ -974,17 +972,17 @@ export class ProposalComponent extends BaseComponent {
       length: item.dimensions?.width || 0,
       breadth: item.dimensions?.depth || 0,
       height: item.dimensions?.height || 0,
-      designId: this.designingId
+      designId:'3FO3ILENXV7I'
     };
     console.log(payload);
-    // this.switchService.saveElementData(payload).subscribe({
-    //   next: (res: any) => {
-    //     if (res?.status === true) {
-    //       this.toastr.success(res.message || 'Elements Imported');
-    //       this.boqData();
-    //     }
-    //   }
-    // });
+    this.switchService.saveElementData(payload).subscribe({
+      next: (res: any) => {
+        if (res?.status === true) {
+          this.toastr.success(res.message || 'Elements Imported');
+          this.boqData();
+        }
+      }
+    });
 
   }
 
@@ -1027,7 +1025,7 @@ export class ProposalComponent extends BaseComponent {
         hsn: Number(element?.hsn ?? formValue.hsn) || 0,
         gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
         amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-        designId: this.designingId,
+        designId: '3FO3ILENXV7I',
         roomName: element?.roomName || formValue.roomName || '',
         itemCode: element?.itemCode || formValue.itemCode || '',
         companyCode: this.userCompanyCode,
@@ -1107,15 +1105,19 @@ export class ProposalComponent extends BaseComponent {
     // });
   }
 
-  proposalFormSubmit(modal: any) {
-    this.submittedStep3 = true;
-    const step3Fields = ['orderFrom', 'vendorId', 'shippingAddress', 'startDate', 'dueDate'];
-    const invalidStep3 = step3Fields.some(field => this.proposalForm.get(field)?.invalid);
-    if (invalidStep3) {
-      this.toastr.warning('Please fill all required fields in Step 3.');
+  proposalFormSubmit(modal?: any) {
+    // this.submittedStep3 = true;
+    // const step3Fields = ['orderFrom', 'vendorId', 'shippingAddress', 'startDate', 'dueDate'];
+    // const invalidStep3 = step3Fields.some(field => this.proposalForm.get(field)?.invalid);
+    // if (invalidStep3) {
+    //   this.toastr.warning('Please fill all required fields in Step 3.');
+    //   return;
+    // }
+    // const formValue = this.proposalForm.value;
+     if (!this.selectedElement || this.selectedElement.length === 0) {
+      this.toastr.warning("Please select at least one Element");
       return;
     }
-    const formValue = this.proposalForm.value;
     const selectedData: any = {};
     const seenBoqIds = new Set<number>();
     let totalAmount = 0;
@@ -1132,117 +1134,122 @@ export class ProposalComponent extends BaseComponent {
         });
       }
     });
-    const {
-      margin, discount, others, clientName, clientAddress, clientEmail, projectConfig,
-      dedEmail, dedMobile, dedName, rmdEmail, rmdMobile, projectName, flatNo,
-      rmdName, clientMobileNumber, tdmc, gmc, gsc, tdsc, gpa, tdpa
-    } = formValue;
-    const clientData = {
-      margin, discount, others, clientName, clientAddress, clientEmail, projectConfig,
-      dedEmail, dedMobile, dedName, rmdEmail, rmdMobile, projectName, flatNo, rmdName, clientMobileNumber,
-      tdmc, gmc, gsc, tdsc, gpa, tdpa
-    };
+    // const {
+    //   margin, discount, others, clientName, clientAddress, clientEmail, projectConfig,
+    //   dedEmail, dedMobile, dedName, rmdEmail, rmdMobile, projectName, flatNo,
+    //   rmdName, clientMobileNumber, tdmc, gmc, gsc, tdsc, gpa, tdpa
+    // } = formValue;
+    // const clientData = {
+    //   margin, discount, others, clientName, clientAddress, clientEmail, projectConfig,
+    //   dedEmail, dedMobile, dedName, rmdEmail, rmdMobile, projectName, flatNo, rmdName, clientMobileNumber,
+    //   tdmc, gmc, gsc, tdsc, gpa, tdpa
+    // };
     const storedClientData = localStorage.getItem("storedClientData");
-    let clientDataToSend = {};
-    if (this.skipClientForm == true) {
-      if (storedClientData) {
-        clientDataToSend = JSON.parse(storedClientData);
-      }
-    } else {
-      clientDataToSend = selectedData || {};
-    }
+    let clientDataToSend = {
+      clientName : this.leadData.name,
+      clientMobileNumber : this.leadData.contact
+
+    };
+    // if (this.skipClientForm == true) {
+    //   if (storedClientData) {
+    //     clientDataToSend = JSON.parse(storedClientData);
+    //   }
+    // } else {
+    //   clientDataToSend = selectedData || {};
+    // }
     const proposalPayload = {
       email: this.userEmail,
       type: this.userType,
       companyCode: this.userCompanyCode,
-      shippingAddress: formValue.shippingAddress,
-      gstNo: formValue.gstNo,
-      startDate: formValue.startDate,
-      dueDate: formValue.dueDate,
-      vendorId: formValue.vendorId,
+      // shippingAddress: formValue.shippingAddress,
+      // gstNo: formValue.gstNo,
+      // startDate: formValue.startDate,
+      // dueDate: formValue.dueDate,
+      // vendorId: formValue.vendorId,
       createdBy: this.userName,
-      orderFor: formValue.orderFor,
-      orderFrom: formValue.orderFrom,
+      // orderFor: formValue.orderFor,
+      // orderFrom: formValue.orderFrom,
       contentJs: JSON.stringify(selectedData),
       currentAmount: totalAmount,
-      designId: this.designingId,
+      designId:'3FO3ILENXV7I',
       clientDataJs: JSON.stringify(clientDataToSend),
     };
-    this.updateElementsAndCreateProposal(proposalPayload, modal);
+    console.log('proposal payload', proposalPayload)
+    // this.updateElementsAndCreateProposal(proposalPayload, modal);
   }
-  private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
-    if (!this.selectedElement || this.selectedElement.length === 0) return;
-    const formValue = this.elementForm?.value ?? {};
-    const payloads = this.selectedElement.map((boqId: number) => {
-      let element: any = null;
-      for (const key of this.tabKeys) {
-        const dataSource = this.boqDataSources[key];
-        if (dataSource) {
-          const found = dataSource.data.find((item: any) => item.boqId === boqId);
-          if (found) {
-            element = found;
-            break;
-          }
-        }
-      }
-      return {
-        boqId: element?.boqId || boqId,
-        elementUrl: element?.elementUrl || formValue.elementUrl || '',
-        elementNameAndDescription:
-          element?.elementNameAndDescription ||
-          (
-            `${formValue.elementName || ''}` +
-            `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
-            `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
-          ),
-        codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
-        orderStatus: element?.orderStatus || formValue.orderStatus || '',
-        itemType: element?.itemType || formValue.itemType || '',
-        source: element?.source || formValue.source || '',
-        status: element?.status || formValue.status || '',
-        length: Number(element?.length ?? formValue.length) || 0,
-        breadth: Number(element?.breadth ?? formValue.breadth) || 0,
-        height: Number(element?.height ?? formValue.height) || 0,
-        quantity: Number(element?.quantity ?? formValue.quantity) || 0,
-        uom: element?.uom || formValue.uom || '',
-        draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
-        clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
-        finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
-        brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
-        discount: Number(element?.discount ?? formValue.discount) || 0,
-        serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
-        baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
-        budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
-        hsn: Number(element?.hsn ?? formValue.hsn) || 0,
-        gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
-        amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-        designId: this.designingId,
-        roomName: element?.roomName || formValue.roomName || '',
-        itemCode: element?.itemCode || formValue.itemCode || '',
-        companyCode: this.userCompanyCode,
-        email: this.userEmail,
-        type: this.userType,
-        inProposal: "inprop",
-      };
-    });
-    this.switchService.updateElementData(payloads).subscribe({
-      next: () => {
-        this.createProposal(proposalPayload, modal);
-      },
-    });
-  }
+  // private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
+  //   if (!this.selectedElement || this.selectedElement.length === 0) return;
+  //   const formValue = this.elementForm?.value ?? {};
+  //   const payloads = this.selectedElement.map((boqId: number) => {
+  //     let element: any = null;
+  //     for (const key of this.tabKeys) {
+  //       const dataSource = this.boqDataSources[key];
+  //       if (dataSource) {
+  //         const found = dataSource.data.find((item: any) => item.boqId === boqId);
+  //         if (found) {
+  //           element = found;
+  //           break;
+  //         }
+  //       }
+  //     }
+  //     return {
+  //       boqId: element?.boqId || boqId,
+  //       elementUrl: element?.elementUrl || formValue.elementUrl || '',
+  //       elementNameAndDescription:
+  //         element?.elementNameAndDescription ||
+  //         (
+  //           `${formValue.elementName || ''}` +
+  //           `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
+  //           `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
+  //         ),
+  //       codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
+  //       orderStatus: element?.orderStatus || formValue.orderStatus || '',
+  //       itemType: element?.itemType || formValue.itemType || '',
+  //       source: element?.source || formValue.source || '',
+  //       status: element?.status || formValue.status || '',
+  //       length: Number(element?.length ?? formValue.length) || 0,
+  //       breadth: Number(element?.breadth ?? formValue.breadth) || 0,
+  //       height: Number(element?.height ?? formValue.height) || 0,
+  //       quantity: Number(element?.quantity ?? formValue.quantity) || 0,
+  //       uom: element?.uom || formValue.uom || '',
+  //       draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
+  //       clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
+  //       finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
+  //       brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+  //       discount: Number(element?.discount ?? formValue.discount) || 0,
+  //       serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
+  //       baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
+  //       budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
+  //       hsn: Number(element?.hsn ?? formValue.hsn) || 0,
+  //       gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
+  //       amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
+  //       designId:'3FO3ILENXV7I',
+  //       roomName: element?.roomName || formValue.roomName || '',
+  //       itemCode: element?.itemCode || formValue.itemCode || '',
+  //       companyCode: this.userCompanyCode,
+  //       email: this.userEmail,
+  //       type: this.userType,
+  //       inProposal: "inprop",
+  //     };
+  //   });
+  //   this.switchService.updateElementData(payloads).subscribe({
+  //     next: () => {
+  //       this.createProposal(proposalPayload, modal);
+  //     },
+  //   });
+  // }
 
-  private createProposal(proposalPayload: any, modal: any) {
-    this.switchService.createProposal(proposalPayload).subscribe({
-      next: (res: any) => {
-        if (res?.status === true) {
-          this.toastr.success(res.message || "Proposal created ");
-          modal.close();
-          this.boqData();
-        }
-      },
-    });
-  }
+  // private createProposal(proposalPayload: any, modal: any) {
+  //   this.switchService.createProposal(proposalPayload).subscribe({
+  //     next: (res: any) => {
+  //       if (res?.status === true) {
+  //         this.toastr.success(res.message || "Proposal created ");
+  //         modal.close();
+  //         this.boqData();
+  //       }
+  //     },
+  //   });
+  // }
 
   extraContentProposalSubmit(modal: any) {
     if (this.extraContentProposalForm.invalid) {

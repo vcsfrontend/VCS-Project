@@ -1883,6 +1883,7 @@
                                                                                     <thead class="table-light">
                                                                                         <tr>
                                                                                             <th style="position: sticky; top: 0; background: #fff; z-index: 100;">S.No</th>
+                                                                                            <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Cabinet Name</th>
                                                                                             <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Panel Name</th>
                                                                                             <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Material</th>
                                                                                             <th style="position: sticky; top: 0; background: #fff; z-index: 100;">Height</th>
@@ -1899,7 +1900,7 @@
                                                                                         </tr>
                                                                                     </thead>
                                                                                     <tbody>
-                                                                                        <ng-container *ngFor="let cab of (groupedPanels | keyvalue)">
+                                                                                        <!-- <ng-container *ngFor="let cab of (groupedPanels | keyvalue)">
                                                                                             <tr class="table-primary">
                                                                                                 <td colspan="15" class="fw-bold" style="
                                                                                                                 position: sticky;
@@ -1910,9 +1911,10 @@
                                                                                                             ">
                                                                                                     {{ cab.key }} ({{ cab.value.length }})
                                                                                                 </td>
-                                                                                            </tr>
-                                                                                        <tr *ngFor="let panel of cab.value; let i = index">
+                                                                                            </tr> -->
+                                                                                        <tr *ngFor="let panel of allPanels; let i = index">
                                                                                             <td>{{ i + 1 }}</td>
+                                                                                            <td>{{panel.cabinetName}}</td>
                                                                                             <td class="text-primary" style="cursor: pointer;"
                                                                                             (click)="manualCutList(content46, panel)">
                                                                                                 {{ panel.pannelName }}
@@ -1936,8 +1938,6 @@
                                                                                                     
                                                                                                 </ng-template>
                                                                                         </tr>
-                                                                                        
-                                                                                        </ng-container>
                                                                                     </tbody>
                                                                                 </table>
                                                                             </div>

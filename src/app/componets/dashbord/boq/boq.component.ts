@@ -737,7 +737,7 @@ export class BoqComponent extends BaseComponent {
                 this.roomNameList = this.tabKeys
                     .filter(k => k !== 'All')
                     .map(name => ({ name }));
-                this.groupCabinetNames();
+                // this.groupCabinetNames();
             }
         });
     }
