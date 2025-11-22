@@ -538,7 +538,7 @@
                         <th mat-header-cell *matHeaderCellDef>Asign To</th>
                         <td mat-cell *matCellDef="let element">
                             <button class="btn btn-primary btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
-                            (click)="assignToUser(content18)">
+                            (click)="assignToUser(content18,element)">
                                 <i class="bi bi-person fs-18 me-1"></i>
                                 <strong>Assign to User</strong>
                             </button>
@@ -1731,32 +1731,106 @@
 <ng-template #content18 let-modal>
     <form [formGroup]="assignToUserForm">
         <div class="modal-header justify-content-center">
-            <h6 class="modal-title" id="staticBackdropLabel3">Assign To User</h6>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
-                aria-label="Close"></button>
+            <h6 class="modal-title"><strong>Assign To User</strong></h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <div class="col-xl-12">
-                <div class="row gy-2">
-                    <div class="col-xl-12">
-                        <label for="projectName" class="form-label">Type</label>
-                        <input type="text" class="form-control" id="projectName" formControlName="type"
-                            placeholder="Enter type">
+            <div class="mb-3">
+                <label class="form-label">Type</label>
+                <ng-select formControlName="type" placeholder="Select Type" (change)="onTypeChange($event)">
+                    <ng-option value="recce">Recce</ng-option>
+                    <ng-option value="design">Design</ng-option>
+                </ng-select>
+            </div>
+            <div *ngIf="selectedType === 'recce'" [formGroup]="recceForm">
+                <div class="row">
+                    <div class="col-lg-6">
+                    <label class="form-label">Select Recce Type</label>
+                    <ng-select formControlName="recceStage" placeholder="Select recce"
+                        [ngClass]="{'is-invalid': recceSubmitted && r['recceStage'] && r['recceStage'].errors}">
+                        <ng-option *ngFor="let item of recceTemplate" [value]="item.name"
+                            [disabled]="blockedStages.includes((item.name || '').trim())">
+                            {{ item.name }}
+                        </ng-option>
+                    </ng-select>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Recce Name</label>
+                    <input formControlName="recceName" class="form-control" placeholder="Recce Name">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Recce Due Date</label>
+                    <input type="date" class="form-control" formControlName="recceDueDate">
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Assign Recce To</label>
+                    <ng-select formControlName="recceAssigne" [items]="userList" bindLabel="email"
+                        placeholder="Select a user">
+                    </ng-select>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Project Stakeholders</label>
+                    <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email"
+                        placeholder="Select stakeholders">
+                    </ng-select>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Client POC</label>
+                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email"
+                        placeholder="Select client POC">
+                    </ng-select>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Instructions</label>
+                    <textarea formControlName="description" class="form-control"
+                        placeholder="Enter instructions"></textarea>
+                </div>
+                <div class="col-lg-6">
+                    <label class="form-label">Upload Images</label>
+                    <input type="file" multiple (change)="onFilesChange($event)">
+                </div>
+                </div>
+            </div>
+            <div *ngIf="selectedType === 'design'" [formGroup]="updateProjectForm">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label class="form-label">Design ID</label>
+                        <input class="form-control" formControlName="designId">
                     </div>
-                    <div class="col-xl-12">
-                        <label for="projectAddress" class="form-label">Assigned Designer</label>
-                        <ng-select formControlName="user" [items]="userList" bindLabel="email" bindValue="email"
-                            placeholder="Select Project Configuration">
+                    <div class="col-lg-6">
+                        <label class="form-label">Project Stage</label>
+                        <input class="form-control" formControlName="projectStage">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">Project Area</label>
+                        <input class="form-control" formControlName="projectArea">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">Design URL</label>
+                        <input class="form-control" formControlName="designUrl">
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">Assigned Designer</label>
+                        <ng-select [items]="userList" bindLabel="email" bindValue="email" formControlName="assignedDesigner"
+                            placeholder="Select a user">
+                        </ng-select>
+                    </div>
+                    <div class="col-lg-6">
+                        <label class="form-label">Update Project Status</label>
+                        <ng-select formControlName="designCompletionStatus" [items]="designStatus" bindLabel="name"
+                            bindValue="name">
                         </ng-select>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"> Submit</button>
-            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
-                data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" (click)="modal.dismiss()">Close</button>
+            <button type="button" class="btn btn-primary" (click)="submitFinalForm(modal)" [disabled]="!selectedType">
+                Submit
+            </button>
         </div>
     </form>
 </ng-template>
+
 
