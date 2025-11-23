@@ -1901,5 +1901,10 @@ export class ProposalComponent extends BaseComponent {
     this.showRightArrow = el.scrollWidth > el.clientWidth &&
     el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
   }
+  forceBlur(select: any) {
+        if (select && select.blur) {
+            select.blur();
+        }
+    }
 
 }

@@ -744,3 +744,13 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .recce-select {
   width: 200px !important;
 }
+.ng-dropdown-panel {
+    z-index: 99999 !important;
+}
+::ng-deep .cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+::ng-deep .ng-dropdown-panel {
+  z-index: 99999 !important;
+}
