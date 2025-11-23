@@ -24,7 +24,7 @@
                                             </button>
                                             <div class="d-flex align-items-center">
                                                 <small class="me-2">Select Recce :</small>
-                                                <ng-select class="w-auto" [items]="recceList" bindLabel="name" bindValue="id">
+                                                <ng-select class="recce-select" [items]="recceList" bindLabel="name" bindValue="id">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -362,7 +362,7 @@
                                 <div class="tt"></div>
                                 <ng-template ngbNavContent>
                                     <div class="col-xl-12">
-                                        <div class="card custom-card">
+                                        <div class="card custom-card bg-light">
                                             <div class="card-body p-0" *ngIf="!selectedProposalContent">
                                                 <div class="table-container">
                                                     <table class="table table-hover text-nowrap my-table">
@@ -460,24 +460,24 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="card custom-card bg-light p-0 pt-1" *ngIf="selectedProposalContent">
-                                                <div class="card custom-card">
+                                            <div class="card custom-card mt-4" style="box-shadow: none !important;" *ngIf="selectedProposalContent">
+                                                <div class="">
                                                     <div class="card-header d-flex justify-content-between align-items-center">
                                                         <div class="d-flex align-items-center gap-2">
                                                             <button class="btn btn-link p-0 me-2" (click)="backToLibrary()">
-                                                                <i class="bi bi-arrow-left"></i>
+                                                                <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
                                                             </button>
                                                             <div class="card-title"> Proposal for New Order ({{ selectedProposalContent?.orderNo }})</div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="card custom-card">
+                                                <div class="">
                                                     <div class="card-header d-flex justify-content-between align-items-center">
                                                         <div class="card-title">Order Details</div>
                                                         <div class="d-flex align-items-center gap-2">
                                                             <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
                                                             <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button>
-                                                            <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
+                                                            <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
                                                                 <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
                                                             </button>
                                                         </div>
@@ -527,7 +527,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="card-footer d-flex justify-content-between align-items-center">
+                                                    <div class="card-footer d-flex justify-content-between align-items-center border-bottom">
                                                         <div>
                                                             <i class="bi bi-plus-circle me-1 text-success"></i>
                                                             Proposal Status:
@@ -688,8 +688,7 @@
                                                     </ng-container>
                                                 </ul>
                                                 <div [ngbNavOutlet]="nav" class=""></div>
-                                    
-                                                <div class="card custom-card">
+                                                <div class="">
                                                     <div class="card-header d-flex justify-content-between align-items-center">
                                                         <div class="d-flex align-items-center gap-2">
                                                             <div class="card-title mb-0">Terms & Condition</div>
@@ -1587,13 +1586,13 @@
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="elementUrl">
                                                                                         <th mat-header-cell *matHeaderCellDef class="sticky-col-left-2" style="max-width: 750px;">
-                                                                                            Element
-                                                                                            Name & Description </th>
+                                                                                            Element Name & Description </th>
                                                                                         <td mat-cell *matCellDef="let element" class="sticky-col-left-2" style="max-width: 750px;">
                                                                                             <div class="d-flex align-items-center" (click)="openEditFromSelected(element, content1)"
                                                                                                 style="cursor: pointer;">
                                                                                                 <span class="avatar avatar-xl me-3">
-                                                                                                    <img [src]="element.elementUrl" class="img-thumbnail" alt="Project Image">
+                                                                                                    <img [src]="element.elementUrl ? element.elementUrl : 'assets/images/brand-logos/no-image.png'"
+                                                                                                        (error)="onImgError($event)" class="img-thumbnail" alt="Project Image">
                                                                                                 </span>
                                                                                                 <div>
                                                                                                     <span class="fw-medium d-block">
@@ -1603,10 +1602,9 @@
                                                                                                         : (element.elementNameAndDescription?.split('\n')[0] || '')
                                                                                                         }}
                                                                                                     </span>
-
-                                                                                                <div class="text-muted small">
-                                                                                                    {{ element.elementNameAndDescription?.split('\n')[1] || '' }}
-                                                                                                </div>
+                                                                                                    <div class="text-muted small">
+                                                                                                        {{ element.elementNameAndDescription?.split('\n')[1] || '' }}
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </td>
@@ -1872,6 +1870,9 @@
                                                                                     <button class="btn btn-primary"  (click)="cutList(content47)">
                                                                                         <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Cut List
                                                                                     </button>
+                                                                                    <button class="btn btn-primary ms-2" (click)="downloadCutList()">
+                                                                                        <i class="bi bi-download side-menu__icon fs-16 align-middle me-1"></i> Download
+                                                                                    </button>
                                                                                     <!-- <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger" *ngIf="isCutListAlreadySubmitted"
                                                                                         (click)="deleteOptimizerCut()">
                                                                                         <i class="ri-delete-bin-line"></i>
@@ -1900,8 +1901,8 @@
                                                                                         </tr>
                                                                                     </thead>
                                                                                     <tbody>
-                                                                                        <!-- <ng-container *ngFor="let cab of (groupedPanels | keyvalue)">
-                                                                                            <tr class="table-primary">
+                                                                                        <ng-container *ngFor="let cab of (groupedPanels | keyvalue)">
+                                                                                            <!-- <tr class="table-primary">
                                                                                                 <td colspan="15" class="fw-bold" style="
                                                                                                                 position: sticky;
                                                                                                                 top: 45px;
@@ -1912,7 +1913,8 @@
                                                                                                     {{ cab.key }} ({{ cab.value.length }})
                                                                                                 </td>
                                                                                             </tr> -->
-                                                                                        <tr *ngFor="let panel of allPanels; let i = index">
+                                                                                            
+                                                                                        <tr *ngFor="let panel of cab.value; let i = index">
                                                                                             <td>{{ i + 1 }}</td>
                                                                                             <td>{{panel.cabinetName}}</td>
                                                                                             <td class="text-primary" style="cursor: pointer;"
@@ -1938,6 +1940,7 @@
                                                                                                     
                                                                                                 </ng-template>
                                                                                         </tr>
+                                                                                        </ng-container>
                                                                                     </tbody>
                                                                                 </table>
                                                                             </div>

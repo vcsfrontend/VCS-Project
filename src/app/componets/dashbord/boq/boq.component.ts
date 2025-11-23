@@ -737,7 +737,7 @@ export class BoqComponent extends BaseComponent {
                 this.roomNameList = this.tabKeys
                     .filter(k => k !== 'All')
                     .map(name => ({ name }));
-                // this.groupCabinetNames();
+                this.groupCabinetNames();
             }
         });
     }
@@ -2546,6 +2546,26 @@ export class BoqComponent extends BaseComponent {
         console.log("Add button clicked for index:", index);
     }
 
+
+    downloadCutList() {
+        const payload = {
+            designId: this.designingId,
+            projectName: this.projectName
+        };
+        this.switchService.downloadCutList(payload).subscribe({
+            next: (res: any) => {
+                if (res.url) {
+                    window.open(res.url, '_blank');
+                }
+            },
+        });
+    }
+
+
+
+    onImgError(event: any) {
+        event.target.src = 'assets/images/brand-logos/no-image.png';
+    }
 
 
 
