@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, ElementRef, HostListener } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef, HostListener,ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, FormArray,Validators  } from '@angular/forms';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import flatpickr from 'flatpickr';
@@ -89,6 +89,7 @@ export class BoqComponent extends BaseComponent {
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild('scrollContainer',{static:false}) scrollContainer!: ElementRef;
+    @ViewChildren('select,orderStatusSelect,itemTypeSelect,statusSelect,uomSelect') allSelects: any;
 
     @ViewChild(MatSort) sort!: MatSort;
     tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
@@ -672,9 +673,36 @@ export class BoqComponent extends BaseComponent {
    ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.proposaldataSource.paginator = this.paginator;
-        setTimeout(() => this.checkArrows(), 150);
-        // this.dataSource.sort = this.sort;
+        window.addEventListener('scroll', (event: any) => {
+        if (this.isScrollingInsideDropdown(event)) {
+        return;
+        }
+        this.closeAllDropdowns();
+    }, true);
     }
+    isScrollingInsideDropdown(event: any): boolean {
+    const path = event.composedPath ? event.composedPath() : event.path;
+    if (!path) return false;
+
+    return path.some((el: any) => {
+        if (!el?.classList) return false;
+
+        // Detect ANY ng-select dropdown panel
+        return el.classList.contains('ng-dropdown-panel');
+    });
+    }
+
+
+
+closeAllDropdowns() {
+  if (!this.allSelects) return;
+
+  this.allSelects.forEach((sel: any) => {
+    try {
+      sel.close();
+    } catch (err) {}
+  });
+}
     ngAfterViewChecked() {
         setTimeout(() => this.checkArrows(), 300);
     }
