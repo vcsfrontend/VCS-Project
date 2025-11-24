@@ -518,8 +518,22 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   align-items: center;
   justify-content: flex-start;
   gap: 2px !important;   
-  padding-top: 4px !important; 
-  padding-bottom: 4px !important;
+  padding-top: 2px !important; 
+  padding-bottom: 2px !important;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
+  position: relative;
+  width: 100%;
+  border: 0px;
+}
+
+.custom-tab-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px !important;   
+  padding-top: 12px !important; 
+  padding-bottom: 12px !important;
   background-color: rgb(255, 255, 255);
   box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
   position: relative;
@@ -753,4 +767,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 
 ::ng-deep .ng-dropdown-panel {
   z-index: 99999 !important;
+}
+
+.d-flex.align-items-center.ttr {
+    margin-top: -3px;
 }

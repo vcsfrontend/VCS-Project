@@ -459,7 +459,7 @@
                     My Projects
                 </div>
                 <div class="d-flex flex-wrap gap-3">
-                    <div class="input-group shadow-sm rounded-3" style="width: 280px;">
+                    <div class="input-group shadow-sm rounded-3" style="width: 280px; max-height:43px">
                         <button class="btn btn-primary d-flex align-items-center justify-content-center rounded-start" type="button"
                             id="button-addon2">
                             <i class="ri-search-line text-white fs-14"></i>
@@ -467,15 +467,15 @@
                         <input type="text" class="form-control border rounded-end" placeholder="Search Here..."
                             aria-describedby="button-addon2" (keyup)="applyMyProjectFilter($event)" #input />
                     </div>
-                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light mt-2"
+                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
                         aria-expanded="false" (click)="onClkDesign('', 'newDesign')" type="button">
                         New Design
                     </button>
-                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light mt-2"
+                    <button href="javascript:void(0);" class="btn btn-primary btn-wave waves-effect waves-light"
                         aria-expanded="false" (click)="onClkDesign('', 'projectList')" type="button">
                         All Projects
                     </button>
-                    <a class="btn btn-primary btn-wave mt-2" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                    <a class="btn btn-primary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
                         (click)="openLg(Content10);submitted=false"><i
                             class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
                 </div>
@@ -1734,7 +1734,7 @@
             <h6 class="modal-title"><strong>Assign To User</strong></h6>
             <button type="button" class="btn-close" (click)="modal.dismiss()" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" style="min-height: 200px;">
             <div class="mb-3">
                 <label class="form-label">Type</label>
                 <ng-select formControlName="type" placeholder="Select Type" (change)="onTypeChange($event)">
@@ -1743,8 +1743,8 @@
                 </ng-select>
             </div>
             <div *ngIf="selectedType === 'recce'" [formGroup]="recceForm">
-                <div class="row">
-                    <div class="col-lg-6">
+                <div class="row gy-2">
+                    <div class="col-lg-4">
                     <label class="form-label">Select Recce Type</label>
                     <ng-select formControlName="recceStage" placeholder="Select recce"
                         [ngClass]="{'is-invalid': recceSubmitted && r['recceStage'] && r['recceStage'].errors}">
@@ -1753,69 +1753,101 @@
                             {{ item.name }}
                         </ng-option>
                     </ng-select>
+                    <div *ngIf="recceSubmitted && r['recceStage'].errors" class="invalid-feedback">
+                        <span *ngIf="r['recceStage']?.errors?.['required']">
+                            Plese select recce type
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label">Recce Name</label>
-                    <input formControlName="recceName" class="form-control" placeholder="Recce Name">
+                    <input formControlName="recceName" class="form-control" placeholder="Recce Name"
+                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceStage'].errors }">
+                    <div *ngIf="recceSubmitted && r['recceName'].errors" class="invalid-feedback">
+                        <span *ngIf="r['recceName']?.errors?.['required']">
+                            Recce Name is required
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label">Recce Due Date</label>
-                    <input type="date" class="form-control" formControlName="recceDueDate">
+                    <input type="date" class="form-control" formControlName="recceDueDate"
+                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceDueDate'].errors }">
+                    <div *ngIf="recceSubmitted && r['recceDueDate'].errors" class="invalid-feedback">
+                        <span *ngIf="r['recceDueDate']?.errors?.['required']">
+                            Recce Due is required
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label">Assign Recce To</label>
-                    <ng-select formControlName="recceAssigne" [items]="userList" bindLabel="email"
-                        placeholder="Select a user">
+                    <ng-select formControlName="recceAssigne" [items]="userList" bindLabel="email" placeholder="Select a user"
+                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceAssigne'].errors }">
                     </ng-select>
+                    <div *ngIf="recceSubmitted && r['recceAssigne'].errors" class="invalid-feedback">
+                        <span *ngIf="r['recceAssigne']?.errors?.['required']">
+                            Recce Assigne is required
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label">Project Stakeholders</label>
                     <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email"
-                        placeholder="Select stakeholders">
+                        placeholder="Select stakeholders" [ngClass]="{ 'is-invalid': recceSubmitted && r['recceStakeHolders'].errors }">
                     </ng-select>
+                    <div *ngIf="recceSubmitted && r['recceStakeHolders'].errors" class="invalid-feedback">
+                        <span *ngIf="r['recceStakeHolders']?.errors?.['required']">
+                            Recce StakeHolders is required
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label">Client POC</label>
-                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email"
-                        placeholder="Select client POC">
+                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email" placeholder="Select client POC"
+                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceClientPoc'].errors }">
                     </ng-select>
+                    <div *ngIf="recceSubmitted && r['recceClientPoc'].errors" class="invalid-feedback">
+                        <span *ngIf="r['recceClientPoc']?.errors?.['required']">
+                            ecceClientPoc is required
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label">Instructions</label>
                     <textarea formControlName="description" class="form-control"
                         placeholder="Enter instructions"></textarea>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <label class="form-label">Upload Images</label>
                     <input type="file" multiple (change)="onFilesChange($event)">
                 </div>
                 </div>
             </div>
             <div *ngIf="selectedType === 'design'" [formGroup]="updateProjectForm">
-                <div class="row">
-                    <div class="col-lg-6">
+                <div class="row gy-2">
+                    <div class="col-lg-4">
                         <label class="form-label">Design ID</label>
                         <input class="form-control" formControlName="designId">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <label class="form-label">Project Stage</label>
                         <input class="form-control" formControlName="projectStage">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <label class="form-label">Project Area</label>
                         <input class="form-control" formControlName="projectArea">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <label class="form-label">Design URL</label>
                         <input class="form-control" formControlName="designUrl">
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <label class="form-label">Assigned Designer</label>
                         <ng-select [items]="userList" bindLabel="email" bindValue="email" formControlName="assignedDesigner"
                             placeholder="Select a user">
                         </ng-select>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <label class="form-label">Update Project Status</label>
                         <ng-select formControlName="designCompletionStatus" [items]="designStatus" bindLabel="name"
                             bindValue="name">

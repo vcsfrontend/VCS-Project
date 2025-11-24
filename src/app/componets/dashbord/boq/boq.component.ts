@@ -119,7 +119,7 @@ export class BoqComponent extends BaseComponent {
     stageNames: any = {1: 'Recce Status', 2: 'Design Status', 3: 'BOQ Status', };
     statusNames: any = {1: 'Recce', 2: 'Design', 3: 'BOQ', };
     recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
-    selectedStageTab: string = '';recceSubmitted : boolean = false;
+    selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -1833,6 +1833,7 @@ closeAllDropdowns() {
     }
 
     getRecceData() {
+        this.isLoading = true;
         const payload = {
             email: this.userEmail,
             companyCode: this.userCompanyCode,
@@ -1866,6 +1867,10 @@ closeAllDropdowns() {
                     });
                     this.filterRecceByStage('Recce Details');
                 }
+                else {
+                    this.recceList = [];
+                }
+                this.isLoading = false;
             },
         });
     }
@@ -2536,14 +2541,15 @@ closeAllDropdowns() {
         }
     }
 
-    openImageViewer(images: string[], index: number) {
+    openImageViewer(recce: any, index: number) {
         this.router.navigate(['/dashboard/recceimagesviewer'], {
             state: {
-                images: images,
-                index: index
+                recceData: recce,
+                selectedIndex: index
             }
         });
     }
+
 
     getFileType(url: string): string {
         if (!url) return 'File';

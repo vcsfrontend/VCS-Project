@@ -35372,3 +35372,19 @@ app-sidebar,
 .cu{
   cursor: pointer;
 }
+
+.no-bottom-radius {
+    border-top-left-radius: 0.85rem !important;
+    border-top-right-radius: 0.85rem !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.no-top-radius {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+.box-shadow-cu {
+  box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
+}
