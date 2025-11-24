@@ -88,7 +88,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   quotationNumber: any;step = 1;submittedStep1 = false; submittedStep2 = false; submittedStep3 = false;
   projectMarginList:any; isLoading = false;projectShare !: FormGroup; updateProjectForm!: FormGroup; 
   selectedFile: File | null = null; previewUrl: string | ArrayBuffer | null = null; projectId: any;
-  selectedProjectId: string = ''; selectedProjectName: string = '';
+  selectedProjectId: string = ''; selectedProjectName: string = '';  selectedProjectStage: string = '';
+  selectedProjectArea: string = '';
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -151,10 +152,16 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   assignToUser(content18: any, element: any) {
     this.selectedProjectId = element.projectId;
     this.selectedProjectName = element.projectName;
+    this.selectedProjectStage = element.projectStage;
+    this.selectedProjectArea = element.projectArea;
     this.recceForm.patchValue({
       projectId: element.projectId,
       projectName: element.projectName
     });
+    this.updateProjectForm.patchValue({
+      projectStage: element.projectStage,
+      projectArea: element.projectArea
+    })
     this.modalService.open(content18, { size: 'lg', centered: true });
   }
 

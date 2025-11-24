@@ -1,5 +1,5 @@
 <div class="col-lg-12">
-    <div class="d-flex justify-content-between align-items-center w-100 custom-progress-nav">
+    <div class="d-flex justify-content-between align-items-center w-100 custom-progress-nav border-top">
         <ul ngbNav #nav13="ngbNav" [activeId]="1" class="">
             <li [ngbNavItem]="1" class="nav-item">
                 <button ngbNavLink class="nav-link custom-step" (click)="setStage(1); getRecceData()">
@@ -12,10 +12,13 @@
                     <span class="step-line"></span>
                 </button>
                 <ng-template ngbNavContent>
-                    <ng-container *ngIf="recceStagesList && recceStagesList.length > 0; else noData">
-                        <div class="row" style="max-height: 300px;">
+                    <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="min-height: 415px;">
+                        <div class="spinner-border" role="status"></div>
+                    </div>
+                    <ng-container *ngIf="!isLoading && recceStagesList && recceStagesList.length > 0; else noData">
+                        <div class="row">
                             <div class="col-xl-12">
-                                <div class="card custom-card">
+                                <div class="card custom-card no-top-radius">
                                     <div class="card-header d-flex align-items-center justify-content-between p-2 px-3">
                                         <div class="d-flex align-items-center gap-3">
                                             <button type="button" class="btn btn-sm btn-primary" *ngIf="adoanAiRole === 'ADMIN'"
@@ -182,7 +185,7 @@
                                                                             *ngFor="let img of recce.imageList; let i = index">
                                                                             <div class="card custom-card position-relative cu"
                                                                                 style="overflow: hidden; border-radius: 12px;"
-                                                                                (click)="openImageViewer(recce.imageList, i)">
+                                                                                (click)="openImageViewer(recce, i)">
                                                                                 <!-- <input type="checkbox" class="form-check-input position-absolute top-0 start-0 m-2"> -->
                                                                                 <span
                                                                                     class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
@@ -226,7 +229,7 @@
                         </div>
                     </ng-container>
                     <ng-template #noData >
-                        <div class="card custom-card" style="min-height: 415px; justify-content: center;">
+                        <div *ngIf="!isLoading" class="card custom-card no-top-radius" style="min-height: 415px; justify-content: center;">
                             <div class="text-center d-flex flex-column justify-content-center align-items-center">
                                 <img src="assets/images/recceimage.jpeg" class="no-data-img mb-3" />
                                 <!-- <svg width="85" height="85" viewBox="0 0 24 24" fill="none" class="mb-3">
@@ -258,7 +261,7 @@
                 </button>
                 <ng-template ngbNavContent>
                     <div class="col-xl-12">
-                        <div class="card custom-card" *ngFor="let project of filteredDesignerData; let i = index">
+                        <div class="card custom-card no-top-radius" *ngFor="let project of filteredDesignerData; let i = index">
                             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0 fw-bold">Project Details</h6>
                                 <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-wave btn-secondary rounded-circle"
@@ -330,7 +333,8 @@
                                             <div class="info-item mb-2">
                                                 <small class="text-muted d-block">Design Link</small>
                                                 <button class="btn btn-primary btn-sm mt-1" *ngIf="project.assignedDesigner === userEmail || userRole === 'ADMIN'"
-                                                    [disabled]="!project.designUrl" (click)="openDesignLink(project.designUrl)">
+                                                    [disabled]="!project.designUrl" [ngbTooltip]="project.designUrl ? 'Open Design' : 'Not Assigned'"
+                                                    (click)="project.designUrl && openDesignLink(project.designUrl)">
                                                     <i class="bi bi-box-arrow-up-right me-1"></i>
                                                     Open Design
                                                 </button>
@@ -356,7 +360,7 @@
                 <ng-template ngbNavContent>
                     <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
                         <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
-                            class="nav nav-style-1 nav-pills bg-white p-2 border-bottom" role="tablist">
+                            class="nav nav-style-1 nav-pills bg-white p-2 border-bottom custom-tab-nav" style="box-shadow: none !important;" role="tablist">
                             <ng-container ngbNavItem="1">
                                 <a ngbNavLink class="ms-1 btn btn-light" (click)="getProposal()">Proposal For Client</a>
                                 <div class="tt"></div>
@@ -1478,12 +1482,12 @@
                                     aria-selected="false">Project Scope</a>
                                     <div class="tt"></div>
                                 <ng-template class="tab-content" ngbNavContent>
-                                    <div class="row">
+                                    <div class="row bg-light pt-3">
                                         <div class="col-xl-12">
-                                            <nav class="nav nav-style-1 nav-pills bg-white" role="tablist">
+                                            <nav class="nav nav-style-1 nav-pills card custom-card mb-0 no-bottom-radius" style="box-shadow: none !important;" role="tablist">
                                                 <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
                                                     <button class="scroll-btn me-2" *ngIf="showLeftArrow" (click)="scrollLeft()">&#10094;</button>
-                                                    <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex flex-nowrap m-0 p-0"
+                                                    <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex flex-nowrap m-0 p-0 ms-1"
                                                         style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;" (navChange)="onRoomTabChange($event.nextId)">
                                                         <ng-container *ngFor="let key of tabKeys; let i = index">
                                                             <ng-container [ngbNavItem]="i+1">
@@ -1495,7 +1499,7 @@
                                                                 <div class="tt"></div>
                                                                 <ng-template ngbNavContent>
                                                                     <div class="col-xl-12" *ngIf="!showPanelList">
-                                                                        <div class="card custom-card bg-white">
+                                                                        <div class="card custom-card no-top-radius" style="box-shadow: none !important;">
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="card-title col-xl-4">{{ key | titlecase }}</div>
                                                                                 <div class="dropdown col-xl-7" ngbDropdown>
@@ -1861,7 +1865,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div *ngIf="showPanelList" class="">
-                                                                        <div class="card custom-card">
+                                                                        <div class="card custom-card no-top-radius" style="box-shadow: none !important;">
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="card-title col-xl-4">Cut List</div>
                                                                                 <div class="d-flex">
@@ -1974,10 +1978,10 @@
         </ul>
         <div class="d-flex justify-content-between align-items-center 
                                             px-2 py-1 me-1">
-            <div class="m-0 px-2 py-1 bg-danger-subtle rounded-3">
-                <small class="text-dark fs-10">{{ stageNames[currentStage] }}:</small>
-                <div class="d-flex align-items-center lh-1">
-                    <small class="fw-semibold text-warning">{{ statusNames[currentStage] }} Pending</small>
+            <div class="m-0 px-2 py-0 bg-danger-subtle rounded-3">
+                <small class="text-dark fs-9">{{ stageNames[currentStage] }}:</small>
+                <div class="d-flex align-items-center ttr">
+                    <small class="fw-semibold text-warning fs-11">{{ statusNames[currentStage] }} Pending</small>
                     <i class="bi bi-arrow-clockwise text-warning ms-2 cu" style="font-size: .80rem;" tabindex="0"
                         triggers="click" placement="start" popoverTitle="Recce History" [ngbPopover]="historyTemplate"
                         popoverClass="p-0">
@@ -2032,7 +2036,7 @@
             </div>
         </div>
     </div>
-    <div class="tab-content bg-white" id="myTabContent1">
+    <div class="tab-content" id="myTabContent1">
         <div [ngbNavOutlet]="nav13" class="border-top"></div>
     </div>
 </div>

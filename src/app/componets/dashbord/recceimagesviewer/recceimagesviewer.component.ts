@@ -7,28 +7,34 @@ import { SharedModule } from '../../../../app/shared/common/sharedmodule';
 @Component({
   selector: 'app-recceimagesviewer',
   standalone: true,
-  imports: [FormsModule,CommonModule,SharedModule],
+  imports: [FormsModule, CommonModule, SharedModule],
   templateUrl: './recceimagesviewer.component.html',
   styleUrl: './recceimagesviewer.component.scss'
 })
 export class RecceimagesviewerComponent implements OnInit {
+  recce: any;
   images: string[] = [];
   currentIndex: number = 0;
-  currentStage = 'External Environment';
-  currentFileName = 'Image.jpg'; 
+  currentStage: string = '';
+  currentFileName: string = '';;
   zoomLevel: number = 100;
   zoomOptions = [50, 75, 90, 100, 110, 125, 150, 200];
   rotation: number = 0;
   constructor(private router: Router, private location: Location) { }
-  ngOnInit() {
-    const nav = history.state;
+  ngOnInit(): void {
+    const state: any = history.state;
+    if (state.recceData) {
+      this.recce = state.recceData;
+      this.images = this.recce.imageList;
+      this.currentIndex = state.selectedIndex ?? 0;
 
-    if (nav && nav.images) {
-      this.images = nav.images;
-      this.currentIndex = nav.index ?? 0;
-    } else {
-      this.location.back();
+      this.currentStage = this.recce.recceStage;
+      this.currentFileName = this.getFileName(this.images[this.currentIndex]);
     }
+  }
+
+  getFileName(url: string): string {
+    return url.split('/').pop()?.split('_')[1]?.split('.')[0] || 'Image';
   }
 
   nextImage() {
@@ -65,6 +71,12 @@ export class RecceimagesviewerComponent implements OnInit {
       img.style.transform = `scale(${this.zoomLevel / 100})`;
     }
   }
+
+  selectImage(index: number): void {
+    this.currentIndex = index;
+    this.currentFileName = this.getFileName(this.images[index]);
+  }
+
 
   toggleFullscreen() {
     const elem = document.documentElement;
