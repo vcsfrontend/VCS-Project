@@ -80,7 +80,7 @@ export class LeadsComponent extends BaseComponent {
   formList: any; tempFormList: any; generatedTemplateId: any; currentIndex: number = 0; allTemplateGenIds: string[] = [];
   rotateCharts = true; executiveList: any[] = []; entryList: any[] = []; agents: any; leads: any[] = [];
   imageFileSrcData: any; followUpDetails: any[] = []; nextLeadStatus: any; minDateTime: string = '';
-  minimumDate : string ='';
+  minimumDate : string =''; mobileNumber: any; clientName: any;  projectName: any
   selectedOpen: any[] = []; showForm: boolean = false; allowCustomStatus: boolean = true; shouldDisableAddStatus = false;isImporting: boolean = false;
   isStagesDisabled : boolean =false; phoneNumber: string = '';readonlyMode:boolean=false;originalConnectedForm: any = {};
   fetchedData:any;companyLst:any;selectedFileName:any;originalStatus: string = '';
@@ -100,7 +100,6 @@ export class LeadsComponent extends BaseComponent {
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
     { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
-
   ];
 
   stageColor: { [key: string]: string } = { open: '#007bff',};
@@ -1773,13 +1772,11 @@ export class LeadsComponent extends BaseComponent {
         next: (res: any) => {
           if (res.entryList) {
             this.leadList = res.entryList; 
-            console.log('response lead list',this.leadList);
             for(const lead of this.leadList){
                this.currentStage = lead.stage;
               if(this.currentStage === 'proposal Stage'){
                 this.sendProposalEnable= true;
               }
-               console.log('current stage', this.currentStage);
             }
             this.dataSource = new MatTableDataSource(res.entryList);
             const cities = res.entryList
@@ -2946,9 +2943,6 @@ export class LeadsComponent extends BaseComponent {
         this.submitted = false;
         this.leadForm.reset();
         // this.getFetchLeadData(this.currentCampaignId);
-      },
-      error: (err) => {
-        console.error('Error moving leads:', err);
       }
     });
     }
@@ -3204,30 +3198,39 @@ export class LeadsComponent extends BaseComponent {
       // }
     });
   }
+
   openCompletionModal(content: any, lead: any) {
     this.selectedLead = lead;
     this.leadId = lead.leadId;
-    this.currentStep = 1;  
-    this.completionForm.reset();
+    this.currentStep = 1;
     this.leadCompletionsubmitted = false;
-    this.modalService.open(content, { centered: true,scrollable : true });
+    this.completionForm.reset();
+    const mobile = lead.contact ? String(Number(lead.contact)) : '';
+    this.completionForm.patchValue({
+      clientName: lead.name ?? '',
+      mobileNumber: mobile,
+      projectName: lead.companyName ?? '',
+      address: lead.address ?? '',
+      username: lead.username ?? ''
+    });
+    this.modalService.open(content, { centered: true, scrollable: true });
   }
 
   closeLeadWithoutProject(modal : any) {
   this.updateCompletionStatus(null, false);  
   }
 
-   updateCompletionStatus(modal: any,autoProjectCreation: boolean) {
+  updateCompletionStatus(modal: any, autoProjectCreation: boolean) {
     this.leadCompletionsubmitted = true;
     if (autoProjectCreation && this.completionForm.invalid) {
-      return; 
+      return;
     }
     const payload = {
       ...this.completionForm.value,
-      status : "completed",
+      status: "completed",
       completedBy: this.userName,
       leadId: this.leadId,
-      companyCode:this.userCompanyCode,
+      companyCode: this.userCompanyCode,
       companyName: this.userCompanyName,
       email: this.userEmail,
       type: this.userType,
@@ -3237,23 +3240,19 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {
         this.toastr.success('lead completed successfully');
-            this.leadCompletionsubmitted = true;
+        this.leadCompletionsubmitted = true;
         if (this.selectedLead) {
-          this.selectedLead.completionStatus = "completed"; 
+          this.selectedLead.completionStatus = "completed";
         }
         this.uploadSpinner = false;
         if (modal) {
-          modal.close('closed'); 
+          modal.close('closed');
         } else {
           this.modalService.dismissAll();
         }
         setTimeout(() => {
           this.currentStep = 1;
         }, 300);
-
-      },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
       }
     });
   }
@@ -3534,7 +3533,6 @@ export class LeadsComponent extends BaseComponent {
   sentProposal(element : any) {
     this.proposalsentSubmitted = true;
     this.ViewCrmLeads(element);
-   console.log('gdgd',this.CrmLeads) ;
   }
 
 

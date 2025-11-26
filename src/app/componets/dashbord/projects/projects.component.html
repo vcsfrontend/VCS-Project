@@ -537,9 +537,9 @@
                     <ng-container matColumnDef="assign">
                         <th mat-header-cell *matHeaderCellDef>Asign To</th>
                         <td mat-cell *matCellDef="let element">
-                            <button class="btn btn-primary btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
+                            <button class="btn btn-primary btn-sm shadow d-flex align-items-center justify-content-center px-3 px-1"
                             (click)="assignToUser(content18,element)">
-                                <i class="bi bi-person fs-18 me-1"></i>
+                                <i class="bi bi-person fs-13 me-1"></i>
                                 <strong>Assign to User</strong>
                             </button>
                         </td>
@@ -698,74 +698,44 @@
 <ng-template #Content11 id="addtask" let-modal>
     <div class="modal-content">
         <div class="modal-header">
-            <h6 class="modal-title" id="mail-ComposeLabel">project details</h6>
+            <h6 class="modal-title" id="mail-ComposeLabel"><strong>project details</strong></h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                 aria-label="Close"></button>
         </div>
         <div class="modal-body px-4">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card custom-card">
-                        <div class="card-body">
-                            <div class="row gy-3">
-                                <div class="col-xl-4">
-                                    <label for="projectName" class="form-label">Project Name</label>
-                                    <input type="text" class="form-control" id="projectName" [(ngModel)]="projectName"
-                                        [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="clientName" class="form-label">Client Name</label>
-                                    <input type="text" class="form-control" id="clientName" [(ngModel)]="clientName"
-                                        [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="businessCategory" class="form-label">Business Category:</label>
-                                    <select class="form-select" aria-label="Default select example"
-                                        [(ngModel)]='businessCategory' [disabled]="true">
-                                        <option value="">select type</option>
-                                        <option value="Commercial">Commercial</option>
-                                        <option value="Residential">Residential</option>
-                                    </select>
-
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="projectAddress" class="form-label">Project Address:</label>
-                                    <input type="text" class="form-control" id="projectAddress"
-                                        [(ngModel)]="projectAddress" [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="state" class="form-label">State:</label>
-                                    <input type="text" class="form-control" id="state" [(ngModel)]="state"
-                                        [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="city" class="form-label">City:</label>
-                                    <input type="text" class="form-control" id="city" [(ngModel)]="city"
-                                        [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="projectArea" class="form-label">Project Area:</label>
-                                    <input type="number" class="form-control" id="projectArea" [(ngModel)]="projectArea"
-                                        [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="action" class="form-label">Action:</label>
-                                    <input type="text" class="form-control" id="action" [(ngModel)]="action"
-                                        [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="designId" class="form-label">Design Id</label>
-                                    <input type="text" class="form-control" id="designId" [(ngModel)]="designId"
-                                        [disabled]="true">
-                                </div>
-                                <div class="col-xl-4">
-                                    <label for="companyName" class="form-label">Company Name:</label>
-                                    <input type="text" class="form-control" id="companyName" [(ngModel)]="companyName"
-                                        [disabled]="true">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="row gy-3">
+                <div class="col-xl-4">
+                    <label for="projectName" class="form-label">Project Name</label>
+                    <input type="text" class="form-control" id="projectName" [(ngModel)]="projectName" [disabled]="true">
+                </div>
+                <div class="col-xl-4">
+                    <label for="clientName" class="form-label">Client Name</label>
+                    <input type="text" class="form-control" id="clientName" [(ngModel)]="clientName" [disabled]="true">
+                </div>
+                <div class="col-xl-4">
+                    <label for="businessCategory" class="form-label">Business Category:</label>
+                    <select class="form-select" aria-label="Default select example" [(ngModel)]='businessCategory'
+                        [disabled]="true">
+                        <option value="">select type</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="Residential">Residential</option>
+                    </select>
+                </div>
+                <div class="col-xl-4">
+                    <label for="projectAddress" class="form-label">Project Address:</label>
+                    <input type="text" class="form-control" id="projectAddress" [(ngModel)]="projectAddress" [disabled]="true">
+                </div>
+                <div class="col-xl-4">
+                    <label for="state" class="form-label">State:</label>
+                    <input type="text" class="form-control" id="state" [(ngModel)]="state" [disabled]="true">
+                </div>
+                <div class="col-xl-4">
+                    <label for="city" class="form-label">City:</label>
+                    <input type="text" class="form-control" id="city" [(ngModel)]="city" [disabled]="true">
+                </div>
+                <div class="col-xl-4">
+                    <label for="companyName" class="form-label">Company Name:</label>
+                    <input type="text" class="form-control" id="companyName" [(ngModel)]="companyName" [disabled]="true">
                 </div>
             </div>
         </div>
@@ -1745,82 +1715,84 @@
             <div *ngIf="selectedType === 'recce'" [formGroup]="recceForm">
                 <div class="row gy-2">
                     <div class="col-lg-4">
-                    <label class="form-label">Select Recce Type</label>
-                    <ng-select formControlName="recceStage" placeholder="Select recce"
-                        [ngClass]="{'is-invalid': recceSubmitted && r['recceStage'] && r['recceStage'].errors}">
-                        <ng-option *ngFor="let item of recceTemplate" [value]="item.name"
-                            [disabled]="blockedStages.includes((item.name || '').trim())">
-                            {{ item.name }}
-                        </ng-option>
-                    </ng-select>
-                    <div *ngIf="recceSubmitted && r['recceStage'].errors" class="invalid-feedback">
-                        <span *ngIf="r['recceStage']?.errors?.['required']">
-                            Plese select recce type
-                        </span>
+                        <label class="form-label">Select Recce Type</label>
+                        <ng-select formControlName="recceStage" placeholder="Select recce"
+                            [ngClass]="{'is-invalid': recceSubmitted && r['recceStage'] && r['recceStage'].errors}">
+                            <ng-option *ngFor="let item of recceTemplate" [value]="item.name"
+                                [disabled]="blockedStages.includes((item.name || '').trim())">
+                                {{ item.name }}
+                            </ng-option>
+                        </ng-select>
+                        <div *ngIf="recceSubmitted && r['recceStage'].errors" class="invalid-feedback">
+                            <span *ngIf="r['recceStage']?.errors?.['required']">
+                                Plese select recce type
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <label class="form-label">Recce Name</label>
-                    <input formControlName="recceName" class="form-control" placeholder="Recce Name"
-                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceStage'].errors }">
-                    <div *ngIf="recceSubmitted && r['recceName'].errors" class="invalid-feedback">
-                        <span *ngIf="r['recceName']?.errors?.['required']">
-                            Recce Name is required
-                        </span>
+                    <div class="col-lg-4">
+                        <label class="form-label">Recce Name</label>
+                        <input formControlName="recceName" class="form-control" placeholder="Recce Name"
+                            [ngClass]="{ 'is-invalid': recceSubmitted && r['recceStage'].errors }">
+                        <div *ngIf="recceSubmitted && r['recceName'].errors" class="invalid-feedback">
+                            <span *ngIf="r['recceName']?.errors?.['required']">
+                                Recce Name is required
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <label class="form-label">Recce Due Date</label>
-                    <input type="date" class="form-control" formControlName="recceDueDate"
-                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceDueDate'].errors }">
-                    <div *ngIf="recceSubmitted && r['recceDueDate'].errors" class="invalid-feedback">
-                        <span *ngIf="r['recceDueDate']?.errors?.['required']">
-                            Recce Due is required
-                        </span>
+                    <div class="col-lg-4">
+                        <label class="form-label">Recce Due Date</label>
+                        <input type="date" class="form-control" formControlName="recceDueDate"
+                            [ngClass]="{ 'is-invalid': recceSubmitted && r['recceDueDate'].errors }">
+                        <div *ngIf="recceSubmitted && r['recceDueDate'].errors" class="invalid-feedback">
+                            <span *ngIf="r['recceDueDate']?.errors?.['required']">
+                                Recce Due is required
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <label class="form-label">Assign Recce To</label>
-                    <ng-select formControlName="recceAssigne" [items]="userList" bindLabel="email" placeholder="Select a user"
-                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceAssigne'].errors }">
-                    </ng-select>
-                    <div *ngIf="recceSubmitted && r['recceAssigne'].errors" class="invalid-feedback">
-                        <span *ngIf="r['recceAssigne']?.errors?.['required']">
-                            Recce Assigne is required
-                        </span>
+                    <div class="col-lg-4">
+                        <label class="form-label">Assign Recce To</label>
+                        <ng-select formControlName="recceAssigne" [items]="userList" bindLabel="email" placeholder="Select a user"
+                            [ngClass]="{ 'is-invalid': recceSubmitted && r['recceAssigne'].errors }">
+                        </ng-select>
+                        <div *ngIf="recceSubmitted && r['recceAssigne'].errors" class="invalid-feedback">
+                            <span *ngIf="r['recceAssigne']?.errors?.['required']">
+                                Recce Assigne is required
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <label class="form-label">Project Stakeholders</label>
-                    <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email"
-                        placeholder="Select stakeholders" [ngClass]="{ 'is-invalid': recceSubmitted && r['recceStakeHolders'].errors }">
-                    </ng-select>
-                    <div *ngIf="recceSubmitted && r['recceStakeHolders'].errors" class="invalid-feedback">
-                        <span *ngIf="r['recceStakeHolders']?.errors?.['required']">
-                            Recce StakeHolders is required
-                        </span>
+                    <div class="col-lg-4">
+                        <label class="form-label">Project Stakeholders</label>
+                        <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email"
+                            placeholder="Select stakeholders"
+                            [ngClass]="{ 'is-invalid': recceSubmitted && r['recceStakeHolders'].errors }">
+                        </ng-select>
+                        <div *ngIf="recceSubmitted && r['recceStakeHolders'].errors" class="invalid-feedback">
+                            <span *ngIf="r['recceStakeHolders']?.errors?.['required']">
+                                Recce StakeHolders is required
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <label class="form-label">Client POC</label>
-                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email" placeholder="Select client POC"
-                        [ngClass]="{ 'is-invalid': recceSubmitted && r['recceClientPoc'].errors }">
-                    </ng-select>
-                    <div *ngIf="recceSubmitted && r['recceClientPoc'].errors" class="invalid-feedback">
-                        <span *ngIf="r['recceClientPoc']?.errors?.['required']">
-                            ecceClientPoc is required
-                        </span>
+                    <div class="col-lg-4">
+                        <label class="form-label">Client POC</label>
+                        <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email"
+                            placeholder="Select client POC"
+                            [ngClass]="{ 'is-invalid': recceSubmitted && r['recceClientPoc'].errors }">
+                        </ng-select>
+                        <div *ngIf="recceSubmitted && r['recceClientPoc'].errors" class="invalid-feedback">
+                            <span *ngIf="r['recceClientPoc']?.errors?.['required']">
+                                ecceClientPoc is required
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <label class="form-label">Instructions</label>
-                    <textarea formControlName="description" class="form-control"
-                        placeholder="Enter instructions"></textarea>
-                </div>
-                <div class="col-lg-4">
-                    <label class="form-label">Upload Images</label>
-                    <input type="file" multiple (change)="onFilesChange($event)">
-                </div>
+                    <div class="col-lg-8">
+                        <label class="form-label">Instructions</label>
+                        <textarea formControlName="description" class="form-control" placeholder="Enter instructions"
+                        rows="1"></textarea>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                        <label class="form-label">Upload Images</label>
+                        <input type="file" class="form-control" multiple (change)="onFilesChange($event)">
+                    </div>
                 </div>
             </div>
             <div *ngIf="selectedType === 'design'" [formGroup]="updateProjectForm">
@@ -1849,8 +1821,7 @@
                     </div>
                     <div class="col-lg-4">
                         <label class="form-label">Update Project Status</label>
-                        <ng-select formControlName="designCompletionStatus" [items]="designStatus" bindLabel="name"
-                            bindValue="name">
+                        <ng-select formControlName="designCompletionStatus" [items]="designStatus" bindLabel="name" bindValue="name">
                         </ng-select>
                     </div>
                 </div>

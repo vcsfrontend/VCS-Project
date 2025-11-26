@@ -27,7 +27,7 @@
                                             </button>
                                             <div class="d-flex align-items-center">
                                                 <small class="me-2">Select Recce :</small>
-                                                <ng-select class="recce-select" [items]="recceList" bindLabel="name" bindValue="id">
+                                                <ng-select class="recce-select" [items]="recceList" bindLabel="recceName" bindValue="recceId">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -164,11 +164,10 @@
                                                                         </h6>
                                                                     </div>
                                                                     <div class="d-flex justify-content-between mt-3">
-                                                                        <div class="card-title text-dark large fs-15">{{ recce.recceName
+                                                                        <div class="card-title text-dark large fs-15">Name: {{ recce.recceName
                                                                             }}</div>
-                                                                        <p class="fs-13 mt-1"
-                                                                            [ngbTooltip]="recce.description?.length > 25 ? recce.description : null"
-                                                                            placement="top" triggers="hover" container="body">
+                                                                        <p class="fs-13 mt-1" [ngbTooltip]="recce.description?.length > 25 ? recce.description : null" placement="top"
+                                                                            triggers="hover" container="body">Description:
                                                                             {{ recce.description?.length > 25 ? (recce.description |
                                                                             slice:0:25) + '...' :
                                                                             recce.description }}
@@ -211,7 +210,7 @@
                                                     </ng-container>
                                                     <div style="height:250px;"></div>
                                                     <ng-container>
-                                                        <a class="btn btn-primary btn-sm mt-2" (click)="newSection(content48)">
+                                                        <a class="btn btn-outline-primary btn-sm mt-2" (click)="newSection(content48)">
                                                             <i class="bi bi-plus-circle me-1"></i>
                                                             Add New Section
                                                         </a>
@@ -1545,16 +1544,39 @@
                                                                                                 <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>
                                                                                                 Actions
                                                                                             </button>
-                                                                                            <ul class="dropdown-menu cuu" ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                                                                                                <li><a ngbDropdownItem class="dropdown-item p-3 border"
-                                                                                                        (click)="onCreateProposalClick(content4)">
-                                                                                                        Create Proposal</a></li>
-                                                                                                <li><a ngbDropdownItem class="dropdown-item p-3 border" (click)="openLg1(content1)">
-                                                                                                        Add Custom Element</a></li>
-                                                                                                <li><a ngbDropdownItem class="dropdown-item p-3 border"
-                                                                                                        (click)="openLg2(content2); getLibraryData()">Import
-                                                                                                        Items From</a></li>
-                                                                                            </ul>
+                                                                                            <div class="btn-group ms-3" ngbDropdown>
+                                                                                                <button type="button" class="btn btn-primary dropdown-toggle" ngbDropdownToggle>
+                                                                                                    <i class="ri-edit-line me-2"></i> Actions
+                                                                                                </button>
+                                                                                                <ul class="dropdown-menu shadow-lg p-0" ngbDropdownMenu style="width: 260px; border-radius: 12px;">
+                                                                                                    <li>
+                                                                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
+                                                                                                            (click)="onCreateProposalClick(content4)">
+                                                                                                            <i class="ri-refresh-line fs-5"></i>
+                                                                                                            <span class="fw-semibold">Create Proposal</span>
+                                                                                                        </a>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <hr class="dropdown-divider my-0">
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3" (click)="openLg1(content1)">
+                                                                                                            <i class="ri-layout-grid-line fs-5"></i>
+                                                                                                            <span class="fw-semibold">Add Custom Element</span>
+                                                                                                        </a>
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <hr class="dropdown-divider my-0">
+                                                                                                    </li>
+                                                                                                    <li>
+                                                                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
+                                                                                                            (click)="openLg2(content2); getLibraryData()">
+                                                                                                            <i class="bi bi-folder side-menu__icon fs-5"></i>
+                                                                                                            <span class="fw-semibold">Import Items From</span>
+                                                                                                        </a>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -1869,7 +1891,7 @@
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="card-title col-xl-4">Cut List</div>
                                                                                 <div class="d-flex">
-                                                                                    <button class="btn btn-primary"  (click)="cutList(content47)">
+                                                                                    <button class="btn btn-primary" ngIf="pannelResponse?.length > 0" (click)="cutList(content47)">
                                                                                         <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Cut List
                                                                                     </button>
                                                                                     <button class="btn btn-primary ms-2" (click)="downloadCutList()">
@@ -1881,7 +1903,7 @@
                                                                                     </a> -->
                                                                                 </div>
                                                                             </div>
-                                                                            <div class="table-container"  style="max-height: 500px; overflow-y: auto;" *ngIf="allPanels.length > 0; else noPanelData">
+                                                                            <div class="table-container"  style="max-height: 500px; overflow-y: auto;" *ngIf="allPanels && allPanels.length > 0; else noPanelData">
                                                                                 <table class="table table-bordered table-hover align-middle">
                                                                                     <thead class="table-light">
                                                                                         <tr>
@@ -3137,10 +3159,11 @@
                     </ng-select>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" [disabled]="updateProjectForm.invalid || updateProjectForm.disabled">Submit</button>
-                <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
-            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"
+                [disabled]="updateProjectForm.invalid || updateProjectForm.disabled">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close()">Close</button>
         </div>
     </form>
 </ng-template>
