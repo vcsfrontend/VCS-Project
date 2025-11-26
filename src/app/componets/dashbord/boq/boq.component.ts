@@ -730,7 +730,7 @@ closeAllDropdowns() {
         this.switchService.fetchBoqData(payload).subscribe({
             next: (res) => {
                 const boqData = res?.boqResponse?.boqData || {};
-                this.pannelResponse = res?.pannelResponse?.pannelResponse || [];
+                const pannelResponse = res?.pannelResponse?.pannelResponse || [];
                 this.tabKeys = Object.keys(boqData);
                 let allItems: any[] = [];
                 this.tabKeys.forEach((key: string) => {
@@ -757,12 +757,8 @@ closeAllDropdowns() {
                 });
                 this.boqDataSources['All'] = new MatTableDataSource(allItems);
                 this.tabKeys = ['All', ...this.tabKeys];
-                this.currentRoomName = 'All'; 
-                this.allPanels = (this.pannelResponse || []).map((item: any, i: number) => ({
-                    order: i + 1,
-                    ...item
-                }));
-                console.log("ALL PANELS:", this.allPanels);
+                this.currentRoomName = 'All';
+                this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({ order: i + 1, ...item }));
                 this.roomNameList = this.tabKeys
                     .filter(k => k !== 'All')
                     .map(name => ({ name }));
@@ -2514,14 +2510,16 @@ closeAllDropdowns() {
 
     groupCabinetNames() {
         this.groupedPanels = this.allPanels.reduce((groups: any, panel: any) => {
-            const name = panel.cabinetName;
-            if (!groups[name]) {
-                groups[name] = [];
-            }
+            const name = panel.cabinetName
+                || panel.cabName
+                || panel.roomName
+                || 'Uncategorized';
+            if (!groups[name]) groups[name] = [];
             groups[name].push(panel);
             return groups;
         }, {});
     }
+
 
     setStage(id: number) {
         this.currentStage = id;

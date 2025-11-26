@@ -772,3 +772,7 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .d-flex.align-items-center.ttr {
     margin-top: -3px;
 }
+
+.dropdown-menu {
+  z-index: 2000 !important;
+}
