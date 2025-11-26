@@ -2233,12 +2233,12 @@ downloadButtons: { label: string; url: string }[] = [];
         updatedBy: `${this.userName},${this.userEmail}`,
       };
       console.log(payload)
-      // this.switchService.updateAssgnAdonaiDesign(payload).subscribe({
-      //   next: (res: any) => {
-      //     this.toastr.success('Project updated');
-      //     modal.close();
-      //   }
-      // });
+      this.switchService.updateAssgnAdonaiDesign(payload).subscribe({
+        next: (res: any) => {
+          this.toastr.success('Project updated');
+          modal.close();
+        }
+      });
     }
   }
 
@@ -2263,13 +2263,13 @@ downloadButtons: { label: string; url: string }[] = [];
       files: this.files.value
     };
     console.log(payload)
-    // this.switchService.createRecce(payload).subscribe({
-    //   next: () => {
-    //     this.toastr.success('Recce created');
-    //     modal.close();
-    //     this.recceForm.reset();
-    //   },
-    // });
+    this.switchService.createRecce(payload).subscribe({
+      next: () => {
+        this.toastr.success('Recce created');
+        modal.close();
+        this.recceForm.reset();
+      },
+    });
   }
 
   onFileChange(event: Event) {
