@@ -486,26 +486,32 @@
                                                                             </li>
                                                                         </ul>
                                                                     </div>
-                                                                    <div ngbDropdown class="d-inline-block">
-                                                                        <button type="button" class="btn btn-primary" ngbDropdownToggle aria-expanded="false"
-                                                                            [hidden]="currentRoomName === 'All'">
-                                                                            <i class="ri-arrow-right-line ms-auto me-1 fw-medium text-white"></i>
-                                                                            Actions
+                                                                    <div ngbDropdown class="d-inline-block" *ngIf="currentRoomName !== 'All'">
+                                                                        <button type="button" class="btn btn-primary dropdown-toggle" ngbDropdownToggle>
+                                                                            <i class="ri-arrow-right-line me-2"></i> Actions
                                                                         </button>
-                                                                        <ul class="dropdown-menu cuu" ngbDropdownMenu
-                                                                            aria-labelledby="dropdownMenuButton1">
-                                                                            <li><a ngbDropdownItem
-                                                                                    class="dropdown-item p-3 border"
-                                                                                    (click)="proposalFormSubmit()">
-                                                                                    Create Proposal</a></li>
-                                                                            <li><a ngbDropdownItem
-                                                                                    class="dropdown-item p-3 border"
-                                                                                    (click)="openLg1(content1)">
-                                                                                    Add Custom Element</a></li>
-                                                                            <li><a ngbDropdownItem
-                                                                                    class="dropdown-item p-3 border"
-                                                                                    (click)="openLg2(content2); getLibraryData()">Import
-                                                                                    Items From</a></li>
+                                                                    
+                                                                        <ul class="dropdown-menu shadow-lg p-0" ngbDropdownMenu style="width: 260px; border-radius: 12px;">
+                                                                            <li>
+                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
+                                                                                    (click)="onCreateProposalClick(content4)">
+                                                                                    <i class="ri-refresh-line fs-5"></i>
+                                                                                    <span class="fw-semibold">Create Proposal</span>
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3" (click)="openLg1(content1)">
+                                                                                    <i class="ri-layout-grid-line fs-5"></i>
+                                                                                    <span class="fw-semibold">Add Custom Element</span>
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
+                                                                                    (click)="openLg2(content2); getLibraryData()">
+                                                                                    <i class="bi bi-folder side-menu__icon fs-5"></i>
+                                                                                    <span class="fw-semibold">Import Items From</span>
+                                                                                </a>
+                                                                            </li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>

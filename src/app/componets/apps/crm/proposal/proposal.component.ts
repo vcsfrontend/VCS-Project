@@ -251,9 +251,6 @@ export class ProposalComponent extends BaseComponent {
     const hh = pad(now.getHours());
     const mi = pad(now.getMinutes());
     this.leadData = history.state.lead;
-    console.log("Received Lead:", this.leadData);
-
-
     this.minDateTime = `${yyyy}-${mm}-${dd}`;
     this.route.queryParams.subscribe(params => {
       this.projectId = params['projectId'];
@@ -974,7 +971,6 @@ export class ProposalComponent extends BaseComponent {
       height: item.dimensions?.height || 0,
       designId:'3FO3ILENXV7I'
     };
-    console.log(payload);
     this.switchService.saveElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
@@ -1090,7 +1086,6 @@ export class ProposalComponent extends BaseComponent {
         type: this.userType,
       },
     ];
-    console.log(payload)
     // this.switchService.updateElementData(payload).subscribe({
     //   next: (res: any) => {
     //     if (res?.status === true) {
@@ -1174,7 +1169,6 @@ export class ProposalComponent extends BaseComponent {
       designId:'3FO3ILENXV7I',
       clientDataJs: JSON.stringify(clientDataToSend),
     };
-    console.log('proposal payload', proposalPayload)
     // this.updateElementsAndCreateProposal(proposalPayload, modal);
   }
   // private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
