@@ -1,8 +1,9 @@
 <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
     <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
-        class="nav nav-style-1 nav-pills bg-white p-2 m-1 border-bottom" role="tablist">
+        class="nav nav-style-1 nav-pills bg-white p-2 border-bottom custom-tab-nav" role="tablist"
+        style="box-shadow: none !important;" role="tablist">
         <ng-container ngbNavItem="1">
-            <a ngbNavLink class="nav-link ms-1" (click)="getProposal()">Proposal For Client</a>
+            <a ngbNavLink class="ms-1 btn btn-light" (click)="getProposal()">Proposal For Client</a>
             <div class="tt"></div>
             <ng-template ngbNavContent>
                 <div class="col-xl-12">
@@ -229,7 +230,8 @@
                                                             <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
                                                                 <div class="d-flex align-items-center" (click)="openEditFromSelected(element, content1)" style="cursor: pointer;">
                                                                     <span class="avatar avatar-xl me-3">
-                                                                        <img [src]="element.elementUrl" class="img-thumbnail" alt="Project Image">
+                                                                        <img [src]="element?.elementUrl ? element.elementUrl : 'assets/images/brand-logos/no-image.png'" class="img-thumbnail"
+                                                                            alt="Project Image" />
                                                                     </span>
                                                                     <div>
                                                                         <span class="fw-medium d-block">
@@ -403,16 +405,15 @@
             </ng-template>
         </ng-container>
         <ng-container [ngbNavItem]="5">
-            <a ngbNavLink class="nav-link ms-1" data-bs-toggle="tab" role="tab" aria-selected="false">Project Scope</a>
-            <div class="tt"></div>
+            <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab" aria-selected="false">Project Scope</a>
             <ng-template class="tab-content" ngbNavContent>
-                <div class="row">
+                <div class="row bg-light pt-3">
                     <div class="col-xl-12">
-                        <nav class="nav nav-style-1 nav-pills border-bottom p-2 bg-white" role="tablist">
+                        <nav class="p-1 bg-white" role="tablist">
                             <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
                                 <button class="scroll-btn me-2" *ngIf="showLeftArrow" (click)="scrollLeft()">&#10094;</button>
                                 <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="1"
-                                    class="nav-tabs d-flex flex-nowrap m-0 p-0"
+                                    class="d-flex flex-nowrap m-0 p-0"
                                     style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;"
                                     (navChange)="onRoomTabChange($event.nextId)">
                                     <ng-container *ngFor="let key of tabKeys; let i = index">
@@ -425,9 +426,8 @@
                                             <div class="tt"></div>
                                             <ng-template ngbNavContent>
                                                 <div class="col-xl-12">
-                                                    <div class="card custom-card bg-white">
-                                                        <div
-                                                            class="card-header d-flex flex-wrap align-items-center justify-content-between">
+                                                    <div class="card custom-card no-top-radius border-top" style="box-shadow: none !important;">
+                                                        <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                             <div class="d-flex align-items-center gap-2">
                                                                 <div class="card-title">{{ key | titlecase }}</div>
                                                                 <button type="button"
@@ -564,7 +564,8 @@
                                                                         <div class="d-flex align-items-center" (click)="openEditFromSelected(element, content1)"
                                                                             style="cursor: pointer;">
                                                                             <span class="avatar avatar-xl me-3">
-                                                                                <img [src]="element.elementUrl" class="img-thumbnail" alt="Project Image">
+                                                                                <img [src]="element?.elementUrl ? element.elementUrl : 'assets/images/brand-logos/no-image.png'"
+                                                                                    class="img-thumbnail" alt="Project Image" />
                                                                             </span>
                                                                             <div>
                                                                                 <span class="fw-medium d-block">
@@ -848,13 +849,15 @@
                                                                     <div
                                                                         class="d-flex justify-content-between align-items-center">
                                                                         <div>
-                                                                            <span class="fw-bold">INR ({{ key |
-                                                                                titlecase }}):
-                                                                                {{ tabTotals[key] | number:'1.0-2'
-                                                                                }}</span>
-                                                                            <div class="small text-muted">*Inclusive of
-                                                                                Taxes
-                                                                            </div>
+                                                                            <span class="fw-bold">
+                                                                                INR ({{ key | titlecase }}):
+                                                                                {{
+                                                                                key === 'All'
+                                                                                ? getTotalSum()
+                                                                                : tabTotals[key] | number:'1.0-2'
+                                                                                }}
+                                                                            </span>
+                                                                            <div class="small text-muted">*Inclusive of Taxes</div>
                                                                         </div>
                                                                     </div>
                                                                 </nav>

@@ -71,42 +71,49 @@
 
         <!-- Start::header-element -->
         <div class="header-element ms-3 d-lg-block d-none my-auto">
+          <div *ngIf="showBoqHeader && projectDetails?.projectName" class="d-flex align-items-center gap-3">
+            <span class="page-title fw-medium fs-15">All Projects /</span>
+            <strong>{{ capitalizeFirstLetter(projectDetails?.projectName, 'No Name') }}</strong>
+            <span class="badge bg-primary-transparent text-dark px-x py-2">
+              Project Id: {{ projectDetails?.projectId }}
+            </span>
+          </div>
           <!-- Start::dashboards list -->
           <!-- <div ngbDropdown class="dropdown my-auto" (click)="toggleDropdown()">
-            <a ngbDropdownToggle href="javascript:void(0);"    
-              class="btn bg-body header-dashboards-button text-start d-flex align-items-center justify-content-between"
-              data-bs-toggle="dropdown" aria-expanded="false">{{ selectedItem }}
-              <i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
-            </a>
-            <ul ngbDropdownMenu class="dropdown-menu dashboard-dropdown" role="menu">
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-             [routerLink]="[ 'dashboard', 'sales']" (click)="handleItemClick('Sales Dashboard')" [class.active]="selectedItem === 'Sales Dashboard'">Sales Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'analytics']" (click)="handleItemClick('Analytics Dashboard')" [class.active]="selectedItem === 'Analytics Dashboard'">Analytics Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'ecommerce']" (click)="handleItemClick('Ecommerce Dashboard')" [class.active]="selectedItem === 'Ecommerce Dashboard'">Ecommerce Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'crm']" (click)="handleItemClick('CRM Dashboard')" [class.active]="selectedItem === 'CRM Dashboard'">CRM Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'hrm']" (click)="handleItemClick('HRM Dashboard')" [class.active]="selectedItem === 'HRM Dashboard'">HRM Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'nft']" (click)="handleItemClick('NFT Dashboard')" [class.active]="selectedItem === 'NFT Dashboard'">NFT Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'crypto']" (click)="handleItemClick('Crypto Dashboard')" [class.active]="selectedItem === 'Crypto Dashboard'" >Crypto Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'jobs']" (click)="handleItemClick('Jobs Dashboard')" [class.active]="selectedItem === 'Jobs Dashboard'">Jobs Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'projects']" (click)="handleItemClick('Projects Dashboard')" [class.active]="selectedItem === 'Projects Dashboard'">Projects Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'courses']" (click)="handleItemClick('Courses Dashboard')" [class.active]="selectedItem === 'Courses Dashboard'">Courses Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'stocks']" (click)="handleItemClick('Stocks Dashboard')" [class.active]="selectedItem === 'Stocks Dashboard'">Stocks Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'personal']" (click)="handleItemClick('Personal Dashboard')" [class.active]="selectedItem === 'Personal Dashboard'">Personal Dashboard</a></li>
-              <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
-                [routerLink]="[ 'dashboard', 'customer']" (click)="handleItemClick('Customer Dashboard')" [class.active]="selectedItem === 'Customer Dashboard'">Customer Dashboard</a></li>
-            </ul>
-          </div> -->
+                    <a ngbDropdownToggle href="javascript:void(0);"    
+                      class="btn bg-body header-dashboards-button text-start d-flex align-items-center justify-content-between"
+                      data-bs-toggle="dropdown" aria-expanded="false">{{ selectedItem }}
+                      <i class="ri-arrow-down-s-line align-middle ms-1 d-inline-block"></i>
+                    </a>
+                    <ul ngbDropdownMenu class="dropdown-menu dashboard-dropdown" role="menu">
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                     [routerLink]="[ 'dashboard', 'sales']" (click)="handleItemClick('Sales Dashboard')" [class.active]="selectedItem === 'Sales Dashboard'">Sales Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'analytics']" (click)="handleItemClick('Analytics Dashboard')" [class.active]="selectedItem === 'Analytics Dashboard'">Analytics Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'ecommerce']" (click)="handleItemClick('Ecommerce Dashboard')" [class.active]="selectedItem === 'Ecommerce Dashboard'">Ecommerce Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'crm']" (click)="handleItemClick('CRM Dashboard')" [class.active]="selectedItem === 'CRM Dashboard'">CRM Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'hrm']" (click)="handleItemClick('HRM Dashboard')" [class.active]="selectedItem === 'HRM Dashboard'">HRM Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'nft']" (click)="handleItemClick('NFT Dashboard')" [class.active]="selectedItem === 'NFT Dashboard'">NFT Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'crypto']" (click)="handleItemClick('Crypto Dashboard')" [class.active]="selectedItem === 'Crypto Dashboard'" >Crypto Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'jobs']" (click)="handleItemClick('Jobs Dashboard')" [class.active]="selectedItem === 'Jobs Dashboard'">Jobs Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'projects']" (click)="handleItemClick('Projects Dashboard')" [class.active]="selectedItem === 'Projects Dashboard'">Projects Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'courses']" (click)="handleItemClick('Courses Dashboard')" [class.active]="selectedItem === 'Courses Dashboard'">Courses Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'stocks']" (click)="handleItemClick('Stocks Dashboard')" [class.active]="selectedItem === 'Stocks Dashboard'">Stocks Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'personal']" (click)="handleItemClick('Personal Dashboard')" [class.active]="selectedItem === 'Personal Dashboard'">Personal Dashboard</a></li>
+                      <li><a ngbDropdownItem class="dropdown-item dashboards-dropdown-item"
+                        [routerLink]="[ 'dashboard', 'customer']" (click)="handleItemClick('Customer Dashboard')" [class.active]="selectedItem === 'Customer Dashboard'">Customer Dashboard</a></li>
+                    </ul>
+                  </div> -->
           <!-- End::dashboards list -->
         </div>
         <!-- End::header-element -->
@@ -194,18 +201,14 @@
         <!-- Start::header-element themes-->
         <li class="header-element header-theme-mode">
           <!-- Start::header-link|layout-setting -->
-          <a href="javascript:void(0);" class="header-link layout-setting">
+          <!-- <a href="javascript:void(0);" class="header-link layout-setting">
             <span class="light-layout" >
-              <!-- Start::header-link-icon -->
               <i class="bi bi-moon header-link-icon" (click)="updateTheme('dark')"></i>
-              <!-- End::header-link-icon -->
             </span>
             <span class="dark-layout" >
-              <!-- Start::header-link-icon -->
               <i class="bi bi-brightness-high header-link-icon"  (click)="updateTheme('light')"></i>
-              <!-- End::header-link-icon -->
             </span>
-          </a>
+          </a> -->
           <!-- End::header-link|layout-setting -->
         </li>
         <!-- End::header-element -->

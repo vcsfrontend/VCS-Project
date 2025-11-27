@@ -1483,10 +1483,10 @@
                                 <ng-template class="tab-content" ngbNavContent>
                                     <div class="row bg-light pt-3">
                                         <div class="col-xl-12">
-                                            <nav class="nav nav-style-1 nav-pills card custom-card mb-0 no-bottom-radius" style="box-shadow: none !important;" role="tablist">
+                                            <nav class="card custom-card mb-0 no-bottom-radius" style="box-shadow: none !important;" role="tablist">
                                                 <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
                                                     <button class="scroll-btn me-2" *ngIf="showLeftArrow" (click)="scrollLeft()">&#10094;</button>
-                                                    <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="1" class="nav-tabs d-flex flex-nowrap m-0 p-0 ms-1"
+                                                    <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="1" class="d-flex flex-nowrap m-0 p-0 ms-1"
                                                         style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;" (navChange)="onRoomTabChange($event.nextId)">
                                                         <ng-container *ngFor="let key of tabKeys; let i = index">
                                                             <ng-container [ngbNavItem]="i+1">
@@ -1498,7 +1498,7 @@
                                                                 <div class="tt"></div>
                                                                 <ng-template ngbNavContent>
                                                                     <div class="col-xl-12" *ngIf="!showPanelList">
-                                                                        <div class="card custom-card no-top-radius" style="box-shadow: none !important;">
+                                                                        <div class="card custom-card no-top-radius border-top" style="box-shadow: none !important;">
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="card-title col-xl-4">{{ key | titlecase }}</div>
                                                                                 <div class="dropdown col-xl-7" ngbDropdown>
@@ -1545,14 +1545,14 @@
                                                                                         
                                                                                             <ul class="dropdown-menu shadow-lg p-0" ngbDropdownMenu style="width: 260px; border-radius: 12px;">
                                                                                                 <li>
-                                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
+                                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom"
                                                                                                         (click)="onCreateProposalClick(content4)">
                                                                                                         <i class="ri-refresh-line fs-5"></i>
                                                                                                         <span class="fw-semibold">Create Proposal</span>
                                                                                                     </a>
                                                                                                 </li>
                                                                                                 <li>
-                                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3" (click)="openLg1(content1)">
+                                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom" (click)="openLg1(content1)">
                                                                                                         <i class="ri-layout-grid-line fs-5"></i>
                                                                                                         <span class="fw-semibold">Add Custom Element</span>
                                                                                                     </a>
@@ -1863,10 +1863,15 @@
                                                                                     <nav aria-label="Page navigation" class="pagination-style-4">
                                                                                         <div class="d-flex justify-content-between align-items-center">
                                                                                             <div>
-                                                                                                <span class="fw-bold">INR ({{ key | titlecase }}):
-                                                                                                    {{ tabTotals[key] | number:'1.0-2' }}</span>
-                                                                                                <div class="small text-muted">*Inclusive of Taxes
-                                                                                                </div>
+                                                                                                <span class="fw-bold">
+                                                                                                    INR ({{ key | titlecase }}):
+                                                                                                    {{
+                                                                                                    key === 'All'
+                                                                                                    ? getTotalSum()
+                                                                                                    : tabTotals[key] | number:'1.0-2'
+                                                                                                    }}
+                                                                                                </span>
+                                                                                                <div class="small text-muted">*Inclusive of Taxes</div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </nav>
@@ -1875,7 +1880,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div *ngIf="showPanelList" class="">
-                                                                        <div class="card custom-card no-top-radius" style="box-shadow: none !important;">
+                                                                        <div class="card custom-card no-top-radius border-top" style="box-shadow: none !important;">
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="card-title col-xl-4">Cut List</div>
                                                                                 <div class="d-flex">
