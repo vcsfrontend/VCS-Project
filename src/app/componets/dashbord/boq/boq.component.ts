@@ -792,11 +792,11 @@ closeAllDropdowns() {
                     this.step = 3;
                     this.step = 3;  
                     const firstProposal = this.proposals[0];
-                    const payload = {
-                        proposalContentId: firstProposal.proposalContentId,
-                        designId: firstProposal.designId
-                    };   
-                    this.getProposalContent(payload);           
+                    // const payload = {
+                    //     proposalContentId: firstProposal.proposalContentId,
+                    //     designId: firstProposal.designId
+                    // };   
+                    // this.getProposalContent(payload);           
                 } else {
                     this.skipClientForm = false; 
                     this.skipProposalForm = false;

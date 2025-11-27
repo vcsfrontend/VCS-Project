@@ -1807,7 +1807,12 @@ export class LeadsComponent extends BaseComponent {
             source: 'entry',
           }));
           const combined = [...executiveList, ...entryList];
+            combined.forEach(item => {
+            item.contact = item.contact ? Number(item.contact).toString() : '';
+          });
+          this.dataSource = new MatTableDataSource(combined);
           this.leadCount = combined.length;
+         
           this.leadStatusCount = combined;
           const statusCounts: { [status: string]: number } = {};
           const statusCompletion : { [completionStatus: string]: number } = {};
