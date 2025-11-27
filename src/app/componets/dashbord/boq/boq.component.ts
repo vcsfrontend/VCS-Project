@@ -2594,12 +2594,17 @@ closeAllDropdowns() {
         });
     }
 
-
-
     onImgError(event: any) {
         event.target.src = 'assets/images/brand-logos/no-image.png';
     }
 
+    getTotalSum(): string {
+        if (!this.tabTotals) return '0.00';
+        const total = Object.values(this.tabTotals)
+            .filter(v => typeof v === 'number')
+            .reduce((acc: number, val: number) => acc + val, 0);
+        return total.toFixed(2);
+    }
 
 
 

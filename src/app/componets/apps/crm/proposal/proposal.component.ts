@@ -81,18 +81,18 @@ export class ProposalComponent extends BaseComponent {
   proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
   selectedProposalCount: any = null;
   isReadOnly: boolean = false; skipClientForm: boolean = false; clientData: any = null;
-  skipProposalForm: boolean = false; minDateTime: string = ''; 
+  skipProposalForm: boolean = false; minDateTime: string = '';
   showShutterFields: boolean = false; dimensionsList: any[] = []; currentStep: number = 1;
-  step1Data: any[] = []; step2Data: any = null;leadData : any;
+  step1Data: any[] = []; step2Data: any = null; leadData: any; selectedRoom: string = 'All';
   // selectedColumns: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild('scrollContainer',{static:false}) scrollContainer!: ElementRef;
+  @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
 
   @ViewChild(MatSort) sort!: MatSort;
   tabKeys: string[] = []; boqDataSources: { [key: string]: MatTableDataSource<any> } = {};
   selectedCategory: any; editIndex: number | null = null; designId: any;
   boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup;
-  proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; updateProjectForm!: FormGroup; 
+  proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; updateProjectForm!: FormGroup;
   addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
   newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
   selectedFile: File | null = null; selectedPanel: any = null;
@@ -601,13 +601,13 @@ export class ProposalComponent extends BaseComponent {
   }
 
   ngAfterViewInit() {
-        this.dataSource.paginator = this.paginator;
-        this.proposaldataSource.paginator = this.paginator;
-        setTimeout(() => this.checkArrows(), 150);
-        // this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.proposaldataSource.paginator = this.paginator;
+    setTimeout(() => this.checkArrows(), 150);
+    // this.dataSource.sort = this.sort;
   }
   ngAfterViewChecked() {
-      setTimeout(() => this.checkArrows(), 300);
+    setTimeout(() => this.checkArrows(), 300);
   }
 
   applyFilter(event: Event) {
@@ -661,7 +661,7 @@ export class ProposalComponent extends BaseComponent {
         });
         this.boqDataSources['All'] = new MatTableDataSource(allItems);
         this.tabKeys = ['All', ...this.tabKeys];
-        this.currentRoomName = 'All'; 
+        this.currentRoomName = 'All';
         this.roomNameList = this.tabKeys
           .filter(k => k !== 'All')
           .map(name => ({ name }));
@@ -770,7 +770,7 @@ export class ProposalComponent extends BaseComponent {
 
   getClientOrders() {
     const payload = {
-      designId:'3FO3ILENXV7I',
+      designId: '3FO3ILENXV7I',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
@@ -920,7 +920,7 @@ export class ProposalComponent extends BaseComponent {
       quantity: quantityNum,
       codeAndCategory: formValue.codeAndCategory?.name || '',
       brandOrMake: this.elementForm.value.brandOrMake || '',
-      designId:'3FO3ILENXV7I',
+      designId: '3FO3ILENXV7I',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType
@@ -969,7 +969,7 @@ export class ProposalComponent extends BaseComponent {
       length: item.dimensions?.width || 0,
       breadth: item.dimensions?.depth || 0,
       height: item.dimensions?.height || 0,
-      designId:'3FO3ILENXV7I'
+      designId: '3FO3ILENXV7I'
     };
     this.switchService.saveElementData(payload).subscribe({
       next: (res: any) => {
@@ -1109,7 +1109,7 @@ export class ProposalComponent extends BaseComponent {
     //   return;
     // }
     // const formValue = this.proposalForm.value;
-     if (!this.selectedElement || this.selectedElement.length === 0) {
+    if (!this.selectedElement || this.selectedElement.length === 0) {
       this.toastr.warning("Please select at least one Element");
       return;
     }
@@ -1141,8 +1141,8 @@ export class ProposalComponent extends BaseComponent {
     // };
     const storedClientData = localStorage.getItem("storedClientData");
     let clientDataToSend = {
-      clientName : this.leadData.name,
-      clientMobileNumber : this.leadData.contact
+      clientName: this.leadData.name,
+      clientMobileNumber: this.leadData.contact
 
     };
     // if (this.skipClientForm == true) {
@@ -1166,7 +1166,7 @@ export class ProposalComponent extends BaseComponent {
       // orderFrom: formValue.orderFrom,
       contentJs: JSON.stringify(selectedData),
       currentAmount: totalAmount,
-      designId:'3FO3ILENXV7I',
+      designId: '3FO3ILENXV7I',
       clientDataJs: JSON.stringify(clientDataToSend),
     };
     // this.updateElementsAndCreateProposal(proposalPayload, modal);
@@ -1893,12 +1893,25 @@ export class ProposalComponent extends BaseComponent {
     const el = this.scrollContainer.nativeElement;
     this.showLeftArrow = el.scrollLeft > 0;
     this.showRightArrow = el.scrollWidth > el.clientWidth &&
-    el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
+      el.scrollLeft < (el.scrollWidth - el.clientWidth - 5);
   }
   forceBlur(select: any) {
-        if (select && select.blur) {
-            select.blur();
-        }
+    if (select && select.blur) {
+      select.blur();
     }
+  }
+
+  onImgError(event: any) {
+    event.target.src = 'assets/images/brand-logos/no-image.png';
+  }
+
+  getTotalSum(): string {
+    if (!this.tabTotals) return '0.00';
+    const total = Object.values(this.tabTotals)
+      .filter(v => typeof v === 'number')
+      .reduce((acc: number, val: number) => acc + val, 0);
+    return total.toFixed(2);
+  }
+
 
 }

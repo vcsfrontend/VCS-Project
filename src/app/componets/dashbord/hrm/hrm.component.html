@@ -1,0 +1,76 @@
+<div class="col-xl-12 mt-3">
+    <div class="card custom-card">
+        <div class="table-container mat-elevation-z8 boq-table-wrapper">
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
+                <ng-container matColumnDef="slNo">
+                    <th mat-header-cell *matHeaderCellDef> S.No. </th>
+                    <td mat-cell *matCellDef="let element; let i = index"> {{getSNo(i)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+                    <td mat-cell *matCellDef="let element" class="cursor-pointer"
+                        [matTooltip]="element.name?.length > 20 ? element.name : ''" matTooltipPosition="above"
+                        matTooltipClass="custom-tooltip">{{(element.name) }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="executive">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Executive</th>
+                    <td mat-cell *matCellDef="let element">
+                        <div class="d-flex align-items-center">
+                            <ng-container *ngIf="element.executive; else noExecutive">
+                                <div class="avatar avatar-sm avatar-rounded me-2 border text-white fw-bold pointer" style="cursor: pointer;"
+                                    [ngClass]="getUserColor({ email: element.executive })" [ngbTooltip]="element.executive"
+                                    tooltipClass="tooltip-primary">
+                                    <span class="d-flex align-items-center justify-content-center w-100 h-100">
+                                        {{ element.executive.charAt(0) | uppercase }}
+                                    </span>
+                                </div>
+                            </ng-container>
+                            <ng-template #noExecutive>
+                                <img src="./assets/images/brand-logos/profile1.jpg" alt="img"
+                                    class="avatar avatar-sm avatar-rounded me-2 border pointer" style="cursor: pointer;"
+                                    ngbTooltip="No executive assigned" tooltipClass="tooltip-primary" />
+                            </ng-template>
+                        </div>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="followUpDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="fixed-width-column">
+                        Followup Date
+                    </th>
+                    <td mat-cell *matCellDef="let element"> {{ element.followUpDate | date: 'dd-MMM-yyyy hh:mm a' }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="contact">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Contact</th>
+                    <td mat-cell *matCellDef="let element"> {{element.contact}} </td>
+                </ng-container>
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="element.email?.length > 20 ? element.email : ''"
+                        matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.email}} </td>
+                </ng-container>
+                <ng-container matColumnDef="city">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>City</th>
+                    <td mat-cell *matCellDef="let element" [matTooltip]="element.city?.length > 20 ? element.city : ''"
+                        matTooltipPosition="above" matTooltipClass="custom-tooltip"> {{element.city}}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="updatedTime">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Lead Updation Date</th>
+                    <td mat-cell *matCellDef="let element"> {{ element.updatedTime | date: 'dd-MMM-yyyy hh:mm a' }} </td>
+                </ng-container>
+                <ng-container matColumnDef="completionStatus">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Completion Status</th>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height:47px; vertical-align:middle;"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
+                    [class.disabled-row]="row.completionStatus === 'completed'"></tr>
+            </table>
+        </div>
+        <mat-paginator [length]="totalRecords" [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]" showFirstLastButtons
+            (page)="onPageChange($event)">
+        </mat-paginator>
+
+    </div>
+</div>

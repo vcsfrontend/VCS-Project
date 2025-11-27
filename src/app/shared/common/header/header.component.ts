@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { SharedModule } from '../sharedmodule';
 import { SwitherService } from '../../services/swither.service';
+
 interface Item {
   id: number;
   name: string;
@@ -31,29 +32,43 @@ export class HeaderComponent implements OnInit {
   notificationCount: number = 5;
   public isCollapsed = true;
    public leadCount = 0;
+  projectName: string | null = null;
+  projectId: string | null = null;
+
   collapse: any; userList: any; loggedInUser: any;
   closeResult = ''; campaignId!: string; followUpCount: any; nextLeadStatus :any;
   themeType: string | undefined; userName:any; userData:any;  userEmail :any
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary',
     'bg-pink', 'bg-teal', 'bg-indigo', 'bg-orange', 'bg-dark', 'bg-light'];
-  profilePic: string | null = null;
-  selectedItem: string  | null ='selectedItem'
+  profilePic: string | null = null; projectDetails: any = null;
+  selectedItem: string  | null ='selectedItem'; showBoqHeader = false;
   isOpen: boolean = false; isCrm:boolean = false; isAdonai:boolean = false;
   constructor(
     private appStateService: AppStateService,
     public navServices: NavService,
     private elementRef: ElementRef,
     public renderer: Renderer2,
-    public modalService:NgbModal,
+    public modalService: NgbModal,
     private toastr: ToastrService, private switchService: SwitherService,
     private router: Router, private activatedRoute: ActivatedRoute, private http: HttpClient
-  ) {this.localStorageBackUp()
+  ) {
+    this.localStorageBackUp()
     this.userData = localStorage.getItem('userDetails'),
-    this.userName = JSON.parse(this.userData)?.username,
-    this.userEmail = JSON.parse(this.userData)?.email,
-    this.isCrm = JSON.parse(this.userData)?.crm,
-    this.isAdonai = JSON.parse(this.userData)?.adonai
+      this.userName = JSON.parse(this.userData)?.username,
+      this.userEmail = JSON.parse(this.userData)?.email,
+      this.isCrm = JSON.parse(this.userData)?.crm,
+      this.isAdonai = JSON.parse(this.userData)?.adonai
+    this.router.events.subscribe(event => {
+    if (event instanceof NavigationEnd) {
+      const params = this.activatedRoute.root.firstChild?.snapshot.queryParams;
+      if (params?.['projectId'] && params?.['projectName']) {
+        localStorage.setItem('selectedProject', JSON.stringify(params)); // keep for refresh
+      }
+      this.projectDetails = JSON.parse(localStorage.getItem('selectedProject') || '{}');
+    }
+  });
   }
+  
 
   private offcanvasService = inject(NgbOffcanvas);
 
@@ -244,6 +259,29 @@ export class HeaderComponent implements OnInit {
   private intervalSub!: Subscription;
   public SearchResultEmpty: boolean = false;
   ngOnInit(): void {
+    this.router.events
+    .pipe(filter(event => event instanceof NavigationEnd))
+    .subscribe((event: any) => {
+
+      // Check if route contains '/boq'
+      this.showBoqHeader = event.urlAfterRedirects.includes('/boq');
+
+      if (this.showBoqHeader) {
+        const params = this.activatedRoute.root.firstChild?.snapshot.queryParams;
+
+        // Save params only when available
+        if (params?.['projectId'] && params?.['projectName']) {
+          localStorage.setItem('selectedProject', JSON.stringify(params));
+        }
+
+        // Load from localStorage
+        this.projectDetails = JSON.parse(localStorage.getItem('selectedProject') || '{}');
+
+      } else {
+        // Hide when not on boq
+        this.projectDetails = null;
+      }
+    });
     this.getUserInfo(this.userEmail);
     this.logRoute();
     this.loadLeadData();
@@ -469,5 +507,13 @@ export class HeaderComponent implements OnInit {
       },
     });
   }
+
+  capitalizeFirstLetter(text: string | null | undefined, defaultText: string = ''): string {
+    if (!text || typeof text !== 'string' || text.trim() === '') {
+      return defaultText;
+    }
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }
+
   
 }

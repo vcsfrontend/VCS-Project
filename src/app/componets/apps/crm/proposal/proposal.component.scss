@@ -518,8 +518,22 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   align-items: center;
   justify-content: flex-start;
   gap: 2px !important;   
-  padding-top: 4px !important; 
-  padding-bottom: 4px !important;
+  padding-top: 2px !important; 
+  padding-bottom: 2px !important;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
+  position: relative;
+  width: 100%;
+  border: 0px;
+}
+
+.custom-tab-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px !important;   
+  padding-top: 12px !important; 
+  padding-bottom: 12px !important;
   background-color: rgb(255, 255, 255);
   box-shadow: 0px 0.225rem 0.75rem rgba(0, 0, 0, 0.07);
   position: relative;
@@ -656,37 +670,41 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .arrow.right {
     right: 5px;
 }
+.hover-select-wrapper {
+  position: relative;
+  width: 150px;
+}
 .code-display {
   padding: 6px 10px;
   cursor: pointer;
   transition: 0.2s;
   white-space: nowrap;
 }
-
+.hover-select-wrapper:hover .code-display {
+  border-color: #007bff;
+}
 .hover-select {
   position: absolute;
   top: 0;
   left: 0;
+
   width: 100%;
   height: 100%;
-  margin-top: -30px;
+
   opacity: 0;
   pointer-events: none;
   z-index: 10;
 }
 .hover-select-wrapper:hover .hover-select {
   opacity: 1 !important;
-  align-items: center;
   pointer-events: auto !important;
 }
 .hover-select-wrapper:hover .code-display {
   opacity: 0;
-  border-color: #007bff;
 }
 .hover-select-wrapper {
     position: relative;
     width: 150px;
-    align-items: center;
 }
 .display-label {
     padding: 6px 10px;
@@ -695,7 +713,6 @@ ul.dropdown-menu.cuw.show ~ .table-container {
     background: white;
     cursor: pointer;
     transition: 0.2s;
-    
 }
 .hover-select-wrapper:hover .display-label {
     border-color: #007bff;
@@ -736,6 +753,24 @@ ul.dropdown-menu.cuw.show ~ .table-container {
   background: #ffffff;
   border: 2px solid #f0f0f0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
+}
+
+.recce-select {
+  width: 200px !important;
+}
+.ng-dropdown-panel {
+    z-index: 99999 !important;
+}
+::ng-deep .cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+::ng-deep .ng-dropdown-panel {
+  z-index: 99999 !important;
+}
+
+.d-flex.align-items-center.ttr {
+    margin-top: -3px;
 }
 
 .dropdown-menu {
