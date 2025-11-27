@@ -89,7 +89,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   projectMarginList:any; isLoading = false;projectShare !: FormGroup; updateProjectForm!: FormGroup; 
   selectedFile: File | null = null; previewUrl: string | ArrayBuffer | null = null; projectId: any;
   selectedProjectId: string = ''; selectedProjectName: string = '';  selectedProjectStage: string = '';
-  selectedProjectArea: string = '';
+  selectedProjectArea: string = '';recceList: any[] = [];selectedStageTab: string = '';
+    filteredRecce: any[] = [];recceStagesList: string[] = [];
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
 
@@ -163,6 +164,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       projectArea: element.projectArea
     })
     this.modalService.open(content18, { size: 'lg', centered: true });
+    this.getRecceData();
   }
 
   openLg2(content13: any) {
@@ -2306,6 +2308,46 @@ downloadButtons: { label: string; url: string }[] = [];
   get files(): FormArray {
     return this.recceForm.get('files') as FormArray;
   }
-
+getRecceData() {
+        this.isLoading = true;
+        const payload = {
+            email: this.userEmail,
+            companyCode: this.userCompanyCode,
+            type: this.userType,
+            projectId: this.selectedProjectId,
+        };
+        this.switchService.fetchRecceData(payload).subscribe({
+            next: (res: any) => {
+                if (res && res.length > 0) {
+                    this.recceList = res.map((recce: any) => ({
+                        ...recce,
+                        imageList: recce.imageUrls
+                            ? recce.imageUrls.split(',').map((url: string) => url.trim())
+                            : [],
+                        recceAssigneEmails: recce.recceAssigne
+                            ? recce.recceAssigne.split(',').map((v: string) => v.trim())
+                            : [],
+                        recceStakeHoldersEmail: recce.recceStakeHolders
+                            ? recce.recceStakeHolders.split(',')[0].trim() : '',
+                        recceClientPocEmail: recce.recceClientPoc
+                            ? recce.recceClientPoc.split(',')[0].trim() : '',
+                    }));
+                    this.recceStagesList = [
+                        ...new Set(this.recceList.map(r => r.recceStage))];
+                    this.selectedStageTab = this.recceStagesList[0];
+                    this.blockedStages = [];
+                    this.recceList.forEach(recce => {
+                        if (recce.recceStage) {
+                            this.blockedStages.push(recce.recceStage);
+                        }
+                    });
+                }
+                else {
+                    this.recceList = [];
+                }
+                this.isLoading = false;
+            },
+        });
+    }
 
 }

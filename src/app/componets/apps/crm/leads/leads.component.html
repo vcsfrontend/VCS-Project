@@ -1441,11 +1441,17 @@
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top sticky-footer">
                 <div class="d-flex justify-content-start gap-3 position-relative">
-                    <button class="btn btn-primary mr-3" type="submit">Update Status</button>
+                    <button class="btn btn-primary mr-3" type="submit" [disabled]="uploadSpinner">Update Status</button>                    
                     <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger mr-3"
                         type="submit">Cancel</button>
                 </div>
             </div>
+            <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+			
         </form>
     </div>
 </ng-template>

@@ -90,8 +90,9 @@ export class DealsComponent extends BaseComponent {
   campaignList: any[] = [];selectedCampaign: any;
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
-  override cityList:any[]=[];
+  override cityList:any[]=[];companyList : any[]=[];
   isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';proposalsentSubmitted : boolean = false;
+   minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -370,9 +371,14 @@ export class DealsComponent extends BaseComponent {
     return index + 1;
   }
   applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  if (this.dataSource.paginator) {
+    this.dataSource.paginator.firstPage();
   }
+  }
+
   userFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.usersDataSource.filter = filterValue.trim().toLowerCase();
@@ -402,8 +408,8 @@ export class DealsComponent extends BaseComponent {
     const mi = pad(now.getMinutes());
 
     this.minDateTime = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+    this.minimumDate = `${yyyy}-${mm}-${dd}`;
     this.getfetchLeadsIndividual();
-
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]],
@@ -479,6 +485,7 @@ export class DealsComponent extends BaseComponent {
       executive: [''],
       city: [''],
       campaignId: [''],
+      companyName: [''],
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType
@@ -858,7 +865,14 @@ export class DealsComponent extends BaseComponent {
               .filter((city: any) => !!city); 
             const uniqueCities = [...new Set(cities)];
             this.cityList = uniqueCities.map(city => ({ name: city }));
+          const companyNames = res.entryList.map((lead:any)=>lead.companyName?.trim()).filter((companyName :any)=>!!companyName);
+          const uniqueCompnayNames = [...new Set(companyNames)];
+          this.companyList = uniqueCompnayNames.map(companyName=>({name:companyName}))
           const combined = [...executiveList, ...entryList];
+          combined.forEach(item => {
+            item.contact = item.contact ? Number(item.contact).toString() : '';
+          });
+          this.dataSource = new MatTableDataSource(combined);
           this.leadCount = combined.length;
            this.leadStatusCount = combined;
           const statusCounts: { [status: string]: number } = {};
@@ -892,6 +906,7 @@ export class DealsComponent extends BaseComponent {
           const nextLead = sortedByFollowUpDate.length
             ? sortedByFollowUpDate[0]
             : null;
+            
            this.updateColumns();
           this.getStatusCount();
           this.taskPriorityList = res.taskPriorityList || [];
@@ -1195,9 +1210,7 @@ export class DealsComponent extends BaseComponent {
     return input.replace(/<\/?[^>]+(>|$)/g, ""); // Removes all HTML tags
   }
 
-
-  
-  uploadLeadSubmit(modal: any) {
+   uploadLeadSubmit(modal: any) {
     const selectedAgents = this.uploadLead.get('agents')?.value;
     if (this.userType !== 1) {
       if (!selectedAgents || selectedAgents.length === 0) {
@@ -1249,12 +1262,6 @@ export class DealsComponent extends BaseComponent {
       });
     }
   }
-
-
-
-
-
-
   sendEmail(element: any) {
     this.sendLeadForm.patchValue({ email: element.email });
   }
@@ -1390,6 +1397,7 @@ export class DealsComponent extends BaseComponent {
 
   followupLeadSubmit(modal: any) {
     this.followupLeadSubmitted = true;
+    this.uploadSpinner = true;
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
     if (this.followupLeadForm?.valid) {
@@ -1457,6 +1465,7 @@ export class DealsComponent extends BaseComponent {
           if (res.status == true) {
             modal.close();
             this.followupLeadSubmitted = false;
+            this.uploadSpinner = false;
             this.showForm = false;
             this.followupLeadForm.reset();
             this.executiveName = '';
@@ -1608,8 +1617,9 @@ export class DealsComponent extends BaseComponent {
 
 
   isSelected(leadId: number): boolean {
-    return this.selectedLeads.some(l => l.leadId === leadId);
+    return this.selectedLeads.includes(leadId);
   }
+
 
   isAllSelected(): boolean {
     return this.selectedLeads.length === this.dataSource.data.length;
@@ -2358,48 +2368,67 @@ export class DealsComponent extends BaseComponent {
     return this.userColors[index];
   }
 
-  getStatusColor(status: string): string {
-    if (!Array.isArray(this.statusLst)) {
-      return '#ccc';
-    }
-    const normalizedStatus = status.trim().toLowerCase();
-
-    if (normalizedStatus === 'active') return '#28a745';
-    for (const stage of this.statusLst) {
-      const field = stage.fields?.find(
-        (f: { name: string }) => f.name?.toLowerCase() === status?.toLowerCase()
-      );
-      if (field?.color) {
-        return field.color;
-      }
-    }
-    return '#ccc';
+  getStatusColor(status: string | null | undefined): string {
+  if (!status || typeof status !== 'string' || status.trim() === '') {
+    return '#ccc'; // default color
   }
-  getStageColor(stage: string): string {
-    if (!this.stageLst) {
-      return '#ccc';
-    }
-    const normalizedStage = stage.trim().toLowerCase();
 
-    if (normalizedStage === 'open') return '#28a745';
-    const match = this.stageLst.find(
-      (s: { stageName: string }) =>
-        s.stageName.toLowerCase() === stage.toLowerCase()
+  if (!Array.isArray(this.statusLst)) return '#ccc';
+
+  const normalizedStatus = status.trim().toLowerCase();
+
+  if (normalizedStatus === 'active') return '#28a745';
+
+  for (const stage of this.statusLst) {
+    const field = stage.fields?.find(
+      (f: { name: string }) => f.name?.toLowerCase() === normalizedStatus
     );
-    return match?.color || '#ccc';
+    if (field?.color) {
+      return field.color;
+    }
   }
-   capitalizeFirstLetter(text: string): string {
-  if (!text) return '';
+
+  return '#ccc';
+}
+
+
+  getStageColor(stage: string | null | undefined): string {
+  if (!stage || typeof stage !== 'string' || stage.trim() === '') {
+    return '#ccc'; // default grey
+  }
+
+  if (!this.stageLst) return '#ccc';
+
+  const normalizedStage = stage.trim().toLowerCase();
+
+  if (normalizedStage === 'open') return '#28a745';
+
+  const match = this.stageLst.find(
+    (s: { stageName: string }) =>
+      s.stageName?.toLowerCase() === normalizedStage
+  );
+
+  return match?.color || '#ccc';
+}
+
+
+ capitalizeFirstLetter(text: string | null | undefined, defaultText: string = ''): string {
+  if (!text || typeof text !== 'string' || text.trim() === '') {
+    return defaultText;   // return default label
+  }
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-  }
+}
+
+
 
   deleteSelectedLeads() {
     if (!this.selectedLeads.length) {
       this.toastr.warning('Please select at least one lead');
       return;
     }
+    let leadList= this.selectedLeads.map((lead: any) => lead.leadId)
     if (confirm('Are you sure you want to delete the selected leads?')) {
-      this.switchService.deleteLeads({ leadList: this.selectedLeads }).subscribe({
+      this.switchService.deleteLeads({ leadList }).subscribe({
         next: (res: any) => {
           this.toastr.success('Leads deleted successfully');
           this.getfetchLeadsIndividual();
@@ -2881,14 +2910,25 @@ export class DealsComponent extends BaseComponent {
   openCompletionModal(content: any, lead: any) {
     this.selectedLead = lead;
     this.leadId = lead.leadId;
-    this.currentStep = 1;  
+    this.currentStep = 1; 
+     const mobile = lead.contact ? String(Number(lead.contact)) : '';
+    this.completionForm.patchValue({
+      clientName: lead.name ?? '',
+      mobileNumber: mobile,
+      projectName: lead.companyName ?? '',
+      address: lead.address ?? '',
+      username: lead.username ?? ''
+    }); 
     this.modalService.open(content, { centered: true,scrollable: true });
+  }
+   closeLeadWithoutProject(modal : any) {
+  this.updateCompletionStatus(null, false);  
   }
 
 
-  updateCompletionStatus(modal: any) {
+   updateCompletionStatus(modal: any,autoProjectCreation: boolean) {
     this.leadCompletionsubmitted = true;
-    if (this.completionForm.invalid) {
+    if (autoProjectCreation && this.completionForm.invalid) {
       return; 
     }
     const payload = {
@@ -2899,7 +2939,8 @@ export class DealsComponent extends BaseComponent {
       companyCode:this.userCompanyCode,
       companyName: this.userCompanyName,
       email: this.userEmail,
-      type: this.userType
+      type: this.userType,
+      autoCreationRequired: autoProjectCreation,
     };
     this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
@@ -2909,8 +2950,15 @@ export class DealsComponent extends BaseComponent {
         if (this.selectedLead) {
           this.selectedLead.completionStatus = "completed"; 
         }
-        modal.close();
         this.uploadSpinner = false;
+        if (modal) {
+          modal.close('closed'); 
+        } else {
+          this.modalService.dismissAll();
+        }
+        setTimeout(() => {
+          this.currentStep = 1;
+        }, 300);
 
       },
       error: (err) => {
@@ -2927,12 +2975,10 @@ export class DealsComponent extends BaseComponent {
     if (this.completionForm.invalid) {
       return; 
     }
-    this.updateCompletionStatus(modal);
-
+    this.updateCompletionStatus(modal,true);
     modal.close();
     this.currentStep = 1;
   }
-
   getfullDaysLeft(task: any): string {
     if (!task.deadline) return '';
     const deadlineDate = new Date(task.deadline);
@@ -3163,6 +3209,22 @@ formatLocalDateTime(dateTime: string | Date): string {
     this.proposalsentSubmitted = true;
     this.ViewCrmLeads(element);
    console.log('gdgd',this.CrmLeads) ;
+  }
+  allowOnlynum(event: KeyboardEvent) {
+    const allowedChars = '0123456789.';
+    const inputChar = event.key;
+
+    if (
+      ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
+    ) {
+      return;
+    }
+
+    const currentValue = (event.target as HTMLInputElement).value;
+
+    if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
+      event.preventDefault();
+    }
   }
 
 
