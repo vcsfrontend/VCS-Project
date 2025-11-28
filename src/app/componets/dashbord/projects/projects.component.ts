@@ -2201,9 +2201,11 @@ downloadButtons: { label: string; url: string }[] = [];
         queryParams: {
           projectId: element.projectId,
           projectName: element.projectName
-        }
+        },
+        state: { projectObj: element }
       }
     );
+    this.getLst();
   }
 
   onTypeChange(type: any) {
