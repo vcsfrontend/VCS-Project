@@ -469,11 +469,13 @@
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;" style="height:47px; vertical-align:middle;"
                     [class.disabled-row]="row.completionStatus === 'completed'"></tr>
             </table>
-            <div class="text-center p-3" *ngIf="dataSource?.data?.length === 0">
+            <div class="text-center p-3" *ngIf="leadList?.length === 0">
                 <p class="text-muted mb-0">No data found</p>
             </div>
         </div>
-        <mat-paginator #paginator [pageSizeOptions]="[20, 100, 500]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
+            (page)="onPageChange($event)">
+        </mat-paginator>
         <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"

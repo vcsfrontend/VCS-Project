@@ -2,7 +2,7 @@ import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/c
 import { SharedModule } from '../../../../shared/common/sharedmodule';
 import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -57,7 +57,6 @@ export class DealsComponent extends BaseComponent {
   usersColumns: string[] = ['slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
-  pageSize = 10;
   Crmusers: any[] = []; CrmLeads: any = {}; element: any = {}; crmLeadsList : any;
   campaignId :string='DUMMY9DD1748413866634' ; stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
   statusOptionsByStage: { [stageName: string]: any[] } = {}; statusLst: any; allStatuses: any;
@@ -92,6 +91,7 @@ export class DealsComponent extends BaseComponent {
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   override cityList:any[]=[];companyList : any[]=[];
   isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';proposalsentSubmitted : boolean = false;
+  pageIndex = 0; pageSize = 5;  data: any[] = []; displayData: any[] = []; totalRecords: number = 0;
    minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
@@ -832,14 +832,15 @@ export class DealsComponent extends BaseComponent {
       ? 'SINGLE9DD1748413866634'
       : 'DUMMY9DD1748413866634';
     const payload = {
-        currentUser : this.userEmail,
-        campaignId:this.campaignId
-
+      page: this.pageIndex,
+      size: 50,
+      currentUser: this.userEmail,
+      campaignId: this.campaignId
     }
-    this.switchService.fetchLeadsIndividual(payload).subscribe({
+    this.switchService.fetchLeads(payload).subscribe({
       next: (res: any) => {
           const now = new Date();
-          const executiveList = (res.executiveList || []).map((item: any) => ({
+          const executiveList = res.executiveList?.content?.map((item: any) => ({
             ...item,
             followUpDue: item.followUpDate
               ? new Date(item.followUpDate) < now
@@ -849,7 +850,7 @@ export class DealsComponent extends BaseComponent {
               : null,
             source: 'executive',
           }));
-          const entryList = (res.entryList || []).map((item: any) => ({
+          const entryList = res.entryList?.content?.map((item: any) => ({
             ...item,
             followUpDue: item.followUpDate
               ? new Date(item.followUpDate) < now
@@ -860,15 +861,20 @@ export class DealsComponent extends BaseComponent {
             source: 'entry',
             
           }));
-          const cities = res.entryList
-              .map((lead: any) => lead.city?.trim())
-              .filter((city: any) => !!city); 
-            const uniqueCities = [...new Set(cities)];
-            this.cityList = uniqueCities.map(city => ({ name: city }));
-          const companyNames = res.entryList.map((lead:any)=>lead.companyName?.trim()).filter((companyName :any)=>!!companyName);
+          const cities = res.entryList?.content
+            ?.map((lead: any) => lead.city?.trim())
+            .filter((city: any) => !!city) ?? [];
+          const uniqueCities = [...new Set(cities)];
+          this.cityList = uniqueCities.map(city => ({ name: city }));
+          const companyNames = res.entryList?.content?.map((lead: any) => lead.companyName?.trim()).filter(Boolean) ?? [];
           const uniqueCompnayNames = [...new Set(companyNames)];
           this.companyList = uniqueCompnayNames.map(companyName=>({name:companyName}))
           const combined = [...executiveList, ...entryList];
+          this.leadList = combined;
+          this.totalRecords = res.entryList?.totalElements ?? combined.length;
+          if (this.pageIndex === 0) {
+            this.paginator?.firstPage();
+          }
           combined.forEach(item => {
             item.contact = item.contact ? Number(item.contact).toString() : '';
           });
@@ -882,14 +888,11 @@ export class DealsComponent extends BaseComponent {
             statusCounts[status] = (statusCounts[status] || 0) + 1;
             const completionStatus = lead.completionStatus;
             statusCompletion[completionStatus]= (statusCompletion[completionStatus] || 0) + 1;
-
           });
-
           this.activeCount = statusCounts['active'] || 0;
           this.connectedCount = statusCounts['completed'] || 0;
           this.notConnectedCount = statusCounts['Not Connected'] || 0;
           this.statusCompletion = statusCompletion['completed'] || 0 ;
-
           this.dataSource.data = combined;
            this.followUpCount = combined.filter(
             (item) => item.followUpDue
@@ -908,12 +911,9 @@ export class DealsComponent extends BaseComponent {
             : null;
             
            this.updateColumns();
-          this.getStatusCount();
+          // this.getStatusCount();
           this.taskPriorityList = res.taskPriorityList || [];
-        },
-      error: (error) => {
-        // this.toastr.error(error.statusText || 'Server Error');
-      },
+        }
     });
   }
 
@@ -3178,6 +3178,7 @@ formatLocalDateTime(dateTime: string | Date): string {
      }
     this.campaignId = selectedCampaignId;
   }
+
   moveLeadToAnotherCampaign(
     data: { leadId: string; campaignId: string } | any[],
     modal: any
@@ -3205,11 +3206,13 @@ formatLocalDateTime(dateTime: string | Date): string {
     });
     }
   }
+
   sentProposal(element : any) {
     this.proposalsentSubmitted = true;
     this.ViewCrmLeads(element);
    console.log('gdgd',this.CrmLeads) ;
   }
+
   allowOnlynum(event: KeyboardEvent) {
     const allowedChars = '0123456789.';
     const inputChar = event.key;
@@ -3225,6 +3228,32 @@ formatLocalDateTime(dateTime: string | Date): string {
     if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
       event.preventDefault();
     }
+  }
+
+  onPageChange(event: PageEvent) {
+    if (event.pageSize !== this.pageSize) {
+      this.pageSize = event.pageSize;
+      this.updateClientPagination();
+      return;
+    }
+
+    if (event.pageIndex !== this.pageIndex) {
+      this.pageIndex = event.pageIndex;
+      this.getfetchLeadsIndividual();
+    }
+  }
+
+
+  updateClientPagination() {
+    if (!this.leadList?.length) {
+      this.displayData = [];
+      this.dataSource = new MatTableDataSource(this.displayData);
+      return;
+    }
+    const startIndex = this.pageIndex * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.displayData = this.leadList.slice(startIndex, endIndex);
+    this.dataSource = new MatTableDataSource(this.displayData);
   }
 
 
