@@ -51,9 +51,10 @@ export class HrmComponent extends BaseComponent{
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
-  userType: any = this.userData ? this.userData.type : ''; campaignName :any; leadList :any; currentStage : string =''; 
+  userType: any = this.userData ? this.userData.type : ''; campaignName :any; leadList: any[] = []; currentStage : string =''; 
   sendProposalEnable : boolean= false; override cityList:any[]=[]; public leadCount = 0;
-  taskPriorityList :any;taskList:any; pageIndex = 50; pageSize = 10; totalRecords = 0;
+  taskPriorityList :any;taskList:any; pageIndex = 0; pageSize = 5;  data: any[] = []; 
+  displayData: any[] = []; totalRecords: number = 0;
   statusCounts: { [key: string]: number } = {}; statusCompletion: { [key: string]: number } = {}; 
   nextLead: any = null;
 
@@ -83,46 +84,43 @@ export class HrmComponent extends BaseComponent{
 
   campaignId= 'DUMMY9DD1748413866634';
   getFetchLeadData() {
-
     const payload = {
       page: this.pageIndex,
-      size: this.pageSize,
+      size: 50,
       campaignId: this.campaignId,
       updatedBy: this.userEmail
     };
-
-    console.log("📢 API Request Payload:", payload);
-
     this.switchService.fetchLeads(payload).subscribe({
       next: (res: any) => {
-        console.log("📥 API Response Received:", res);
-
         const entryContent = res.entryList?.content || [];
         this.totalRecords = res.entryList?.totalElements || 0;
-
-        this.dataSource = new MatTableDataSource(entryContent);
         this.leadList = entryContent;
-
-        setTimeout(() => {
-          if (this.paginator) {
-            this.dataSource.paginator = this.paginator;
-          }
-        });
-      },
-      error: (err) => {
-        console.error("❌ API Error:", err);
+        this.updateClientPagination(); 
       }
     });
   }
 
+updateClientPagination() {
+  const startIndex = 0;
+  const endIndex = this.pageSize;
+
+  this.displayData = this.leadList.slice(startIndex, endIndex);
+  this.dataSource = new MatTableDataSource(this.displayData);
+}
+
 
   onPageChange(event: PageEvent) {
-    console.log("📌 Pagination event:", event);
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    console.log(`➡ Calling API with page: ${this.pageIndex}, size: ${this.pageSize}`);
-    this.getFetchLeadData();
+    if (event.pageSize !== this.pageSize) {
+      this.pageSize = event.pageSize;
+      this.updateClientPagination();
+      return;
+    }
+    if (event.pageIndex !== this.pageIndex) {
+      this.pageIndex = event.pageIndex;
+      this.getFetchLeadData(); 
+    }
   }
+
 
   getUserColor(followup: any): string {
     const key = followup.email || followup.followUpBy || 'default';
