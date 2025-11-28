@@ -266,7 +266,7 @@ export class BoqComponent extends BaseComponent {
     const hh = pad(now.getHours());
     const mi = pad(now.getMinutes());
     this.project = history.state.projectObj;
-  console.log("Full Project Object:", this.project);
+    console.log("Full Project Object:", this.project);
 
     this.minDateTime = `${yyyy}-${mm}-${dd}`;
         this.route.queryParams.subscribe(params => {
@@ -342,10 +342,10 @@ export class BoqComponent extends BaseComponent {
                 Validators.required,
                  Validators.pattern(/^[0-9]{10}$/)
             ]],
-            orderFrom: ['',[Validators.required]],
+            orderFrom: [this.project.projectName],
             orderFor: [this.userCompanyName],
             vendorId: ['',[Validators.required]],
-            shippingAddress: ['',[Validators.required]],
+            shippingAddress: [this.project.projectAddress],
             startDate: ['',[Validators.required]],
             dueDate: ['',[Validators.required]],
             gstNo: [''],
@@ -368,6 +368,17 @@ export class BoqComponent extends BaseComponent {
             updatedTime: new Date().toISOString(),
         }
         );
+        if (this.project) {
+            this.proposalForm.patchValue({
+            clientName: this.project.clientName,
+            clientMobileNumber: this.project.clientContact,
+            shippingAddress: this.project.projectAddress,
+            projectName: this.project.projectName,
+            orderFrom: this.project.projectName,
+            clientAddress: this.project.city ?? '',
+            flatNo: this.project.flatNo ?? ''
+            });
+        }
         this.proposalApprovalForm = this.fb.group({
             designId: [''],
             orderNo: [''],

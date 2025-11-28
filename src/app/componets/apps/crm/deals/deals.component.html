@@ -15,12 +15,12 @@
                                 <h4 class="mt-1">{{activeCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between">
+                        <!-- <div class="d-flex align-items-center justify-content-between">
                             <div class="text-end">
                                 <p class="mb-0 text-success">+40%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -42,12 +42,12 @@
                                 <h4 class="mt-1">{{notConnectedCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mt-1">
+                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
                             <div class="text-end">
                                 <p class="mb-0 text-success">+25%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -69,12 +69,12 @@
                                 <h4 class="mt-1">{{followUpCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mt-1">
+                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
                             <div class="text-end">
                                 <p class="mb-0 text-success">+19%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -98,12 +98,12 @@
                                 <h4 class="mt-1">{{statusCompletion}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mt-1">
+                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
                             <div class="text-end">
                                 <p class="mb-0 text-danger">-12%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -147,8 +147,12 @@
             </div>
         </div>
         <div class="table-container mat-elevation-z8 boq-table-wrapper">
-            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
-                <ng-container matColumnDef="sourceFlag">
+            <div *ngIf="uploadLeads" class="d-flex justify-content-center align-items-center py-5">
+                <mat-spinner diameter="50"></mat-spinner>
+            </div>
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table" *ngIf="!uploadLeads">
+              
+                <ng-container matColumnDef="sourceFlag" *ngIf="!uploadLeads">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let element">
                         <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1"
@@ -472,8 +476,9 @@
             <div class="text-center p-3" *ngIf="leadList?.length === 0">
                 <p class="text-muted mb-0">No data found</p>
             </div>
+            
         </div>
-        <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]" showFirstLastButtons
+        <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[50]" showFirstLastButtons
             (page)="onPageChange($event)">
         </mat-paginator>
         <div class="d-flex mb-2 px-3 marge">

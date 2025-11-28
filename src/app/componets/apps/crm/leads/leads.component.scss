@@ -310,3 +310,9 @@ table.mat-mdc-table {
     font-weight: 500;
     border-radius: 0.2rem; 
 }
+.mat-mdc-paginator-page-size {
+    display: flex;
+    align-items: baseline;
+    margin-right: 8px;
+    padding-bottom: 8px;
+}

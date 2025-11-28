@@ -2,7 +2,7 @@ import { Component, TemplateRef, ViewChild, ViewEncapsulation,} from '@angular/c
 import { SharedModule } from '../../../../shared/common/sharedmodule';
 import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModalRef, NgbModule,} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator,PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -48,7 +48,7 @@ export class LeadsComponent extends BaseComponent {
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
-  pageSize = 10; appointmentDataList: any[] = [];selectedAppointment: any = null; selectedLead: any;
+  pageSize = 50; appointmentDataList: any[] = [];selectedAppointment: any = null; selectedLead: any;
   Crmusers: any[] = []; selectedLeads: any[] = [];
   CrmLeads: any = {}; element: any = {}; crmLeadsList: any; campaignId!: string;
   stageLst: any; isStagesLoading: boolean = true; isAddStagesDisabled: boolean = false;
@@ -96,6 +96,7 @@ export class LeadsComponent extends BaseComponent {
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
   moveCampaignSubmit:boolean=false;currentStage : string ='';sendProposalEnable : boolean= false;proposalsentSubmitted : boolean=false;
+  pageIndex = 0;displayData: any[] = [];totalRecords: number = 0;
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -315,14 +316,8 @@ export class LeadsComponent extends BaseComponent {
     return index + 1;
   }
   usersGetSNo(index: number): number {
-    if (
-      this.usersPaginator &&
-      this.usersPaginator.pageIndex !== undefined &&
-      this.usersPaginator.pageSize !== undefined
-    ) {
-      return (
-        this.usersPaginator.pageIndex * this.usersPaginator.pageSize + index + 1
-      );
+    if (this.usersPaginator && this.usersPaginator.pageIndex !== undefined && this.usersPaginator.pageSize !== undefined) {
+      return this.usersPaginator.pageIndex * this.usersPaginator.pageSize + index + 1;
     }
     return index + 1;
   }
@@ -1766,27 +1761,37 @@ export class LeadsComponent extends BaseComponent {
   //   });
   // }
 
-  getFetchLeadData(customPayload?: any) {
-    this.switchService.FetchLeadData(this.userEmail, this.campaignId)
+  getFetchLeadData(data? : any) {
+    const userType = this.userType;
+    const payload = {
+      page: this.pageIndex,
+      size: 50,
+      updatedBy: this.userEmail,
+      campaignId: this.campaignId
+    }
+    this.switchService.fetchLeadsInCampaigns(payload)
       .subscribe({
         next: (res: any) => {
-          if (res.entryList) {
-            this.leadList = res.entryList; 
-            for(const lead of this.leadList){
-               this.currentStage = lead.stage;
-              if(this.currentStage === 'proposal Stage'){
-                this.sendProposalEnable= true;
-              }
-            }
-            this.dataSource = new MatTableDataSource(res.entryList);
-            const cities = res.entryList
+          if (res.entryList?.content || []) {
+            this.leadList = Array.isArray(res.entryList) ? res.entryList : []; 
+            this.sendProposalEnable = this.leadList.some(
+              (lead:any) => lead.stage?.trim().toLowerCase() === 'proposal stage'
+            );
+
+            const entryArray = Array.isArray(res.entryList) ? res.entryList : [];
+
+            this.dataSource = new MatTableDataSource(entryArray);
+
+            const cities = entryArray
               .map((lead: any) => lead.city?.trim())
-              .filter((city: any) => !!city); 
+              .filter((city: any) => !!city);
+
             const uniqueCities = [...new Set(cities)];
+
             this.cityList = uniqueCities.map(city => ({ name: city }));
           }
           const now = new Date();
-          const executiveList = (res.executiveList || []).map((item: any) => ({
+          const executiveList = (res.executiveList?.content || []).map((item: any) => ({
             ...item,
             followUpDue: item.followUpDate
               ? new Date(item.followUpDate) < now
@@ -1796,7 +1801,9 @@ export class LeadsComponent extends BaseComponent {
               : null,
             source: 'executive',
           }));
-          const entryList = (res.entryList || []).map((item: any) => ({
+          const entryList = Array.isArray(res.entryList?.content) ? res.entryList.content : [];
+
+          this.entryList = (res.entryList?.content || []).map((item: any) => ({
             ...item,
             followUpDue: item.followUpDate
               ? new Date(item.followUpDate) < now
@@ -1807,6 +1814,10 @@ export class LeadsComponent extends BaseComponent {
             source: 'entry',
           }));
           const combined = [...executiveList, ...entryList];
+          this.totalRecords = res.entryList?.totalElements ?? combined.length;
+          if (this.pageIndex === 0) {
+            this.paginator?.firstPage();
+          }
             combined.forEach(item => {
             item.contact = item.contact ? Number(item.contact).toString() : '';
           });
@@ -3539,6 +3550,29 @@ export class LeadsComponent extends BaseComponent {
     this.proposalsentSubmitted = true;
     this.ViewCrmLeads(element);
   }
+   onPageChange(event: PageEvent) {
+      if (event.pageSize !== this.pageSize) {
+        this.pageSize = event.pageSize;
+        this.updateClientPagination();
+        return;
+      }
+  
+      if (event.pageIndex !== this.pageIndex) {
+        this.pageIndex = event.pageIndex;
+        this.getFetchLeadData();
+      }
+    }
+    updateClientPagination() {
+      if (!this.leadList?.length) {
+        this.displayData = [];
+        this.dataSource = new MatTableDataSource(this.displayData);
+        return;
+      }
+      const startIndex = this.pageIndex * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      this.displayData = this.leadList.slice(startIndex, endIndex);
+      this.dataSource = new MatTableDataSource(this.displayData);
+    }
 
 
 }

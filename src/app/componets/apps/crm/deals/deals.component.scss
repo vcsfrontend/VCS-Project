@@ -281,3 +281,9 @@ table.mat-mdc-table {
     line-height: 1.75rem;
     font-size: 0.65rem;
 }
+.mat-mdc-paginator-page-size {
+    display: flex;
+    align-items: baseline;
+    margin-right: 8px;
+    padding-bottom: 8px;
+}
