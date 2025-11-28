@@ -15,12 +15,12 @@
                                 <h4 class="mt-1">{{activeCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between">
+                        <!-- <div class="d-flex align-items-center justify-content-between">
                             <div class="text-end">
                                 <p class="mb-0 text-success">+40%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -42,12 +42,12 @@
                                 <h4 class="mt-1">{{notConnectedCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mt-1">
+                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
                             <div class="text-end">
                                 <p class="mb-0 text-success">+25%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -69,12 +69,12 @@
                                 <h4 class="mt-1">{{followUpCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mt-1">
+                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
                             <div class="text-end">
                                 <p class="mb-0 text-success">+19%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -96,12 +96,12 @@
                                 <h4 class="mt-1">{{statusCompletion}} <span class="text-muted op-7 fs-11">Leads</span></h4>
                             </div>
                         </div>
-                        <div class="d-flex align-items-center justify-content-between mt-1">
+                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
                             <div class="text-end">
                                 <p class="mb-0 text-danger">-12%</p>
                                 <span class="text-muted op-7 fs-11">this month</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -462,7 +462,9 @@
             </div>
         
         </div>
-        <mat-paginator #paginator [pageSizeOptions]="[20, 100, 500]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[50]" showFirstLastButtons
+            (page)="onPageChange($event)">
+        </mat-paginator>
         <div class="d-flex mb-2 px-3 marge">
             <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
                 <div class="input-group w-auto"

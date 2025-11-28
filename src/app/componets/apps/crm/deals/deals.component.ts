@@ -91,8 +91,9 @@ export class DealsComponent extends BaseComponent {
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   override cityList:any[]=[];companyList : any[]=[];
   isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';proposalsentSubmitted : boolean = false;
-  pageIndex = 0; pageSize = 5;  data: any[] = []; displayData: any[] = []; totalRecords: number = 0;
-   minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any
+  pageIndex = 0; pageSize = 50;  data: any[] = []; displayData: any[] = []; totalRecords: number = 0;
+   minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any;
+  uploadLeads :boolean=false;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -827,6 +828,7 @@ export class DealsComponent extends BaseComponent {
   }
 
   getfetchLeadsIndividual() {
+    this.uploadLeads = true;
     const userType = this.userType;
     this.campaignId = (userType == 1)
       ? 'SINGLE9DD1748413866634'
@@ -913,6 +915,7 @@ export class DealsComponent extends BaseComponent {
            this.updateColumns();
           // this.getStatusCount();
           this.taskPriorityList = res.taskPriorityList || [];
+          this.uploadLeads = false;
         }
     });
   }
