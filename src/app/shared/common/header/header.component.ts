@@ -313,8 +313,31 @@ export class HeaderComponent implements OnInit {
     this.text = '';
     this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
       this.updateSelectedItem();
-    });
+      this.localStorageBackUp();
 
+      const user = localStorage.getItem('userDetails');
+      if (user) {
+        const parsed = JSON.parse(user);
+        this.userName = parsed?.username;
+        this.userEmail = parsed?.email;
+        this.isCrm = parsed?.crm;
+        this.isAdonai = parsed?.adonai;
+      }
+
+      const storedProject = localStorage.getItem('selectedProject');
+      if (storedProject) {
+        this.projectDetails = JSON.parse(storedProject);
+      }
+      this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          const params = this.activatedRoute.root.firstChild?.snapshot.queryParams;
+          if (params?.['projectId'] && params?.['projectName']) {
+            localStorage.setItem('selectedProject', JSON.stringify(params));
+            this.projectDetails = params;
+          }
+        }
+      });
+    });
   }
   
   private updateSelectedItem() {

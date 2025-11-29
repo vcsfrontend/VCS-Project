@@ -18,7 +18,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { BaseComponent } from '../../../shared/base/base.component';
 import { NgbOffcanvasModule } from '@ng-bootstrap/ng-bootstrap';
 import { emptyDoc } from 'ngx-editor';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router  } from '@angular/router';
 import { SwiperModule, } from 'swiper/angular';
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, Virtual, Zoom, Autoplay,
     Thumbs, Mousewheel, Keyboard, EffectCube, EffectFade, EffectFlip, EffectCoverflow,
@@ -86,9 +86,11 @@ export class BoqComponent extends BaseComponent {
     modelValues: any = {};autoSwitchDone = false;optimizerSubmit : boolean = false;
     isCutListAlreadySubmitted : boolean = false;groupedPanels: { [key: string]: any[] } = {};
     showLeftArrow = false;showRightArrow = false; pannelResponse: any[] = [];
-    project : any;
+    project : any; boqLoaded = false; allowBoqRun = false; boqAvailable: boolean | null = null; 
+    activeInnerTab = 'scope';  activeScopeTab = 1; private isInitialLoad = true;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
+    activeTableSource = new MatTableDataSource<any>();
     @ViewChild('scrollContainer',{static:false}) scrollContainer!: ElementRef;
     @ViewChildren('select,orderStatusSelect,itemTypeSelect,statusSelect,uomSelect') allSelects: any;
 
@@ -160,7 +162,7 @@ export class BoqComponent extends BaseComponent {
         { label: 'Shutter Length 2', control: 'l2' },
         { label: 'Shutter Width 2', control: 'w2' }
     ];
-    constructor(
+    constructor(private activatedRoute: ActivatedRoute,
         private modalService: NgbModal, public switchService: SwitherService,
         private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
         private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
@@ -168,6 +170,18 @@ export class BoqComponent extends BaseComponent {
         this.userData = localStorage.getItem('userDetails');
         this.userType = JSON.parse(this.userData).type;
         this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                const params = this.activatedRoute.snapshot.queryParams;
+                if (params && params['projectId']) {
+                    localStorage.setItem('selectedTab', '1');
+                    this.activeTab = '1';
+                    this.currentStage = 1;
+                    this.boqLoaded = false;
+                    this.allowBoqRun = false;
+                }
+            }
+        });
     }
 
     open(content: any) {
@@ -258,6 +272,14 @@ export class BoqComponent extends BaseComponent {
     };
 
     ngOnInit(): void {
+    const storedTab = localStorage.getItem('selectedTab');
+    if (storedTab) {
+        this.activeTab = storedTab;
+        this.currentStage = Number(storedTab);
+        if (storedTab === '3') {
+            this.allowBoqRun = true;
+        }
+    }
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
     const yyyy = now.getFullYear();
@@ -451,10 +473,23 @@ export class BoqComponent extends BaseComponent {
         });
 
         this.getUsers();
-        this.getAssignProjects();
-        this.getProjectConfig();
-        this.getMarginData();
+        this.getAssignProjects(); 
         flatpickr('#addignedDate', this.flatpickrOptions);
+    }
+
+    changeTab(tabId: string) {
+        this.activeTab = tabId;
+        localStorage.setItem('selectedTab', tabId);
+        if (tabId === '3') {
+            this.allowBoqRun = true;
+            this.getAssignProjects();
+        }
+    }
+
+    loadProjectScope() {
+        if (!this.boqAvailable) {
+            this.boqData();
+        }
     }
 
     buildRecceForm() {
@@ -474,8 +509,6 @@ export class BoqComponent extends BaseComponent {
             type: this.userType,
             createdBy: this.userName
         });
-        this.getLibraryNames();
-        this.getOptimizerCut();
     }
 
     getUsers() {
@@ -684,26 +717,32 @@ export class BoqComponent extends BaseComponent {
         this.isCollapsed = !this.isCollapsed;
     }
 
-   ngAfterViewInit() {
+    ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.proposaldataSource.paginator = this.paginator;
         window.addEventListener('scroll', (event: any) => {
-        if (this.isScrollingInsideDropdown(event)) {
-        return;
+            if (this.isScrollingInsideDropdown(event)) {
+                return;
+            }
+            this.closeAllDropdowns();
+        }, true);
+        const stored = localStorage.getItem('selectedTab');
+        if (stored) {
+            setTimeout(() => {
+                if (stored === '1') this.getRecceData();
+                if (stored === '2') this.getAssignProjects();
+                if (stored === '3') this.boqData();
+            }, 100);
         }
-        this.closeAllDropdowns();
-    }, true);
     }
+
     isScrollingInsideDropdown(event: any): boolean {
-    const path = event.composedPath ? event.composedPath() : event.path;
-    if (!path) return false;
-
-    return path.some((el: any) => {
-        if (!el?.classList) return false;
-
-        // Detect ANY ng-select dropdown panel
-        return el.classList.contains('ng-dropdown-panel');
-    });
+        const path = event.composedPath ? event.composedPath() : event.path;
+        if (!path) return false;
+        return path.some((el: any) => {
+            if (!el?.classList) return false;
+            return el.classList.contains('ng-dropdown-panel');
+        });
     }
 
 
@@ -734,6 +773,7 @@ closeAllDropdowns() {
     }
 
     boqData() {
+        if (!this.designingId) return;
         const payload = {
             email: this.userEmail,
             designId: this.designingId,
@@ -1619,14 +1659,10 @@ closeAllDropdowns() {
     ])
     sectionName = 'Unsectioned (12)';
     sectionTotal = 10000;
-    activeTab: string = 'tab1';
+    activeTab: string = '1';
     tab1Checked: boolean = false;
     tab2Checked: boolean = false;
     tab3Checked: boolean = false;
-
-    selectTab(tab: string) {
-        this.activeTab = tab;
-    }
 
     fileName: string | null = null;
 
@@ -1740,34 +1776,31 @@ closeAllDropdowns() {
             type: this.userType,
             companycode: this.userCompanyCode,
             projectId: this.projectId,
+            currentUserEmail: this.userRole === 'ADMIN' ? '' : this.userEmail,
+            requestFrom: this.userRole === 'ADMIN' ? 'Admin' : 'User'
         };
-        if (this.userRole === 'ADMIN') {
-            payload.currentUserEmail = '';
-            payload.requestFrom = 'Admin';
-        } else {
-            payload.currentUserEmail = this.userEmail;
-            payload.requestFrom = 'User';
-        }
         this.switchService.fetchAssgnAdonaiDesign(payload).subscribe({
             next: (res: any) => {
-                if (!res) {
-                    this.designerData = [];
-                    this.filteredDesignerData = [];
-                    return;
-                }
                 const projects = Array.isArray(res) ? res : [res];
                 this.designingId = res?.designId || '';
-                this.designCompletionStatus = res?.designCompletionStatus || '';
-                if (this.userRole === 'ADMIN') {
-                    this.designerData = projects;
-                } else {
-                    this.designerData = projects.filter(
-                        (p: any) => p?.assignedDesigner?.toLowerCase() === this.userEmail?.toLowerCase()
-                    );
+                if (this.activeTab === '3' && !this.designingId) {
+                    this.boqAvailable = false;
+                    return;
                 }
+                if (this.activeTab === '3' && !this.boqLoaded && this.designingId) {
+                    this.boqLoaded = true;
+                    this.boqAvailable = true;
+                    this.boqData();
+                }
+                this.designCompletionStatus = res?.designCompletionStatus || '';
+
+                this.designerData = this.userRole === 'ADMIN'
+                    ? projects
+                    : projects.filter(p =>
+                        p?.assignedDesigner?.toLowerCase() === this.userEmail?.toLowerCase()
+                    );
                 this.filteredDesignerData = [...this.designerData];
-                this.getProposal();
-            }
+            },
         });
     }
 
@@ -1986,18 +2019,40 @@ closeAllDropdowns() {
         });
     }
 
-    onTabChange(event: any) {
-  this.activeTab = event.nextId;
+    trackById(index: number, item: any): any {
+        return item.id ?? item.boqId ?? item.referenceNo ?? index;
+    }
+    onInnerTabChange(tab: string) {
+        this.activeInnerTab = tab;
+    }
 
-  if (this.activeTab === '1') {
-    this.isReadOnly = true;
-    this.elementForm.disable();
-    this.elementForm.get('quantity')?.enable();
-  } else if (this.activeTab === '5') {
-    this.isReadOnly = false;
-    this.elementForm.enable();
-  }
-}
+    onScopeTabChange(tab: number) {
+        this.activeScopeTab = tab;
+    }
+
+    setStage(id: number) {
+        this.currentStage = id;
+        if (id === 3) {
+            this.activeInnerTab = 'scope'; 
+            this.activeScopeTab = 1;     
+        }
+    }
+    
+    onTabChange(tabId: any) {
+        this.activeTab = String(tabId);
+        if (this.activeTab === '1') {
+            this.getProposal();
+        }
+        else if (this.activeTab === '2') {
+            this.getClientOrders();
+        }
+        else if (this.activeTab === '3') {
+        }
+        else if (this.activeTab === '4') {
+            // nothing to call
+        }
+    }
+
 
 
   prevStep() {
@@ -2535,10 +2590,6 @@ closeAllDropdowns() {
         }, {});
     }
 
-
-    setStage(id: number) {
-        this.currentStage = id;
-    }
     onScroll() {
         this.checkArrows();
     }
@@ -2591,7 +2642,6 @@ closeAllDropdowns() {
     }
 
     onAdd(index: number) {
-        console.log("Add button clicked for index:", index);
     }
 
 

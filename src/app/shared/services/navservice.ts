@@ -190,15 +190,15 @@ export class NavService implements OnDestroy {
     //   selected: false,
     //   path: '/pages/to-do-list',
     // },
-    {
-      title: 'HRM',
-      icon: 'bi-file-earmark',
-      dirchange: false,
-      type: 'link',
-      linkType : 'internal',
-      active: false,
-      path : "/dashboard/hrm"
-    },
+    // {
+    //   title: 'HRM',
+    //   icon: 'bi-file-earmark',
+    //   dirchange: false,
+    //   type: 'link',
+    //   linkType : 'internal',
+    //   active: false,
+    //   path : "/dashboard/hrm"
+    // },
     // {
     //   title: 'Customer',
     //   dirchange: false,
