@@ -1,7 +1,7 @@
 <div class="col-lg-12">
     <div class="d-flex justify-content-between align-items-center w-100 custom-progress-nav border-top">
-        <ul ngbNav #nav13="ngbNav" [activeId]="1" class="">
-            <li [ngbNavItem]="1" class="nav-item">
+        <ul ngbNav #nav13="ngbNav" [(activeId)]="activeTab" (activeIdChange)="changeTab($event)" class="">
+            <li ngbNavItem="1" class="nav-item">
                 <button ngbNavLink class="nav-link custom-step" (click)="setStage(1); getRecceData()">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 1,
@@ -248,7 +248,7 @@
                     </ng-template>
                 </ng-template>
             </li>
-            <li [ngbNavItem]="2" class="nav-item">
+            <li ngbNavItem="2" class="nav-item">
                 <button ngbNavLink class="nav-link custom-step" (click)="setStage(2); getAssignProjects()">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 2,
@@ -346,7 +346,7 @@
                     </div>
                 </ng-template>
             </li>
-            <li [ngbNavItem]="3" class="nav-item">
+            <li ngbNavItem="3" class="nav-item">
             <button ngbNavLink class="nav-link custom-step" (click)="setStage(3); boqData()">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 3,
@@ -358,11 +358,10 @@
                 </button>
                 <ng-template ngbNavContent>
                     <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                        <nav ngbNav #nav2="ngbNav" [activeId]="5" (navChange)="onTabChange($event)"
+                        <nav ngbNav #nav2="ngbNav" [activeId]="activeInnerTab" (activeIdChange)="onInnerTabChange($event)" [destroyOnHide]="false"
                             class="nav nav-style-1 nav-pills bg-white p-2 border-bottom custom-tab-nav" style="box-shadow: none !important;" role="tablist">
-                            <ng-container ngbNavItem="1">
+                            <ng-container ngbNavItem="proposal">
                                 <a ngbNavLink class="ms-1 btn btn-light" (click)="getProposal()">Proposal For Client</a>
-                                <div class="tt"></div>
                                 <ng-template ngbNavContent>
                                     <div class="col-xl-12">
                                         <div class="card custom-card bg-light">
@@ -382,7 +381,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <ng-container *ngFor="let element of filteredProposals; let i = index">
+                                                            <ng-container *ngFor="let element of filteredProposals; trackBy: trackById; let i = index">
                                                                 <tr (click)="getProposalContent(element)" style="cursor: pointer;">
                                                                     <td>{{ i + 1 }}</td>
                                                                     <td>{{ element.referenceNo }}</td>
@@ -720,12 +719,9 @@
                                     </div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container [ngbNavItem]="2">
-                                <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
-                                    aria-selected="true" (click)="getClientOrders()">Client Orders
-                                    <!-- <span class="badge bg-secondary ms-1 rounded-pill">32</span> -->
+                            <ng-container ngbNavItem="orders">
+                                <a ngbNavLink class="ms-1 btn btn-light" (click)="getClientOrders()">Client Orders
                                 </a>
-                                <div class="tt"></div>
                                 <ng-template class="tab-content bg-white" ngbNavContent>
                                     <div class="col-xl-12">
                                         <div class="card custom-card">
@@ -1029,10 +1025,8 @@
                                     </div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container [ngbNavItem]="3">
-                                <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
-                                    aria-selected="true">Client Invoices</a>
-                                    <div class="tt"></div>
+                            <ng-container ngbNavItem="invoices">
+                                <a ngbNavLink class="ms-1 btn btn-light">Client Invoices</a>
                                 <ng-template class="tab-content bg-white" ngbNavContent>
                                     <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
                                         class="nav nav-pills m-3 show active text-muted">
@@ -1084,7 +1078,7 @@
                                                         </div>
                                                         <div class="card-body p-0">
                                                             <div class="table-container mat-elevation-z8">
-                                                                <table mat-table [dataSource]="clientInvoicesDataSource"
+                                                                <table mat-table [dataSource]="activeTableSource"
                                                                     matSort class="mat-table w-100">
                                                                     <ng-container matColumnDef="slNo">
                                                                         <th mat-header-cell *matHeaderCellDef> S.No. </th>
@@ -1156,8 +1150,7 @@
                                                             </div>
                                                             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                                                             <div class="text-start p-2">
-                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
-                                                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)">
                                                                     + Add New Invoice
                                                                 </button>
                                                             </div>
@@ -1238,8 +1231,7 @@
                                                             </div>
                                                             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                                                             <div class="text-start p-2">
-                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
-                                                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)">
                                                                     + Add New Invoice
                                                                 </button>
                                                             </div>
@@ -1252,11 +1244,9 @@
                                     <div [ngbNavOutlet]="innerNav"></div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container ngbNavItem="4">
-                                <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
-                                    aria-selected="false">Payments From
+                            <ng-container ngbNavItem="payments">
+                                <a ngbNavLink class="ms-1 btn btn-light">Payments From
                                     Client</a>
-                                    <div class="tt"></div>
                                 <ng-template class="tab-content bg-white" ngbNavContent>
                                     <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
                                         class="nav nav-pills m-3 show active text-muted">
@@ -1380,8 +1370,7 @@
                                                             </div>
                                                             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                                                             <div class="text-start p-2">
-                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
-                                                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)">
                                                                     + Add New Invoice
                                                                 </button>
                                                             </div>
@@ -1462,8 +1451,7 @@
                                                             </div>
                                                             <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
                                                             <div class="text-start p-2">
-                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)"
-                                                                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+                                                                <button type="button" class="btn btn-link text-danger fw-bold" (click)="openRights(content12)">
                                                                     + Add New Invoice
                                                                 </button>
                                                             </div>
@@ -1476,12 +1464,17 @@
                                     <div [ngbNavOutlet]="innerNav"></div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container [ngbNavItem]="5">
-                                <a ngbNavLink class="ms-1 btn btn-light" data-bs-toggle="tab" role="tab"
-                                    aria-selected="false">Project Scope</a>
-                                    <div class="tt"></div>
+                            <ng-container ngbNavItem="scope">
+                                <a ngbNavLink class="ms-1 btn btn-light">Project Scope</a>
                                 <ng-template class="tab-content" ngbNavContent>
-                                    <div class="row bg-light pt-3">
+                                    <div *ngIf="boqAvailable === null" class="text-center py-4">
+                                        <div class="spinner-border"></div>
+                                        <p class="text-muted mt-2">Loading Project Scope...</p>
+                                    </div>
+                                    <div *ngIf="boqAvailable === false" class="text-center py-4">
+                                        <p class="text-muted fs-14">🚫 No BOQ assigned for this project.</p>
+                                    </div>
+                                    <div class="row bg-light pt-3" *ngIf="boqAvailable === true">
                                         <div class="col-xl-12">
                                             <nav class="card custom-card mb-0 no-bottom-radius" style="box-shadow: none !important;" role="tablist">
                                                 <div class="scroll-wrapper position-relative d-flex align-items-center w-100">

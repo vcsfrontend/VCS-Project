@@ -43,11 +43,11 @@ export const admin: Routes = [
   loadComponent: () =>
     import('./dashboard2/dashboard2.component').then((m) => m.Dashboard2Component),
 },
-{
-  path: 'hrm',
-  loadComponent: () =>
-    import('./hrm/hrm.component').then((m) => m.HrmComponent),
-},
+// {
+//   path: 'hrm',
+//   loadComponent: () =>
+//     import('./hrm/hrm.component').then((m) => m.HrmComponent),
+// },
 {
   path: 'superadmin',
   loadComponent: () =>

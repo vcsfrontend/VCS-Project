@@ -71,11 +71,13 @@
 
         <!-- Start::header-element -->
         <div class="header-element ms-3 d-lg-block d-none my-auto">
-          <div *ngIf="showBoqHeader && projectDetails?.projectName" class="d-flex align-items-center gap-3">
+          <div *ngIf="projectDetails" class="d-flex align-items-center gap-3">
             <span class="page-title fw-medium fs-15">All Projects /</span>
-            <strong>{{ capitalizeFirstLetter(projectDetails?.projectName, 'No Name') }}</strong>
-            <span class="badge bg-primary-transparent text-dark px-x py-2">
-              Project Id: {{ projectDetails?.projectId }}
+            <strong>
+              {{ projectDetails?.projectName ? capitalizeFirstLetter(projectDetails?.projectName) : 'No Name' }}
+            </strong>
+            <span class="badge bg-primary-transparent text-dark px-3 py-2">
+              Project Id: {{ projectDetails?.projectId || '--' }}
             </span>
           </div>
           <!-- Start::dashboards list -->
