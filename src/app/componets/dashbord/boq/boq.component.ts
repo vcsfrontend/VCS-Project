@@ -123,6 +123,7 @@ export class BoqComponent extends BaseComponent {
     statusNames: any = {1: 'Recce', 2: 'Design', 3: 'BOQ', };
     recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
+    selectedRecce: any;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -190,6 +191,10 @@ export class BoqComponent extends BaseComponent {
     openRights(content: any) {
         this.offcanvasService.open(content, { position: 'end' });
     }
+    viewRecce(view: any) {
+        this.offcanvasService.open(view, { position: 'end' });
+    }
+
     openRecce(content44: any, recceStage: string) {
         this.recceStage = recceStage;
         this.modalService.open(content44, { centered: true });
@@ -288,8 +293,6 @@ export class BoqComponent extends BaseComponent {
     const hh = pad(now.getHours());
     const mi = pad(now.getMinutes());
     this.project = history.state.projectObj;
-    console.log("Full Project Object:", this.project);
-
     this.minDateTime = `${yyyy}-${mm}-${dd}`;
         this.route.queryParams.subscribe(params => {
             this.projectId = params['projectId'];

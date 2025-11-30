@@ -45,93 +45,37 @@
                                             <button type="button" class="btn btn-sm btn-primary">
                                                 <i class="bi bi-check-circle"></i> Mark Submit
                                             </button>
-                                            <div ngbDropdown class="d-inline-block" placement="left-top" role="group">
-                                                <i class="bi bi-three-dots-vertical fs-5" ngbDropdownToggle style="cursor: pointer;">
-                                                </i>
-                                                <ul ngbDropdownMenu class="dropdown-menu p-0" style="width: 300px;">
+                                            <div ngbDropdown class="d-inline-block" placement="left-top">
+                                                <i class="bi bi-three-dots-vertical fs-5" ngbDropdownToggle style="cursor: pointer;"></i>
+                                                <ul class="dropdown-menu shadow-lg p-0" ngbDropdownMenu style="width: 220px; border-radius: 12px;">
                                                     <li>
-                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
-                                                            <i class="bi bi-input-cursor fs-4"></i>
-                                                            <div>
-                                                                <div class="fw-semibold">Add Input Field</div>
-                                                                <div class="text-muted small">Input text and file attachments</div>
-                                                            </div>
+                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom">
+                                                            <i class="bi bi-check-circle fs-6 mt-1"></i>
+                                                            <span class="fw-semibold"> Mark Approve</span>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <hr class="dropdown-divider m-0">
-                                                    </li>
-                                                    <li>
-                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
-                                                            <i class="bi bi-aspect-ratio fs-4"></i>
-                                                            <div>
-                                                                <div class="fw-semibold">Add Space</div>
-                                                                <div class="text-muted small">Images with elements and measurements
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                
-                                                    <li>
-                                                        <hr class="dropdown-divider m-0">
-                                                    </li>
-                                                    <li>
-                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
-                                                            <i class="bi bi-image fs-4"></i>
-                                                            <div>
-                                                                <div class="fw-semibold">Add Image and Videos</div>
-                                                                <div class="text-muted small">Images and Videos</div>
-                                                            </div>
+                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom">
+                                                            <i class="bi bi-x-circle fs-6 mt-1"></i>
+                                                            <span class="fw-semibold">Mark Un-approve</span>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <hr class="dropdown-divider m-0">
-                                                    </li>
-                                                    <li>
-                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
-                                                            <i class="bi bi-menu-down fs-4"></i>
-                                                            <div>
-                                                                <div class="fw-semibold">Dropdown Field</div>
-                                                                <div class="text-muted small">Single selection from dropdown options
-                                                                </div>
-                                                            </div>
+                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom">
+                                                            <i class="bi bi-link-45deg fs-6 mt-1"></i>
+                                                            <span class="fw-semibold">Copy Shareable Link</span>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <hr class="dropdown-divider m-0">
-                                                    </li>
-                                                    <li>
-                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
-                                                            <i class="bi bi-list-check fs-4"></i>
-                                                            <div>
-                                                                <div class="fw-semibold">Multi Select Dropdown Field</div>
-                                                                <div class="text-muted small">Multi selection from dropdown options
-                                                                </div>
-                                                            </div>
+                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom">
+                                                            <i class="bi bi-download fs-6 mt-1"></i>
+                                                            <span class="fw-semibold">Download Report</span>
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <hr class="dropdown-divider m-0">
-                                                    </li>
-                                                    <li>
-                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
-                                                            <i class="bi bi-paperclip fs-4"></i>
-                                                            <div>
-                                                                <div class="fw-semibold">Single Attachment Field</div>
-                                                                <div class="text-muted small">Upload Media Files & Documents</div>
-                                                            </div>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <hr class="dropdown-divider m-0">
-                                                    </li>
-                                                    <li>
-                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
-                                                            <i class="bi bi-calendar-event fs-4"></i>
-                                                            <div>
-                                                                <div class="fw-semibold">Date Field</div>
-                                                                <div class="text-muted small">Select date from calendar</div>
-                                                            </div>
+                                                        <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom">
+                                                            <i class="ri-settings-3-line fs-6 mt-1"></i>
+                                                            <span class="fw-semibold">Current Recce Settings</span>
                                                         </a>
                                                     </li>
                                                 </ul>
@@ -157,49 +101,121 @@
                                                             <a ngbNavLink class="nav-link btn btn-light btn-sm mt-2">{{ stage }}</a>
                                                             <ng-template ngbNavContent>
                                                                 <div *ngFor="let recce of getRecceByStage(stage)" class="">
-                                                                    <div class="border-bottom mt-3">
-                                                                        <h6>
-                                                                            <div class="card-title"><strong>{{ recce.recceStage
+                                                                    <div class="border-bottom mt-3 d-flex justify-content-between align-items-center">
+                                                                        <div class="card-title" (click)="viewRecce(recceView)"><strong>{{ recce.recceStage
                                                                                     }}</strong></div>
-                                                                        </h6>
+                                                                        <div ngbDropdown class="d-inline-block" placement="left-top" role="group">
+                                                                            <i class="bi bi-three-dots-vertical fs-5" ngbDropdownToggle style="cursor: pointer;">
+                                                                            </i>
+                                                                            <ul ngbDropdownMenu class="dropdown-menu shadow-lg p-0" style="width: 300px;">
+                                                                                <li>
+                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
+                                                                                        <i class="bi bi-input-cursor fs-4"></i>
+                                                                                        <div>
+                                                                                            <div class="fw-semibold">Add Input Field</div>
+                                                                                            <div class="text-muted fs-8">Input text and file attachments</div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <hr class="dropdown-divider m-0">
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
+                                                                                        <i class="bi bi-aspect-ratio fs-4"></i>
+                                                                                        <div>
+                                                                                            <div class="fw-semibold">Add Space</div>
+                                                                                            <div class="text-muted fs-8">Images with elements and measurements
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                        
+                                                                                <li>
+                                                                                    <hr class="dropdown-divider m-0">
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
+                                                                                        <i class="bi bi-image fs-4"></i>
+                                                                                        <div>
+                                                                                            <div class="fw-semibold">Add Image and Videos</div>
+                                                                                            <div class="text-muted fs-8">Images and Videos</div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <hr class="dropdown-divider m-0">
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
+                                                                                        <i class="bi bi-menu-down fs-4"></i>
+                                                                                        <div>
+                                                                                            <div class="fw-semibold">Dropdown Field</div>
+                                                                                            <div class="text-muted fs-8">Single selection from dropdown options
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <hr class="dropdown-divider m-0">
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
+                                                                                        <i class="bi bi-list-check fs-4"></i>
+                                                                                        <div>
+                                                                                            <div class="fw-semibold">Multi Select Dropdown Field</div>
+                                                                                            <div class="text-muted fs-8">Multi selection from dropdown options
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <hr class="dropdown-divider m-0">
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
+                                                                                        <i class="bi bi-paperclip fs-4"></i>
+                                                                                        <div>
+                                                                                            <div class="fw-semibold">Single Attachment Field</div>
+                                                                                            <div class="text-muted fs-8">Upload Media Files & Documents</div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <hr class="dropdown-divider m-0">
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-start gap-3">
+                                                                                        <i class="bi bi-calendar-event fs-4"></i>
+                                                                                        <div>
+                                                                                            <div class="fw-semibold">Date Field</div>
+                                                                                            <div class="text-muted fs-8">Select date from calendar</div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="d-flex justify-content-between mt-3">
-                                                                        <div class="card-title text-dark large fs-15">Name: {{ recce.recceName
-                                                                            }}</div>
-                                                                        <p class="fs-13 mt-1" [ngbTooltip]="recce.description?.length > 25 ? recce.description : null" placement="top"
-                                                                            triggers="hover" container="body">Description:
-                                                                            {{ recce.description?.length > 25 ? (recce.description |
-                                                                            slice:0:25) + '...' :
-                                                                            recce.description }}
-                                                                        </p>
-                                                                        <button class="btn btn-primary btn-sm" style="max-height: 30px;"
+                                                                    <div class="d-flex justify-content-between mt-2 mb-2">
+                                                                         <div class="card-title text-dark large fs-15" (click)="recce(recceView, recce)">{{ recce.recceStage }} Photos & videos     
+                                                                         </div>
+                                                                        <a class="text-primary fw-semibold small d-inline-flex align-items-center gap-1 cu"
                                                                             *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)"
                                                                             (click)="openRecce(content44, recce.recceStage)">
-                                                                            <i class="bi bi-plus-circle me-1"></i>Upload Images
-                                                                        </button>
+                                                                          + Upload Images
+                                                                        </a>
                                                                     </div>
-                                                                    <div class="d-flex flex-wrap gap-4 mt-3 ms-5"
-                                                                        style="max-height: 200px; overflow-y: auto;">
-                                                                        <div class="col-lg-2 col-md-3"
-                                                                            *ngFor="let img of recce.imageList; let i = index">
-                                                                            <div class="card custom-card position-relative cu"
-                                                                                style="overflow: hidden; border-radius: 12px;"
-                                                                                (click)="openImageViewer(recce, i)">
-                                                                                <!-- <input type="checkbox" class="form-check-input position-absolute top-0 start-0 m-2"> -->
-                                                                                <span
-                                                                                    class="badge bg-warning text-dark position-absolute top-0 end-0 m-2">
+                                                                    <div class="row g-3 mt-2 pt-2" style="max-height: 270px; overflow-y:auto;">
+                                                                        <div class="col-6 col-sm-4 col-md-3 col-lg-2" *ngFor="let img of recce.imageList; let i = index">
+                                                                            <div class="gallery-thumb position-relative hover-parent" (click)="openImageViewer(recce, i)">
+                                                                                <span class="badge bg-warning text-dark fs-7 position-absolute top-0 end-0 m-1 hover-show">
                                                                                     {{ getFileType(img) }}
                                                                                 </span>
-                                                                                <img [src]="img" class="card-img-top rounded"
-                                                                                    style="height:150px; object-fit:cover;">
-                                                                                <div
-                                                                                    class="overlay-icons d-flex justify-content-center gap-3">
-                                                                                    <i class="bi bi-plus-circle text-white cu"
-                                                                                        (click)="onAdd(i); $event.stopPropagation()"></i>
-                                                                                    <i class="bi bi-download text-white cu"
-                                                                                        (click)="downloadImage(img); $event.stopPropagation()"></i>
-                                                                                    <i class="bi bi-trash text-danger cu"
-                                                                                        (click)="deleteImage(recce, i); $event.stopPropagation()"></i>
+                                                                                <img [src]="img" class="thumb-img rounded">
+                                                                                <div class="gallery-actions hover-show icon-bg d-flex gap-2">
+                                                                                    <i class="bi bi-plus-circle text-white fs-6" (click)="onAdd(i);$event.stopPropagation()"></i>
+                                                                                    <i class="bi bi-download text-white fs-6" (click)="downloadImage(img);$event.stopPropagation()"></i>
+                                                                                    <i class="bi bi-trash text-danger fs-6" (click)="deleteImage(recce, i);$event.stopPropagation()"></i>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1984,8 +2000,7 @@
                 </ng-template>
             </li>
         </ul>
-        <div class="d-flex justify-content-between align-items-center 
-                                            px-2 py-1 me-1">
+        <div class="d-flex justify-content-between align-items-center px-2 py-1 me-1">
             <div class="m-0 px-2 py-0 bg-danger-subtle rounded-3">
                 <small class="text-dark fs-9">{{ stageNames[currentStage] }}:</small>
                 <div class="d-flex align-items-center ttr">
@@ -2011,6 +2026,7 @@
                     </ng-template>
                 </div>
             </div>
+            <i class="bi bi-chat-left-text cu fs-2 ms-3"></i>
             <div class="btn-group ms-3" ngbDropdown>
                 <button type="button" class="btn btn-primary dropdown-toggle" ngbDropdownToggle>
                     <i class="ri-edit-line me-2"></i> Actions
@@ -2961,7 +2977,6 @@
                             role="tablist" aria-orientation="vertical">
                             <div class="mb-3 col-lg-11">
                                 <label class="form-label">Select recce Type</label>
-                            
                                 <ng-select formControlName="recceStage" placeholder="Select recce"
                                     [ngClass]="{ 'is-invalid': recceSubmitted && f['recceStage'].errors }">
                                     <ng-option *ngFor="let item of recceTemplate" [value]="item.name"
@@ -2969,14 +2984,12 @@
                                         {{ item.name }}
                                     </ng-option>
                                 </ng-select>
-                            
                                 <div *ngIf="recceSubmitted && f['recceStage'].errors" class="invalid-feedback">
                                     <span *ngIf="f['recceStage']?.errors?.['required']">
                                         Plese select recce type
                                     </span>
                                 </div>
                             </div>
-
                         </div>
                         <div class="col-lg-8 pe-3">
                             <div class="modal-body scrollable-body">
@@ -3090,7 +3103,7 @@
 <ng-template #content44 let-modal>
     <form [formGroup]="updateRecceForm" (ngSubmit)="updateRecce(modal)">
         <div class="modal-header justify-content-center">
-            <h6 class="modal-title">Update Recce</h6>
+            <h6 class="modal-title"><strong>Update Recce</strong></h6>
             <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
         </div>
         <div class="modal-body overflowImportant">
@@ -3369,7 +3382,6 @@
                         <div *ngIf="cl['l2']?.errors?.['pattern']">Only numbers allowed</div>
                     </div>
                 </div>
-            
                 <div class="col-lg-6">
                     <label class="form-label">Width 2</label>
                     <input type="text" class="form-control" formControlName="w2"
@@ -3379,7 +3391,6 @@
                         <div *ngIf="cl['w2']?.errors?.['pattern']">Only numbers allowed</div>
                     </div>
                 </div>
-            
             </div>
         </div>
         <div class="modal-footer">
@@ -3408,5 +3419,38 @@
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Create</button>
+    </div>
+</ng-template>
+
+<ng-template #recceView let-offcanvas>
+    <div class="offcanvas-header border-bottom border-block-end-dashed">
+        <h5 class="offcanvas-title" id="offcanvasExampleLabel"><strong>{{ selectedRecce?.recceStage }} Details</strong></h5>
+        <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="card custom-card border">
+            <div class="card-body">
+                <div class="p-3 text-dark" id="pill-flex-home" role="tabpanel">
+                    <ul class="list-unstyled info-list">
+                        <!-- <li class="mb-2"><span class="fw-semibold me-1  ">Recce Name</span> : <span>{{ selectedRecce?.name }}</span></li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Recce Description :
+                            </span>{{ recce.description}}</li> -->
+                        <!-- <li class="mb-2"><span class="fw-semibold me-1">Executive :
+                            </span>{{element.executive}}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Products :
+                            </span>{{element.products}}</li>
+                        <li class="mb-2"><span class="fw-semibold me-1">Country : </span>{{element.country}}
+                        </li> -->
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12 p-4 border-top">
+        <div class="position-relative justify-content-start d-flex gap-3 ">
+            <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
+        </div>
     </div>
 </ng-template>

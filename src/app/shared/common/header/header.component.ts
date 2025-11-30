@@ -43,6 +43,7 @@ export class HeaderComponent implements OnInit {
   profilePic: string | null = null; projectDetails: any = null;
   selectedItem: string  | null ='selectedItem'; showBoqHeader = false;
   isOpen: boolean = false; isCrm:boolean = false; isAdonai:boolean = false;
+  isBoqPage: boolean = false;
   constructor(
     private appStateService: AppStateService,
     public navServices: NavService,
@@ -60,9 +61,10 @@ export class HeaderComponent implements OnInit {
       this.isAdonai = JSON.parse(this.userData)?.adonai
     this.router.events.subscribe(event => {
     if (event instanceof NavigationEnd) {
+      this.isBoqPage = this.router.url.includes('boq');
       const params = this.activatedRoute.root.firstChild?.snapshot.queryParams;
       if (params?.['projectId'] && params?.['projectName']) {
-        localStorage.setItem('selectedProject', JSON.stringify(params)); // keep for refresh
+        localStorage.setItem('selectedProject', JSON.stringify(params)); 
       }
       this.projectDetails = JSON.parse(localStorage.getItem('selectedProject') || '{}');
     }

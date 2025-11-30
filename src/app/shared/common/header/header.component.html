@@ -71,7 +71,7 @@
 
         <!-- Start::header-element -->
         <div class="header-element ms-3 d-lg-block d-none my-auto">
-          <div *ngIf="projectDetails" class="d-flex align-items-center gap-3">
+          <div *ngIf="projectDetails && isBoqPage" class="d-flex align-items-center gap-3">
             <span class="page-title fw-medium fs-15">All Projects /</span>
             <strong>
               {{ projectDetails?.projectName ? capitalizeFirstLetter(projectDetails?.projectName) : 'No Name' }}

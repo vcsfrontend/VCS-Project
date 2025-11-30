@@ -579,7 +579,7 @@
             <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
                 <div class="row gy-3">
                     <div class="col-xl-4">
-                        <label for="projectName" class="form-label">Project Name:</label>
+                        <label for="projectName" class="form-label">Project Name</label>
                         <input type="text" class="form-control" id="projectName" formControlName="projectName"
                             placeholder="Enter Project Name" [ngClass]="{ 'is-invalid': submitted && f['projectName'].errors }"
                             maxlength="50">
@@ -590,7 +590,7 @@
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="clientName" class="form-label">Client Name:</label>
+                        <label for="clientName" class="form-label">Client Name</label>
                         <input type="text" class="form-control" id="clientName" formControlName="clientName"
                             placeholder="Enter Client Name" [ngClass]="{ 'is-invalid': submitted && f['clientName'].errors }"
                             maxlength="50">
@@ -600,21 +600,17 @@
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="businessCategory" class="form-label">Business Category:</label>
-                        <select class="form-select" aria-label="Default select example" formControlName='businessCategory'
+                        <label for="businessCategory" class="form-label">Business Category</label>
+                        <ng-select class="form-control-ng-select" [items]="businessCategoryOptions" bindLabel="label" bindValue="value"
+                            placeholder="Select Type" formControlName="businessCategory"
                             [ngClass]="{ 'is-invalid': submitted && f['businessCategory'].errors }">
-                            <option value="" disabled selected>select type</option>
-                            <option value="Commercial">Commercial</option>
-                            <option value="Residential">Residential</option>
-                        </select>
-                        <div *ngIf="submitted && f['businessCategory'].errors" class="invalid-feedback">
-                            <div *ngIf="f['businessCategory'].errors['required']">Business Category
-                                is
-                                required</div>
+                        </ng-select>
+                        <div *ngIf="submitted && f['businessCategory'].errors" class="invalid-feedback d-block">
+                            <div *ngIf="f['businessCategory'].errors?.['required']">Business Category is required</div>
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="projectAddress" class="form-label">Project Address:</label>
+                        <label for="projectAddress" class="form-label">Project Address</label>
                         <input type="text" class="form-control" id="projectAddress" formControlName="projectAddress"
                             placeholder="Enter Project Address"
                             [ngClass]="{ 'is-invalid': submitted && f['projectAddress'].errors }" maxlength="50">
@@ -624,7 +620,7 @@
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="state" class="form-label">State:</label>
+                        <label for="state" class="form-label">State</label>
                         <input type="text" class="form-control" id="state" formControlName="state" placeholder="Enter State"
                             [ngClass]="{ 'is-invalid': submitted && f['state'].errors }" maxlength="50">
                         <div *ngIf="submitted && f['state'].errors" class="invalid-feedback">
@@ -632,7 +628,7 @@
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="city" class="form-label">City:</label>
+                        <label for="city" class="form-label">City</label>
                         <input type="text" class="form-control" id="city" formControlName="city" placeholder="Enter City"
                             [ngClass]="{ 'is-invalid': submitted && f['city'].errors }" maxlength="50">
                         <div *ngIf="submitted && f['city'].errors" class="invalid-feedback">
@@ -652,7 +648,7 @@
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="projectArea" class="form-label">Project Area (SFT):</label>
+                        <label for="projectArea" class="form-label">Project Area (SFT)</label>
                         <input type="tel" class="form-control" id="projectArea" formControlName="projectArea"
                             placeholder="Enter Project Area" [ngClass]="{ 'is-invalid': submitted && f['projectArea'].errors }"
                             maxlength="6">
@@ -662,25 +658,30 @@
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="startDate" class="form-label">Start Date:</label>
-                        <input type="date" class="form-control" id='startDate' formControlName='projectStartDate'
-                            [ngClass]="{ 'is-invalid': submitted && f['projectStartDate'].errors }"
-                            (change)="onStartDateChange($event)">
-                        <div *ngIf="submitted && f['projectStartDate'].errors" class="invalid-feedback">
-                            <div *ngIf="f['projectStartDate'].errors['required']">Start Date is
-                                required
-                            </div>
+                        <label class="form-label">Project Start Date</label>
+                        <div class="position-relative w-100">
+                            <input type="text" readonly placeholder="Select Start Date" ngbDatepicker autocomplete="off"
+                                #startPicker="ngbDatepicker" (click)="startPicker.open()" formControlName="projectStartDate"
+                                class="form-control ps-3 pe-5" [ngClass]="{ 'is-invalid': submitted && f['projectStartDate'].errors }" />
+                            <i class="bi bi-calendar calendar-icon" (click)="startPicker.open()"></i>
+                        </div>
+                        <div *ngIf="submitted && f['projectStartDate'].errors" class="invalid-feedback d-block">
+                            <div *ngIf="f['projectStartDate'].errors?.['required']">Project Start Date is required</div>
                         </div>
                     </div>
                     <div class="col-xl-4">
-                        <label for="endDate" class="form-label">End Date:</label>
-                        <input type="date" class="form-control" id='endDate' formControlName='projectEndDate'
-                            [ngClass]="{ 'is-invalid': submitted && f['projectEndDate'].errors }" [min]="minEndDate">
-                        <div *ngIf="submitted && f['projectEndDate'].errors" class="invalid-feedback">
-                            <div *ngIf="f['projectEndDate'].errors['required']">End Date is required
-                            </div>
+                        <label class="form-label">Project End Date</label>
+                        <div class="position-relative w-100">
+                            <input type="text" readonly placeholder="Select End Date" ngbDatepicker autocomplete="off"
+                                #endPicker="ngbDatepicker" (click)="endPicker.open()" formControlName="projectEndDate"
+                                class="form-control ps-3 pe-5" [ngClass]="{ 'is-invalid': submitted && f['projectEndDate'].errors }" />
+                            <i class="bi bi-calendar calendar-icon" (click)="endPicker.open()"></i>
+                        </div>
+                        <div *ngIf="submitted && f['projectEndDate'].errors" class="invalid-feedback d-block">
+                            <div *ngIf="f['projectEndDate'].errors?.['required']">Project End Date is required</div>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>

@@ -10,7 +10,7 @@ import { FilePondOptions } from 'filepond';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModule, NgbOffcanvas,NgbDatepickerModule  } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, DatePipe, } from '@angular/common';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { FlatpickrDefaults, FlatpickrModule } from 'angularx-flatpickr';
@@ -57,7 +57,7 @@ export type ChartOptions = {
     AngularFireDatabaseModule, CommonModule, MatFormFieldModule, MatSelectModule, FlatpickrModule,
     AngularFirestoreModule, ToastrModule, SharedModule, ShowcodeCardComponent, MaterialModuleModule,
     OverlayscrollbarsModule, ShowCodeContentDirective, MatIconModule, NgApexchartsModule,
-    NgbDropdownModule, MatDatepickerModule, MatInputModule, MatNativeDateModule, NgSelectModule,],
+    NgbDropdownModule, MatDatepickerModule, MatInputModule, MatNativeDateModule, NgSelectModule,NgbDatepickerModule],
   providers: [FirebaseService, { provide: ToastrService, useClass: ToastrService }, FlatpickrDefaults, DatePipe],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.scss',
@@ -527,39 +527,54 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   onSubmit(): void {
     this.submitted = true;
+
     if (this.createProjectForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
+      this.createProjectForm.markAllAsTouched();
       return;
     }
-    else if (this.createProjectForm.valid) {
-      const projectData = this.createProjectForm.value;
-      this.btnDisable = true;
-      projectData.companyName = JSON.parse(this.userDetails)?.companyName,
-        projectData.email = JSON.parse(this.userDetails)?.email,
-        projectData.type = JSON.parse(this.userDetails)?.type,
-        projectData.username = JSON.parse(this.userDetails)?.username,
-        projectData.companyCode = JSON.parse(this.userDetails)?.companyCode,
-        projectData.projStatus = this.dynamicFields[0].value,
-        projectData.percentage = this.dynamicFields[0].percent,
-        this.switchService.saveProject(projectData).subscribe({
-          next: (response) => {
-            const parts = response.message.split('<>');
-            this.toastr.success(parts[0]);
-            this.getLst(); this.getdesignData(); this.getMatCardLst();
-            this.modalService.dismissAll(); this.onSubmitTaskDetails(parts[1])
-          },
-          error: (error) => {
-            this.toastr.error('Error creating project', error);
-            this.btnDisable = false;
-          },
-          complete: () => {
-            this.resetForm();
-          },
-        });
-    } else {
-      this.createProjectForm.markAllAsTouched();
-    }
+    let projectData = { ...this.createProjectForm.value };
+    projectData.projectStartDate = this.formatDate(projectData.projectStartDate);
+    projectData.projectEndDate = this.formatDate(projectData.projectEndDate);
+    this.btnDisable = true;
+    const user = JSON.parse(this.userDetails);
+    projectData.companyName = user?.companyName;
+    projectData.email = user?.email;
+    projectData.type = user?.type;
+    projectData.username = user?.username;
+    projectData.companyCode = user?.companyCode;
+    projectData.projStatus = this.dynamicFields[0]?.value;
+    projectData.percentage = this.dynamicFields[0]?.percent;
+    console.log("Final Payload:", projectData);
+    this.switchService.saveProject(projectData).subscribe({
+      next: (response) => {
+        const parts = response.message.split('<>');
+        this.toastr.success(parts[0]);
+        this.getLst();
+        this.getdesignData();
+        this.getMatCardLst();
+        this.modalService.dismissAll();
+        this.onSubmitTaskDetails(parts[1])
+      },
+      error: (error) => {
+        this.toastr.error('Error creating project', error);
+        this.btnDisable = false;
+      },
+      complete: () => {
+        this.resetForm();
+      },
+    });
+
   }
+
+  formatDate(date: any): string {
+    if (!date) return '';
+    if (typeof date === 'object' && date.year) {
+      return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
+    }
+    return new Date(date).toISOString().slice(0, 10);
+  }
+
 
   onSubmitTaskDetails(id: any) {
     let payload = {
@@ -579,9 +594,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.toastr.error(res.message);
         }
       },
-      // error: (error) => {
-      //   this.toastr.error(error.statusText);
-      // },
     })
   }
 
@@ -2352,4 +2364,5 @@ getRecceData() {
         });
     }
 
+    
 }
