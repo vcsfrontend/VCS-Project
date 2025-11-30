@@ -694,4 +694,9 @@ export class BaseComponent {
       {"name":"No"},
     ]
 
+  businessCategoryOptions = [
+    { label: 'Commercial', value: 'Commercial' },
+    { label: 'Residential', value: 'Residential' }
+  ]
+
 }
