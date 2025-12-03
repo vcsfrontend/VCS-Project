@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, TemplateRef, ViewChild, ViewEncapsulation,HostListener } from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
 import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModalRef, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -93,7 +93,7 @@ export class DealsComponent extends BaseComponent {
   isCreateCampaignOpen :boolean=false; currentCampaignId : string ='';proposalsentSubmitted : boolean = false;
   pageIndex = 0; pageSize = 50;  data: any[] = []; displayData: any[] = []; totalRecords: number = 0;
    minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any;
-  uploadLeads :boolean=false;
+  uploadLeads :boolean=false;moveCmapignSubmitted : boolean= false;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -112,6 +112,7 @@ export class DealsComponent extends BaseComponent {
     { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
 
   ];
+  @ViewChild('picker') picker: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -177,7 +178,7 @@ export class DealsComponent extends BaseComponent {
 
   constructor(config: NgbModalConfig, private modalService: NgbModal,
     private offcanvasService: NgbOffcanvas, public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder,
-    private route: ActivatedRoute,private router: Router,
+    private route: ActivatedRoute,private router: Router,private datePipe: DatePipe,
   ) {
     super();
 
@@ -293,6 +294,7 @@ export class DealsComponent extends BaseComponent {
   }
   openRight3(content31: any, element: any) {
     this.selectedLeadData = element;
+    this.LeadToCampaignForm.reset();
     this.modalService.open(content31, { centered: true });
   }
   openRight12(content12: any) {
@@ -452,8 +454,11 @@ export class DealsComponent extends BaseComponent {
     });
 
     this.LeadToCampaignForm = this.fb.group({
-      campaignId: [this.campaignId,],
+      campaignId: ['',Validators.required],
     });
+    this.LeadToCampaignForm.patchValue({
+      campaignId: [this.campaignId,],
+    })
 
     this.campaignForm = this.fb.group({
       campaignId: [],
@@ -779,6 +784,9 @@ export class DealsComponent extends BaseComponent {
   get t() {
     return this.campaignForm.controls;
   }
+  get b(){
+    return this.LeadToCampaignForm.controls;
+  }
   onSubmit(modal: any) {
     this.leadForm.get('campaignId')?.setValue ((JSON.parse(this.userData)?.userType == 1) ? 'SINGLE9DD1748413866634' : 'DUMMY9DD1748413866634');
     this.leadForm.get('executive')?.setValue('');
@@ -888,17 +896,21 @@ export class DealsComponent extends BaseComponent {
           combined.forEach(lead => {
             const status = lead.status?.trim() || 'Unknown';
             statusCounts[status] = (statusCounts[status] || 0) + 1;
+
             const completionStatus = lead.completionStatus;
-            statusCompletion[completionStatus]= (statusCompletion[completionStatus] || 0) + 1;
+            statusCompletion[completionStatus] = (statusCompletion[completionStatus] || 0) + 1;
           });
-          this.activeCount = statusCounts['active'] || 0;
-          this.connectedCount = statusCounts['completed'] || 0;
-          this.notConnectedCount = statusCounts['Not Connected'] || 0;
-          this.statusCompletion = statusCompletion['completed'] || 0 ;
+
+          this.activeCount = this.getCount(statusCounts, 'active');
+          this.connectedCount = this.getCount(statusCounts, 'completed');
+          this.notConnectedCount = this.getCount(statusCounts, 'not connected');
+
+          this.statusCompletion = this.getCount(statusCompletion, 'completed');
+
           this.dataSource.data = combined;
-           this.followUpCount = combined.filter(
-            (item) => item.followUpDue
-          ).length;
+
+          this.followUpCount = combined.filter(item => item.followUpDue).length;
+
           if (combined.length > 0 && combined[0].contact) {
             this.phoneNumber = combined[0].contact;
           }
@@ -913,7 +925,7 @@ export class DealsComponent extends BaseComponent {
             : null;
             
            this.updateColumns();
-          // this.getStatusCount();
+          this.getStatusCount();
           this.taskPriorityList = res.taskPriorityList || [];
           this.uploadLeads = false;
         }
@@ -1607,30 +1619,56 @@ export class DealsComponent extends BaseComponent {
       }
     }
   }
+  onSelectAllChange(event: any) {
+  if (event.checked) {
 
-   onSelectAllChange(event: any) {
-    if (event.checked) {
-      this.selectedLeads = this.dataSource.data
-        .filter((row: any) => row.completionStatus !== 'completed')
-        .map((row: any) => row.leadId);
-    } else {
-      this.selectedLeads = [];
-    }
+    this.dataSource.data.forEach((row: any, index: number) => {
+    });
+
+    const filtered = this.dataSource.data.filter((row: any) => {
+      const status = (row?.completionStatus || '').trim().toLowerCase();
+      const isCompleted = status === 'completed';
+      const hasValidId = row?.leadId != null;
+
+      return !isCompleted && hasValidId;
+    });
+
+    this.selectedLeads = filtered.map((row: any) => row.leadId);
+
+  } else {
+    this.selectedLeads = [];
   }
-
-
+  }
   isSelected(leadId: number): boolean {
     return this.selectedLeads.includes(leadId);
   }
 
-
   isAllSelected(): boolean {
-    return this.selectedLeads.length === this.dataSource.data.length;
+    const enabledRows = this.dataSource.data
+      .filter(row => row.completionStatus?.toLowerCase() !== 'completed');
+
+    // Only compare the selectable rows
+    const selectedIds = this.selectedLeads.map(l => l.leadId ?? l);
+
+    return enabledRows.every(row => selectedIds.includes(row.leadId));
   }
+
 
   isIndeterminate(): boolean {
-    return this.selectedLeads.length > 0 && !this.isAllSelected();
+  const enabledRows = this.dataSource.data
+    .filter(row => row.completionStatus?.toLowerCase() !== 'completed');
+
+  if (enabledRows.length === 0) return false;
+
+  const selectedIds = this.selectedLeads.map(l => l.leadId ?? l);
+
+  const selectedCount = enabledRows.filter(row =>
+    selectedIds.includes(row.leadId)
+  ).length;
+
+  return selectedCount > 0 && selectedCount < enabledRows.length;
   }
+
 
   @ViewChild("myPond") myPond!: FilePondComponent;
 
@@ -2305,16 +2343,10 @@ export class DealsComponent extends BaseComponent {
       next: (res: any[]) => {
         if (Array.isArray(res)) {
           this.statusCounts = res;
-        } else {
-          this.toastr.error('Unexpected response format.');
-        }
-      },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Server error.');
+        } 
       },
     });
   }
-
 
   getSeriesData(fields: any[]): number[] {
   return fields.map((field) => {
@@ -2425,23 +2457,40 @@ export class DealsComponent extends BaseComponent {
 
 
   deleteSelectedLeads() {
-    if (!this.selectedLeads.length) {
-      this.toastr.warning('Please select at least one lead');
-      return;
-    }
-    let leadList= this.selectedLeads.map((lead: any) => lead.leadId)
-    if (confirm('Are you sure you want to delete the selected leads?')) {
-      this.switchService.deleteLeads({ leadList }).subscribe({
-        next: (res: any) => {
-          this.toastr.success('Leads deleted successfully');
-          this.getfetchLeadsIndividual();
-          this.selectedLeads = [];
-        },
-        error: (error) => {
-          this.toastr.error('Failed to delete leads.');
-        },
-      });
-    }
+  if (!this.selectedLeads.length) {
+    this.toastr.warning('Please select at least one lead');
+    return;
+  }
+  const normalized = this.selectedLeads
+    .map(item => {
+      if (!item) return null;
+      return typeof item === 'number'
+        ? this.dataSource.data.find(row => row.leadId === item) 
+        : item;
+    })
+    .filter(x => x);
+  const filteredLeads = normalized.filter(
+    (lead: any) => lead.status?.toLowerCase() !== 'completed'
+  );
+
+  if (!filteredLeads.length) {
+    this.toastr.warning('Completed leads cannot be deleted');
+    return;
+  }
+  const leadList = filteredLeads.map((lead: any) => lead.leadId);
+
+  if (confirm('Are you sure you want to delete the selected leads?')) {
+    this.switchService.deleteLeads({ leadList }).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Leads deleted successfully');
+        this.getfetchLeadsIndividual();
+        this.selectedLeads = [];
+      },
+      error: (error) => {
+        this.toastr.error('Failed to delete leads.');
+      },
+    });
+  }
   }
 
   deleteSingleLead(leadId: number) {
@@ -2450,7 +2499,7 @@ export class DealsComponent extends BaseComponent {
         next: () => {
           this.toastr.success('Lead deleted successfully');
           this.getfetchLeadsIndividual();
-          this.selectedLeads = this.selectedLeads.filter(id => id !== leadId); // Remove if selected
+          this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
         },
         error: () => {
           this.toastr.error('Failed to delete lead.');
@@ -2571,7 +2620,8 @@ export class DealsComponent extends BaseComponent {
   }
 
 
-   filterLeads(modal:any) {
+  filterLeads(modal:any) {
+    this.uploadSpinner = true;
     const formValue = this.filterLeadForm.value;
     const ensureSeconds = (value: string | null): string | null => {
       if (!value) return null;
@@ -2600,8 +2650,9 @@ export class DealsComponent extends BaseComponent {
           this.leadCount = res.length;
           modal.close();
           this.submitted = false;
+          this.uploadSpinner = false;
           this.filterLeadForm.reset();
-          this.toastr.success(res.message, 'Lead');
+          this.toastr.success('filter leads successfully');
           this.filterApplied = true;
         } else {
           this.toastr.error(res.message, 'Lead');
@@ -3158,6 +3209,11 @@ formatLocalDateTime(dateTime: string | Date): string {
   this.open(content);
   }
   leadToCampaignSubmit(modal: any) {
+    this.moveCmapignSubmitted = true;
+    if(this.LeadToCampaignForm.invalid){
+      this.toastr.warning('please fill all the mandatory fields');
+    }
+    this.uploadSpinner = true;
     const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
     const currentCampaignId = this.campaignId;
     let payloadArray: any[] = [];
@@ -3176,9 +3232,12 @@ formatLocalDateTime(dateTime: string | Date): string {
       ];
     }
     this.moveLeadToAnotherCampaign(payloadArray, modal);
-     if (!this.isCreateCampaignOpen) {
-    this.getfetchLeadsIndividual();
-     }
+      this.moveCmapignSubmitted = false;
+      this.uploadSpinner = false;
+      if (!this.isCreateCampaignOpen) {
+        this.getfetchLeadsIndividual();
+
+      }
     this.campaignId = selectedCampaignId;
   }
 
@@ -3190,7 +3249,6 @@ formatLocalDateTime(dateTime: string | Date): string {
     this.currentCampaignId = this.campaignId;
     const leadIds = payloadArray.map(item => item.leadId);
     const campaignId = payloadArray[0].campaignId;
-    console.log(campaignId, leadIds);
      if (!this.isCreateCampaignOpen) {
     this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
       next: (res) => {
@@ -3203,9 +3261,6 @@ formatLocalDateTime(dateTime: string | Date): string {
         this.leadForm.reset();
         this.getfetchLeadsIndividual();
       },
-      error: (err) => {
-        console.error('Error moving leads:', err);
-      }
     });
     }
   }
@@ -3213,7 +3268,6 @@ formatLocalDateTime(dateTime: string | Date): string {
   sentProposal(element : any) {
     this.proposalsentSubmitted = true;
     this.ViewCrmLeads(element);
-   console.log('gdgd',this.CrmLeads) ;
   }
 
   allowOnlynum(event: KeyboardEvent) {
@@ -3258,6 +3312,54 @@ formatLocalDateTime(dateTime: string | Date): string {
     this.displayData = this.leadList.slice(startIndex, endIndex);
     this.dataSource = new MatTableDataSource(this.displayData);
   }
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    this.hideDropdown();
+    this.hideFloatingUI();
+  }
+  @HostListener('document:wheel', ['$event'])
+  onDocumentScroll() {
+    this.hideDropdown();
+    this.hideFloatingUI();
+  }
 
+  hideDropdown() {
+    const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+    dropdowns.forEach((d: any) => d.classList.remove('show'));
+  }
+  hideFloatingUI() {
+  document.querySelectorAll('.dropdown-menu.show')
+    .forEach((el: any) => el.classList.remove('show'));
+  document.querySelectorAll('.popover.show')
+    .forEach((el: any) => el.classList.remove('show'));
+  }
+  getCount(obj: any, key: string): number {
+    return Object.keys(obj).reduce((total, currentKey) => {
+      return currentKey.trim().toLowerCase() === key.trim().toLowerCase()
+        ? total + obj[currentKey]
+        : total;
+    }, 0);
+  }
+
+  openPicker() {
+    setTimeout(() => {
+      this.picker.open();
+    });
+  }
+
+  onFollowupDateSelect(event: any) {
+  const selectedDate = event.value;
+
+  if (selectedDate) {
+    const hours = 10;
+    const minutes = 0;
+
+    selectedDate.setHours(hours, minutes, 0);
+
+    this.followupLeadForm.patchValue({
+      followupDate: selectedDate
+    });
+  }
+  }
 
 }

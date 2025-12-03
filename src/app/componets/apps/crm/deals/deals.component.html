@@ -190,7 +190,7 @@
                         </a>
                         <span ngbDropdown placement="right-top" container="body">
                             <i class="btn btn-icon btn-sm btn-primary-light btn-wave waves-effect waves-light m-1 ri-edit-line bt-icon"
-                                ngbDropdownToggle></i>
+                                ngbDropdownToggle ></i>
                             <ul class="dropdown-menu z-1" ngbDropdownMenu>
                                 <li class="m-2">
                                     <button class="btn btn-warning label-btn label-end w-100" (click)="sendEmail(element)"
@@ -954,10 +954,16 @@
         </div>
         <div class="offcanvas-footer border-top p-4">
             <div class="d-flex justify-content-start gap-2">
-                <button class="btn btn-primary" type="submit">Filter</button>
+                <button class="btn btn-primary" type="submit" [disabled]="uploadSpinner">Filter</button>
                 <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
             </div>
+            
         </div>
+         <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
     </form>
 </ng-template>
 
@@ -1143,14 +1149,18 @@
             <div class="offcanvas-body p-0 m-4 h-100" style="max-height: 100vh;">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
-                        <label for="followupDate" class="form-label">Next Follow up date</label>
-                        <input type="datetime-local" class="form-control" id="followupDate" placeholder=""
-                            formControlName="followupDate" [disabled]="readonlyMode"
-                            [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }"
-                            [min]="minDateTime" />
-
-                        <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
-                            <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
+                        <label class="form-label">Next Follow up date</label>
+                        <div class="position-relative w-100">
+                            <input type="text" readonly placeholder="Next Follow Up Date" ngbDatepicker #followPicker="ngbDatepicker"
+                                (click)="followPicker.open()" formControlName="followupDate" class="form-control ps-3 pe-5"
+                                [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }" />
+                    
+                            <i class="bi bi-calendar calendar-icon" (click)="followPicker.open()"></i>
+                        </div>
+                        <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback d-block">
+                            <div *ngIf="e['followupDate'].errors?.['required']">
+                                Followup Date is required
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
@@ -1990,13 +2000,20 @@
                     </span>
                 </div>
             </div>
-            <div class="col-xl-6 col-lg-6 col-md-6">
-                <label for="contact" class="form-label">End Date</label>
-                <input type="date" class="form-control" id="contact" placeholder="Enter Contact Number"
-                    formControlName="endDate" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }" [min]="minimumDate" />
-                <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback">
+            <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
+                <label class="form-label">End Date</label>
+            
+                <div class="position-relative w-100">
+                    <input type="text" readonly placeholder="Select End Date" ngbDatepicker  #endDatePicker="ngbDatepicker"
+                        (click)="endDatePicker.open()" formControlName="endDate" class="form-control ps-3 pe-5"
+                        [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }" [min]="minimumDate" />
+            
+                    <i class="bi bi-calendar calendar-icon" (click)="endDatePicker.open()"></i>
+                </div>
+            
+                <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback d-block">
                     <span *ngIf="j['endDate'].errors['required']">
-                        endDate  is required.
+                        End Date is required.
                     </span>
                 </div>
             </div>
@@ -2046,17 +2063,19 @@
                     <div class="col-xl-12">
                         <label class="form-label">Select Campaign</label>
                         <ng-select [items]="campaignList" bindLabel="campaignName" bindValue="id" placeholder="Select Campaign"
-                            formControlName="campaignId">
+                            formControlName="campaignId" [ngClass]="{ 'is-invalid': moveCmapignSubmitted && b['campaignId'].errors }">
                         </ng-select>
+                        <div *ngIf="moveCmapignSubmitted && b['campaignId'].errors" class="invalid-feedback">
+                            <span *ngIf="b['campaignId'].errors['required']">please select the campaign</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
                     (click)="modal.close('Cross click')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Submit</button>
                 <button ty3tpe="button"class="btn btn-primary ms-2" (click)="openCreateCampaign(content15)">Create Campaign</button>
-
             </div>
         </div>
     </form>
