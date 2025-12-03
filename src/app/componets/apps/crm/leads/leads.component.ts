@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation,} from '@angular/core';
+import { Component, TemplateRef, ViewChild, ViewEncapsulation,HostListener} from '@angular/core';
 import { SharedModule } from '../../../../shared/common/sharedmodule';
 import { NgbDropdownModule, NgbModal, NgbModalConfig, NgbModalRef, NgbModule,} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -1827,22 +1827,20 @@ export class LeadsComponent extends BaseComponent {
           this.leadStatusCount = combined;
           const statusCounts: { [status: string]: number } = {};
           const statusCompletion : { [completionStatus: string]: number } = {};
-          combined.forEach(lead => {
+         combined.forEach(lead => {
             const status = lead.status?.trim() || 'Unknown';
             statusCounts[status] = (statusCounts[status] || 0) + 1;
-            const completionStatus = lead.completionStatus;
-            statusCompletion[completionStatus]= (statusCompletion[completionStatus] || 0) + 1;
 
+            const completionStatus = lead.completionStatus;
+            statusCompletion[completionStatus] = (statusCompletion[completionStatus] || 0) + 1;
           });
 
-          this.activeCount = statusCounts['active'] || 0;
-          this.connectedCount = statusCounts['completed'] || 0;
-          this.notConnectedCount = statusCounts['not connected'] || 0;
-          this.statusCompletion = statusCompletion['completed'] || 0 ;
-
-          this.followUpCount = combined.filter(
-            (item) => item.followUpDue
-          ).length;
+          this.activeCount = this.getCount(statusCounts, 'active');
+          this.connectedCount = this.getCount(statusCounts, 'completed');
+          this.notConnectedCount = this.getCount(statusCounts, 'not connected');
+          this.statusCompletion = this.getCount(statusCompletion, 'completed');
+          this.dataSource.data = combined;
+          this.followUpCount = combined.filter(item => item.followUpDue).length;
           this.dataSource.data = combined;
           
           this.updateColumns();
@@ -2849,25 +2847,39 @@ export class LeadsComponent extends BaseComponent {
   }
 
 
-  deleteSelectedLeads() {
-    if (!this.selectedLeads.length) {
-      this.toastr.warning('Please select at least one lead');
-      return;
-    }
-    let leadList= this.selectedLeads.map((lead: any) => lead.leadId)
-    if (confirm('Are you sure you want to delete the selected leads?')) {
-      this.switchService.deleteLeads({ leadList}).subscribe({
-        next: (res: any) => {
-          this.toastr.success('Leads deleted successfully');
-          this.getFetchLeadData();
-          this.selectedLeads = []; 
-        },
-        error: (error) => {
-          this.toastr.error('Failed to delete leads.');
-        },
-      });
-    }
+ deleteSelectedLeads() {
+  if (!this.selectedLeads.length) {
+    this.toastr.warning('Please select at least one lead');
+    return;
   }
+  const normalized = this.selectedLeads
+    .map(item => {
+      if (!item) return null;
+      return typeof item === 'number'
+        ? this.dataSource.data.find(row => row.leadId === item) 
+        : item;
+    })
+    .filter(x => x); 
+    const filteredLeads = normalized.filter(
+      (lead: any) => lead.status?.toLowerCase() !== 'completed'
+    );
+
+  if (!filteredLeads.length) {
+    this.toastr.warning('Completed leads cannot be deleted');
+    return;
+  }
+  const leadList = filteredLeads.map((lead: any) => lead.leadId);
+  if (confirm('Are you sure you want to delete the selected leads?')) {
+    this.switchService.deleteLeads({ leadList }).subscribe({
+      next: (res: any) => {
+        this.toastr.success('Leads deleted successfully');
+        this.getFetchLeadData();
+        this.selectedLeads = [];
+      },
+    });
+  }
+  }
+
 
 
   deleteSingleLead(leadId: number) {
@@ -3573,6 +3585,37 @@ export class LeadsComponent extends BaseComponent {
       this.displayData = this.leadList.slice(startIndex, endIndex);
       this.dataSource = new MatTableDataSource(this.displayData);
     }
+  @HostListener('window:scroll', ['$event'])
+  onWindowScroll() {
+    this.hideDropdown();
+    this.hideFloatingUI();
+  }
+  @HostListener('document:wheel', ['$event'])
+  onDocumentScroll() {
+    this.hideDropdown();
+    this.hideFloatingUI();
+  }
+
+  hideDropdown() {
+    const dropdowns = document.querySelectorAll('.dropdown-menu.show');
+    dropdowns.forEach((d: any) => d.classList.remove('show'));
+  }
+  hideFloatingUI() {
+  // Close ALL ngbDropdown menus
+  document.querySelectorAll('.dropdown-menu.show')
+    .forEach((el: any) => el.classList.remove('show'));
+
+  // Close ALL ngbPopover panels
+  document.querySelectorAll('.popover.show')
+    .forEach((el: any) => el.classList.remove('show'));
+  }
+  getCount(obj: any, key: string): number {
+    return Object.keys(obj).reduce((total, currentKey) => {
+      return currentKey.trim().toLowerCase() === key.trim().toLowerCase()
+        ? total + obj[currentKey]
+        : total;
+    }, 0);
+  }
 
 
 }

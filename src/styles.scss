@@ -552,3 +552,46 @@ textarea:focus {
     width: 250px !important;
     border-radius: 10px !important;
 }
+.cdk-overlay-container,
+.cdk-overlay-connected-position-bounding-box,
+.cdk-overlay-pane {
+  z-index: 200000 !important;
+}
+
+.date-wrapper {
+  height: 40px; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.date-wrapper input {
+  border: none;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.date-wrapper input:focus {
+  outline: none;
+}
+
+.date-icon {
+  border: none;
+  background: #f4f4f4;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-icon mat-icon {
+  font-size: 20px;
+}
