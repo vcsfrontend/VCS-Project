@@ -220,6 +220,7 @@ export class SwitherService {
   getLibrarayData(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/items/get/all`); }
   getUomNames(): Observable<any> { return this.http.get(`${this.bizUrl}api/uoms`); }
   getLibrarayNames(): Observable<any> { return this.http.get(`${this.bizUrl}api/libraries/shared`); }
+  getCategoriesName(): Observable<any> { return this.http.get(`${this.bizUrl}api/categories`); }
   addRole(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/roles/createRole`, data); }
   getRole(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/roles/listRoles?companyCode=${companyCode}`); }  
   updateRole(id:any,name:any,description :any): Observable<any> { return this.http.put(`${this.apiUrl}api/roles/updateRole/${id}?name=${name}&description=${description}`,"");} 
