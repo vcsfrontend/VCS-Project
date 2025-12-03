@@ -776,3 +776,7 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .dropdown-menu {
   z-index: 2000 !important;
 }
+
+.tooltip-primary .tooltip-inner {
+  min-width: 300px;
+}

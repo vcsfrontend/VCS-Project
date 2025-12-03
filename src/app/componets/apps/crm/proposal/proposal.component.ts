@@ -67,7 +67,7 @@ export class ProposalComponent extends BaseComponent {
   userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
   innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
   selectedOrderContent: any = null; actstatus: any;
-  adoanAiRole: string = '';
+  adoanAiRole: string = ''; 
   itemId: any; currentSection: any; proposals: any[] = []; clientOrders: any[] = [];
   dataSource = new MatTableDataSource<any>(); projectId: any; projectName!: any;
   designingId: any; designCompletionStatus: string = '';
@@ -93,7 +93,7 @@ export class ProposalComponent extends BaseComponent {
   selectedCategory: any; editIndex: number | null = null; designId: any;
   boqList: any; tabCounts: { [key: string]: number } = {}; elementForm!: FormGroup; proposalForm!: FormGroup;
   proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; updateProjectForm!: FormGroup;
-  addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
+  addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: number[] = [];
   newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
   selectedFile: File | null = null; selectedPanel: any = null;
   activeId: any = 0; highlightedTabIndex = 0; selectedProposal: any;
@@ -101,7 +101,7 @@ export class ProposalComponent extends BaseComponent {
   orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
   orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
   projectLst: any = []; boqproject: any; showAllProposals = false; libraryList: any[] = [];
-  libraryListData: any[] = []; objectKeys = Object.keys;
+  libraryListData: any[] = []; objectKeys = Object.keys; libraryCategoriesList: any[] = [];
   showLeftArrow = false; showRightArrow = false; step = 1; submittedStep1: boolean = false;
   submittedStep2: boolean = false; submittedStep3: boolean = false;
   submitted: boolean = false; projectConfigList: string[] = [];
@@ -594,7 +594,7 @@ export class ProposalComponent extends BaseComponent {
   resetForm() {
     this.elementForm.reset();
     this.isEditMode = false;
-    this.selectedElement = null;
+    this.selectedElement = [];
   }
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
@@ -942,22 +942,20 @@ export class ProposalComponent extends BaseComponent {
       return;
     }
     const item = this.selectedItems[0];
-    const combinedDescription = [
-      item.description || '',
+    const descriptionParts = [
+      item.description && item.description !== item.name ? item.description : '',
       item.carcassMaterial ? `Carcass Material: ${item.carcassMaterial}` : '',
       item.carcassFinish ? `Carcass Finish: ${item.carcassFinish}` : '',
       item.shutterMaterial ? `Shutter Material: ${item.shutterMaterial}` : '',
       item.shutterFinish ? `Shutter Finish: ${item.shutterFinish}` : ''
-    ]
-      .filter(x => x && x.trim() !== '')
-      .join(" | ");
+    ].filter(x => x.trim() !== '');
+    const combinedDescription =
+      `${item.name || ''}\n${descriptionParts.length ? descriptionParts.join(" | ") : 'No description available'}`;
     const payload = {
-      libraryId: item.libraryId?._id || item.libraryId || null,
-      name: item.name || '',
-      description: combinedDescription,
+      elementNameAndDescription: combinedDescription,
       brandMake: item.brandMake || '',
-      categoryId: item.categoryId?._id || item.categoryId || null,
-      uom: this.getUomNameById(item.uom),
+      categoryName: this.getCategoryName(item.categoryId?._id || item.categoryId),
+      uom: this.getUomName(item.uom) || null,
       quantity: Number(item.standardQuantity) || 1,
       standardRate: Number(item.standardRate) || 0,
       budgetRate: Number(item.budgetRate) || 0,
@@ -974,12 +972,11 @@ export class ProposalComponent extends BaseComponent {
     this.switchService.saveElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
-          this.toastr.success(res.message || 'Elements Imported');
+          this.toastr.success(res.message || 'Item imported successfully!');
           this.boqData();
         }
       }
     });
-
   }
 
   get es() {
@@ -1036,56 +1033,64 @@ export class ProposalComponent extends BaseComponent {
           this.elementForm.reset();
           this.offcanvasService.dismiss();
           this.elementFormSubmitted = false;
-          this.selectedElement = null;
+          this.selectedElement = [];
           this.boqData();
         }
       }
     });
   }
 
-  moveToRoomSubmit(element?: any) {
-    const formValue = { ...this.elementForm.value };
-    const payload = [
-      {
-        boqId: element?.boqId || Number(this.itemId) || 0,
-        elementUrl: element?.elementUrl || formValue.elementUrl || '',
-        elementNameAndDescription: (
-          `Name : ${formValue.elementName || ''}\n` +
-          `Carcass Material : ${formValue.carcassMaterial || ''}\n` +
-          `Carcass Finish : ${formValue.carcassFinish || ''}\n` +
-          `Shutter Material : ${formValue.shutterMaterial || ''}\n` +
-          `Shutter Finish : ${formValue.shutterFinish || ''}\n` +
-          `Brand : ${formValue.brandOrMake || ''}`
-        ).trim(),
-        codeAndCategory: formValue.codeAndCategory || element?.codeAndCategory || '',
-        orderStatus: formValue.orderStatus || element?.orderStatus || '',
-        itemType: formValue.itemType || element?.itemType || '',
-        source: formValue.source || element?.source || '',
-        status: formValue.status || element?.status || '',
-        length: Number(element?.length ?? formValue.length) || 0,
-        breadth: Number(element?.breadth ?? formValue.breadth) || 0,
-        height: Number(element?.height ?? formValue.height) || 0,
-        quantity: Number(element?.quantity ?? formValue.quantity) || 0,
-        uom: formValue.uom || element?.uom || '',
-        draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
-        clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
-        finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
-        brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
-        discount: Number(element?.discount ?? formValue.discount) || 0,
-        serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
-        baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
-        budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
-        hsn: Number(element?.hsn ?? formValue.hsn) || 0,
-        gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
-        amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-        designId: '3FO3I0HLFK20',
-        roomName: element?.roomName || formValue.roomName || '',
-        itemCode: element?.itemCode || formValue.itemCode || '',
-        companyCode: this.userCompanyCode,
-        email: this.userEmail,
-        type: this.userType,
-      },
+  moveToRoomSubmit() {
+    const selectedItems: any[] = [];
+    Object.keys(this.boqDataSources).forEach(key => {
+      const rows = this.boqDataSources[key]?.data ?? [];
+      rows.forEach(row => {
+        if (this.selectedElement.includes(row.boqId)) {
+          selectedItems.push(row);
+        }
+      });
+    });
+    const uniqueItems = [
+      ...new Map(selectedItems.map(item => [item.boqId, item])).values()
     ];
+    if (!uniqueItems.length) {
+      this.toastr.warning("Please select at least one item");
+      return;
+    }
+    const payload = uniqueItems.map(item => ({
+      boqId: item.boqId,
+      elementUrl: item.elementUrl ?? '',
+      elementNameAndDescription: item.elementNameAndDescription ?? '',
+      codeAndCategory: item.codeAndCategory ?? '',
+      orderStatus: item.orderStatus ?? '',
+      itemType: item.itemType ?? '',
+      source: item.source ?? '',
+      status: item.status ?? '',
+      length: Number(item.length ?? 0),
+      breadth: Number(item.breadth ?? 0),
+      height: Number(item.height ?? 0),
+      quantity: Number(item.quantity ?? 1),
+      uom: item.uom ?? '-',
+      draftQuantity: Number(item.draftQuantity ?? 0),
+      clientRate: Number(item.clientRate ?? 0),
+      finalAmount: Number(item.finalAmount ?? 0),
+      brandOrMake: item.brandOrMake ?? '',
+      discount: Number(item.discount ?? 0),
+      serviceCharge: Number(item.serviceCharge ?? 0),
+      baseAmount: Number(item.baseAmount ?? 0),
+      budgetRate: Number(item.budgetRate ?? 0),
+      hsn: Number(item.hsn ?? 0),
+      gstPrecent: Number(item.gstPrecent ?? 0),
+      amountWithoutGst: Number(item.amountWithoutGst ?? 0),
+      roomName: this.elementForm.value.roomName,
+      itemCode: item.itemCode ?? '',
+      designId: item.designId ?? '3FO3ILENXV7I',
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      inProposal: item.inProposal ?? '',
+    }));
+    console.log("FINAL PAYLOAD:", payload);
     // this.switchService.updateElementData(payload).subscribe({
     //   next: (res: any) => {
     //     if (res?.status === true) {
@@ -1099,6 +1104,8 @@ export class ProposalComponent extends BaseComponent {
     //   }
     // });
   }
+
+
 
   proposalFormSubmit(modal?: any) {
     // this.submittedStep3 = true;
@@ -1354,6 +1361,10 @@ export class ProposalComponent extends BaseComponent {
     return selectedInThisTable.length > 0 && selectedInThisTable.length < data.length;
   }
 
+  isRowSelected(boqId: number): boolean {
+    return this.selectedElement?.includes(boqId) ?? false;
+  }
+
   onSelectAllChange(event: any, key: string): void {
     const data = this.boqDataSources?.[key]?.data ?? [];
     if (!data.length) return;
@@ -1366,18 +1377,17 @@ export class ProposalComponent extends BaseComponent {
     }
   }
 
-  onRowCheckboxChange(element: any, event: any) {
-    if (!this.selectedElement) this.selectedElement = [];
-    const boqId = element.boqId;
+  onRowCheckboxChange(element: any, event: any): void {
+    const boqId = element?.boqId;
+    if (!boqId && boqId !== 0) return;
+    this.selectedElement = this.selectedElement ?? [];
     if (event.checked) {
-      if (!this.selectedElement.includes(boqId)) {
-        this.selectedElement.push(boqId);
-      }
+      this.selectedElement = [...new Set([...this.selectedElement, boqId])];
     } else {
-      const index = this.selectedElement.indexOf(boqId);
-      if (index > -1) this.selectedElement.splice(index, 1);
+      this.selectedElement = this.selectedElement.filter((id: number) => id !== boqId);
     }
   }
+
 
   isSelected(boqId: number): boolean {
     return this.selectedElement?.includes(boqId) ?? false;
@@ -1615,7 +1625,9 @@ export class ProposalComponent extends BaseComponent {
       next: (res: any) => {
         if (res && res.items) {
           this.libraryListData = res.items;
+          setTimeout(() => this.mapCategoryNames(), 200);
           this.getUomNames();
+          this.getCategoriesName();
         }
       }
     });
@@ -1629,6 +1641,11 @@ export class ProposalComponent extends BaseComponent {
     });
   }
 
+  getUomName(id: string): string {
+    const match = this.uomList.find(u => u._id === id);
+    return match ? match.name : '-';
+  }
+
 
   getLibraryNames() {
     this.switchService.getLibrarayNames().subscribe({
@@ -1639,6 +1656,17 @@ export class ProposalComponent extends BaseComponent {
       }
     });
   }
+
+  getCategoriesName() {
+    this.switchService.getCategoriesName().subscribe({
+      next: (res: any) => {
+        if (res && res.categories) {
+          this.libraryCategoriesList = res.categories;
+        }
+      }
+    });
+  }
+
 
   onTabChange(event: any) {
     this.activeTab = event.nextId;
@@ -1912,6 +1940,39 @@ export class ProposalComponent extends BaseComponent {
       .reduce((acc: number, val: number) => acc + val, 0);
     return total.toFixed(2);
   }
+
+  getCategoryName(id: string): string {
+    const match = this.libraryCategoriesList.find(c => c._id === id);
+    return match ? match.name : '-';
+  }
+
+  mapCategoryNames() {
+    this.libraryListData = this.libraryListData.map(item => ({
+      ...item,
+      categoryName: this.getCategoryName(item.categoryId?._id)
+    }));
+  }
+
+  formatTooltip(item: any): string {
+    return [
+      item.name || '',
+      item.description ? `Description: ${item.description}` : '',
+      item.brandMake ? `Brand: ${item.brandMake}` : '',
+      item.carcassMaterial ? `Carcass Material: ${item.carcassMaterial}` : '',
+      item.carcassFinish ? `Carcass Finish: ${item.carcassFinish}` : '',
+      item.shutterMaterial ? `Shutter Material: ${item.shutterMaterial}` : '',
+      item.shutterFinish ? `Shutter Finish: ${item.shutterFinish}` : ''
+    ]
+      .filter(Boolean)
+      .join('\n')
+      .trim();
+  }
+
+
+
+
+
+
 
 
 }

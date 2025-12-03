@@ -490,23 +490,22 @@
                                                                         <button type="button" class="btn btn-primary dropdown-toggle" ngbDropdownToggle>
                                                                             <i class="ri-arrow-right-line me-2"></i> Actions
                                                                         </button>
-                                                                    
                                                                         <ul class="dropdown-menu shadow-lg p-0" ngbDropdownMenu style="width: 260px; border-radius: 12px;">
                                                                             <li>
-                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
+                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom"
                                                                                     (click)="onCreateProposalClick(content4)">
                                                                                     <i class="ri-refresh-line fs-5"></i>
                                                                                     <span class="fw-semibold">Create Proposal</span>
                                                                                 </a>
                                                                             </li>
                                                                             <li>
-                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3" (click)="openLg1(content1)">
+                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom" (click)="openLg1(content1)">
                                                                                     <i class="ri-layout-grid-line fs-5"></i>
                                                                                     <span class="fw-semibold">Add Custom Element</span>
                                                                                 </a>
                                                                             </li>
                                                                             <li>
-                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
+                                                                                <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom"
                                                                                     (click)="openLg2(content2); getLibraryData()">
                                                                                     <i class="bi bi-folder side-menu__icon fs-5"></i>
                                                                                     <span class="fw-semibold">Import Items From</span>
@@ -530,54 +529,46 @@
                                                                     </td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="select">
-                                                                    <th mat-header-cell *matHeaderCellDef
-                                                                        class="sticky-col-left"
-                                                                        style="max-width: 750px;">
-                                                                        <mat-checkbox [checked]="isAllSelected(key)"
-                                                                            [indeterminate]="isIndeterminate(key)"
-                                                                            (change)="onSelectAllChange($event, key); moveToRoom(content22)">
+                                                                    <th mat-header-cell *matHeaderCellDef class="sticky-col-left" style="max-width: 750px;">
+                                                                        <mat-checkbox [checked]="isAllSelected(key)" [indeterminate]="isIndeterminate(key)"
+                                                                            (change)="onSelectAllChange($event, key)">
                                                                         </mat-checkbox>
                                                                     </th>
-                                                                    <td mat-cell *matCellDef="let element"
-                                                                        class="sticky-col-left"
-                                                                        style="max-width: 750px;">
-                                                                        <mat-checkbox
-                                                                            [checked]="selectedElement?.includes(element.boqId) ?? false"
-                                                                            (change)="onRowCheckboxChange(element, $event)"
-                                                                            [disabled]="element.inProposal === 'inprop'"
-                                                                            class="custom-checkbox">
+                                                                    <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
+                                                                        <mat-checkbox [checked]="isRowSelected(element.boqId)" (change)="onRowCheckboxChange(element, $event)"
+                                                                            [disabled]="element.inProposal === 'inprop'" class="custom-checkbox">
                                                                         </mat-checkbox>
                                                                     </td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="Roomname">
                                                                     <th mat-header-cell *matHeaderCellDef>Roomname
                                                                     </th>
-                                                                    <td mat-cell
-                                                                        *matCellDef="let element; let i = index">
+                                                                    <td mat-cell *matCellDef="let element; let i = index">
                                                                         {{ element.Roomname }}</td>
                                                                 </ng-container>
                                                                 <ng-container matColumnDef="elementUrl">
                                                                     <th mat-header-cell *matHeaderCellDef class="sticky-col-left-2" style="max-width: 750px;">
-                                                                        Element
-                                                                        Name & Description </th>
+                                                                        Element Name & Description
+                                                                    </th>
                                                                     <td mat-cell *matCellDef="let element" class="sticky-col-left-2" style="max-width: 750px;">
                                                                         <div class="d-flex align-items-center" (click)="openEditFromSelected(element, content1)"
                                                                             style="cursor: pointer;">
                                                                             <span class="avatar avatar-xl me-3">
                                                                                 <img [src]="element?.elementUrl ? element.elementUrl : 'assets/images/brand-logos/no-image.png'"
-                                                                                    class="img-thumbnail" alt="Project Image" />
+                                                                                    class="img-thumbnail" alt="Element Image" />
                                                                             </span>
                                                                             <div>
                                                                                 <span class="fw-medium d-block">
                                                                                     {{
-                                                                                    (element.elementNameAndDescription?.split('\n')[0] || '')?.length > 30
+                                                                                    element.elementNameAndDescription?.split('\n')[0]?.length > 30
                                                                                     ? (element.elementNameAndDescription?.split('\n')[0] | slice:0:30) + '...'
-                                                                                    : (element.elementNameAndDescription?.split('\n')[0] || '')
+                                                                                    : element.elementNameAndDescription?.split('\n')[0]
                                                                                     }}
                                                                                 </span>
-                                                                                <div class="text-muted small">
+                                                                                <div class="text-muted small pointer" [ngbTooltip]="element.elementNameAndDescription" tooltipClass="tooltip-primary"
+                                                                                    container="body">
                                                                                     {{
-                                                                                    element.elementNameAndDescription?.split('\n')[1] || ''
+                                                                                    element.elementNameAndDescription?.split('\n')[1] || 'No description available'
                                                                                     }}
                                                                                 </div>
                                                                             </div>
@@ -598,7 +589,6 @@
                                                                         Code & Category
                                                                     </th>
                                                                     <td mat-cell *matCellDef="let element" class="sticky-col-left-4">
-                                                                
                                                                         <div class="hover-select-wrapper" (mouseleave)="forceBlur(select)">
                                                                             <div class="code-display">
                                                                                 {{ element.codeAndCategory ? element.codeAndCategory : '–' }}
@@ -1051,7 +1041,6 @@
                                     <th>Budget Rate</th>
                                     <th>HSN</th>
                                     <th>GST</th>
-                                    <th>Library Type</th>
                                     <th>Created At</th>
                                 </tr>
                             </thead>
@@ -1073,22 +1062,25 @@
                                                         {{ item.name.length > 30 ? (item.name | slice:0:15) + '...' :
                                                         item.name }}
                                                     </span>
-                                                    <div class="text-muted small">
-                                                        {{ item.description ? (item.description | slice:0:15) + '...' :
-                                                        'No description available' }}
+                                                    <div class="text-muted small pointer cu" [ngbTooltip]="formatTooltip(item)" tooltipClass="tooltip-primary"
+                                                        container="body">
+                                                        {{
+                                                        item.description
+                                                        ? (item.description.length > 25 ? (item.description | slice:0:25) + '...' : item.description)
+                                                        : 'No description available'
+                                                        }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>{{ item.brandMake }}</td>
-                                        <td>{{ item.categoryId }}</td>
-                                        <td>{{ item.uom }}</td>
+                                        <td>{{ getCategoryName(item.categoryId?._id) }}</td>
+                                        <td>{{ getUomName(item.uom) }}</td>
                                         <td>{{ item.standardQuantity }}</td>
                                         <td>{{ item.standardRate }}</td>
                                         <td>{{ item.budgetRate }}</td>
                                         <td>{{ item.hsn }}</td>
                                         <td>{{ item.gst }}</td>
-                                        <td>{{ item.type }}</td>
                                         <td>{{ item.createdAt | date:'dd-MMM-yyyy hh:mm a' }}</td>
                                     </tr>
                                 </ng-container>

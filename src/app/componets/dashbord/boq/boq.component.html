@@ -380,7 +380,7 @@
                                 <a ngbNavLink class="ms-1 btn btn-light" (click)="getProposal()">Proposal For Client</a>
                                 <ng-template ngbNavContent>
                                     <div class="col-xl-12">
-                                        <div class="card custom-card bg-light">
+                                        <div class="">
                                             <div class="card-body p-0" *ngIf="!selectedProposalContent">
                                                 <div class="table-container">
                                                     <table class="table table-hover text-nowrap my-table">
@@ -1509,7 +1509,12 @@
                                                                     <div class="col-xl-12" *ngIf="!showPanelList">
                                                                         <div class="card custom-card no-top-radius border-top" style="box-shadow: none !important;">
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
-                                                                                <div class="card-title col-xl-4">{{ key | titlecase }}</div>
+                                                                                <div class="d-flex align-items-center gap-2">
+                                                                                    <div class="card-title">{{ key | titlecase }}</div>
+                                                                                    <button type="button" class="btn btn-outline-primary btn-sm btn-wave" (click)="moveToRoom(content22)">
+                                                                                        <i class="bi bi-arrows-move"></i>
+                                                                                    </button>
+                                                                                </div>
                                                                                 <div class="dropdown col-xl-7" ngbDropdown>
                                                                                     <div class="d-flex justify-content-end gap-3">
                                                                                         <div class="input-group shadow-sm rounded-3" style="width: 280px;">
@@ -1595,8 +1600,7 @@
                                                                                             </mat-checkbox>
                                                                                         </th>
                                                                                         <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
-                                                                                            <mat-checkbox [checked]="selectedElement?.includes(element.boqId) ?? false"
-                                                                                                (change)="onRowCheckboxChange(element, $event)"
+                                                                                            <mat-checkbox [checked]="isRowSelected(element.boqId)" (change)="onRowCheckboxChange(element, $event)"
                                                                                                 [disabled]="element.inProposal === 'inprop'" class="custom-checkbox">
                                                                                             </mat-checkbox>
                                                                                         </td>
@@ -2286,8 +2290,8 @@
                         <table class="table table-hover text-nowrap my-table">
                             <thead>
                                 <tr>
-                                    <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel1" value="" aria-label="..."
-                                        ></th>
+                                    <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox"
+                                            id="checkboxNoLabel1" value="" aria-label="..."></th>
                                     <th>S.No.</th>
                                     <th>Element Name & Description</th>
                                     <th>Brand Make</th>
@@ -2298,40 +2302,46 @@
                                     <th>Budget Rate</th>
                                     <th>HSN</th>
                                     <th>GST</th>
-                                    <th>Library Type</th>
                                     <th>Created At</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <ng-container *ngFor="let item of libraryListData; let i = index">
                                     <tr>
-                                        <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox" id="checkboxNoLabel2" value="" aria-label="..."
-                                            (change)="toggleSelect($event, i)" [(ngModel)]="item.checked"></th>
+                                        <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox"
+                                                id="checkboxNoLabel2" value="" aria-label="..."
+                                                (change)="toggleSelect($event, i)"></th>
                                         <td>{{ i + 1 }}</td>
                                         <td style="max-width: 750px;">
                                             <div class="d-flex align-items-center">
                                                 <span class="avatar avatar-xl me-3">
-                                                    <img [src]="item.imageUrl || 'assets/images/brand-logos/no-image.png'" class="img-thumbnail" alt="Project Image">
+                                                    <img [src]="item.imageUrl || 'assets/images/brand-logos/no-image.png'"
+                                                        class="img-thumbnail" alt="Project Image">
                                                 </span>
                                                 <div>
                                                     <span class="fw-medium d-block">
-                                                        {{ item.name.length > 30 ? (item.name | slice:0:15) + '...' : item.name }}
+                                                        {{ item.name.length > 30 ? (item.name | slice:0:15) + '...' :
+                                                        item.name }}
                                                     </span>
-                                                    <div class="text-muted small">
-                                                        {{ item.description ? (item.description | slice:0:15) + '...' : 'No description available' }}
+                                                    <div class="text-muted small pointer cu" [ngbTooltip]="formatTooltip(item)" tooltipClass="tooltip-primary"
+                                                        container="body">
+                                                        {{
+                                                        item.description
+                                                        ? (item.description.length > 25 ? (item.description | slice:0:25) + '...' : item.description)
+                                                        : 'No description available'
+                                                        }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>{{ item.brandMake }}</td>
-                                        <td>{{ item.categoryId }}</td>
-                                        <td>{{ item.uom }}</td>
+                                        <td>{{ getCategoryName(item.categoryId?._id) }}</td>
+                                        <td>{{ getUomName(item.uom) }}</td>
                                         <td>{{ item.standardQuantity }}</td>
                                         <td>{{ item.standardRate }}</td>
                                         <td>{{ item.budgetRate }}</td>
                                         <td>{{ item.hsn }}</td>
                                         <td>{{ item.gst }}</td>
-                                        <td>{{ item.type }}</td>
                                         <td>{{ item.createdAt | date:'dd-MMM-yyyy hh:mm a' }}</td>
                                     </tr>
                                 </ng-container>
@@ -3453,4 +3463,28 @@
             <button class="btn btn-danger" type="button" (click)="offcanvas.dismiss('Cross click')">Cancel</button>
         </div>
     </div>
+</ng-template>
+
+<ng-template #content22 let-modal>
+    <form [formGroup]="elementForm" (ngSubmit)="moveToRoomSubmit()">
+        <div class="modal-header justify-content-center">
+            <h6 class="modal-title"><strong>Move to Other Room </strong></h6>
+            <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
+        </div>
+        <div class="modal-body overflowImportant" style="min-height: 200px;">
+            <div class="row gy-3">
+                <div class="col-lg-12">
+                    <label class="form-label">Select Room Name</label>
+                    <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
+                        placeholder="Select a stage">
+                    </ng-select>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary"> Submit</button>
+            <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
+                data-bs-dismiss="modal">Close</button>
+        </div>
+    </form>
 </ng-template>

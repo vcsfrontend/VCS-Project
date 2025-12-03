@@ -101,7 +101,7 @@ export class BoqComponent extends BaseComponent {
     proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; recceForm!: FormGroup;
     updateRecceForm!: FormGroup; updateProjectForm!: FormGroup; cutListForm!: FormGroup; generateCutListForm!: FormGroup;
     manualCutListForm!:FormGroup; 
-    addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any = null;
+    addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any[] = [];
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null; selectedPanel: any = null;
     activeId: any = 0; highlightedTabIndex = 0; selectedProposal: any;        
@@ -123,7 +123,7 @@ export class BoqComponent extends BaseComponent {
     statusNames: any = {1: 'Recce', 2: 'Design', 3: 'BOQ', };
     recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
-    selectedRecce: any;
+    selectedRecce: any; libraryCategoriesList: any[] = [];
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -714,7 +714,7 @@ export class BoqComponent extends BaseComponent {
     resetForm() {
         this.elementForm.reset();
         this.isEditMode = false;
-        this.selectedElement = null;
+        this.selectedElement = [];
     }
     toggleCollapse() {
         this.isCollapsed = !this.isCollapsed;
@@ -1130,12 +1130,11 @@ closeAllDropdowns() {
         .filter(x => x && x.trim() !== '')  
         .join(" | ");
         const payload = {
-            libraryId: item.libraryId?._id || item.libraryId || null,
             name: item.name || '',
             description: combinedDescription,
             brandMake: item.brandMake || '',
-            categoryId: item.categoryId?._id || item.categoryId || null,
-            uom: this.getUomNameById(item.uom),
+            categoryName: this.getCategoryName(item.categoryId?._id || item.categoryId),
+            uom: this.getUomName(item.uom) || null,
             quantity: Number(item.standardQuantity) || 1,
             standardRate: Number(item.standardRate) || 0,
             budgetRate: Number(item.budgetRate) || 0,
@@ -1214,7 +1213,7 @@ closeAllDropdowns() {
                     this.elementForm.reset();
                     this.offcanvasService.dismiss();
                     this.elementFormSubmitted = false;
-                    this.selectedElement = null;
+                    this.selectedElement = [];
                     this.boqData();
                 }
             }
@@ -1492,18 +1491,19 @@ closeAllDropdowns() {
         }
     }
 
-    onRowCheckboxChange(element: any, event: any) {
-        if (!this.selectedElement) this.selectedElement = [];
-
-        const boqId = element.boqId;
+    onRowCheckboxChange(element: any, event: any): void {
+        const boqId = element?.boqId;
+        if (!boqId && boqId !== 0) return;
+        this.selectedElement = this.selectedElement ?? [];
         if (event.checked) {
-            if (!this.selectedElement.includes(boqId)) {
-                this.selectedElement.push(boqId);
-            }
+            this.selectedElement = [...new Set([...this.selectedElement, boqId])];
         } else {
-            const index = this.selectedElement.indexOf(boqId);
-            if (index > -1) this.selectedElement.splice(index, 1);
+            this.selectedElement = this.selectedElement.filter((id: number) => id !== boqId);
         }
+    }
+
+    isRowSelected(boqId: number): boolean {
+        return this.selectedElement?.includes(boqId) ?? false;
     }
 
     isSelected(boqId: number): boolean {
@@ -1997,10 +1997,34 @@ closeAllDropdowns() {
             next: (res: any) => {
                 if (res && res.items) {
                     this.libraryListData = res.items;
+                    setTimeout(() => this.mapCategoryNames(), 200);
                     this.getUomNames();
+                    this.getCategoriesName();
                 }
             }
         });
+    }
+
+    mapCategoryNames() {
+        this.libraryListData = this.libraryListData.map(item => ({
+            ...item,
+            categoryName: this.getCategoryName(item.categoryId?._id)
+        }));
+    }
+
+    getCategoriesName() {
+        this.switchService.getCategoriesName().subscribe({
+            next: (res: any) => {
+                if (res && res.categories) {
+                    this.libraryCategoriesList = res.categories;
+                }
+            }
+        });
+    }
+
+    getCategoryName(id: string): string {
+        const match = this.libraryCategoriesList.find(c => c._id === id);
+        return match ? match.name : '-';
     }
 
     getUomNames() {
@@ -2009,6 +2033,11 @@ closeAllDropdowns() {
                 this.uomList = res.uoms || [];
             }
         });
+    }
+
+    getUomName(id: string): string {
+        const match = this.uomList.find(u => u._id === id);
+        return match ? match.name : '-';
     }
 
     
@@ -2672,6 +2701,90 @@ closeAllDropdowns() {
             .filter(v => typeof v === 'number')
             .reduce((acc: number, val: number) => acc + val, 0);
         return total.toFixed(2);
+    }
+
+    formatTooltip(item: any): string {
+        return [
+            item.name || '',
+            item.description ? `Description: ${item.description}` : '',
+            item.brandMake ? `Brand: ${item.brandMake}` : '',
+            item.carcassMaterial ? `Carcass Material: ${item.carcassMaterial}` : '',
+            item.carcassFinish ? `Carcass Finish: ${item.carcassFinish}` : '',
+            item.shutterMaterial ? `Shutter Material: ${item.shutterMaterial}` : '',
+            item.shutterFinish ? `Shutter Finish: ${item.shutterFinish}` : ''
+        ]
+            .filter(Boolean)
+            .join('\n')
+            .trim();
+    }
+
+    moveToRoom(content22: any) {
+        this.modalService.open(content22, { centered: true });
+    }
+
+    moveToRoomSubmit() {
+        const selectedItems: any[] = [];
+        Object.keys(this.boqDataSources).forEach(key => {
+            const rows = this.boqDataSources[key]?.data ?? [];
+            rows.forEach(row => {
+                if (this.selectedElement?.includes(row.boqId)) {
+                    selectedItems.push(row);
+                }
+            });
+        });
+        const uniqueItems = [
+            ...new Map(selectedItems.map(item => [item.boqId, item])).values()
+        ];
+        if (!uniqueItems.length) {
+            this.toastr.warning("Please select at least one item");
+            return;
+        }
+        const payload = uniqueItems.map(item => ({
+            boqId: item.boqId,
+            elementUrl: item.elementUrl ?? '',
+            elementNameAndDescription: item.elementNameAndDescription ?? '',
+            codeAndCategory: item.codeAndCategory ?? '',
+            orderStatus: item.orderStatus ?? '',
+            itemType: item.itemType ?? '',
+            source: item.source ?? '',
+            status: item.status ?? '',
+            length: Number(item.length ?? 0),
+            breadth: Number(item.breadth ?? 0),
+            height: Number(item.height ?? 0),
+            quantity: Number(item.quantity ?? 1),
+            uom: item.uom ?? '-',
+            draftQuantity: Number(item.draftQuantity ?? 0),
+            clientRate: Number(item.clientRate ?? 0),
+            finalAmount: Number(item.finalAmount ?? 0),
+            brandOrMake: item.brandOrMake ?? '',
+            discount: Number(item.discount ?? 0),
+            serviceCharge: Number(item.serviceCharge ?? 0),
+            baseAmount: Number(item.baseAmount ?? 0),
+            budgetRate: Number(item.budgetRate ?? 0),
+            hsn: Number(item.hsn ?? 0),
+            gstPrecent: Number(item.gstPrecent ?? 0),
+            amountWithoutGst: Number(item.amountWithoutGst ?? 0),
+            roomName: this.elementForm.value.roomName,
+            itemCode: item.itemCode ?? '',
+            designId: item.designId ?? '',
+            companyCode: this.userCompanyCode,
+            email: this.userEmail,
+            type: this.userType,
+            inProposal: item.inProposal ?? '',
+        }));
+        console.log("FINAL PAYLOAD:", payload);
+        // this.switchService.updateElementData(payload).subscribe({
+        //   next: (res: any) => {
+        //     if (res?.status === true) {
+        //       this.toastr.success(res.message || 'Data Updated ');
+        //       this.elementForm.reset();
+        //       this.offcanvasService.dismiss();
+        //       this.elementFormSubmitted = false;
+        //       this.selectedElement = null;
+        //       this.boqData();
+        //     }
+        //   }
+        // });
     }
 
 
