@@ -35421,3 +35421,36 @@ ngb-datepicker .ngb-dp-weekday {
   color: #000 !important;
   font-weight: 600;
 }
+ngb-datepicker .ngb-dp-navigation-select select {
+  max-height: 150px !important;
+  overflow-y: auto !important;
+}
+
+.date-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+.date-wrapper input {
+  border: none !important;
+  outline: none;
+  width: 100%;
+  cursor: pointer;
+}
+
+.date-icon {
+  border: none;
+  background: #f4f4f4;
+  border-radius: 50%;
+  padding: 6px;
+  cursor: pointer;
+}
+.mat-datepicker-content .mat-calendar {
+    width: 206px !important; 
+    height: 304px !important;
+}

@@ -2975,115 +2975,112 @@
     <form [formGroup]="recceForm" (ngSubmit)="recceSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="mail-ComposeLabel"><strong>Creating New Recce</strong></h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal1" (click)="modal.close('Cross click')"
-                    aria-label="Close">
-                </button>
+                <h6 class="modal-title"><strong>Creating New Recce</strong></h6>
+                <button type="button" class="btn-close"
+                        (click)="modal.close('Cross click')" aria-label="Close"></button>
             </div>
             <div class="modal-body overflowImportant">
                 <div class="row">
-                    <div class="d-flex">
-                        <div class="col-lg-4 nav flex-column me-3 border-end align-items-start" id="v-pills-tab"
-                            role="tablist" aria-orientation="vertical">
-                            <div class="mb-3 col-lg-11">
-                                <label class="form-label">Select recce Type</label>
-                                <ng-select formControlName="recceStage" placeholder="Select recce"
-                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceStage'].errors }">
-                                    <ng-option *ngFor="let item of recceTemplate" [value]="item.name"
-                                        [disabled]="blockedStages.includes((item.name || '').trim())">
-                                        {{ item.name }}
-                                    </ng-option>
+                    <div class="col-lg-4 border-end">
+                        <label class="form-label">Select recce Type</label>
+                        <ng-select formControlName="recceStage"
+                                   placeholder="Select recce"
+                                   [ngClass]="{'is-invalid': recceSubmitted && f['recceStage'].errors}">
+                            <ng-option *ngFor="let item of recceTemplate"
+                                       [value]="item.name"
+                                       [disabled]="blockedStages.includes((item.name || '').trim())">
+                                {{ item.name }}
+                            </ng-option>
+                        </ng-select>
+                        <div *ngIf="recceSubmitted && f['recceStage'].errors" class="invalid-feedback">
+                            <span *ngIf="f['recceStage']?.errors?.['required']">Please select recce type</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="scrollable-body" style="max-height: 70vh; overflow-y: auto;">
+                            <h6 class="mt-2">Recce Details</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Recce Name</label>
+                                <input type="text" class="form-control"
+                                       placeholder="Recce name"
+                                       formControlName="recceName"
+                                       [ngClass]="{'is-invalid': recceSubmitted && f['recceName'].errors}">
+                                <div *ngIf="recceSubmitted && f['recceName'].errors" class="invalid-feedback">
+                                    <span *ngIf="f['recceName']?.errors?.['required']">Recce Name is required</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Recce Due Date</label>
+                                <input type="date" class="form-control"
+                                       formControlName="recceDueDate"
+                                       [ngClass]="{'is-invalid': recceSubmitted && f['recceDueDate'].errors}">
+                                <div *ngIf="recceSubmitted && f['recceDueDate'].errors" class="invalid-feedback">
+                                    <span *ngIf="f['recceDueDate']?.errors?.['required']">Recce Due is required</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Assign Recce to (will receive link)</label>
+                                <ng-select [items]="userList" bindLabel="email"
+                                           formControlName="recceAssigne"
+                                           placeholder="Select user"
+                                           [ngClass]="{'is-invalid': recceSubmitted && f['recceAssigne'].errors}">
                                 </ng-select>
-                                <div *ngIf="recceSubmitted && f['recceStage'].errors" class="invalid-feedback">
-                                    <span *ngIf="f['recceStage']?.errors?.['required']">
-                                        Plese select recce type
+                                <div *ngIf="recceSubmitted && f['recceAssigne'].errors" class="invalid-feedback">
+                                    <span *ngIf="f['recceAssigne']?.errors?.['required']">Recce Assignee is required</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Project Stakeholders</label>
+                                <ng-select [items]="userList" bindLabel="email"
+                                           formControlName="recceStakeHolders"
+                                           placeholder="Select user"
+                                           [ngClass]="{'is-invalid': recceSubmitted && f['recceStakeHolders'].errors}">
+                                </ng-select>
+                                <div *ngIf="recceSubmitted && f['recceStakeHolders'].errors" class="invalid-feedback">
+                                    <span *ngIf="f['recceStakeHolders']?.errors?.['required']">
+                                        Recce Stakeholders are required
                                     </span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-8 pe-3">
-                            <div class="modal-body scrollable-body">
-                                <div class="col-md-12">
-                                    <div class="row gy-2 border rounded">
-                                        <div class="tab-content ">
-                                            <div
-                                                [ngClass]="{ 'tab-pane fade show': activeTab === 'tab1', 'tab-pane fade': activeTab !== 'tab1' }">
-                                                <h6>Recce Details</h6>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Recce Name</label>
-                                                    <input type="text" class="form-control" placeholder="Recce name"
-                                                        aria-label="First name" formControlName="recceName" [ngClass]="{ 'is-invalid': recceSubmitted && f['recceStage'].errors }">
-                                                    <div *ngIf="recceSubmitted && f['recceName'].errors" class="invalid-feedback">
-                                                        <span *ngIf="f['recceName']?.errors?.['required']">
-                                                            Recce Name is required
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Recce Due Date</label>
-                                                    <input type="date" class="form-control" formControlName="recceDueDate"
-                                                        placeholder="select due date" [ngClass]="{ 'is-invalid': recceSubmitted && f['recceDueDate'].errors }">
-                                                    <div *ngIf="recceSubmitted && f['recceDueDate'].errors" class="invalid-feedback">
-                                                        <span *ngIf="f['recceDueDate']?.errors?.['required']">
-                                                            Recce Due is required
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Assign Recce to(will receive recce
-                                                        link)</label>
-                                                    <ng-select [items]="userList" bindLabel="email" formControlName="recceAssigne" placeholder="Select a user"
-                                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceAssigne'].errors }">
-                                                    </ng-select>
-                                                    <div *ngIf="recceSubmitted && f['recceAssigne'].errors" class="invalid-feedback">
-                                                        <span *ngIf="f['recceAssigne']?.errors?.['required']">
-                                                            Recce Assigne is required
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Project Stakeholders to be contacted</label>
-                                                    <ng-select formControlName="recceStakeHolders" [items]="userList" bindLabel="email" placeholder="Select a user"
-                                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceStakeHolders'].errors }">
-                                                    </ng-select>
-                                                    <div *ngIf="recceSubmitted && f['recceStakeHolders'].errors" class="invalid-feedback">
-                                                        <span *ngIf="f['recceStakeHolders']?.errors?.['required']">
-                                                            Recce StakeHolders is required
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Client POC to be contacted</label>
-                                                    <ng-select formControlName="recceClientPoc" [items]="userList" bindLabel="email" placeholder="Select a user"
-                                                    [ngClass]="{ 'is-invalid': recceSubmitted && f['recceClientPoc'].errors }">
-                                                    </ng-select>
-                                                    <div *ngIf="recceSubmitted && f['recceClientPoc'].errors" class="invalid-feedback">
-                                                        <span *ngIf="f['recceClientPoc']?.errors?.['required']">
-                                                            ecceClientPoc is required
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div class="mb-3">
-                                                    <label class="form-label">Instruction for Recce </label>
-                                                    <textarea class="form-control" rows="2" placeholder="Enter Instruction for Recce"
-                                                        formControlName="description"></textarea>
-                                                </div>
-                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                                    <label for="input-file" class="form-label">Upload Images</label>
-                                                    <input type="file" multiple (change)="onFilesChange($event)">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Client POC</label>
+                                <ng-select [items]="userList" bindLabel="email"
+                                           formControlName="recceClientPoc"
+                                           placeholder="Select user"
+                                           [ngClass]="{'is-invalid': recceSubmitted && f['recceClientPoc'].errors}">
+                                </ng-select>
+                                <div *ngIf="recceSubmitted && f['recceClientPoc'].errors" class="invalid-feedback">
+                                    <span *ngIf="f['recceClientPoc']?.errors?.['required']">
+                                        Client POC is required
+                                    </span>
                                 </div>
                             </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Instructions</label>
+                                <textarea class="form-control" rows="2"
+                                          placeholder="Enter instructions"
+                                          formControlName="description"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Upload Images</label>
+                                <input type="file" multiple (change)="onFilesChange($event)">
+                            </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
+
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal1"
-                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="button" class="btn btn-danger"
+                        (click)="modal.close('Cross click')">Cancel</button>
                 <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </div>

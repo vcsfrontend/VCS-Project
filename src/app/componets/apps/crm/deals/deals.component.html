@@ -1150,15 +1150,21 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label class="form-label">Next Follow up date</label>
-                        <div class="position-relative w-100">
-                            <input type="text" readonly placeholder="Next Follow Up Date" ngbDatepicker #followPicker="ngbDatepicker"
-                                (click)="followPicker.open()" formControlName="followupDate" class="form-control ps-3 pe-5"
-                                [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }" />
                     
-                            <i class="bi bi-calendar calendar-icon" (click)="followPicker.open()"></i>
+                        <div class="form-control date-wrapper">
+                            <input type="text" matInput [matDatepicker]="pickerFollow" formControlName="followupDate"
+                                placeholder="Next Follow Up Date" readonly />
+                    
+                            <button type="button" class="date-icon" (click)="pickerFollow.open()">
+                                <mat-icon>calendar_today</mat-icon>
+                            </button>
                         </div>
+                    
+                        <!-- Angular Material Date Picker -->
+                        <mat-datepicker #pickerFollow (dateChange)="onFollowupDateSelect($event)"></mat-datepicker>
+                    
                         <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback d-block">
-                            <div *ngIf="e['followupDate'].errors?.['required']">
+                            <div *ngIf="e['followupDate'].errors['required']">
                                 Followup Date is required
                             </div>
                         </div>
@@ -2000,23 +2006,27 @@
                     </span>
                 </div>
             </div>
-            <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
-                <label class="form-label">End Date</label>
-            
-                <div class="position-relative w-100">
-                    <input type="text" readonly placeholder="Select End Date" ngbDatepicker  #endDatePicker="ngbDatepicker"
-                        (click)="endDatePicker.open()" formControlName="endDate" class="form-control ps-3 pe-5"
-                        [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }" [min]="minimumDate" />
-            
-                    <i class="bi bi-calendar calendar-icon" (click)="endDatePicker.open()"></i>
-                </div>
-            
-                <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback d-block">
-                    <span *ngIf="j['endDate'].errors['required']">
-                        End Date is required.
-                    </span>
-                </div>
+        <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
+            <label class="form-label">End Date</label>
+        
+            <div class="form-control date-wrapper">
+                <input type="text" matInput [matDatepicker]="endPicker" formControlName="endDate" placeholder="Select End Date"
+                    readonly [min]="minimumDate" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['endDate'].errors }" />
+        
+                <button type="button" class="date-icon" (click)="endPicker.open()">
+                    <mat-icon>calendar_today</mat-icon>
+                </button>
             </div>
+        
+            <mat-datepicker #endPicker></mat-datepicker>
+
+            <div *ngIf="leadCompletionsubmitted && j['endDate'].errors" class="invalid-feedback d-block">
+                <span *ngIf="j['endDate'].errors['required']">
+                    End Date is required.
+                </span>
+            </div>
+        </div>
+
             <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="address" class="form-label">Project Estimation</label>
                 <input type="text" class="form-control" id="address" placeholder="Enter ProjectEstimation" formControlName="projectEstimation"

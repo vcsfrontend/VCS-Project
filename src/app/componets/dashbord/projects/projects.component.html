@@ -659,29 +659,39 @@
                     </div>
                     <div class="col-xl-4">
                         <label class="form-label">Project Start Date</label>
-                        <div class="position-relative w-100">
-                            <input type="text" readonly placeholder="Select Start Date" ngbDatepicker autocomplete="off"
-                                #startPicker="ngbDatepicker" (click)="startPicker.open()" formControlName="projectStartDate"
-                                class="form-control ps-3 pe-5" [ngClass]="{ 'is-invalid': submitted && f['projectStartDate'].errors }" />
-                            <i class="bi bi-calendar calendar-icon" (click)="startPicker.open()"></i>
+                    
+                        <div class="form-control date-wrapper">
+                            <input type="text" matInput [matDatepicker]="picker" formControlName="projectStartDate"
+                                placeholder="Project Start Date" readonly />
+                    
+                            <button type="button" class="date-icon" (click)="picker.open()">
+                                <mat-icon>calendar_today</mat-icon>
+                            </button>
                         </div>
+                    
+                        <mat-datepicker #picker (dateChange)="onDateSelect($event)"></mat-datepicker>
+                    
                         <div *ngIf="submitted && f['projectStartDate'].errors" class="invalid-feedback d-block">
-                            <div *ngIf="f['projectStartDate'].errors?.['required']">Project Start Date is required</div>
+                            Project Start Date is required
                         </div>
                     </div>
                     <div class="col-xl-4">
                         <label class="form-label">Project End Date</label>
-                        <div class="position-relative w-100">
-                            <input type="text" readonly placeholder="Select End Date" ngbDatepicker autocomplete="off"
-                                #endPicker="ngbDatepicker" (click)="endPicker.open()" formControlName="projectEndDate"
-                                class="form-control ps-3 pe-5" [ngClass]="{ 'is-invalid': submitted && f['projectEndDate'].errors }" />
-                            <i class="bi bi-calendar calendar-icon" (click)="endPicker.open()"></i>
+                        <div class="form-control date-wrapper">
+                            <input type="text" matInput [matDatepicker]="pickerEnd" formControlName="projectEndDate"
+                                placeholder="Project End Date" readonly [min]="minEndDate" />
+                    
+                            <button type="button" class="date-icon" (click)="pickerEnd.open()">
+                                <mat-icon>calendar_today</mat-icon>
+                            </button>
                         </div>
+                    
+                        <mat-datepicker #pickerEnd></mat-datepicker>
+                    
                         <div *ngIf="submitted && f['projectEndDate'].errors" class="invalid-feedback d-block">
-                            <div *ngIf="f['projectEndDate'].errors?.['required']">Project End Date is required</div>
+                            End Date is required
                         </div>
                     </div>
-
                 </div>
             </form>
         </div>
