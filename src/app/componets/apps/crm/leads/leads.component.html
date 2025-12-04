@@ -148,8 +148,11 @@
             </div>
         </div>
         <div class="table-container mat-elevation-z8 boq-table-wrapper">
-            <table mat-table [dataSource]="dataSource" matSort class="mat-table">
-                <ng-container matColumnDef="sourceFlag">
+            <div *ngIf="uploadLeads" class="d-flex justify-content-center align-items-center py-5">
+                <mat-spinner diameter="50"></mat-spinner>
+            </div>
+            <table mat-table [dataSource]="dataSource" matSort class="mat-table" *ngIf="!uploadLeads">
+                <ng-container matColumnDef="sourceFlag" *ngIf="!uploadLeads">
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let element">
                         <i *ngIf="element.source === 'executive'" class="ri-flag-2-line text-warning me-1"
@@ -462,7 +465,7 @@
             </div>
         
         </div>
-        <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[50]" showFirstLastButtons
+       <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[50]" showFirstLastButtons
             (page)="onPageChange($event)">
         </mat-paginator>
         <div class="d-flex mb-2 px-3 marge">
@@ -1394,14 +1397,22 @@
             <div class="offcanvas-body p-0 m-4 flex-grow-1 overflow-auto">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
-                        <label for="followupDate" class="form-label">Next Follow up date</label>
-                        <input type="datetime-local" class="form-control" id="followupDate" placeholder=""
-                            formControlName="followupDate" [disabled]="readonlyMode"
-                            [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['followupDate'].errors }"
-                            [min]="minDateTime" />
-
-                        <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback">
-                            <div *ngIf="e['followupDate'].errors['required']">Followup Date is required</div>
+                        <label class="form-label">Next Follow up date</label>
+                    
+                        <div class="form-control date-wrapper">
+                            <input type="text" matInput [matDatepicker]="pickerFollow" formControlName="followupDate"
+                                placeholder="Next Follow Up Date" readonly />
+                    
+                            <button type="button" class="date-icon" (click)="pickerFollow.open()">
+                                <mat-icon>calendar_today</mat-icon>
+                            </button>
+                        </div>
+                        <mat-datepicker #pickerFollow (dateChange)="onFollowupDateSelect($event)"></mat-datepicker>
+                    
+                        <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback d-block">
+                            <div *ngIf="e['followupDate'].errors['required']">
+                                Followup Date is required
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6  mb-4">
