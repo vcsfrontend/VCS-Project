@@ -97,6 +97,7 @@ export class LeadsComponent extends BaseComponent {
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
   moveCampaignSubmit:boolean=false;currentStage : string ='';sendProposalEnable : boolean= false;proposalsentSubmitted : boolean=false;
   pageIndex = 0;displayData: any[] = [];totalRecords: number = 0;
+  uploadLeads :boolean=false;
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -111,6 +112,7 @@ export class LeadsComponent extends BaseComponent {
   matcardLst: any; topDisplayedCards: any; defaultStageName: string = ''; defaultStatusName: string = '';
   allocateExecutive: boolean = false; selectedLeadId: number = 0;  individualEmail: any;  hasSelectedInvalid = false;
   completionForm !:FormGroup;currentStep = 1;
+  @ViewChild('picker') picker: any;
   @ViewChild(MatPaginator) paginator!: MatPaginator; LeadToCampaignForm!: FormGroup;
   @ViewChild(MatPaginator) usersPaginator!: MatPaginator; 
   @ViewChild(MatSort) sort!: MatSort;
@@ -169,6 +171,7 @@ export class LeadsComponent extends BaseComponent {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
+    private datePipe: DatePipe,
   ) {
     super();
     this.statusOptionsByStage = 
@@ -1762,6 +1765,7 @@ export class LeadsComponent extends BaseComponent {
   // }
 
   getFetchLeadData(data? : any) {
+    this.uploadLeads = true;
     const userType = this.userType;
     const payload = {
       page: this.pageIndex,
@@ -1814,7 +1818,7 @@ export class LeadsComponent extends BaseComponent {
             source: 'entry',
           }));
           const combined = [...executiveList, ...entryList];
-          this.totalRecords = res.entryList?.totalElements ?? combined.length;
+          this.totalRecords =(res.entryList?.totalElements ?? combined.length) || res.executiveList?.totalElements;
           if (this.pageIndex === 0) {
             this.paginator?.firstPage();
           }
@@ -1870,6 +1874,7 @@ export class LeadsComponent extends BaseComponent {
             this.taskPriorityList = res.taskPriorityList || [];
             this.dataSource.paginator = this.paginator;
           }
+          this.uploadLeads = false;
         },
         // error: (error) => {
         //   this.toastr.error(error.statusText || 'Server Error');
@@ -2534,8 +2539,6 @@ export class LeadsComponent extends BaseComponent {
   }
   onRowCheckboxChange(lead: any, event: any) {
   if (event.checked) {
-
-    // Add only if not exists (works for number or object)
     if (!this.selectedLeads.some(l =>
       (typeof l === 'object' ? l.leadId : l) === lead.leadId
     )) {
@@ -2545,8 +2548,6 @@ export class LeadsComponent extends BaseComponent {
     this.selectedLeadForAppointment = lead;
 
   } else {
-
-    // ❗ FIX: Remove both object format & number format
     this.selectedLeads = this.selectedLeads.filter(l =>
       (typeof l === 'object' ? l.leadId : l) !== lead.leadId
     );
@@ -2882,7 +2883,7 @@ export class LeadsComponent extends BaseComponent {
   .filter(x => x && x.leadId); 
   const filteredLeads = normalized.filter(
   (lead: any) => lead.status?.toLowerCase() !== 'completed'
-);
+  );
 
 
   if (!filteredLeads.length) {
@@ -2890,7 +2891,6 @@ export class LeadsComponent extends BaseComponent {
     return;
   }
   const leadList = filteredLeads.map((lead: any) => lead.leadId);
-  console.log('leadlidt',leadList);
   if (confirm('Are you sure you want to delete the selected leads?')) {
     this.switchService.deleteLeads({ leadList }).subscribe({
       next: (res: any) => {
@@ -3637,6 +3637,28 @@ export class LeadsComponent extends BaseComponent {
         ? total + obj[currentKey]
         : total;
     }, 0);
+  }
+
+  
+  openPicker() {
+    setTimeout(() => {
+      this.picker.open();
+    });
+  }
+
+  onFollowupDateSelect(event: any) {
+  const selectedDate = event.value;
+
+  if (selectedDate) {
+    const hours = 10;
+    const minutes = 0;
+
+    selectedDate.setHours(hours, minutes, 0);
+
+    this.followupLeadForm.patchValue({
+      followupDate: selectedDate
+    });
+  }
   }
 
 

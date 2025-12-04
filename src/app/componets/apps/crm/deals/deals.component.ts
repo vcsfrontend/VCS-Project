@@ -3078,7 +3078,7 @@ export class DealsComponent extends BaseComponent {
   }
   
   
-formatLocalDateTime(dateTime: string | Date): string {
+  formatLocalDateTime(dateTime: string | Date): string {
     if (!dateTime) return "";
 
     let dateTimeString = dateTime.toString();
