@@ -93,7 +93,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     filteredRecce: any[] = [];recceStagesList: string[] = [];
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
-
+  @ViewChild('picker') picker: any;
   @ViewChild('myProjectPaginator') myProjectPaginator!: MatPaginator;
   @ViewChild('elitePaginator') elitePaginator!: MatPaginator;
   @ViewChild('recceContent2') recceModal: any;
@@ -210,7 +210,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   constructor(private fb: FormBuilder, private http: HttpClient, private modalService: NgbModal,
     private toastr: ToastrService, public switchService: SwitherService, private dp: DatePipe,
-    private router: Router,
+    private router: Router,private datePipe: DatePipe,
     private offcanvasService: NgbOffcanvas
   ) {
     super();
@@ -2363,6 +2363,16 @@ getRecceData() {
             },
         });
     }
+  openPicker() {
+    setTimeout(() => {
+      this.picker.open();
+    });
+  }
 
+  onDateSelect(event: any) {
+    const formatted = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+    this.createProjectForm.patchValue({ projectStartDate: formatted });
+    this.picker.close();
+  }
     
 }

@@ -881,7 +881,7 @@ export class DealsComponent extends BaseComponent {
           this.companyList = uniqueCompnayNames.map(companyName=>({name:companyName}))
           const combined = [...executiveList, ...entryList];
           this.leadList = combined;
-          this.totalRecords = res.entryList?.totalElements ?? combined.length;
+          this.totalRecords =(res.entryList?.totalElements ?? combined.length) || res.executiveList?.totalElements;
           if (this.pageIndex === 0) {
             this.paginator?.firstPage();
           }
@@ -1606,18 +1606,25 @@ export class DealsComponent extends BaseComponent {
     }
   }
 
-   onRowCheckboxChange(lead: any, event: any) {
-    if (event.checked) {
-      if (!this.selectedLeads.some(l => l.leadId === lead.leadId)) {
-        this.selectedLeads.push(lead);
-      }
-      this.selectedLeadForAppointment = lead;
-    } else {
-      this.selectedLeads = this.selectedLeads.filter(l => l.leadId !== lead.leadId);
-      if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
-        this.selectedLeadForAppointment = null;
-      }
+  onRowCheckboxChange(lead: any, event: any) {
+  if (event.checked) {
+    if (!this.selectedLeads.some(l =>
+      (typeof l === 'object' ? l.leadId : l) === lead.leadId
+    )) {
+      this.selectedLeads.push(lead);
     }
+
+    this.selectedLeadForAppointment = lead;
+
+  } else {
+    this.selectedLeads = this.selectedLeads.filter(l =>
+      (typeof l === 'object' ? l.leadId : l) !== lead.leadId
+    );
+
+    if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
+      this.selectedLeadForAppointment = null;
+    }
+  }
   }
   onSelectAllChange(event: any) {
   if (event.checked) {
@@ -2462,15 +2469,15 @@ export class DealsComponent extends BaseComponent {
     return;
   }
   const normalized = this.selectedLeads
-    .map(item => {
-      if (!item) return null;
-      return typeof item === 'number'
-        ? this.dataSource.data.find(row => row.leadId === item) 
-        : item;
-    })
-    .filter(x => x);
+  .map(item => {
+    if (typeof item === 'number') {
+      return this.dataSource.data.find(row => row.leadId === item);
+    }
+    return item;
+  })
+  .filter(x => x && x.leadId); 
   const filteredLeads = normalized.filter(
-    (lead: any) => lead.status?.toLowerCase() !== 'completed'
+  (lead: any) => lead.status?.toLowerCase() !== 'completed'
   );
 
   if (!filteredLeads.length) {
@@ -3361,5 +3368,6 @@ formatLocalDateTime(dateTime: string | Date): string {
     });
   }
   }
+ 
 
 }

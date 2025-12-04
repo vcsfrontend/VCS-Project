@@ -101,7 +101,7 @@ export class BoqComponent extends BaseComponent {
     proposalApprovalForm!: FormGroup; extraContentProposalForm!: FormGroup; recceForm!: FormGroup;
     updateRecceForm!: FormGroup; updateProjectForm!: FormGroup; cutListForm!: FormGroup; generateCutListForm!: FormGroup;
     manualCutListForm!:FormGroup; 
-    addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any[] = [];
+    addMoreVisible: boolean = false; selectedElementNames: string[] = []; selectedElement: any[] | null = [];
     newItem: string = ''; isEditMode = false; selectedLibrary: any; modal: any; previewUrl: string | ArrayBuffer | null = null;
     selectedFile: File | null = null; selectedPanel: any = null;
     activeId: any = 0; highlightedTabIndex = 0; selectedProposal: any;        
@@ -2773,18 +2773,18 @@ closeAllDropdowns() {
             inProposal: item.inProposal ?? '',
         }));
         console.log("FINAL PAYLOAD:", payload);
-        // this.switchService.updateElementData(payload).subscribe({
-        //   next: (res: any) => {
-        //     if (res?.status === true) {
-        //       this.toastr.success(res.message || 'Data Updated ');
-        //       this.elementForm.reset();
-        //       this.offcanvasService.dismiss();
-        //       this.elementFormSubmitted = false;
-        //       this.selectedElement = null;
-        //       this.boqData();
-        //     }
-        //   }
-        // });
+        this.switchService.updateElementData(payload).subscribe({
+          next: (res: any) => {
+            if (res?.status === true) {
+              this.toastr.success(res.message || 'Data Updated ');
+              this.elementForm.reset();
+              this.offcanvasService.dismiss();
+              this.elementFormSubmitted = false;
+              this.selectedElement = null;
+              this.boqData();
+            }
+          }
+        });
     }
 
 

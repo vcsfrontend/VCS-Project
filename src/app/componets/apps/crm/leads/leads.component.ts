@@ -2149,6 +2149,7 @@ export class LeadsComponent extends BaseComponent {
       campaignId: element.campaignId || this.campaignId,
     };
     this.leadForm.patchValue(payload);
+    this.leadForm.get('followUpDate')?.disable();
 
     this.modalService.open(Content14, {
       scrollable: true,
@@ -2532,39 +2533,58 @@ export class LeadsComponent extends BaseComponent {
     });
   }
   onRowCheckboxChange(lead: any, event: any) {
-    if (event.checked) {
-      if (!this.selectedLeads.some(l => l.leadId === lead.leadId)) {
-        this.selectedLeads.push(lead);
-      }
-      this.selectedLeadForAppointment = lead;
-    } else {
-      this.selectedLeads = this.selectedLeads.filter(l => l.leadId !== lead.leadId);
-      if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
-        this.selectedLeadForAppointment = null;
-      }
+  if (event.checked) {
+
+    // Add only if not exists (works for number or object)
+    if (!this.selectedLeads.some(l =>
+      (typeof l === 'object' ? l.leadId : l) === lead.leadId
+    )) {
+      this.selectedLeads.push(lead);
+    }
+
+    this.selectedLeadForAppointment = lead;
+
+  } else {
+
+    // ❗ FIX: Remove both object format & number format
+    this.selectedLeads = this.selectedLeads.filter(l =>
+      (typeof l === 'object' ? l.leadId : l) !== lead.leadId
+    );
+
+    if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
+      this.selectedLeadForAppointment = null;
     }
   }
+}
+
 
  isSelected(leadId: number): boolean {
   return this.selectedLeads.some((l: any) =>
     typeof l === 'object' ? l.leadId === leadId : l === leadId
   );
-}
+  }
 
 
   onSelectAllChange(event: any) {
-    if (event.checked) {
-      this.selectedLeads = this.dataSource.data
-        .filter((row: any) => row.completionStatus !== 'completed')
-        .map((row: any) => row.leadId);
-    } else {
-      this.selectedLeads = [];
-    }
+  if (event.checked) {
+
+    this.selectedLeads = [];   // FIX: Clear old objects/numbers
+
+    this.selectedLeads = this.dataSource.data
+      .filter(row => row.completionStatus !== 'completed')
+      .map(row => row.leadId);  // keep number format as your system needs
+  } 
+  else {
+    this.selectedLeads = [];
+  }
   }
 
+
   isAllSelected(): boolean {
-    return this.selectedLeads.length === this.dataSource.data.length;
+  const selectable = this.dataSource.data.filter(r => r.completionStatus !== 'completed');
+  return this.selectedLeads.length === selectable.length;
   }
+
 
   isIndeterminate(): boolean {
     return this.selectedLeads.length > 0 && !this.isAllSelected();
@@ -2853,22 +2873,24 @@ export class LeadsComponent extends BaseComponent {
     return;
   }
   const normalized = this.selectedLeads
-    .map(item => {
-      if (!item) return null;
-      return typeof item === 'number'
-        ? this.dataSource.data.find(row => row.leadId === item) 
-        : item;
-    })
-    .filter(x => x); 
-    const filteredLeads = normalized.filter(
-      (lead: any) => lead.status?.toLowerCase() !== 'completed'
-    );
+  .map(item => {
+    if (typeof item === 'number') {
+      return this.dataSource.data.find(row => row.leadId === item);
+    }
+    return item;
+  })
+  .filter(x => x && x.leadId); 
+  const filteredLeads = normalized.filter(
+  (lead: any) => lead.status?.toLowerCase() !== 'completed'
+);
+
 
   if (!filteredLeads.length) {
     this.toastr.warning('Completed leads cannot be deleted');
     return;
   }
   const leadList = filteredLeads.map((lead: any) => lead.leadId);
+  console.log('leadlidt',leadList);
   if (confirm('Are you sure you want to delete the selected leads?')) {
     this.switchService.deleteLeads({ leadList }).subscribe({
       next: (res: any) => {
