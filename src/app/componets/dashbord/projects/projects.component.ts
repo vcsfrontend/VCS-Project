@@ -416,7 +416,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         });
       }
     }
-    this.lastField = this.dynamicFields[this.dynamicFields.length - 1].value;
+    this.lastField = this.dynamicFields?.[this.dynamicFields.length - 1]?.value ?? null;
     this.getdesignData()
   }
 

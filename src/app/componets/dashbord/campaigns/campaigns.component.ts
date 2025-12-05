@@ -40,7 +40,7 @@ export class CampaignsComponent extends BaseComponent {
   matcardLst: any; topDisplayedCards: any;filteredUserList: any[] = [];
   preSelectedUsers: string[] = []; isEditMode : boolean = false;
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
-  newItemColor: string = '#000000'; listNew: any;
+  newItemColor: string = '#000000'; listNew: any; isLoading = true;
   dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
  
   displayedColumns: string[] = [
@@ -247,6 +247,7 @@ export class CampaignsComponent extends BaseComponent {
       next: (res: any) => {
         if (Array.isArray(res)) {
           this.campaignList = res;
+          this.isLoading = false;
           this.campaignCount = this.campaignList.length;
           this.campaignList.forEach(campaign => {
           this.getLeadCountForCampaign(campaign.campgnId);

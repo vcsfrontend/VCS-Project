@@ -1993,14 +1993,14 @@ closeAllDropdowns() {
     }
 
     getLibraryData() {
+        this.isLoading = true;
         this.switchService.getLibrarayData().subscribe({
             next: (res: any) => {
-                if (res && res.items) {
-                    this.libraryListData = res.items;
-                    setTimeout(() => this.mapCategoryNames(), 200);
-                    this.getUomNames();
-                    this.getCategoriesName();
-                }
+                this.libraryListData = res?.items || [];
+                setTimeout(() => this.mapCategoryNames(), 200);
+                this.getUomNames();
+                this.getCategoriesName();
+                this.isLoading = false;
             }
         });
     }
