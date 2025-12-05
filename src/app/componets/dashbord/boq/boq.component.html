@@ -1511,7 +1511,8 @@
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="d-flex align-items-center gap-2">
                                                                                     <div class="card-title">{{ key | titlecase }}</div>
-                                                                                    <button type="button" class="btn btn-outline-primary btn-sm btn-wave" (click)="moveToRoom(content22)">
+                                                                                    <button type="button" class="btn btn-outline-primary btn-sm btn-wave" (click)="moveToRoom(content22)"
+                                                                                    *ngIf="currentRoomName !== 'All'">
                                                                                         <i class="bi bi-arrows-move"></i>
                                                                                     </button>
                                                                                 </div>
@@ -2286,7 +2287,12 @@
                     </button>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-container" *ngIf="libraryListData?.length">
+                    <div *ngIf="isLoading" class="d-flex justify-content-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="table-container" *ngIf="!isLoading && libraryListData?.length">>
                         <table class="table table-hover text-nowrap my-table">
                             <thead>
                                 <tr>
@@ -2347,6 +2353,9 @@
                                 </ng-container>
                             </tbody>
                         </table>
+                    </div>
+                    <div *ngIf="!isLoading && !libraryListData?.length" class="text-center py-4 text-muted">
+                        No data found
                     </div>
                 </div>
             </div>
@@ -3009,7 +3018,6 @@
                                     <span *ngIf="f['recceName']?.errors?.['required']">Recce Name is required</span>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Recce Due Date</label>
                                 <input type="date" class="form-control"
@@ -3019,7 +3027,6 @@
                                     <span *ngIf="f['recceDueDate']?.errors?.['required']">Recce Due is required</span>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Assign Recce to (will receive link)</label>
                                 <ng-select [items]="userList" bindLabel="email"
@@ -3031,7 +3038,6 @@
                                     <span *ngIf="f['recceAssigne']?.errors?.['required']">Recce Assignee is required</span>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Project Stakeholders</label>
                                 <ng-select [items]="userList" bindLabel="email"
@@ -3045,7 +3051,6 @@
                                     </span>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Client POC</label>
                                 <ng-select [items]="userList" bindLabel="email"
@@ -3059,19 +3064,16 @@
                                     </span>
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Instructions</label>
                                 <textarea class="form-control" rows="2"
                                           placeholder="Enter instructions"
                                           formControlName="description"></textarea>
                             </div>
-
                             <div class="mb-3">
                                 <label class="form-label">Upload Images</label>
-                                <input type="file" multiple (change)="onFilesChange($event)">
+                                <input type="file" class="form-control" multiple (change)="onFilesChange($event)">
                             </div>
-
                         </div>
                     </div>
 
@@ -3115,9 +3117,9 @@
         </div>
         <div class="modal-body overflowImportant">
             <div class="row gy-3">
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <label for="input-file" class="form-label">Upload Images</label>
-                    <input type="file" multiple (change)="onUpdateFilesChange($event)">
+                    <input type="file" class="form-control" multiple (change)="onUpdateFilesChange($event)">
                 </div>
             </div>
         </div>
