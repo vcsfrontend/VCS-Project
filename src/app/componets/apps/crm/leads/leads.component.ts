@@ -29,6 +29,8 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartOptions } from 'chart.js';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { forkJoin } from 'rxjs';
+import { MatDatepicker } from '@angular/material/datepicker';
+
 
 @Component({
   selector: 'app-leads',
@@ -44,7 +46,7 @@ import { forkJoin } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
 })
 export class LeadsComponent extends BaseComponent {
-  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'city','updatedTime','completionStatus',];
+  displayedColumns: string[] = [ 'sourceFlag', 'select', 'slNo', 'action', 'name', 'executive', 'stage', 'status', 'followUpDate', 'contact', 'email', 'companyName','city','updatedTime','completionStatus',];
   usersColumns: string[] = [ 'slNo', 'name', 'role', 'email', 'date', 'callsAttempted', 'callsConnected',];
   dataSource = new MatTableDataSource<any>();
   usersDataSource = new MatTableDataSource<any>();
@@ -91,7 +93,7 @@ export class LeadsComponent extends BaseComponent {
   selectedLeadForAppointment:any; selectedLeadForAppointmentObject:any;
   leadCompletionsubmitted : boolean = false;leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;crmRole:any;selecteTemplateFormSubmitted : boolean = false;
-  currentCampaignId : string ='';
+  currentCampaignId : string ='';companyList : any[]=[];
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
@@ -919,12 +921,14 @@ export class LeadsComponent extends BaseComponent {
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
+     this.uploadSpinner = true;
     if (this.leadForm?.valid) {
       this.switchService.EditCrmLeads(payload).subscribe({
         next: (res: any) => {
           if (res.status) {
             modal.close();
             this.submitted = false;
+            this.uploadSpinner = false;
             this.leadForm.reset();
             this.getFetchLeadData();
             this.toastr.success(res.message, 'lead', {
@@ -1776,26 +1780,8 @@ export class LeadsComponent extends BaseComponent {
     this.switchService.fetchLeadsInCampaigns(payload)
       .subscribe({
         next: (res: any) => {
-          if (res.entryList?.content || []) {
-            this.leadList = Array.isArray(res.entryList) ? res.entryList : []; 
-            this.sendProposalEnable = this.leadList.some(
-              (lead:any) => lead.stage?.trim().toLowerCase() === 'proposal stage'
-            );
-
-            const entryArray = Array.isArray(res.entryList) ? res.entryList : [];
-
-            this.dataSource = new MatTableDataSource(entryArray);
-
-            const cities = entryArray
-              .map((lead: any) => lead.city?.trim())
-              .filter((city: any) => !!city);
-
-            const uniqueCities = [...new Set(cities)];
-
-            this.cityList = uniqueCities.map(city => ({ name: city }));
-          }
           const now = new Date();
-          const executiveList = (res.executiveList?.content || []).map((item: any) => ({
+          const executiveList = res.executiveList?.content?.map((item: any) => ({
             ...item,
             followUpDue: item.followUpDate
               ? new Date(item.followUpDate) < now
@@ -1805,9 +1791,7 @@ export class LeadsComponent extends BaseComponent {
               : null,
             source: 'executive',
           }));
-          const entryList = Array.isArray(res.entryList?.content) ? res.entryList.content : [];
-
-          this.entryList = (res.entryList?.content || []).map((item: any) => ({
+          const entryList = res.entryList?.content?.map((item: any) => ({
             ...item,
             followUpDue: item.followUpDate
               ? new Date(item.followUpDate) < now
@@ -1816,22 +1800,31 @@ export class LeadsComponent extends BaseComponent {
               ? new Date(item.followUpDate)
               : null,
             source: 'entry',
+            
           }));
+          const cities = res.entryList?.content
+            ?.map((lead: any) => lead.city?.trim())
+            .filter((city: any) => !!city) ?? [];
+          const uniqueCities = [...new Set(cities)];
+          this.cityList = uniqueCities.map(city => ({ name: city }));
+          const companyNames = res.entryList?.content?.map((lead: any) => lead.companyName?.trim()).filter(Boolean) ?? [];
+          const uniqueCompnayNames = [...new Set(companyNames)];
+          this.companyList = uniqueCompnayNames.map(companyName=>({name:companyName}))
           const combined = [...executiveList, ...entryList];
+          this.leadList = combined;
           this.totalRecords =(res.entryList?.totalElements ?? combined.length) || res.executiveList?.totalElements;
           if (this.pageIndex === 0) {
             this.paginator?.firstPage();
           }
-            combined.forEach(item => {
+          combined.forEach(item => {
             item.contact = item.contact ? Number(item.contact).toString() : '';
           });
           this.dataSource = new MatTableDataSource(combined);
           this.leadCount = combined.length;
-         
-          this.leadStatusCount = combined;
+           this.leadStatusCount = combined;
           const statusCounts: { [status: string]: number } = {};
           const statusCompletion : { [completionStatus: string]: number } = {};
-         combined.forEach(lead => {
+          combined.forEach(lead => {
             const status = lead.status?.trim() || 'Unknown';
             statusCounts[status] = (statusCounts[status] || 0) + 1;
 
@@ -1842,12 +1835,13 @@ export class LeadsComponent extends BaseComponent {
           this.activeCount = this.getCount(statusCounts, 'active');
           this.connectedCount = this.getCount(statusCounts, 'completed');
           this.notConnectedCount = this.getCount(statusCounts, 'not connected');
+
           this.statusCompletion = this.getCount(statusCompletion, 'completed');
+
           this.dataSource.data = combined;
+
           this.followUpCount = combined.filter(item => item.followUpDue).length;
-          this.dataSource.data = combined;
-          
-          this.updateColumns();
+
           if (combined.length > 0 && combined[0].contact) {
             this.phoneNumber = combined[0].contact;
           }
@@ -1860,22 +1854,12 @@ export class LeadsComponent extends BaseComponent {
           const nextLead = sortedByFollowUpDate.length
             ? sortedByFollowUpDate[0]
             : null;
-          this.nextLeadStatus = nextLead ? nextLead.status : 'No follow-up';
-          localStorage.setItem(
-            'leadData',
-            JSON.stringify({
-              campaignId: this.campaignId,
-              followUpCount: this.followUpCount,
-              nextLeadStatus: this.nextLeadStatus,
-            })
-          );
+            
+           this.updateColumns();
           this.getStatusCount();
-          if (this.paginator) {
-            this.taskPriorityList = res.taskPriorityList || [];
-            this.dataSource.paginator = this.paginator;
-          }
+          this.taskPriorityList = res.taskPriorityList || [];
           this.uploadLeads = false;
-        },
+        }
         // error: (error) => {
         //   this.toastr.error(error.statusText || 'Server Error');
         // },
@@ -3243,9 +3227,6 @@ export class LeadsComponent extends BaseComponent {
           ...(res.assignedTaskList || [])
         ];
       },
-      // error: (err) => {
-      //   this.toastr.error('Something went wrong!');
-      // }
     });
   }
 
@@ -3443,33 +3424,19 @@ export class LeadsComponent extends BaseComponent {
       }
     },
   };
+formatToLocal(dateString: string): string {
+  const date = new Date(dateString);
 
-  formatLocalDateTime(dateTime: string | Date): string {
-    if (!dateTime) return "";
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
 
-    let dateTimeString = dateTime.toString();
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
 
-    if (typeof dateTime === "object" && dateTime instanceof Date) {
-        dateTimeString = dateTime.toISOString();
-    }
-
-    const normalized = dateTimeString.split('.')[0];
-    const date = new Date(normalized + "Z");
-
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-    const dd = pad(date.getDate());
-    const mmm = months[date.getMonth()];
-    const yyyy = date.getFullYear();
-
-    let hours = date.getHours();
-    const minutes = pad(date.getMinutes());
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
-
-    return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
   }
 
   goBackToCampaigns() {
@@ -3660,6 +3627,5 @@ export class LeadsComponent extends BaseComponent {
     });
   }
   }
-
 
 }
