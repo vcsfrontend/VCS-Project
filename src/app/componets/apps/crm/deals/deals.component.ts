@@ -1325,6 +1325,7 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
     const payload = this.leadForm.value;
     this.submitted = true;
+    this.uploadSpinner = true;
     if (this.leadForm?.valid) {
       this.switchService.EditCrmLeads(payload).subscribe({
         next: (res: any) => {
@@ -3037,8 +3038,8 @@ export class DealsComponent extends BaseComponent {
       return; 
     }
     this.updateCompletionStatus(modal,true);
-    modal.close();
-    this.currentStep = 1;
+
+    
   }
   getfullDaysLeft(task: any): string {
     if (!task.deadline) return '';
@@ -3077,34 +3078,21 @@ export class DealsComponent extends BaseComponent {
     return 'bg-success-transparent';
   }
   
-  
-  formatLocalDateTime(dateTime: string | Date): string {
-    if (!dateTime) return "";
+  formatToLocal(dateString: string): string {
+  const date = new Date(dateString);
 
-    let dateTimeString = dateTime.toString();
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = date.toLocaleString('en-US', { month: 'short' });
+  const year = date.getFullYear();
 
-    if (typeof dateTime === "object" && dateTime instanceof Date) {
-        dateTimeString = dateTime.toISOString();
-    }
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
 
-    const normalized = dateTimeString.split('.')[0];
-    const date = new Date(normalized + "Z");
-
-    const pad = (n: number) => n.toString().padStart(2, '0');
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-    const dd = pad(date.getDate());
-    const mmm = months[date.getMonth()];
-    const yyyy = date.getFullYear();
-
-    let hours = date.getHours();
-    const minutes = pad(date.getMinutes());
-    const ampm = hours >= 12 ? "PM" : "AM";
-    hours = hours % 12 || 12;
-
-    return `${dd}-${mmm}-${yyyy} ${hours}:${minutes} ${ampm}`;
+  return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
   }
+
   openBulkMove(content31: any, selectedLeads: any[]) {
     if (!selectedLeads || selectedLeads.length === 0) {
       this.toastr.warning('Please select at least one lead.');
