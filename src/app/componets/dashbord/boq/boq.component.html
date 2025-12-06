@@ -3476,7 +3476,7 @@
 </ng-template>
 
 <ng-template #content22 let-modal>
-    <form [formGroup]="elementForm" (ngSubmit)="moveToRoomSubmit()">
+    <form [formGroup]="elementForm" (ngSubmit)="moveToRoomSubmit(modal)">
         <div class="modal-header justify-content-center">
             <h6 class="modal-title"><strong>Move to Other Room </strong></h6>
             <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>

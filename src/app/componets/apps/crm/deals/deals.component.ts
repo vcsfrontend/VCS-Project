@@ -1585,9 +1585,10 @@ export class DealsComponent extends BaseComponent {
         idList: this.selectedLeads.map((lead: any) => lead.leadId)
       });
       let allocateData = { 
-        idList: this.selectedLeads.map((lead: any) => lead.leadId), 
+        idList: this.selectedLeads, 
         executive: this.allocateForm.get('executive')?.value 
-      };      
+      };    
+      console.log('allocated date',allocateData);  
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2291,7 +2292,15 @@ export class DealsComponent extends BaseComponent {
       this.toastr.warning('please fill all mandatory fields');
       return;
     }
-    const payload = this.selectTemplateForm.value;
+    // const payload = this.selectTemplateForm.value;
+     const payload = {
+      ...this.selectTemplateForm.value,
+      campaignId : 0 ,
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+
+    }
     this.switchService.selectFormTemplate(payload).subscribe({
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');

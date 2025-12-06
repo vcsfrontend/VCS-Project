@@ -515,7 +515,8 @@ selectedPermissions: any[] = [];
     this.createPermissionForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
-      features: this.fb.array([]),
+      // features: this.fb.array([]),
+      subPermission : this.fb.array([]),
       companyName: JSON.parse(this.userData)?.companyName,
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type
@@ -2168,7 +2169,16 @@ selectedPermissions: any[] = [];
     if (this.createPermissionForm.invalid) {
       return;
     }
-    const payload = this.createPermissionForm.value;
+    const formValue = this.createPermissionForm.value;
+     const selectedKeys = this.subPermissionArray.controls
+    .filter(ctrl => ctrl.value.enabled === true)
+    .map(ctrl => ctrl.value.key);
+
+    const commaSeparated = selectedKeys.join(',');
+    const payload ={
+      ...formValue,
+      subPermission : commaSeparated
+    }
     console.log(payload)
     // this.switchService.createPermission(payload).subscribe({
     //   next: (res) => {
@@ -2197,13 +2207,18 @@ selectedPermissions: any[] = [];
     const permissionId = this.permissionId;
     const permissionName = this.permissionName;
     const description = this.permissionDescription;
-    this.switchService.updatePermission(permissionId, permissionName, description).subscribe({
-      next: (res: any) => {
-        this.toastr.success('Department updated successfully');
-        this.getAllPermissions();
-        modal.close()
-      },
-    });
+     const selectedKeys = this.subPermissionArray.controls
+    .filter(ctrl => ctrl.value.enabled === true)
+    .map(ctrl => ctrl.value.key);
+    const commaSeparated = selectedKeys.join(',');
+    const subPermission = commaSeparated
+    // this.switchService.updatePermission(permissionId, permissionName, description,subPermission).subscribe({
+    //   next: (res: any) => {
+    //     this.toastr.success('Department updated successfully');
+    //     this.getAllPermissions();
+    //     modal.close()
+    //   },
+    // });
   }
   deletePermission(id: number) {
     if (!id) return;
@@ -2669,17 +2684,17 @@ selectedPermissions: any[] = [];
   }
 
   
-  get featuresArray() {
-    return this.createPermissionForm.get('features') as FormArray;
+  get subPermissionArray() {
+    return this.createPermissionForm.get('subPermission') as FormArray;
   }
 
   onPermissionSelect(selected: any) {
     const value = (selected?.name || selected)?.toUpperCase() as PermissionName;
-    const featuresArray = this.createPermissionForm.get('features') as FormArray;
-    featuresArray.clear();
+    const subPermissionArray = this.createPermissionForm.get('subPermission') as FormArray;
+    subPermissionArray.clear();
     if (!this.allPermissions[value]) return;
     this.allPermissions[value].forEach(feature => {
-      featuresArray.push(
+      subPermissionArray.push(
         this.fb.group({
           key: feature,
           label: this.formatLabel(feature),

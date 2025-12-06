@@ -2721,7 +2721,7 @@ closeAllDropdowns() {
         this.modalService.open(content22, { centered: true });
     }
 
-    moveToRoomSubmit() {
+    moveToRoomSubmit(modal:any) {
         const selectedItems: any[] = [];
         Object.keys(this.boqDataSources).forEach(key => {
             const rows = this.boqDataSources[key]?.data ?? [];
@@ -2776,6 +2776,7 @@ closeAllDropdowns() {
           next: (res: any) => {
             if (res?.status === true) {
               this.toastr.success(res.message || 'Data Updated ');
+              modal.close();
               this.elementForm.reset();
               this.offcanvasService.dismiss();
               this.elementFormSubmitted = false;
