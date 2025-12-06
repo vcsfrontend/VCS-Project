@@ -35443,14 +35443,5 @@ ngb-datepicker .ngb-dp-navigation-select select {
   cursor: pointer;
 }
 
-.date-icon {
-  border: none;
-  background: #f4f4f4;
-  border-radius: 50%;
-  padding: 6px;
-  cursor: pointer;
-}
-.mat-datepicker-content .mat-calendar {
-    width: 206px !important; 
-    height: 304px !important;
-}
+
+

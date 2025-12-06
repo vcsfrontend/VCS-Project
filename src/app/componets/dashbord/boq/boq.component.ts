@@ -123,7 +123,8 @@ export class BoqComponent extends BaseComponent {
     statusNames: any = {1: 'Recce', 2: 'Design', 3: 'BOQ', };
     recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
-    selectedRecce: any; libraryCategoriesList: any[] = [];
+    selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
+    designUrl: string = '';
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -277,6 +278,7 @@ export class BoqComponent extends BaseComponent {
     };
 
     ngOnInit(): void {
+    this.getAssignProjects();
     const storedTab = localStorage.getItem('selectedTab');
     if (storedTab) {
         this.activeTab = storedTab;
@@ -431,8 +433,6 @@ export class BoqComponent extends BaseComponent {
             noCalendar: true,
             dateFormat: 'H:i',
         };
-
-        this.getRecceData();
         this.updateRecceForm = this.fb.group({
             files: this.fb.array([]),
             updatedBy: [''],
@@ -474,9 +474,6 @@ export class BoqComponent extends BaseComponent {
             companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
             companyName: [(JSON.parse(this.userData).companyName) ? JSON.parse(this.userData).companyName : ''],
         });
-
-        this.getUsers();
-        this.getAssignProjects(); 
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
@@ -1796,7 +1793,6 @@ closeAllDropdowns() {
                     this.boqData();
                 }
                 this.designCompletionStatus = res?.designCompletionStatus || '';
-
                 this.designerData = this.userRole === 'ADMIN'
                     ? projects
                     : projects.filter(p =>
@@ -1890,6 +1886,7 @@ closeAllDropdowns() {
         };
         this.switchService.fetchRecceData(payload).subscribe({
             next: (res: any) => {
+                this.getUsers();
                 if (res && res.length > 0) {
                     this.recceList = res.map((recce: any) => ({
                         ...recce,
@@ -1914,9 +1911,11 @@ closeAllDropdowns() {
                         }
                     });
                     this.filterRecceByStage('Recce Details');
+                    this.isRecceEmpty = false;
                 }
                 else {
                     this.recceList = [];
+                    this.isRecceEmpty = true;
                 }
                 this.isLoading = false;
             },
@@ -2786,6 +2785,48 @@ closeAllDropdowns() {
           }
         });
     }
+
+
+    get statusLabel(): string {
+        const stageName = this.statusNames[this.currentStage];
+
+        // **📍 Recce Logic**
+        if (stageName === 'Recce') {
+            return this.isRecceEmpty ? 'Recce Not Created' : 'Recce Pending';
+        }
+
+        // **📍 Design Logic**
+        if (stageName === 'Design') {
+
+            const noDesignAssigned =
+                (!this.designId || this.designId.trim() === '') &&
+                (!this.designUrl || this.designUrl.trim() === '');
+
+            if (noDesignAssigned) return 'Design Not Assigned';
+
+            if (this.designCompletionStatus?.toLowerCase().includes('complet')) {
+                return 'Design Completed';
+            }
+
+            return 'Design Pending';
+        }
+        return `${stageName} Pending`;
+    }
+
+    get statusColor(): string {
+        const label = this.statusLabel;
+
+        if (label.includes('Completed')) return 'text-success';     // Green
+        if (label.includes('Not Assigned') || label.includes('Not Created')) return 'text-danger'; // Red
+        if (label.includes('Pending')) return 'text-warning';       // Yellow
+
+        return 'text-secondary';
+    }
+
+
+
+
+
 
 
 

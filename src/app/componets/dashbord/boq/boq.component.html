@@ -196,7 +196,7 @@
                                                                             </ul>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="d-flex justify-content-between mt-2 mb-2">
+                                                                    <div class="d-flex justify-econtent-between mt-2 mb-2">
                                                                          <div class="card-title text-dark large fs-15" (click)="recce(recceView, recce)">{{ recce.recceStage }} Photos & videos     
                                                                          </div>
                                                                         <a class="text-primary fw-semibold small d-inline-flex align-items-center gap-1 cu"
@@ -805,7 +805,7 @@
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
-                                                        <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
+                                                        <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
                                                             <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
                                                         </button>
                                                     </div>
@@ -1488,7 +1488,9 @@
                                         <p class="text-muted mt-2">Loading Project Scope...</p>
                                     </div>
                                     <div *ngIf="boqAvailable === false" class="text-center py-4">
-                                        <p class="text-muted fs-14">🚫 No BOQ assigned for this project.</p>
+                                        <div class="card custom-card align-items-center justify-content-center" style="min-height: 250px; box-shadow: none !important;">
+                                            <p class="text-dark fw-semibold fs-14">No BOQ assigned for this project.</p>
+                                        </div>
                                     </div>
                                     <div class="row bg-light pt-3" *ngIf="boqAvailable === true">
                                         <div class="col-xl-12">
@@ -2009,27 +2011,36 @@
             <div class="m-0 px-2 py-0 bg-danger-subtle rounded-3">
                 <small class="text-dark fs-9">{{ stageNames[currentStage] }}:</small>
                 <div class="d-flex align-items-center ttr">
-                    <small class="fw-semibold text-warning fs-11">{{ statusNames[currentStage] }} Pending</small>
-                    <i class="bi bi-arrow-clockwise text-warning ms-2 cu" style="font-size: .80rem;" tabindex="0"
-                        triggers="click" placement="start" popoverTitle="Recce History" [ngbPopover]="historyTemplate"
-                        popoverClass="p-0">
-                    </i>
-                    <ng-template #historyTemplate>
-                        <div class="col-xl-12 border-danger">
+                    <small class="fw-semibold fs-11" [ngClass]="statusColor">
+                        {{ statusLabel }}
+                        <i class="bi bi-arrow-clockwise ms-2 cu" [ngClass]="statusColor" style="font-size: .80rem;" tabindex="0"
+                            triggers="click" placement="bottom" popoverTitle="History" [ngbPopover]="historyTemplate"
+                            popoverClass="p-0">
+                        </i>
+                    </small>
+                </div>
+                <ng-template #historyTemplate>
+                    <div *ngIf="isRecceEmpty; else hasHistory" class="text-center p-2 w-100">
+                        <span class="fw-semibold text-muted">No history found</span>
+                    </div>
+                    <ng-template #hasHistory>
+                        <div class="col-lg-12">
                             <div class="p-0">
                                 <div class="text-muted small mb-1">
                                     Status changed to :
-                                    <span class="fw-semibold text-warning">{{ statusNames[currentStage] }} Pending</span>
+                                    <span class="fw-semibold text-warning">
+                                        {{ statusNames[currentStage] }} Pending
+                                    </span>
                                 </div>
                                 <div class="text-muted small">
-                                    Updated on 2 Oct 2024
+                                    Updated on {{ recceList[0]?.updatedTime | date:'d MMM yyyy, h:mm a' }}
                                     <i class="bi bi-circle-fill text-warning mx-1" style="font-size: .40rem;"></i>
-                                    CH TARUN, Varma…
+                                    {{ recceList[0]?.updatedBy }}
                                 </div>
                             </div>
                         </div>
                     </ng-template>
-                </div>
+                </ng-template>
             </div>
             <i class="bi bi-chat-left-text cu fs-2 ms-3"></i>
             <div class="btn-group ms-3" ngbDropdown>
@@ -3006,7 +3017,7 @@
                         </div>
                     </div>
                     <div class="col-lg-8">
-                        <div class="scrollable-body" style="max-height: 70vh; overflow-y: auto;">
+                        <div class="scrollable-body" style="max-height: 60vh; overflow-y: auto;">
                             <h6 class="mt-2">Recce Details</h6>
                             <div class="mb-3">
                                 <label class="form-label">Recce Name</label>
