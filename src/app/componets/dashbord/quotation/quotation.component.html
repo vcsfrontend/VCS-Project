@@ -101,16 +101,10 @@
                                                             <div class="card-title">Cost Breakup By Rooms</div>
                                                         </div>
                                                         <div class="card-body">
-                                                            <div id="timeline-grouped">
-                                                                <apx-chart [series]="chartOptions4.series"
-                                                                    [chart]="chartOptions4.chart"
-                                                                    [plotOptions]="chartOptions4.plotOptions"
-                                                                    [xaxis]="chartOptions4.xaxis"
-                                                                    [colors]="chartOptions4.colors"
-                                                                    [fill]="chartOptions4.fill"
-                                                                    [yaxis]="chartOptions4.yaxis"
-                                                                    [legend]="chartOptions4.legend"
-                                                                    [grid]="chartOptions4.grid">
+                                                            <div id="timeline-grouped" *ngIf="chartOptions4">
+                                                                <apx-chart [series]="chartOptions4.series" [chart]="chartOptions4.chart" [plotOptions]="chartOptions4.plotOptions"
+                                                                    [xaxis]="chartOptions4.xaxis" [colors]="chartOptions4.colors" [fill]="chartOptions4.fill"
+                                                                    [yaxis]="chartOptions4.yaxis" [legend]="chartOptions4.legend" [grid]="chartOptions4.grid">
                                                                 </apx-chart>
                                                             </div>
                                                         </div>

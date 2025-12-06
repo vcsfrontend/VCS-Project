@@ -585,7 +585,7 @@ textarea:focus {
   border: none;
   background: #f4f4f4;
   border-radius: 50%;
-  padding: 5px;
+  padding: 1px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -594,4 +594,15 @@ textarea:focus {
 
 .date-icon mat-icon {
   font-size: 20px;
+}
+
+.date-icon {
+  border: none;
+  background: none;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

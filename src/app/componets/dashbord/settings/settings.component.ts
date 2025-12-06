@@ -26,6 +26,7 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
 import { NgSelectModule } from '@ng-select/ng-select';
 import { flatMap } from 'rxjs';
 
+type PermissionName = 'CRM' | 'SALES' | 'HR';
 @Component({
   selector: 'app-settings',
   standalone: true,
@@ -105,6 +106,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   departmentListTable: any[] = []; optimizerCuts: any[] = []; submittedModels: string[] = [];fullCutListItems :any[]=[];
   isCutListFull : boolean = false;existingCuts: any[] = []; originalCutItems : any[]=[];
   codeLabels: { [key: string]: string } = { AK_PA: 'Panel', AK_SH: 'Shutter'};
+  
+  allPermissions: Record<PermissionName, string[]> = {
+    CRM: ['deals_delete', 'deals_edit', 'deals_reports', 'deals_stage_status'],
+    SALES: ['products_add', 'products_edit'],
+    HR: ['employee_add', 'employee_edit']
+  };
+
+
+selectedPermissions: any[] = [];
   userForm: FormGroup = this.fb.group({
     type: [2],
     firstName: ['', Validators.required],
@@ -263,6 +273,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    
     this.getStockData(); this.getSawData(); this.getPartsData();
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
@@ -504,6 +515,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.createPermissionForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
+      features: this.fb.array([]),
       companyName: JSON.parse(this.userData)?.companyName,
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type
@@ -512,6 +524,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     this.onMinDate();
     this.getProjectLst();
     this.getMarginData();
+    this.createPermissionForm.get('name')?.valueChanges.subscribe(value => {
+      this.onPermissionSelect(value);
+    });
   }
   onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
@@ -1964,11 +1979,9 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   }
   onPermissionSubmit(modal?: any) {
     this.permissionFormSubmitted = true;
-
     if (this.createPermissionForm.invalid) {
       return;
     }
-
     if (this.isEditmode) {
       this.updatePermission(modal);
     } else {
@@ -2156,14 +2169,15 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       return;
     }
     const payload = this.createPermissionForm.value;
-    this.switchService.createPermission(payload).subscribe({
-      next: (res) => {
-        this.toastr.success('Permission created successfully');
-        this.permissionFormSubmitted = false;
-        modal.close();
-        this.getAllPermissions();
-      }
-    });
+    console.log(payload)
+    // this.switchService.createPermission(payload).subscribe({
+    //   next: (res) => {
+    //     this.toastr.success('Permission created successfully');
+    //     this.permissionFormSubmitted = false;
+    //     modal.close();
+    //     this.getAllPermissions();
+    //   }
+    // });
   }
 
   getAllPermissions() {
@@ -2654,5 +2668,31 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     return this.cutListForm.controls;
   }
 
-}
+  
+  get featuresArray() {
+    return this.createPermissionForm.get('features') as FormArray;
+  }
 
+  onPermissionSelect(selected: any) {
+    const value = (selected?.name || selected)?.toUpperCase() as PermissionName;
+    const featuresArray = this.createPermissionForm.get('features') as FormArray;
+    featuresArray.clear();
+    if (!this.allPermissions[value]) return;
+    this.allPermissions[value].forEach(feature => {
+      featuresArray.push(
+        this.fb.group({
+          key: feature,
+          label: this.formatLabel(feature),
+          enabled: false
+        })
+      );
+    });
+  }
+  
+  formatLabel(value: string): string {
+    return value
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+}

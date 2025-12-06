@@ -438,10 +438,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
         this.stopLoading();
       },
-      error: (error) => {
-        this.stopLoading();
-        // this.toastr.error(error.statusText);
-      },
     })
   }
 
@@ -477,10 +473,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
         this.stopLoading();
       },
-      error: (error) => {
-        this.stopLoading();
-        // this.toastr.error(error.statusText);
-      },
     })
   }
 
@@ -502,9 +494,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.toastr.success(res.message);
         }
       },
-      error: (err) => {
-        // this.toastr.error('Something went wrong');
-      }
     });
   }
 
@@ -645,9 +634,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.projectLst = res.projList;
           this.myProjectDataSource.data = this.projectLst;
-        } else {
-          // this.toastr.error(res.message);
-        }
+        } 
         this.stopLoading();
       }
     })
@@ -664,10 +651,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.adonaiSubEndDate = res.subData.subEndDate || '';
           this.adonaiDaysLeft = this.calculateDateDiff(this.adonaiSubEndDate);
-
-        } else {
-          // this.toastr.error(res.message);
-          return;
         }
       }
     });
@@ -756,8 +739,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             this.matcardLst?.sort((a: any, b: any) => a.priorityDays - b.priorityDays);
             this.toggleShowMore();
             this.toggleTopShowMore();
-          } else {
-            this.toastr.error(res.message);
           }
           this.stopLoading();
         }
@@ -1722,10 +1703,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         }
         this.stopLoading();
       },
-      error: (error) => {
-        // this.toastr.error(error.statusText || "An error occurred while fetching projects.");
-        this.stopLoading();
-      },
     });
   }
 
@@ -1936,18 +1913,8 @@ downloadButtons: { label: string; url: string }[] = [];
                 rmdMobile:  this.userPhoneNumber,
                 rmdName: matchedUser.username,
               }); 
-              
             } 
-
-          } else {
-            this.toastr.error(res.message, 'signup', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          }
-        },
-        error: (error) => {
-          // this.toastr.error(error.statusText);
+          } 
         },
       })
     }
@@ -1986,15 +1953,8 @@ downloadButtons: { label: string; url: string }[] = [];
               rmdName: ''
             });
           }
-
-
-        } else {
-          // this.toastr.error("User not found.");
-        }
+        } 
       },
-      error: (err: any) => {
-        // this.toastr.error("Failed to fetch user data. Please try again.");
-      }
     });
   }
 
@@ -2084,9 +2044,6 @@ downloadButtons: { label: string; url: string }[] = [];
         } else {
           this.toastr.error(res.message);
         }
-      },
-      error: (error) => {
-        // this.toastr.error(error.statusText || "An error occurred while saving the product.");
       }
     });
   }
@@ -2200,8 +2157,6 @@ downloadButtons: { label: string; url: string }[] = [];
           }
           this.projectMarginList = configs;
         }
-      },
-      error: (error) => {
       }
     });
   }
@@ -2248,7 +2203,6 @@ downloadButtons: { label: string; url: string }[] = [];
         ...formValue,
         updatedBy: `${this.userName},${this.userEmail}`,
       };
-      console.log(payload)
       this.switchService.updateAssgnAdonaiDesign(payload).subscribe({
         next: (res: any) => {
           this.toastr.success('Project updated');
@@ -2278,7 +2232,6 @@ downloadButtons: { label: string; url: string }[] = [];
         : '',
       files: this.files.value
     };
-    console.log(payload)
     this.switchService.createRecce(payload).subscribe({
       next: () => {
         this.toastr.success('Recce created');

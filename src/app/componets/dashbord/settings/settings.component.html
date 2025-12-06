@@ -2002,7 +2002,7 @@
     <form [formGroup]="createPermissionForm" (ngSubmit)="onPermissionSubmit(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
-                {{ isEditmode ? 'Edit Permission' : 'Create Permission' }}
+                <strong>{{ isEditmode ? 'Edit Permission' : 'Create Permission' }}</strong>
             </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
@@ -2019,15 +2019,30 @@
                 </div> -->
                 <div class="col-lg-12">
                     <label for="permissionName" class="form-label">Permission Name</label>
-                
                     <ng-select [items]="permissionCategories" bindLabel="name" bindValue="name" formControlName="name"
-                        placeholder="Select Permission" [ngClass]="{ 'is-invalid': permissionFormSubmitted && pf['name'].errors }">
+                        placeholder="Select Permission" (change)="onPermissionSelect($event)"
+                        [ngClass]="{ 'is-invalid': permissionFormSubmitted && pf['name'].errors }">
                     </ng-select>
-                
                     <div *ngIf="permissionFormSubmitted && pf['name'].errors" class="invalid-feedback">
                         <div *ngIf="pf['name'].errors['required']">Permission name is required</div>
                     </div>
                 </div>
+                <div class="col-lg-12" formArrayName="features" *ngIf="featuresArray.length > 0">
+                    <label class="form-label fw-semibold d-block mb-2">Available Features</label>
+                    <div class="row">
+                        <div class="col-lg-4" *ngFor="let feature of featuresArray.controls; let i = index"
+                            [formGroupName]="i">
+                            <div class="d-flex align-items-center gap-2">
+                                <label class="form-check-label" for="switch-primary">{{ feature.get('label')?.value }}</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input cu" type="checkbox" role="switch" id="switch-primary" checked=""
+                                    formControlName="enabled">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <div class="col-lg-12">
                     <label for="description" class="form-label">Permission Description</label>
