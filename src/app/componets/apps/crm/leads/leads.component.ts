@@ -504,7 +504,7 @@ export class LeadsComponent extends BaseComponent {
 
     //Send Email
     this.selectTemplateForm = this.fb.group({
-      campaignId: [0],
+      campaignId: this.campaignId,
       templateGenId: [''],
       templateName: ['',Validators.required],
       subject: ['',Validators.required],
@@ -1031,7 +1031,15 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
    this.uploadSpinner = true;
-    const payload = this.selectTemplateForm.value;
+    const payload = {
+      ...this.selectTemplateForm.value,
+      campaignId : 0 ,
+      email: this.userEmail,
+      companyCode: this.userCompanyCode,
+      type: this.userType,
+
+    }
+    console.log('payload',payload);
     this.switchService.selectFormTemplate(payload).subscribe({
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
@@ -1042,9 +1050,7 @@ export class LeadsComponent extends BaseComponent {
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
-      // error: (err) => {
-      //   this.toastr.error(err.statusText || 'Error submitting the template.');
-      // },
+      
     });
   }
 
@@ -2323,10 +2329,12 @@ export class LeadsComponent extends BaseComponent {
           completionTime: formValue.completionTime || ''
         }
       };
+      this.uploadSpinner = true;
       this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
         next: (res: any) => {
           if (res.status == true) {
             modal.close();
+            this.uploadSpinner = false;
             this.followupLeadSubmitted = false;
             this.showForm = false;
             this.followupLeadForm.reset();
