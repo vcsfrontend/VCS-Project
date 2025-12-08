@@ -1309,81 +1309,81 @@ closeAllDropdowns() {
             clientDataJs: JSON.stringify(clientDataToSend),
         };
         console.log('creation form payload', proposalPayload);
-        // this.updateElementsAndCreateProposal(proposalPayload, modal);
+        this.updateElementsAndCreateProposal(proposalPayload, modal);
     }
-    // private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
-    //     if (!this.selectedElement || this.selectedElement.length === 0) return;
-    //     const formValue = this.elementForm?.value ?? {};
-    //     const payloads = this.selectedElement.map((boqId: number) => {
-    //         let element: any = null;
-    //         for (const key of this.tabKeys) {
-    //             const dataSource = this.boqDataSources[key];
-    //             if (dataSource) {
-    //                 const found = dataSource.data.find((item: any) => item.boqId === boqId);
-    //                 if (found) {
-    //                     element = found;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //         return {
-    //             boqId: element?.boqId || boqId,
-    //             elementUrl: element?.elementUrl || formValue.elementUrl || '',
-    //             elementNameAndDescription:
-    //                 element?.elementNameAndDescription ||
-    //                 (
-    //                     `${formValue.elementName || ''}` +
-    //                     `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
-    //                     `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
-    //                 ),
-    //             codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
-    //             orderStatus: element?.orderStatus || formValue.orderStatus || '',
-    //             itemType: element?.itemType || formValue.itemType || '',
-    //             source: element?.source || formValue.source || '',
-    //             status: element?.status || formValue.status || '',
-    //             length: Number(element?.length ?? formValue.length) || 0,
-    //             breadth: Number(element?.breadth ?? formValue.breadth) || 0,
-    //             height: Number(element?.height ?? formValue.height) || 0,
-    //             quantity: Number(element?.quantity ?? formValue.quantity) || 0,
-    //             uom: element?.uom || formValue.uom || '',
-    //             draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
-    //             clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
-    //             finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
-    //             brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
-    //             discount: Number(element?.discount ?? formValue.discount) || 0,
-    //             serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
-    //             baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
-    //             budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
-    //             hsn: Number(element?.hsn ?? formValue.hsn) || 0,
-    //             gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
-    //             amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-    //             designId: this.designingId,
-    //             roomName: element?.roomName || formValue.roomName || '',
-    //             itemCode: element?.itemCode || formValue.itemCode || '',
-    //             companyCode: this.userCompanyCode,
-    //             email: this.userEmail,
-    //             type: this.userType,
-    //             inProposal: "inprop",
-    //         };
-    //     });
-    //     this.switchService.updateElementData(payloads).subscribe({
-    //         next: () => {
-    //             this.createProposal(proposalPayload, modal);
-    //         },
-    //     });
-    // }
+    private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
+        if (!this.selectedElement || this.selectedElement.length === 0) return;
+        const formValue = this.elementForm?.value ?? {};
+        const payloads = this.selectedElement.map((boqId: number) => {
+            let element: any = null;
+            for (const key of this.tabKeys) {
+                const dataSource = this.boqDataSources[key];
+                if (dataSource) {
+                    const found = dataSource.data.find((item: any) => item.boqId === boqId);
+                    if (found) {
+                        element = found;
+                        break;
+                    }
+                }
+            }
+            return {
+                boqId: element?.boqId || boqId,
+                elementUrl: element?.elementUrl || formValue.elementUrl || '',
+                elementNameAndDescription:
+                    element?.elementNameAndDescription ||
+                    (
+                        `${formValue.elementName || ''}` +
+                        `${formValue.elementDescription ? '\n' + formValue.elementDescription : ''}` +
+                        `${formValue.brandOrMake ? '\nBrand: ' + formValue.brandOrMake : ''}`
+                    ),
+                codeAndCategory: element?.codeAndCategory || formValue.codeAndCategory?.name || '',
+                orderStatus: element?.orderStatus || formValue.orderStatus || '',
+                itemType: element?.itemType || formValue.itemType || '',
+                source: element?.source || formValue.source || '',
+                status: element?.status || formValue.status || '',
+                length: Number(element?.length ?? formValue.length) || 0,
+                breadth: Number(element?.breadth ?? formValue.breadth) || 0,
+                height: Number(element?.height ?? formValue.height) || 0,
+                quantity: Number(element?.quantity ?? formValue.quantity) || 0,
+                uom: element?.uom || formValue.uom || '',
+                draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
+                clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
+                finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
+                brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+                discount: Number(element?.discount ?? formValue.discount) || 0,
+                serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
+                baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
+                budgetRate: Number(element?.budgetRate ?? formValue.budgetRate) || 0,
+                hsn: Number(element?.hsn ?? formValue.hsn) || 0,
+                gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
+                amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
+                designId: this.designingId,
+                roomName: element?.roomName || formValue.roomName || '',
+                itemCode: element?.itemCode || formValue.itemCode || '',
+                companyCode: this.userCompanyCode,
+                email: this.userEmail,
+                type: this.userType,
+                inProposal: "inprop",
+            };
+        });
+        this.switchService.updateElementData(payloads).subscribe({
+            next: () => {
+                this.createProposal(proposalPayload, modal);
+            },
+        });
+    }
 
-    // private createProposal(proposalPayload: any, modal: any) {
-    //     this.switchService.createProposal(proposalPayload).subscribe({
-    //         next: (res: any) => {
-    //             if (res?.status === true) {
-    //                 this.toastr.success(res.message || "Proposal created ");
-    //                 modal.close();
-    //                 this.boqData();
-    //             }
-    //         },
-    //     });
-    // }
+    private createProposal(proposalPayload: any, modal: any) {
+        this.switchService.createProposal(proposalPayload).subscribe({
+            next: (res: any) => {
+                if (res?.status === true) {
+                    this.toastr.success(res.message || "Proposal created ");
+                    modal.close();
+                    this.boqData();
+                }
+            },
+        });
+    }
 
     extraContentProposalSubmit(modal: any) {
         if (this.extraContentProposalForm.invalid) {

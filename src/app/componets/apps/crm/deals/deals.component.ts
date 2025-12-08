@@ -94,6 +94,7 @@ export class DealsComponent extends BaseComponent {
   pageIndex = 0; pageSize = 50;  data: any[] = []; displayData: any[] = []; totalRecords: number = 0;
    minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any;
   uploadLeads :boolean=false;moveCmapignSubmitted : boolean= false;
+  executiveEmail : string ='';
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -488,7 +489,7 @@ export class DealsComponent extends BaseComponent {
       source: [''],
       startDate: [''],
       endDate: [''],
-      executive: [''],
+      executive: this.userEmail,
       city: [''],
       campaignId: [''],
       companyName: [''],
@@ -575,7 +576,7 @@ export class DealsComponent extends BaseComponent {
       projectName: ['', [Validators.required, Validators.minLength(3)]],
       businessCategory: ['' , Validators.required],
       address: ['' , Validators.required],
-      username: ['',Validators.required],
+      username: this.userName,
       clientName: ['',Validators.required],
       mobileNumber: ['',Validators.required],
       endDate : ['',Validators.required],
@@ -1633,20 +1634,13 @@ export class DealsComponent extends BaseComponent {
   onSelectAllChange(event: any) {
   if (event.checked) {
 
-    this.dataSource.data.forEach((row: any, index: number) => {
-    });
+    this.selectedLeads = [];   // FIX: Clear old objects/numbers
 
-    const filtered = this.dataSource.data.filter((row: any) => {
-      const status = (row?.completionStatus || '').trim().toLowerCase();
-      const isCompleted = status === 'completed';
-      const hasValidId = row?.leadId != null;
-
-      return !isCompleted && hasValidId;
-    });
-
-    this.selectedLeads = filtered.map((row: any) => row.leadId);
-
-  } else {
+    this.selectedLeads = this.dataSource.data
+      .filter(row => row.completionStatus !== 'completed')
+      .map(row => row.leadId);  // keep number format as your system needs
+  } 
+  else {
     this.selectedLeads = [];
   }
   }
@@ -2648,6 +2642,9 @@ export class DealsComponent extends BaseComponent {
     };
     const startDate = ensureSeconds(formValue.startDate);
     const endDate = ensureSeconds(formValue.endDate);
+     if(this.crmRole === 'USER'){
+      this.executiveEmail = this.userEmail;
+    }
     const payload = {
       ...this.filterLeadForm.value,
       startDate,
@@ -2656,7 +2653,7 @@ export class DealsComponent extends BaseComponent {
       status: Array.isArray(formValue.status) ? formValue.status.join(',') : formValue.status || null,
       city: Array.isArray(formValue.city) ? formValue.city.join(',') : formValue.city || null,
       source: Array.isArray(formValue.source) ? formValue.source.join(',') : formValue.source || null,
-      executive: Array.isArray(formValue.executive) ? formValue.executive.join(',') : formValue.executive || null,
+      executive: this.executiveEmail,
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
@@ -3014,7 +3011,9 @@ export class DealsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType,
       autoCreationRequired: autoProjectCreation,
+      username : this.userName
     };
+    console.log('payload',payload);
     this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {

@@ -1086,8 +1086,8 @@
                         <label class="form-label">Proposal From</label>
                         <input type="text" class="form-control" formControlName="orderFrom"
                             placeholder="Enter Proposal From"
-                            [ngClass]="{ 'is-invalid': submittedStep3 && g['orderFrom'].errors }">
-                        <div *ngIf="submittedStep3 && g['orderFrom'].errors" class="invalid-feedback">
+                            [ngClass]="{ 'is-invalid': proposalSubmitted && g['orderFrom'].errors }">
+                        <div *ngIf="proposalSubmitted && g['orderFrom'].errors" class="invalid-feedback">
                             <div *ngIf="g['orderFrom'].errors['required']">Proposal From is
                                 required
                             </div>
@@ -1107,8 +1107,8 @@
                         <label class="form-label">Shipping Address</label>
                         <input type="text" class="form-control" formControlName="shippingAddress"
                             placeholder="Enter Shipping Address"
-                            [ngClass]="{ 'is-invalid': submittedStep3 && g['shippingAddress'].errors }">
-                        <div *ngIf="submittedStep3 && g['shippingAddress'].errors" class="invalid-feedback">
+                            [ngClass]="{ 'is-invalid': proposalSubmitted && g['shippingAddress'].errors }">
+                        <div *ngIf="proposalSubmitted && g['shippingAddress'].errors" class="invalid-feedback">
                             <div *ngIf="g['shippingAddress'].errors['required']">Shipping Address is
                                 required
                             </div>
@@ -1118,8 +1118,8 @@
                         <label class="form-label">Execution Start Date</label>
                         <input type="date" class="form-control" formControlName="startDate"
                             placeholder="Execution Start Date"
-                            [ngClass]="{ 'is-invalid': submittedStep3 && g['startDate'].errors }">
-                        <div *ngIf="submittedStep3 && g['startDate'].errors" class="invalid-feedback">
+                            [ngClass]="{ 'is-invalid': proposalSubmitted && g['startDate'].errors }">
+                        <div *ngIf="proposalSubmitted && g['startDate'].errors" class="invalid-feedback">
                             <div *ngIf="g['startDate'].errors['required']">startDate is
                                 required
                             </div>
@@ -1129,8 +1129,8 @@
                         <label class="form-label">Execution End Date</label>
                         <input type="date" class="form-control" formControlName="dueDate"
                             placeholder="Execution End Date"
-                            [ngClass]="{ 'is-invalid': submittedStep3 && g['dueDate'].errors }" [min]="minDateTime" />
-                        <div *ngIf="submittedStep3 && g['dueDate'].errors" class="invalid-feedback">
+                            [ngClass]="{ 'is-invalid': proposalSubmitted && g['dueDate'].errors }" [min]="minDateTime" />
+                        <div *ngIf="proposalSubmitted && g['dueDate'].errors" class="invalid-feedback">
                             <div *ngIf="g['dueDate'].errors['required']">dueDate is
                                 required
                             </div>
