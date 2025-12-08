@@ -2162,6 +2162,7 @@ downloadButtons: { label: string; url: string }[] = [];
   }
 
   goToBoq(element: any) {
+    localStorage.setItem('selectedTab', '1'); 
     this.router.navigate(
       ['/dashboard/boq'],
       {
@@ -2174,6 +2175,7 @@ downloadButtons: { label: string; url: string }[] = [];
     );
     this.getLst();
   }
+
 
   onTypeChange(type: any) {
     this.selectedType = type;

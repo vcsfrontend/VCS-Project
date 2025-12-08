@@ -124,7 +124,7 @@ export class BoqComponent extends BaseComponent {
     recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
     selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
-    designUrl: string = ''; showSubmitButton: boolean = true;
+    designUrl: string = ''; showSubmitButton: boolean = true; isLoadingAssignProjects: boolean = false;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -301,12 +301,19 @@ export class BoqComponent extends BaseComponent {
         this.route.queryParams.subscribe(params => {
             this.projectId = params['projectId'];
             this.projectName = params['projectName'];
+
             this.buildRecceForm();
-            this.recceForm.patchValue({
-                projectId: this.projectId,
-                projectName: this.projectName
-            });
+            this.recceForm.patchValue({ projectId: this.projectId, projectName: this.projectName });
+
+            const storedTab = localStorage.getItem('selectedTab') || '1';
+
+            if (!this.tabLoaded) {
+                this.tabLoaded = true;
+                this.changeTab(storedTab, true);
+            }
         });
+
+
         this.flatpickrOptions = {
             enableTime: true,
             noCalendar: true,
@@ -476,11 +483,6 @@ export class BoqComponent extends BaseComponent {
             companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
             companyName: [(JSON.parse(this.userData).companyName) ? JSON.parse(this.userData).companyName : ''],
         });
-        const storedTab = localStorage.getItem('selectedTab');
-        if (storedTab && !this.tabLoaded) {
-            this.tabLoaded = true;
-            this.changeTab(storedTab);
-        }
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
@@ -490,6 +492,7 @@ export class BoqComponent extends BaseComponent {
             this.boqData();
         }
     }
+
 
     buildRecceForm() {
         this.recceForm = this.fb.group({
@@ -735,20 +738,24 @@ export class BoqComponent extends BaseComponent {
         }
     }
 
-    changeTab(tabId: string) {
+    changeTab(tabId: string, skipStore: boolean = false) {
         this.activeTab = tabId;
-        localStorage.setItem('selectedTab', tabId);
-        if (!this.projectId) {
-            setTimeout(() => this.changeTab(tabId), 200);
-            return;
+
+        if (!skipStore) {
+            localStorage.setItem('selectedTab', tabId);
         }
+
+        if (!this.projectId) return;
+
         switch (tabId) {
             case '1':
                 this.getRecceData();
                 break;
+
             case '2':
                 this.getAssignProjects();
                 break;
+
             case '3':
                 this.allowBoqRun = true;
                 this.getAssignProjects();
@@ -756,6 +763,7 @@ export class BoqComponent extends BaseComponent {
                 break;
         }
     }
+
 
     
 
@@ -1801,6 +1809,7 @@ closeAllDropdowns() {
 
     
     getAssignProjects(): void {
+        this.isLoadingAssignProjects = true;
         const payload: any = {
             email: this.userEmail,
             type: this.userType,
@@ -1830,8 +1839,32 @@ closeAllDropdowns() {
                     );
                 this.filteredDesignerData = [...this.designerData];
             },
+            complete: () => {
+                this.isLoadingAssignProjects = false;
+            }
         });
     }
+
+    showNoData(): boolean {
+        if (!this.filteredDesignerData) return true;
+        if (this.filteredDesignerData.length === 0) return true;
+        return this.isObjectEmpty(this.filteredDesignerData[0]);
+    }
+
+    showData(): boolean {
+        return (
+            this.filteredDesignerData &&
+            this.filteredDesignerData.length > 0 &&
+            !this.isObjectEmpty(this.filteredDesignerData[0])
+        );
+    }
+
+    isObjectEmpty(data: any): boolean {
+        if (!data) return true;
+
+        return Object.values(data).every(val => val === null || val === "" || val === undefined);
+    }
+
 
     applyDesignerFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value
