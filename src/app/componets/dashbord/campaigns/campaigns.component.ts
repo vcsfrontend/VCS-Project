@@ -250,15 +250,10 @@ export class CampaignsComponent extends BaseComponent {
           this.isLoading = false;
           this.campaignCount = this.campaignList.length;
           this.campaignList.forEach(campaign => {
-          this.getLeadCountForCampaign(campaign.campgnId);
-      });
-        } else {
-          this.toastr.error("Unexpected response format.");
+            this.getLeadCountForCampaign(campaign.campgnId);
+          });
         }
       },
-      error: (err) => {
-        // this.toastr.error(err.statusText || "An error occurred while fetching data.");
-      }
     });
   }
   
@@ -271,17 +266,16 @@ export class CampaignsComponent extends BaseComponent {
     this.switchService.sepecificCampaign(payload).subscribe({
       next: (res: any) => {
         this.listNew = res;
-        if(this.userType == 2){
-        this.listNew.forEach((campaign:any) => {
-          this.getLeadCountForCampaign(campaign.campgnId);
-      });
-      }
+        this.isLoading = false;
+        if (this.userType == 2) {
+          this.listNew.forEach((campaign: any) => {
+            this.getLeadCountForCampaign(campaign.campgnId);
+          });
+        }
       },
-      error: (err) => {
-        // this.toastr.error(err.statusText || "An error occurred while fetching data.");
-      }
     });
   }
+
    getUsers() {
    if (JSON.parse(this.userData).type == 2) {
       let cn = this.userCompanyName;

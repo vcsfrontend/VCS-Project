@@ -87,7 +87,7 @@ export class BoqComponent extends BaseComponent {
     isCutListAlreadySubmitted : boolean = false;groupedPanels: { [key: string]: any[] } = {};
     showLeftArrow = false;showRightArrow = false; pannelResponse: any[] = [];
     project : any; boqLoaded = false; allowBoqRun = false; boqAvailable: boolean | null = null; 
-    activeInnerTab = 'scope';  activeScopeTab = 1; private isInitialLoad = true;
+    activeInnerTab = 'scope';  activeScopeTab = 1; private isInitialLoad = true; private tabLoaded = false;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     activeTableSource = new MatTableDataSource<any>();
@@ -124,7 +124,7 @@ export class BoqComponent extends BaseComponent {
     recceStages: any = {1: 'Not Started', 2: 'Pending', 3: 'Completed'}; recceStagesList: string[] = [];
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
     selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
-    designUrl: string = '';
+    designUrl: string = ''; showSubmitButton: boolean = true;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -164,27 +164,38 @@ export class BoqComponent extends BaseComponent {
         { label: 'Shutter Length 2', control: 'l2' },
         { label: 'Shutter Width 2', control: 'w2' }
     ];
-    constructor(private activatedRoute: ActivatedRoute,
-        private modalService: NgbModal, public switchService: SwitherService,
-        private toastr: ToastrService, private offcanvasService: NgbOffcanvas,
-        private fb: FormBuilder, private route: ActivatedRoute, private router: Router) {
+    constructor(
+        private activatedRoute: ActivatedRoute, private modalService: NgbModal,
+        public switchService: SwitherService, private toastr: ToastrService,
+        private offcanvasService: NgbOffcanvas, private fb: FormBuilder,
+        private route: ActivatedRoute, private router: Router ) 
+        {
         super();
         this.userData = localStorage.getItem('userDetails');
         this.userType = JSON.parse(this.userData).type;
         this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+        const savedStage = localStorage.getItem('currentStage');
+        const savedActiveTab = localStorage.getItem('selectedTab');
+        this.currentStage = savedStage ? Number(savedStage) : 1;
+        this.activeTab = savedActiveTab ?? '1';
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
                 const params = this.activatedRoute.snapshot.queryParams;
                 if (params && params['projectId']) {
-                    localStorage.setItem('selectedTab', '1');
-                    this.activeTab = '1';
-                    this.currentStage = 1;
-                    this.boqLoaded = false;
-                    this.allowBoqRun = false;
+                    const savedProjectId = localStorage.getItem('savedProjectId');
+                    if (savedProjectId !== params['projectId']) {
+                        localStorage.setItem('savedProjectId', params['projectId']);
+                        localStorage.setItem('currentStage', '1');
+                        localStorage.setItem('selectedTab', '1');
+                        this.currentStage = 1;
+                        this.activeTab = '1';
+                        this.boqLoaded = false;
+                    }
                 }
             }
         });
     }
+
 
     open(content: any) {
         this.modalService.open(content, { centered: true });
@@ -278,15 +289,6 @@ export class BoqComponent extends BaseComponent {
     };
 
     ngOnInit(): void {
-    this.getAssignProjects();
-    const storedTab = localStorage.getItem('selectedTab');
-    if (storedTab) {
-        this.activeTab = storedTab;
-        this.currentStage = Number(storedTab);
-        if (storedTab === '3') {
-            this.allowBoqRun = true;
-        }
-    }
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
     const yyyy = now.getFullYear();
@@ -474,17 +476,14 @@ export class BoqComponent extends BaseComponent {
             companyCode: [(JSON.parse(this.userData).companyCode) ? JSON.parse(this.userData).companyCode : ''],
             companyName: [(JSON.parse(this.userData).companyName) ? JSON.parse(this.userData).companyName : ''],
         });
+        const storedTab = localStorage.getItem('selectedTab');
+        if (storedTab && !this.tabLoaded) {
+            this.tabLoaded = true;
+            this.changeTab(storedTab);
+        }
         flatpickr('#addignedDate', this.flatpickrOptions);
     }
 
-    changeTab(tabId: string) {
-        this.activeTab = tabId;
-        localStorage.setItem('selectedTab', tabId);
-        if (tabId === '3') {
-            this.allowBoqRun = true;
-            this.getAssignProjects();
-        }
-    }
 
     loadProjectScope() {
         if (!this.boqAvailable) {
@@ -720,21 +719,45 @@ export class BoqComponent extends BaseComponent {
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.proposaldataSource.paginator = this.paginator;
-        window.addEventListener('scroll', (event: any) => {
-            if (this.isScrollingInsideDropdown(event)) {
-                return;
-            }
-            this.closeAllDropdowns();
-        }, true);
-        const stored = localStorage.getItem('selectedTab');
-        if (stored) {
-            setTimeout(() => {
-                if (stored === '1') this.getRecceData();
-                if (stored === '2') this.getAssignProjects();
-                if (stored === '3') this.boqData();
-            }, 100);
+        window.addEventListener(
+            'scroll',
+            (event: any) => {
+                if (!this.isScrollingInsideDropdown(event)) {
+                    this.closeAllDropdowns();
+                }
+            },
+            true
+        );
+        const storedTab = localStorage.getItem('selectedTab');
+        if (storedTab && !this.tabLoaded) {
+            this.tabLoaded = true;
+            setTimeout(() => this.changeTab(storedTab), 100);
         }
     }
+
+    changeTab(tabId: string) {
+        this.activeTab = tabId;
+        localStorage.setItem('selectedTab', tabId);
+        if (!this.projectId) {
+            setTimeout(() => this.changeTab(tabId), 200);
+            return;
+        }
+        switch (tabId) {
+            case '1':
+                this.getRecceData();
+                break;
+            case '2':
+                this.getAssignProjects();
+                break;
+            case '3':
+                this.allowBoqRun = true;
+                this.getAssignProjects();
+                this.boqData();
+                break;
+        }
+    }
+
+    
 
     isScrollingInsideDropdown(event: any): boolean {
         const path = event.composedPath ? event.composedPath() : event.path;
@@ -1063,6 +1086,13 @@ closeAllDropdowns() {
 
     openEditFromSelected(element: any, content: any) {
         this.isEditMode = true;
+        this.showSubmitButton = true;
+        this.openEditForm(element, content);
+    }
+
+    openOffcanvasWithoutSubmit(element: any, content: any) {
+        this.isEditMode = true;
+        this.showSubmitButton = false;
         this.openEditForm(element, content);
     }
 
@@ -2063,125 +2093,120 @@ closeAllDropdowns() {
 
     setStage(id: number) {
         this.currentStage = id;
+        localStorage.setItem('currentStage', id.toString());
         if (id === 3) {
-            this.activeInnerTab = 'scope'; 
-            this.activeScopeTab = 1;     
+            this.activeInnerTab = 'scope';
+            this.activeScopeTab = 1;
         }
     }
+
     
     onTabChange(tabId: any) {
         this.activeTab = String(tabId);
         if (this.activeTab === '1') {
             this.getProposal();
-        }
-        else if (this.activeTab === '2') {
+        } else if (this.activeTab === '2') {
             this.getClientOrders();
-        }
-        else if (this.activeTab === '3') {
-        }
-        else if (this.activeTab === '4') {
-            // nothing to call
+        } else if (this.activeTab === '3') {
+            this.getAssignProjects();
+        } else if (this.activeTab === '4') {
         }
     }
 
-
-
-  prevStep() {
-    if (this.step > 1) {
-      this.step--;
+    prevStep() {
+        if (this.step > 1) {
+            this.step--;
+        }
     }
-  }
-  nextStep() {
-  if (this.skipClientForm) {
-    if (this.step === 1) {
-      this.step = 2;
-      return;
-    }
-  }
-  if (this.step === 1) {
-    this.submittedStep1 = true;
-    const step1Fields = ['clientName', 'clientAddress', 'clientMobileNumber', 'clientEmail'];
-    step1Fields.forEach(field => {
-      const control = this.proposalForm.get(field);
-      control?.markAsTouched();
-      control?.updateValueAndValidity();
-    });
-     const invalidStep1 = step1Fields.some(field => this.proposalForm.get(field)?.invalid);
-    if (invalidStep1) {
-      this.toastr.warning('Please fill all required fields in Step 1.');
-      return;
-    }
-    this.step = 2;
-  }
-  else if (this.step === 2) {
-    this.submittedStep2 = true;
-    const step2Fields = ['projectConfig', 'dedEmail', 'rmdEmail',];
-    step2Fields.forEach(field => {
-      const control = this.proposalForm.get(field);
-      control?.markAsTouched();
-      control?.updateValueAndValidity();
-    });
-     const invalidStep2 = step2Fields.some(field => this.proposalForm.get(field)?.invalid);
-    if (invalidStep2) {
-      this.toastr.warning('Please fill all required fields in Step 2.');
-      return;
-    }
-    this.step = 3;
-  }
-  else if (this.step === 3) {
-  return
-}
+    nextStep() {
+        if (this.skipClientForm) {
+            if (this.step === 1) {
+                this.step = 2;
+                return;
+            }
+        }
+        if (this.step === 1) {
+            this.submittedStep1 = true;
+            const step1Fields = ['clientName', 'clientAddress', 'clientMobileNumber', 'clientEmail'];
+            step1Fields.forEach(field => {
+                const control = this.proposalForm.get(field);
+                control?.markAsTouched();
+                control?.updateValueAndValidity();
+            });
+            const invalidStep1 = step1Fields.some(field => this.proposalForm.get(field)?.invalid);
+            if (invalidStep1) {
+                this.toastr.warning('Please fill all required fields in Step 1.');
+                return;
+            }
+            this.step = 2;
+        }
+        else if (this.step === 2) {
+            this.submittedStep2 = true;
+            const step2Fields = ['projectConfig', 'dedEmail', 'rmdEmail',];
+            step2Fields.forEach(field => {
+                const control = this.proposalForm.get(field);
+                control?.markAsTouched();
+                control?.updateValueAndValidity();
+            });
+            const invalidStep2 = step2Fields.some(field => this.proposalForm.get(field)?.invalid);
+            if (invalidStep2) {
+                this.toastr.warning('Please fill all required fields in Step 2.');
+                return;
+            }
+            this.step = 3;
+        }
+        else if (this.step === 3) {
+            return
+        }
 
     }
-  allowOnlyNumbers(event: any) {
-    event.target.value = event.target.value.replace(/[^0-9]/g, '');
-  }
-  allowOnlynum(event: KeyboardEvent) {
-    const allowedChars = '0123456789.';
-    const inputChar = event.key;
-
-    if (
-      ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
-    ) {
-      return;
+    allowOnlyNumbers(event: any) {
+        event.target.value = event.target.value.replace(/[^0-9]/g, '');
     }
+    allowOnlynum(event: KeyboardEvent) {
+        const allowedChars = '0123456789.';
+        const inputChar = event.key;
 
-    const currentValue = (event.target as HTMLInputElement).value;
+        if (
+            ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete'].includes(inputChar)
+        ) {
+            return;
+        }
 
-    if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
-      event.preventDefault();
+        const currentValue = (event.target as HTMLInputElement).value;
+
+        if (!allowedChars.includes(inputChar) || (inputChar === '.' && currentValue.includes('.'))) {
+            event.preventDefault();
+        }
     }
-  }
-  get g() {
-    return this.proposalForm.controls;
-  }
-  get f() {
-    return this.recceForm.controls;
-  }
-   onDedSelected(selectedUser: any): void {
-    if (selectedUser?.email === 'Other') {
-    this.showOtherDesignerFields = true;
-
-    // Clear auto-fill fields
-    this.proposalForm.patchValue({
-      dedMobile: '',
-      dedName: ''
-    });
-    } else {
-    this.showOtherDesignerFields = false;
-    if (selectedUser) {
-      this.proposalForm.patchValue({
-        dedMobile: selectedUser.phoneNumber || '',
-        dedName: selectedUser.username || ''
-      });
-    } else {
-      this.proposalForm.patchValue({
-        dedMobile: '',
-        dedName: ''
-      });
+    get g() {
+        return this.proposalForm.controls;
     }
-  }
-  }
+    get f() {
+        return this.recceForm.controls;
+    }
+    onDedSelected(selectedUser: any): void {
+        if (selectedUser?.email === 'Other') {
+            this.showOtherDesignerFields = true;
+            this.proposalForm.patchValue({
+                dedMobile: '',
+                dedName: ''
+            });
+        } else {
+            this.showOtherDesignerFields = false;
+            if (selectedUser) {
+                this.proposalForm.patchValue({
+                    dedMobile: selectedUser.phoneNumber || '',
+                    dedName: selectedUser.username || ''
+                });
+            } else {
+                this.proposalForm.patchValue({
+                    dedMobile: '',
+                    dedName: ''
+                });
+            }
+        }
+    }
 
     onUserSelected(selectedUser: any): void {
         if (selectedUser?.email === 'Other') {
@@ -2206,37 +2231,37 @@ closeAllDropdowns() {
         }
     }
     
-   getProjectConfig(){
-    let payload = {
-      companycode: JSON.parse(this.userData).companyCode,
-      email: JSON.parse(this.userData).email,
-      type: JSON.parse(this.userData).type
-    };
-    this.switchService.fetchProjectConfig(payload).subscribe({
-      next: (res: any) => {
-        if (res && res.configId) {
-           const configs: string[] = [];
-          for (let i = 1; i <= 10; i++) {
-            const value = res[`f${i}`];
-            if (value) configs.push(value);
-          }
-          this.projectConfigList = configs;
-        } 
-      }
-    });
-  }
-   toggleGraniteFields() {
-    this.graniteEnabled = !this.graniteEnabled;
-    if (!this.graniteEnabled) {
-      this.proposalForm.patchValue({ gpa: 0, gsc: 0,gmc:0 });
+    getProjectConfig() {
+        let payload = {
+            companycode: JSON.parse(this.userData).companyCode,
+            email: JSON.parse(this.userData).email,
+            type: JSON.parse(this.userData).type
+        };
+        this.switchService.fetchProjectConfig(payload).subscribe({
+            next: (res: any) => {
+                if (res && res.configId) {
+                    const configs: string[] = [];
+                    for (let i = 1; i <= 10; i++) {
+                        const value = res[`f${i}`];
+                        if (value) configs.push(value);
+                    }
+                    this.projectConfigList = configs;
+                }
+            }
+        });
     }
-  }
-  toggleTDMCFields() {
-    this.TDMCEnabled = !this.TDMCEnabled;
-    if (!this.TDMCEnabled) {
-      this.proposalForm.patchValue({ tdmc: 0, tdpa: 0,tdsc:0 });
+    toggleGraniteFields() {
+        this.graniteEnabled = !this.graniteEnabled;
+        if (!this.graniteEnabled) {
+            this.proposalForm.patchValue({ gpa: 0, gsc: 0, gmc: 0 });
+        }
     }
-  }
+    toggleTDMCFields() {
+        this.TDMCEnabled = !this.TDMCEnabled;
+        if (!this.TDMCEnabled) {
+            this.proposalForm.patchValue({ tdmc: 0, tdpa: 0, tdsc: 0 });
+        }
+    }
 
   getMarginData(){
     let payload = {
@@ -2790,25 +2815,17 @@ closeAllDropdowns() {
 
     get statusLabel(): string {
         const stageName = this.statusNames[this.currentStage];
-
-        // **📍 Recce Logic**
         if (stageName === 'Recce') {
             return this.isRecceEmpty ? 'Recce Not Created' : 'Recce Pending';
         }
-
-        // **📍 Design Logic**
         if (stageName === 'Design') {
-
             const noDesignAssigned =
                 (!this.designId || this.designId.trim() === '') &&
                 (!this.designUrl || this.designUrl.trim() === '');
-
             if (noDesignAssigned) return 'Design Not Assigned';
-
             if (this.designCompletionStatus?.toLowerCase().includes('complet')) {
                 return 'Design Completed';
             }
-
             return 'Design Pending';
         }
         return `${stageName} Pending`;
@@ -2817,9 +2834,9 @@ closeAllDropdowns() {
     get statusColor(): string {
         const label = this.statusLabel;
 
-        if (label.includes('Completed')) return 'text-success';     // Green
-        if (label.includes('Not Assigned') || label.includes('Not Created')) return 'text-danger'; // Red
-        if (label.includes('Pending')) return 'text-warning';       // Yellow
+        if (label.includes('Completed')) return 'text-success';    
+        if (label.includes('Not Assigned') || label.includes('Not Created')) return 'text-danger'; 
+        if (label.includes('Pending')) return 'text-warning';     
 
         return 'text-secondary';
     }

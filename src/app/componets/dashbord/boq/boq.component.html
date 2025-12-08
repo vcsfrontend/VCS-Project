@@ -2,7 +2,7 @@
     <div class="d-flex justify-content-between align-items-center w-100 custom-progress-nav border-top">
         <ul ngbNav #nav13="ngbNav" [(activeId)]="activeTab" (activeIdChange)="changeTab($event)" class="">
             <li ngbNavItem="1" class="nav-item">
-                <button ngbNavLink class="nav-link custom-step" (click)="setStage(1); getRecceData()">
+                <button ngbNavLink class="nav-link custom-step" (click)="setStage(1);">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 1,
                             'active-circle': currentStage === 1
@@ -265,7 +265,7 @@
                 </ng-template>
             </li>
             <li ngbNavItem="2" class="nav-item">
-                <button ngbNavLink class="nav-link custom-step" (click)="setStage(2); getAssignProjects()">
+                <button ngbNavLink class="nav-link custom-step" (click)="setStage(2);">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 2,
                             'active-circle': currentStage === 2
@@ -363,7 +363,7 @@
                 </ng-template>
             </li>
             <li ngbNavItem="3" class="nav-item">
-            <button ngbNavLink class="nav-link custom-step" (click)="setStage(3); boqData()">
+            <button ngbNavLink class="nav-link custom-step" (click)="setStage(3)">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 3,
                             'active-circle': currentStage === 3
@@ -568,7 +568,7 @@
                                                     <ng-container *ngFor="let key of proposalTabKeys; let i = index">
                                                         <li [ngbNavItem]="i + 1">
                                                             <a ngbNavLink class="nav-link m-2">
-                                                                {{ key }}<span class="badge bg-white text-dark ms-1">
+                                                                {{ key }}<span class="badge bg-dark text-whites ms-1">
                                                                     {{ proposalTabCounts[key] || 0 }}</span>
                                                             </a>
                                                             <ng-template ngbNavContent>
@@ -584,7 +584,7 @@
                                                                                 <td mat-cell *matCellDef="let element" class="sticky-col-left"
                                                                                     style="max-width: 750px;">
                                                                                     <div class="d-flex align-items-center"
-                                                                                        (click)="openEditFromSelected(element, content1)"
+                                                                                        (click)="openOffcanvasWithoutSubmit(element, content1)"
                                                                                         style="cursor: pointer;">
                                                                                         <span class="avatar avatar-xl me-3">
                                                                                             <img [src]="element.elementUrl" class="img-thumbnail"
@@ -2272,7 +2272,7 @@
             </div>
         </div>
         <div class="offcanvas-footer border-top p-3">
-            <button type="submit" class="btn btn-primary me-3">
+            <button type="submit" class="btn btn-primary me-3" *ngIf="showSubmitButton">
                 {{ isEditMode ? 'Update' : 'Save' }}
             </button>
             <button type="button" class="btn btn-danger" (click)="offcanvas.dismiss('Close click')">

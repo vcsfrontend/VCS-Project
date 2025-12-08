@@ -925,7 +925,9 @@ export class DealsComponent extends BaseComponent {
             : null;
             
            this.updateColumns();
-          this.getStatusCount();
+          if (this.crmRole === 'ADMIN') {
+            this.getStatusCount();
+          } 
           this.taskPriorityList = res.taskPriorityList || [];
           this.uploadLeads = false;
         }
