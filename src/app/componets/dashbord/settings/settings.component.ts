@@ -26,7 +26,7 @@ import { ShowCodeContentDirective } from '../../../shared/directives/show-code-c
 import { NgSelectModule } from '@ng-select/ng-select';
 import { flatMap } from 'rxjs';
 
-type PermissionName = 'CRM' | 'SALES' | 'HR';
+type PermissionName = 'CRM' | 'SALES' | 'HR'| 'Projects';
 @Component({
   selector: 'app-settings',
   standalone: true,
@@ -95,7 +95,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   appointmentId: number = 0; assignRoleForm !: FormGroup; selectedDepartment: any = {}; selectedPermission: any = {};
   selectedRole: any = {}; assignedRoleLst: any[] = []; depId: number = 0; responseList: any; selectedAssignedRole: any = {};
   selectedPermissionRole: any = {}; assignRoleResponse: any = {}; selectedRoleObj: any; selectedDeptObj: any;
-  selectedId: number = 0;
+  selectedId: number = 0;selectedPermissionId : number =0;
   savedRoles: { [companyCode: string]: any[] } = {};
   savedDepartmentRoles: any[] = []; assignedPermissionLst: any[] = [];
   assignPermissionForm !: FormGroup; assignUserForm !: FormGroup; assignUserEmail: string = '';
@@ -105,10 +105,14 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   assignPerm: any; filteredUserList: any[] = []; showUser: boolean = false; selectedUser: any;
   departmentListTable: any[] = []; optimizerCuts: any[] = []; submittedModels: string[] = [];fullCutListItems :any[]=[];
   isCutListFull : boolean = false;existingCuts: any[] = []; originalCutItems : any[]=[];
+  userPermissions : any[]=[];selectedrole: number = 0;userPermissionSet = new Set<string>();
+selectedSubPermissions: string[] = [];selectedPermissionName : string ='';
+showSubPermissionDropdown = false;editSubpermissionForm !:FormGroup;
   codeLabels: { [key: string]: string } = { AK_PA: 'Panel', AK_SH: 'Shutter'};
   
   allPermissions: Record<PermissionName, string[]> = {
-    CRM: ['deals_delete', 'deals_edit', 'deals_reports', 'deals_stage_status'],
+    CRM: ['deals_delete', 'deals_edit', 'deals_reports', 'deals_stage_status','leads_add','leads_delete','deals_add'],
+    Projects :['project_create','project_delete','project_update'],
     SALES: ['products_add', 'products_edit'],
     HR: ['employee_add', 'employee_edit']
   };
@@ -439,6 +443,7 @@ selectedPermissions: any[] = [];
       permissionRole: [0],
       depRole: [0],
       description: [''],
+      subPermission: this.fb.array([])   
     })
 
     this.assignUserForm = this.fb.group({
@@ -515,19 +520,21 @@ selectedPermissions: any[] = [];
     this.createPermissionForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
-      // features: this.fb.array([]),
-      subPermission : this.fb.array([]),
+      // subPermission : this.fb.array([]),
       companyName: JSON.parse(this.userData)?.companyName,
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type
+    })
+    this.editSubpermissionForm = this.fb.group({
+      subPermission: this.fb.array([])
     })
     this.onTodayDt();
     this.onMinDate();
     this.getProjectLst();
     this.getMarginData();
-    this.createPermissionForm.get('name')?.valueChanges.subscribe(value => {
-      this.onPermissionSelect(value);
-    });
+    // this.createPermissionForm.get('name')?.valueChanges.subscribe(value => {
+    //   this.onPermissionSelect(value);
+    // });
   }
   onClkDesign(key: string = '') {
     this.userData = localStorage.getItem('userDetails');
@@ -2170,24 +2177,23 @@ selectedPermissions: any[] = [];
       return;
     }
     const formValue = this.createPermissionForm.value;
-     const selectedKeys = this.subPermissionArray.controls
-    .filter(ctrl => ctrl.value.enabled === true)
-    .map(ctrl => ctrl.value.key);
+    //  const selectedKeys = this.subPermissionArray.controls
+    // .filter(ctrl => ctrl.value.enabled === true)
+    // .map(ctrl => ctrl.value.key);
 
-    const commaSeparated = selectedKeys.join(',');
+    // const commaSeparated = selectedKeys.join(',');
     const payload ={
       ...formValue,
-      subPermission : commaSeparated
     }
     console.log(payload)
-    // this.switchService.createPermission(payload).subscribe({
-    //   next: (res) => {
-    //     this.toastr.success('Permission created successfully');
-    //     this.permissionFormSubmitted = false;
-    //     modal.close();
-    //     this.getAllPermissions();
-    //   }
-    // });
+    this.switchService.createPermission(payload).subscribe({
+      next: (res) => {
+        this.toastr.success('Permission created successfully');
+        this.permissionFormSubmitted = false;
+        modal.close();
+        this.getAllPermissions();
+      }
+    });
   }
 
   getAllPermissions() {
@@ -2200,6 +2206,13 @@ selectedPermissions: any[] = [];
           this.permissionName = res[0].name;
           this.permissionDescription = res[0].description;
         }
+        this.userPermissions = res.map(item => ({
+          permission: item.name,
+          subPermissions: item.subPermission
+            ? item.subPermission.split(',')  // convert comma string to array
+            : []
+        }));
+        console.log('userpermiussions',this.userPermissions);
       }
     });
   }
@@ -2363,9 +2376,53 @@ selectedPermissions: any[] = [];
     this.selectedPermission = id
   }
 
-  onPermissionChange(id: number) {
-    this.selectedPermissionRole = id;
+  onPermissionChange(selectP: any) {
+  this.selectedPermissionRole = selectP;
+  this.selectedPermissionId = selectP.id;
+  console.log('assignedpermisisons',this.selectedPermissionId);
+
+  const selected = this.permissionList.find((p: any) => p.id === this.selectedPermissionId);
+  console.log('selcted123445',selected);
+  if (!selected) return;
+  console.log('selcted',selected);
+
+  // this.subPermissionArray.clear();
+
+  const permissionName = selected.name; 
+
+  const features = this.allPermissions[permissionName as keyof typeof this.allPermissions] || [];
+
+  features.forEach(feature => {
+    this.subPermissionArray.push(
+      this.fb.group({
+        key: feature,
+        label: this.formatLabel(feature),
+        enabled: false
+      })
+    );
+  });
   }
+
+
+  
+  // onPermissionChange(selectP: any) {
+  // this.selectedPermissionRole = selectP.id;
+  // console.log('id',selectP.id);
+
+  // const selected = this.permissionList.find((p:any) => p.id === selectP.id);
+  // console.log('selecte ',this.permissionList);
+  // console.log('selected id',selected);
+  // const sub = selected?.subPermission || '';
+
+  // if (sub && sub.length > 0) {
+  //   this.selectedSubPermissions = sub.split(',').map((s:any) => s.trim());
+  //   this.showSubPermissionDropdown = true;
+  // } else {
+  //   this.selectedSubPermissions = [];
+  //   this.showSubPermissionDropdown = false;
+  // }
+  // }
+
   getSavedDepartmentRoleById(companyCode: string, selectedId: any) {
     return this.assignedRoleLst.find(
       (role) => role.companyCode === companyCode && role.departmentId === selectedId
@@ -2398,6 +2455,11 @@ selectedPermissions: any[] = [];
     let companyCode = JSON.parse(this.userData)?.companyCode;
     let selectedId = this.selectedPermission.id;
     const departmentRole = this.getSavedDepartmentRoleById(companyCode, selectedId);
+      const selectedKeys = this.subPermissionArray.controls
+    .filter(ctrl => ctrl.value.enabled === true)
+    .map(ctrl => ctrl.value.key);
+
+    const commaSeparated = selectedKeys.join(',');
     const payload = {
       depRole: this.selectedPermission.id,
       permissionRole: this.assignPermissionForm.value.permissionRole,
@@ -2407,7 +2469,9 @@ selectedPermissions: any[] = [];
       companyName: JSON.parse(this.userData)?.companyName,
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type,
+      subPermission :commaSeparated,
     }
+    console.log('payload',payload);
     this.switchService.assignPermissionToRole(payload).subscribe({
       next: (res) => {
         this.toastr.success('assigned successfully');
@@ -2516,6 +2580,7 @@ selectedPermissions: any[] = [];
 
   adminAccessAllUsers() {
     const companyCode = JSON.parse(this.userData).companyCode;
+    const loggedEmail = localStorage.getItem('userEmail');
     this.switchService.adminAccessAllUsers(companyCode).subscribe({
       next: (res: any) => {
         if (res) {
@@ -2542,12 +2607,29 @@ selectedPermissions: any[] = [];
   isRoleOpen(deptIndex: number, roleIndex: number): boolean {
     return this.openRoles[`${deptIndex}-${roleIndex}`];
   }
-  getTotalPermissions(dept: any): number {
-    if (!dept?.roles) return 0;
-    return dept.roles.reduce(
-      (sum: number, role: any) => sum + ((role.permissions?.length ?? 0)),
-      0
-    );
+  
+ getTotalPermissions(dep: any): number {
+  if (!dep || !dep.roles) return 0;
+
+  let total = 0;
+
+  console.log("DEPARTMENT DATA:", dep);
+
+  dep.roles.forEach((role: any) => {
+    const permObject = role.permissions;   // permissions object
+
+    if (permObject && typeof permObject === 'object') {
+      Object.values(permObject).forEach((value: any) => {
+        if (typeof value === 'string' && value.trim() !== '') {
+          const permissions = value.split(',').map(p => p.trim()).filter(p => p);
+          console.log("permissions:", permissions);
+          total += permissions.length;
+        }
+      });
+    }
+  });
+
+  return total;
   }
 
   getTotalUsers(dept: any): number {
@@ -2555,51 +2637,67 @@ selectedPermissions: any[] = [];
   }
 
   buildDepartmentView() {
-    const deptMap = new Map<string, any>();
+  const deptMap = new Map<string, any>();
+  this.userPermissionSet.clear();
+  for (const user of this.adminAccessUsersLst || []) {
+    for (const dept of user.departments || []) {
+      if (!deptMap.has(dept.departmentName)) {
+        deptMap.set(dept.departmentName, {
+          departmentName: dept.departmentName,
+          roles: [],
+          users: new Set()
+        });
+      }
+      const deptEntry = deptMap.get(dept.departmentName);
+      deptEntry.users.add(user.userEmail);
+      for (const role of dept.roles || []) {
+         for (const [key, value] of Object.entries(role.permissions || {})) {
 
-    for (const user of this.adminAccessUsersLst || []) {
-      for (const dept of user.departments || []) {
-        if (!deptMap.has(dept.departmentName)) {
-          deptMap.set(dept.departmentName, {
-            departmentName: dept.departmentName,
-            roles: [],
-            users: new Set()
+          this.userPermissionSet.add(key); 
+          const val = String(value);
+          val.split(',').forEach((sub: string) => {
+            if (sub.trim()) this.userPermissionSet.add(sub.trim());
           });
         }
+        const existingRole = deptEntry.roles.find(
+          (r: any) => r.roleName === role.roleName
+        );
+        let safePermissions: string[] = [];
 
-        const deptEntry = deptMap.get(dept.departmentName);
-        deptEntry.users.add(user.userEmail);
-
-        for (const role of dept.roles || []) {
-          const existingRole = deptEntry.roles.find(
-            (r: any) => r.roleName === role.roleName
-          );
-
-          const safePermissions = Array.isArray(role.permissions)
-            ? role.permissions
-            : [];
-
-          if (existingRole) {
-            for (const perm of safePermissions) {
-              if (!existingRole.permissions.includes(perm)) {
-                existingRole.permissions.push(perm);
-              }
+        if (role.permissions && typeof role.permissions === "object") {
+          Object.values(role.permissions).forEach((value: any) => {
+            if (typeof value === "string") {
+              safePermissions.push(
+                ...value
+                  .split(",")
+                  .map(p => p.trim())
+                  .filter(p => p)
+              );
             }
-          } else {
-            deptEntry.roles.push({
-              roleName: role.roleName,
-              permissions: [...safePermissions]
-            });
+          });
+        }
+        if (existingRole) {
+          for (const perm of safePermissions) {
+            if (!existingRole.permissions.includes(perm)) {
+              existingRole.permissions.push(perm);
+            }
           }
+        } else {
+          deptEntry.roles.push({
+            roleName: role.roleName,
+            permissions: [...safePermissions]
+          });
         }
       }
     }
-
-    this.departmentListTable = Array.from(deptMap.values()).map((d) => ({
-      ...d,
-      users: Array.from(d.users)
-    }));
   }
+  const finalData = Array.from(deptMap.values()).map(d => ({
+        ...d,
+        users: Array.from(d.users)  
+    }));
+  this.departmentListTable =finalData ;
+}
+
 
   cutListSubmit(modal:any) {
     this.cutListSubmitted = true;
@@ -2685,13 +2783,13 @@ selectedPermissions: any[] = [];
 
   
   get subPermissionArray() {
-    return this.createPermissionForm.get('subPermission') as FormArray;
+    return this.assignPermissionForm.get('subPermission') as FormArray;
   }
 
   onPermissionSelect(selected: any) {
     const value = (selected?.name || selected)?.toUpperCase() as PermissionName;
     const subPermissionArray = this.createPermissionForm.get('subPermission') as FormArray;
-    subPermissionArray.clear();
+    // subPermissionArray.clear();
     if (!this.allPermissions[value]) return;
     this.allPermissions[value].forEach(feature => {
       subPermissionArray.push(
@@ -2709,5 +2807,56 @@ selectedPermissions: any[] = [];
       .replace(/_/g, ' ')
       .replace(/\b\w/g, c => c.toUpperCase());
   }
+  
+  get editsubPermissionArray(): FormArray {
+    return this.editSubpermissionForm.get('subPermission') as FormArray;
+  }
+
+  editSubpermmissions(permission: any, content115: any) {
+
+  console.log("Selected Permission:", permission);
+  this.selectedPermissionName = permission.permissionName;
+  this.editsubPermissionArray.clear();
+  const assignedList = permission.subPermission
+    ? permission.subPermission.split(',').map((p: string) => p.trim())
+    : [];
+const fullList = this.allPermissions[permission?.permissionName as PermissionName] ?? [];
+
+  fullList.forEach((sub:any) => {
+    this.editsubPermissionArray.push(
+      this.fb.group({
+        label: [sub],
+        enabled: [assignedList.includes(sub)]
+      })
+    );
+  });
+  this.modalService.open(content115, { size: 'lg' });
+}
+ updateSubPermissions(modal: any) {
+    const permissionId = this.permissionId;
+    const permissionName = this.permissionName;
+    const description = this.permissionDescription;
+     const selectedKeys = this.editsubPermissionArray.controls
+    .filter(ctrl => ctrl.value.enabled === true)
+    .map(ctrl => ctrl.value.label);
+    const commaSeparated = selectedKeys.join(',');
+    const subPermission = commaSeparated
+    console.log('update subpermission api payload',permissionId,subPermission);
+
+    this.switchService.updateSubPermission(permissionId,subPermission).subscribe({
+      next: (res: any) => {
+        this.toastr.success('SubPermissions updated successfully');
+        this.getAllPermissions();
+        modal.close()
+      },
+    });
+  }
+
+  hasPermission(key: string): boolean {
+  return this.userPermissionSet.has(key);
+}
+
+
+
 
 }

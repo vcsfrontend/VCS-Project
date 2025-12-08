@@ -235,7 +235,7 @@ export class SwitherService {
 
   createPermission(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/permissions/createPermission`, data); }
   getPermissions(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/permissions/listPermissions?companyCode=${companyCode}`); }  
-  updatePermission(id:any,name:any,description :any,subPermission :any): Observable<any> { return this.http.put(`${this.apiUrl}api/permissions/updatePermission/${id}?name=${name}&description=${description}?subPermission=${{subPermission}}`,"");} 
+  updatePermission(id:any,name:any,description :any,subPermission :any): Observable<any> { return this.http.put(`${this.apiUrl}api/permissions/updatePermission/${id}?name=${name}&description=${description}`,"");} 
   deletePermission(id :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/permissions/deletePermission/${id}`); }  
 
   assignRoleToDepartment(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/department-roles/assignRoleToDepartment`, data); }
@@ -253,6 +253,8 @@ export class SwitherService {
 
     return this.http.get(url);
   }
+  updateSubPermission(id:any,subPermission :any): Observable<any> { return this.http.put(`${this.apiUrl}api/role-permissions/updateRolePermission/${id}?subPermission=${subPermission}`,"");} 
+
   deleteAssignedPermission(deptRoleId  :any,permissionId :any,companyCode :any): Observable<any> { return this.http.delete(`${this.apiUrl}api/role-permissions/removePermissionFromDeptRole?deptRoleId=${deptRoleId}&permissionId=${permissionId}&companyCode=${companyCode}`); }  
 
 
