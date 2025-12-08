@@ -3271,6 +3271,7 @@ export class LeadsComponent extends BaseComponent {
       email: this.userEmail,
       type: this.userType,
       autoCreationRequired: autoProjectCreation,
+      username : this.userName
     };
     this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({

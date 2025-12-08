@@ -1855,16 +1855,6 @@
                 </div>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" placeholder="Enter Username"
-                    formControlName="username" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['username'].errors }">
-                <div *ngIf="leadCompletionsubmitted && j['username'].errors" class="invalid-feedback">
-                    <span *ngIf="j['username'].errors['required']">
-                        username  is required.
-                    </span>
-                </div>
-            </div>
-            <div class="col-xl-6 col-lg-6 col-md-6">
                 <label for="contact" class="form-label">Contact</label>
                 <input type="text" class="form-control" id="contact" placeholder="Enter Contact Number"
                     formControlName="mobileNumber" (keypress)="allowOnlynum($event)" maxlength="10" [ngClass]="{ 'is-invalid': leadCompletionsubmitted && j['mobileNumber'].errors }">

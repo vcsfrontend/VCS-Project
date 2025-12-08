@@ -84,6 +84,7 @@ export class ProposalComponent extends BaseComponent {
   skipProposalForm: boolean = false; minDateTime: string = '';
   showShutterFields: boolean = false; dimensionsList: any[] = []; currentStep: number = 1;
   step1Data: any[] = []; step2Data: any = null; leadData: any; selectedRoom: string = 'All';
+  proposalSubmitted : boolean = false;
   // selectedColumns: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
@@ -1121,9 +1122,14 @@ export class ProposalComponent extends BaseComponent {
       this.toastr.warning("Please select at least one Element");
       return;
     }
+    this.proposalSubmitted = true;
+    if(this.proposalForm.invalid){
+      this.toastr.warning('please fill the all fields');
+    }
     const selectedData: any = {};
     const seenBoqIds = new Set<number>();
     let totalAmount = 0;
+    
     Object.keys(this.boqDataSources).forEach(key => {
       const data = this.boqDataSources[key]?.data || [];
       const filtered = data.filter((item: any) => this.selectedElement?.includes(item.boqId));
@@ -1226,7 +1232,6 @@ export class ProposalComponent extends BaseComponent {
       },
     });
   }
-
   private createProposal(proposalPayload: any, modal: any) {
     this.switchService.createProposal(proposalPayload).subscribe({
       next: (res: any) => {
