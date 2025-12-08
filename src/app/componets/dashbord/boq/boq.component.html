@@ -238,7 +238,6 @@
                                             </div>
                                         </div>
                                     </div>
-                
                                 </div>
                             </div>
                         </div>
@@ -247,18 +246,19 @@
                         <div *ngIf="!isLoading" class="card custom-card no-top-radius" style="min-height: 415px; justify-content: center;">
                             <div class="text-center d-flex flex-column justify-content-center align-items-center">
                                 <img src="assets/images/recceimage.jpeg" class="no-data-img mb-3" />
-                                <!-- <svg width="85" height="85" viewBox="0 0 24 24" fill="none" class="mb-3">
-                                    <rect x="7" y="3" width="10" height="16" rx="2" stroke="#d00000" stroke-width="2" />
-                                    <circle cx="17" cy="17" r="3" stroke="#d00000" stroke-width="2" />
-                                    <path d="M17 15V19M15 17H19" stroke="#d00000" stroke-width="2" stroke-linecap="round" />
-                                    <path d="M4 14V17C4 18.7 5.3 20 7 20H12" stroke="#495057" stroke-width="2" stroke-linecap="round" />
-                                </svg> -->
-                                <p class="text-muted mb-3">
-                                    Start tracking your project stages by creating a Recce.
-                                </p>
-                                <button class="btn btn-primary px-3" (click)="openModal2(recceContent2)">
-                                    <i class="bi bi-plus-circle me-1"></i> Create Recce
-                                </button>
+                                <div *ngIf="userRole === 'ADMIN'">
+                                    <p class="text-muted mb-3">
+                                        Start tracking your project stages by creating a Recce.
+                                    </p>
+                                    <button class="btn btn-primary px-3" (click)="openModal2(recceContent2)">
+                                        <i class="bi bi-plus-circle me-1"></i> Create Recce
+                                    </button>
+                                </div>
+                                <div *ngIf="userRole === 'USER'">
+                                    <p class="text-muted mb-3">
+                                        Recce not available yet — it will appear here once the admin creates it.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </ng-template>
@@ -275,7 +275,21 @@
                     <span class="step-line"></span>
                 </button>
                 <ng-template ngbNavContent>
-                    <div class="col-xl-12">
+                    <div *ngIf="isLoadingAssignProjects" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div *ngIf="!isLoadingAssignProjects && showNoData()" class="card custom-card no-top-radius" style="min-height: 415px; justify-content: center;">
+                            <div class="text-center d-flex flex-column justify-content-center align-items-center">
+                                <div >
+                                    <p class="text-dark fw-semibold fs-14">
+                                        Design is not available yet — it will appear here once the admin assigns it.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    <div *ngIf="!isLoadingAssignProjects && showData()">
                         <div class="card custom-card no-top-radius" *ngFor="let project of filteredDesignerData; let i = index">
                             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0 fw-bold">Project Details</h6>
@@ -285,7 +299,7 @@
                                     {{ project.projectId | slice: 0:14 }}
                                 </a>
                             </div>
-                            <div class="card-body p-4" style="min-height: 360px;"> 
+                            <div class="card-body p-4" style="min-height: 360px;">
                                 <div *ngFor="let project of filteredDesignerData; let i = index">
                                     <div class="row g-4">
                                         <div class="col-lg-4 col-md-6">
@@ -347,8 +361,10 @@
                                             </div>
                                             <div class="info-item mb-2">
                                                 <small class="text-muted d-block">Design Link</small>
-                                                <button class="btn btn-primary btn-sm mt-1" *ngIf="project.assignedDesigner === userEmail || userRole === 'ADMIN'"
-                                                    [disabled]="!project.designUrl" [ngbTooltip]="project.designUrl ? 'Open Design' : 'Not Assigned'"
+                                                <button class="btn btn-primary btn-sm mt-1"
+                                                    *ngIf="project.assignedDesigner === userEmail || userRole === 'ADMIN'"
+                                                    [disabled]="!project.designUrl"
+                                                    [ngbTooltip]="project.designUrl ? 'Open Design' : 'Not Assigned'"
                                                     (click)="project.designUrl && openDesignLink(project.designUrl)">
                                                     <i class="bi bi-box-arrow-up-right me-1"></i>
                                                     Open Design
@@ -3058,16 +3074,14 @@
                                 </ng-select>
                                 <div *ngIf="recceSubmitted && f['recceStakeHolders'].errors" class="invalid-feedback">
                                     <span *ngIf="f['recceStakeHolders']?.errors?.['required']">
-                                        Recce Stakeholders are required
+                                        Recce Stakeholders is required
                                     </span>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Client POC</label>
-                                <ng-select [items]="userList" bindLabel="email"
-                                           formControlName="recceClientPoc"
-                                           placeholder="Select user"
-                                           [ngClass]="{'is-invalid': recceSubmitted && f['recceClientPoc'].errors}">
+                                <ng-select [items]="userList" bindLabel="email" formControlName="recceClientPoc" placeholder="Select user"
+                                    [ngClass]="{'is-invalid': recceSubmitted && f['recceClientPoc'].errors}">
                                 </ng-select>
                                 <div *ngIf="recceSubmitted && f['recceClientPoc'].errors" class="invalid-feedback">
                                     <span *ngIf="f['recceClientPoc']?.errors?.['required']">
