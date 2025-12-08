@@ -93,7 +93,7 @@
 
 <div class="col-xl-12 pt-3">
   <div class="card custom-card">
-    <div class="card-header justify-content-between">
+    <div class="card-header justify-content-between border-bottom-0">
       <div class="card-title col-lg-4">All Campaigns</div>
       <div class="col-md-4 col-xl-4 col-xxl-4 col-lg-4 col-sm-6 d-flex">
         <!-- <div class="input-group custom-input-group">
@@ -209,13 +209,9 @@
       </div>
     </ng-container>
     <ng-template #noData>
-    
-      <!-- 🔹 Show loader while fetching -->
       <div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="min-height: 300px;">
         <div class="spinner-border text-primary" role="status"></div>
       </div>
-    
-      <!-- 🔹 Show empty message only AFTER loading, if list is empty -->
       <div *ngIf="!isLoading" class="card custom-card d-flex justify-content-center align-items-center text-center"
         style="min-height: 300px;">
         <div>

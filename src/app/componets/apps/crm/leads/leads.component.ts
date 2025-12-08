@@ -388,7 +388,6 @@ export class LeadsComponent extends BaseComponent {
       this.LeadForm(this.campaignId);
       this.getFetchLeadData();
       this.getCrmStages();
-      this.getStatusCount();
       this.getCampaignData();
       this.getlistFormTemplate();
       this.getAllEmailTemplates();
@@ -1860,15 +1859,13 @@ export class LeadsComponent extends BaseComponent {
           const nextLead = sortedByFollowUpDate.length
             ? sortedByFollowUpDate[0]
             : null;
-            
            this.updateColumns();
-          this.getStatusCount();
+          if (this.crmRole === 'ADMIN') {
+            this.getStatusCount();
+          }
           this.taskPriorityList = res.taskPriorityList || [];
           this.uploadLeads = false;
         }
-        // error: (error) => {
-        //   this.toastr.error(error.statusText || 'Server Error');
-        // },
       });
   }
   
