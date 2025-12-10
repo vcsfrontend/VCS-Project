@@ -106,17 +106,16 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   departmentListTable: any[] = []; optimizerCuts: any[] = []; submittedModels: string[] = [];fullCutListItems :any[]=[];
   isCutListFull : boolean = false;existingCuts: any[] = []; originalCutItems : any[]=[];
   userPermissions : any[]=[];selectedrole: number = 0;userPermissionSet = new Set<string>();
-selectedSubPermissions: string[] = [];selectedPermissionName : string ='';
-showSubPermissionDropdown = false;editSubpermissionForm !:FormGroup;
+  selectedSubPermissions: string[] = [];selectedPermissionName : string ='';
+  showSubPermissionDropdown = false;editSubpermissionForm !:FormGroup;
   codeLabels: { [key: string]: string } = { AK_PA: 'Panel', AK_SH: 'Shutter'};
   
   allPermissions: Record<PermissionName, string[]> = {
-    CRM: ['deals_delete', 'deals_edit', 'deals_reports', 'deals_stage_status','leads_add','leads_delete','deals_add'],
+    CRM: ['deals_delete', 'deals_edit', 'deals_stage_status','leads_add','leads_delete','deals_add','leads_edit',],
     Projects :['project_create','project_delete','project_update'],
     SALES: ['products_add', 'products_edit'],
     HR: ['employee_add', 'employee_edit']
   };
-
 
 selectedPermissions: any[] = [];
   userForm: FormGroup = this.fb.group({

@@ -13,7 +13,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AppStateService } from '../../shared/services/app-state.service';
 import { BehaviorSubject } from 'rxjs';
 import { NavService } from '../../shared/services/navservice';
-
+import { SwitherService } from '../../shared/services/swither.service';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -35,7 +35,7 @@ export class LoginComponent {
   // public showPassword: boolean = false;
 
   // toggleClass = 'ri-eye-off-line';
-  active="Angular"; btnDisable = false; 
+  active="Angular"; btnDisable = false; userData :any;
 
   public togglePassword() {
     // this.showPassword = !this.showPassword;
@@ -58,7 +58,8 @@ constructor(
   private firebaseService: FirebaseService,
   private toastr: ToastrService ,
   private appStateService: AppStateService,
-  private navSvc : NavService
+  private navSvc : NavService,
+  public switchService: SwitherService
 ) {
   // AngularFireModule.initializeApp(environment.firebase);
 
@@ -67,6 +68,8 @@ constructor(
   // this.elementRef.nativeElement.ownerDocument.documentElement;
 // htmlElement.removeAttribute('style');
   //User Tools
+      this.userData = localStorage.getItem('userDetails');
+
 
 }
 ngOnInit(): void {
@@ -144,6 +147,7 @@ login() {
           this.navSvc.isCRMApplicable$.next(res.crm);
           this.navSvc.adonaiRole$.next(res.adonaiRole);
           this.navSvc.crmRole$.next(res.crmRole)
+          this.getUsersAccess(this.email)
         this.router.navigate(['/pages/profile']);
       }
     else{
@@ -242,4 +246,50 @@ preventCopyPaste(event: ClipboardEvent): void {
   // this.toastr.error('Copy, paste, and cut actions are disabled for security reasons.','signup', {
   //   timeOut: 3000, positionClass: 'toast-top-right' });
 }
+
+getUsersAccess(email:string) {
+    const user = JSON.parse(this.userData || '{}');   
+   
+    if (!email) {
+      console.warn("User email not found — cannot load access.");
+      return;
+    }
+    if (!email) return;
+    this.switchService.getUserAccess(email).subscribe({
+       next: (res: any) => {
+    console.log("Access API:", res);
+
+    const formatted: any = {};
+
+    // Loop departments
+    res.departments.forEach((dept: any) => {
+      // Loop roles
+      dept.roles.forEach((role: any) => {
+
+        const perms = role.permissions; // this is an object
+
+        // Example perms = { Projects: "project_delete", CRM: "leads_add,deals_add" }
+
+        Object.keys(perms).forEach(permissionName => {
+          
+          // Store main permission
+          formatted[permissionName] = true;  
+
+          const subString = perms[permissionName]; // e.g. "leads_add,deals_add"
+
+          const subList = subString.split(',');  // convert to array
+
+          subList.forEach((sub:any) => {
+            formatted[`${permissionName}_${sub}`] = true;
+          });
+        });
+
+      });
+    });
+
+    localStorage.setItem("userAccess", JSON.stringify(formatted));
+    console.log("Formatted Access Saved:", formatted);
+  }
+    });
+  }
 }

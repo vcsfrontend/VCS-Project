@@ -30,10 +30,12 @@ export class SidebarComponent implements AfterViewInit {
   adonaiRole: string='';
   crmRole: string = '';
   screenWidth!: number;
+  access : any = {};
   public windowSubscribe$!: Subscription;
   options = { autoHide: false, scrollbarMinSize: 100 };
   public menuItems!: Menu[];
   public menuitemsSubscribe$!: Subscription;
+  
   constructor(
     private navServices: NavService,
     public router: Router,
@@ -42,8 +44,6 @@ export class SidebarComponent implements AfterViewInit {
     private cd: ChangeDetectorRef,
     public switchService: SwitherService, private toastr: ToastrService,) {
     let html = this.elementRef.nativeElement.ownerDocument.documentElement;
-    
-
   }
 
   clearNavDropdown() {
@@ -94,8 +94,10 @@ export class SidebarComponent implements AfterViewInit {
     if (document.querySelector('html')?.getAttribute('data-nav-layout') == 'horizontal' && window.innerWidth >= 992) { this.clearNavDropdown(); }
 
   }
+  
 
   buildMenu(): void {
+    this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
     this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
       items.forEach((item) => {
       switch (item.title) {
@@ -104,6 +106,8 @@ export class SidebarComponent implements AfterViewInit {
           break;
 
         case 'CRM':
+          // item.isVisible = !!this.access.CRM;  
+          // break;
         // case 'Customer':
         case 'Deals':
         // case 'clients':
@@ -116,6 +120,8 @@ export class SidebarComponent implements AfterViewInit {
         case 'Optimization':
         case 'Projects':
           item.isVisible = this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER';
+
+          // item.isVisible = !!this.access.Projects;
           break;
 
         // case 'Dashboard':
@@ -126,7 +132,6 @@ export class SidebarComponent implements AfterViewInit {
         // case 'Reports':
         // case 'support':
         case 'optimizer':
-        
         case 'Tasks':
         case 'Dashboard':
         case 'Knowledge':
@@ -149,10 +154,10 @@ export class SidebarComponent implements AfterViewInit {
         default:
           item.isVisible = false;
       }
-      if ((this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER') &&
-        (this.crmRole === 'ADMIN' || this.crmRole === 'USER')) {
-      item.isVisible = true;
-    }
+    //   if ((this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER') &&
+    //     (this.crmRole === 'ADMIN' || this.crmRole === 'USER')) {
+    //   item.isVisible = true;
+    // }
       });
       this.menuItems = items;
     });
