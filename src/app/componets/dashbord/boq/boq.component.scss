@@ -152,14 +152,31 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 }
 
 .offcanvas.custom-offcanvas {
-  --bs-offcanvas-width: 1100px; 
+  --bs-offcanvas-width: 90vw; 
+  max-width: 1100px; 
 }
-.offcanvas.custom-offcanvas.show:not(.hiding),
-.offcanvas.custom-offcanvas.showing {
-  transform: none !important;
-  min-width: 1100px !important;
-  max-width: 1100px !important;
+
+@media (min-width: 1024px) {
+  .offcanvas.custom-offcanvas {
+    --bs-offcanvas-width: 65vw;
+    max-width: 1200px;
+  }
 }
+
+@media (min-width: 1440px) {
+  .offcanvas.custom-offcanvas {
+    --bs-offcanvas-width: 55vw;
+    max-width: 1300px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .offcanvas.custom-offcanvas {
+    --bs-offcanvas-width: 50vw;
+    max-width: 1400px;
+  }
+}
+
 
 .kt {
   cursor: pointer;
