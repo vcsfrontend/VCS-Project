@@ -534,8 +534,8 @@
                         <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
                             ({{calculateDateDifference(element.projectEndDate)}}) </td>
                     </ng-container>
-                    <ng-container matColumnDef="assign">
-                        <th mat-header-cell *matHeaderCellDef>Asign To</th>
+                    <ng-container matColumnDef="assign" *ngIf="userRole === 'ADMIN'">
+                        <th mat-header-cell *matHeaderCellDef>Asign To User</th>
                         <td mat-cell *matCellDef="let element">
                             <button class="btn btn-primary btn-sm shadow d-flex align-items-center justify-content-center px-3 px-1"
                             (click)="assignToUser(content18,element)">

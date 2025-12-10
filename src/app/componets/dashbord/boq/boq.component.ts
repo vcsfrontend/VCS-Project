@@ -265,6 +265,9 @@ export class BoqComponent extends BaseComponent {
     }
 
     openRights4(content4: any) {
+        this.getProjectConfig();
+        this.getUsers();
+        this.getMarginData();
         this.modalService.open(content4, { centered: true, size: 'md' });
     }
 
@@ -754,6 +757,7 @@ export class BoqComponent extends BaseComponent {
 
             case '2':
                 this.getAssignProjects();
+                this.getUsers();  
                 break;
 
             case '3':
@@ -2829,7 +2833,6 @@ closeAllDropdowns() {
             type: this.userType,
             inProposal: item.inProposal ?? '',
         }));
-        console.log("FINAL PAYLOAD:", payload);
         this.switchService.updateElementData(payload).subscribe({
           next: (res: any) => {
             if (res?.status === true) {

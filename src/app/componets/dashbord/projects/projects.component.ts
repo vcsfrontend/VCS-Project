@@ -64,7 +64,7 @@ export type ChartOptions = {
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['sourceFlag','slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate', 'assign'  ];
+    'projectArea', 'projectStartDate', 'projectEndDate',  ];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; recceSubmitted : boolean = false;
@@ -81,6 +81,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   userName: string = this.userData ? this.userData.username : '';
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: any = this.userData ? this.userData.type : '';
+  userRole: string = this.userData ? this.userData?.adonaiRole : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userPhoneNumber: any ;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;
   showOtherDesignerFields : boolean =false;showOtherRelationshipFields: boolean=false;
@@ -160,12 +161,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       projectName: element.projectName
     });
     this.updateProjectForm.patchValue({
+      projectId: element.projectId, 
       projectStage: element.projectStage,
       projectArea: element.projectArea
-    })
+    });
     this.modalService.open(content18, { size: 'lg', centered: true });
     this.getRecceData();
-  }
+}
+
 
   openLg2(content13: any) {
     this.modalService.open(content13, { size: 'lg', centered: true });
@@ -221,13 +224,13 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   ngOnInit(): void {
+    if (this.userRole === 'ADMIN') {
+      this.displayedColumns.push('assign');
+    }
     this.getAdonai();
-    this.getProjectList();
     this.getLst(); this.getMatCardLst();    this.getUsers();    this.getUserInfo(this.userEmail);
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
-    this.getMarginData();
-    this.getProjectConfig();
     this.createProjectForm = this.fb.group({
       projectName: ['', Validators.required],
       clientName: ['', Validators.required],
@@ -1668,43 +1671,43 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     }
   }
 
-  getProjectList() {
-    this.startLoading();
-    const userEmail = JSON.parse(this.userDetails)?.email;
-    if (!userEmail) {
-      this.toastr.error("User email not found.");
-      return;
-    }
-    this.switchService.ProjectDataList(userEmail).subscribe({
-      next: (res: any) => {
-        if (res?.values && Array.isArray(res.values)) {
-          this.projectList = res.values.map((project: any) => ({
-            area: project.area || "N/A",
-            modifiedTime: project.modifiedTime || "N/A",
-            city: project.city || "N/A",
-            created: project.created || "N/A",
-            planPic: project.planPic || "N/A",
-            specName: project.specName || "N/A",
-            srcArea: project.srcArea || "N/A",
-            name: project.name || "Unnamed Project",
-            designId: project.designId || "N/A",
-            planId: project.planId || "N/A",
-            commName: project.commName || "N/A",
-            coverPic: project.coverPic || "N/A",
-            status: project.status || "Unknown",
-            tagId: project.tagId || "N/A",
-            designPanoUrl: project.designPanoUrl || "N/A",
-          }));
+  // getProjectList() {
+  //   this.startLoading();
+  //   const userEmail = JSON.parse(this.userDetails)?.email;
+  //   if (!userEmail) {
+  //     this.toastr.error("User email not found.");
+  //     return;
+  //   }
+  //   this.switchService.ProjectDataList(userEmail).subscribe({
+  //     next: (res: any) => {
+  //       if (res?.values && Array.isArray(res.values)) {
+  //         this.projectList = res.values.map((project: any) => ({
+  //           area: project.area || "N/A",
+  //           modifiedTime: project.modifiedTime || "N/A",
+  //           city: project.city || "N/A",
+  //           created: project.created || "N/A",
+  //           planPic: project.planPic || "N/A",
+  //           specName: project.specName || "N/A",
+  //           srcArea: project.srcArea || "N/A",
+  //           name: project.name || "Unnamed Project",
+  //           designId: project.designId || "N/A",
+  //           planId: project.planId || "N/A",
+  //           commName: project.commName || "N/A",
+  //           coverPic: project.coverPic || "N/A",
+  //           status: project.status || "Unknown",
+  //           tagId: project.tagId || "N/A",
+  //           designPanoUrl: project.designPanoUrl || "N/A",
+  //         }));
 
-          this.eliteDataSource.data = this.projectList;
-          if (this.elitePaginator) {
-            this.elitePaginator.length = this.projectList.length;
-          }
-        }
-        this.stopLoading();
-      },
-    });
-  }
+  //         this.eliteDataSource.data = this.projectList;
+  //         if (this.elitePaginator) {
+  //           this.elitePaginator.length = this.projectList.length;
+  //         }
+  //       }
+  //       this.stopLoading();
+  //     },
+  //   });
+  // }
 
 
   get i() {
@@ -2023,31 +2026,6 @@ downloadButtons: { label: string; url: string }[] = [];
     }
   }
 
-  getProjectConfig(){
-    let payload = {
-      companycode: JSON.parse(this.userData).companyCode,
-      email: JSON.parse(this.userData).email,
-      type: JSON.parse(this.userData).type
-    };
-    this.switchService.fetchProjectConfig(payload).subscribe({
-      next: (res: any) => {
-        if (res) {
-           const configs: string[] = [];
-          for (let i = 1; i <= 10; i++) {
-            const value = res[`f${i}`];
-            if (value) configs.push(value);
-          }
-          this.projectConfigList = configs;
-          this.quotationForm.patchValue({
-            quotationNumber: res.quotationNumber
-          });
-        } else {
-          this.toastr.error(res.message);
-        }
-      }
-    });
-  }
-
   allowOnlynum(event: KeyboardEvent) {
     const allowedChars = '0123456789.';
     const inputChar = event.key;
@@ -2135,29 +2113,6 @@ downloadButtons: { label: string; url: string }[] = [];
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    });
-  }
-
-  getMarginData(){
-    let payload = {
-      companycode: JSON.parse(this.userData).companyCode,
-      email: JSON.parse(this.userData).email,
-      type: JSON.parse(this.userData).type
-    };
-    this.switchService.fetchDynamicMargin(payload).subscribe({
-      next: (res: any) => {
-        if (res) {
-          const configs: { name: string, percent: number }[] = [];
-          for (let i = 1; i <= 10; i++) {
-            const name = res[`f${i}`];
-            const percent = res[`f${i}Percent`];
-            if (name) {
-              configs.push({ name, percent: percent || 0 });
-            }
-          }
-          this.projectMarginList = configs;
-        }
-      }
     });
   }
 

@@ -196,7 +196,7 @@
                                                                             </ul>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="d-flex justify-econtent-between mt-2 mb-2">
+                                                                    <div class="d-flex justify-content-between mt-2 mb-2">
                                                                          <div class="card-title text-dark large fs-15" (click)="recce(recceView, recce)">{{ recce.recceStage }} Photos & videos     
                                                                          </div>
                                                                         <a class="text-primary fw-semibold small d-inline-flex align-items-center gap-1 cu"
@@ -2530,7 +2530,7 @@
 <ng-template #content4 let-modal>
   <form [formGroup]="proposalForm" (ngSubmit)="proposalFormSubmit(modal)">
     <div class="modal-header justify-content-center">
-      <h6 class="modal-title">Create Proposal</h6>
+      <h6 class="modal-title"><strong>Create Proposal</strong></h6>
       <button type="button" class="btn-close" (click)="modal.dismiss('Cross click')" aria-label="Close"></button>
     </div>
     <div class="modal-body overflowImportant">
@@ -2575,8 +2575,8 @@
                         <div *ngIf="g['clientEmail'].errors['email']">Enter a valid email address.</div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
+                <div class="modal-footer p-0 pt-3 pe-4">
+                    <button class="btn btn-primary" type="button" (click)="nextStep()">Next</button>
                 </div>
             </div>
         </div>
@@ -2685,7 +2685,7 @@
                     </div>
                 </div>
                 <div class="col-xl-6">
-                    <label for="projectAddress" class="form-label">Others</label>
+                    <label for="projectAddress" class="form-label">Other Cost</label>
                     <input type="text" class="form-control" id="projectAddress" formControlName="others" placeholder="Enter Others"
                         [ngClass]="{ 'is-invalid': submitted && g['others'].errors }" (keypress)="allowOnlynum($event)">
                     <div *ngIf="submitted && g['others'].errors" class="invalid-feedback">
@@ -2693,9 +2693,9 @@
                         <div *ngIf="g['others'].errors['pattern']">Only numbers are allowed.</div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary me-2 ct" type="button" (click)="prevStep()">Back</button>
-                    <button class="btn btn-primary ct" type="button" (click)="nextStep()">Next</button>
+                <div class="modal-footer p-0 pt-3 pe-4">
+                    <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">Back</button>
+                    <button class="btn btn-primary" type="button" (click)="nextStep()">Next</button>
                 </div>
             </div>
         </div>
