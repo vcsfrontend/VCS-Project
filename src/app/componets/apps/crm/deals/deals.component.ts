@@ -295,7 +295,8 @@ export class DealsComponent extends BaseComponent {
   }
   openRight3(content31: any, element: any) {
     this.selectedLeadData = element;
-    this.LeadToCampaignForm.reset();
+    this.moveCmapignSubmitted = false; 
+  this.LeadToCampaignForm.reset();
     this.modalService.open(content31, { centered: true });
   }
   openRight12(content12: any) {
@@ -458,8 +459,8 @@ export class DealsComponent extends BaseComponent {
       campaignId: ['',Validators.required],
     });
     this.LeadToCampaignForm.patchValue({
-      campaignId: [this.campaignId,],
-    })
+      campaignId: this.campaignId,
+    });
 
     this.campaignForm = this.fb.group({
       campaignId: [],
@@ -759,7 +760,7 @@ export class DealsComponent extends BaseComponent {
       updatedBy: [this.userEmail],
       updatedTime: [''],
       entryBy: [this.userEmail],
-      companyCode: [this.userCompanyCode],
+      companyCode: [''],
       companyName: [this.userCompanyName],
       individualEmail: [this.userEmail],
       type: [this.userType],
@@ -794,7 +795,7 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('entryBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('companyCode')?.setValue(JSON.parse(this.userData).companyCode);
-    this.leadForm.get('companyName')?.setValue(JSON.parse(this.userData).companyName);
+    // this.leadForm.get('companyName')?.setValue(JSON.parse(this.userData).companyName);
     this.leadForm.get('individualEmail')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('type')?.setValue(JSON.parse(this.userData).type);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
@@ -1319,22 +1320,32 @@ export class DealsComponent extends BaseComponent {
     this.onStatusChange();
 
   }
+  formatDate(value: any) {
+    return this.datePipe.transform(value, 'dd-MMM-yyyy hh:mm a');
+  }
 
   editLeadSubmit(modal: any) {
+    const now = new Date();
+    this.submitted = true;
     this.leadForm.get('campaignId')?.setValue(this.campaignId);
     this.leadForm.get('executive')?.setValue(this.element.executive ?? null);
     this.leadForm.get('entryBy')?.setValue(this.element.entryBy ?? null);
     this.leadForm.get('updatedBy')?.setValue(JSON.parse(this.userData).email);
-    this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
-    const payload = this.leadForm.value;
-    this.submitted = true;
+    this.leadForm.get('updatedTime')?.setValue(
+      this.formatDate(now)
+    );    
+    if (this.leadForm.invalid) {
+      this.toastr.warning('Please fill all mandatory fields');
+      return; 
+    }
     this.uploadSpinner = true;
-    if (this.leadForm?.valid) {
+    const payload = this.leadForm.value;
       this.switchService.EditCrmLeads(payload).subscribe({
         next: (res: any) => {
           if (res.status) {
             modal.close();
             this.submitted = false;
+             this.uploadSpinner = false;
             this.leadForm.reset();
             this.getfetchLeadsIndividual();
             this.toastr.success(res.message, 'lead', {
@@ -1352,7 +1363,6 @@ export class DealsComponent extends BaseComponent {
           this.toastr.error(error.statusText);
         },
       });
-    }
   }
 
   onEmailFileChange(event: any): void {
@@ -3099,7 +3109,6 @@ export class DealsComponent extends BaseComponent {
   const minutes = String(date.getMinutes()).padStart(2, '0');
   const ampm = hours >= 12 ? 'PM' : 'AM';
   hours = hours % 12 || 12;
-
   return `${day}-${month}-${year} ${hours}:${minutes} ${ampm}`;
   }
 
@@ -3110,6 +3119,8 @@ export class DealsComponent extends BaseComponent {
     }
 
     this.selectedLeads = selectedLeads;
+     this.moveCmapignSubmitted = false; 
+    this.LeadToCampaignForm.reset();
     this.getCampaignData();
     this.firstModalRef = this.modalService.open(content31, {
       centered: true,
@@ -3215,9 +3226,12 @@ export class DealsComponent extends BaseComponent {
   }
   leadToCampaignSubmit(modal: any) {
     this.moveCmapignSubmitted = true;
-    if(this.LeadToCampaignForm.invalid){
+
+    if (this.LeadToCampaignForm.invalid) {
       this.toastr.warning('please fill all the mandatory fields');
+      return;
     }
+
     this.uploadSpinner = true;
     const selectedCampaignId = this.LeadToCampaignForm.value.campaignId;
     const currentCampaignId = this.campaignId;
@@ -3237,6 +3251,7 @@ export class DealsComponent extends BaseComponent {
       ];
     }
     this.moveLeadToAnotherCampaign(payloadArray, modal);
+      modal.close();
       this.moveCmapignSubmitted = false;
       this.uploadSpinner = false;
       if (!this.isCreateCampaignOpen) {
