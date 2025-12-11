@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { SharedModule } from '../sharedmodule';
 import { SwitherService } from '../../services/swither.service';
+import { environment } from '../../../../environments/environment';
 
 interface Item {
   id: number;
@@ -278,27 +279,28 @@ export class HeaderComponent implements OnInit {
         this.projectDetails = null;
       }
     });
+    if (!this.switchService.userInfoCache) {
+      this.switchService.userInfo(this.userEmail).subscribe();
+    }
     this.switchService.userInfoLoaded.subscribe((loaded: boolean) => {
-    if (loaded) {
+      if (!loaded) return;
+
       const cached = this.switchService.userInfoCache;
 
       if (cached) {
         this.userData = cached;
-        this.userName = this.switchService.userName || '';
-        this.profilePic =
-          this.switchService.profilePic || 'assets/images/brand-logos/profile1.jpg';
+        this.userName = cached.username || cached.name;
+        this.profilePic = cached.profilePic
+          ? this.addBaseUrlIfNeeded(cached.profilePic)
+          : 'assets/images/brand-logos/profile1.jpg';
       }
-    }
-  });
+    });
     this.logRoute();
     this.routerSub = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
         this.loadLeadData();
       });
-    if(this.userData.email === this.userEmail){
-    this.profilePic = localStorage.getItem("profilePic");
-    }
     const storedSelectedItem = localStorage.getItem('selectedItem');
     if (!storedSelectedItem) {
       this.selectedItem = "Sales Dashboard";
@@ -341,6 +343,16 @@ export class HeaderComponent implements OnInit {
       });
     });
   }
+
+  addBaseUrlIfNeeded(pic: string) {
+    if (!pic) return null;
+
+    if (!pic.startsWith('http')) {
+      return environment.imageBaseUrl + pic;
+    }
+    return pic;
+  }
+
   
   private updateSelectedItem() {
     const dashboard = this.activatedRoute.snapshot.firstChild?.url[0]?.path;
@@ -523,17 +535,17 @@ export class HeaderComponent implements OnInit {
   }
 
   getUserInfo(email: string) {
-  this.switchService.userInfo(email).subscribe({
-    next: (res: any) => {
-      if (!res) return;
+    this.switchService.userInfo(email).subscribe({
+      next: (res: any) => {
+        if (!res) return;
 
-      this.userData = res;
-      this.profilePic = res.profilePic 
-        ? res.profilePic 
-        : 'assets/images/brand-logos/profile1.jpg';
-    }
-  });
-}
+        this.userData = res;
+        this.profilePic = res.profilePic
+          ? res.profilePic
+          : 'assets/images/brand-logos/profile1.jpg';
+      }
+    });
+  }
 
   capitalizeFirstLetter(text: string | null | undefined, defaultText: string = ''): string {
     if (!text || typeof text !== 'string' || text.trim() === '') {

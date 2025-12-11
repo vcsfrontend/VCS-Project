@@ -10,6 +10,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule, DatePipe } from '@angular/common';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../../../environments/environment';
 
 
 const data = [
@@ -86,18 +87,23 @@ export class ProfileComponent {
       
     }
   ngOnInit():void {
+     if (!this.switchService.userInfoCache) {
+      this.switchService.userInfo(this.userEmail).subscribe();
+    }
     this.switchService.userInfoLoaded.subscribe((loaded: boolean) => {
-    if (loaded) {
+      if (!loaded) return;
+
       const cached = this.switchService.userInfoCache;
 
       if (cached) {
         this.userData = cached;
-        this.userName = this.switchService.userName || '';
-        this.profilePic =
-          this.switchService.profilePic || 'assets/images/brand-logos/profile1.jpg';
+        this.userName = cached.username || cached.name;
+        this.profilePic = cached.profilePic
+          ? this.addBaseUrlIfNeeded(cached.profilePic)
+          : 'assets/images/brand-logos/profile1.jpg';
       }
-    }
-  });
+    });
+
     this.getAllStages();
     this.getUsers();
     this.fetchTasks();
@@ -119,6 +125,14 @@ export class ProfileComponent {
     lightboxRef.load(this.items);
   }
 
+  addBaseUrlIfNeeded(pic: string) {
+    if (!pic) return null;
+
+    if (!pic.startsWith('http')) {
+      return environment.imageBaseUrl + pic;
+    }
+    return pic;
+  }
   dynamicFields: { value: string; percent: number; fieldNm: string; }[] = [];
   initializeDynamicFields() {
   if (!this.stageLst) return; // safeguard
