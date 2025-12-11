@@ -111,7 +111,7 @@ export class ProposalComponent extends BaseComponent {
   designerData: any[] = []; filteredDesignerData: any[] = [];
   boqKeys: string[] = []; roomNameList: any[] = []; isImportChecked: boolean = false;
   selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any;
-  uomList: any[] = [];leadName : string = '';
+  uomList: any[] = [];leadName : string = ''; isLoading: boolean = false;
   setThumbsSwiper(swiper: any) {
     this.thumbsSwiper = swiper;
   }
@@ -1612,14 +1612,14 @@ export class ProposalComponent extends BaseComponent {
   }
 
   getLibraryData() {
+    this.isLoading = true;
     this.switchService.getLibrarayData().subscribe({
       next: (res: any) => {
-        if (res && res.items) {
-          this.libraryListData = res.items;
-          setTimeout(() => this.mapCategoryNames(), 200);
-          this.getUomNames();
-          this.getCategoriesName();
-        }
+        this.libraryListData = res?.items || [];
+        setTimeout(() => this.mapCategoryNames(), 200);
+        this.getUomNames();
+        this.getCategoriesName();
+        this.isLoading = false;
       }
     });
   }

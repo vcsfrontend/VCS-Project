@@ -659,35 +659,28 @@
                     </div>
                     <div class="col-xl-4">
                         <label class="form-label">Project Start Date</label>
-                    
-                        <div class="form-control date-wrapper">
+                        <div class="date-wrapper">
                             <input type="text" matInput [matDatepicker]="picker" formControlName="projectStartDate"
                                 placeholder="Project Start Date" readonly />
-                    
                             <button type="button" class="date-icon" (click)="picker.open()">
                                 <mat-icon>calendar_today</mat-icon>
                             </button>
                         </div>
-                    
                         <mat-datepicker #picker (dateChange)="onDateSelect($event)"></mat-datepicker>
-                    
                         <div *ngIf="submitted && f['projectStartDate'].errors" class="invalid-feedback d-block">
                             Project Start Date is required
                         </div>
                     </div>
                     <div class="col-xl-4">
                         <label class="form-label">Project End Date</label>
-                        <div class="form-control date-wrapper">
+                        <div class="date-wrapper">
                             <input type="text" matInput [matDatepicker]="pickerEnd" formControlName="projectEndDate"
                                 placeholder="Project End Date" readonly [min]="minEndDate" />
-                    
                             <button type="button" class="date-icon" (click)="pickerEnd.open()">
                                 <mat-icon>calendar_today</mat-icon>
                             </button>
                         </div>
-                    
                         <mat-datepicker #pickerEnd></mat-datepicker>
-                    
                         <div *ngIf="submitted && f['projectEndDate'].errors" class="invalid-feedback d-block">
                             End Date is required
                         </div>

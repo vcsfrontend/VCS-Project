@@ -1005,7 +1005,12 @@
                     </button>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-container" *ngIf="libraryListData?.length">
+                    <div *ngIf="isLoading" class="d-flex justify-content-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="table-container" *ngIf="!isLoading && libraryListData?.length">>
                         <table class="table table-hover text-nowrap my-table">
                             <thead>
                                 <tr>
@@ -1027,7 +1032,7 @@
                             <tbody>
                                 <ng-container *ngFor="let item of libraryListData; let i = index">
                                     <tr>
-                                        <th scope="row" class="ps-4"><input class="form-check-input" type="checkbox"
+                                        <th scope="row" class="ps-4"><input class="form-check-input cu" type="checkbox"
                                                 id="checkboxNoLabel2" value="" aria-label="..."
                                                 (change)="toggleSelect($event, i)"></th>
                                         <td>{{ i + 1 }}</td>
@@ -1066,6 +1071,9 @@
                                 </ng-container>
                             </tbody>
                         </table>
+                    </div>
+                    <div *ngIf="!isLoading && !libraryListData?.length" class="text-center py-4 text-muted">
+                        No data found
                     </div>
                 </div>
             </div>

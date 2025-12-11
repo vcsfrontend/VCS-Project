@@ -264,44 +264,44 @@ export class HeaderComponent implements OnInit {
     this.router.events
     .pipe(filter(event => event instanceof NavigationEnd))
     .subscribe((event: any) => {
-
-      // Check if route contains '/boq'
+      
       this.showBoqHeader = event.urlAfterRedirects.includes('/boq');
 
       if (this.showBoqHeader) {
         const params = this.activatedRoute.root.firstChild?.snapshot.queryParams;
-
-        // Save params only when available
         if (params?.['projectId'] && params?.['projectName']) {
           localStorage.setItem('selectedProject', JSON.stringify(params));
         }
-
-        // Load from localStorage
         this.projectDetails = JSON.parse(localStorage.getItem('selectedProject') || '{}');
 
       } else {
-        // Hide when not on boq
         this.projectDetails = null;
       }
     });
-    this.getUserInfo(this.userEmail);
-    this.logRoute();
-    this.loadLeadData();
-    this.routerSub = this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.loadLeadData();
+    this.switchService.userInfoLoaded.subscribe((loaded: boolean) => {
+    if (loaded) {
+      const cached = this.switchService.userInfoCache;
+
+      if (cached) {
+        this.userData = cached;
+        this.userName = this.switchService.userName || '';
+        this.profilePic =
+          this.switchService.profilePic || 'assets/images/brand-logos/profile1.jpg';
       }
-    });
+    }
+  });
+    this.logRoute();
+    this.routerSub = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadLeadData();
+      });
     if(this.userData.email === this.userEmail){
     this.profilePic = localStorage.getItem("profilePic");
     }
-    this.loggedInUser = JSON.parse(this.userData);
-    this.userName = this.loggedInUser?.name || this.loggedInUser?.username;
-    this.intervalSub = interval(5000).subscribe(() => this.loadLeadData());
-    this.loadLeadData();
     const storedSelectedItem = localStorage.getItem('selectedItem');
     if (!storedSelectedItem) {
-      this.selectedItem = "Sales Dashboard"; // You can set any default item here
+      this.selectedItem = "Sales Dashboard";
       localStorage.setItem('selectedItem', this.selectedItem);
     } else {
       this.selectedItem = storedSelectedItem;
@@ -523,15 +523,17 @@ export class HeaderComponent implements OnInit {
   }
 
   getUserInfo(email: string) {
-    this.switchService.userInfo(email).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.userData = res;
-          this.profilePic = this.userData.profilePic;
-        }
-      },
-    });
-  }
+  this.switchService.userInfo(email).subscribe({
+    next: (res: any) => {
+      if (!res) return;
+
+      this.userData = res;
+      this.profilePic = res.profilePic 
+        ? res.profilePic 
+        : 'assets/images/brand-logos/profile1.jpg';
+    }
+  });
+}
 
   capitalizeFirstLetter(text: string | null | undefined, defaultText: string = ''): string {
     if (!text || typeof text !== 'string' || text.trim() === '') {

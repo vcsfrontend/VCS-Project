@@ -125,6 +125,7 @@ export class BoqComponent extends BaseComponent {
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
     selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
     designUrl: string = ''; showSubmitButton: boolean = true; isLoadingAssignProjects: boolean = false;
+    showDownloadButton = false; isBoqLoading = false;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -214,45 +215,35 @@ export class BoqComponent extends BaseComponent {
     openRights2(content3: any) {
         this.offcanvasService.open(content3, { position: 'end' });
     }
+    showOnlyEditableFields = false;
 
     openProjectModal(content45: any, project: any) {
-        if (!project) {
-            return;
-        }
-        this.updateProjectForm.patchValue({
-            projectId: project.projectId || '',
-            designId: project.designId || '',
-            projectStage: project.projectStage || '',
-            projectArea: project.projectArea || '',
-            designUrl: project.designUrl || '',
-            assignedDesigner: project.assignedDesigner?.email || project.assignedDesigner || '',
-            designCompletionStatus: project.designCompletionStatus || '',
-            email: this.userEmail,
-            companycode: this.userCompanyCode,
-            updatedBy: this.userName,
-            type: this.userType
-        });
+    if (!project) return;
 
-        // Handle form enable/disable logic
-        if (project.designCompletionStatus === 'Complete') {
-            this.updateProjectForm.disable();
-        } else if (this.userRole === 'USER') {
-            Object.keys(this.updateProjectForm.controls).forEach(control => {
-                if (control !== 'designCompletionStatus') {
-                    this.updateProjectForm.get(control)?.disable();
-                } else {
-                    this.updateProjectForm.get(control)?.enable();
-                }
-            });
-        } else if (this.userRole === 'ADMIN') {
-            Object.keys(this.updateProjectForm.controls).forEach(control => {
-                this.updateProjectForm.get(control)?.enable();
-            });
-        }
-
-        // Open modal safely
-        this.modalService.open(content45, { backdrop: 'static' });
+    this.updateProjectForm.patchValue({
+        projectId: project.projectId || '',
+        designId: project.designId || '',
+        projectStage: project.projectStage || '',
+        projectArea: project.projectArea || '',
+        designUrl: project.designUrl || '',
+        assignedDesigner: project.assignedDesigner?.email || project.assignedDesigner || '',
+        designCompletionStatus: project.designCompletionStatus || '',
+        email: this.userEmail,
+        companycode: this.userCompanyCode,
+        updatedBy: this.userName,
+        type: this.userType
+    });
+    if (project.designCompletionStatus === 'Complete') {
+        this.showOnlyEditableFields = false; 
+    } else if (this.userRole === 'USER') {
+        this.showOnlyEditableFields = true;  
+    } else if (this.userRole === 'ADMIN') {
+        this.showOnlyEditableFields = false; 
     }
+
+    this.modalService.open(content45, { backdrop: 'static' });
+}
+
 
     onCreateProposalClick(content: any) {
         const storedClientData = localStorage.getItem("storedClientData");
@@ -743,28 +734,24 @@ export class BoqComponent extends BaseComponent {
 
     changeTab(tabId: string, skipStore: boolean = false) {
         this.activeTab = tabId;
-
         if (!skipStore) {
             localStorage.setItem('selectedTab', tabId);
         }
-
         if (!this.projectId) return;
-
         switch (tabId) {
             case '1':
                 this.getRecceData();
                 break;
-
             case '2':
                 this.getAssignProjects();
                 this.getUsers();  
                 break;
-
             case '3':
                 this.allowBoqRun = true;
                 this.getAssignProjects();
                 this.boqData();
                 break;
+
         }
     }
 
@@ -809,6 +796,7 @@ closeAllDropdowns() {
 
     boqData() {
         if (!this.designingId) return;
+        this.isBoqLoading = true;
         const payload = {
             email: this.userEmail,
             designId: this.designingId,
@@ -818,8 +806,12 @@ closeAllDropdowns() {
         };
         this.switchService.fetchBoqData(payload).subscribe({
             next: (res) => {
+                this.getProposal();
                 const boqData = res?.boqResponse?.boqData || {};
                 const pannelResponse = res?.pannelResponse?.pannelResponse || [];
+                this.showDownloadButton = pannelResponse.some((p: any) =>
+                    (p.cl && p.cl !== 0) || (p.cw && p.cw !== 0)
+                );
                 this.tabKeys = Object.keys(boqData);
                 let allItems: any[] = [];
                 this.tabKeys.forEach((key: string) => {
@@ -852,6 +844,9 @@ closeAllDropdowns() {
                     .filter(k => k !== 'All')
                     .map(name => ({ name }));
                 this.groupCabinetNames();
+            },
+            complete: () => {
+                this.isBoqLoading = false;  
             }
         });
     }

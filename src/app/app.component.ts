@@ -8,6 +8,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { FilePondModule } from 'ngx-filepond';
 import { AppStateService } from './shared/services/app-state.service';
 import { ChatbotComponent } from './componets/dashbord/chatbot/chatbot.component';
+import { SwitherService } from './shared/services/swither.service';
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -18,9 +19,19 @@ import { ChatbotComponent } from './componets/dashbord/chatbot/chatbot.component
 
 })
 export class AppComponent {
-  title = 'VCS';
+  title = 'VCS';  userEmail: any;
 
-  constructor(private appState : AppStateService){
+  constructor(private appState : AppStateService,private switchService: SwitherService,){
     this.appState.updateState();
   }
+
+  ngOnInit(): void {
+    this.userEmail = localStorage.getItem('email');
+    if (!this.switchService.userInfoCache && this.userEmail) {
+      this.switchService.userInfo(this.userEmail).subscribe();
+    }
+  }
+
+
+
 }
