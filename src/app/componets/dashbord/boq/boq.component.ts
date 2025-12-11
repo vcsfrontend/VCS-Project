@@ -1261,13 +1261,14 @@ closeAllDropdowns() {
 
     proposalFormSubmit(modal: any) {
         this.submittedStep3 = true;
-        const step3Fields = ['orderFrom', 'vendorId', 'shippingAddress', 'startDate', 'dueDate'];
+        const step3Fields = ['orderFrom', 'shippingAddress', 'startDate', 'dueDate'];
         const invalidStep3 = step3Fields.some(field => this.proposalForm.get(field)?.invalid);
         if (invalidStep3) {
             this.toastr.warning('Please fill all required fields in Step 3.');
             return;
         }
         const formValue = this.proposalForm.value;
+        const newId = this.generateVendorId();
         const selectedData: any = {};
         const seenBoqIds = new Set<number>();
         let totalAmount = 0;
@@ -1301,7 +1302,7 @@ closeAllDropdowns() {
                 clientDataToSend = JSON.parse(storedClientData);
             }
             } else {
-            clientDataToSend = selectedData || {};
+            clientDataToSend = clientData || {};
             }
         const proposalPayload = {
             email: this.userEmail,
@@ -1311,7 +1312,7 @@ closeAllDropdowns() {
             gstNo: formValue.gstNo,
             startDate: formValue.startDate,
             dueDate: formValue.dueDate,
-            vendorId: formValue.vendorId,
+            vendorId: newId,
             createdBy: this.userName,
             orderFor: formValue.orderFor,
             orderFrom: formValue.orderFrom,
@@ -2878,7 +2879,16 @@ closeAllDropdowns() {
     }
 
 
+ generateVendorId(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let id = '';
 
+  for (let i = 0; i < 10; i++) {
+    id += chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  return id;
+}
 
 
 

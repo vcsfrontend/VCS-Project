@@ -799,10 +799,13 @@ export class DealsComponent extends BaseComponent {
     this.leadForm.get('individualEmail')?.setValue(JSON.parse(this.userData).email);
     this.leadForm.get('type')?.setValue(JSON.parse(this.userData).type);
     this.leadForm.get('updatedTime')?.setValue(new Date().toISOString());
-    const payload = this.leadForm.value;
     this.submitted = true;
-    this.uploadSpinner = true
-    if (this.leadForm?.valid) {
+     if (this.leadForm.invalid) {
+      this.toastr.warning('Please fill all mandatory fields');
+      return; 
+    }
+    this.uploadSpinner = true;
+    const payload = this.leadForm.value;
       this.switchService.AddCrmLeads(payload).subscribe({
         next: (res: any) => {
           const followUpDate = this.leadForm.get('followUpDate')?.value;
@@ -834,7 +837,6 @@ export class DealsComponent extends BaseComponent {
           this.toastr.error(error.statusText);
         },
       });
-    }
   }
 
   getfetchLeadsIndividual() {
@@ -1602,22 +1604,22 @@ export class DealsComponent extends BaseComponent {
         executive: this.allocateForm.get('executive')?.value 
       };    
       console.log('allocated date',allocateData);  
-      this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
-        next: (res: any) => {
-          if (res.status == true) {
-            this.allocateSubmitted = false;
-            this.allocateForm.reset();
-            this.selectedLeads=[];
-            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-            this.getfetchLeadsIndividual();
-          } else {
-            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
-      });
+      // this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
+      //   next: (res: any) => {
+      //     if (res.status == true) {
+      //       this.allocateSubmitted = false;
+      //       this.allocateForm.reset();
+      //       this.selectedLeads=[];
+      //       this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      //       this.getfetchLeadsIndividual();
+      //     } else {
+      //       this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+      //     }
+      //   },
+      //   error: (error) => {
+      //     this.toastr.error(error.statusText);
+      //   },
+      // });
     }
   }
 
@@ -1644,11 +1646,11 @@ export class DealsComponent extends BaseComponent {
   onSelectAllChange(event: any) {
   if (event.checked) {
 
-    this.selectedLeads = [];   // FIX: Clear old objects/numbers
+    this.selectedLeads = [];   
 
     this.selectedLeads = this.dataSource.data
       .filter(row => row.completionStatus !== 'completed')
-      .map(row => row.leadId);  // keep number format as your system needs
+      .map(row => row.leadId);  
   } 
   else {
     this.selectedLeads = [];
