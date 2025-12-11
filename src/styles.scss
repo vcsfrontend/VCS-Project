@@ -590,10 +590,11 @@ textarea:focus {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 4px !important;
 }
 
 .date-icon mat-icon {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .date-icon {

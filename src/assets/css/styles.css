@@ -35271,37 +35271,21 @@ ng-select {
   background-color: #8699a34d !important;
   color: #fff !important;
 }
-/* Base and Focused/Open styles */
+
 .ng-select .ng-select-container {
   border: 1px solid #aaa5a5;
-  border-radius: 0.5rem !important;
-  transition: all 0.3s ease;
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
 }
 
-.ng-select.ng-select-focused .ng-select-container,
-.ng-select.ng-select-opened .ng-select-container {
-  outline: none;
+.ng-select.ng-select-focused > .ng-select-container {
   border: 2px solid #3b5bff !important;
-  box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.4);
-  border-radius: 0.5rem !important;
+  box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.4) !important;
 }
 
-.ng-dropdown-panel {
+.ng-select.ng-select-opened > .ng-select-container {
   border: 2px solid #3b5bff !important;
-  border-radius: 0.5rem !important; 
-  margin-top: 4px; 
-  box-shadow: 0 4px 12px rgba(59, 91, 255, 0.2);
-  overflow: hidden;
-}
-
-.ng-dropdown-panel {
-  box-sizing: border-box;
-  position: absolute;
-  opacity: 0;
-  width: 100%;
-  z-index: 1050;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 10px;
+  box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.4) !important;
 }
 
 .form-label {
@@ -35317,6 +35301,11 @@ ng-select {
     font-weight: var(--default-font-weight);
     line-height: 1.8;
     border-radius: 0.5rem;
+}
+.form-control:focus {
+    outline: none !important;
+    border-color: #3b5bff !important;
+    box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.35) !important;
 }
 
 .btn-grad {
@@ -35426,21 +35415,44 @@ ngb-datepicker .ngb-dp-navigation-select select {
   overflow-y: auto !important;
 }
 
+/* WRAPPER DEFAULT LOOK */
 .date-wrapper {
   width: 100%;
   display: flex;
-  align-items: end;
-  border: 1px solid #ced4da;
+  align-items: center;
+  border: 1px solid #aaa5a5;
   border-radius: 8px;
   padding: 10px;
   background: #fff;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+
+.date-wrapper:focus-within {
+  outline: none;
+  border: 1px solid #3b5bff;
+  box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.4); 
+  border-radius: 10px; 
 }
 
 .date-wrapper input {
   border: none !important;
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
   width: 100%;
+  background: transparent;
   cursor: pointer;
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #aaa5a5;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 

@@ -79,14 +79,25 @@ export class ProfileComponent {
   userDetails: any = {};taskStats : any; userProfilePic:any;
   //  isCollapsed = true;
   isCollapsed1 = true;
-  isCollapsed2 = true;
+  isCollapsed2 = true; profilePic: string | null = null;
   constructor(public gallery: Gallery, public lightbox: Lightbox ,
     public switchService: SwitherService,private toastr: ToastrService,private fb: FormBuilder,
   private offcanvasService: NgbOffcanvas, private modalService: NgbModal,) {
       
     }
   ngOnInit():void {
-    this.getUserInfo(this.userEmail);
+    this.switchService.userInfoLoaded.subscribe((loaded: boolean) => {
+    if (loaded) {
+      const cached = this.switchService.userInfoCache;
+
+      if (cached) {
+        this.userData = cached;
+        this.userName = this.switchService.userName || '';
+        this.profilePic =
+          this.switchService.profilePic || 'assets/images/brand-logos/profile1.jpg';
+      }
+    }
+  });
     this.getAllStages();
     this.getUsers();
     this.fetchTasks();
@@ -104,20 +115,10 @@ export class ProfileComponent {
       thumbPosition: ThumbnailsPosition.Top,
     });
 
+   
     lightboxRef.load(this.items);
   }
 
-  getUserInfo(email: string) {
-    this.switchService.userInfo(email).subscribe({
-      next: (res: any) => {
-        this.userData = res;
-        if (res?.profilePic) {
-          localStorage.setItem("profilePic", res.profilePic);
-        }
-      },
-    });
-  }
-  
   dynamicFields: { value: string; percent: number; fieldNm: string; }[] = [];
   initializeDynamicFields() {
   if (!this.stageLst) return; // safeguard
@@ -144,6 +145,18 @@ export class ProfileComponent {
   this.getdesignData();
   }
   
+  getUserInfo(email: string) {
+    this.switchService.userInfo(email).subscribe({
+      next: (res: any) => {
+        if (!res) return;
+
+        this.userData = res;
+        this.profilePic = res.profilePic
+          ? res.profilePic
+          : 'assets/images/brand-logos/profile1.jpg';
+      }
+    });
+  }
   getAllStages() {
     let payload = {
       "email": this.userEmail,
@@ -189,7 +202,6 @@ export class ProfileComponent {
 
   getUsers() {
     if (this.userType == 2) {
-      // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
       let cn = this.userCompanyName;
       let cc = this.userCompanyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({

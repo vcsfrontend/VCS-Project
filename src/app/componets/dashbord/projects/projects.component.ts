@@ -228,7 +228,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       this.displayedColumns.push('assign');
     }
     this.getAdonai();
-    this.getLst(); this.getMatCardLst();    this.getUsers();    this.getUserInfo(this.userEmail);
+    this.getLst(); this.getMatCardLst();    this.getUsers();  
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
     this.createProjectForm = this.fb.group({
@@ -1928,37 +1928,6 @@ downloadButtons: { label: string; url: string }[] = [];
         username: null
       }];
     }
-  }
-
-  getUserInfo(email: string) {
-    if (!email) {
-      return;
-    }
-    this.switchService.userInfo(email).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.userData = res;
-          this.userPhoneNumber = res.phoneNumber;
-          if (this.userType === 1) {
-            this.quotationForm.patchValue({
-              rmdEmail: this.userEmail,
-              rmdMobile: this.userPhoneNumber,
-              rmdName: this.userName,
-              dedEmail: this.userEmail,
-              dedMobile: this.userPhoneNumber,
-              dedName: this.userName,
-            });
-          }
-          else{
-            this.quotationForm.patchValue({
-              rmdEmail: '',
-              rmdMobile:'',
-              rmdName: ''
-            });
-          }
-        } 
-      },
-    });
   }
 
  onUserSelected(selectedUser: any): void {

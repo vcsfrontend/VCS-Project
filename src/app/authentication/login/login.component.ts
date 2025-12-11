@@ -251,13 +251,11 @@ getUsersAccess(email:string) {
     const user = JSON.parse(this.userData || '{}');   
    
     if (!email) {
-      console.warn("User email not found — cannot load access.");
       return;
     }
     if (!email) return;
     this.switchService.getUserAccess(email).subscribe({
        next: (res: any) => {
-    console.log("Access API:", res);
 
     const formatted: any = {};
 
@@ -288,7 +286,6 @@ getUsersAccess(email:string) {
     });
 
     localStorage.setItem("userAccess", JSON.stringify(formatted));
-    console.log("Formatted Access Saved:", formatted);
   }
     });
   }

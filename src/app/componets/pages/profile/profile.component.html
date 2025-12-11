@@ -17,7 +17,7 @@
                             <div class="lh-1">
                                 <span class="avatar avatar-xxl avatar-rounded online me-3 cu"
                                     (click)="profileUpdate(content12)">
-                                    <img [src]="userData.profilePic || 'assets/images/brand-logos/profile1.jpg'"
+                                    <img [src]="userData?.profilePic || switchService.profilePic || 'assets/images/brand-logos/profile1.jpg'"
                                         alt="Profile Picture" class="rounded-circle border border-2 border-dark">
                                 </span>
                             </div>

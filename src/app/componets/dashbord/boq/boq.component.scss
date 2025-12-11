@@ -233,7 +233,8 @@ ul.dropdown-menu.cuw.show ~ .table-container {
 .editable-cell .cell-input {
   display: none;
   width: 100%;
-  border: 1px solid #d60606;
+  border-color: #3b5bff !important;
+  box-shadow: 0 0 0 3px rgba(59, 91, 255, 0.35) !important;
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 13px;
