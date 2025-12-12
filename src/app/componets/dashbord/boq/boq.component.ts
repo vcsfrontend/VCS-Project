@@ -88,6 +88,7 @@ export class BoqComponent extends BaseComponent {
     showLeftArrow = false;showRightArrow = false; pannelResponse: any[] = [];
     project : any; boqLoaded = false; allowBoqRun = false; boqAvailable: boolean | null = null; 
     activeInnerTab = 'scope';  activeScopeTab = 1; private isInitialLoad = true; private tabLoaded = false;
+    elementUrl: string = '';
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     activeTableSource = new MatTableDataSource<any>();
@@ -567,7 +568,6 @@ export class BoqComponent extends BaseComponent {
             const parts: string[] = element.elementNameAndDescription.split('\n');
             const namePart = parts.find((p: string) => p.startsWith('Name :'));
             elementName = namePart ? namePart.replace('Name :', '').trim() : '';
-
             const brandPart = parts.find((p: string) => p.startsWith('Brand :'));
             brandOrMake = brandPart ? brandPart.replace('Brand :', '').trim() : '';
             elementDescription = parts
@@ -591,8 +591,8 @@ export class BoqComponent extends BaseComponent {
             budgetRate: element.budgetRate,
             hsn: element.hsn,
             gstPrecent: element.gstPrecent,
-            roomName: element.roomName,
-            itemCode: element.itemCode,
+            roomName: element.roomName || '',
+            itemCode: element.itemCode || '',
             companyCode: element.companyCode,
             email: element.email,
             type: element.type,
@@ -601,11 +601,6 @@ export class BoqComponent extends BaseComponent {
         const ref = this.offcanvasService.open(content, { position: 'end', scroll: true });
         ref.closed.subscribe(() => this.resetForm());
         ref.dismissed.subscribe(() => this.resetForm());
-        // if (this.isEditMode) {
-        //     this.elementForm.disable();
-        //     this.elementForm.get('quantity')?.enable();
-        // }
-
     }
 
     updateDropdownField(
@@ -1109,44 +1104,46 @@ closeAllDropdowns() {
             this.toastr.warning("Please fill in all required fields.");
             return;
         }
-        const formValue = { ...this.elementForm.value };
-        delete formValue.elementName;
-        delete formValue.elementDescription;
-        const breadthNum = Number(this.elementForm.value.breadth || 0);
-        const lengthNum = Number(this.elementForm.value.length || 0);
-        const heightNum = Number(this.elementForm.value.height || 0);
-        const quantityNum = Number(this.elementForm.value.quantity || 0);
+        const formValue = this.elementForm.value;
+        const elementNameAndDescription =
+        `Name : ${formValue.elementName || ''}` +
+        `${formValue.elementDescription ? '\nDescription : ' + formValue.elementDescription : ''}`;
         const payload = {
-            ...formValue,
-            elementNameAndDescription:
-                `${this.elementForm.value.elementName || ''}` +
-                `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}` +
-                `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`,
-            budgetRate: Number(this.elementForm.value.budgetRate ),
-            clientRate: Number(this.elementForm.value.clientRate),
-            gstPrecent: Number(this.elementForm.value.gstPrecent),
-            hsn: Number(this.elementForm.value.hsn),
-            breadth: breadthNum,
-            height: heightNum,
-            length: lengthNum,
-            quantity: quantityNum,
+            elementNameAndDescription,
+            brandOrMake: formValue.brandOrMake || '', 
+            budgetRate: Number(formValue.budgetRate),
+            clientRate: Number(formValue.clientRate),
+            gstPrecent: Number(formValue.gstPrecent),
+            hsn: Number(formValue.hsn),
+            breadth: Number(formValue.breadth),
+            height: Number(formValue.height),
+            length: Number(formValue.length),
+            quantity: Number(formValue.quantity),
+            uom: formValue.uom || '',
+            elementUrl: this.elementUrl || '',
+            itemCode: formValue.itemCode || '',
+            roomName: formValue.roomName || '',
+            draftQuantity: Number(formValue.draftQuantity) || 0,
             codeAndCategory: formValue.codeAndCategory?.name || '',
-            brandOrMake: this.elementForm.value.brandOrMake || '',
-            designId:this.designingId,
+            itemType: formValue.itemType || '',
+            designId: this.designingId,
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType
         };
-        this.switchService.saveElementData(payload).subscribe({
-            next: (res: any) => {
-                if (res?.status === true) {
-                    this.toastr.success(res.message || 'Element Saved ');
-                    this.elementForm.reset();
-                    this.elementFormSubmitted = false;
-                }
-            }
-        });
+        console.log(payload);
+        // this.switchService.saveElementData(payload).subscribe({
+        //     next: (res: any) => {
+        //         if (res?.status === true) {
+        //             this.toastr.success(res.message || 'Element Saved');
+        //             this.boqData();
+        //             this.elementForm.reset();
+        //             this.elementFormSubmitted = false;
+        //         }
+        //     }
+        // });
     }
+
 
     saveLibraryItem() {
         if (this.selectedItems.length === 0) {
@@ -1155,6 +1152,7 @@ closeAllDropdowns() {
         }
         const item = this.selectedItems[0];
         const combinedDescription = [
+            item.name || '', 
             item.description || '',
             item.carcassMaterial ? `Carcass Material: ${item.carcassMaterial}` : '',
             item.carcassFinish ? `Carcass Finish: ${item.carcassFinish}` : '',
@@ -1165,7 +1163,7 @@ closeAllDropdowns() {
         .join(" | ");
         const payload = {
             name: item.name || '',
-            description: combinedDescription,
+            elementNameAndDescription: combinedDescription,
             brandMake: item.brandMake || '',
             categoryName: this.getCategoryName(item.categoryId?._id || item.categoryId),
             uom: this.getUomName(item.uom) || null,
@@ -1198,6 +1196,10 @@ closeAllDropdowns() {
     }
 
     editElement(element?: any) {
+        this.elementFormSubmitted = true;
+        if (this.elementForm.invalid) {
+            return;
+        }
         const formValue = { ...this.elementForm.value };
         const payload = [
             {
@@ -1233,8 +1235,8 @@ closeAllDropdowns() {
                 gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
                 amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
                 designId: this.designingId,
-                roomName: element?.roomName || formValue.roomName || '',
-                itemCode: element?.itemCode || formValue.itemCode || '',
+                roomName: formValue.roomName,
+                itemCode: formValue.itemCode,
                 companyCode: this.userCompanyCode,
                 email: this.userEmail,
                 type: this.userType,
@@ -1574,7 +1576,8 @@ closeAllDropdowns() {
             this.selectedFile = input.files[0];
             const reader = new FileReader();
             reader.onload = () => {
-                this.previewUrl = reader.result;
+                this.previewUrl = reader.result as string;
+                this.elementUrl = this.previewUrl;  // correct!
             };
             reader.readAsDataURL(this.selectedFile);
         }
