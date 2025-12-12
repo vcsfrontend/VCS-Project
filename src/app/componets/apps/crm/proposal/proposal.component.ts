@@ -67,7 +67,7 @@ export class ProposalComponent extends BaseComponent {
   userType: any = this.userData ? this.userData.type : ''; campaignName: any; selectedItem: any;
   innerActive = 1; selectedProposalContent: any = null; isCollapsed = false;
   selectedOrderContent: any = null; actstatus: any;
-  adoanAiRole: string = ''; 
+  adoanAiRole: string = '';
   itemId: any; currentSection: any; proposals: any[] = []; clientOrders: any[] = [];
   dataSource = new MatTableDataSource<any>(); projectId: any; projectName!: any;
   designingId: any; designCompletionStatus: string = '';
@@ -84,7 +84,7 @@ export class ProposalComponent extends BaseComponent {
   skipProposalForm: boolean = false; minDateTime: string = '';
   showShutterFields: boolean = false; dimensionsList: any[] = []; currentStep: number = 1;
   step1Data: any[] = []; step2Data: any = null; leadData: any; selectedRoom: string = 'All';
-  proposalSubmitted : boolean = false;
+  proposalSubmitted: boolean = false;
   // selectedColumns: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
@@ -111,7 +111,7 @@ export class ProposalComponent extends BaseComponent {
   designerData: any[] = []; filteredDesignerData: any[] = [];
   boqKeys: string[] = []; roomNameList: any[] = []; isImportChecked: boolean = false;
   selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any;
-  uomList: any[] = [];leadName : string = ''; isLoading: boolean = false;
+  uomList: any[] = []; leadName: string = ''; isLoading: boolean = false; elementUrl: string = '';
   setThumbsSwiper(swiper: any) {
     this.thumbsSwiper = swiper;
   }
@@ -252,7 +252,7 @@ export class ProposalComponent extends BaseComponent {
     const hh = pad(now.getHours());
     const mi = pad(now.getMinutes());
     this.leadData = history.state.lead;
-    console.log('lead data',this.leadData);
+    console.log('lead data', this.leadData);
     this.minDateTime = `${yyyy}-${mm}-${dd}`;
     this.route.queryParams.subscribe(params => {
       this.projectId = params['projectId'];
@@ -348,10 +348,10 @@ export class ProposalComponent extends BaseComponent {
       updatedTime: new Date().toISOString(),
     }
     );
-    
-    if(this.leadData){
+
+    if (this.leadData) {
       this.proposalForm.patchValue({
-        orderFrom : this.leadData.name,
+        orderFrom: this.leadData.name,
       })
     }
     this.proposalApprovalForm = this.fb.group({
@@ -906,38 +906,39 @@ export class ProposalComponent extends BaseComponent {
       this.toastr.warning("Please fill in all required fields.");
       return;
     }
-    const formValue = { ...this.elementForm.value };
-    delete formValue.elementName;
-    delete formValue.elementDescription;
-    const breadthNum = Number(this.elementForm.value.breadth || 0);
-    const lengthNum = Number(this.elementForm.value.length || 0);
-    const heightNum = Number(this.elementForm.value.height || 0);
-    const quantityNum = Number(this.elementForm.value.quantity || 0);
+    const formValue = this.elementForm.value;
+    const elementNameAndDescription =
+      `Name : ${formValue.elementName || ''}` +
+      `${formValue.elementDescription ? '\nDescription : ' + formValue.elementDescription : ''}`;
     const payload = {
-      ...formValue,
-      elementNameAndDescription:
-        `${this.elementForm.value.elementName || ''}` +
-        `${this.elementForm.value.elementDescription ? '\n' + this.elementForm.value.elementDescription : ''}` +
-        `${this.elementForm.value.brandOrMake ? '\nBrand: ' + this.elementForm.value.brandOrMake : ''}`,
-      budgetRate: Number(this.elementForm.value.budgetRate),
-      clientRate: Number(this.elementForm.value.clientRate),
-      gstPrecent: Number(this.elementForm.value.gstPrecent),
-      hsn: Number(this.elementForm.value.hsn),
-      breadth: breadthNum,
-      height: heightNum,
-      length: lengthNum,
-      quantity: quantityNum,
+      elementNameAndDescription,
+      brandOrMake: formValue.brandOrMake || '',
+      budgetRate: Number(formValue.budgetRate),
+      clientRate: Number(formValue.clientRate),
+      gstPrecent: Number(formValue.gstPrecent),
+      hsn: Number(formValue.hsn),
+      breadth: Number(formValue.breadth),
+      height: Number(formValue.height),
+      length: Number(formValue.length),
+      quantity: Number(formValue.quantity),
+      uom: formValue.uom || '',
+      elementUrl: this.elementUrl || '',
+      itemCode: formValue.itemCode || '',
+      roomName: formValue.roomName || '',
+      draftQuantity: Number(formValue.draftQuantity) || 0,
       codeAndCategory: formValue.codeAndCategory?.name || '',
-      brandOrMake: this.elementForm.value.brandOrMake || '',
+      itemType: formValue.itemType || '',
       designId: '3FO3ILENXV7I',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType
     };
+    console.log(payload);
     this.switchService.saveElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
-          this.toastr.success(res.message || 'Element Saved ');
+          this.toastr.success(res.message || 'Element Saved');
+          this.boqData();
           this.elementForm.reset();
           this.elementFormSubmitted = false;
         }
@@ -1049,7 +1050,7 @@ export class ProposalComponent extends BaseComponent {
     });
   }
 
-  moveToRoomSubmit(modal:any) {
+  moveToRoomSubmit(modal: any) {
     const selectedItems: any[] = [];
     Object.keys(this.boqDataSources).forEach(key => {
       const rows = this.boqDataSources[key]?.data ?? [];
@@ -1123,13 +1124,13 @@ export class ProposalComponent extends BaseComponent {
       return;
     }
     this.proposalSubmitted = true;
-    if(this.proposalForm.invalid){
+    if (this.proposalForm.invalid) {
       this.toastr.warning('please fill the all fields');
     }
     const selectedData: any = {};
     const seenBoqIds = new Set<number>();
     let totalAmount = 0;
-    
+
     Object.keys(this.boqDataSources).forEach(key => {
       const data = this.boqDataSources[key]?.data || [];
       const filtered = data.filter((item: any) => this.selectedElement?.includes(item.boqId));
@@ -1150,7 +1151,7 @@ export class ProposalComponent extends BaseComponent {
 
     };
     const formValue = this.proposalForm.value;
-     const newId = this.generateVendorId();
+    const newId = this.generateVendorId();
     const proposalPayload = {
       email: this.userEmail,
       type: this.userType,
@@ -1168,7 +1169,7 @@ export class ProposalComponent extends BaseComponent {
       designId: '3FO3ILENXV7I',
       clientDataJs: JSON.stringify(clientDataToSend),
     };
-    console.log('final payload',proposalPayload);
+    console.log('final payload', proposalPayload);
     this.updateElementsAndCreateProposal(proposalPayload, modal);
   }
   private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
@@ -1217,7 +1218,7 @@ export class ProposalComponent extends BaseComponent {
         hsn: Number(element?.hsn ?? formValue.hsn) || 0,
         gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
         amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-        designId:'3FO3ILENXV7I',
+        designId: '3FO3ILENXV7I',
         roomName: element?.roomName || formValue.roomName || '',
         itemCode: element?.itemCode || formValue.itemCode || '',
         companyCode: this.userCompanyCode,
@@ -1413,11 +1414,13 @@ export class ProposalComponent extends BaseComponent {
       this.selectedFile = input.files[0];
       const reader = new FileReader();
       reader.onload = () => {
-        this.previewUrl = reader.result;
+        this.previewUrl = reader.result as string;
+        this.elementUrl = this.previewUrl;  // correct!
       };
       reader.readAsDataURL(this.selectedFile);
     }
   }
+  
   sectionName = 'Unsectioned (12)';
   sectionTotal = 10000;
   activeTab: string = 'tab1';
@@ -1960,15 +1963,15 @@ export class ProposalComponent extends BaseComponent {
   }
 
   generateVendorId(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let id = '';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let id = '';
 
-  for (let i = 0; i < 10; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)];
+    for (let i = 0; i < 10; i++) {
+      id += chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    return id;
   }
-
-  return id;
-}
 
 
 }

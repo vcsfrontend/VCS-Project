@@ -674,6 +674,8 @@ export class BaseComponent {
     { "name": "Appliances", "code": "AK_AP" },
     { "name": "Accessories", "code": "AK_AC" },
     { "name": "Hardware", "code": "AK_HA" },
+    { "name": "Group Panel", "code": "AK_GP" },
+    { "name": "Group Panel", "code": "AK_GP" },
   ];
   permissionCategories =[
     {"name" : 'taskApproval'},

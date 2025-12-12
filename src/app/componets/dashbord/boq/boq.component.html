@@ -2349,11 +2349,8 @@
                                                     </span>
                                                     <div class="text-muted small pointer cu" [ngbTooltip]="formatTooltip(item)" tooltipClass="tooltip-primary"
                                                         container="body">
-                                                        {{
-                                                        item.description
-                                                        ? (item.description.length > 25 ? (item.description | slice:0:25) + '...' : item.description)
-                                                        : 'No description available'
-                                                        }}
+                                                        {{ item.description ? (item.description.length > 25 ? (item.description | slice:0:25) + '...' : item.description)
+                                                        : 'No description available' }}
                                                     </div>
                                                 </div>
                                             </div>
