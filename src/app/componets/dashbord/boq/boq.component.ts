@@ -88,7 +88,7 @@ export class BoqComponent extends BaseComponent {
     showLeftArrow = false;showRightArrow = false; pannelResponse: any[] = [];
     project : any; boqLoaded = false; allowBoqRun = false; boqAvailable: boolean | null = null; 
     activeInnerTab = 'scope';  activeScopeTab = 1; private isInitialLoad = true; private tabLoaded = false;
-    elementUrl: string = '';
+    elementUrl: string | null = null; 
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     activeTableSource = new MatTableDataSource<any>();
@@ -319,7 +319,7 @@ export class BoqComponent extends BaseComponent {
             elementUrl: [''],
             elementName: [''],
             elementDescription: [''],
-            codeAndCategory: [],
+            codeAndCategory: [''],
             orderStatus: [''],
             itemType: [''],
             source: [''],
@@ -327,24 +327,18 @@ export class BoqComponent extends BaseComponent {
             length: [0],
             breadth: [0],
             height: [0],
-            quantity: [0],
+            quantity: [0, [Validators.min(1)]],
             uom: [''],
-            draftQuantity: [0],
-            l1: [''],
-            l2: [''],
-            w1: [''],
-            w2: [''],
-            cl: [''],
-            cw: [''],
-            clientRate: [0],
+            draftQuantity: [0,[Validators.min(1)]],
+            clientRate: [0,[Validators.min(0)]],
             finalAmount: [0],
             brandOrMake: [''],
             discount: [0],
-            serviceCharge: [0],
+            serviceCharge: [0,[Validators.min(0)]],
             baseAmount: [0],
             budgetRate: [0],
             hsn: [0],
-            gstPrecent: [0],
+            gstPrecent: [0, [Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
             amountWithoutGst: [0],
             designId: [''],
             roomName: ['', [Validators.required]],
@@ -532,6 +526,7 @@ export class BoqComponent extends BaseComponent {
 
     onSubmit() {
         if (this.isEditMode) {
+            console.log('hit')
             this.editElement();
         } else {
             this.elementSubmit();
@@ -565,21 +560,33 @@ export class BoqComponent extends BaseComponent {
         let brandOrMake = '';
         let elementDescription = '';
         if (element.elementNameAndDescription) {
-            const parts: string[] = element.elementNameAndDescription.split('\n');
-            const namePart = parts.find((p: string) => p.startsWith('Name :'));
-            elementName = namePart ? namePart.replace('Name :', '').trim() : '';
-            const brandPart = parts.find((p: string) => p.startsWith('Brand :'));
-            brandOrMake = brandPart ? brandPart.replace('Brand :', '').trim() : '';
-            elementDescription = parts
-                .filter(p => !p.startsWith('Name :') && !p.startsWith('Brand :'))
+            const lines = element.elementNameAndDescription.split('\n');
+            const rawName = lines[0] || '';
+            elementName = rawName
+                .replace('Name :', '')
+                .split('|')[0]
+                .trim();
+            const brandLine = lines.find((l: string) =>
+                l.trim().startsWith('Brand :')
+            );
+            brandOrMake = brandLine
+                ? brandLine.replace('Brand :', '').trim()
+                : '';
+            elementDescription = lines
+                .filter((l: string) =>
+                    !l.startsWith('Name :') && !l.startsWith('Brand :')
+                )
+                .map((l: string) =>
+                    l.replace('Description :', '').trim()
+                )
                 .join('\n')
                 .trim();
         }
         this.elementForm.patchValue({
             elementUrl: element.elementUrl || '',
             elementName: elementName,
-            elementDescription: elementDescription,
             brandOrMake: brandOrMake || element.brandOrMake || '',
+            elementDescription: elementDescription,
             length: element.length || 0,
             breadth: element.breadth || 0,
             height: element.height || 0,
@@ -597,8 +604,12 @@ export class BoqComponent extends BaseComponent {
             email: element.email,
             type: element.type,
         });
+        this.elementUrl = element.elementUrl || '';
         this.previewUrl = element.elementUrl || null;
-        const ref = this.offcanvasService.open(content, { position: 'end', scroll: true });
+        const ref = this.offcanvasService.open(content, {
+            position: 'end',
+            scroll: true
+        });
         ref.closed.subscribe(() => this.resetForm());
         ref.dismissed.subscribe(() => this.resetForm());
     }
@@ -1046,7 +1057,7 @@ closeAllDropdowns() {
         }
     }
 
-    openLg1(content1: any) {
+    openLg1(content1: any,) {
         this.isEditMode = false;
         this.elementForm.reset();
         this.elementForm.enable();
@@ -1093,7 +1104,7 @@ closeAllDropdowns() {
     }
 
     openOffcanvasWithoutSubmit(element: any, content: any) {
-        this.isEditMode = true;
+        this.isEditMode = false;
         this.showSubmitButton = false;
         this.openEditForm(element, content);
     }
@@ -1105,12 +1116,18 @@ closeAllDropdowns() {
             return;
         }
         const formValue = this.elementForm.value;
-        const elementNameAndDescription =
-        `Name : ${formValue.elementName || ''}` +
-        `${formValue.elementDescription ? '\nDescription : ' + formValue.elementDescription : ''}`;
+        let elementNameAndDescription = '';
+        if (formValue.elementName && formValue.elementName.trim()) {
+            elementNameAndDescription = `Name : ${formValue.elementName.trim()}`;
+        }
+        if (formValue.brandOrMake && formValue.brandOrMake.trim()) {
+            elementNameAndDescription += `\nBrand : ${formValue.brandOrMake.trim()}`;
+        }
+        if (formValue.elementDescription && formValue.elementDescription.trim()) {
+            elementNameAndDescription += `\nDescription : ${formValue.elementDescription.trim()}`;
+        }
         const payload = {
             elementNameAndDescription,
-            brandOrMake: formValue.brandOrMake || '', 
             budgetRate: Number(formValue.budgetRate),
             clientRate: Number(formValue.clientRate),
             gstPrecent: Number(formValue.gstPrecent),
@@ -1120,30 +1137,28 @@ closeAllDropdowns() {
             length: Number(formValue.length),
             quantity: Number(formValue.quantity),
             uom: formValue.uom || '',
-            elementUrl: this.elementUrl || '',
+            elementUrl: this.elementUrl,
             itemCode: formValue.itemCode || '',
             roomName: formValue.roomName || '',
             draftQuantity: Number(formValue.draftQuantity) || 0,
-            codeAndCategory: formValue.codeAndCategory?.name || '',
+            codeAndCategory: formValue.codeAndCategory || '',
             itemType: formValue.itemType || '',
             designId: this.designingId,
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType
         };
-        console.log(payload);
-        // this.switchService.saveElementData(payload).subscribe({
-        //     next: (res: any) => {
-        //         if (res?.status === true) {
-        //             this.toastr.success(res.message || 'Element Saved');
-        //             this.boqData();
-        //             this.elementForm.reset();
-        //             this.elementFormSubmitted = false;
-        //         }
-        //     }
-        // });
+        this.switchService.saveElementData(payload).subscribe({
+            next: (res: any) => {
+                if (res?.status === true) {
+                    this.toastr.success(res.message || 'Element Saved');
+                    this.boqData();
+                    this.elementForm.reset();
+                    this.elementFormSubmitted = false;
+                }
+            }
+        });
     }
-
 
     saveLibraryItem() {
         if (this.selectedItems.length === 0) {
@@ -1151,20 +1166,18 @@ closeAllDropdowns() {
             return;
         }
         const item = this.selectedItems[0];
-        const combinedDescription = [
-            item.name || '', 
-            item.description || '',
-            item.carcassMaterial ? `Carcass Material: ${item.carcassMaterial}` : '',
-            item.carcassFinish ? `Carcass Finish: ${item.carcassFinish}` : '',
-            item.shutterMaterial ? `Shutter Material: ${item.shutterMaterial}` : '',
-            item.shutterFinish ? `Shutter Finish: ${item.shutterFinish}` : ''
-        ]
-        .filter(x => x && x.trim() !== '')  
-        .join(" | ");
+        let elementNameAndDescription = '';
+        if (item.name && item.name.trim()) {
+            elementNameAndDescription = `Name : ${item.name.trim()}`;
+        }
+        if (item.brandMake && item.brandMake.trim()) {
+            elementNameAndDescription += `\nBrand : ${item.brandMake.trim()}`;
+        }
+        if (item.description && item.description.trim()) {
+            elementNameAndDescription += `\nDescription : ${item.description.trim()}`;
+        }
         const payload = {
-            name: item.name || '',
-            elementNameAndDescription: combinedDescription,
-            brandMake: item.brandMake || '',
+            elementNameAndDescription,
             categoryName: this.getCategoryName(item.categoryId?._id || item.categoryId),
             uom: this.getUomName(item.uom) || null,
             quantity: Number(item.standardQuantity) || 1,
@@ -1174,12 +1187,13 @@ closeAllDropdowns() {
             gstPrecent: item.gst ?? null,
             roomName: item.roomName,
             itemCode: item.itemTypeId?.name || '',
-            elementUrl:item.imageUrl || '',
+            elementUrl: item.imageUrl || '',
             length: item.dimensions?.width || 0,
             breadth: item.dimensions?.depth || 0,
             height: item.dimensions?.height || 0,
-            designId:this.designingId
+            designId: this.designingId
         };
+        console.log(payload);
         this.switchService.saveElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -1188,7 +1202,6 @@ closeAllDropdowns() {
                 }
             }
         });
-
     }
 
     get es() {
@@ -1197,14 +1210,14 @@ closeAllDropdowns() {
 
     editElement(element?: any) {
         this.elementFormSubmitted = true;
-        if (this.elementForm.invalid) {
-            return;
+        if (this.elementForm.value.roomName == '' || this.elementForm.value.itemCode == ''){
+            console.log('roomnam or item code mising ')
         }
         const formValue = { ...this.elementForm.value };
         const payload = [
             {
                 boqId: element?.boqId || Number(this.itemId) || 0,
-                elementUrl: element?.elementUrl || formValue.elementUrl || '',
+                elementUrl: this.elementUrl || element?.elementUrl || '',
                 elementNameAndDescription: (
                     `Name : ${formValue.elementName || ''}\n` +
                     `Carcass Material : ${formValue.carcassMaterial || ''}\n` +
@@ -1213,7 +1226,7 @@ closeAllDropdowns() {
                     `Shutter Finish : ${formValue.shutterFinish || ''}\n` +
                     `Brand : ${formValue.brandOrMake || ''}`
                 ).trim(),
-                codeAndCategory: formValue.codeAndCategory || element?.codeAndCategory || '',
+                codeAndCategory: formValue.codeAndCategory || '',
                 orderStatus: formValue.orderStatus || element?.orderStatus || '',
                 itemType: formValue.itemType || element?.itemType || '',
                 source: formValue.source || element?.source || '',
@@ -1242,15 +1255,43 @@ closeAllDropdowns() {
                 type: this.userType,
             },
         ];
+        console.log(payload)
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
-                    this.toastr.success(res.message || 'Data Updated ');
+                    this.toastr.success(res.message || 'Element Updated');
+                    const updatedItem = payload[0];
+                    const room = formValue.roomName;
+                    const roomDataSource = this.boqDataSources[room];
+                    if (roomDataSource) {
+                        const index = roomDataSource.data.findIndex(
+                            (d: any) => d.boqId === updatedItem.boqId
+                        );
+                        if (index !== -1) {
+                            roomDataSource.data[index] = {
+                                ...roomDataSource.data[index],
+                                ...updatedItem
+                            };
+                            roomDataSource._updateChangeSubscription();
+                        }
+                    }
+                    const allDataSource = this.boqDataSources['All'];
+                    if (allDataSource) {
+                        const allIndex = allDataSource.data.findIndex(
+                            (d: any) => d.boqId === updatedItem.boqId
+                        );
+                        if (allIndex !== -1) {
+                            allDataSource.data[allIndex] = {
+                                ...allDataSource.data[allIndex],
+                                ...updatedItem
+                            };
+                            allDataSource._updateChangeSubscription();
+                        }
+                    }
                     this.elementForm.reset();
                     this.offcanvasService.dismiss();
                     this.elementFormSubmitted = false;
                     this.selectedElement = [];
-                    this.boqData();
                 }
             }
         });
@@ -1573,15 +1614,12 @@ closeAllDropdowns() {
     onFileChange(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.files && input.files.length > 0) {
-            this.selectedFile = input.files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.previewUrl = reader.result as string;
-                this.elementUrl = this.previewUrl;  // correct!
-            };
-            reader.readAsDataURL(this.selectedFile);
+            const file = input.files[0];
+            this.elementUrl = file.name;
+            this.previewUrl = URL.createObjectURL(file);
         }
     }
+
 
     libraryDataSource = new MatTableDataSource<any>([
         {
@@ -2876,17 +2914,30 @@ closeAllDropdowns() {
         return 'text-secondary';
     }
 
+    generateVendorId(): string {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let id = '';
+        for (let i = 0; i < 10; i++) {
+            id += chars[Math.floor(Math.random() * chars.length)];
+        }
+        return id;
+    }
 
- generateVendorId(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let id = '';
+    blockMinus(event: KeyboardEvent) {
+        if (event.key === '-' || event.key === 'e' || event.key === '+') {
+            event.preventDefault();
+        }
+    }
 
-  for (let i = 0; i < 10; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)];
-  }
+    getBrand(element: any): string {
+        if (!element?.elementNameAndDescription) {
+            return '-';
+        }
+        const lines = element.elementNameAndDescription.split('\n');
+        const brandLine = lines.find((l: string) => l.trim().startsWith('Brand :'));
+        return brandLine ? brandLine.replace('Brand :', '').trim() : '-';
+    }
 
-  return id;
-}
 
 
 

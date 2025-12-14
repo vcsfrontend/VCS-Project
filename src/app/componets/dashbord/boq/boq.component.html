@@ -1623,24 +1623,45 @@
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="elementUrl">
                                                                                         <th mat-header-cell *matHeaderCellDef class="sticky-col-left-2" style="max-width: 750px;">
-                                                                                            Element Name & Description </th>
+                                                                                            Element Name & Description
+                                                                                        </th>
                                                                                         <td mat-cell *matCellDef="let element" class="sticky-col-left-2" style="max-width: 750px;">
                                                                                             <div class="d-flex align-items-center" (click)="openEditFromSelected(element, content1)"
                                                                                                 style="cursor: pointer;">
                                                                                                 <span class="avatar avatar-xl me-3">
-                                                                                                    <img [src]="element.elementUrl ? element.elementUrl : 'assets/images/brand-logos/no-image.png'"
-                                                                                                        (error)="onImgError($event)" class="img-thumbnail" alt="Project Image">
+                                                                                                    <img [src]="element.elementUrl || 'assets/images/brand-logos/no-image.png'" (error)="onImgError($event)"
+                                                                                                        class="img-thumbnail" alt="Project Image">
                                                                                                 </span>
                                                                                                 <div>
                                                                                                     <span class="fw-medium d-block">
                                                                                                         {{
-                                                                                                        (element.elementNameAndDescription?.split('\n')[0] || '').length > 30
-                                                                                                        ? ((element.elementNameAndDescription?.split('\n')[0] || '') | slice:0:30) + '...'
-                                                                                                        : (element.elementNameAndDescription?.split('\n')[0] || '')
+                                                                                                        (
+                                                                                                        (element.elementNameAndDescription?.split('\n')[0] || '')
+                                                                                                        .replace('Name :', '')
+                                                                                                        .split('|')[0]
+                                                                                                        .trim()
+                                                                                                        ).length > 30
+                                                                                                        ? (
+                                                                                                        (element.elementNameAndDescription?.split('\n')[0] || '')
+                                                                                                        .replace('Name :', '')
+                                                                                                        .split('|')[0]
+                                                                                                        .trim()
+                                                                                                        | slice:0:30
+                                                                                                        ) + '...'
+                                                                                                        : (
+                                                                                                        (element.elementNameAndDescription?.split('\n')[0] || '')
+                                                                                                        .replace('Name :', '')
+                                                                                                        .split('|')[0]
+                                                                                                        .trim()
+                                                                                                        )
                                                                                                         }}
                                                                                                     </span>
+
                                                                                                     <div class="text-muted small">
-                                                                                                        {{ element.elementNameAndDescription?.split('\n')[1] || '' }}
+                                                                                                        {{
+                                                                                                        element.elementNameAndDescription
+                                                                                                        ?.split('\n')[2] || ''
+                                                                                                        }}
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -1651,9 +1672,7 @@
                                                                                             Brand Or Make
                                                                                         </th>
                                                                                         <td mat-cell *matCellDef="let element" class="sticky-col-left-3">
-                                                                                            {{
-                                                                                            element.elementNameAndDescription?.split('\n')[1]?.split(':')[1]?.trim()
-                                                                                            }}
+                                                                                            {{ getBrand(element) }}
                                                                                         </td>
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="codeAndCategory">
@@ -1682,7 +1701,6 @@
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                                                             Order Status
                                                                                         </th>
-                                                                                    
                                                                                         <td mat-cell *matCellDef="let element">
                                                                                             <div class="hover-select-wrapper clickable" (mouseleave)="forceBlur(orderStatusSelect)" (click)="orderStatusSelect.open()">
                                                                                                 <div class="code-display">
@@ -1697,7 +1715,6 @@
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="itemType">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Type</th>
-
                                                                                         <td mat-cell *matCellDef="let element">
                                                                                             <div class="hover-select-wrapper clickable" (mouseleave)="forceBlur(itemTypeSelect)" (click)="itemTypeSelect.open()">
                                                                                                 <div class="code-display">
@@ -1712,7 +1729,6 @@
                                                                                                         </div>
                                                                                                     </ng-template>
                                                                                                 </ng-select>
-
                                                                                             </div>
                                                                                         </td>
                                                                                     </ng-container>
@@ -1724,7 +1740,6 @@
                                                                                     </ng-container>
                                                                                     <ng-container matColumnDef="status">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                                                                                    
                                                                                         <td mat-cell *matCellDef="let element">
                                                                                             <div class="hover-select-wrapper clickable" (click)="statusSelect.open()" (mouseleave)="forceBlur(statusSelect)">
                                                                                                 <div class="code-display">
@@ -1739,11 +1754,9 @@
                                                                                                         </div>
                                                                                                     </ng-template>
                                                                                                 </ng-select>
-                                                                                    
                                                                                             </div>
                                                                                         </td>
                                                                                     </ng-container>
-
                                                                                     <ng-container matColumnDef="length">
                                                                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                                                                             Length
@@ -2156,7 +2169,7 @@
 </ng-template>
 
 <ng-template #content1 let-offcanvas>
-    <form [formGroup]="elementForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="elementForm">
         <div class="offcanvas-header border-bottom">
             <h5 class="offcanvas-title"><strong> {{ isEditMode ? 'Edit Element' : 'Create Element' }}</strong>
             </h5>
@@ -2182,11 +2195,11 @@
                         <textarea class="form-control" formControlName="elementDescription" rows="4"></textarea>
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">Length</label>
+                        <label class="form-label">Widht</label>
                         <input type="number" class="form-control" formControlName="length" placeholder="Enter Length">
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">Breadth</label>
+                        <label class="form-label">Depth</label>
                         <input type="number" class="form-control" formControlName="breadth" placeholder="Enter Breadth">
                     </div>
                     <div class="col-xl-6">
@@ -2194,8 +2207,31 @@
                         <input type="number" class="form-control" formControlName="height" placeholder="Enter Height">
                     </div>
                     <div class="col-xl-6">
+                        <label class="form-label">Item Code</label>
+                        <ng-select formControlName="itemCode" [items]="itemCodeLst" bindLabel="name" bindValue="code"
+                            placeholder="Select Item Code" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['itemCode'].errors }">
+                        </ng-select>
+                        <div *ngIf="elementFormSubmitted && es['itemCode'].errors" class="invalid-feedback">
+                          <div *ngIf="es['itemCode'].errors['required']">Item Code required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Room Name</label>
+                        <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
+                            placeholder="Select Room Name" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['roomName'].errors }">
+                        </ng-select>
+                        <div *ngIf="elementFormSubmitted && es['roomName'].errors" class="invalid-feedback">
+                          <div *ngIf="es['roomName'].errors['required']">Room Name required</div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">Client Rate (₹)</label>
+                        <input type="number" class="form-control" formControlName="clientRate"
+                            placeholder="Enter Client Rate">
+                    </div>
+                    <div class="col-xl-6">
                         <label class="form-label">Code & Category</label>
-                        <ng-select [items]="codeAndCategory" bindValue="code" placeholder="Select"
+                        <ng-select [items]="codeAndCategory" bindLabel="name" bindValue="name" placeholder="Select"
                             formControlName="codeAndCategory">
                             <ng-template ng-option-tmp let-item="item">
                                 <div class="d-flex justify-content-between w-100">
@@ -2216,8 +2252,8 @@
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Quantity</label>
-                        <input type="number" class="form-control" formControlName="quantity"
-                            placeholder="Enter Quantity">
+                        <input type="number" class="form-control" formControlName="quantity" placeholder="Enter Quantity" min="0"
+                            (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Item Type</label>
@@ -2226,23 +2262,9 @@
                         </ng-select>
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">Room Name</label>
-                        <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
-                            placeholder="Select Room Name" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['roomName'].errors }">
-                        </ng-select>
-                        <div *ngIf="elementFormSubmitted && es['roomName'].errors" class="invalid-feedback">
-                          <div *ngIf="es['roomName'].errors['required']">Room Name required</div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
                         <label class="form-label">Draft Quantity</label>
                         <input type="number" class="form-control" formControlName="draftQuantity"
                             placeholder="Enter Draft Quantity">
-                    </div>
-                    <div class="col-xl-6">
-                        <label class="form-label">Client Rate (₹)</label>
-                        <input type="number" class="form-control" formControlName="clientRate"
-                            placeholder="Enter Client Rate">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Budget Rate (₹)</label>
@@ -2250,23 +2272,26 @@
                             placeholder="Enter Budget Rate">
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">HSN</label>
-                        <input type="text" class="form-control" formControlName="hsn" placeholder="Enter HSN">
+                        <label class="form-label">Base Amount (₹)</label>
+                        <input type="number" class="form-control" formControlName="baseAmount"
+                            placeholder="Enter Base Amount">
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">Item Code</label>
-                        <ng-select formControlName="itemCode" [items]="itemCodeLst" bindLabel="name" bindValue="code"
-                            placeholder="Select Item Code" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['itemCode'].errors }">
-                        </ng-select>
-                        <div *ngIf="elementFormSubmitted && es['itemCode'].errors" class="invalid-feedback">
-                          <div *ngIf="es['itemCode'].errors['required']">Item Code required</div>
-                        </div>
+                        <label class="form-label">Service Charge</label>
+                        <input type="number" class="form-control" formControlName="serviceCharge"
+                            placeholder="Enter Service Charge">
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="form-label">HSN Code</label>
+                        <input type="text" class="form-control" formControlName="gstPrecent" placeholder="Enter HSN">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">GST %</label>
-                        <ng-select [items]="GST" bindLabel="name" bindValue="name" placeholder="Select any"
-                            formControlName="gstPrecent">
-                        </ng-select>
+                        <input type="text" class="form-control" formControlName="gstPrecent" placeholder="Enter GST"
+                        [ngClass]="{ 'is-invalid': elementFormSubmitted && es['gstPrecent'].errors }">
+                        <div *ngIf="elementFormSubmitted && es['gstPrecent'].errors" class="invalid-feedback">
+                          <div *ngIf="es['gstPrecent'].errors['pattern']">Only numbers are allowed.</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Upload Image</label>
@@ -2279,7 +2304,7 @@
             </div>
         </div>
         <div class="offcanvas-footer border-top p-3">
-            <button type="submit" class="btn btn-primary me-3" *ngIf="showSubmitButton">
+            <button type="button" class="btn btn-primary me-3" *ngIf="showSubmitButton" (click)="onSubmit()">
                 {{ isEditMode ? 'Update' : 'Save' }}
             </button>
             <button type="button" class="btn btn-danger" (click)="offcanvas.dismiss('Close click')">

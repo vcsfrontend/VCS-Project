@@ -618,6 +618,7 @@ export class BaseComponent {
     { "name": "Lumpsum"},
     { "name": "Nos"},
     { "name": "RFT"},
+    { "name": "MM"},
   ];
 
   GST = [
@@ -675,7 +676,7 @@ export class BaseComponent {
     { "name": "Accessories", "code": "AK_AC" },
     { "name": "Hardware", "code": "AK_HA" },
     { "name": "Group Panel", "code": "AK_GP" },
-    { "name": "Group Panel", "code": "AK_GP" },
+    { "name": "Services", "code": "AK_SE" },
   ];
   permissionCategories =[
     {"name" : 'taskApproval'},
