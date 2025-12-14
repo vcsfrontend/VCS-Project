@@ -112,6 +112,7 @@ export class ProposalComponent extends BaseComponent {
   boqKeys: string[] = []; roomNameList: any[] = []; isImportChecked: boolean = false;
   selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any;
   uomList: any[] = []; leadName: string = ''; isLoading: boolean = false; elementUrl: string = '';
+  showSubmitButton: boolean = true;
   setThumbsSwiper(swiper: any) {
     this.thumbsSwiper = swiper;
   }
@@ -268,7 +269,7 @@ export class ProposalComponent extends BaseComponent {
       elementUrl: [''],
       elementName: [''],
       elementDescription: [''],
-      codeAndCategory: [],
+      codeAndCategory: [''],
       orderStatus: [''],
       itemType: [''],
       source: [''],
@@ -276,24 +277,18 @@ export class ProposalComponent extends BaseComponent {
       length: [0],
       breadth: [0],
       height: [0],
-      quantity: [0],
+      quantity: [0, [Validators.min(1)]],
       uom: [''],
-      draftQuantity: [0],
-      l1: [''],
-      l2: [''],
-      w1: [''],
-      w2: [''],
-      cl: [''],
-      cw: [''],
-      clientRate: [0],
+      draftQuantity: [0, [Validators.min(1)]],
+      clientRate: [0, [Validators.min(0)]],
       finalAmount: [0],
       brandOrMake: [''],
       discount: [0],
-      serviceCharge: [0],
+      serviceCharge: [0, [Validators.min(0)]],
       baseAmount: [0],
       budgetRate: [0],
       hsn: [0],
-      gstPrecent: [0],
+      gstPrecent: [0, [Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
       amountWithoutGst: [0],
       designId: [''],
       roomName: ['', [Validators.required]],
@@ -459,22 +454,33 @@ export class ProposalComponent extends BaseComponent {
     let brandOrMake = '';
     let elementDescription = '';
     if (element.elementNameAndDescription) {
-      const parts: string[] = element.elementNameAndDescription.split('\n');
-      const namePart = parts.find((p: string) => p.startsWith('Name :'));
-      elementName = namePart ? namePart.replace('Name :', '').trim() : '';
-
-      const brandPart = parts.find((p: string) => p.startsWith('Brand :'));
-      brandOrMake = brandPart ? brandPart.replace('Brand :', '').trim() : '';
-      elementDescription = parts
-        .filter(p => !p.startsWith('Name :') && !p.startsWith('Brand :'))
+      const lines = element.elementNameAndDescription.split('\n');
+      const rawName = lines[0] || '';
+      elementName = rawName
+        .replace('Name :', '')
+        .split('|')[0]
+        .trim();
+      const brandLine = lines.find((l: string) =>
+        l.trim().startsWith('Brand :')
+      );
+      brandOrMake = brandLine
+        ? brandLine.replace('Brand :', '').trim()
+        : '';
+      elementDescription = lines
+        .filter((l: string) =>
+          !l.startsWith('Name :') && !l.startsWith('Brand :')
+        )
+        .map((l: string) =>
+          l.replace('Description :', '').trim()
+        )
         .join('\n')
         .trim();
     }
     this.elementForm.patchValue({
       elementUrl: element.elementUrl || '',
       elementName: elementName,
-      elementDescription: elementDescription,
       brandOrMake: brandOrMake || element.brandOrMake || '',
+      elementDescription: elementDescription,
       length: element.length || 0,
       breadth: element.breadth || 0,
       height: element.height || 0,
@@ -486,21 +492,20 @@ export class ProposalComponent extends BaseComponent {
       budgetRate: element.budgetRate,
       hsn: element.hsn,
       gstPrecent: element.gstPrecent,
-      roomName: element.roomName,
-      itemCode: element.itemCode,
+      roomName: element.roomName || '',
+      itemCode: element.itemCode || '',
       companyCode: element.companyCode,
       email: element.email,
       type: element.type,
     });
+    this.elementUrl = element.elementUrl || '';
     this.previewUrl = element.elementUrl || null;
-    const ref = this.offcanvasService.open(content, { position: 'end', scroll: true });
+    const ref = this.offcanvasService.open(content, {
+      position: 'end',
+      scroll: true
+    });
     ref.closed.subscribe(() => this.resetForm());
     ref.dismissed.subscribe(() => this.resetForm());
-    // if (this.isEditMode) {
-    //     this.elementForm.disable();
-    //     this.elementForm.get('quantity')?.enable();
-    // }
-
   }
 
   updateDropdownField(
@@ -897,6 +902,13 @@ export class ProposalComponent extends BaseComponent {
 
   openEditFromSelected(element: any, content: any) {
     this.isEditMode = true;
+    this.showSubmitButton = true;
+    this.openEditForm(element, content);
+  }
+
+  openOffcanvasWithoutSubmit(element: any, content: any) {
+    this.isEditMode = true;
+    this.showSubmitButton = false;
     this.openEditForm(element, content);
   }
 
@@ -907,12 +919,18 @@ export class ProposalComponent extends BaseComponent {
       return;
     }
     const formValue = this.elementForm.value;
-    const elementNameAndDescription =
-      `Name : ${formValue.elementName || ''}` +
-      `${formValue.elementDescription ? '\nDescription : ' + formValue.elementDescription : ''}`;
+    let elementNameAndDescription = '';
+    if (formValue.elementName && formValue.elementName.trim()) {
+      elementNameAndDescription = `Name : ${formValue.elementName.trim()}`;
+    }
+    if (formValue.brandOrMake && formValue.brandOrMake.trim()) {
+      elementNameAndDescription += `\nBrand : ${formValue.brandOrMake.trim()}`;
+    }
+    if (formValue.elementDescription && formValue.elementDescription.trim()) {
+      elementNameAndDescription += `\nDescription : ${formValue.elementDescription.trim()}`;
+    }
     const payload = {
       elementNameAndDescription,
-      brandOrMake: formValue.brandOrMake || '',
       budgetRate: Number(formValue.budgetRate),
       clientRate: Number(formValue.clientRate),
       gstPrecent: Number(formValue.gstPrecent),
@@ -922,18 +940,17 @@ export class ProposalComponent extends BaseComponent {
       length: Number(formValue.length),
       quantity: Number(formValue.quantity),
       uom: formValue.uom || '',
-      elementUrl: this.elementUrl || '',
+      elementUrl: this.elementUrl,
       itemCode: formValue.itemCode || '',
       roomName: formValue.roomName || '',
       draftQuantity: Number(formValue.draftQuantity) || 0,
-      codeAndCategory: formValue.codeAndCategory?.name || '',
+      codeAndCategory: formValue.codeAndCategory || '',
       itemType: formValue.itemType || '',
-      designId: '3FO3ILENXV7I',
+      designId: this.designingId,
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType
     };
-    console.log(payload);
     this.switchService.saveElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
@@ -952,18 +969,18 @@ export class ProposalComponent extends BaseComponent {
       return;
     }
     const item = this.selectedItems[0];
-    const descriptionParts = [
-      item.description && item.description !== item.name ? item.description : '',
-      item.carcassMaterial ? `Carcass Material: ${item.carcassMaterial}` : '',
-      item.carcassFinish ? `Carcass Finish: ${item.carcassFinish}` : '',
-      item.shutterMaterial ? `Shutter Material: ${item.shutterMaterial}` : '',
-      item.shutterFinish ? `Shutter Finish: ${item.shutterFinish}` : ''
-    ].filter(x => x.trim() !== '');
-    const combinedDescription =
-      `${item.name || ''}\n${descriptionParts.length ? descriptionParts.join(" | ") : 'No description available'}`;
+    let elementNameAndDescription = '';
+    if (item.name && item.name.trim()) {
+      elementNameAndDescription = `Name : ${item.name.trim()}`;
+    }
+    if (item.brandMake && item.brandMake.trim()) {
+      elementNameAndDescription += `\nBrand : ${item.brandMake.trim()}`;
+    }
+    if (item.description && item.description.trim()) {
+      elementNameAndDescription += `\nDescription : ${item.description.trim()}`;
+    }
     const payload = {
-      elementNameAndDescription: combinedDescription,
-      brandMake: item.brandMake || '',
+      elementNameAndDescription,
       categoryName: this.getCategoryName(item.categoryId?._id || item.categoryId),
       uom: this.getUomName(item.uom) || null,
       quantity: Number(item.standardQuantity) || 1,
@@ -977,12 +994,13 @@ export class ProposalComponent extends BaseComponent {
       length: item.dimensions?.width || 0,
       breadth: item.dimensions?.depth || 0,
       height: item.dimensions?.height || 0,
-      designId: '3FO3ILENXV7I'
+      designId: this.designingId
     };
+    console.log(payload);
     this.switchService.saveElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
-          this.toastr.success(res.message || 'Item imported successfully!');
+          this.toastr.success(res.message || 'Elements Imported');
           this.boqData();
         }
       }
@@ -994,11 +1012,15 @@ export class ProposalComponent extends BaseComponent {
   }
 
   editElement(element?: any) {
+    this.elementFormSubmitted = true;
+    if (this.elementForm.value.roomName == '' || this.elementForm.value.itemCode == '') {
+      console.log('roomnam or item code mising ')
+    }
     const formValue = { ...this.elementForm.value };
     const payload = [
       {
         boqId: element?.boqId || Number(this.itemId) || 0,
-        elementUrl: element?.elementUrl || formValue.elementUrl || '',
+        elementUrl: this.elementUrl || element?.elementUrl || '',
         elementNameAndDescription: (
           `Name : ${formValue.elementName || ''}\n` +
           `Carcass Material : ${formValue.carcassMaterial || ''}\n` +
@@ -1007,7 +1029,7 @@ export class ProposalComponent extends BaseComponent {
           `Shutter Finish : ${formValue.shutterFinish || ''}\n` +
           `Brand : ${formValue.brandOrMake || ''}`
         ).trim(),
-        codeAndCategory: formValue.codeAndCategory || element?.codeAndCategory || '',
+        codeAndCategory: formValue.codeAndCategory || '',
         orderStatus: formValue.orderStatus || element?.orderStatus || '',
         itemType: formValue.itemType || element?.itemType || '',
         source: formValue.source || element?.source || '',
@@ -1028,23 +1050,51 @@ export class ProposalComponent extends BaseComponent {
         hsn: Number(element?.hsn ?? formValue.hsn) || 0,
         gstPrecent: Number(element?.gstPrecent ?? formValue.gstPrecent) || 0,
         amountWithoutGst: Number(element?.amountWithoutGst ?? formValue.amountWithoutGst) || 0,
-        designId: '3FO3ILENXV7I',
-        roomName: element?.roomName || formValue.roomName || '',
-        itemCode: element?.itemCode || formValue.itemCode || '',
+        designId: this.designingId,
+        roomName: formValue.roomName,
+        itemCode: formValue.itemCode,
         companyCode: this.userCompanyCode,
         email: this.userEmail,
         type: this.userType,
       },
     ];
+    console.log(payload)
     this.switchService.updateElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
-          this.toastr.success(res.message || 'Data Updated ');
+          this.toastr.success(res.message || 'Element Updated');
+          const updatedItem = payload[0];
+          const room = formValue.roomName;
+          const roomDataSource = this.boqDataSources[room];
+          if (roomDataSource) {
+            const index = roomDataSource.data.findIndex(
+              (d: any) => d.boqId === updatedItem.boqId
+            );
+            if (index !== -1) {
+              roomDataSource.data[index] = {
+                ...roomDataSource.data[index],
+                ...updatedItem
+              };
+              roomDataSource._updateChangeSubscription();
+            }
+          }
+          const allDataSource = this.boqDataSources['All'];
+          if (allDataSource) {
+            const allIndex = allDataSource.data.findIndex(
+              (d: any) => d.boqId === updatedItem.boqId
+            );
+            if (allIndex !== -1) {
+              allDataSource.data[allIndex] = {
+                ...allDataSource.data[allIndex],
+                ...updatedItem
+              };
+              allDataSource._updateChangeSubscription();
+            }
+          }
           this.elementForm.reset();
           this.offcanvasService.dismiss();
           this.elementFormSubmitted = false;
           this.selectedElement = [];
-          this.boqData();
         }
       }
     });
@@ -1415,7 +1465,7 @@ export class ProposalComponent extends BaseComponent {
       const reader = new FileReader();
       reader.onload = () => {
         this.previewUrl = reader.result as string;
-        this.elementUrl = this.previewUrl;  // correct!
+        this.elementUrl = this.previewUrl;  
       };
       reader.readAsDataURL(this.selectedFile);
     }
@@ -1971,6 +2021,21 @@ export class ProposalComponent extends BaseComponent {
     }
 
     return id;
+  }
+
+  blockMinus(event: KeyboardEvent) {
+    if (event.key === '-' || event.key === 'e' || event.key === '+') {
+      event.preventDefault();
+    }
+  }
+
+  getBrand(element: any): string {
+    if (!element?.elementNameAndDescription) {
+      return '-';
+    }
+    const lines = element.elementNameAndDescription.split('\n');
+    const brandLine = lines.find((l: string) => l.trim().startsWith('Brand :'));
+    return brandLine ? brandLine.replace('Brand :', '').trim() : '-';
   }
 
 
