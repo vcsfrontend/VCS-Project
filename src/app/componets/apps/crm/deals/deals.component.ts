@@ -94,7 +94,7 @@ export class DealsComponent extends BaseComponent {
   pageIndex = 0; pageSize = 50;  data: any[] = []; displayData: any[] = []; totalRecords: number = 0;
    minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any;
   uploadLeads :boolean=false;moveCmapignSubmitted : boolean= false;
-  executiveEmail : string ='';
+  executiveEmail : string ='';isAllocating: boolean = false;selectedAppointment : any[]=[];
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -403,6 +403,7 @@ export class DealsComponent extends BaseComponent {
     this.getAllEmailTemplates();
     this.getLeadEntry();
     this.getCampaignData();
+    this.getAppointment();
     this.selectedLeads = [];
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -1596,44 +1597,54 @@ export class DealsComponent extends BaseComponent {
       return;
     }
     if (this.allocateForm?.valid) {
+      const finalIds = this.selectedLeads.map((l: any) =>
+        typeof l === 'number' ? l : l.leadId
+      );
+
       this.allocateForm.patchValue({
-        idList: this.selectedLeads.map((lead: any) => lead.leadId)
+        idList: finalIds
       });
+
       let allocateData = { 
-        idList: this.selectedLeads, 
+        idList: finalIds,
         executive: this.allocateForm.get('executive')?.value 
-      };    
-      console.log('allocated date',allocateData);  
-      // this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
-      //   next: (res: any) => {
-      //     if (res.status == true) {
-      //       this.allocateSubmitted = false;
-      //       this.allocateForm.reset();
-      //       this.selectedLeads=[];
-      //       this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-      //       this.getfetchLeadsIndividual();
-      //     } else {
-      //       this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-      //     }
-      //   },
-      //   error: (error) => {
-      //     this.toastr.error(error.statusText);
-      //   },
-      // });
+      };
+      this.isAllocating = true;
+      this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
+        next: (res: any) => {
+          if (res.status == true) {
+            this.allocateSubmitted = false;
+            this.allocateForm.reset();
+            this.selectedLeads=[];
+            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+             this.isAllocating = false;  
+            this.getfetchLeadsIndividual();
+          } else {
+            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+          }
+        },
+        error: (error) => {
+          this.toastr.error(error.statusText);
+        },
+      });
     }
   }
 
-  onRowCheckboxChange(lead: any, event: any) {
+ onRowCheckboxChange(lead: any, event: any) {
   if (event.checked) {
+
+    // Add only if not already added
     if (!this.selectedLeads.some(l =>
       (typeof l === 'object' ? l.leadId : l) === lead.leadId
     )) {
-      this.selectedLeads.push(lead);
+      this.selectedLeads.push(lead);   // store full object in single select
     }
 
     this.selectedLeadForAppointment = lead;
 
   } else {
+
+    // Remove both object or number format
     this.selectedLeads = this.selectedLeads.filter(l =>
       (typeof l === 'object' ? l.leadId : l) !== lead.leadId
     );
@@ -1643,35 +1654,37 @@ export class DealsComponent extends BaseComponent {
     }
   }
   }
+
   onSelectAllChange(event: any) {
   if (event.checked) {
-
-    this.selectedLeads = [];   
-
-    this.selectedLeads = this.dataSource.data
-      .filter(row => row.completionStatus !== 'completed')
-      .map(row => row.leadId);  
-  } 
-  else {
+    const rows = this.dataSource.data
+      .filter(row => row.completionStatus !== 'completed');
+    this.selectedLeads = rows.map(r => r.leadId);
+  } else {
     this.selectedLeads = [];
   }
   }
-  isSelected(leadId: number): boolean {
-    return this.selectedLeads.includes(leadId);
-  }
+
+isSelected(leadId: number): boolean {
+  return this.selectedLeads.some(item =>
+    typeof item === 'number'
+      ? item === leadId
+      : item.leadId === leadId
+  );
+}
+
+
 
   isAllSelected(): boolean {
-    const enabledRows = this.dataSource.data
-      .filter(row => row.completionStatus?.toLowerCase() !== 'completed');
+  const enabledRows = this.dataSource.data
+    .filter(row => row.completionStatus?.toLowerCase() !== 'completed');
 
-    // Only compare the selectable rows
-    const selectedIds = this.selectedLeads.map(l => l.leadId ?? l);
+  const selectedIds = this.selectedLeads.map(l => l.leadId ?? l);
 
-    return enabledRows.every(row => selectedIds.includes(row.leadId));
-  }
+  return enabledRows.every(row => selectedIds.includes(row.leadId));
+}
 
-
-  isIndeterminate(): boolean {
+isIndeterminate(): boolean {
   const enabledRows = this.dataSource.data
     .filter(row => row.completionStatus?.toLowerCase() !== 'completed');
 
@@ -1684,7 +1697,7 @@ export class DealsComponent extends BaseComponent {
   ).length;
 
   return selectedCount > 0 && selectedCount < enabledRows.length;
-  }
+}
 
 
   @ViewChild("myPond") myPond!: FilePondComponent;
@@ -2487,25 +2500,35 @@ export class DealsComponent extends BaseComponent {
     return;
   }
   const normalized = this.selectedLeads
-  .map(item => {
-    if (typeof item === 'number') {
-      return this.dataSource.data.find(row => row.leadId === item);
-    }
-    return item;
-  })
-  .filter(x => x && x.leadId); 
-  const filteredLeads = normalized.filter(
-  (lead: any) => lead.status?.toLowerCase() !== 'completed'
-  );
+    .map(item =>
+      typeof item === 'number'
+        ? this.dataSource.data.find(row => row.leadId === item)
+        : item
+    )
+  .filter(obj => obj && obj.leadId);  
+ const blocked = normalized
+  .filter(lead => this.selectedAppointment.includes(lead.leadId))
+  .map(lead => lead.leadId);
 
-  if (!filteredLeads.length) {
-    this.toastr.warning('Completed leads cannot be deleted');
+  if (blocked.length > 0) {
+    this.toastr.warning('Some selected leads have appointments — cannot delete');
     return;
   }
-  const leadList = filteredLeads.map((lead: any) => lead.leadId);
+    const filteredLeads = normalized.filter(
+      (lead: any) => lead?.completionStatus?.toLowerCase() !== 'completed'
+    );
+
+    if (!filteredLeads.length) {
+      this.toastr.warning('Completed leads cannot be deleted');
+      return;
+    }
+    const leadIdList = filteredLeads.map(lead => lead.leadId);
+    const payload = {
+      leadList: leadIdList
+    };
 
   if (confirm('Are you sure you want to delete the selected leads?')) {
-    this.switchService.deleteLeads({ leadList }).subscribe({
+    this.switchService.deleteLeads( payload ).subscribe({
       next: (res: any) => {
         this.toastr.success('Leads deleted successfully');
         this.getfetchLeadsIndividual();
@@ -2740,7 +2763,11 @@ export class DealsComponent extends BaseComponent {
     this.modalService.open(appointment1, { centered: true });
   }
 
-  appointmentFormSubmit(modal: any) {  
+  appointmentFormSubmit(modal: any) {
+    this.appointmentFormSubmitted = true;
+    if(this.appointmentForm.invalid){
+      this.toastr.warning('please fill the all required fields')
+    }
     const formData = this.appointmentForm.value;
      const payload = {
       appointmenType: formData.appointmenType,
@@ -2780,31 +2807,31 @@ export class DealsComponent extends BaseComponent {
         type: this.selectedLeadForAppointment.type,
       }  : null  
     };
-    this.appointmentFormSubmitted = true;
-    if(this.appointmentForm?.valid){
-      this.switchService.saveAppointment(payload).subscribe({
-        next: (res) => {
-          this.toastr.success('Appointment Created ');
-          this.appointmentFormSubmitted = false;
-          modal.close();
-        },
-        error: (err) => {
-        }
-      });
-    }
-  }
-
-  getAppointment(element: any) {
-    const leadId = element.leadId;
-    this.switchService.fetchAppointment(leadId).subscribe({
+    this.uploadSpinner = true;
+    
+    this.switchService.saveAppointment(payload).subscribe({
       next: (res) => {
-        this.appointmentDataList = res; 
+        this.toastr.success('Appointment Created ');
+        this.uploadSpinner = false;
+        this.appointmentFormSubmitted = false;
+        modal.close();
       },
       error: (err) => {
-        this.toastr.error('Failed to fetch appointment');
       }
     });
   }
+
+  // getAppointment(element: any) {
+  //   const leadId = element.leadId;
+  //   this.switchService.fetchAppointment(leadId).subscribe({
+  //     next: (res) => {
+  //       this.appointmentDataList = res; 
+  //     },
+  //     error: (err) => {
+  //       this.toastr.error('Failed to fetch appointment');
+  //     }
+  //   });
+  // }
   openEditAppointment(template: any, element: any) {
     this.switchService.fetchAppointment(element.leadId).subscribe(res => {
       if (res && res.length > 0) {
@@ -3383,6 +3410,50 @@ export class DealsComponent extends BaseComponent {
     });
   }
   }
+  getAppointment() {
+  const startOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const endOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+  const isAdmin = this.adoanAiRole === 'ADMIN' || this.crmRole === 'ADMIN';
+  const payload = {
+    startDate: startOfMonth,
+    endDate: endOfMonth,
+    companyCode: this.userCompanyCode,
+    email: this.userEmail,
+    type: this.userType,
+    currentUser : isAdmin ? 'from_admin' : this.userEmail
+  };
+
+  this.switchService.fetchAppointment(payload).subscribe({
+    next: (res) => {
+      this.selectedAppointment = res.map((item: any) => item.leadEntry?.leadId);
+      console.log('appontmnets lists',this.selectedAppointment);
+    
+    },
+    error: () => this.toastr.error('Failed to fetch appointments')
+  });
+  }
+
+   formatDateOnly(dateInput: string | Date): string {
+  let date: Date;
+
+  if (typeof dateInput === 'string') {
+    date = new Date(dateInput);
+  } else {
+    date = dateInput;
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+  }
  
+ hasAppointment(leadId: number): boolean {
+  return Array.isArray(this.selectedAppointment) &&
+    this.selectedAppointment.includes(leadId);
+  }
+
+
 
 }
