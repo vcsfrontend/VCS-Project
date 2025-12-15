@@ -397,7 +397,7 @@
                                 <ng-template ngbNavContent>
                                     <div class="col-xl-12">
                                         <div class="">
-                                            <div class="card-body p-0" *ngIf="!selectedProposalContent">
+                                            <div class="card-body p-0 mt-4" *ngIf="!selectedProposalContent">
                                                 <div class="table-container">
                                                     <table class="table table-hover text-nowrap my-table">
                                                         <thead class="sticky: true">
@@ -495,255 +495,242 @@
                                                 </div>
                                             </div>
                                             <div class="card custom-card mt-4" style="box-shadow: none !important;" *ngIf="selectedProposalContent">
-                                                <div class="">
-                                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <button class="btn btn-link p-0 me-2" (click)="backToLibrary()">
-                                                                <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
-                                                            </button>
-                                                            <div class="card-title"> Proposal for New Order ({{ selectedProposalContent?.orderNo }})</div>
+                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <button class="btn btn-link p-0 me-2" (click)="backToLibrary()">
+                                                            <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
+                                                        </button>
+                                                        <div class="card-title">Proposal Details ({{ selectedProposalContent?.orderNo }})</div>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
+                                                        <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button>
+                                                        <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
+                                                            <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body" *ngIf="!isCollapsed">
+                                                    <div class="row g-3">
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Order No.</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderNo }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Order From</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderFrom }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Vendor ID</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.vendorId }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Job ID</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.jobId }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Created By</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.createdBy }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Order For</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderFor }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Shipping Address</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.shippingAddress }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Start Date</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.startDate | date:'dd MMM yyyy' }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">Due Date</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.dueDate | date:'dd MMM yyyy' }}</p>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <small class="text-muted">GST Number</small>
+                                                            <p class="fw-semibold mb-0">{{ selectedProposalContent?.gstNo }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="">
-                                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                                        <div class="card-title">Order Details</div>
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
-                                                            <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button>
-                                                            <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
-                                                                <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
-                                                            </button>
-                                                        </div>
+                                                <div class="card-footer d-flex justify-content-between align-items-center border-bottom">
+                                                    <div>
+                                                        <i class="bi bi-plus-circle me-1 text-success"></i>
+                                                        Proposal Status:
+                                                        <span class="fw-bold text-success">{{ selectedProposalContent?.proposalStatus }}</span>
                                                     </div>
-                                                    <div class="card-body" *ngIf="!isCollapsed">
-                                                        <div class="row g-3">
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Order No.</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderNo }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Order From</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderFrom }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Vendor ID</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.vendorId }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Job ID</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.jobId }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Created By</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.createdBy }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Order For</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.orderFor }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Shipping Address</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.shippingAddress }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Start Date</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.startDate | date:'dd MMM yyyy' }}
-                                                                </p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">Due Date</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.dueDate | date:'dd MMM yyyy' }}</p>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <small class="text-muted">GST Number</small>
-                                                                <p class="fw-semibold mb-0">{{ selectedProposalContent?.gstNo }}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="card-footer d-flex justify-content-between align-items-center border-bottom">
-                                                        <div>
-                                                            <i class="bi bi-plus-circle me-1 text-success"></i>
-                                                            Proposal Status:
-                                                            <span class="fw-bold text-success">{{ selectedProposalContent?.proposalStatus }}</span>
-                                                        </div>
-                                                        <div *ngIf="selectedProposalContent?.createdBy" class="d-flex align-items-center mt-1">
-                                                            <span class="me-2">Created By:</span>
-                                                            <div class="d-flex align-items-center flex-wrap avatar-list-stacked">
-                                                                <span
-                                                                    class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
-                                                                    [ngClass]="getAgentColor(selectedProposalContent.createdBy)">
-                                                                    {{ selectedProposalContent.createdBy.trim().charAt(0) | uppercase }}
-                                                                </span>
-                                                                <span class="small ms-3">{{ selectedProposalContent.createdBy }}</span>
-                                                            </div>
+                                                    <div *ngIf="selectedProposalContent?.createdBy" class="d-flex align-items-center mt-1">
+                                                        <span class="me-2">Created By:</span>
+                                                        <div class="d-flex align-items-center flex-wrap avatar-list-stacked">
+                                                            <span
+                                                                class="avatar avatar-xs avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center bg-primary"
+                                                                [ngClass]="getAgentColor(selectedProposalContent.createdBy)">
+                                                                {{ selectedProposalContent.createdBy.trim().charAt(0) | uppercase }}
+                                                            </span>
+                                                            <span class="small ms-3">{{ selectedProposalContent.createdBy }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <ul ngbNav #nav="ngbNav" class="nav-tabs bg-white">
+                                            </div>
+                                            <div class="card custom-card mt-4" style="box-shadow: none !important; overflow: hidden;" *ngIf="selectedProposalContent">
+                                                <ul ngbNav #nav="ngbNav" class="bg-white">
                                                     <ng-container *ngFor="let key of proposalTabKeys; let i = index">
                                                         <li [ngbNavItem]="i + 1">
-                                                            <a ngbNavLink class="nav-link m-2">
-                                                                {{ key }}<span class="badge bg-dark text-whites ms-1">
+                                                            <a ngbNavLink class="btn-light m-2">
+                                                                {{ key }}<span class="badge bg-dark text-white ms-1">
                                                                     {{ proposalTabCounts[key] || 0 }}</span>
                                                             </a>
                                                             <ng-template ngbNavContent>
-                                                                <div class="card custom-card">
-                                                                    <div class="table-container mat-elevation-z8">
-                                                                        <table mat-table [dataSource]="proposalContentDataSources[key]" matSort
-                                                                            class="mat-table w-100">
-                                                                            <ng-container matColumnDef="elementUrl">
-                                                                                <th mat-header-cell *matHeaderCellDef class="sticky-col-left"
-                                                                                    style="max-width: 750px;">
-                                                                                    Element Name & Description
-                                                                                </th>
-                                                                                <td mat-cell *matCellDef="let element" class="sticky-col-left"
-                                                                                    style="max-width: 750px;">
-                                                                                    <div class="d-flex align-items-center"
-                                                                                        (click)="openOffcanvasWithoutSubmit(element, content1)"
-                                                                                        style="cursor: pointer;">
-                                                                                        <span class="avatar avatar-xl me-3">
-                                                                                            <img [src]="element.elementUrl" class="img-thumbnail"
-                                                                                                alt="Project Image">
+                                                                <div class="table-container mat-elevation-z8">
+                                                                    <table mat-table [dataSource]="proposalContentDataSources[key]" matSort class="mat-table w-100">
+                                                                        <ng-container matColumnDef="elementUrl">
+                                                                            <th mat-header-cell *matHeaderCellDef class="sticky-col-left" style="max-width: 750px;">
+                                                                                Element Name & Description
+                                                                            </th>
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
+                                                                                <div class="d-flex align-items-center" (click)="openOffcanvasWithoutSubmit(element, content1)"
+                                                                                    style="cursor: pointer;">
+                                                                                    <span class="avatar avatar-xl me-3">
+                                                                                        <img [src]="element.elementUrl" class="img-thumbnail" alt="Project Image">
+                                                                                    </span>
+                                                                                    <div>
+                                                                                        <span class="fw-medium d-block">
+                                                                                            {{
+                                                                                            element.elementNameAndDescription.split('\n')[0].length > 30
+                                                                                            ? (element.elementNameAndDescription.split('\n')[0] |
+                                                                                            slice:0:30) +
+                                                                                            '...'
+                                                                                            : element.elementNameAndDescription.split('\n')[0]
+                                                                                            }}
                                                                                         </span>
-                                                                                        <div>
-                                                                                            <span class="fw-medium d-block">
-                                                                                                {{
-                                                                                                element.elementNameAndDescription.split('\n')[0].length > 30
-                                                                                                ? (element.elementNameAndDescription.split('\n')[0] |
-                                                                                                slice:0:30) +
-                                                                                                '...'
-                                                                                                : element.elementNameAndDescription.split('\n')[0]
-                                                                                                }}
-                                                                                            </span>
-                                                                                            <div class="text-muted small">
-                                                                                                {{ element.elementNameAndDescription.split('\n')[1] }}
-                                                                                            </div>
+                                                                                        <div class="text-muted small">
+                                                                                            {{ element.elementNameAndDescription.split('\n')[1] }}
                                                                                         </div>
                                                                                     </div>
-                                                                                </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="brandOrMake">
-                                                                                <th mat-header-cell *matHeaderCellDef> Brand / Make </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.brandOrMake }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="codeAndCategory">
-                                                                                <th mat-header-cell *matHeaderCellDef> Code & Category </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.codeAndCategory }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="orderStatus">
-                                                                                <th mat-header-cell *matHeaderCellDef> Order Status </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.orderStatus }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="itemType">
-                                                                                <th mat-header-cell *matHeaderCellDef> Item Type </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.itemType }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="source">
-                                                                                <th mat-header-cell *matHeaderCellDef> Source </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.source }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="status">
-                                                                                <th mat-header-cell *matHeaderCellDef> Status </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="length">
-                                                                                <th mat-header-cell *matHeaderCellDef> Length </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.length }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="breadth">
-                                                                                <th mat-header-cell *matHeaderCellDef> Breadth </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.breadth }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="height">
-                                                                                <th mat-header-cell *matHeaderCellDef> Height </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.height }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="quantity">
-                                                                                <th mat-header-cell *matHeaderCellDef> Quantity </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.quantity }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="uom">
-                                                                                <th mat-header-cell *matHeaderCellDef> UOM </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.uom }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="draftQuantity">
-                                                                                <th mat-header-cell *matHeaderCellDef> Draft Qty </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.draftQuantity }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="clientRate">
-                                                                                <th mat-header-cell *matHeaderCellDef> Client Rate </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.clientRate }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="serviceCharge">
-                                                                                <th mat-header-cell *matHeaderCellDef> Service Charge </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.serviceCharge }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="baseAmount">
-                                                                                <th mat-header-cell *matHeaderCellDef> Base Amount </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.baseAmount }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="budgetRate">
-                                                                                <th mat-header-cell *matHeaderCellDef> Budget Rate </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.budgetRate }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="hsn">
-                                                                                <th mat-header-cell *matHeaderCellDef> HSN </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.hsn }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="gstPrecent">
-                                                                                <th mat-header-cell *matHeaderCellDef> GST % </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.gstPrecent }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="amountWithoutGst">
-                                                                                <th mat-header-cell *matHeaderCellDef> Amt w/o GST </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.amountWithoutGst }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="discount">
-                                                                                <th mat-header-cell *matHeaderCellDef> Discount </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.discount }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="finalAmount">
-                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                                                                    class="sticky-col-right">
-                                                                                    Final Amount (₹)
-                                                                                </th>
-                                                                                <td mat-cell *matCellDef="let element" class="sticky-col-right">
-                                                                                    {{ element.finalAmount }}
-                                                                                </td>
-                                                                            </ng-container>
-                                                                            <tr mat-header-row *matHeaderRowDef="proposalContentColumns"></tr>
-                                                                            <tr mat-row *matRowDef="let row; columns: proposalContentColumns"></tr>
-                                                                        </table>
-                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="brandOrMake">
+                                                                            <th mat-header-cell *matHeaderCellDef> Brand / Make </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.brandOrMake }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="codeAndCategory">
+                                                                            <th mat-header-cell *matHeaderCellDef> Code & Category </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.codeAndCategory }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="orderStatus">
+                                                                            <th mat-header-cell *matHeaderCellDef> Order Status </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.orderStatus }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="itemType">
+                                                                            <th mat-header-cell *matHeaderCellDef> Item Type </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.itemType }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="source">
+                                                                            <th mat-header-cell *matHeaderCellDef> Source </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.source }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="status">
+                                                                            <th mat-header-cell *matHeaderCellDef> Status </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="length">
+                                                                            <th mat-header-cell *matHeaderCellDef> Length </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.length }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="breadth">
+                                                                            <th mat-header-cell *matHeaderCellDef> Breadth </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.breadth }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="height">
+                                                                            <th mat-header-cell *matHeaderCellDef> Height </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.height }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="quantity">
+                                                                            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.quantity }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="uom">
+                                                                            <th mat-header-cell *matHeaderCellDef> UOM </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.uom }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="draftQuantity">
+                                                                            <th mat-header-cell *matHeaderCellDef> Draft Qty </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.draftQuantity }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="clientRate">
+                                                                            <th mat-header-cell *matHeaderCellDef> Client Rate </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.clientRate }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="serviceCharge">
+                                                                            <th mat-header-cell *matHeaderCellDef> Service Charge </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.serviceCharge }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="baseAmount">
+                                                                            <th mat-header-cell *matHeaderCellDef> Base Amount </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.baseAmount }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="budgetRate">
+                                                                            <th mat-header-cell *matHeaderCellDef> Budget Rate </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.budgetRate }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="hsn">
+                                                                            <th mat-header-cell *matHeaderCellDef> HSN </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.hsn }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="gstPrecent">
+                                                                            <th mat-header-cell *matHeaderCellDef> GST % </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.gstPrecent }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="amountWithoutGst">
+                                                                            <th mat-header-cell *matHeaderCellDef> Amt w/o GST </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.amountWithoutGst }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="discount">
+                                                                            <th mat-header-cell *matHeaderCellDef> Discount </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.discount }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="finalAmount">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-right">
+                                                                                Final Amount (₹)
+                                                                            </th>
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-right">
+                                                                                {{ element.finalAmount }}
+                                                                            </td>
+                                                                        </ng-container>
+                                                                        <tr mat-header-row *matHeaderRowDef="proposalContentColumns"></tr>
+                                                                        <tr mat-row *matRowDef="let row; columns: proposalContentColumns"></tr>
+                                                                    </table>
                                                                 </div>
                                                             </ng-template>
                                                         </li>
                                                     </ng-container>
                                                 </ul>
                                                 <div [ngbNavOutlet]="nav" class=""></div>
-                                                <div class="">
-                                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <div class="card-title mb-0">Terms & Condition</div>
-                                                        </div>
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
-                                                                <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
-                                                            </button>
-                                                        </div>
+                                            </div>
+                                            <div class="card custom-card mt-3"  style="box-shadow: none !important;" *ngIf="selectedProposalContent">
+                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="card-title mb-0">Terms & Condition</div>
                                                     </div>
-                                                    <div class="card-body" *ngIf="!isCollapsed">
-                                                        <div class="form-check form-switch mb-0">
-                                                            <input class="form-check-input form-checked-success" type="checkbox" role="switch"
-                                                                id="switch-dark" checked="">
-                                                            <label class="form-check-label" for="Payment-Terms">Payment Terms</label>
-                                                        </div>
-                                                        <div class="form-check form-switch mb-0 pt-2">
-                                                            <input class="form-check-input form-checked-success" type="checkbox" role="switch"
-                                                                id="switch-dark" checked="">
-                                                            <label class="form-check-label" for="Other-Terms&Condition">Other Terms & Condition</label>
-                                                        </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
+                                                            <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body" *ngIf="!isCollapsed">
+                                                    <div class="form-check form-switch mb-0">
+                                                        <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
+                                                            checked="">
+                                                        <label class="form-check-label" for="Payment-Terms">Payment Terms</label>
+                                                    </div>
+                                                    <div class="form-check form-switch mb-0 pt-2">
+                                                        <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
+                                                            checked="">
+                                                        <label class="form-check-label" for="Other-Terms&Condition">Other Terms & Condition</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -756,8 +743,8 @@
                                 </a>
                                 <ng-template class="tab-content bg-white" ngbNavContent>
                                     <div class="col-xl-12">
-                                        <div class="card custom-card">
-                                            <div class="card-body p-0" *ngIf="!selectedOrderContent">
+                                        <div class="">
+                                            <div class="card-body p-0 mt-4" *ngIf="!selectedOrderContent">
                                                 <div class="table-container">
                                                     <table class="table table-hover text-nowrap my-table">
                                                         <thead>
@@ -811,19 +798,22 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="card custom-card" *ngIf="selectedOrderContent">
-                                                <div class="card-header d-flex justify-content-between align-items-center">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <button class="btn btn-link p-0 me-2" (click)="backToOrders()">
-                                                            <i class="bi bi-arrow-left"></i>
-                                                        </button>
-                                                        <div class="card-title mb-0">Order Details</div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
-                                                        <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
-                                                            <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
-                                                        </button>
+                                            <div class="card custom-card mt-4" style="box-shadow: none !important;" *ngIf="selectedOrderContent">
+                                                <div class="">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <button class="btn btn-link p-0 me-2" (click)="backToOrders()">
+                                                                <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
+                                                            </button>
+                                                            <div class="card-title">Order Details ({{ selectedOrderContent?.orderNo }})</div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2">
+                                                            <!-- <button class="btn btn-danger btn-sm">Approve</button>
+                                                            <button class="btn btn-primary btn-sm">Share</button> -->
+                                                            <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
+                                                                <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="card-body" *ngIf="!isCollapsed">
@@ -866,7 +856,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="card-footer d-flex justify-content-between align-items-center">
+                                                <div class="card-footer d-flex justify-content-between align-items-center border-bottom">
                                                     <div>
                                                         <i class="bi bi-plus-circle me-1 text-success"></i>
                                                         Proposal Status:
@@ -884,172 +874,166 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <ul ngbNav #nav="ngbNav" class="nav-tabs bg-white">
+                                            </div>
+                                             <div class="card custom-card mt-4" style="box-shadow: none !important; overflow: hidden;" *ngIf="selectedOrderContent">
+                                                <ul ngbNav #nav="ngbNav" class="bg-white">
                                                     <ng-container *ngFor="let key of orderTabKeys; let i = index">
                                                         <li [ngbNavItem]="i + 1">
-                                                            <a ngbNavLink class="nav-link m-2">
+                                                            <a ngbNavLink class="btn-light m-2">
                                                                 {{ key }}
-                                                                <span class="badge bg-white text-dark ms-1">
+                                                                <span class="badge bg-dark text-white ms-1">
                                                                     {{ orderTabCounts[key] || 0 }}
                                                                 </span>
                                                             </a>
                                                             <ng-template ngbNavContent>
-                                                                <div class="card custom-card">
-                                                                    <div class="table-container mat-elevation-z8">
-                                                                        <table mat-table [dataSource]="orderContentDataSources[key]" matSort
-                                                                            class="mat-table w-100">
-                                                                            <ng-container matColumnDef="elementUrl">
-                                                                                <th mat-header-cell *matHeaderCellDef class="sticky-col-left"
-                                                                                    style="max-width: 750px;">
-                                                                                    Element Name & Description
-                                                                                </th>
-                                                                                <td mat-cell *matCellDef="let element" class="sticky-col-left"
-                                                                                    style="max-width: 750px;">
-                                                                                    <div class="d-flex align-items-center"
-                                                                                        (click)="openEditFromSelected(element, content1)"
-                                                                                        style="cursor: pointer;">
-                                                                                        <span class="avatar avatar-xl me-3">
-                                                                                            <img [src]="element.elementUrl" class="img-thumbnail"
-                                                                                                alt="Project Image">
+                                                                <div class="table-container mat-elevation-z8">
+                                                                    <table mat-table [dataSource]="orderContentDataSources[key]" matSort class="mat-table w-100">
+                                                                        <ng-container matColumnDef="elementUrl">
+                                                                            <th mat-header-cell *matHeaderCellDef class="sticky-col-left" style="max-width: 750px;">
+                                                                                Element Name & Description
+                                                                            </th>
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-left" style="max-width: 750px;">
+                                                                                <div class="d-flex align-items-center" (click)="openEditFromSelected(element, content1)"
+                                                                                    style="cursor: pointer;">
+                                                                                    <span class="avatar avatar-xl me-3">
+                                                                                        <img [src]="element.elementUrl" class="img-thumbnail" alt="Project Image">
+                                                                                    </span>
+                                                                                    <div>
+                                                                                        <span class="fw-medium d-block">
+                                                                                            {{
+                                                                                            element.elementNameAndDescription.split('\n')[0].length > 30
+                                                                                            ? (element.elementNameAndDescription.split('\n')[0] |
+                                                                                            slice:0:30) +
+                                                                                            '...'
+                                                                                            : element.elementNameAndDescription.split('\n')[0]
+                                                                                            }}
                                                                                         </span>
-                                                                                        <div>
-                                                                                            <span class="fw-medium d-block">
-                                                                                                {{
-                                                                                                element.elementNameAndDescription.split('\n')[0].length > 30
-                                                                                                ? (element.elementNameAndDescription.split('\n')[0] |
-                                                                                                slice:0:30) +
-                                                                                                '...'
-                                                                                                : element.elementNameAndDescription.split('\n')[0]
-                                                                                                }}
-                                                                                            </span>
-                                                                                            <div class="text-muted small">
-                                                                                                {{ element.elementNameAndDescription.split('\n')[1] }}
-                                                                                            </div>
+                                                                                        <div class="text-muted small">
+                                                                                            {{ element.elementNameAndDescription.split('\n')[1] }}
                                                                                         </div>
                                                                                     </div>
-                                                                                </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="brandOrMake">
-                                                                                <th mat-header-cell *matHeaderCellDef> Brand / Make </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.brandOrMake }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="codeAndCategory">
-                                                                                <th mat-header-cell *matHeaderCellDef> Code & Category </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.codeAndCategory }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="orderStatus">
-                                                                                <th mat-header-cell *matHeaderCellDef> Order Status </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.orderStatus }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="itemType">
-                                                                                <th mat-header-cell *matHeaderCellDef> Item Type </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.itemType }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="source">
-                                                                                <th mat-header-cell *matHeaderCellDef> Source </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.source }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="status">
-                                                                                <th mat-header-cell *matHeaderCellDef> Status </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="length">
-                                                                                <th mat-header-cell *matHeaderCellDef> Length </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.length }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="breadth">
-                                                                                <th mat-header-cell *matHeaderCellDef> Breadth </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.breadth }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="height">
-                                                                                <th mat-header-cell *matHeaderCellDef> Height </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.height }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="quantity">
-                                                                                <th mat-header-cell *matHeaderCellDef> Quantity </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.quantity }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="uom">
-                                                                                <th mat-header-cell *matHeaderCellDef> UOM </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.uom }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="draftQuantity">
-                                                                                <th mat-header-cell *matHeaderCellDef> Draft Qty </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.draftQuantity }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="clientRate">
-                                                                                <th mat-header-cell *matHeaderCellDef> Client Rate </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.clientRate }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="serviceCharge">
-                                                                                <th mat-header-cell *matHeaderCellDef> Service Charge </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.serviceCharge }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="baseAmount">
-                                                                                <th mat-header-cell *matHeaderCellDef> Base Amount </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.baseAmount }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="budgetRate">
-                                                                                <th mat-header-cell *matHeaderCellDef> Budget Rate </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.budgetRate }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="hsn">
-                                                                                <th mat-header-cell *matHeaderCellDef> HSN </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.hsn }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="gstPrecent">
-                                                                                <th mat-header-cell *matHeaderCellDef> GST % </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.gstPrecent }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="amountWithoutGst">
-                                                                                <th mat-header-cell *matHeaderCellDef> Amt w/o GST </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.amountWithoutGst }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="discount">
-                                                                                <th mat-header-cell *matHeaderCellDef> Discount </th>
-                                                                                <td mat-cell *matCellDef="let element"> {{ element.discount }} </td>
-                                                                            </ng-container>
-                                                                            <ng-container matColumnDef="finalAmount">
-                                                                                <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                                                                    class="sticky-col-right"> Final Amount (₹)
-                                                                                </th>
-                                                                                <td mat-cell *matCellDef="let element" class="sticky-col-right">
-                                                                                    {{ element.finalAmount }}
-                                                                                </td>
-                                                                            </ng-container>
-                                                                            <tr mat-header-row *matHeaderRowDef="orderContentColumns"></tr>
-                                                                            <tr mat-row *matRowDef="let row; columns: orderContentColumns"></tr>
-                                                                        </table>
-                                                                    </div>
+                                                                                </div>
+                                                                            </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="brandOrMake">
+                                                                            <th mat-header-cell *matHeaderCellDef> Brand / Make </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.brandOrMake }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="codeAndCategory">
+                                                                            <th mat-header-cell *matHeaderCellDef> Code & Category </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.codeAndCategory }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="orderStatus">
+                                                                            <th mat-header-cell *matHeaderCellDef> Order Status </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.orderStatus }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="itemType">
+                                                                            <th mat-header-cell *matHeaderCellDef> Item Type </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.itemType }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="source">
+                                                                            <th mat-header-cell *matHeaderCellDef> Source </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.source }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="status">
+                                                                            <th mat-header-cell *matHeaderCellDef> Status </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.status }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="length">
+                                                                            <th mat-header-cell *matHeaderCellDef> Length </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.length }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="breadth">
+                                                                            <th mat-header-cell *matHeaderCellDef> Breadth </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.breadth }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="height">
+                                                                            <th mat-header-cell *matHeaderCellDef> Height </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.height }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="quantity">
+                                                                            <th mat-header-cell *matHeaderCellDef> Quantity </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.quantity }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="uom">
+                                                                            <th mat-header-cell *matHeaderCellDef> UOM </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.uom }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="draftQuantity">
+                                                                            <th mat-header-cell *matHeaderCellDef> Draft Qty </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.draftQuantity }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="clientRate">
+                                                                            <th mat-header-cell *matHeaderCellDef> Client Rate </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.clientRate }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="serviceCharge">
+                                                                            <th mat-header-cell *matHeaderCellDef> Service Charge </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.serviceCharge }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="baseAmount">
+                                                                            <th mat-header-cell *matHeaderCellDef> Base Amount </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.baseAmount }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="budgetRate">
+                                                                            <th mat-header-cell *matHeaderCellDef> Budget Rate </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.budgetRate }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="hsn">
+                                                                            <th mat-header-cell *matHeaderCellDef> HSN </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.hsn }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="gstPrecent">
+                                                                            <th mat-header-cell *matHeaderCellDef> GST % </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.gstPrecent }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="amountWithoutGst">
+                                                                            <th mat-header-cell *matHeaderCellDef> Amt w/o GST </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.amountWithoutGst }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="discount">
+                                                                            <th mat-header-cell *matHeaderCellDef> Discount </th>
+                                                                            <td mat-cell *matCellDef="let element"> {{ element.discount }} </td>
+                                                                        </ng-container>
+                                                                        <ng-container matColumnDef="finalAmount">
+                                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="sticky-col-right"> Final Amount
+                                                                                (₹)
+                                                                            </th>
+                                                                            <td mat-cell *matCellDef="let element" class="sticky-col-right">
+                                                                                {{ element.finalAmount }}
+                                                                            </td>
+                                                                        </ng-container>
+                                                                        <tr mat-header-row *matHeaderRowDef="orderContentColumns"></tr>
+                                                                        <tr mat-row *matRowDef="let row; columns: orderContentColumns"></tr>
+                                                                    </table>
                                                                 </div>
                                                             </ng-template>
                                                         </li>
                                                     </ng-container>
                                                 </ul>
                                                 <div [ngbNavOutlet]="nav" class=""></div>
-
-                                                <div class="card custom-card">
-                                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <div class="card-title mb-0">Terms & Condition</div>
-                                                        </div>
-                                                        <div class="d-flex align-items-center gap-2">
-                                                            <button class="btn btn-light btn-sm" (click)="toggleCollapse()">
-                                                                <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
-                                                            </button>
-                                                        </div>
+                                             </div>
+                                            <div class="card custom-card mt-4" style="box-shadow: none !important;" *ngIf="selectedOrderContent">
+                                                <div class="card-header d-flex justify-content-between align-items-center">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="card-title mb-0">Terms & Condition</div>
                                                     </div>
-                                                    <div class="card-body" *ngIf="!isCollapsed">
-                                                        <div class="form-check form-switch mb-0">
-                                                            <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
-                                                                checked="">
-                                                            <label class="form-check-label" for="Payment-Terms">Payment Terms</label>
-                                                        </div>
-                                                        <div class="form-check form-switch mb-0 pt-2">
-                                                            <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
-                                                                checked="">
-                                                            <label class="form-check-label" for="Other-Terms&Condition">Other Terms & Condition</label>
-                                                        </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
+                                                            <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body" *ngIf="!isCollapsed">
+                                                    <div class="form-check form-switch mb-0">
+                                                        <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
+                                                            checked="">
+                                                        <label class="form-check-label" for="Payment-Terms">Payment Terms</label>
+                                                    </div>
+                                                    <div class="form-check form-switch mb-0 pt-2">
+                                                        <input class="form-check-input form-checked-success" type="checkbox" role="switch" id="switch-dark"
+                                                            checked="">
+                                                        <label class="form-check-label" for="Other-Terms&Condition">Other Terms & Condition</label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1065,7 +1049,7 @@
                                         <li [ngbNavItem]="1">
                                             <button ngbNavLink class="btn  btn-outline-primary">Invoices</button>
                                             <ng-template ngbNavContent>
-                                                <div class="row">
+                                                <div class="row mt-3">
                                                     <div class="col-xl-4 col-sm-6">
                                                         <div class="card custom-card overflow-hidden">
                                                             <div class="card-body">
@@ -2899,7 +2883,7 @@
 <ng-template #content5 let-modal>
     <form [formGroup]="proposalApprovalForm" (ngSubmit)="proposalApprovalSubmit(modal)">
         <div class="modal-header justify-content-center">
-            <h6 class="modal-title" id="staticBackdropLabel3">Approve Proposal</h6>
+            <h6 class="modal-title" id="staticBackdropLabel3"><strong>Approve Proposal</strong></h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
