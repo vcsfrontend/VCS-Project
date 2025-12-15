@@ -118,7 +118,7 @@ export class BoqComponent extends BaseComponent {
     designerData: any[] = []; filteredDesignerData: any[] = [];   override panelList: any[] = [];
     allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
     showManualFields = false; boqKeys: string[] = []; roomNameList: { name: string }[] = []; isImportChecked: boolean = false;
-    allRooms: { name: string }[] = [];
+    allRooms: { name: string }[] = []; filteredRoomNameList: { name: string }[] = [];
     selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any; currentStage = 1;
     uomList: any[] = []; stages = [{ id: 1, name: 'Recce' }, { id: 2, name: 'Design' }, { id: 3, name: 'BOQ' },];
     stageNames: any = {1: 'Recce Status', 2: 'Design Status', 3: 'BOQ Status', };
@@ -2715,12 +2715,6 @@ closeAllDropdowns() {
     this.isImportChecked = this.selectedItems.length > 0;
     }
 
-    get filteredRoomNameList() {
-        return (this.roomNameList || []).filter(
-            room => room.name !== this.currentRoomName
-        );
-    }
-
     onRoomTabChange(id: number) {
         this.currentRoomName = this.tabKeys[id - 1];
     }
@@ -2839,10 +2833,18 @@ closeAllDropdowns() {
     }
 
     moveToRoom(content22: any) {
+        this.elementForm.patchValue({ roomName: null });
+        this.filteredRoomNameList = (this.roomNameList || []).filter(
+            room => room.name !== this.currentRoomName
+        );
         this.modalService.open(content22, { centered: true });
     }
 
     moveToRoomSubmit(modal:any) {
+        if (!this.elementForm.value.roomName) {
+            this.toastr.warning('Please select a room');
+            return;
+        }
         const selectedItems: any[] = [];
         Object.keys(this.boqDataSources).forEach(key => {
             const rows = this.boqDataSources[key]?.data ?? [];
@@ -2906,7 +2908,6 @@ closeAllDropdowns() {
           }
         });
     }
-
 
     get statusLabel(): string {
         const stageName = this.statusNames[this.currentStage];
