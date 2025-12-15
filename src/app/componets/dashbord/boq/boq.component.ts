@@ -117,7 +117,8 @@ export class BoqComponent extends BaseComponent {
     thumbsSwiper: any;graniteEnabled: boolean = false;TDMCEnabled : boolean=false;projectMarginList:any;
     designerData: any[] = []; filteredDesignerData: any[] = [];   override panelList: any[] = [];
     allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
-    showManualFields = false; boqKeys: string[] = []; roomNameList: any[] = []; isImportChecked: boolean = false;
+    showManualFields = false; boqKeys: string[] = []; roomNameList: { name: string }[] = []; isImportChecked: boolean = false;
+    allRooms: { name: string }[] = [];
     selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any; currentStage = 1;
     uomList: any[] = []; stages = [{ id: 1, name: 'Recce' }, { id: 2, name: 'Design' }, { id: 3, name: 'BOQ' },];
     stageNames: any = {1: 'Recce Status', 2: 'Design Status', 3: 'BOQ Status', };
@@ -526,7 +527,6 @@ export class BoqComponent extends BaseComponent {
 
     onSubmit() {
         if (this.isEditMode) {
-            console.log('hit')
             this.editElement();
         } else {
             this.elementSubmit();
@@ -846,9 +846,21 @@ closeAllDropdowns() {
                 this.tabKeys = ['All', ...this.tabKeys];
                 this.currentRoomName = 'All';
                 this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({ order: i + 1, ...item }));
-                this.roomNameList = this.tabKeys
+                const apiRooms = this.tabKeys
                     .filter(k => k !== 'All')
                     .map(name => ({ name }));
+                if (!this.allRooms || this.allRooms.length === 0) {
+                    this.allRooms = [...apiRooms];
+                } else {
+                    this.allRooms = [
+                        ...this.allRooms,
+                        ...apiRooms
+                    ].filter(
+                        (room, index, self) =>
+                            index === self.findIndex(r => r.name === room.name)
+                    );
+                }
+                this.roomNameList = [...this.allRooms];
                 this.groupCabinetNames();
             },
             complete: () => {
@@ -1209,21 +1221,29 @@ closeAllDropdowns() {
     }
 
     editElement(element?: any) {
-        this.elementFormSubmitted = true;
-        if (this.elementForm.value.roomName == '' || this.elementForm.value.itemCode == ''){
-            console.log('roomnam or item code mising ')
+        if (!this.elementForm.value.roomName || !this.elementForm.value.itemCode) {
+            this.elementFormSubmitted = true;
+            this.elementForm.markAllAsTouched();
+            return;
         }
+        this.elementFormSubmitted = true;
         const formValue = { ...this.elementForm.value };
+        const description: string = formValue.elementDescription || '';
+        const extract = (label: string): string => {
+            const regex = new RegExp(`${label}\\s*:\\s*(.*)`, 'i');
+            const match = description.match(regex);
+            return match ? match[1].trim() : '';
+        };
         const payload = [
             {
                 boqId: element?.boqId || Number(this.itemId) || 0,
                 elementUrl: this.elementUrl || element?.elementUrl || '',
                 elementNameAndDescription: (
                     `Name : ${formValue.elementName || ''}\n` +
-                    `Carcass Material : ${formValue.carcassMaterial || ''}\n` +
-                    `Carcass Finish : ${formValue.carcassFinish || ''}\n` +
-                    `Shutter Material : ${formValue.shutterMaterial || ''}\n` +
-                    `Shutter Finish : ${formValue.shutterFinish || ''}\n` +
+                    `Carcass Material : ${extract('Carcass Material')}\n` +
+                    `Carcass Finish : ${extract('Carcass Finish')}\n` +
+                    `Shutter Material : ${extract('Shutter Material')}\n` +
+                    `Shutter Finish : ${extract('Shutter Finish')}\n` +
                     `Brand : ${formValue.brandOrMake || ''}`
                 ).trim(),
                 codeAndCategory: formValue.codeAndCategory || '',
@@ -1239,7 +1259,7 @@ closeAllDropdowns() {
                 draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
                 clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
                 finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
-                brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+                brandOrMake: formValue.brandOrMake || element?.brandOrMake || '',
                 discount: Number(element?.discount ?? formValue.discount) || 0,
                 serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
                 baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
@@ -1252,16 +1272,18 @@ closeAllDropdowns() {
                 itemCode: formValue.itemCode,
                 companyCode: this.userCompanyCode,
                 email: this.userEmail,
-                type: this.userType,
-            },
+                type: this.userType
+            }
         ];
-        console.log(payload)
         this.switchService.updateElementData(payload).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
                     this.toastr.success(res.message || 'Element Updated');
+
                     const updatedItem = payload[0];
                     const room = formValue.roomName;
+
+                    // update room datasource
                     const roomDataSource = this.boqDataSources[room];
                     if (roomDataSource) {
                         const index = roomDataSource.data.findIndex(
@@ -1275,6 +1297,8 @@ closeAllDropdowns() {
                             roomDataSource._updateChangeSubscription();
                         }
                     }
+
+                    // update All datasource
                     const allDataSource = this.boqDataSources['All'];
                     if (allDataSource) {
                         const allIndex = allDataSource.data.findIndex(
@@ -1288,6 +1312,7 @@ closeAllDropdowns() {
                             allDataSource._updateChangeSubscription();
                         }
                     }
+
                     this.elementForm.reset();
                     this.offcanvasService.dismiss();
                     this.elementFormSubmitted = false;
@@ -2675,28 +2700,25 @@ closeAllDropdowns() {
     }
 
     toggleSelect(event: any, index: number) {
-
     const item = this.libraryListData[index];
-
     if (event.target.checked) {
-
-        // Uncheck all other items
         this.libraryListData.forEach((x, i) => {
             if (i !== index) x.checked = false;
         });
-
-        // Allow only 1 selected item
         this.selectedItems = [{
             ...item,
             roomName: this.currentRoomName
         }];
-
     } else {
-        // Unchecking → empty selection
         this.selectedItems = [];
     }
-
     this.isImportChecked = this.selectedItems.length > 0;
+    }
+
+    get filteredRoomNameList() {
+        return (this.roomNameList || []).filter(
+            room => room.name !== this.currentRoomName
+        );
     }
 
     onRoomTabChange(id: number) {

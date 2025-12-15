@@ -4,7 +4,7 @@ import { SwitcherComponent } from '../switcher/switcher.component';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AppStateService } from '../../services/app-state.service';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule ,UrlTree } from '@angular/router';
-import { filter ,interval,Subscription} from 'rxjs';
+import { filter ,interval,Subscription,take} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -279,21 +279,17 @@ export class HeaderComponent implements OnInit {
         this.projectDetails = null;
       }
     });
-    if (!this.switchService.userInfoCache) {
-      this.switchService.userInfo(this.userEmail).subscribe();
-    }
-    this.switchService.userInfoLoaded.subscribe((loaded: boolean) => {
-      if (!loaded) return;
-
+    this.switchService.userInfoLoaded
+    .pipe(filter(loaded => loaded))
+    .subscribe(() => {
       const cached = this.switchService.userInfoCache;
+      if (!cached) return;
 
-      if (cached) {
-        this.userData = cached;
-        this.userName = cached.username || cached.name;
-        this.profilePic = cached.profilePic
-          ? this.addBaseUrlIfNeeded(cached.profilePic)
-          : 'assets/images/brand-logos/profile1.jpg';
-      }
+      this.userData = cached;
+      this.userName = cached.username || cached.name;
+      this.profilePic = cached.profilePic
+        ? this.addBaseUrlIfNeeded(cached.profilePic)
+        : 'assets/images/brand-logos/profile1.jpg';
     });
     this.logRoute();
     this.routerSub = this.router.events

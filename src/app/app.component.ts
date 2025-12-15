@@ -9,6 +9,7 @@ import { FilePondModule } from 'ngx-filepond';
 import { AppStateService } from './shared/services/app-state.service';
 import { ChatbotComponent } from './componets/dashbord/chatbot/chatbot.component';
 import { SwitherService } from './shared/services/swither.service';
+import { take } from 'rxjs';
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -27,11 +28,13 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.userEmail = localStorage.getItem('email');
-    if (!this.switchService.userInfoCache && this.userEmail) {
-      this.switchService.userInfo(this.userEmail).subscribe();
+
+    if (this.userEmail) {
+      this.switchService.userInfo(this.userEmail)
+        .pipe(take(1))
+        .subscribe();
     }
   }
-
 
 
 }

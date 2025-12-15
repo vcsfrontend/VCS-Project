@@ -11,6 +11,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../environments/environment';
+import { take ,filter} from 'rxjs';
 
 
 const data = [
@@ -87,21 +88,20 @@ export class ProfileComponent {
       
     }
   ngOnInit():void {
-     if (!this.switchService.userInfoCache) {
-      this.switchService.userInfo(this.userEmail).subscribe();
-    }
-    this.switchService.userInfoLoaded.subscribe((loaded: boolean) => {
-      if (!loaded) return;
-
+    this.switchService.userInfoLoaded
+    .pipe(
+      filter(loaded => loaded),
+      take(1)
+    )
+    .subscribe(() => {
       const cached = this.switchService.userInfoCache;
+      if (!cached) return;
 
-      if (cached) {
-        this.userData = cached;
-        this.userName = cached.username || cached.name;
-        this.profilePic = cached.profilePic
-          ? this.addBaseUrlIfNeeded(cached.profilePic)
-          : 'assets/images/brand-logos/profile1.jpg';
-      }
+      this.userData = cached;
+      this.userName = cached.username || cached.name;
+      this.profilePic = cached.profilePic
+        ? this.addBaseUrlIfNeeded(cached.profilePic)
+        : 'assets/images/brand-logos/profile1.jpg';
     });
 
     this.getAllStages();
@@ -291,6 +291,7 @@ export class ProfileComponent {
       },
     });
   }
+  
   profileUpdate(content12: any) {
     this.modalService.open(content12, { centered: true });
   }
@@ -307,8 +308,8 @@ export class ProfileComponent {
           if (res) {
             this.modal.close();
             this.toastr.success('Profile updated successfully!',);
+            this.getUserInfo(this.userEmail);
           }
-          this.getUserInfo(this.userEmail);
         }
       });
     }

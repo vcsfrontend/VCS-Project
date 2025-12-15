@@ -1522,7 +1522,7 @@
                                                                                 <div class="d-flex align-items-center gap-2">
                                                                                     <div class="card-title">{{ key | titlecase }}</div>
                                                                                     <button type="button" class="btn btn-outline-primary btn-sm btn-wave" (click)="moveToRoom(content22)"
-                                                                                    *ngIf="currentRoomName !== 'All'">
+                                                                                        *ngIf="currentRoomName !== 'All' && roomNameList.length > 1">
                                                                                         <i class="bi bi-arrows-move"></i>
                                                                                     </button>
                                                                                 </div>
@@ -2189,10 +2189,28 @@
                             <label class="form-label">Brand/Make</label>
                             <input type="text" class="form-control" formControlName="brandOrMake" placeholder="Enter Description">
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Item Code</label>
+                            <ng-select formControlName="itemCode" [items]="itemCodeLst" bindLabel="name" bindValue="code"
+                                placeholder="Select Item Code" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['itemCode'].errors }">
+                            </ng-select>
+                            <div *ngIf="elementFormSubmitted && es['itemCode'].errors" class="invalid-feedback">
+                                <div *ngIf="es['itemCode'].errors['required']">Item Code required</div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <label class="form-label">Room Name</label>
+                            <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
+                                placeholder="Select Room Name" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['roomName'].errors }">
+                            </ng-select>
+                            <div *ngIf="elementFormSubmitted && es['roomName'].errors" class="invalid-feedback">
+                                <div *ngIf="es['roomName'].errors['required']">Room Name required</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Element Description</label>
-                        <textarea class="form-control" formControlName="elementDescription" rows="4"></textarea>
+                        <textarea class="form-control" formControlName="elementDescription" rows="11"></textarea>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Widht</label>
@@ -2205,24 +2223,6 @@
                     <div class="col-xl-6">
                         <label class="form-label">Height</label>
                         <input type="number" class="form-control" formControlName="height" placeholder="Enter Height">
-                    </div>
-                    <div class="col-xl-6">
-                        <label class="form-label">Item Code</label>
-                        <ng-select formControlName="itemCode" [items]="itemCodeLst" bindLabel="name" bindValue="code"
-                            placeholder="Select Item Code" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['itemCode'].errors }">
-                        </ng-select>
-                        <div *ngIf="elementFormSubmitted && es['itemCode'].errors" class="invalid-feedback">
-                          <div *ngIf="es['itemCode'].errors['required']">Item Code required</div>
-                        </div>
-                    </div>
-                    <div class="col-xl-6">
-                        <label class="form-label">Room Name</label>
-                        <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
-                            placeholder="Select Room Name" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['roomName'].errors }">
-                        </ng-select>
-                        <div *ngIf="elementFormSubmitted && es['roomName'].errors" class="invalid-feedback">
-                          <div *ngIf="es['roomName'].errors['required']">Room Name required</div>
-                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Client Rate (₹)</label>
@@ -3513,7 +3513,7 @@
             <div class="row gy-3">
                 <div class="col-lg-12">
                     <label class="form-label">Select Room Name</label>
-                    <ng-select formControlName="roomName" [items]="roomNameList" bindLabel="name" bindValue="name"
+                    <ng-select formControlName="roomName" [items]="filteredRoomNameList" bindLabel="name" bindValue="name"
                         placeholder="Select a stage">
                     </ng-select>
                 </div>
