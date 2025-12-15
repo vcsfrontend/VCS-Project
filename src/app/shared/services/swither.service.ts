@@ -1,7 +1,7 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap, EMPTY  } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class SwitherService {
   openOffcanvas$: any; userInfoCache: any = null; profilePic: string | null = null;
   userName: string | null = null;
   userInfoLoaded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-
+  private userInfoInFlight = false;
   constructor(private http: HttpClient) {}
 
   //new api calls
@@ -66,21 +66,30 @@ export class SwitherService {
   onAdonaiView(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/fetch_data_adonai/${email}`); }
   onAdonaiUpdate(data:any): Observable<any> { return this.http.post(`${this.adonaiURL}adonai/update_subscription`, data); }
   adonaiHstry(email:any): Observable<any> { return this.http.get(`${this.adonaiURL}adonai/sub_scription_history/${email}`); }
+  
   userInfo(email: any): Observable<any> {
     if (this.userInfoCache) {
       this.profilePic = this.userInfoCache?.profilePic || null;
-      this.userName = this.userInfoCache?.name || this.userInfoCache?.username || null;
+      this.userName =
+        this.userInfoCache?.name || this.userInfoCache?.username || null;
       this.userInfoLoaded.next(true);
       return of(this.userInfoCache);
     }
-    return this.http.get(`${this.apiUrl}auth/fetch_user_info/${email}`).pipe(
-      tap((res: any) => {
-        this.userInfoCache = res;
-        this.profilePic = res?.profilePic || null;
-        this.userName = res?.name || res?.username || null;
-        this.userInfoLoaded.next(true);
-      })
-    );
+    if (this.userInfoInFlight) {
+      return EMPTY;
+    }
+    this.userInfoInFlight = true;
+    return this.http
+      .get(`${this.apiUrl}auth/fetch_user_info/${email}`)
+      .pipe(
+        tap((res: any) => {
+          this.userInfoCache = res;
+          this.profilePic = res?.profilePic || null;
+          this.userName = res?.name || res?.username || null;
+          this.userInfoLoaded.next(true);
+          this.userInfoInFlight = false;
+        })
+      );
   }
   updateProfilePic(data:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/upload_profile`,data); }
   updateUserCompany(data:any): Observable<any> { return this.http.post(`${this.apiUrl}auth/update_user_company`,data); }
