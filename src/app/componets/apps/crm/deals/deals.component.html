@@ -166,7 +166,8 @@
                     </th>
                     <td mat-cell *matCellDef="let element">
                         <mat-checkbox (change)="onRowCheckboxChange(element, $event)" [checked]="isSelected(element.leadId)"
-                            [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
+                            [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"
+                            [matTooltip]="hasAppointment(element.leadId) ? 'This lead has an appointment' : ''"></mat-checkbox>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="slNo">
@@ -512,10 +513,14 @@
                             </div>
                         </ng-template>
                     </ng-select>
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
-                        id="button-addon1" data-mdb-ripple-color="dark">
-                        Allocate
+                    <button class="btn btn-primary position-relative overflow-hidden" type="submit" [disabled]="isAllocating"
+                        style="width:120px; height:40px;">
+                        <span [class.invisible]="isAllocating">Allocate</span>
+                        <mat-progress-spinner *ngIf="isAllocating" class="allocate-spinner" mode="indeterminate" [diameter]="22">
+                        </mat-progress-spinner>
+                    
                     </button>
+
                 </div>
                 <div *ngIf="allocateSubmitted && a['executive'].errors" class="invalid-feedback">
                     <div *ngIf="a['executive'].errors['required']">Executive is required</div>
@@ -1785,9 +1790,15 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner"> Submit</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
+
+    </div>
+    <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
     </form>
 </ng-template>

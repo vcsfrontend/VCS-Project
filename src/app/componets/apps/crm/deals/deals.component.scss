@@ -291,3 +291,24 @@ table.mat-mdc-table {
     width: 200px;
     height: 300px;
 }
+.allocate-btn {
+  position: relative;
+  width: 120px;        /* keeps button consistent */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.allocate-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  stroke: white !important;   /* MOST IMPORTANT */
+  z-index: 3;
+}
+
+// .invisible {
+//   visibility: hidden;
+// }
+

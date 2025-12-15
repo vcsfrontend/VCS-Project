@@ -119,7 +119,7 @@ export class BoqComponent extends BaseComponent {
     allPanels: any[] = []; showPanelList: boolean = false; optimizerCuts: any[] = []; 
     showManualFields = false; boqKeys: string[] = []; roomNameList: { name: string }[] = []; isImportChecked: boolean = false;
     allRooms: { name: string }[] = []; filteredRoomNameList: { name: string }[] = [];
-    selectedRows: boolean[] = []; selectedItems: any[] = []; currentRoomName: any; currentStage = 1;
+    selectedRows: boolean[] = []; selectedItems: any[] = [];  currentStage = 1;
     uomList: any[] = []; stages = [{ id: 1, name: 'Recce' }, { id: 2, name: 'Design' }, { id: 3, name: 'BOQ' },];
     stageNames: any = {1: 'Recce Status', 2: 'Design Status', 3: 'BOQ Status', };
     statusNames: any = {1: 'Recce', 2: 'Design', 3: 'BOQ', };
@@ -127,7 +127,7 @@ export class BoqComponent extends BaseComponent {
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
     selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
     designUrl: string = ''; showSubmitButton: boolean = true; isLoadingAssignProjects: boolean = false;
-    showDownloadButton = false; isBoqLoading = false;
+    showDownloadButton = false; isBoqLoading = false;activeNavId: number = 1; currentRoomName: string = 'All'
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -800,7 +800,7 @@ closeAllDropdowns() {
         return index + 1;
     }
 
-    boqData() {
+    boqData(roomSnapshot: string | null = null) {
         if (!this.designingId) return;
         this.isBoqLoading = true;
         const payload = {
@@ -844,7 +844,12 @@ closeAllDropdowns() {
                 });
                 this.boqDataSources['All'] = new MatTableDataSource(allItems);
                 this.tabKeys = ['All', ...this.tabKeys];
+                // this.currentRoomName = 'All';
+                 if (roomSnapshot && this.tabKeys.includes(roomSnapshot)) {
+                this.currentRoomName = roomSnapshot;
+                } else if (!this.currentRoomName || !this.tabKeys.includes(this.currentRoomName)) {
                 this.currentRoomName = 'All';
+                }
                 this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({ order: i + 1, ...item }));
                 const apiRooms = this.tabKeys
                     .filter(k => k !== 'All')
@@ -1208,10 +1213,17 @@ closeAllDropdowns() {
         console.log(payload);
         this.switchService.saveElementData(payload).subscribe({
             next: (res: any) => {
-                if (res?.status === true) {
-                    this.toastr.success(res.message || 'Elements Imported');
-                    this.boqData();
-                }
+               if (res?.status === true) {
+                this.toastr.success(res.message || 'Elements Imported');
+                 const snapshotIndex = this.activeNavId;
+                const snapshotRoom = this.currentRoomName;
+                this.boqData();
+                this.offcanvasService.dismiss();
+                setTimeout(() => {
+                    this.activeNavId = snapshotIndex;
+                    this.currentRoomName = snapshotRoom;
+                });
+               }
             }
         });
     }
@@ -2715,9 +2727,9 @@ closeAllDropdowns() {
     this.isImportChecked = this.selectedItems.length > 0;
     }
 
-    onRoomTabChange(id: number) {
-        this.currentRoomName = this.tabKeys[id - 1];
-    }
+    // onRoomTabChange(id: number) {
+    //     this.currentRoomName = this.tabKeys[id - 1];
+    // }
 
     getUomNameById(id: string): string {
         const uom = this.uomList.find(x => x._id === id);
@@ -2961,6 +2973,14 @@ closeAllDropdowns() {
         return brandLine ? brandLine.replace('Brand :', '').trim() : '-';
     }
 
+     onRoomClick(room: string) {
+        this.currentRoomName = room;
+        this.onHidePanelList(); 
+    }
+    onRoomTabChange(nextId: number) {
+  this.activeNavId = nextId;
+  this.currentRoomName = this.tabKeys[nextId - 1];
+}
 
 
 

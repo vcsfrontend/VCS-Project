@@ -1505,15 +1505,16 @@
                                             <nav class="card custom-card mb-0 no-bottom-radius" style="box-shadow: none !important;" role="tablist">
                                                 <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
                                                     <button class="scroll-btn me-2" *ngIf="showLeftArrow" (click)="scrollLeft()">&#10094;</button>
-                                                    <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="1" class="d-flex flex-nowrap m-0 p-0 ms-1"
+                                                    <ul #scrollContainer (scroll)="onScroll()" ngbNav #nav2="ngbNav" [activeId]="activeNavId" class="d-flex flex-nowrap m-0 p-0 ms-1"
                                                         style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;" (navChange)="onRoomTabChange($event.nextId)">
                                                         <ng-container *ngFor="let key of tabKeys; let i = index">
                                                             <ng-container [ngbNavItem]="i+1">
-                                                                <a ngbNavLink class="ms-1 btn btn-light me-2 ms-1 my-2" (click)="onHidePanelList()">{{ key | titlecase }}
+                                                                <a ngbNavLink class="ms-1 btn btn-light me-2 ms-1 my-2" [class.active]="currentRoomName === key"   (click)="onRoomClick(key); onHidePanelList()">{{ key | titlecase }}
                                                                     <span class="badge bg-black text-white ms-1">
                                                                         {{ boqDataSources[key].data.length }}
                                                                     </span>
                                                                 </a>
+
                                                                 <div class="tt"></div>
                                                                 <ng-template ngbNavContent>
                                                                     <div class="col-xl-12" *ngIf="!showPanelList">
@@ -2233,11 +2234,11 @@
                         <label class="form-label">Code & Category</label>
                         <ng-select [items]="codeAndCategory" bindLabel="name" bindValue="name" placeholder="Select"
                             formControlName="codeAndCategory">
-                            <ng-template ng-option-tmp let-item="item">
-                                <div class="d-flex justify-content-between w-100">
-                                    <span>{{ item.name }}</span>
-                                    <span>{{ item.code }}</span>
-                                </div>
+                            <ng-template ng-label-tmp let-item="item">
+                                {{ item.name }}
+                                <ng-container *ngIf="item.code">
+                                    ({{ item.code }})
+                                </ng-container>
                             </ng-template>
                             <ng-template ng-label-tmp let-item="item">
                                 {{ item.name }} ({{ item.code }})

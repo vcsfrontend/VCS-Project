@@ -106,12 +106,16 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   departmentListTable: any[] = []; optimizerCuts: any[] = []; submittedModels: string[] = [];fullCutListItems :any[]=[];
   isCutListFull : boolean = false;existingCuts: any[] = []; originalCutItems : any[]=[];
   userPermissions : any[]=[];selectedrole: number = 0;userPermissionSet = new Set<string>();
-  selectedSubPermissions: string[] = [];selectedPermissionName : string ='';
+  selectedSubPermissions: string[] = [];selectedPermissionName : string ='';SubpermissionId : number=0;
   showSubPermissionDropdown = false;editSubpermissionForm !:FormGroup;
   codeLabels: { [key: string]: string } = { AK_PA: 'Panel', AK_SH: 'Shutter'};
   
   allPermissions: Record<PermissionName, string[]> = {
-    CRM: ['deals_delete', 'deals_edit', 'deals_stage_status','leads_add','leads_delete','deals_add','leads_edit',],
+    CRM: ['deals_delete', 'deals_edit', 'deals_stage_status','leads_add','leads_delete','deals_add','leads_edit','leads_view','deals_access','campaign_create','campaign_deletion',
+      'campaign_edit','leads_stage_status','mail_template_creation','appointmnet_creation','campaign_access','leads_allocate',
+      'completion_lead','move_campaign','analytics_display'
+      
+    ],
     Projects :['project_create','project_delete','project_update'],
     SALES: ['products_add', 'products_edit'],
     HR: ['employee_add', 'employee_edit']
@@ -2211,7 +2215,6 @@ selectedPermissions: any[] = [];
             ? item.subPermission.split(',')  // convert comma string to array
             : []
         }));
-        console.log('userpermiussions',this.userPermissions);
       }
     });
   }
@@ -2815,6 +2818,7 @@ selectedPermissions: any[] = [];
 
   console.log("Selected Permission:", permission);
   this.selectedPermissionName = permission.permissionName;
+  this.SubpermissionId = permission.id;
   this.editsubPermissionArray.clear();
   const assignedList = permission.subPermission
     ? permission.subPermission.split(',').map((p: string) => p.trim())
@@ -2832,7 +2836,7 @@ const fullList = this.allPermissions[permission?.permissionName as PermissionNam
   this.modalService.open(content115, { size: 'lg' });
 }
  updateSubPermissions(modal: any) {
-    const permissionId = this.permissionId;
+    const permissionId = this.SubpermissionId;
     const permissionName = this.permissionName;
     const description = this.permissionDescription;
      const selectedKeys = this.editsubPermissionArray.controls

@@ -338,5 +338,11 @@ table thead.custom-header th {
   background-color: #c7c7c7;
   border-radius: 5px;
 }
+.permission-scroll {
+  min-height: 400px;    
+  max-height: 70vh;    
+  overflow-y: auto;      
+  overflow-x: hidden;
+}
 
 
