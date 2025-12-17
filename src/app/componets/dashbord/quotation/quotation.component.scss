@@ -196,4 +196,26 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
+.fixed-card-height {
+  min-height: 240px;  
+  max-height: 240px;  
+}
+.equal-card-height {
+  min-height: 220px;
+  max-height: 220px;
+  height: 220px;
+  overflow: hidden;
+}
 
+.equal-card-height .card-body {
+  overflow-y: auto;
+}
+.equal-card-height1{
+  min-height: 600px;
+  max-height: 600px;
+  height: 600px;
+  overflow: hidden;
+}
+.equal-card-height1 .card-body {
+  overflow-y: auto;
+}

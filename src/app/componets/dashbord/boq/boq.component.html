@@ -705,6 +705,7 @@
                                                                     </table>
                                                                 </div>
                                                             </ng-template>
+                                                             
                                                         </li>
                                                     </ng-container>
                                                 </ul>
@@ -1536,8 +1537,10 @@
                                                                                                             <div class="fw-bold">{{
                                                                                                                 proposal.referenceNo }}</div>
                                                                                                             <small class="text-muted">
-                                                                                                                {{ proposal.proposalRequestType }} →
-                                                                                                                {{ proposal.status }}
+                                                                                                                <!-- {{ proposal.proposalRequestType }} → -->
+                                                                                                                <span class="badge" [ngClass]="getStatusBadge(proposal.status)">
+                                                                                                                    {{ proposal.status }}
+                                                                                                                </span>
                                                                                                             </small>
                                                                                                         </div>
                                                                                                         <div class="text-end">
@@ -1644,9 +1647,12 @@
 
                                                                                                     <div class="text-muted small">
                                                                                                         {{
-                                                                                                        element.elementNameAndDescription
-                                                                                                        ?.split('\n')[2] || ''
+                                                                                                        (element.elementNameAndDescription?.split('\n')[2] || '')
+                                                                                                        | slice:0:30
                                                                                                         }}
+                                                                                                        <ng-container *ngIf="(element.elementNameAndDescription?.split('\n')[2] || '').length > 30">
+                                                                                                            ...
+                                                                                                        </ng-container>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
@@ -2282,7 +2288,7 @@
                         <label class="form-label">Upload Image</label>
                         <input class="form-control" type="file" (change)="onFileChange($event)">
                     </div>
-                    <div *ngIf="previewUrl">
+                    <div *ngIf="previewUrl && isEditMode">
                         <img [src]="previewUrl" alt="Existing Image" class="img-thumbnail mt-2" width="100">
                     </div>
                 </div>
@@ -2342,9 +2348,8 @@
                             <tbody>
                                 <ng-container *ngFor="let item of libraryListData; let i = index">
                                     <tr>
-                                        <th scope="row" class="ps-4"><input class="form-check-input cu" type="checkbox"
-                                                id="checkboxNoLabel2" value="" aria-label="..."
-                                                (change)="toggleSelect($event, i)"></th>
+                                        <th scope="row" class="ps-4"> <input class="form-check-input cu" type="checkbox" [checked]="libraryListData[i].checked"
+                                                (change)="toggleSelect($event, i)" /></th>
                                         <td>{{ i + 1 }}</td>
                                         <td style="max-width: 750px;">
                                             <div class="d-flex align-items-center">

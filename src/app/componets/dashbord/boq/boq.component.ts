@@ -980,7 +980,6 @@ closeAllDropdowns() {
             0
         ) || 0;
     }
-
     getClientOrders() {
         const payload = {
             designId: this.designingId,
@@ -1169,6 +1168,7 @@ closeAllDropdowns() {
             next: (res: any) => {
                 if (res?.status === true) {
                     this.toastr.success(res.message || 'Element Saved');
+                    this.offcanvasService.dismiss();
                     this.boqData();
                     this.elementForm.reset();
                     this.elementFormSubmitted = false;
@@ -2711,21 +2711,29 @@ closeAllDropdowns() {
         return this.manualCutListForm.controls;
     }
 
-    toggleSelect(event: any, index: number) {
-    const item = this.libraryListData[index];
-    if (event.target.checked) {
-        this.libraryListData.forEach((x, i) => {
-            if (i !== index) x.checked = false;
-        });
-        this.selectedItems = [{
-            ...item,
-            roomName: this.currentRoomName
-        }];
+   toggleSelect(event: any, index: number) {
+  const item = this.libraryListData[index];
+
+  if (event.target.checked) {
+    // uncheck all other rows
+    this.libraryListData.forEach((x, i) => {
+      x.checked = i === index;
+    });
+
+    // store only one selected item
+    this.selectedItems = [{
+      ...item,
+      roomName: this.currentRoomName
+    }];
     } else {
-        this.selectedItems = [];
+    // uncheck current
+    this.libraryListData[index].checked = false;
+    this.selectedItems = [];
     }
+
     this.isImportChecked = this.selectedItems.length > 0;
     }
+
 
     // onRoomTabChange(id: number) {
     //     this.currentRoomName = this.tabKeys[id - 1];
@@ -2980,6 +2988,18 @@ closeAllDropdowns() {
     onRoomTabChange(nextId: number) {
   this.activeNavId = nextId;
   this.currentRoomName = this.tabKeys[nextId - 1];
+}
+getStatusBadge(status: string): string {
+  switch (status) {
+    case 'Approve':
+      return 'bg-success';
+    case 'Pending for Approval':
+      return 'bg-warning text-dark';
+    case 'Rejected':
+      return 'bg-danger';
+    default:
+      return 'bg-secondary';
+  }
 }
 
 

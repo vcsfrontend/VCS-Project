@@ -1,8 +1,8 @@
 <div class="row mt-4">
     <div class="col-xxl-12">
         <div class="row">
-            <div class="col-lg-4">
-                <div class="card custom-card overflow-hidden">
+            <div class="col-lg-4" >
+                <div class="card custom-card overflow-hidden equal-card-height">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-start mb-2">
                             <div>Hi {{ userContent.clientName }}</div>
@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card custom-card overflow-hidden">
+                <div class="card custom-card overflow-hidden equal-card-height" >
                     <div class="card-body d-flex justify-content-between flex-wrap">
                         <div class="me-4 mb-3 flex-grow-1">
                             <div class="d-flex justify-content-between align-items-center mb-2">
@@ -47,8 +47,8 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card custom-card overflow-hidden">
-                    <div class="card-body d-flex justify-content-between flex-wrap">
+                <div class="card custom-card overflow-hidden equal-card-height">
+                    <div class="card-body  justify-content-between flex-wrap">
                         <div class="me-4 mb-3 flex-grow-1">
                             <div class="mb-2 mt-3">
                                 <div><strong>Relationship Manager : </strong>{{ userContent.rmdName }}<span class="text-muted"></span></div>
@@ -111,7 +111,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-xl-6 col-sm-6">
-                                                    <div class="card custom-card overflow-hidden">
+                                                    <div class="card custom-card overflow-hidden equal-card-height1">
                                                         <div class="card-body">
                                                             <div
                                                                 class="d-flex justify-content-between align-items-start mb-2">
@@ -129,12 +129,12 @@
                                                                         getRoomTotal(key) | currency:'INR'}}</strong>
                                                                 </div>
                                                             </div>
-                                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                            <!-- <div class="d-flex justify-content-between align-items-start mb-3">
                                                                 <div><strong class="fs-14 fw-medium">Design and Handling
                                                                         Fees</strong></div>
                                                                 <div><strong class="fs-14 fw-medium">₹
                                                                         1000.00</strong></div>
-                                                            </div>
+                                                            </div> -->
                                                             <div class="d-flex justify-content-between align-items-start mb-3">
                                                                 <div><strong class="fs-14 fw-medium">
                                                                         Discount</strong></div>
@@ -165,7 +165,7 @@
                                                                 <div><strong class="fs-14 fw-medium text-primary">Total
                                                                         Project Estimate</strong></div>
                                                                 <div><strong class="fs-14 fw-medium">{{
-                                                                        (totalPrice1 + 10000 - 5000) |
+                                                                        (totalPrice1 ) |
                                                                         currency:'INR' }}</strong></div>
                                                             </div>
                                                             <hr>
