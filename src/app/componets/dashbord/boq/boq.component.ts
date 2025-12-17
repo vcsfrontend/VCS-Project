@@ -109,7 +109,7 @@ export class BoqComponent extends BaseComponent {
     filteredProposals: any[] = []; filteredClientOrders: any[] = []; tabTotals: { [key: string]: number } = {};
     orderContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
     orderTabCounts: { [key: string]: number } = {}; orderTabKeys: string[] = [];
-    projectLst: any = []; boqproject: any; showAllProposals = false; libraryList: any[] = [];
+    boqproject: any; showAllProposals = false; libraryList: any[] = [];
     libraryListData: any[] = [];objectKeys = Object.keys;step = 1;submittedStep1:boolean=false;
     submittedStep2 : boolean = false;submittedStep3 : boolean = false;
     submitted: boolean = false; projectConfigList: string[] = []; 
@@ -127,7 +127,8 @@ export class BoqComponent extends BaseComponent {
     selectedStageTab: string = ''; recceSubmitted : boolean = false; isLoading: boolean = false;
     selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
     designUrl: string = ''; showSubmitButton: boolean = true; isLoadingAssignProjects: boolean = false;
-    showDownloadButton = false; isBoqLoading = false;activeNavId: number = 1; currentRoomName: string = 'All'
+    showDownloadButton = false; isBoqLoading = false;activeNavId: number = 1; currentRoomName: string = 'All';
+    boqChecked = false;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -220,8 +221,8 @@ export class BoqComponent extends BaseComponent {
     showOnlyEditableFields = false;
 
     openProjectModal(content45: any, project: any) {
+    this.getUsers(); 
     if (!project) return;
-
     this.updateProjectForm.patchValue({
         projectId: project.projectId || '',
         designId: project.designId || '',
@@ -244,8 +245,7 @@ export class BoqComponent extends BaseComponent {
     }
 
     this.modalService.open(content45, { backdrop: 'static' });
-}
-
+    }
 
     onCreateProposalClick(content: any) {
         const storedClientData = localStorage.getItem("storedClientData");
@@ -297,18 +297,14 @@ export class BoqComponent extends BaseComponent {
         this.route.queryParams.subscribe(params => {
             this.projectId = params['projectId'];
             this.projectName = params['projectName'];
-
             this.buildRecceForm();
             this.recceForm.patchValue({ projectId: this.projectId, projectName: this.projectName });
-
             const storedTab = localStorage.getItem('selectedTab') || '1';
-
             if (!this.tabLoaded) {
                 this.tabLoaded = true;
                 this.changeTab(storedTab, true);
             }
         });
-
 
         this.flatpickrOptions = {
             enableTime: true,
@@ -325,22 +321,22 @@ export class BoqComponent extends BaseComponent {
             itemType: [''],
             source: [''],
             status: [''],
-            length: [0],
-            breadth: [0],
-            height: [0],
+            length: [0, [Validators.min(0)]],
+            breadth: [0, [Validators.min(0)]],
+            height: [0, [Validators.min(0)]],
             quantity: [0, [Validators.min(1)]],
             uom: [''],
             draftQuantity: [0,[Validators.min(1)]],
             clientRate: [0,[Validators.min(0)]],
             finalAmount: [0],
             brandOrMake: [''],
-            discount: [0],
+            discount: [0,[Validators.min(0)]],
             serviceCharge: [0,[Validators.min(0)]],
-            baseAmount: [0],
-            budgetRate: [0],
+            baseAmount: [0, [Validators.min(0)]],
+            budgetRate: [0, [Validators.min(0)]],
             hsn: [0],
             gstPrecent: [0, [Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
-            amountWithoutGst: [0],
+            amountWithoutGst: [0,[Validators.min(0)]],
             designId: [''],
             roomName: ['', [Validators.required]],
             itemCode: ['', [Validators.required]],
@@ -737,7 +733,10 @@ export class BoqComponent extends BaseComponent {
             setTimeout(() => this.changeTab(storedTab), 100);
         }
     }
+ hasDesign = false;
 
+ 
+ 
     changeTab(tabId: string, skipStore: boolean = false) {
         this.activeTab = tabId;
         if (!skipStore) {
@@ -748,21 +747,27 @@ export class BoqComponent extends BaseComponent {
             case '1':
                 this.getRecceData();
                 break;
+
             case '2':
                 this.getAssignProjects();
-                this.getUsers();  
                 break;
+
             case '3':
                 this.allowBoqRun = true;
-                this.getAssignProjects();
-                this.boqData();
+                this.boqChecked = false;
+                this.hasDesign = !!this.designingId;
+                if (this.hasDesign) {
+                    if (this.boqLoaded) return;
+                    this.boqLoaded = true;
+                    this.isBoqLoading = true;
+                    this.boqData();
+                } else {
+                    this.isBoqLoading = false;
+                }
                 break;
 
         }
     }
-
-
-    
 
     isScrollingInsideDropdown(event: any): boolean {
         const path = event.composedPath ? event.composedPath() : event.path;
@@ -814,6 +819,12 @@ closeAllDropdowns() {
             next: (res) => {
                 this.getProposal();
                 const boqData = res?.boqResponse?.boqData || {};
+                const hasBoq =
+                    Object.keys(boqData).some(
+                        key => Array.isArray(boqData[key]) && boqData[key].length > 0
+                    );
+                this.boqAvailable = hasBoq;
+                this.boqChecked = true;
                 const pannelResponse = res?.pannelResponse?.pannelResponse || [];
                 this.showDownloadButton = pannelResponse.some((p: any) =>
                     (p.cl && p.cl !== 0) || (p.cw && p.cw !== 0)
@@ -844,13 +855,16 @@ closeAllDropdowns() {
                 });
                 this.boqDataSources['All'] = new MatTableDataSource(allItems);
                 this.tabKeys = ['All', ...this.tabKeys];
-                // this.currentRoomName = 'All';
-                 if (roomSnapshot && this.tabKeys.includes(roomSnapshot)) {
-                this.currentRoomName = roomSnapshot;
+
+                if (roomSnapshot && this.tabKeys.includes(roomSnapshot)) {
+                    this.currentRoomName = roomSnapshot;
                 } else if (!this.currentRoomName || !this.tabKeys.includes(this.currentRoomName)) {
-                this.currentRoomName = 'All';
+                    this.currentRoomName = 'All';
                 }
-                this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({ order: i + 1, ...item }));
+                this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({
+                    order: i + 1,
+                    ...item
+                }));
                 const apiRooms = this.tabKeys
                     .filter(k => k !== 'All')
                     .map(name => ({ name }));
@@ -1822,7 +1836,6 @@ closeAllDropdowns() {
     }
     detailsClick() {
         const selectedFileDetails = document.querySelector('.selected-file-details');
-
         if (window.innerWidth <= 1180 && selectedFileDetails) {
             selectedFileDetails.classList.add('open');
         } else {
@@ -1839,6 +1852,7 @@ closeAllDropdowns() {
         this.modalService.open(recceContent1, { centered: true, size: 'lg' });
     }
     openModal2(recceContent2: any) {
+        this.getUsers();
         this.modalService.open(recceContent2, { centered: true, size: 'lg' });
     }
 
@@ -1864,64 +1878,61 @@ closeAllDropdowns() {
         });
     }
 
-    // getLst() {
-    //     let payload = {
-    //         email: this.userEmail,
-    //         type: this.userType,
-    //         companyname: this.userCompanyName,
-    //         companycode: this.userCompanyCode,
-    //         projectId: '',
-    //         projectname: '',
-    //         filter: 'All',
-    //     }
-    //     this.switchService.projectLst(payload).subscribe({
-    //         next: (res: any) => {
-    //             if (res) {
-    //                 this.projectLst = res.projList;
-    //                 this.designerDataSource.data = this.projectLst;
-    //             } 
-    //         }
-    //     })
-    // }
-
-
     
     getAssignProjects(): void {
-        this.isLoadingAssignProjects = true;
-        const payload: any = {
-            email: this.userEmail,
-            type: this.userType,
-            companycode: this.userCompanyCode,
-            projectId: this.projectId,
-            currentUserEmail: this.userRole === 'ADMIN' ? '' : this.userEmail,
-            requestFrom: this.userRole === 'ADMIN' ? 'Admin' : 'User'
-        };
-        this.switchService.fetchAssgnAdonaiDesign(payload).subscribe({
-            next: (res: any) => {
-                const projects = Array.isArray(res) ? res : [res];
-                this.designingId = res?.designId || '';
-                if (this.activeTab === '3' && !this.designingId) {
-                    this.boqAvailable = false;
-                    return;
-                }
-                if (this.activeTab === '3' && !this.boqLoaded && this.designingId) {
-                    this.boqLoaded = true;
-                    this.boqAvailable = true;
-                    this.boqData();
-                }
-                this.designCompletionStatus = res?.designCompletionStatus || '';
-                this.designerData = this.userRole === 'ADMIN'
-                    ? projects
-                    : projects.filter(p =>
-                        p?.assignedDesigner?.toLowerCase() === this.userEmail?.toLowerCase()
-                    );
-                this.filteredDesignerData = [...this.designerData];
-            },
-            complete: () => {
-                this.isLoadingAssignProjects = false;
-            }
-        });
+
+  // 🔒 Prevent parallel calls
+  if (this.isLoadingAssignProjects) {
+    return;
+  }
+
+  this.isLoadingAssignProjects = true;
+
+  const payload: any = {
+    email: this.userEmail,
+    type: this.userType,
+    companycode: this.userCompanyCode,
+    projectId: this.projectId,
+    currentUserEmail: this.userRole === 'ADMIN' ? '' : this.userEmail,
+    requestFrom: this.userRole === 'ADMIN' ? 'Admin' : 'User'
+  };
+
+  this.switchService.fetchAssgnAdonaiDesign(payload).subscribe({
+    next: (res: any) => {
+
+      const projects = Array.isArray(res) ? res : [res];
+
+      // ✅ Save designId ONLY
+      this.designingId = res?.designId || '';
+
+      if (this.designingId) {
+        localStorage.setItem('designId', this.designingId);
+      }
+
+      this.designCompletionStatus =
+        res?.designCompletionStatus || '';
+
+      this.designerData =
+        this.userRole === 'ADMIN'
+          ? projects
+          : projects.filter(p =>
+              p?.assignedDesigner
+                ?.toLowerCase()
+                === this.userEmail?.toLowerCase()
+            );
+
+      this.filteredDesignerData = [...this.designerData];
+    },
+    error: () => {
+      this.isLoadingAssignProjects = false;
+    },
+    complete: () => {
+      this.isLoadingAssignProjects = false;
     }
+  });
+}
+
+
 
     showNoData(): boolean {
         if (!this.filteredDesignerData) return true;
@@ -2027,7 +2038,6 @@ closeAllDropdowns() {
         };
         this.switchService.fetchRecceData(payload).subscribe({
             next: (res: any) => {
-                this.getUsers();
                 if (res && res.length > 0) {
                     this.recceList = res.map((recce: any) => ({
                         ...recce,
@@ -2212,17 +2222,16 @@ closeAllDropdowns() {
     }
 
     
-    onTabChange(tabId: any) {
-        this.activeTab = String(tabId);
-        if (this.activeTab === '1') {
-            this.getProposal();
-        } else if (this.activeTab === '2') {
-            this.getClientOrders();
-        } else if (this.activeTab === '3') {
-            this.getAssignProjects();
-        } else if (this.activeTab === '4') {
+    onTabChange(tabId: any): void {
+        const newTab = String(tabId);
+        if (this.activeTab === newTab) {
+            return;
         }
+        this.activeTab = newTab;
+        this.changeTab(newTab);
     }
+
+
 
     prevStep() {
         if (this.step > 1) {

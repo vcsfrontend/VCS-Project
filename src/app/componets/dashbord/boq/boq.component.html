@@ -1480,7 +1480,12 @@
                                         <div class="spinner-border"></div>
                                         <p class="text-muted mt-2">Loading Project Scope...</p>
                                     </div>
-                                    <div *ngIf="!isBoqLoading && boqAvailable === false" class="text-center py-4">
+                                    <div *ngIf="!isBoqLoading && !hasDesign" class="text-center py-4">
+                                        <div class="card custom-card align-items-center justify-content-center" style="min-height: 250px; box-shadow: none !important;">
+                                            <p class="text-dark fw-semibold fs-14">No BOQ assigned for this project.</p>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!isBoqLoading && hasDesign && boqChecked && boqAvailable === false" class="text-center py-4">
                                         <div class="card custom-card align-items-center justify-content-center" style="min-height: 250px; box-shadow: none !important;">
                                             <p class="text-dark fw-semibold fs-14">No BOQ assigned for this project.</p>
                                         </div>
@@ -1499,7 +1504,6 @@
                                                                         {{ boqDataSources[key].data.length }}
                                                                     </span>
                                                                 </a>
-
                                                                 <div class="tt"></div>
                                                                 <ng-template ngbNavContent>
                                                                     <div class="col-xl-12" *ngIf="!showPanelList">
@@ -2205,15 +2209,18 @@
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Widht</label>
-                        <input type="number" class="form-control" formControlName="length" placeholder="Enter Length">
+                        <input type="number" class="form-control" formControlName="length" placeholder="Enter Length"
+                           min="0" (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Depth</label>
-                        <input type="number" class="form-control" formControlName="breadth" placeholder="Enter Breadth">
+                        <input type="number" class="form-control" formControlName="breadth" placeholder="Enter Breadth"
+                           min="0" (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Height</label>
-                        <input type="number" class="form-control" formControlName="height" placeholder="Enter Height">
+                        <input type="number" class="form-control" formControlName="height" placeholder="Enter Height"
+                           min="0" (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Client Rate (₹)</label>
@@ -2255,22 +2262,22 @@
                     <div class="col-xl-6">
                         <label class="form-label">Draft Quantity</label>
                         <input type="number" class="form-control" formControlName="draftQuantity"
-                            placeholder="Enter Draft Quantity">
+                            placeholder="Enter Draft Quantity" min="0" (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Budget Rate (₹)</label>
                         <input type="number" class="form-control" formControlName="budgetRate"
-                            placeholder="Enter Budget Rate">
+                            placeholder="Enter Budget Rate" min="0" (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Base Amount (₹)</label>
                         <input type="number" class="form-control" formControlName="baseAmount"
-                            placeholder="Enter Base Amount">
+                            placeholder="Enter Base Amount" min="0" (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Service Charge</label>
                         <input type="number" class="form-control" formControlName="serviceCharge"
-                            placeholder="Enter Service Charge">
+                            placeholder="Enter Service Charge" min="0" (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">HSN Code</label>
@@ -2278,18 +2285,16 @@
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">GST %</label>
-                        <input type="text" class="form-control" formControlName="gstPrecent" placeholder="Enter GST"
-                        [ngClass]="{ 'is-invalid': elementFormSubmitted && es['gstPrecent'].errors }">
-                        <div *ngIf="elementFormSubmitted && es['gstPrecent'].errors" class="invalid-feedback">
-                          <div *ngIf="es['gstPrecent'].errors['pattern']">Only numbers are allowed.</div>
-                        </div>
+                        <input type="number" class="form-control" formControlName="gstPrecent" placeholder="Enter GST" min="0"
+                            (keydown)="blockMinus($event)">
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Upload Image</label>
-                        <input class="form-control" type="file" (change)="onFileChange($event)">
-                    </div>
-                    <div *ngIf="previewUrl && isEditMode">
-                        <img [src]="previewUrl" alt="Existing Image" class="img-thumbnail mt-2" width="100">
+                        <div class="d-flex align-items-center gap-3">
+                            <input class="form-control" type="file" (change)="onFileChange($event)" />
+                            <img *ngIf="previewUrl && isEditMode" [src]="previewUrl" alt="Existing Image" class="img-thumbnail"
+                                width="100" />
+                        </div>
                     </div>
                 </div>
             </div>

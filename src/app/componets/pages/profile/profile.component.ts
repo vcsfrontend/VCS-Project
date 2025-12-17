@@ -91,12 +91,11 @@ export class ProfileComponent {
     this.switchService.userInfoLoaded
     .pipe(
       filter(loaded => loaded),
-      take(1)
+      take(1) 
     )
     .subscribe(() => {
       const cached = this.switchService.userInfoCache;
       if (!cached) return;
-
       this.userData = cached;
       this.userName = cached.username || cached.name;
       this.profilePic = cached.profilePic
