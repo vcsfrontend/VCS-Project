@@ -12,7 +12,16 @@ export class SwitherService {
   userName: string | null = null;
   userInfoLoaded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private userInfoInFlight = false;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const storedUser = localStorage.getItem('userInfo');
+    if (storedUser) {
+      this.userInfoCache = JSON.parse(storedUser);
+      this.profilePic = this.userInfoCache?.profilePic || null;
+      this.userName =
+        this.userInfoCache?.name || this.userInfoCache?.username || null;
+      this.userInfoLoaded.next(true);
+    }
+  }
 
   //new api calls
   // private apiUrl = 'https://sasi-vcs-repo.onrender.com/auth/get_all_vcs_users';
@@ -69,9 +78,6 @@ export class SwitherService {
   
   userInfo(email: any): Observable<any> {
     if (this.userInfoCache) {
-      this.profilePic = this.userInfoCache?.profilePic || null;
-      this.userName =
-        this.userInfoCache?.name || this.userInfoCache?.username || null;
       this.userInfoLoaded.next(true);
       return of(this.userInfoCache);
     }
@@ -84,6 +90,7 @@ export class SwitherService {
       .pipe(
         tap((res: any) => {
           this.userInfoCache = res;
+          localStorage.setItem('userInfo', JSON.stringify(res));
           this.profilePic = res?.profilePic || null;
           this.userName = res?.name || res?.username || null;
           this.userInfoLoaded.next(true);

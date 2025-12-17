@@ -2097,7 +2097,6 @@ downloadButtons: { label: string; url: string }[] = [];
         state: { projectObj: element }
       }
     );
-    this.getLst();
   }
 
 

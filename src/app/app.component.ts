@@ -28,13 +28,13 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.userEmail = localStorage.getItem('email');
-
     if (this.userEmail) {
       this.switchService.userInfo(this.userEmail)
         .pipe(take(1))
         .subscribe();
     }
   }
+
 
 
 }

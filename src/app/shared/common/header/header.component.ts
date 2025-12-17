@@ -280,17 +280,15 @@ export class HeaderComponent implements OnInit {
       }
     });
     this.switchService.userInfoLoaded
-    .pipe(filter(loaded => loaded))
-    .subscribe(() => {
-      const cached = this.switchService.userInfoCache;
-      if (!cached) return;
-
-      this.userData = cached;
-      this.userName = cached.username || cached.name;
-      this.profilePic = cached.profilePic
-        ? this.addBaseUrlIfNeeded(cached.profilePic)
-        : 'assets/images/brand-logos/profile1.jpg';
-    });
+      .pipe(filter(loaded => loaded))
+      .subscribe(() => {
+        const cached = this.switchService.userInfoCache;
+        if (!cached) return;
+        this.userName = cached.username || cached.name;
+        this.profilePic = cached.profilePic
+          ? this.addBaseUrlIfNeeded(cached.profilePic)
+          : 'assets/images/brand-logos/profile1.jpg';
+      });
     this.logRoute();
     this.routerSub = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
