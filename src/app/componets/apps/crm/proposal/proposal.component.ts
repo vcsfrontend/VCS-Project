@@ -79,12 +79,12 @@ export class ProposalComponent extends BaseComponent {
   proposalTabCounts: { [key: string]: number } = {}; activeStage: string = '';
   public userList: any; filteredUserList: any[] = [];
   proposalContentDataSources: { [key: string]: MatTableDataSource<any> } = {};
-  selectedProposalCount: any = null;
+  selectedProposalCount: any = null; filteredRoomNameList: { name: string }[] = [];
   isReadOnly: boolean = false; skipClientForm: boolean = false; clientData: any = null;
   skipProposalForm: boolean = false; minDateTime: string = '';
   showShutterFields: boolean = false; dimensionsList: any[] = []; currentStep: number = 1;
   step1Data: any[] = []; step2Data: any = null; leadData: any; selectedRoom: string = 'All';
-  proposalSubmitted: boolean = false;
+  proposalSubmitted: boolean = false; activeNavId: number = 1;
   // selectedColumns: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('scrollContainer', { static: false }) scrollContainer!: ElementRef;
@@ -274,22 +274,22 @@ export class ProposalComponent extends BaseComponent {
       itemType: [''],
       source: [''],
       status: [''],
-      length: [0],
-      breadth: [0],
-      height: [0],
+      length: [0, [Validators.min(0)]],
+      breadth: [0, [Validators.min(0)]],
+      height: [0, [Validators.min(0)]],
       quantity: [0, [Validators.min(1)]],
       uom: [''],
       draftQuantity: [0, [Validators.min(1)]],
       clientRate: [0, [Validators.min(0)]],
       finalAmount: [0],
       brandOrMake: [''],
-      discount: [0],
+      discount: [0, [Validators.min(0)]],
       serviceCharge: [0, [Validators.min(0)]],
-      baseAmount: [0],
-      budgetRate: [0],
+      baseAmount: [0, [Validators.min(0)]],
+      budgetRate: [0, [Validators.min(0)]],
       hsn: [0],
       gstPrecent: [0, [Validators.pattern(/^[0-9]+(\.[0-9]+)?$/)]],
-      amountWithoutGst: [0],
+      amountWithoutGst: [0, [Validators.min(0)]],
       designId: [''],
       roomName: ['', [Validators.required]],
       itemCode: ['', [Validators.required]],
@@ -389,35 +389,10 @@ export class ProposalComponent extends BaseComponent {
       assignedDesigner: [''],
       designCompletionStatus: ['']
     });
-    this.getUsers();
     this.getAssignProjects();
-    this.getProjectConfig();
-    this.getMarginData();
     this.boqData();
     flatpickr('#addignedDate', this.flatpickrOptions);
   }
-
-  getUsers() {
-    if (this.userType == 2) {
-      let cn = this.userCompanyName;
-      let cc = this.userCompanyCode;
-      this.switchService.cmpnyUsers(cn, cc).subscribe({
-        next: (res: any) => {
-          if (res) {
-            this.userList = res.map((user: any) => ({
-              email: user.email,
-              username: user.username,
-              adonaiRole: user.adonaiRole
-            }));
-            this.filteredUserList = this.userList.filter(
-              (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
-            );
-          }
-        }
-      });
-    }
-  }
-
 
   onSubmit() {
     if (this.isEditMode) {
@@ -675,8 +650,9 @@ export class ProposalComponent extends BaseComponent {
         this.boqDataSources['All'] = new MatTableDataSource(allItems);
         this.tabKeys = ['All', ...this.tabKeys];
         this.currentRoomName = 'All';
+
         this.roomNameList = this.tabKeys
-          .filter(k => k !== 'All')
+          .filter(name => name !== 'All')
           .map(name => ({ name }));
 
       }
@@ -946,7 +922,7 @@ export class ProposalComponent extends BaseComponent {
       draftQuantity: Number(formValue.draftQuantity) || 0,
       codeAndCategory: formValue.codeAndCategory || '',
       itemType: formValue.itemType || '',
-      designId: this.designingId,
+      designId: '3FO3ILENXV7I',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType
@@ -955,6 +931,7 @@ export class ProposalComponent extends BaseComponent {
       next: (res: any) => {
         if (res?.status === true) {
           this.toastr.success(res.message || 'Element Saved');
+          this.offcanvasService.dismiss();
           this.boqData();
           this.elementForm.reset();
           this.elementFormSubmitted = false;
@@ -963,70 +940,84 @@ export class ProposalComponent extends BaseComponent {
     });
   }
 
-  saveLibraryItem() {
-    if (this.selectedItems.length === 0) {
-      this.toastr.warning("Please select an item");
-      return;
-    }
-    const item = this.selectedItems[0];
-    let elementNameAndDescription = '';
-    if (item.name && item.name.trim()) {
-      elementNameAndDescription = `Name : ${item.name.trim()}`;
-    }
-    if (item.brandMake && item.brandMake.trim()) {
-      elementNameAndDescription += `\nBrand : ${item.brandMake.trim()}`;
-    }
-    if (item.description && item.description.trim()) {
-      elementNameAndDescription += `\nDescription : ${item.description.trim()}`;
-    }
-    const payload = {
-      elementNameAndDescription,
-      categoryName: this.getCategoryName(item.categoryId?._id || item.categoryId),
-      uom: this.getUomName(item.uom) || null,
-      quantity: Number(item.standardQuantity) || 1,
-      standardRate: Number(item.standardRate) || 0,
-      budgetRate: Number(item.budgetRate) || 0,
-      hsn: item.hsn || '',
-      gstPrecent: item.gst ?? null,
-      roomName: item.roomName,
-      itemCode: item.itemTypeId?.name || '',
-      elementUrl: item.imageUrl || '',
-      length: item.dimensions?.width || 0,
-      breadth: item.dimensions?.depth || 0,
-      height: item.dimensions?.height || 0,
-      designId: this.designingId
-    };
-    console.log(payload);
-    this.switchService.saveElementData(payload).subscribe({
-      next: (res: any) => {
-        if (res?.status === true) {
-          this.toastr.success(res.message || 'Elements Imported');
-          this.boqData();
+   saveLibraryItem() {
+        if (this.selectedItems.length === 0) {
+            this.toastr.warning("Please select an item");
+            return;
         }
-      }
-    });
-  }
+        const item = this.selectedItems[0];
+        let elementNameAndDescription = '';
+        if (item.name && item.name.trim()) {
+            elementNameAndDescription = `Name : ${item.name.trim()}`;
+        }
+        if (item.brandMake && item.brandMake.trim()) {
+            elementNameAndDescription += `\nBrand : ${item.brandMake.trim()}`;
+        }
+        if (item.description && item.description.trim()) {
+            elementNameAndDescription += `\nDescription : ${item.description.trim()}`;
+        }
+        const payload = {
+            elementNameAndDescription,
+            categoryName: this.getCategoryName(item.categoryId?._id || item.categoryId),
+            uom: this.getUomName(item.uom) || null,
+            quantity: Number(item.standardQuantity) || 1,
+            standardRate: Number(item.standardRate) || 0,
+            budgetRate: Number(item.budgetRate) || 0,
+            hsn: item.hsn || '',
+            gstPrecent: item.gst ?? null,
+            roomName: item.roomName,
+            itemCode: item.itemTypeId?.name || '',
+            elementUrl: item.imageUrl || '',
+            length: item.dimensions?.width || 0,
+            breadth: item.dimensions?.depth || 0,
+            height: item.dimensions?.height || 0,
+            designId: '3FO3ILENXV7I'
+        };
+        this.switchService.saveElementData(payload).subscribe({
+            next: (res: any) => {
+               if (res?.status === true) {
+                this.toastr.success(res.message || 'Elements Imported');
+                 const snapshotIndex = this.activeNavId;
+                const snapshotRoom = this.currentRoomName;
+                this.boqData();
+                this.offcanvasService.dismiss();
+                setTimeout(() => {
+                    this.activeNavId = snapshotIndex;
+                    this.currentRoomName = snapshotRoom;
+                });
+               }
+            }
+        });
+    }
 
   get es() {
     return this.elementForm.controls;
   }
 
   editElement(element?: any) {
-    this.elementFormSubmitted = true;
-    if (this.elementForm.value.roomName == '' || this.elementForm.value.itemCode == '') {
-      console.log('roomnam or item code mising ')
+    if (!this.elementForm.value.roomName || !this.elementForm.value.itemCode) {
+      this.elementFormSubmitted = true;
+      this.elementForm.markAllAsTouched();
+      return;
     }
+    this.elementFormSubmitted = true;
     const formValue = { ...this.elementForm.value };
+    const description: string = formValue.elementDescription || '';
+    const extract = (label: string): string => {
+      const regex = new RegExp(`${label}\\s*:\\s*(.*)`, 'i');
+      const match = description.match(regex);
+      return match ? match[1].trim() : '';
+    };
     const payload = [
       {
         boqId: element?.boqId || Number(this.itemId) || 0,
         elementUrl: this.elementUrl || element?.elementUrl || '',
         elementNameAndDescription: (
           `Name : ${formValue.elementName || ''}\n` +
-          `Carcass Material : ${formValue.carcassMaterial || ''}\n` +
-          `Carcass Finish : ${formValue.carcassFinish || ''}\n` +
-          `Shutter Material : ${formValue.shutterMaterial || ''}\n` +
-          `Shutter Finish : ${formValue.shutterFinish || ''}\n` +
+          `Carcass Material : ${extract('Carcass Material')}\n` +
+          `Carcass Finish : ${extract('Carcass Finish')}\n` +
+          `Shutter Material : ${extract('Shutter Material')}\n` +
+          `Shutter Finish : ${extract('Shutter Finish')}\n` +
           `Brand : ${formValue.brandOrMake || ''}`
         ).trim(),
         codeAndCategory: formValue.codeAndCategory || '',
@@ -1042,7 +1033,7 @@ export class ProposalComponent extends BaseComponent {
         draftQuantity: Number(element?.draftQuantity ?? formValue.draftQuantity) || 0,
         clientRate: Number(element?.clientRate ?? formValue.clientRate) || 0,
         finalAmount: Number(element?.finalAmount ?? formValue.finalAmount) || 0,
-        brandOrMake: element?.brandOrMake || formValue.brandOrMake || '',
+        brandOrMake: formValue.brandOrMake || element?.brandOrMake || '',
         discount: Number(element?.discount ?? formValue.discount) || 0,
         serviceCharge: Number(element?.serviceCharge ?? formValue.serviceCharge) || 0,
         baseAmount: Number(element?.baseAmount ?? formValue.baseAmount) || 0,
@@ -1055,16 +1046,18 @@ export class ProposalComponent extends BaseComponent {
         itemCode: formValue.itemCode,
         companyCode: this.userCompanyCode,
         email: this.userEmail,
-        type: this.userType,
-      },
+        type: this.userType
+      }
     ];
-    console.log(payload)
     this.switchService.updateElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
           this.toastr.success(res.message || 'Element Updated');
+
           const updatedItem = payload[0];
           const room = formValue.roomName;
+
+          // update room datasource
           const roomDataSource = this.boqDataSources[room];
           if (roomDataSource) {
             const index = roomDataSource.data.findIndex(
@@ -1078,6 +1071,8 @@ export class ProposalComponent extends BaseComponent {
               roomDataSource._updateChangeSubscription();
             }
           }
+
+          // update All datasource
           const allDataSource = this.boqDataSources['All'];
           if (allDataSource) {
             const allIndex = allDataSource.data.findIndex(
@@ -1091,6 +1086,7 @@ export class ProposalComponent extends BaseComponent {
               allDataSource._updateChangeSubscription();
             }
           }
+
           this.elementForm.reset();
           this.offcanvasService.dismiss();
           this.elementFormSubmitted = false;
@@ -1100,12 +1096,25 @@ export class ProposalComponent extends BaseComponent {
     });
   }
 
+  moveToRoom(content22: any) {
+    this.elementForm.patchValue({ roomName: null });
+    this.filteredRoomNameList = (this.roomNameList || []).filter(
+      room => room.name !== this.currentRoomName
+    );
+    this.modalService.open(content22, { centered: true });
+  }
+
+
   moveToRoomSubmit(modal: any) {
+    if (!this.elementForm.value.roomName) {
+      this.toastr.warning('Please select a room');
+      return;
+    }
     const selectedItems: any[] = [];
     Object.keys(this.boqDataSources).forEach(key => {
       const rows = this.boqDataSources[key]?.data ?? [];
       rows.forEach(row => {
-        if (this.selectedElement.includes(row.boqId)) {
+        if (this.selectedElement?.includes(row.boqId)) {
           selectedItems.push(row);
         }
       });
@@ -1144,13 +1153,12 @@ export class ProposalComponent extends BaseComponent {
       amountWithoutGst: Number(item.amountWithoutGst ?? 0),
       roomName: this.elementForm.value.roomName,
       itemCode: item.itemCode ?? '',
-      designId: item.designId ?? '3FO3ILENXV7I',
+      designId: item.designId ?? '',
       companyCode: this.userCompanyCode,
       email: this.userEmail,
       type: this.userType,
       inProposal: item.inProposal ?? '',
     }));
-    console.log("FINAL PAYLOAD:", payload);
     this.switchService.updateElementData(payload).subscribe({
       next: (res: any) => {
         if (res?.status === true) {
@@ -1159,7 +1167,7 @@ export class ProposalComponent extends BaseComponent {
           this.elementForm.reset();
           this.offcanvasService.dismiss();
           this.elementFormSubmitted = false;
-          // this.selectedElement = null;
+          this.selectedElement = [];
           this.boqData();
         }
       }
@@ -1714,16 +1722,18 @@ export class ProposalComponent extends BaseComponent {
 
   onTabChange(event: any) {
     this.activeTab = event.nextId;
-
+    this.currentRoomName = this.tabKeys[event.nextId] || 'All';
     if (this.activeTab === '1') {
       this.isReadOnly = true;
       this.elementForm.disable();
       this.elementForm.get('quantity')?.enable();
-    } else if (this.activeTab === '5') {
+    }
+    else if (this.activeTab === '5') {
       this.isReadOnly = false;
       this.elementForm.enable();
     }
   }
+
 
 
   prevStep() {
@@ -1843,25 +1853,6 @@ export class ProposalComponent extends BaseComponent {
     }
   }
 
-  getProjectConfig() {
-    let payload = {
-      companycode: JSON.parse(this.userData).companyCode,
-      email: JSON.parse(this.userData).email,
-      type: JSON.parse(this.userData).type
-    };
-    this.switchService.fetchProjectConfig(payload).subscribe({
-      next: (res: any) => {
-        if (res && res.configId) {
-          const configs: string[] = [];
-          for (let i = 1; i <= 10; i++) {
-            const value = res[`f${i}`];
-            if (value) configs.push(value);
-          }
-          this.projectConfigList = configs;
-        }
-      }
-    });
-  }
   toggleGraniteFields() {
     this.graniteEnabled = !this.graniteEnabled;
     if (!this.graniteEnabled) {
@@ -1875,28 +1866,6 @@ export class ProposalComponent extends BaseComponent {
     }
   }
 
-  getMarginData() {
-    let payload = {
-      companycode: JSON.parse(this.userData).companyCode,
-      email: JSON.parse(this.userData).email,
-      type: JSON.parse(this.userData).type
-    };
-    this.switchService.fetchDynamicMargin(payload).subscribe({
-      next: (res: any) => {
-        if (res) {
-          const configs: { name: string, percent: number }[] = [];
-          for (let i = 1; i <= 10; i++) {
-            const name = res[`f${i}`];
-            const percent = res[`f${i}Percent`];
-            if (name) {
-              configs.push({ name, percent: percent || 0 });
-            }
-          }
-          this.projectMarginList = configs;
-        }
-      }
-    });
-  }
 
   openSelect(select: NgSelectComponent) {
     setTimeout(() => select.open(), 100);
@@ -1952,10 +1921,6 @@ export class ProposalComponent extends BaseComponent {
   getUomNameById(id: string): string {
     const uom = this.uomList.find(x => x._id === id);
     return uom ? uom.name : '';
-  }
-
-  moveToRoom(content22: any) {
-    this.modalService.open(content22, { centered: true });
   }
   onScroll() {
     this.checkArrows();
@@ -2036,6 +2001,23 @@ export class ProposalComponent extends BaseComponent {
     const lines = element.elementNameAndDescription.split('\n');
     const brandLine = lines.find((l: string) => l.trim().startsWith('Brand :'));
     return brandLine ? brandLine.replace('Brand :', '').trim() : '-';
+  }
+
+  trackById(index: number, item: any): any {
+    return item.id ?? item.boqId ?? item.referenceNo ?? index;
+  }
+
+  getStatusBadge(status: string): string {
+    switch (status) {
+      case 'Approve':
+        return 'bg-success';
+      case 'Pending for Approval':
+        return 'bg-warning text-dark';
+      case 'Rejected':
+        return 'bg-danger';
+      default:
+        return 'bg-secondary';
+    }
   }
 
 
