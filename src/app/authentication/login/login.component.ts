@@ -148,7 +148,10 @@ login() {
           this.navSvc.adonaiRole$.next(res.adonaiRole);
           this.navSvc.crmRole$.next(res.crmRole)
           this.getUsersAccess(this.email)
-        this.router.navigate(['/pages/profile']);
+          this.getUsersAccess(this.email);
+          this.switchService.userInfo(res.email).subscribe(() => {
+            this.router.navigate(['/pages/profile']);
+          });
       }
     else{
       this.toastr.error(res.message,'VCS', {
