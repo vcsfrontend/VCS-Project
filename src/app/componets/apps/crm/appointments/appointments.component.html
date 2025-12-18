@@ -46,7 +46,7 @@
         <div id='calendar2'>
           <full-calendar [options]="calendarOptions">
           <ng-template #eventContent let-arg>
-            <div class="custom-event" (click)="open(content1)">
+            <div class="custom-event" (click)="open(content1)" *ngIf="hasPermission('CRM_appointment_view')">
               <strong>{{ arg.event.title }}</strong>
             </div>
           </ng-template>
@@ -205,7 +205,7 @@
                   <p><strong>Client Email:</strong> {{ item.leadEntry?.email }}</p>
                 </div>
                 <div>
-                  <div class="btn-list">
+                  <div class="btn-list" *ngIf="hasPermission('CRM_appointment_edit')">
                     <button class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
                       (click)="openEditModal(item)" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                       <i class="ri-edit-line"></i>

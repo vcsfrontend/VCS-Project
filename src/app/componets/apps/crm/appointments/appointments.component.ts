@@ -47,7 +47,7 @@ export class AppointmentsComponent extends BaseComponent {
   appointmentsList : any;appointments: any[] = [];
   monthlyAppointments: any[] = []; 
   editMode = false; saving = false;                 
-  selectedAppointment: any = null;crmRole : any;
+  selectedAppointment: any = null;crmRole : any;access : any;
   appointmentDates: Set<string> = new Set();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('appointment1') appointment1!: TemplateRef<any>;
@@ -69,6 +69,7 @@ export class AppointmentsComponent extends BaseComponent {
   }
   ngOnInit() {
     this.getUsers();
+    this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
     this.availabilityForm = this.fb.group({
       duration: ['30'],
       ...this.createWeekControls()
@@ -499,10 +500,14 @@ private getDefaultColor(str: string): string {
     return 'btn-warning-transparent';
   }
   return 'btn-success-transparent';
-}
- formatMobileNumber(mobile: any): string {
+  }
+  formatMobileNumber(mobile: any): string {
     if (!mobile) return "";
-    return Number(mobile).toFixed(0); // Convert to normal number
+    return Number(mobile).toFixed(0);
+  }
+  hasPermission(key: string): boolean {
+  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
+  return !!access[key];
   }
 
 }
