@@ -95,73 +95,64 @@ export class SidebarComponent implements AfterViewInit {
 
   }
   
-
   buildMenu(): void {
-    this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
-    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
-      items.forEach((item) => {
+  this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
+  this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
+
+    items.forEach((item: any) => {
       switch (item.title) {
-        case 'Adonai':
-          item.isVisible = this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER';
-          break;
 
         case 'CRM':
-          // item.isVisible = !!this.access.CRM;  
-          // break;
-        // case 'Customer':
-        case 'Deals':
-        // case 'clients':
-        case 'Appointment':
-        // case 'proposal':
-          item.isVisible = this.crmRole === 'ADMIN' || this.crmRole === 'USER';
+          item.isVisible = !!this.access.CRM;
           break;
 
-        // case 'Quotation':
-        case 'Optimization':
         case 'Projects':
-          item.isVisible = this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER';
-
-          // item.isVisible = !!this.access.Projects;
+          item.isVisible = !!this.access.Projects;
           break;
 
-        // case 'Dashboard':
-        // case 'To-Do-List':
-        // case 'HRM':
-        // case 'Analytics':
-        // case 'users':
-        // case 'Reports':
-        // case 'support':
-        case 'optimizer':
-        case 'Tasks':
         case 'Dashboard':
-        case 'Knowledge':
-        item.isVisible = true;
-        break;
-          
-        // case 'Boq':
+          item.isVisible = true;
+          break;
+        case 'Tasks':
+        // case 'Knowledge':
+        // case 'optimizer':
         //   item.isVisible = true;
         //   break;
 
-        // case 'Adonai Users':
-        //   this.getSalesUsers(this.userEmail, item);
-        //   break;
-
-        case 'Settings':
-          // 🔹 use external method here
-          this.checkAdminRole(item);
-          break;
-
         default:
-          item.isVisible = false;
+          if (!item.children) item.isVisible = item.isVisible ?? false;
+          break;
       }
-    //   if ((this.adonaiRole === 'ADMIN' || this.adonaiRole === 'USER') &&
-    //     (this.crmRole === 'ADMIN' || this.crmRole === 'USER')) {
-    //   item.isVisible = true;
-    // }
-      });
-      this.menuItems = items;
+      if (item.children && item.children.length > 0) {
+
+        item.children.forEach((child: any) => {
+
+          if (child.permissionKey) {
+            child.isVisible = !!this.access[child.permissionKey];
+          } 
+           if (item.children && item.children.length > 0) {
+        item.children.forEach((child: any) => {
+          
+          child.isVisible = child.permissionKey 
+                              ? !!this.access[child.permissionKey] 
+                              : false; 
+
+        });
+        item.isVisible = item.children.some((c: any) => c.isVisible);
+      }
+
+        });
+        item.isVisible = item.children.some((c: any) => c.isVisible);
+      }
+
     });
-  }
+
+    this.menuItems = items;
+  });
+}
+
+
+
  
   getSalesUsers(email: string = this.userEmail, item: any) {
     this.switchService.SalesUsers(email).subscribe({
@@ -197,7 +188,6 @@ export class SidebarComponent implements AfterViewInit {
 
   // Start of Set menu Active event
   setNavActive(event: any, currentPath: string, menuData = this.menuItems) {
-    // console.log("103",currentPath)
     if (event) {
       if (event?.ctrlKey) {
         return;
@@ -630,5 +620,13 @@ export class SidebarComponent implements AfterViewInit {
       }
     }
   }
+
+
+
+hasPermission(key: string | undefined): boolean {
+  if (!key) return true;
+  return !!this.access[key];
+}
+
 
 }

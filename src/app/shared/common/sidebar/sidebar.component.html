@@ -82,7 +82,7 @@
             [ngStyle]="{ display: menuItem.active ? 'block' : 'none' }">
             <li class="slide side-menu__label1"><a href="javascript:void(0)">{{menuItem.title}}</a></li>
             @for (childrenItem of menuItem.children; track childrenItem) {
-            <li class="slide" [ngClass]="{'active':childrenItem.selected}" appDropdownPosition
+            <li class="slide" *ngIf="childrenItem.isVisible" [ngClass]="{'active':childrenItem.selected}" appDropdownPosition
               [ngClass]="{ 'has-sub': childrenItem.type === 'sub','active':childrenItem.selected}">
               <!-- link -->
               @if (childrenItem.type === 'link') {
@@ -115,7 +115,7 @@
                               
                                 }">
                 @for (childrenSubItem of childrenItem.children; track childrenSubItem) {
-                <li class="slide" appDropdownPosition [ngClass]="{'open': childrenSubItem.active}">
+                <li class="slide" *ngIf="childrenSubItem.isVisible" appDropdownPosition [ngClass]="{'open': childrenSubItem.active}">
                   @if (childrenSubItem.type === 'link') {
                   <a class="side-menu__item" routerLinkActive="active"
                     [routerLink]="!childrenSubItem.type ?  null : [childrenSubItem.path]"

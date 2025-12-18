@@ -95,6 +95,7 @@ export class DealsComponent extends BaseComponent {
    minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any;
   uploadLeads :boolean=false;moveCmapignSubmitted : boolean= false;
   executiveEmail : string ='';isAllocating: boolean = false;selectedAppointment : any[]=[];
+  access : any;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -298,6 +299,7 @@ export class DealsComponent extends BaseComponent {
     this.moveCmapignSubmitted = false; 
   this.LeadToCampaignForm.reset();
     this.modalService.open(content31, { centered: true });
+    this.getCampaignData();
   }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
@@ -398,12 +400,10 @@ export class DealsComponent extends BaseComponent {
 
   ngOnInit(): void {
     this.LeadForm('DUMMY9DD1748413866634');
-    this.getCrmStages();
-    this.getFormTemplate();
-    this.getAllEmailTemplates();
-    this.getLeadEntry();
-    this.getCampaignData();
-    this.getAppointment();
+    
+    // this.getFormTemplate();
+    
+    // this.getLeadEntry();
     this.selectedLeads = [];
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -415,7 +415,20 @@ export class DealsComponent extends BaseComponent {
 
     this.minDateTime = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
     this.minimumDate = `${yyyy}-${mm}-${dd}`;
-    this.getfetchLeadsIndividual();
+    this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
+    if (this.access.CRM_deals_view) {
+      this.getfetchLeadsIndividual();
+    }
+    if (this.access.CRM_deals_stage_status) {
+      this.getCrmStages();
+    }
+    if (this.access.CRM_deals_mail_teamplet_create) {
+      this.getAllEmailTemplates();
+    }
+    if (this.access.CRM_deals_appointment) {
+        this.getAppointment();
+    }
+    // this.getfetchLeadsIndividual();
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
       file: ['', [Validators.required]],
@@ -435,8 +448,7 @@ export class DealsComponent extends BaseComponent {
       this.uploadLead.get('agents')?.updateValueAndValidity();
     });
 
-
-    //Send Email 
+ 
     this.sendLeadForm = this.fb.group({
       email: ['', [Validators.required]],
       template: ['', [Validators.required]],
@@ -446,7 +458,6 @@ export class DealsComponent extends BaseComponent {
       content: ['', [Validators.required]]
     });
 
-    //Send Email 
     this.followupLeadForm = this.fb.group({
       followupDate: ['', [Validators.required]],
       followupTime: [''],
@@ -586,7 +597,6 @@ export class DealsComponent extends BaseComponent {
     });
 
     this.getUsers();
-    // Filter options as the user types in the search bar
     this.searchControl.valueChanges.subscribe((searchText) => {
       if (searchText && typeof searchText === 'string') {
         const filtered = this.options.filter((option) =>
@@ -594,7 +604,7 @@ export class DealsComponent extends BaseComponent {
         );
         this.filteredOptions.next(filtered);
       } else {
-        this.filteredOptions.next(this.options); // Reset to all options if searchText is null
+        this.filteredOptions.next(this.options);
       }
     });
 
@@ -3052,7 +3062,6 @@ isIndeterminate(): boolean {
       autoCreationRequired: autoProjectCreation,
       username : this.userName
     };
-    console.log('payload',payload);
     this.uploadSpinner = true;
     this.switchService.updateLeadCompletion(payload).subscribe({
       next: (res) => {
@@ -3426,7 +3435,6 @@ isIndeterminate(): boolean {
   this.switchService.fetchAppointment(payload).subscribe({
     next: (res) => {
       this.selectedAppointment = res.map((item: any) => item.leadEntry?.leadId);
-      console.log('appontmnets lists',this.selectedAppointment);
     
     },
     error: () => this.toastr.error('Failed to fetch appointments')
@@ -3453,6 +3461,23 @@ isIndeterminate(): boolean {
   return Array.isArray(this.selectedAppointment) &&
     this.selectedAppointment.includes(leadId);
   }
+
+  hasPermission(key: string): boolean {
+  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
+  return !!access[key];
+  }
+  onCompletionClick(modal: any, element: any) {
+  if (element.completionStatus === 'completed') {
+    this.toastr.info('This lead is already completed');
+    return;
+  }
+  if (!this.access.CRM_deal_completion) {
+    this.toastr.warning('You do not have access to this lead close');
+    return;
+  }
+  this.openCompletionModal(modal, element);
+}
+
 
 
 

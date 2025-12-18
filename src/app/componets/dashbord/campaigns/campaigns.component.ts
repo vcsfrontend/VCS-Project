@@ -349,14 +349,19 @@ export class CampaignsComponent extends BaseComponent {
     }
     return hash;
   }
-
+  
   viewCampaignLeads(campaign: any) {
+    if (!this.hasPermission('CRM_leads_view')) {
+      this.toastr.warning('You do not have permission to view leads');
+      return;
+    }
     this.getLeadCountForCampaign(campaign.campgnId);
     this.router.navigate(['/apps/crm/leads'], {
       queryParams: { campaignId: campaign.campgnId },
       state: { agents: campaign.agents }
     });
   }
+ 
 
   getLeadCountForCampaign(campaignId: string) {
     this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
@@ -476,5 +481,9 @@ export class CampaignsComponent extends BaseComponent {
     const key = followup.email || followup.followUpBy || 'default';
     const index = this.hashString(key) % this.userColors.length;
     return this.userColors[index];
+  }
+  hasPermission(key: string): boolean {
+  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
+  return !!access[key];
   }
 }
