@@ -10,7 +10,7 @@
 <div class="row" *ngIf="adoanAiRole== 'ADMIN'">
     <div class="col-xl-12">
         <div class="card custom-card">
-            <div class="card-header justify-content-between">
+            <div class="card-header justify-content-between border-bottom-0">
                 <div class="card-title">
                     Team
                 </div>
@@ -1922,7 +1922,7 @@
     <form [formGroup]="roleForm" (ngSubmit)="onRoleSubmit(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
-                {{ isEditmode ? 'Edit Role' : 'Create Role' }}
+                <strong>{{ isEditmode ? 'Edit Role' : 'Create Role' }}</strong>
             </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
@@ -1962,7 +1962,7 @@
     <form [formGroup]="createDepartmentForm" (ngSubmit)="onDepartmentSubmit(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
-                {{ isEditmode ? 'Edit Department' : 'Create Department' }}
+                <strong> {{ isEditmode ? 'Edit Department' : 'Create Department' }}</strong>
             </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
@@ -2053,12 +2053,12 @@
     <form [formGroup]="assignRoleForm" (ngSubmit)="assignRole(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
-                Assign Role To Department
+                <strong>Assign Role To Department</strong>
             </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
-        <div class="modal-body overflowImportant">
+        <div class="modal-body overflowImportant" style="min-height: 300px;">
             <div class="row gy-3 scrollable-content">
                 <!-- <div class="col-xl-6">
                     <label for="name" class="form-label">Select Department</label>
@@ -2066,13 +2066,13 @@
                         placeholder="Select an Department" (change)="onDepartmentChange($event)">
                     </ng-select>
                 </div> -->
-                <div class="col-xl-6">
+                <div class="col-xl-12">
                     <label for="name" class="form-label">Select Role</label>
                     <ng-select formControlName="roleRole" [items]="roleLst" bindLabel="name" bindValue="id"
                         placeholder="Select an Role" (change)="onRoleChange($event)">
                     </ng-select>
                 </div>
-                 <div class="col-lg-6">
+                 <div class="col-lg-12">
                     <label for="description" class="form-label">Description</label>
                     <textarea class="form-control" id="description" rows="3" formControlName="description"
                         placeholder="Department Description"></textarea>
@@ -2092,14 +2092,14 @@
         <div class="modal-content1">
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLgLabel">
-                    Assign Permission To Department Role
+                    <strong>Assign Permission To Department Role</strong>
                 </h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-scroll">
                 <div class="row gy-3 scrollable-content">
-                    <div class="col-xl-6">
+                    <div class="col-xl-12">
                         <label for="name" class="form-label">Select Permission</label>
                         <ng-select formControlName="permissionRole" [items]="permissionList" bindLabel="name" bindValue="id"
                             placeholder="Select an Permission" (change)="onPermissionChange($event)">
@@ -2146,14 +2146,14 @@
     <form [formGroup]="assignUserForm" (ngSubmit)="assignUserToDeptRole(modal)">
         <div class="modal-header">
             <h6 class="modal-title" id="exampleModalLgLabel">
-                Assign User To Department
+                <strong>Assign User To Department</strong>
             </h6>
             <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                 aria-label="Close"></button>
         </div>
         <div class="modal-body overflowImportant">
             <div class="row gy-3 scrollable-content">
-                <div class="col-xl-6">
+                <div class="col-xl-12">
                     <label for="name" class="form-label">Select User</label>
                     <ng-select formControlName="userEmail" [items]="userLst" bindLabel="email" bindValue="email"
                         placeholder="Select an Permission">
@@ -2198,182 +2198,183 @@
                     <nav ngbNav #nav7="ngbNav" orientation="vertical"
                         class="nav nav-tabs flex-column nav-style-5 gap-3 sidebar-container" role="tablist">
                         <ng-container ngbNavItem="Home">
-                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="false"><i
-                                    class="ri-home-smile-line me-2 align-middle d-inline-block"></i>Departments</a>
+                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
+                                aria-selected="false"><i class="bi bi-clipboard-data side-menu__icon me-1"></i>Departments</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
-                                    <div class="col-lg-12">
-
-                                        <div class="card custom-card">
-                                            <div *ngIf="!showRoles && !showPermissions">
-                                                <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-                                                    <div class="card-title mb-2 mb-sm-0">Departments</div>
-                                                    <div class="d-flex flex-wrap align-items-center gap-2">
-                                                        <div class="input-group" style="max-width: 200px;">
-                                                            <input type="text" class="form-control" placeholder="Search Departments"
-                                                                aria-describedby="button-addon2">
-                                                            <button class="btn btn-ghost-light border" type="button" id="button-addon2">
-                                                                <i class="ri-search-line text-muted"></i>
-                                                            </button>
-                                                        </div>
-                                                        <button class="btn btn-primary btn-sm me-2" (click)="openLg(Content113)">Add Department</button>
+                                    <div class="card custom-card">
+                                        <div *ngIf="!showRoles && !showPermissions">
+                                            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                                                <div class="card-title mb-2 mb-sm-0">Departments</div>
+                                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                                    <div class="input-group" style="max-width: 200px;">
+                                                        <input type="text" class="form-control" placeholder="Search Departments"
+                                                            aria-describedby="button-addon2">
+                                                        <button class="btn btn-ghost-light border" type="button" id="button-addon2">
+                                                            <i class="ri-search-line text-muted"></i>
+                                                        </button>
+                                                    </div>
+                                                    <button class="btn btn-primary btn-sm me-2" (click)="openLg(Content113)">Add Department</button>
+                                                </div>
+                                            </div>
+                                
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive">
+                                                    <table class="table text-nowrap">
+                                                        <thead class="custom-header">
+                                                            <tr>
+                                                                <th scope="col">S.No</th>
+                                                                <th scope="col">Name</th>
+                                                                <th scope="col">Description</th>
+                                                                <th scope="col">Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let department of departmentList; let i = index">
+                                                                <td>{{ i + 1 }}</td>
+                                                                <td>
+                                                                    <div class="d-flex align-items-center lh-1">
+                                                                        <div class="me-2">
+                                                                            <span
+                                                                                class="avatar avatar-sm avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center"
+                                                                                [ngClass]="getDeptColor(department.name)">
+                                                                                {{ department.name?.charAt(0) | uppercase }}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div>{{ department.name }}</div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>{{ department.description | slice:0:25 }}</td>
+                                                                <td>
+                                                                    <div class="hstack gap-2 fs-1">
+                                                                        <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light"
+                                                                            (click)="toggleTable(department)">
+                                                                            <i class="ri-eye-line"></i>
+                                                                        </a>
+                                                                        <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light"
+                                                                            (click)="editDepartmentFormSelected(department, Content113)">
+                                                                            <i class="ri-edit-line"></i>
+                                                                        </a>
+                                                                        <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light"
+                                                                            (click)="deleteDepartment(department.id)">
+                                                                            <i class="ri-delete-bin-line"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer border-top-0">
+                                                <div class="d-flex flex-wrap align-items-center">
+                                                    <div>Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i></div>
+                                                    <div class="ms-auto">
+                                                        <nav aria-label="Page navigation" class="pagination-style-4">
+                                                            <ul class="pagination mb-0">
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="javascript:void(0);">Prev</a>
+                                                                </li>
+                                                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+                                                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                                                <li class="page-item">
+                                                                    <a class="page-link text-primary" href="javascript:void(0);">Next</a>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
-                                        
-                                                <div class="card-body p-0">
-                                                    <div class="table-responsive">
-                                                        <table class="table text-nowrap">
-                                                            <thead class="custom-header">
-                                                                <tr>
-                                                                    <th scope="col">S.No</th>
-                                                                    <th scope="col">Name</th>
-                                                                    <th scope="col">Description</th>
-                                                                    <th scope="col">Actions</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr *ngFor="let department of departmentList; let i = index">
-                                                                    <td>{{ i + 1 }}</td>
-                                                                    <td>
-                                                                        <div class="d-flex align-items-center lh-1">
-                                                                            <div class="me-2">
-                                                                                <span
-                                                                                    class="avatar avatar-sm avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center"
-                                                                                    [ngClass]="getDeptColor(department.name)">
-                                                                                    {{ department.name?.charAt(0) | uppercase }}
-                                                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngIf="showRoles  && !showPermissions">
+                                            <div class="col-lg-12">
+                                                <div class="card custom-card">
+                                                    <div class="card-header justify-content-between">
+                                                        <div class="card-title d-flex align-items-center">
+                                                            <a href="javascript:void(0);" class="btn btn-link p-0 me-2" (click)="backToDepartments()">
+                                                                <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
+                                                            </a>Assigned Roles to {{ selectedDepartment?.name }}
+                                                        </div>
+                                                        <div class="d-flex flex-wrap align-items-center gap-2">
+                                                            <div class="input-group" style="max-width: 150px;">
+                                                                <input type="text" class="form-control" placeholder="Search Departments"
+                                                                    aria-describedby="button-addon2">
+                                                                <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
+                                                                        class="ri-search-line text-muted"></i></button>
+                                                            </div>
+                                                            <button class="btn btn-primary btn-sm" (click)="openLg(Content15);">Assign RoleTo
+                                                                Department</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-body p-0">
+                                                        <div class="table-responsive">
+                                                            <table class="table text-nowrap">
+                                                                <thead class="custom-header">
+                                                                    <tr>
+                                                                        <th scope="col">S.No</th>
+                                                                        <th scope="col">Role Name</th>
+                                                                        <th scope="col">Description</th>
+                                                                        <th scope="col">Actions</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody *ngFor="let assignedRole of filteredRoleList; let i = index">
+                                                                    <tr>
+                                                                        <td> {{ i + 1 }}</td>
+                                                                        <td>{{assignedRole.roleName}}</td>
+                                                                        <td>{{assignedRole.description}}</td>
+                                                                        <td>
+                                                                            <div class="hstack gap-2 fs-1">
+                                                                                <a href="javascript:void(0);"
+                                                                                    class="btn btn-icon btn-sm btn-primary-light"
+                                                                                    (click)="tablePermissionView(assignedRole)">
+                                                                                    <i class="ri-eye-line"></i>
+                                                                                </a>
+                                                                                <a aria-label="anchor" href="javascript:void(0);"
+                                                                                    class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
+                                                                                    (click)="deleteDepartmentRole(assignedRole.id)"><i
+                                                                                        class="ri-delete-bin-line"></i></a>
                                                                             </div>
-                                                                            <div>{{ department.name }}</div>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td>{{ department.description | slice:0:25 }}</td>
-                                                                    <td>
-                                                                        <div class="hstack gap-2 fs-1">
-                                                                            <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light"
-                                                                                (click)="toggleTable(department)">
-                                                                                <i class="ri-eye-line"></i>
-                                                                            </a>
-                                                                            <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light"
-                                                                                (click)="editDepartmentFormSelected(department, Content113)">
-                                                                                <i class="ri-edit-line"></i>
-                                                                            </a>
-                                                                            <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light"
-                                                                                (click)="deleteDepartment(department.id)">
-                                                                                <i class="ri-delete-bin-line"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <div class="card-footer border-top-0">
-                                                    <div class="d-flex flex-wrap align-items-center">
-                                                        <div>Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i></div>
-                                                        <div class="ms-auto">
-                                                            <nav aria-label="Page navigation" class="pagination-style-4">
-                                                                <ul class="pagination mb-0">
-                                                                    <li class="page-item disabled">
-                                                                        <a class="page-link" href="javascript:void(0);">Prev</a>
-                                                                    </li>
-                                                                    <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                                    <li class="page-item">
-                                                                        <a class="page-link text-primary" href="javascript:void(0);">Next</a>
-                                                                    </li>
-                                                                </ul>
-                                                            </nav>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="row" *ngIf="showRoles  && !showPermissions">
-                                                <div class="col-lg-12">
-                                                    <div class="card custom-card">
-                                                        <div class="card-header justify-content-between">
-                                                            <div class="card-title d-flex align-items-center">
-                                                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light me-2" (click)="backToDepartments()">
-                                                                    <i class="ri-arrow-left-line"></i>
-                                                                </a>Assigned Roles to {{ selectedDepartment?.name }}
+                                                    <div class="card-footer border-top-0">
+                                                        <div class="d-flex flex-wrap align-items-center">
+                                                            <div>
+                                                                Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
                                                             </div>
-                                                            <div class="d-flex flex-wrap align-items-center gap-2">
-                                                                <div class="input-group" style="max-width: 150px;">
-                                                                    <input type="text" class="form-control" placeholder="Search Departments"
-                                                                        aria-describedby="button-addon2">
-                                                                    <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
-                                                                            class="ri-search-line text-muted"></i></button>
-                                                                </div>
-                                                                <button class="btn btn-secondary btn-sm" (click)="openLg(Content15);">Assign RoleTo
-                                                                    Department</button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-body p-0">
-                                                            <div class="table-responsive">
-                                                                <table class="table text-nowrap">
-                                                                    <thead class="custom-header">
-                                                                        <tr>
-                                                                            <th scope="col">S.No</th>
-                                                                            <th scope="col">Role Name</th>
-                                                                            <th scope="col">Description</th>
-                                                                            <th scope="col">Actions</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody *ngFor="let assignedRole of filteredRoleList; let i = index">
-                                                                        <tr>
-                                                                            <td> {{ i + 1 }}</td>
-                                                                            <td>{{assignedRole.roleName}}</td>
-                                                                            <td>{{assignedRole.description}}</td>
-                                                                            <td>
-                                                                                <div class="hstack gap-2 fs-1">
-                                                                                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light" (click)="tablePermissionView(assignedRole)">
-                                                                                        <i class="ri-eye-line"></i>
-                                                                                    </a>
-                                                                                    <a aria-label="anchor" href="javascript:void(0);"
-                                                                                        class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                                                                        (click)="deleteDepartmentRole(assignedRole.id)"><i class="ri-delete-bin-line"></i></a>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-footer border-top-0">
-                                                            <div class="d-flex flex-wrap align-items-center">
-                                                                <div>
-                                                                    Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
-                                                                </div>
-                                                                <div class="ms-auto">
-                                                                    <nav aria-label="Page navigation" class="pagination-style-4">
-                                                                        <ul class="pagination mb-0">
-                                                                            <li class="page-item disabled">
-                                                                                <a class="page-link" href="javascript:void(0);">
-                                                                                    Prev
-                                                                                </a>
-                                                                            </li>
-                                                                            <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                                            <li class="page-item">
-                                                                                <a class="page-link text-primary" href="javascript:void(0);">
-                                                                                    next
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </nav>
-                                                                </div>
+                                                            <div class="ms-auto">
+                                                                <nav aria-label="Page navigation" class="pagination-style-4">
+                                                                    <ul class="pagination mb-0">
+                                                                        <li class="page-item disabled">
+                                                                            <a class="page-link" href="javascript:void(0);">
+                                                                                Prev
+                                                                            </a>
+                                                                        </li>
+                                                                        <li class="page-item active"><a class="page-link"
+                                                                                href="javascript:void(0);">1</a></li>
+                                                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                                                        <li class="page-item">
+                                                                            <a class="page-link text-primary" href="javascript:void(0);">
+                                                                                next
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </nav>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>  
-                                        <div class="card custom-card" *ngIf="showPermissions && !showUser">
+                                        </div>
+                                    </div>
+                                    <div class="card custom-card" *ngIf="showPermissions && !showUser">
                                         <div class="card-header justify-content-between">
                                             <div class="card-title d-flex align-items-center">
-                                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light me-2">
-                                                    <i class="ri-arrow-left-line" (click)="backToPermissions()"></i>
+                                                <a href="javascript:void(0);" class="btn btn-link p-0 me-2" (click)="backToPermissions()">
+                                                    <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
                                                 </a>Assigne Permission To {{selectedPermission?.roleName}}
                                             </div>
                                             <div class="d-flex flex-wrap align-items-center gap-2">
@@ -2383,8 +2384,8 @@
                                                     <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
                                                             class="ri-search-line text-muted"></i></button>
                                                 </div>
-                                                <button class="btn btn-secondary btn-sm" (click)="openLg(Content16);">Assign Permissions</button>
-
+                                                <button class="btn btn-primary btn-sm" (click)="openLg(Content16);">Assign Permissions</button>
+                                
                                             </div>
                                         </div>
                                         <div class="card-body p-0">
@@ -2405,7 +2406,8 @@
                                                             <td>{{assignedPermission.description}}</td>
                                                             <td>
                                                                 <div class="hstack gap-2 fs-1">
-                                                                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light" (click)="tableUserView()">
+                                                                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light"
+                                                                        (click)="tableUserView()">
                                                                         <i class="ri-eye-line"></i>
                                                                     </a>
                                                                     <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light"
@@ -2448,77 +2450,77 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    
-                                        </div>
-                                        <div class="card custom-card" *ngIf="showUser">
-                                            <div class="card-header justify-content-between">
-                                                <div class="card-title d-flex align-items-center">
-                                                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light me-2" (click)="backToUsers()">
-                                                        <i class="ri-arrow-left-line"></i>
-                                                    </a>Assigne User to department Role
-                                                </div>
-                                                <div class="d-flex flex-wrap align-items-center gap-2">
-                                                    <div class="input-group" style="max-width: 150px;">
-                                                        <input type="text" class="form-control" placeholder="Search Departments"
-                                                            aria-describedby="button-addon2">
-                                                        <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
-                                                                class="ri-search-line text-muted"></i></button>
-                                                    </div>
-                                                    <button class="btn btn-primary btn-sm" (click)="openLg(Content17);">Assign User</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body p-0">
-                                                <div class="table-responsive">
-                                                    <table class="table text-nowrap">
-                                                        <thead class="custom-header">
-                                                            <tr>
-                                                                <th scope="col">S.No</th>
-                                                                <th scope="col">Email</th>
-                                                                <th scope="col">Description</th>
-                                                                <th scope="col">Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody *ngFor="let assignedUser of adminAccessUsersLst; let i = index">
-                                                            <tr>
-                                                                <td> {{ i + 1 }}</td>
                                 
-                                                                <td>{{assignedUser.userEmail}}</td>
-                                                                <td>{{assignedUser.description}}</td>
-                                                                <td>
-                                                                    <div class="hstack gap-2 fs-1">
-                                                                        <a aria-label="anchor" href="javascript:void(0);"
-                                                                            class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                                                            (click)="deleteAssignUsers()"><i class="ri-delete-bin-line"></i></a>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                    </div>
+                                    <div class="card custom-card" *ngIf="showUser">
+                                        <div class="card-header justify-content-between">
+                                            <div class="card-title d-flex align-items-center">
+                                                <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light me-2"
+                                                    (click)="backToUsers()">
+                                                    <i class="ri-arrow-left-line"></i>
+                                                </a>Assigne User to department Role
                                             </div>
-                                            <div class="card-footer border-top-0">
-                                                <div class="d-flex flex-wrap align-items-center">
-                                                    <div>
-                                                        Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
-                                                    </div>
-                                                    <div class="ms-auto">
-                                                        <nav aria-label="Page navigation" class="pagination-style-4">
-                                                            <ul class="pagination mb-0">
-                                                                <li class="page-item disabled">
-                                                                    <a class="page-link" href="javascript:void(0);">
-                                                                        Prev
-                                                                    </a>
-                                                                </li>
-                                                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                                <li class="page-item">
-                                                                    <a class="page-link text-primary" href="javascript:void(0);">
-                                                                        next
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </nav>
-                                                    </div>
+                                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                                <div class="input-group" style="max-width: 150px;">
+                                                    <input type="text" class="form-control" placeholder="Search Departments"
+                                                        aria-describedby="button-addon2">
+                                                    <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
+                                                            class="ri-search-line text-muted"></i></button>
+                                                </div>
+                                                <button class="btn btn-primary btn-sm" (click)="openLg(Content17);">Assign User</button>
+                                            </div>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table text-nowrap">
+                                                    <thead class="custom-header">
+                                                        <tr>
+                                                            <th scope="col">S.No</th>
+                                                            <th scope="col">Email</th>
+                                                            <th scope="col">Description</th>
+                                                            <th scope="col">Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody *ngFor="let assignedUser of adminAccessUsersLst; let i = index">
+                                                        <tr>
+                                                            <td> {{ i + 1 }}</td>
+                                
+                                                            <td>{{assignedUser.userEmail}}</td>
+                                                            <td>{{assignedUser.description}}</td>
+                                                            <td>
+                                                                <div class="hstack gap-2 fs-1">
+                                                                    <a aria-label="anchor" href="javascript:void(0);"
+                                                                        class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
+                                                                        (click)="deleteAssignUsers()"><i class="ri-delete-bin-line"></i></a>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer border-top-0">
+                                            <div class="d-flex flex-wrap align-items-center">
+                                                <div>
+                                                    Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
+                                                </div>
+                                                <div class="ms-auto">
+                                                    <nav aria-label="Page navigation" class="pagination-style-4">
+                                                        <ul class="pagination mb-0">
+                                                            <li class="page-item disabled">
+                                                                <a class="page-link" href="javascript:void(0);">
+                                                                    Prev
+                                                                </a>
+                                                            </li>
+                                                            <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+                                                            <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                                            <li class="page-item">
+                                                                <a class="page-link text-primary" href="javascript:void(0);">
+                                                                    next
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
                                                 </div>
                                             </div>
                                         </div>
@@ -2527,9 +2529,8 @@
                             </ng-template>
                         </ng-container>
                          <ng-container ngbNavItem="About">
-                            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="false"><i
-                                    class="ri-archive-drawer-line me-2 align-middle d-inline-block"></i>Roles</a>
+                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
+                                aria-selected="false"><i class="bi bi-person side-menu__icon me-1"></i>Roles</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -2546,7 +2547,7 @@
                                                                 class="ri-search-line text-muted"></i></button>
                                                     </div>
                                                     <button class="btn btn-primary btn-sm" (click)="openLg(Content112);">Add Role</button>
-                                                    <button class="btn btn-secondary btn-sm" (click)="openLg(Content15);">Assign RoleTo
+                                                    <button class="btn btn-primary btn-sm" (click)="openLg(Content15);">Assign RoleTo
                                                         Department</button>
                                                 </div>
                                             </div>
@@ -2626,9 +2627,8 @@
                             </ng-template>
                         </ng-container>
                         <ng-container ngbNavItem="Services">
-                            <a ngbNavLink class="nav-link " data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true"><i
-                                    class="ri-bank-line me-2 align-middle d-inline-block"></i>Permissions</a>
+                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
+                                aria-selected="true"><i class="bx bx-lock-alt me-1"></i>Permissions</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -2647,7 +2647,7 @@
                                                                 class="ri-search-line text-muted"></i></button>
                                                     </div>
                                                     <button class="btn btn-primary btn-sm" (click)="openLg(Content114);">Add Permission</button>
-                                                    <button class="btn btn-secondary btn-sm" (click)="openLg(Content16);">Assign Permissions</button>
+                                                    <button class="btn btn-primary btn-sm" (click)="openLg(Content16);">Assign Permissions</button>
                                                 </div>
                                             </div>
                                             <div class="card-body p-0">
@@ -2725,9 +2725,9 @@
                             </ng-template>
                         </ng-container>
                         <ng-container ngbNavItem="departments">
-                            <a ngbNavLink class="nav-link " data-bs-toggle="tab" role="tab" aria-current="page"
+                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
                                 aria-selected="true">
-                                <i class="ri-building-line me-2 d-inline-block"></i>Department Access Overview</a>
+                                <i class="bi bi-shield-check side-menu__icon me-1"></i>Department Access Overview</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="col-xl-12">
@@ -2793,9 +2793,9 @@
                         </ng-container>
                     </nav>
                 </div>
-                <div class="col-xl-9 border rounded-1 content-container">
-                    <div class="scrollable-section">
-                        <div [ngbNavOutlet]="nav7" class="ms-4">
+                <div class="col-xl-9 border rounded-1 content-container ">
+                    <div class="scrollable-section ">
+                        <div [ngbNavOutlet]="nav7" class="">
                         </div>
                     </div>
                 </div>
@@ -2808,7 +2808,7 @@
         <div class="modal-content permission-modal">
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLgLabel">
-                    Edit {{ selectedPermissionName }}
+                    <strong>Edit {{ selectedPermissionName }}</strong>
                 </h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.dismiss('Cross click')"
                     aria-label="Close"></button>
@@ -2818,15 +2818,15 @@
                     <div class="col-lg-12" formArrayName="subPermission"
                         *ngIf="editsubPermissionArray && editsubPermissionArray.length > 0">
                         <label class="form-label fw-semibold d-block mb-2">Available Features</label>
-                        <div class="row gap-3">
-                            <div class="col-lg-4" *ngFor="let feature of editsubPermissionArray.controls; let i = index"
+                        <div class="row">
+                            <div class="col-lg-6 mb-3" *ngFor="let feature of editsubPermissionArray.controls; let i = index"
                                 [formGroupName]="i">
-                                <div class="d-flex align-items-center gap-2">
-                                    <label class="form-check-label" for="switch-primary">{{ feature.get('label')?.value
-                                        }}</label>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input cu" type="checkbox" role="switch" id="switch-primary"
-                                            checked="" formControlName="enabled">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <label class="form-check-label text-break me-2">
+                                        {{ feature.get('label')?.value }}
+                                    </label>
+                                    <div class="form-check form-switch m-0">
+                                        <input class="form-check-input cu" type="checkbox" role="switch" formControlName="enabled">
                                     </div>
                                 </div>
                             </div>

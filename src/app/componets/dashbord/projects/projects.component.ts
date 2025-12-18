@@ -227,8 +227,17 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (this.userRole === 'ADMIN') {
       this.displayedColumns.push('assign');
     }
-    this.getAdonai();
-    this.getLst(); this.getMatCardLst();    this.getUsers();  
+    const payload = {
+      email: JSON.parse(this.userDetails)?.email,
+      type: JSON.parse(this.userDetails)?.type,
+      companyname: JSON.parse(this.userDetails)?.companyName,
+      companycode: JSON.parse(this.userDetails)?.companyCode,
+      projectId: '',
+      projectname: '',
+      filter: 'All'
+    };
+    this.fetchProjectList(payload);
+    this.getAdonai(); this.getUsers();  
     this.onMinDate(); this.onTodayDt(); this.onClkDesign('i');
     this.getAllStages(); this.getAllPmntStages();
     this.createProjectForm = this.fb.group({
@@ -519,7 +528,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   onSubmit(): void {
     this.submitted = true;
-
     if (this.createProjectForm.invalid) {
       this.toastr.error('Please fill mandatory fields');
       this.createProjectForm.markAllAsTouched();
@@ -542,15 +550,20 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       next: (response) => {
         const parts = response.message.split('<>');
         this.toastr.success(parts[0]);
-        this.getLst();
+        this.toastr.success(parts[0]);
+        const payload = {
+          email: user?.email,
+          type: user?.type,
+          companyname: user?.companyName,
+          companycode: user?.companyCode,
+          projectId: '',
+          projectname: '',
+          filter: 'All'
+        };
+        this.fetchProjectList(payload);
         this.getdesignData();
-        this.getMatCardLst();
         this.modalService.dismissAll();
         this.onSubmitTaskDetails(parts[1])
-      },
-      error: (error) => {
-        this.toastr.error('Error creating project', error);
-        this.btnDisable = false;
       },
       complete: () => {
         this.resetForm();
@@ -621,27 +634,70 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     }));
   }
 
-  getLst() {
+  fetchProjectList(payload: any) {
     this.startLoading();
-    let payload = {
+
+    this.switchService.projectLst(payload).subscribe({
+      next: (res: any) => {
+        if (!res) return;
+
+        let projLst = res.projList || [];
+
+        // date difference
+        projLst = projLst.map((e: any) => ({
+          ...e,
+          dateDifference: this.calculateDateDifference(e.projectEndDate)
+        }));
+
+        // payment
+        res.paymentLastList?.forEach((p: any) => {
+          const match = projLst.find((x: any) => x.projectId === p.projectId);
+          if (match) {
+            match.paymentPercent = p.paymentPercent;
+            match.paymentStage = p.paymentStage;
+          }
+        });
+        res.projectLastList?.forEach((p: any) => {
+          const match = projLst.find((x: any) => x.projectId === p.projectId);
+          if (match) {
+            match.projectPercent = p.projectPercent;
+            match.projectStage = p.projectStage;
+          }
+        });
+
+        projLst.sort((a: any, b: any) => a.priorityDays - b.priorityDays);
+
+        // ✅ assign everywhere
+        this.projectLst = projLst;
+        this.myProjectDataSource.data = projLst;
+
+        this.matcardLst = projLst;
+        this.toggleShowMore();
+        this.toggleTopShowMore();
+
+        this.stopLoading();
+      },
+      error: () => this.stopLoading()
+    });
+  }
+
+
+
+  getLst() {
+    const payload = {
       email: JSON.parse(this.userDetails)?.email,
       type: JSON.parse(this.userDetails)?.type,
       companyname: JSON.parse(this.userDetails)?.companyName,
       companycode: JSON.parse(this.userDetails)?.companyCode,
       projectId: '',
       projectname: '',
-      filter: 'All',
-    }
-    this.switchService.projectLst(payload).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.projectLst = res.projList;
-          this.myProjectDataSource.data = this.projectLst;
-        } 
-        this.stopLoading();
-      }
-    })
+      filter: 'All'
+    };
+    this.fetchProjectList(payload);
   }
+
+
+
   onFilterChange(id: any) {
     id === '2' ? this.projName = '' : id === '3' ? this.projId = '' :
       (this.projName = '', this.projId = '', this.getMatCardLst());
@@ -698,57 +754,34 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
 
   getMatCardLst() {
-    this.startLoading();
-    if (this.addFilter == '2' && this.projId == '') {
+    if (this.addFilter === '2' && !this.projId) {
       this.toastr.warning('Please enter Project Id');
+      return;
     }
-    else if (this.addFilter == '3' && this.projName == '') {
-      this.toastr.warning('Please enter Project Name');
-    } else {
-      let payload = {
-        email: JSON.parse(this.userDetails)?.email,
-        type: JSON.parse(this.userDetails)?.type,
-        companyname: JSON.parse(this.userDetails)?.companyName,
-        companycode: JSON.parse(this.userDetails)?.companyCode,
-        projectId: this.addFilter == '2' ? this.projId : '',
-        projectname: this.addFilter == '3' ? this.projName : '',
-        filter: this.addFilter == '1' ? 'All' : (this.addFilter == '2' ? 'projectid' : 'projectname'),
-      }
-      this.switchService.projectLst(payload).subscribe({
-        next: (res: any) => {
-          if (res) {
-            const projLst = res.projList;
-            const paymentLastLst = res.paymentLastList;
-            const proLastLst = res.projectLastList;
-            projLst?.forEach((project: any) => {
-              const matchedProject = paymentLastLst.find((lastProject: any) => lastProject.projectId === project.projectId);
-              if (matchedProject) {
-                project.paymentPercent = matchedProject.paymentPercent;
-                project.paymentStage = matchedProject.paymentStage
-              } else {
-                project.paymentPercent = 0;
-              }
-            });
-            projLst?.forEach((e: any) => {
-              const matchedProjectstg = proLastLst.find((lastStg: any) => lastStg.projectId === e.projectId);
-              if (matchedProjectstg) {
-                e.projectPercent = matchedProjectstg.projectPercent;
-                e.projectStage = matchedProjectstg.projectStage
-              } else {
-                e.projectPercent = 0;
-              }
-            });
-            this.matcardLst = projLst;
-            this.matcardLst?.sort((a: any, b: any) => a.priorityDays - b.priorityDays);
-            this.toggleShowMore();
-            this.toggleTopShowMore();
-          }
-          this.stopLoading();
-        }
 
-      })
+    if (this.addFilter === '3' && !this.projName) {
+      this.toastr.warning('Please enter Project Name');
+      return;
     }
+
+    const payload = {
+      email: JSON.parse(this.userDetails)?.email,
+      type: JSON.parse(this.userDetails)?.type,
+      companyname: JSON.parse(this.userDetails)?.companyName,
+      companycode: JSON.parse(this.userDetails)?.companyCode,
+      projectId: this.addFilter === '2' ? this.projId : '',
+      projectname: this.addFilter === '3' ? this.projName : '',
+      filter:
+        this.addFilter === '1'
+          ? 'All'
+          : this.addFilter === '2'
+            ? 'projectid'
+            : 'projectname'
+    };
+    this.fetchProjectList(payload);
   }
+
+
 
   getdesignData() {
     let payload = {
@@ -769,9 +802,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           });
         }
       },
-      // error: (error) => {
-      //   this.toastr.error(error.statusText);
-      // },
     })
   }
 
