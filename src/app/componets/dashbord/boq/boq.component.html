@@ -280,15 +280,16 @@
                             <span class="visually-hidden">Loading...</span>
                         </div>
                     </div>
-                    <div *ngIf="!isLoadingAssignProjects && showNoData()" class="card custom-card no-top-radius" style="min-height: 415px; justify-content: center;">
-                            <div class="text-center d-flex flex-column justify-content-center align-items-center">
-                                <div >
-                                    <p class="text-dark fw-semibold fs-14">
-                                        Design is not available yet — it will appear here once the admin assigns it.
-                                    </p>
-                                </div>
+                    <div *ngIf="!isLoadingAssignProjects && showNoData()" class="card custom-card no-top-radius"
+                        style="min-height: 415px; justify-content: center;">
+                        <div class="text-center d-flex flex-column justify-content-center align-items-center">
+                            <div>
+                                <p class="text-dark fw-semibold fs-14">
+                                    Design is not available yet — it will appear here once the admin assigns it.
+                                </p>
                             </div>
                         </div>
+                    </div>
                     <div *ngIf="!isLoadingAssignProjects && showData()">
                         <div class="card custom-card no-top-radius" *ngFor="let project of filteredDesignerData; let i = index">
                             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">

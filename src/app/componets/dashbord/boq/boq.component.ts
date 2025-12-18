@@ -221,30 +221,32 @@ export class BoqComponent extends BaseComponent {
     showOnlyEditableFields = false;
 
     openProjectModal(content45: any, project: any) {
-    this.getUsers(); 
-    if (!project) return;
-    this.updateProjectForm.patchValue({
-        projectId: project.projectId || '',
-        designId: project.designId || '',
-        projectStage: project.projectStage || '',
-        projectArea: project.projectArea || '',
-        designUrl: project.designUrl || '',
-        assignedDesigner: project.assignedDesigner?.email || project.assignedDesigner || '',
-        designCompletionStatus: project.designCompletionStatus || '',
-        email: this.userEmail,
-        companycode: this.userCompanyCode,
-        updatedBy: this.userName,
-        type: this.userType
-    });
-    if (project.designCompletionStatus === 'Complete') {
-        this.showOnlyEditableFields = false; 
-    } else if (this.userRole === 'USER') {
-        this.showOnlyEditableFields = true;  
-    } else if (this.userRole === 'ADMIN') {
-        this.showOnlyEditableFields = false; 
-    }
+        if (this.userRole === 'ADMIN') {
+            this.getUsers();
+        }
+        if (!project) return;
+        this.updateProjectForm.patchValue({
+            projectId: project.projectId || '',
+            designId: project.designId || '',
+            projectStage: project.projectStage || '',
+            projectArea: project.projectArea || '',
+            designUrl: project.designUrl || '',
+            assignedDesigner: project.assignedDesigner?.email || project.assignedDesigner || '',
+            designCompletionStatus: project.designCompletionStatus || '',
+            email: this.userEmail,
+            companycode: this.userCompanyCode,
+            updatedBy: this.userName,
+            type: this.userType
+        });
+        if (project.designCompletionStatus === 'Complete') {
+            this.showOnlyEditableFields = false;
+        } else if (this.userRole === 'USER') {
+            this.showOnlyEditableFields = true;
+        } else if (this.userRole === 'ADMIN') {
+            this.showOnlyEditableFields = false;
+        }
 
-    this.modalService.open(content45, { backdrop: 'static' });
+        this.modalService.open(content45, { backdrop: 'static' });
     }
 
     onCreateProposalClick(content: any) {
@@ -735,45 +737,39 @@ export class BoqComponent extends BaseComponent {
     }
 
     changeTab(tabId: string, skipStore: boolean = false) {
-  this.activeTab = tabId;
+        this.activeTab = tabId;
 
-  if (!skipStore) {
-    localStorage.setItem('selectedTab', tabId);
-  }
+        if (!skipStore) {
+            localStorage.setItem('selectedTab', tabId);
+        }
 
-  if (!this.projectId) return;
+        if (!this.projectId) return;
 
-  switch (tabId) {
+        switch (tabId) {
 
-    case '1':
-      this.getRecceData();
-      break;
+            case '1':
+                this.getRecceData();
+                break;
 
-    case '2':
-      this.getAssignProjects();
-      break;
+            case '2':
+                this.getAssignProjects();
+                break;
 
-    case '3':
-      this.allowBoqRun = true;
-      this.boqChecked = false;
-
-      // 🔑 If designId not present → fetch first
-      if (!this.designingId) {
-        this.isBoqLoading = true;
-        this.getAssignProjects();
-        return;
-      }
-
-      // 🔑 If already loaded → do nothing
-      if (this.boqLoaded) return;
-
-      // 🔑 Load BOQ
-      this.boqLoaded = true;
-      this.isBoqLoading = true;
-      this.boqData();
-      break;
-  }
-}
+            case '3':
+                this.allowBoqRun = true;
+                this.boqChecked = false;
+                if (!this.designingId) {
+                    this.isBoqLoading = true;
+                    this.getAssignProjects();
+                    return;
+                }
+                if (this.boqLoaded) return;
+                this.boqLoaded = true;
+                this.isBoqLoading = true;
+                this.boqData();
+                break;
+        }
+    }
 
 
     isScrollingInsideDropdown(event: any): boolean {
@@ -813,100 +809,86 @@ closeAllDropdowns() {
     }
 
     boqData(roomSnapshot: string | null = null) {
+        if (!this.designingId) {
+            this.isBoqLoading = false;
+            return;
+        }
+        this.isBoqLoading = true;
+        const payload = {
+            email: this.userEmail,
+            designId: this.designingId,
+            bomRequired: false,
+            wardrobeRequired: true,
+            kbRequired: true
+        };
+        this.switchService.fetchBoqData(payload).subscribe({
+            next: (res) => {
+                this.getProposal();
+                const boqData = res?.boqResponse?.boqData || {};
+                this.boqAvailable = Object.keys(boqData).some(
+                    key => Array.isArray(boqData[key]) && boqData[key].length > 0
+                );
+                this.boqChecked = true;
+                const pannelResponse = res?.pannelResponse?.pannelResponse || [];
+                this.showDownloadButton = pannelResponse.some(
+                    (p: any) => (p.cl && p.cl !== 0) || (p.cw && p.cw !== 0)
+                );
+                this.tabKeys = Object.keys(boqData);
+                let allItems: any[] = [];
+                this.tabKeys.forEach((key: string) => {
+                    const items: any[] = boqData[key] || [];
+                    this.boqDataSources[key] = new MatTableDataSource(
+                        items.map((item: any, index: number) => ({
+                            slNo: index + 1,
+                            ...item
+                        }))
+                    );
 
-  // 🔒 Safety guard
-  if (!this.designingId) {
-    this.isBoqLoading = false;
-    return;
-  }
+                    this.tabCounts[key] = items.length;
+                    this.tabTotals[key] = items.reduce(
+                        (sum: number, item: any) => sum + (item.clientRate || 0),
+                        0
+                    );
 
-  this.isBoqLoading = true;
+                    allItems.push(
+                        ...items.map((item: any, i: number) => ({
+                            slNo: i + 1,
+                            roomName: key,
+                            ...item
+                        }))
+                    );
+                });
 
-  const payload = {
-    email: this.userEmail,
-    designId: this.designingId,
-    bomRequired: false,
-    wardrobeRequired: true,
-    kbRequired: true
-  };
+                this.boqDataSources['All'] = new MatTableDataSource(allItems);
+                this.tabKeys = ['All', ...this.tabKeys];
 
-  this.switchService.fetchBoqData(payload).subscribe({
-    next: (res) => {
+                this.currentRoomName =
+                    roomSnapshot && this.tabKeys.includes(roomSnapshot)
+                        ? roomSnapshot
+                        : 'All';
 
-      this.getProposal();
+                this.allPanels = pannelResponse.map((item: any, i: number) => ({
+                    order: i + 1,
+                    ...item
+                }));
 
-      const boqData = res?.boqResponse?.boqData || {};
+                const apiRooms = this.tabKeys
+                    .filter(k => k !== 'All')
+                    .map(name => ({ name }));
 
-      this.boqAvailable = Object.keys(boqData).some(
-        key => Array.isArray(boqData[key]) && boqData[key].length > 0
-      );
+                this.allRooms = [...new Map(
+                    [...(this.allRooms || []), ...apiRooms]
+                        .map(r => [r.name, r])
+                ).values()];
 
-      this.boqChecked = true;
-
-      const pannelResponse = res?.pannelResponse?.pannelResponse || [];
-
-      this.showDownloadButton = pannelResponse.some(
-        (p: any) => (p.cl && p.cl !== 0) || (p.cw && p.cw !== 0)
-      );
-
-      this.tabKeys = Object.keys(boqData);
-      let allItems: any[] = [];
-
-      this.tabKeys.forEach((key: string) => {
-        const items: any[] = boqData[key] || [];
-
-        this.boqDataSources[key] = new MatTableDataSource(
-          items.map((item: any, index: number) => ({
-            slNo: index + 1,
-            ...item
-          }))
-        );
-
-        this.tabCounts[key] = items.length;
-        this.tabTotals[key] = items.reduce(
-          (sum: number, item: any) => sum + (item.clientRate || 0),
-          0
-        );
-
-        allItems.push(
-          ...items.map((item: any, i: number) => ({
-            slNo: i + 1,
-            roomName: key,
-            ...item
-          }))
-        );
-      });
-
-      this.boqDataSources['All'] = new MatTableDataSource(allItems);
-      this.tabKeys = ['All', ...this.tabKeys];
-
-      this.currentRoomName =
-        roomSnapshot && this.tabKeys.includes(roomSnapshot)
-          ? roomSnapshot
-          : 'All';
-
-      this.allPanels = pannelResponse.map((item: any, i: number) => ({
-        order: i + 1,
-        ...item
-      }));
-
-      const apiRooms = this.tabKeys
-        .filter(k => k !== 'All')
-        .map(name => ({ name }));
-
-      this.allRooms = [...new Map(
-        [...(this.allRooms || []), ...apiRooms]
-          .map(r => [r.name, r])
-      ).values()];
-
-      this.roomNameList = [...this.allRooms];
-      this.groupCabinetNames();
-    },
-    complete: () => {
-      this.isBoqLoading = false;   // ✅ ONLY place loader stops after BOQ
+                this.roomNameList = [...this.allRooms];
+                this.groupCabinetNames();
+            },
+            complete: () => {
+                this.isBoqLoading = false;   
+            }
+        });
     }
-  });
-}
 
 
     onShowPanelList() {
@@ -1899,86 +1881,84 @@ closeAllDropdowns() {
         });
     }
 
-    
     getAssignProjects(): void {
+        if (this.isLoadingAssignProjects) return;
 
-  // 🔒 Prevent parallel calls
-  if (this.isLoadingAssignProjects) return;
+        this.isLoadingAssignProjects = true;
 
-  this.isLoadingAssignProjects = true;
+        const payload: any = {
+            email: this.userEmail,
+            type: this.userType,
+            companycode: this.userCompanyCode,
+            projectId: this.projectId,
+            currentUserEmail: this.userRole === 'ADMIN' ? '' : this.userEmail,
+            requestFrom: this.userRole === 'ADMIN' ? 'Admin' : 'User'
+        };
 
-  const payload: any = {
-    email: this.userEmail,
-    type: this.userType,
-    companycode: this.userCompanyCode,
-    projectId: this.projectId,
-    currentUserEmail: this.userRole === 'ADMIN' ? '' : this.userEmail,
-    requestFrom: this.userRole === 'ADMIN' ? 'Admin' : 'User'
-  };
+        this.switchService.fetchAssgnAdonaiDesign(payload).subscribe({
+            next: (res: any) => {
+                const projects = Array.isArray(res) ? res : [res];
 
-  this.switchService.fetchAssgnAdonaiDesign(payload).subscribe({
-    next: (res: any) => {
+                const designProject = projects.find(p => p?.designId);
 
-      const projects = Array.isArray(res) ? res : [res];
+                if (designProject?.designId) {
+                    this.designingId = designProject.designId;
+                    this.hasDesign = true;
+                } else {
+                    this.designingId = '';
+                    this.hasDesign = false;
+                    this.isBoqLoading = false;
+                    if (this.userRole !== 'ADMIN') {
+                        this.filteredDesignerData = [];
+                        return;
+                    }
+                }
+                this.designCompletionStatus =
+                    designProject?.designCompletionStatus || '';
+                this.designerData =
+                    this.userRole === 'ADMIN'
+                        ? projects
+                        : projects.filter(p =>
+                            p?.assignedDesigner?.toLowerCase() ===
+                            this.userEmail?.toLowerCase()
+                        );
 
-      const designProject = projects.find(p => p?.designId);
+                this.filteredDesignerData = [...this.designerData];
 
-      if (designProject?.designId) {
-        this.designingId = designProject.designId;
-        localStorage.setItem('designId', this.designingId);
-        this.hasDesign = true;
-      } else {
-        // ❗ NO DESIGN → stop loader
-        this.designingId = '';
-        this.hasDesign = false;
-        this.isBoqLoading = false;
-        return;
-      }
-
-      this.designCompletionStatus =
-        designProject?.designCompletionStatus || '';
-
-      this.designerData =
-        this.userRole === 'ADMIN'
-          ? projects
-          : projects.filter(p =>
-              p?.assignedDesigner?.toLowerCase() ===
-              this.userEmail?.toLowerCase()
-            );
-
-      this.filteredDesignerData = [...this.designerData];
-
-      // 🔁 Auto-run BOQ if user is already on Tab 3
-      if (this.activeTab === '3' && !this.boqLoaded) {
-        this.boqLoaded = true;
-        this.isBoqLoading = true;
-        this.boqData();
-      }
-    },
-    error: () => {
-      this.isBoqLoading = false;
-      this.isLoadingAssignProjects = false;
-    },
-    complete: () => {
-      this.isLoadingAssignProjects = false;
+                if (this.activeTab === '3' && !this.boqLoaded) {
+                    this.boqLoaded = true;
+                    this.isBoqLoading = true;
+                    this.boqData();
+                }
+            },
+            error: () => {
+                this.filteredDesignerData = [];
+                this.isBoqLoading = false;
+                this.isLoadingAssignProjects = false;
+            },
+            complete: () => {
+                this.isLoadingAssignProjects = false;
+            }
+        });
     }
-  });
-}
 
-
-    showNoData(): boolean {
-        if (!this.filteredDesignerData) return true;
-        if (this.filteredDesignerData.length === 0) return true;
-        return this.isObjectEmpty(this.filteredDesignerData[0]);
-    }
 
     showData(): boolean {
-        return (
-            this.filteredDesignerData &&
-            this.filteredDesignerData.length > 0 &&
-            !this.isObjectEmpty(this.filteredDesignerData[0])
-        );
+        if (this.userRole === 'ADMIN') {
+            return true;
+        }
+        return this.hasDesign === true;
     }
+
+    showNoData(): boolean {
+        if (this.userRole === 'ADMIN') {
+            return false;
+        }
+        return this.hasDesign === false;
+    }
+
+
+
 
     isObjectEmpty(data: any): boolean {
         if (!data) return true;
@@ -1986,23 +1966,19 @@ closeAllDropdowns() {
         return Object.values(data).every(val => val === null || val === "" || val === undefined);
     }
 
-
     applyDesignerFilter(event: Event): void {
         const filterValue = (event.target as HTMLInputElement).value
             ?.trim()
             ?.toLowerCase() || '';
-
         if (!filterValue) {
             this.filteredDesignerData = [...this.designerData];
             return;
         }
-
         this.filteredDesignerData = this.designerData.filter((item: any) =>
             item?.projectId?.toLowerCase().includes(filterValue) ||
             item?.projectName?.toLowerCase().includes(filterValue)
         );
     }
-
 
     recceSubmit(modal: any) {
         this.recceSubmitted = true;
