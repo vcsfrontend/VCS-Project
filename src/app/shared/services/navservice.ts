@@ -465,7 +465,8 @@ export class NavService implements OnDestroy {
           type: 'link',
           linkType: 'internal',
           active: false,
-          path: '/dashboard/tasks'
+          path: '/dashboard/tasks',
+          permissionKey : 'CRM_task_access'
         },
         {
           title: 'Reports',
@@ -511,7 +512,7 @@ export class NavService implements OnDestroy {
         linkType: 'internal',
         active: false,
         path: '/dashboard/appointments',
-        permissionKey : 'CRM_appointmnent'
+        permissionKey : 'CRM_appointment_access'
         },
 
         {
@@ -521,7 +522,8 @@ export class NavService implements OnDestroy {
           type: 'link',
           linkType: 'internal',
           active: false,
-          path: '/apps/crm/clients'
+          path: '/apps/crm/clients',
+          permissionKey : 'CRM_client_access'
         },
               
       ],
