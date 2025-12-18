@@ -108,7 +108,6 @@
         </div>
     </div>
 </div>
-
 <div class="col-xl-12">
     <div class="card custom-card">
         <div class="card-header justify-content-between">
@@ -139,11 +138,11 @@
                         data-bs-target="#exampleModalLg" (click)="resetFilterForm()" *ngIf="filterApplied">Reset</button>
                     <button type="button" class="btn btn-primary border-end border-light"
                         (click)="openRight(content)" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" *ngIf="adoanAiRole== 'ADMIN'|| userType ==1 || crmRole=='ADMIN'">
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" *ngIf="hasPermission('CRM_leads_add')">
                         Bulk Upload 
                     </button>
                     <button type="button" class="btn btn-primary border-end border-light" data-bs-toggle="modal"
-                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);" *ngIf="adoanAiRole == 'ADMIN'|| userType ==1 || crmRole=='ADMIN'">Add New</button>
+                        data-bs-target="#exampleModalLg" (click)="VerticallyScrol(Content112);" *ngIf="hasPermission('CRM_leads_add')">Add New</button>
                 </div>
             </div>
         </div>
@@ -166,7 +165,8 @@
                     </th>
                     <td mat-cell *matCellDef="let element">
                         <mat-checkbox (change)="onRowCheckboxChange(element, $event)" [checked]="isSelected(element.leadId)"
-                            [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"></mat-checkbox>
+                            [disabled]="element.completionStatus === 'completed'" class="custom-checkbox"
+                            [matTooltip]="hasAppointment(element.leadId) ? 'This lead has an appointment' : ''"></mat-checkbox>
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="slNo">
@@ -231,17 +231,17 @@
                                  <li class="m-2">
                                     <button class="btn btn-success label-btn label-end w-100"
                                         (click)="openRight3(content31, element)" data-bs-target="#offcanvasRight"
-                                        aria-controls="offcanvasRight">
+                                        aria-controls="offcanvasRight" *ngIf="hasPermission('CRM_leads_move_campaign')">
                                         Move To<i class="bi bi-arrows-move bt-icon label-btn-icon"></i>
                                     </button>
                                 </li>
                                 <li class="m-2">
                                     <button class="btn btn-teal label-btn label-end w-100 "
-                                        (click)="editLead(element,Content14)">
+                                        (click)="editLead(element,Content14)"  *ngIf="hasPermission('CRM_leads_edit')">
                                         Edit<i class="ri-edit-line bt-icon label-btn-icon"></i>
                                     </button>
                                 </li>
-                                <li class="m-2" *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'">
+                                <li class="m-2" *ngIf="hasPermission('CRM_leads_delete')">
                                     <button class="btn btn-danger label-btn label-end w-100"
                                         (click)="deleteSingleLead(element.leadId)">
                                         Delete<i class="ri-delete-bin-line label-btn-icon"></i>
@@ -442,8 +442,10 @@
                        <button  *ngIf="element.completionStatus !== 'completed' &&(element.stage !== 'proposal Stage' ||
                         (element.stage === 'proposal Stage' && element.status === 'proposal Approved') )"
                             class="btn btn-success btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
-                            (click)="openCompletionModal(completionModal, element)" data-bs-toggle="modal"
-                            data-bs-target="#completionModal">
+                            [class.disabled]="element.completionStatus === 'completed' || !access.CRM_completion_lead"
+                            [attr.aria-disabled]="element.completionStatus === 'completed' || !access.CRM_completion_lead"
+                            (click)="onCompletionClick(completionModal, element)"
+                            data-bs-toggle="modal"  data-bs-target="#completionModal">
                             <i class="bi bi-hourglass-split me-1"></i>
                             <strong>LC</strong>
                         </button>
@@ -455,7 +457,7 @@
                         </button>
                         <button *ngIf="element.completionStatus === 'completed'"
                             class="btn btn-danger btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
-                            disabled>
+                            disabled >
                             <i class="bi bi-check-circle-fill me-1"></i>
                             <strong>LC</strong>
                         </button>
@@ -473,8 +475,8 @@
        <mat-paginator [length]="totalRecords" [pageSize]="pageSize" [pageSizeOptions]="[50]" showFirstLastButtons
             (page)="onPageChange($event)">
         </mat-paginator>
-        <div class="d-flex mb-2 px-3 marge">
-            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()">
+        <div class="d-flex mb-2 px-3 marge" >
+            <form [formGroup]="allocateForm" (ngSubmit)="onAllocateSubmit()" *ngIf="hasPermission('CRM_leads_allocate')">
                 <div class="input-group w-auto"
                     [ngClass]="{ 'is-invalid': allocateSubmitted && a['executive'].errors }">
                     <ng-select formControlName="executive" [items]="agentUsers" bindValue="email" placeholder="Select an Executive"
@@ -507,9 +509,12 @@
                             </div>
                         </ng-template>
                     </ng-select>
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-primary" type="submit"
-                        id="button-addon1" data-mdb-ripple-color="dark">
-                        Allocate
+                    <button class="btn btn-primary position-relative overflow-hidden" type="submit" [disabled]="isAllocating"
+                        style="width:120px; height:40px;">
+                        <span [class.invisible]="isAllocating">Allocate</span>
+                        <mat-progress-spinner *ngIf="isAllocating" class="allocate-spinner" mode="indeterminate" [diameter]="22">
+                        </mat-progress-spinner>
+                    
                     </button>
                 </div>
                 <div *ngIf="allocateSubmitted && a['executive'].errors" class="invalid-feedback">
@@ -523,13 +528,13 @@
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMailOffcanvas(offcanvasTemplate)"
                         data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Mail"><i class="ri-mail-line bt-icon"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="openTaskModal(content30)"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
-                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMove(content31,selectedLeads)"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Move To"><i class="bi bi-arrows-move"></i></button>
+                        *ngIf="hasPermission('CRM_leads_task_create')" data-bs-toggle="tooltip" placement="top" ngbTooltip="Tasks"><i class="ri-calendar-check-line"></i></button>
+                    <button type="button" class="btn btn-outline-primary btn-wave" (click)="openBulkMove(content31,selectedLeads)"  *ngIf="hasPermission('CRM_leads_move_campaign')"
+                        data-bs-toggle="tooltip" placement="top" ngbTooltip="Move To"><i class="bi bi-arrows-move"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="appointmentModal(appointment1, element)"
-                        *ngIf="adoanAiRole !== 'ADMIN' || userType== 1 || crmRole !=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
+                        *ngIf="hasPermission('CRM_appointmnet_creation')" data-bs-toggle="tooltip" placement="top" ngbTooltip="Appointment"><i class="ri-time-line"></i></button>
                     <button type="button" class="btn btn-outline-primary btn-wave" (click)="deleteSelectedLeads()"
-                        *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'" data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Delete"><i class="ri-delete-bin-line"></i></button>
+                        *ngIf="hasPermission('CRM_leads_delete')" data-bs-toggle="tooltip" placement="top" ngbTooltip="Bulk Delete"><i class="ri-delete-bin-line"></i></button>
                 </div>
             </div>
         </div>
@@ -537,7 +542,7 @@
 </div>
 
 <div class="col-lg-12">
-    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'">
+    <div class="row" *ngIf="hasPermission('CRM_leads_stage_status')">
         <div class="col-lg-4">
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
@@ -576,7 +581,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4" *ngIf="hasPermission('CRM_leads_stage_status')">
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Lead Status</div>
@@ -616,7 +621,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
+        <div class="col-lg-4" *ngIf="hasPermission('CRM_lead_mail_template_creation')">
             <div class="card custom-card">
                 <div class="card-header justify-content-between d-flex">
                     <div class="card-title">Mail Templates</div>
@@ -643,7 +648,7 @@
     </div>
 </div>
 <div class="col-lg-12" >
-    <div class="row" *ngIf="adoanAiRole== 'ADMIN' || userType== 1 || crmRole=='ADMIN'">
+    <div class="row" *ngIf="hasPermission('CRM_analytics_display')">
         <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-header justify-content-between border-bottom-0">
@@ -1761,9 +1766,14 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary"> Submit</button>
+        <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner"> Submit</button>
         <button type="button" class="btn btn-danger" (click)="modal.close('Close click')"
             data-bs-dismiss="modal">Close</button>
+    </div>
+     <div class="text-center uploadSpinner" *ngIf="uploadSpinner">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
     </div>
     </form>
 </ng-template>

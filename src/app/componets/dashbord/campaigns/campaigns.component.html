@@ -102,7 +102,7 @@
         </div> -->
       </div>
       <div class="text-center">
-        <button type="button" class="btn btn-primary btn-wave" (click)="openCreateModal(content7)" *ngIf="adoanAiRole== 'ADMIN' || userType==1">Create Campaign</button>
+        <button type="button" class="btn btn-primary btn-wave" (click)="openCreateModal(content7)" *ngIf="hasPermission('CRM_campaign_create')">Create Campaign</button>
         <button class="btn btn-primary ms-3" (click)="toggleTopShowMore()">
           {{ topshowMore ? 'Show Less' : 'Show More' }}
         </button>
@@ -165,7 +165,7 @@
                 </div>
               </div>
             </div>
-            <div class="card-body card-scroll " (click)="viewCampaignLeads(campaign)">
+            <div class="card-body card-scroll " (click)="viewCampaignLeads(campaign)" >
               <div class="mb-1">Total Leads : <span class="badge bg-info-transparent">{{ leadCounts[campaign.campgnId] ||
                   0 }}</span></div>
               <div>
@@ -194,14 +194,14 @@
               </div>
             </div>
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <button class="btn btn-primary-light btn-sm btn-wave ms-3 w-100 me-3" (click)="viewCampaignLeads(campaign)">
+              <button class="btn btn-primary-light btn-sm btn-wave ms-3 w-100 me-3" (click)="viewCampaignLeads(campaign)" *ngIf="hasPermission('CRM_leads_view')">
                 <i class="ri-eye-line me-2"></i> View Leads
               </button>
-              <div class="d-flex align-items-center" *ngIf="adoanAiRole== 'ADMIN'|| userType ==1">
+              <div class="d-flex align-items-center">
                 <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light btn-wave me-2"
-                (click)="openEditModal(content7, campaign.campgnId)"><i class="ri-pencil-line"></i></a>
+                (click)="openEditModal(content7, campaign.campgnId)" *ngIf="hasPermission('CRM_campaign_edit')"><i class="ri-pencil-line"></i></a>
                 <a aria-label="anchor" href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light btn-wave me-3"
-                (click)="deleteCampaignById(campaign)"><i class="ri-delete-bin-line"></i></a>
+                (click)="deleteCampaignById(campaign)" *ngIf="hasPermission('CRM_campaign_deletion')"><i class="ri-delete-bin-line"></i></a>
               </div>
             </div>
           </div>

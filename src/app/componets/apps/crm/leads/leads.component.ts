@@ -99,7 +99,7 @@ export class LeadsComponent extends BaseComponent {
   filteredUserList: any[] = [];isCreateCampaignOpen :boolean=false;
   moveCampaignSubmit:boolean=false;currentStage : string ='';sendProposalEnable : boolean= false;proposalsentSubmitted : boolean=false;
   pageIndex = 0;displayData: any[] = [];totalRecords: number = 0;
-  uploadLeads :boolean=false;
+  uploadLeads :boolean=false;isAllocating : boolean = false;access : any;
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
@@ -281,6 +281,7 @@ export class LeadsComponent extends BaseComponent {
   openRight3(content31: any, element: any) {
     this.selectedLeadData = element;
     this.modalService.open(content31, { centered: true });
+    this.getCampaignData();
   }
 
   openFollowup(element: any, content1: any) {
@@ -386,12 +387,21 @@ export class LeadsComponent extends BaseComponent {
     this.route.queryParams.subscribe((params) => {
       this.campaignId = params['campaignId']?.trim() || '';
       this.LeadForm(this.campaignId);
-      this.getFetchLeadData();
-      this.getCrmStages();
-      this.getCampaignData();
-      this.getlistFormTemplate();
-      this.getAllEmailTemplates();
       this.selectedLeads = [];
+      this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
+      if (this.access.CRM_leads_view) {
+        this.getFetchLeadData();
+      }
+      if (this.access.CRM_leads_stage_status) {
+        this.getCrmStages();
+      }
+      if (this.access.CRM_lead_mail_template_creation) {
+        this.getAllEmailTemplates();
+      }
+      if (this.access.CRM_appointmnet_creation) {
+        this.getAppointment();
+      }
+
     // this.getCrmLeads();
 
       const nav = history.state;
@@ -489,7 +499,7 @@ export class LeadsComponent extends BaseComponent {
       });
     });
 
-    this.getLeadEntry();
+    // this.getLeadEntry();
 
     //Upload Lead Validatoin
     this.uploadLead = this.fb.group({
@@ -949,6 +959,10 @@ export class LeadsComponent extends BaseComponent {
   }
 
   appointmentFormSubmit(modal: any) {  
+    this.appointmentFormSubmitted = true;
+    if(this.appointmentForm.invalid){
+      this.toastr.warning('please fill the all required fields')
+    }
     const formData = this.appointmentForm.value;
     const payload = {
       appointmenType: formData.appointmenType,
@@ -988,39 +1002,36 @@ export class LeadsComponent extends BaseComponent {
         type: this.selectedLeadForAppointment.type,
       }  : null  
     };
-    this.appointmentFormSubmitted = true;
-    if(this.appointmentForm?.valid){
-      this.switchService.saveAppointment(payload).subscribe({
-        next: (res) => {
-          this.toastr.success('Appointment Created ');
-          this.appointmentFormSubmitted = false;
-          modal.close();
-        },
-        error: (err) => {
-        }
-      });
-    }
-  }
-
-  getAppointment(element: any) {
-    this.leadId = element.leadId;
-    const leadId = element.leadId;
-    this.switchService.fetchAppointment(leadId).subscribe({
+    this.uploadSpinner = true;
+    this.switchService.saveAppointment(payload).subscribe({
       next: (res) => {
-        this.appointmentDataList = res;
-        if (res.length > 0) {
-          const selectedAppointment = res[0]; // or find(x => x.appointmentId === someId)
-          this.appointmentId = selectedAppointment.appointmentId;
-          this.appointmentForm.patchValue(selectedAppointment);
-        }
-        this.appointmentId= res.appointmentId;
-        
+        this.toastr.success('Appointment Created ');
+        this.appointmentFormSubmitted = false;
+        this.uploadSpinner = false
+        modal.close();
       },
-      // error: (err) => {
-      //   this.toastr.error('Failed to fetch appointment');
-      // }
+      error: (err) => {
+      }
     });
   }
+
+  // getAppointment(element: any) {
+  //   this.leadId = element.leadId;
+  //   const leadId = element.leadId;
+  //   this.switchService.fetchAppointment(leadId).subscribe({
+  //     next: (res) => {
+  //       this.appointmentDataList = res;
+  //       if (res.length > 0) {
+  //         const selectedAppointment = res[0]; // or find(x => x.appointmentId === someId)
+  //         this.appointmentId = selectedAppointment.appointmentId;
+  //         this.appointmentForm.patchValue(selectedAppointment);
+  //       }
+  //       this.appointmentId= res.appointmentId;
+        
+  //     },
+    
+  //   });
+  // }
 
   selectFormTemplateSubmit() {
     this.selecteTemplateFormSubmitted = true;
@@ -1038,7 +1049,6 @@ export class LeadsComponent extends BaseComponent {
       type: this.userType,
 
     }
-    console.log('payload',payload);
     this.switchService.selectFormTemplate(payload).subscribe({
       next: (res: any) => {
         this.toastr.success('Template submitted successfully!');
@@ -2435,13 +2445,19 @@ export class LeadsComponent extends BaseComponent {
       return;
     }
     if (this.allocateForm?.valid) {
+      const finalIds = this.selectedLeads.map((l: any) =>
+        typeof l === 'number' ? l : l.leadId
+      );
+
       this.allocateForm.patchValue({
-        idList: this.selectedLeads.map((lead: any) => lead.leadId)
+        idList: finalIds
       });
+
       let allocateData = { 
-        idList: this.selectedLeads.map((lead: any) => lead.leadId), 
+        idList: finalIds,
         executive: this.allocateForm.get('executive')?.value 
-      };      
+      };
+      this.isAllocating = true;
       this.switchService.CRMAllocateLeadExecutive(allocateData).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -2449,6 +2465,7 @@ export class LeadsComponent extends BaseComponent {
             this.allocateForm.reset();
             this.selectedLeads=[];
             this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+            this.isAllocating = false;
             this.getFetchLeadData();
           } else {
             this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
@@ -2528,15 +2545,19 @@ export class LeadsComponent extends BaseComponent {
   }
   onRowCheckboxChange(lead: any, event: any) {
   if (event.checked) {
+
+    // Add only if not already added
     if (!this.selectedLeads.some(l =>
       (typeof l === 'object' ? l.leadId : l) === lead.leadId
     )) {
-      this.selectedLeads.push(lead);
+      this.selectedLeads.push(lead);   // store full object in single select
     }
 
     this.selectedLeadForAppointment = lead;
 
   } else {
+
+    // Remove both object or number format
     this.selectedLeads = this.selectedLeads.filter(l =>
       (typeof l === 'object' ? l.leadId : l) !== lead.leadId
     );
@@ -2545,40 +2566,51 @@ export class LeadsComponent extends BaseComponent {
       this.selectedLeadForAppointment = null;
     }
   }
-}
-
-
- isSelected(leadId: number): boolean {
-  return this.selectedLeads.some((l: any) =>
-    typeof l === 'object' ? l.leadId === leadId : l === leadId
-  );
   }
-
 
   onSelectAllChange(event: any) {
   if (event.checked) {
-
-    this.selectedLeads = [];   // FIX: Clear old objects/numbers
-
-    this.selectedLeads = this.dataSource.data
-      .filter(row => row.completionStatus !== 'completed')
-      .map(row => row.leadId);  // keep number format as your system needs
-  } 
-  else {
+    const rows = this.dataSource.data
+      .filter(row => row.completionStatus !== 'completed');
+    this.selectedLeads = rows.map(r => r.leadId);
+  } else {
     this.selectedLeads = [];
   }
   }
 
+isSelected(leadId: number): boolean {
+  return this.selectedLeads.some(item =>
+    typeof item === 'number'
+      ? item === leadId
+      : item.leadId === leadId
+  );
+}
+
+
 
   isAllSelected(): boolean {
-  const selectable = this.dataSource.data.filter(r => r.completionStatus !== 'completed');
-  return this.selectedLeads.length === selectable.length;
-  }
+  const enabledRows = this.dataSource.data
+    .filter(row => row.completionStatus?.toLowerCase() !== 'completed');
 
+  const selectedIds = this.selectedLeads.map(l => l.leadId ?? l);
 
-  isIndeterminate(): boolean {
-    return this.selectedLeads.length > 0 && !this.isAllSelected();
-  }
+  return enabledRows.every(row => selectedIds.includes(row.leadId));
+}
+
+isIndeterminate(): boolean {
+  const enabledRows = this.dataSource.data
+    .filter(row => row.completionStatus?.toLowerCase() !== 'completed');
+
+  if (enabledRows.length === 0) return false;
+
+  const selectedIds = this.selectedLeads.map(l => l.leadId ?? l);
+
+  const selectedCount = enabledRows.filter(row =>
+    selectedIds.includes(row.leadId)
+  ).length;
+
+  return selectedCount > 0 && selectedCount < enabledRows.length;
+}
   @ViewChild('myPond') myPond!: FilePondComponent;
 
   pondOptions: FilePond.FilePondOptions = {
@@ -2862,14 +2894,21 @@ export class LeadsComponent extends BaseComponent {
     this.toastr.warning('Please select at least one lead');
     return;
   }
-  const normalized = this.selectedLeads
-  .map(item => {
+  const normalized = this.selectedLeads .map(item => {
     if (typeof item === 'number') {
       return this.dataSource.data.find(row => row.leadId === item);
     }
     return item;
-  })
-  .filter(x => x && x.leadId); 
+  }).filter(x => x && x.leadId); 
+
+  const blocked = normalized.filter(lead => this.selectedAppointment.includes(lead.leadId))
+  .map(lead => lead.leadId);
+
+  if (blocked.length > 0) {
+    this.toastr.warning('Some selected leads have appointments — cannot delete');
+    return;
+  }
+  
   const filteredLeads = normalized.filter(
   (lead: any) => lead.status?.toLowerCase() !== 'completed'
   );
@@ -3633,5 +3672,64 @@ formatToLocal(dateString: string): string {
     });
   }
   }
+  getAppointment() {
+  const startOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const endOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+  const isAdmin = this.adoanAiRole === 'ADMIN' || this.crmRole === 'ADMIN';
+  const payload = {
+    startDate: startOfMonth,
+    endDate: endOfMonth,
+    companyCode: this.userCompanyCode,
+    email: this.userEmail,
+    type: this.userType,
+    currentUser : isAdmin ? 'from_admin' : this.userEmail
+  };
+
+  this.switchService.fetchAppointment(payload).subscribe({
+    next: (res) => {
+      this.selectedAppointment = res.map((item: any) => item.leadEntry?.leadId);
+    },
+    error: () => this.toastr.error('Failed to fetch appointments')
+  });
+  }
+
+   formatDateOnly(dateInput: string | Date): string {
+  let date: Date;
+
+  if (typeof dateInput === 'string') {
+    date = new Date(dateInput);
+  } else {
+    date = dateInput;
+  }
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+  }
+  hasAppointment(leadId: number): boolean {
+    return Array.isArray(this.selectedAppointment) &&
+    this.selectedAppointment.includes(leadId);
+  }
+
+  hasPermission(key: string): boolean {
+  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
+  return !!access[key];
+  }
+  onCompletionClick(modal: any, element: any) {
+    if (element.completionStatus === 'completed') {
+      this.toastr.info('This lead is already completed');
+      return;
+    }
+    if (!this.access.CRM_completion_lead) {
+      this.toastr.warning('You do not have access to this feature');
+      return;
+    }
+    this.openCompletionModal(modal, element);
+  }
+
+
+
 
 }

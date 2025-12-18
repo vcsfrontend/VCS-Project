@@ -112,8 +112,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   
   allPermissions: Record<PermissionName, string[]> = {
     CRM: ['deals_delete', 'deals_edit', 'deals_stage_status','leads_add','leads_delete','deals_add','leads_edit','leads_view','deals_access','campaign_create','campaign_deletion',
-      'campaign_edit','leads_stage_status','mail_template_creation','appointmnet_creation','campaign_access','leads_allocate',
-      'completion_lead','move_campaign','analytics_display'
+      'campaign_edit','leads_stage_status','lead_mail_template_creation','appointmnet_creation','campaign_access','leads_allocate',
+      'completion_lead','leads_move_campaign','analytics_display','Campaign_Users','leads_view','deals_view','deals_mail_create','deals_mail_teamplet_create',
+      'deals_campaign_move','deals_appointment','deals_task_create','leads_task_create','deal_completion','deals_analytics','deals_allocate','campaign_users_dispaly',
+      'users_dispaly'
       
     ],
     Projects :['project_create','project_delete','project_update'],
@@ -1273,7 +1275,7 @@ selectedPermissions: any[] = [];
     this.modalService.open(content13, { centered: true, });
   }
   roleModal(content16: any) {
-    this.modalService.open(content16, { centered: true, });
+    this.modalService.open(content16, { centered: true, scrollable : true });
   }
   openRight14(content14: any) {
     this.modalService.open(content14, { centered: true, });
@@ -2188,7 +2190,6 @@ selectedPermissions: any[] = [];
     const payload ={
       ...formValue,
     }
-    console.log(payload)
     this.switchService.createPermission(payload).subscribe({
       next: (res) => {
         this.toastr.success('Permission created successfully');
@@ -2379,31 +2380,27 @@ selectedPermissions: any[] = [];
   }
 
   onPermissionChange(selectP: any) {
-  this.selectedPermissionRole = selectP;
-  this.selectedPermissionId = selectP.id;
-  console.log('assignedpermisisons',this.selectedPermissionId);
-
-  const selected = this.permissionList.find((p: any) => p.id === this.selectedPermissionId);
-  console.log('selcted123445',selected);
-  if (!selected) return;
-  console.log('selcted',selected);
-
-  // this.subPermissionArray.clear();
-
-  const permissionName = selected.name; 
-
-  const features = this.allPermissions[permissionName as keyof typeof this.allPermissions] || [];
-
-  features.forEach(feature => {
-    this.subPermissionArray.push(
-      this.fb.group({
-        key: feature,
-        label: this.formatLabel(feature),
-        enabled: false
-      })
+    this.selectedPermissionRole = selectP;
+    this.selectedPermissionId = selectP.id;
+    const selected = this.permissionList.find(
+      (p: any) => p.id === this.selectedPermissionId
     );
-  });
+    if (!selected) return;
+    const permissionName = selected.name;
+    const features =
+    this.allPermissions[permissionName as keyof typeof this.allPermissions] || [];
+    this.subPermissionArray.clear();
+    features.forEach(feature => {
+      this.subPermissionArray.push(
+        this.fb.group({
+          key: feature,
+          label: this.formatLabel(feature),
+          enabled: false
+        })
+      );
+    });
   }
+
 
 
   
@@ -2473,7 +2470,6 @@ selectedPermissions: any[] = [];
       type: JSON.parse(this.userData)?.type,
       subPermission :commaSeparated,
     }
-    console.log('payload',payload);
     this.switchService.assignPermissionToRole(payload).subscribe({
       next: (res) => {
         this.toastr.success('assigned successfully');
@@ -2614,17 +2610,12 @@ selectedPermissions: any[] = [];
   if (!dep || !dep.roles) return 0;
 
   let total = 0;
-
-  console.log("DEPARTMENT DATA:", dep);
-
   dep.roles.forEach((role: any) => {
-    const permObject = role.permissions;   // permissions object
-
+    const permObject = role.permissions;   
     if (permObject && typeof permObject === 'object') {
       Object.values(permObject).forEach((value: any) => {
         if (typeof value === 'string' && value.trim() !== '') {
           const permissions = value.split(',').map(p => p.trim()).filter(p => p);
-          console.log("permissions:", permissions);
           total += permissions.length;
         }
       });
@@ -2815,8 +2806,6 @@ selectedPermissions: any[] = [];
   }
 
   editSubpermmissions(permission: any, content115: any) {
-
-  console.log("Selected Permission:", permission);
   this.selectedPermissionName = permission.permissionName;
   this.SubpermissionId = permission.id;
   this.editsubPermissionArray.clear();
@@ -2844,8 +2833,6 @@ const fullList = this.allPermissions[permission?.permissionName as PermissionNam
     .map(ctrl => ctrl.value.label);
     const commaSeparated = selectedKeys.join(',');
     const subPermission = commaSeparated
-    console.log('update subpermission api payload',permissionId,subPermission);
-
     this.switchService.updateSubPermission(permissionId,subPermission).subscribe({
       next: (res: any) => {
         this.toastr.success('SubPermissions updated successfully');

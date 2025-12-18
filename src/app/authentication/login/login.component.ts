@@ -139,6 +139,15 @@ login() {
           timeOut: 3000,
           positionClass: 'toast-top-right',
         });
+         localStorage.setItem(
+          'loginPayload',
+          JSON.stringify({
+            email: this.loginForm.value.email,
+            password: this.loginForm.value.password
+          })
+        );
+
+
         localStorage.setItem("username",res.username);
         localStorage.setItem("email",res.email);
         localStorage.setItem("adonaiRole", res.adonaiRole);
@@ -147,11 +156,11 @@ login() {
           this.navSvc.isCRMApplicable$.next(res.crm);
           this.navSvc.adonaiRole$.next(res.adonaiRole);
           this.navSvc.crmRole$.next(res.crmRole)
-          this.getUsersAccess(this.email)
           this.getUsersAccess(this.email);
           this.switchService.userInfo(res.email).subscribe(() => {
             this.router.navigate(['/pages/profile']);
           });
+        // this.router.navigate(['/pages/profile']);
       }
     else{
       this.toastr.error(res.message,'VCS', {
@@ -261,7 +270,7 @@ getUsersAccess(email:string) {
        next: (res: any) => {
 
     const formatted: any = {};
-
+   
     // Loop departments
     res.departments.forEach((dept: any) => {
       // Loop roles
@@ -289,7 +298,32 @@ getUsersAccess(email:string) {
     });
 
     localStorage.setItem("userAccess", JSON.stringify(formatted));
+    window.location.reload();
   }
     });
   }
+
+  setUserAccessFromResponse(res: any) {
+  const formatted: any = {};
+
+  res.departments?.forEach((dept: any) => {
+    dept.roles?.forEach((role: any) => {
+
+      Object.entries(role.permissions || {}).forEach(
+        ([key, value]: any) => {
+
+          formatted[key] = true;
+
+          value?.split(',').forEach((sub: string) => {
+            formatted[`${key}_${sub}`] = true;
+          });
+        }
+      );
+
+    });
+  });
+
+  localStorage.setItem('userAccess', JSON.stringify(formatted));
+}
+
 }

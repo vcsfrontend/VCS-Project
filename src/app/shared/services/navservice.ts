@@ -23,6 +23,8 @@ export interface Menu {
   menutype?: string;
   isVisible?: boolean;
   linkType?:string;
+  permission?: string;
+  permissionKey ?: string;
 }
 
 @Injectable({
@@ -65,7 +67,6 @@ export class NavService implements OnDestroy {
   public crmRole$ = new BehaviorSubject<string>(
     localStorage.getItem('crmRole') || ''
   );
-
   
 
   constructor(private router: Router) {
@@ -118,6 +119,7 @@ export class NavService implements OnDestroy {
       type: 'link',
       linkType : 'internal',
       path: '/dashboard/sales',
+      isVisible: true 
     },
     // {
     //   title: 'CRM',
@@ -432,6 +434,7 @@ export class NavService implements OnDestroy {
       dirchange: false,
       type: 'sub',
       active: false,
+      permission: 'CRM',
       children: [
         
         {
@@ -441,7 +444,8 @@ export class NavService implements OnDestroy {
           type: 'link',
           linkType : 'internal',
           active: false,
-          path: '/apps/crm/deals'
+          path: '/apps/crm/deals',
+          permissionKey: 'CRM_deals_access'
         },
         {
           title: 'Campaigns',
@@ -452,6 +456,7 @@ export class NavService implements OnDestroy {
           active: false,
           selected: false,
           path: '/dashboard/campaigns',
+          permissionKey : 'CRM_campaign_access'
         }, 
         {
           title: 'Tasks',
@@ -505,7 +510,8 @@ export class NavService implements OnDestroy {
         type: 'link',
         linkType: 'internal',
         active: false,
-        path: '/dashboard/appointments'
+        path: '/dashboard/appointments',
+        permissionKey : 'CRM_appointmnent'
         },
 
         {
@@ -529,6 +535,7 @@ export class NavService implements OnDestroy {
       active: false,
       selected: false,
       path: '/dashboard/projects',
+      permissionKey : 'Projects'
     },
     // {
     //   title: 'Documents',

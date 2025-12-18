@@ -344,5 +344,31 @@ table thead.custom-header th {
   overflow-y: auto;      
   overflow-x: hidden;
 }
+.modal-content1 {
+  height: 60vh;
+  min-height: 40vh;  
+  max-height: 80vh;        
+  display: flex;
+  flex-direction: column;
+}
+.permission-modal {
+  height: 70vh;                 /* you can adjust */
+  display: flex;
+  flex-direction: column;
+}
+
+.permission-modal .modal-header {
+  flex-shrink: 0;
+}
+
+.permission-modal .modal-body {
+  flex: 1;                      /* CRITICAL */
+  overflow-y: auto;             /* CRITICAL */
+}
+
+.permission-modal .modal-footer {
+  flex-shrink: 0;
+}
+
 
 
