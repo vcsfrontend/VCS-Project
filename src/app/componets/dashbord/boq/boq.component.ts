@@ -128,7 +128,7 @@ export class BoqComponent extends BaseComponent {
     selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
     designUrl: string = ''; showSubmitButton: boolean = true; isLoadingAssignProjects: boolean = false;
     showDownloadButton = false; isBoqLoading = false;activeNavId: number = 1; currentRoomName: string = 'All';
-    boqChecked = false;
+    boqChecked = false; hasDesign = false;
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -733,41 +733,48 @@ export class BoqComponent extends BaseComponent {
             setTimeout(() => this.changeTab(storedTab), 100);
         }
     }
- hasDesign = false;
 
- 
- 
     changeTab(tabId: string, skipStore: boolean = false) {
-        this.activeTab = tabId;
-        if (!skipStore) {
-            localStorage.setItem('selectedTab', tabId);
-        }
-        if (!this.projectId) return;
-        switch (tabId) {
-            case '1':
-                this.getRecceData();
-                break;
+  this.activeTab = tabId;
 
-            case '2':
-                this.getAssignProjects();
-                break;
+  if (!skipStore) {
+    localStorage.setItem('selectedTab', tabId);
+  }
 
-            case '3':
-                this.allowBoqRun = true;
-                this.boqChecked = false;
-                this.hasDesign = !!this.designingId;
-                if (this.hasDesign) {
-                    if (this.boqLoaded) return;
-                    this.boqLoaded = true;
-                    this.isBoqLoading = true;
-                    this.boqData();
-                } else {
-                    this.isBoqLoading = false;
-                }
-                break;
+  if (!this.projectId) return;
 
-        }
-    }
+  switch (tabId) {
+
+    case '1':
+      this.getRecceData();
+      break;
+
+    case '2':
+      this.getAssignProjects();
+      break;
+
+    case '3':
+      this.allowBoqRun = true;
+      this.boqChecked = false;
+
+      // 🔑 If designId not present → fetch first
+      if (!this.designingId) {
+        this.isBoqLoading = true;
+        this.getAssignProjects();
+        return;
+      }
+
+      // 🔑 If already loaded → do nothing
+      if (this.boqLoaded) return;
+
+      // 🔑 Load BOQ
+      this.boqLoaded = true;
+      this.isBoqLoading = true;
+      this.boqData();
+      break;
+  }
+}
+
 
     isScrollingInsideDropdown(event: any): boolean {
         const path = event.composedPath ? event.composedPath() : event.path;
@@ -806,87 +813,101 @@ closeAllDropdowns() {
     }
 
     boqData(roomSnapshot: string | null = null) {
-        if (!this.designingId) return;
-        this.isBoqLoading = true;
-        const payload = {
-            email: this.userEmail,
-            designId: this.designingId,
-            bomRequired: false,
-            wardrobeRequired: true,
-            kbRequired: true
-        };
-        this.switchService.fetchBoqData(payload).subscribe({
-            next: (res) => {
-                this.getProposal();
-                const boqData = res?.boqResponse?.boqData || {};
-                const hasBoq =
-                    Object.keys(boqData).some(
-                        key => Array.isArray(boqData[key]) && boqData[key].length > 0
-                    );
-                this.boqAvailable = hasBoq;
-                this.boqChecked = true;
-                const pannelResponse = res?.pannelResponse?.pannelResponse || [];
-                this.showDownloadButton = pannelResponse.some((p: any) =>
-                    (p.cl && p.cl !== 0) || (p.cw && p.cw !== 0)
-                );
-                this.tabKeys = Object.keys(boqData);
-                let allItems: any[] = [];
-                this.tabKeys.forEach((key: string) => {
-                    const items: any[] = boqData[key] || [];
-                    this.boqDataSources[key] = new MatTableDataSource(
-                        items.map((item: any, index: number) => ({
-                            slNo: index + 1,
-                            ...item
-                        }))
-                    );
-                    this.tabCounts[key] = items.length;
-                    this.tabTotals[key] = items.reduce(
-                        (sum: number, item: any) => sum + (item.clientRate || 0),
-                        0
-                    );
-                    allItems = [
-                        ...allItems,
-                        ...items.map((item: any, i: number) => ({
-                            slNo: i + 1,
-                            roomName: key,
-                            ...item
-                        }))
-                    ];
-                });
-                this.boqDataSources['All'] = new MatTableDataSource(allItems);
-                this.tabKeys = ['All', ...this.tabKeys];
 
-                if (roomSnapshot && this.tabKeys.includes(roomSnapshot)) {
-                    this.currentRoomName = roomSnapshot;
-                } else if (!this.currentRoomName || !this.tabKeys.includes(this.currentRoomName)) {
-                    this.currentRoomName = 'All';
-                }
-                this.allPanels = (pannelResponse as any[]).map((item: any, i: number) => ({
-                    order: i + 1,
-                    ...item
-                }));
-                const apiRooms = this.tabKeys
-                    .filter(k => k !== 'All')
-                    .map(name => ({ name }));
-                if (!this.allRooms || this.allRooms.length === 0) {
-                    this.allRooms = [...apiRooms];
-                } else {
-                    this.allRooms = [
-                        ...this.allRooms,
-                        ...apiRooms
-                    ].filter(
-                        (room, index, self) =>
-                            index === self.findIndex(r => r.name === room.name)
-                    );
-                }
-                this.roomNameList = [...this.allRooms];
-                this.groupCabinetNames();
-            },
-            complete: () => {
-                this.isBoqLoading = false;  
-            }
-        });
+  // 🔒 Safety guard
+  if (!this.designingId) {
+    this.isBoqLoading = false;
+    return;
+  }
+
+  this.isBoqLoading = true;
+
+  const payload = {
+    email: this.userEmail,
+    designId: this.designingId,
+    bomRequired: false,
+    wardrobeRequired: true,
+    kbRequired: true
+  };
+
+  this.switchService.fetchBoqData(payload).subscribe({
+    next: (res) => {
+
+      this.getProposal();
+
+      const boqData = res?.boqResponse?.boqData || {};
+
+      this.boqAvailable = Object.keys(boqData).some(
+        key => Array.isArray(boqData[key]) && boqData[key].length > 0
+      );
+
+      this.boqChecked = true;
+
+      const pannelResponse = res?.pannelResponse?.pannelResponse || [];
+
+      this.showDownloadButton = pannelResponse.some(
+        (p: any) => (p.cl && p.cl !== 0) || (p.cw && p.cw !== 0)
+      );
+
+      this.tabKeys = Object.keys(boqData);
+      let allItems: any[] = [];
+
+      this.tabKeys.forEach((key: string) => {
+        const items: any[] = boqData[key] || [];
+
+        this.boqDataSources[key] = new MatTableDataSource(
+          items.map((item: any, index: number) => ({
+            slNo: index + 1,
+            ...item
+          }))
+        );
+
+        this.tabCounts[key] = items.length;
+        this.tabTotals[key] = items.reduce(
+          (sum: number, item: any) => sum + (item.clientRate || 0),
+          0
+        );
+
+        allItems.push(
+          ...items.map((item: any, i: number) => ({
+            slNo: i + 1,
+            roomName: key,
+            ...item
+          }))
+        );
+      });
+
+      this.boqDataSources['All'] = new MatTableDataSource(allItems);
+      this.tabKeys = ['All', ...this.tabKeys];
+
+      this.currentRoomName =
+        roomSnapshot && this.tabKeys.includes(roomSnapshot)
+          ? roomSnapshot
+          : 'All';
+
+      this.allPanels = pannelResponse.map((item: any, i: number) => ({
+        order: i + 1,
+        ...item
+      }));
+
+      const apiRooms = this.tabKeys
+        .filter(k => k !== 'All')
+        .map(name => ({ name }));
+
+      this.allRooms = [...new Map(
+        [...(this.allRooms || []), ...apiRooms]
+          .map(r => [r.name, r])
+      ).values()];
+
+      this.roomNameList = [...this.allRooms];
+      this.groupCabinetNames();
+    },
+    complete: () => {
+      this.isBoqLoading = false;   // ✅ ONLY place loader stops after BOQ
     }
+  });
+}
+
 
     onShowPanelList() {
         this.showPanelList = true;
@@ -1882,9 +1903,7 @@ closeAllDropdowns() {
     getAssignProjects(): void {
 
   // 🔒 Prevent parallel calls
-  if (this.isLoadingAssignProjects) {
-    return;
-  }
+  if (this.isLoadingAssignProjects) return;
 
   this.isLoadingAssignProjects = true;
 
@@ -1902,28 +1921,42 @@ closeAllDropdowns() {
 
       const projects = Array.isArray(res) ? res : [res];
 
-      // ✅ Save designId ONLY
-      this.designingId = res?.designId || '';
+      const designProject = projects.find(p => p?.designId);
 
-      if (this.designingId) {
+      if (designProject?.designId) {
+        this.designingId = designProject.designId;
         localStorage.setItem('designId', this.designingId);
+        this.hasDesign = true;
+      } else {
+        // ❗ NO DESIGN → stop loader
+        this.designingId = '';
+        this.hasDesign = false;
+        this.isBoqLoading = false;
+        return;
       }
 
       this.designCompletionStatus =
-        res?.designCompletionStatus || '';
+        designProject?.designCompletionStatus || '';
 
       this.designerData =
         this.userRole === 'ADMIN'
           ? projects
           : projects.filter(p =>
-              p?.assignedDesigner
-                ?.toLowerCase()
-                === this.userEmail?.toLowerCase()
+              p?.assignedDesigner?.toLowerCase() ===
+              this.userEmail?.toLowerCase()
             );
 
       this.filteredDesignerData = [...this.designerData];
+
+      // 🔁 Auto-run BOQ if user is already on Tab 3
+      if (this.activeTab === '3' && !this.boqLoaded) {
+        this.boqLoaded = true;
+        this.isBoqLoading = true;
+        this.boqData();
+      }
     },
     error: () => {
+      this.isBoqLoading = false;
       this.isLoadingAssignProjects = false;
     },
     complete: () => {
@@ -1931,7 +1964,6 @@ closeAllDropdowns() {
     }
   });
 }
-
 
 
     showNoData(): boolean {

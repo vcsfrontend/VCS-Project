@@ -1485,12 +1485,7 @@
                                             <p class="text-dark fw-semibold fs-14">No BOQ assigned for this project.</p>
                                         </div>
                                     </div>
-                                    <div *ngIf="!isBoqLoading && hasDesign && boqChecked && boqAvailable === false" class="text-center py-4">
-                                        <div class="card custom-card align-items-center justify-content-center" style="min-height: 250px; box-shadow: none !important;">
-                                            <p class="text-dark fw-semibold fs-14">No BOQ assigned for this project.</p>
-                                        </div>
-                                    </div>
-                                    <div class="row bg-light pt-3" *ngIf="!isBoqLoading && boqAvailable === true">
+                                    <div class="row bg-light pt-3" *ngIf="!isBoqLoading && boqAvailable">
                                         <div class="col-xl-12">
                                             <nav class="card custom-card mb-0 no-bottom-radius" style="box-shadow: none !important;" role="tablist">
                                                 <div class="scroll-wrapper position-relative d-flex align-items-center w-100">
