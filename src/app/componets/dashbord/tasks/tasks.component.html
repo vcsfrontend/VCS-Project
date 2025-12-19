@@ -226,7 +226,7 @@
                                                                         </p>
                                                                     </div>
                                                                     <div>
-                                                                        <div class="btn-list">
+                                                                        <div class="btn-list" *ngIf="hasPermission('CRM_task_edit')">
                                                                             <button
                                                                                 class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
@@ -298,7 +298,7 @@
                                                                         </p>
                                                                     </div>
                                                                     <div>
-                                                                        <div class="btn-list">
+                                                                        <div class="btn-list" *ngIf="hasPermission('CRM_task_edit')">
                                                                             <button
                                                                                 class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
@@ -370,7 +370,7 @@
                                                                         </p>
                                                                     </div>
                                                                     <div>
-                                                                        <div class="btn-list">
+                                                                        <div class="btn-list" *ngIf="hasPermission('CRM_task_edit')">
                                                                             <button
                                                                                 class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
@@ -442,7 +442,7 @@
                                                                         </p>
                                                                     </div>
                                                                     <div>
-                                                                        <div class="btn-list">
+                                                                        <div class="btn-list" *ngIf="hasPermission('CRM_task_edit')">
                                                                             <button
                                                                                 class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
                                                                                 (click)="openEditTaskModal(task,editTaskModal)">
@@ -512,7 +512,7 @@
                                                                         </p>
                                                                     </div>
                                                                     <div>
-                                                                        <div class="btn-list">
+                                                                        <div class="btn-list" *ngIf="hasPermission('CRM_task_edit')">
                                                                             <button
                                                                                 class="btn btn-sm btn-icon btn-wave btn-success-light rounded-circle"
                                                                                 (click)="openEditTaskModal(task,editTaskModal)">

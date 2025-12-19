@@ -571,5 +571,13 @@ table.mat-mdc-table .mdc-data-table__header-cell {
   max-height: 70vh;  
   overflow-y: auto;
 }
+.clickable-col {
+  cursor: pointer;
+}
+
+.clickable-col:hover {
+  text-decoration: none;
+  color: #006699;
+}
 
 

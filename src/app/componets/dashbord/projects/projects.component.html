@@ -439,10 +439,10 @@
                                 Completed</div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <a class="btn btn-sm btn-primary btn-wave ms-3" (click)="onProjectAdd(project)"><i
+                            <a class="btn btn-sm btn-primary btn-wave ms-3" (click)="onProjectAdd(project)" *ngIf="hasPermission('Projects_add_project_stage')"><i
                                     class="ri-add-line align-middle me-1 fw-medium"></i>Add</a>
                             <!-- routerLink="/dashboard/mytask" -->
-                            <a class="btn btn-sm btn-primary btn-wave me-3" (click)="onProjectCycle(project)"><i
+                            <a class="btn btn-sm btn-primary btn-wave me-3" (click)="onProjectCycle(project)" *ngIf="hasPermission('Projects_view_project_cycle')"><i
                                     class="bi bi-calendar-date align-middle me-1 fw-medium"></i>Project Cycle</a>
                             <!-- routerLink="/pages/timeline" -->
                         </div>
@@ -452,7 +452,7 @@
         </div>
     </div>
 
-    <div class="col-xl-12 mt-2">
+    <div class="col-xl-12 mt-2" *ngIf="hasPermission('Projects_my_projects_table')">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
@@ -476,11 +476,11 @@
                         All Projects
                     </button>
                     <a class="btn btn-primary btn-wave" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
-                        (click)="openLg(Content10);submitted=false"><i
+                        (click)="openLg(Content10);submitted=false" *ngIf="hasPermission('Projects_project_create')"><i
                             class="ri-add-line align-middle me-1 fw-medium"></i>Create Project</a>
                 </div>
             </div>
-            <div class="table-container mat-elevation-z8 boq-table-wrapper">
+            <div class="table-container mat-elevation-z8 boq-table-wrapper" >
                 <table mat-table [dataSource]="myProjectDataSource" matSort class="mat-table">
                     <ng-container matColumnDef="sourceFlag">
                         <th mat-header-cell *matHeaderCellDef></th>
@@ -516,7 +516,7 @@
                     </ng-container>
                     <ng-container matColumnDef="projectEstimation">
                         <th mat-header-cell *matHeaderCellDef>Project Estimation</th>
-                        <td mat-cell *matCellDef="let element" data-bs-toggle="modal" data-bs-target="#exampleModalLg"
+                        <td mat-cell *matCellDef="let element" data-bs-toggle="modal" data-bs-target="#exampleModalLg" class="clickable-col"
                             (click)="VerticallyScrol(Content12); fetchPaymentStages(element)">
                             {{element.projectEstimation}} </td>
                     </ng-container>
@@ -538,7 +538,8 @@
                         <th mat-header-cell *matHeaderCellDef>Asign To User</th>
                         <td mat-cell *matCellDef="let element">
                             <button class="btn btn-primary btn-sm shadow d-flex align-items-center justify-content-center px-3 px-1"
-                            (click)="assignToUser(content18,element)">
+                            (click)="onAssignClick(content18,element)" [class.disabled]="!access.Projects_project_assign"
+                            [attr.aria-disabled]="!access.Projects_project_assign">
                                 <i class="bi bi-person fs-13 me-1"></i>
                                 <strong>Assign to User</strong>
                             </button>

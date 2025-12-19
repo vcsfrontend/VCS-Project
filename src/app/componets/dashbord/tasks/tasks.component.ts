@@ -27,7 +27,7 @@ export class TasksComponent {
   userCompanyName: string = this.userData ? this.userData.companyName : '';
   userType: any = this.userData ? this.userData.type : ''; campaignName: any; taskForm!: FormGroup;
   taskList: any[] | null = null;  agentUsers: any[] = []; campaignList: any[] = [];
-  modal: any;selectedTaskId: string = '';
+  modal: any;selectedTaskId: string = '';access : any;
   selectedCampaign: any; currentUser: any;
   adoanAiRole: any;
   inprogressTasks: any[] = [];
@@ -47,6 +47,7 @@ export class TasksComponent {
     inline: true,
   };
   ngOnInit(): void {
+    this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
     this.fetchTasks();
     this.getUsers();
     this.taskForm = this.fb.group({
@@ -362,6 +363,10 @@ export class TasksComponent {
     }
   }
 
+  hasPermission(key: string): boolean {
+  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
+  return !!access[key];
+  }
 
 
 }
