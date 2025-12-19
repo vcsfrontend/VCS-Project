@@ -1,7 +1,7 @@
 <div class="col-lg-12">
     <div class="d-flex justify-content-between align-items-center w-100 custom-progress-nav border-top">
         <ul ngbNav #nav13="ngbNav" [(activeId)]="activeTab" (activeIdChange)="changeTab($event)" class="">
-            <li ngbNavItem="1" class="nav-item">
+            <li ngbNavItem="1" class="nav-item" *ngIf="hasPermission('Projects_recce_stage')">
                 <button ngbNavLink class="nav-link custom-step" (click)="setStage(1);">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 1,
@@ -264,7 +264,7 @@
                     </ng-template>
                 </ng-template>
             </li>
-            <li ngbNavItem="2" class="nav-item">
+            <li ngbNavItem="2" class="nav-item" *ngIf="hasPermission('Projects_design_stage')">
                 <button ngbNavLink class="nav-link custom-step" (click)="setStage(2);">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 2,
@@ -379,7 +379,7 @@
                     </div>
                 </ng-template>
             </li>
-            <li ngbNavItem="3" class="nav-item">
+            <li ngbNavItem="3" class="nav-item" *ngIf="hasPermission('Projects_boq_stage')">
             <button ngbNavLink class="nav-link custom-step" (click)="setStage(3)">
                     <span class="step-circle" [ngClass]="{
                             'completed-circle': currentStage > 3,
@@ -393,7 +393,7 @@
                     <div class="" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
                         <nav ngbNav #nav2="ngbNav" [activeId]="activeInnerTab" (activeIdChange)="onInnerTabChange($event)" [destroyOnHide]="false"
                             class="nav nav-style-1 nav-pills bg-white p-2 border-bottom custom-tab-nav" style="box-shadow: none !important;" role="tablist">
-                            <ng-container ngbNavItem="proposal">
+                            <ng-container ngbNavItem="proposal" *ngIf="hasPermission('Projects_proposal_for_client')">
                                 <a ngbNavLink class="ms-1 btn btn-light" (click)="getProposal()">Proposal For Client</a>
                                 <ng-template ngbNavContent>
                                     <div class="col-xl-12">
@@ -504,8 +504,8 @@
                                                         <div class="card-title">Proposal Details ({{ selectedProposalContent?.orderNo }})</div>
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2">
-                                                        <button class="btn btn-danger btn-sm" (click)="openLg5(content5)">Approve</button>
-                                                        <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button>
+                                                        <button class="btn btn-danger btn-sm" (click)="openLg5(content5)" *ngIf="hasPermission('Projects_proposal_approve')">Approve</button>
+                                                        <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)" *ngIf="hasPermission('Projects_proposal_share')">Share</button>
                                                         <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
                                                             <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
                                                         </button>
@@ -740,7 +740,7 @@
                                     </div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container ngbNavItem="orders">
+                            <ng-container ngbNavItem="orders" *ngIf="hasPermission('Projects_client_orders')">
                                 <a ngbNavLink class="ms-1 btn btn-light" (click)="getClientOrders()">Client Orders
                                 </a>
                                 <ng-template class="tab-content bg-white" ngbNavContent>
@@ -1053,7 +1053,7 @@
                                     </div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container ngbNavItem="invoices">
+                            <ng-container ngbNavItem="invoices" *ngIf="hasPermission('Projects_client_invoice')">
                                 <a ngbNavLink class="ms-1 btn btn-light">Client Invoices</a>
                                 <ng-template class="tab-content bg-white" ngbNavContent>
                                     <ul ngbNav #innerNav="ngbNav" [(activeId)]="innerActive"
@@ -1268,7 +1268,7 @@
                                     <div [ngbNavOutlet]="innerNav"></div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container ngbNavItem="payments">
+                            <ng-container ngbNavItem="payments" *ngIf="hasPermission('Projects_payments_from_client')">
                                 <a ngbNavLink class="ms-1 btn btn-light">Payments From
                                     Client</a>
                                 <ng-template class="tab-content bg-white" ngbNavContent>
@@ -1484,7 +1484,7 @@
                                     <div [ngbNavOutlet]="innerNav"></div>
                                 </ng-template>
                             </ng-container>
-                            <ng-container ngbNavItem="scope">
+                            <ng-container ngbNavItem="scope" *ngIf="hasPermission('Projects_project_scope')">
                                 <a ngbNavLink class="ms-1 btn btn-light">Project Scope</a>
                                 <ng-template class="tab-content" ngbNavContent>
                                     <div *ngIf="isBoqLoading" class="text-center py-4">
@@ -1505,12 +1505,13 @@
                                                         style="overflow-x: auto; scroll-behavior: smooth; white-space: nowrap;" (navChange)="onRoomTabChange($event.nextId)">
                                                         <ng-container *ngFor="let key of tabKeys; let i = index">
                                                             <ng-container [ngbNavItem]="i+1">
-                                                                <a ngbNavLink class="ms-1 btn btn-light me-2 ms-1 my-2" [class.active]="currentRoomName === key"   (click)="onRoomClick(key); onHidePanelList()">{{ key | titlecase }}
+                                                                <a ngbNavLink class="ms-1 btn btn-light me-2 ms-1 my-2" [class.active]="currentRoomName === key"  (click)="onRoomClick(key); onHidePanelList()"
+                                                                *ngIf="hasPermission('Projects_project_boq_data')">{{ key | titlecase }}
                                                                     <span class="badge bg-black text-white ms-1">
                                                                         {{ boqDataSources[key].data.length }}
                                                                     </span>
                                                                 </a>
-                                                                <div class="tt"></div>
+                                                                <div class="tt" *ngIf="hasPermission('Projects_project_boq_data')"></div>
                                                                 <ng-template ngbNavContent>
                                                                     <div class="col-xl-12" *ngIf="!showPanelList">
                                                                         <div class="card custom-card no-top-radius border-top" style="box-shadow: none !important;">
@@ -1568,20 +1569,21 @@
                                                                                             <ul class="dropdown-menu shadow-lg p-0" ngbDropdownMenu style="width: 260px; border-radius: 12px;">
                                                                                                 <li>
                                                                                                     <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom"
-                                                                                                        (click)="onCreateProposalClick(content4)">
+                                                                                                        (click)="onCreateProposalClick(content4)" *ngIf="hasPermission('Projects_create_proposal')">
                                                                                                         <i class="ri-refresh-line fs-5"></i>
                                                                                                         <span class="fw-semibold">Create Proposal</span>
                                                                                                     </a>
                                                                                                 </li>
                                                                                                 <li>
-                                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom" (click)="openLg1(content1)">
+                                                                                                    <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3 border-bottom" (click)="openLg1(content1)"
+                                                                                                    *ngIf="hasPermission('Projects_custom_element')">
                                                                                                         <i class="ri-layout-grid-line fs-5"></i>
                                                                                                         <span class="fw-semibold">Add Custom Element</span>
                                                                                                     </a>
                                                                                                 </li>
                                                                                                 <li>
                                                                                                     <a ngbDropdownItem class="dropdown-item py-2 d-flex align-items-center gap-3"
-                                                                                                        (click)="openLg2(content2); getLibraryData()">
+                                                                                                        (click)="openLg2(content2); getLibraryData()" *ngIf="hasPermission('Projects_import_items')">
                                                                                                         <i class="bi bi-folder side-menu__icon fs-5"></i>
                                                                                                         <span class="fw-semibold">Import Items From</span>
                                                                                                     </a>
@@ -1921,10 +1923,11 @@
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="card-title col-xl-4">Cut List</div>
                                                                                 <div class="d-flex">
-                                                                                    <button class="btn btn-primary" (click)="cutList(content47)">
+                                                                                    <button class="btn btn-primary" (click)="cutList(content47)" *ngIf="hasPermission('Projects_cutlist_change')">
                                                                                         <i class="bi bi-check2-square side-menu__icon fs-16 align-middle me-1"></i> Cut List
                                                                                     </button>
-                                                                                    <button *ngIf="showDownloadButton" class="btn btn-primary ms-2" (click)="downloadCutList()">
+                                                                                    <button *ngIf="hasPermission('Projects_cutlist_download')" class="btn btn-primary ms-2" 
+                                                                                    (click)="downloadCutList()">
                                                                                         <i class="bi bi-download side-menu__icon fs-16 align-middle me-1"></i> Download
                                                                                     </button>
                                                                                     <!-- <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger" *ngIf="isCutListAlreadySubmitted"
@@ -2008,7 +2011,7 @@
                                                                 </ng-template>
                                                             </ng-container>
                                                         </ng-container>
-                                                        <div class="text-end">
+                                                        <div class="text-end" *ngIf="hasPermission('Projects_cut_list')">
                                                             <button class="btn btn-light ms-2 mt-2" (click)="onShowPanelList()">
                                                                 Cut List
                                                             </button>

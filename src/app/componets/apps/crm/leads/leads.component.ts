@@ -3713,9 +3713,9 @@ formatToLocal(dateString: string): string {
     this.selectedAppointment.includes(leadId);
   }
 
-  hasPermission(key: string): boolean {
-  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
-  return !!access[key];
+  hasPermission(key?: string): boolean {
+    if (!key) return true;
+    return this.switchService.hasPermission(key);
   }
   onCompletionClick(modal: any, element: any) {
     if (element.completionStatus === 'completed') {

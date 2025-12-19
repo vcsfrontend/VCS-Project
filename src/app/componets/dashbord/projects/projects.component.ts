@@ -228,9 +228,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   }
 
   ngOnInit(): void {
-    if (this.userRole === 'ADMIN') {
-      this.displayedColumns.push('assign');
-    }
     this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
     const payload = {
       email: JSON.parse(this.userDetails)?.email,
@@ -2291,10 +2288,11 @@ getRecceData() {
     this.createProjectForm.patchValue({ projectStartDate: formatted });
     this.picker.close();
   }
-  hasPermission(key: string): boolean {
-  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
-  return !!access[key];
+  hasPermission(key?: string): boolean {
+    if (!key) return true;
+    return this.switchService.hasPermission(key);
   }
+
 
   onAssignClick(modal: any, element: any) {
   
@@ -2303,5 +2301,12 @@ getRecceData() {
     return;
   }
   this.assignToUser(modal, element);
+  }
+  onEstimationClick(modal: any, element: any) {
+    if (!this.access.project_estimation) {
+      this.toastr.warning('You do not have access to assign this estimation');
+      return;
+    }
+    this.VerticallyScrol(modal);
   }
 }

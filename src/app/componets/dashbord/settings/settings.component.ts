@@ -118,7 +118,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       'users_dispaly','task_edit'
       
     ],
-    Projects :['project_create','Top_Projects','my_projects_table','add_project_stage','view_project_cycle','recce_access','project_assign','project_estimation'],
+    Projects :['project_create','Top_Projects','my_projects_table','add_project_stage','view_project_cycle','recce_access','project_assign','project_estimation', 'recce_stage', 'design_stage', 
+      'boq_stage', 'project_scope', 'payments_from_client',  'client_invoice', 'client_orders', 'proposal_for_client', 'project_boq_data','cut_list', 'create_proposal', 'custom_element', 
+      'import_items', 'proposal_approve', 'proposal_share', 'cutlist_change','cutlist_download', 
+    ],
     SALES: ['products_add', 'products_edit'],
     HR: ['employee_add', 'employee_edit']
   };
@@ -2058,10 +2061,6 @@ selectedPermissions: any[] = [];
           this.toastr.success('Role deleted successfully');
           this.getRoles();
         },
-        error: (err) => {
-          this.toastr.error('Failed to delete department');
-          console.error(err);
-        }
       });
     }
   }
@@ -2822,23 +2821,61 @@ const fullList = this.allPermissions[permission?.permissionName as PermissionNam
   });
   this.modalService.open(content115, { size: 'lg' });
 }
- updateSubPermissions(modal: any) {
+  updateSubPermissions(modal: any) {
     const permissionId = this.SubpermissionId;
-    const permissionName = this.permissionName;
-    const description = this.permissionDescription;
-     const selectedKeys = this.editsubPermissionArray.controls
-    .filter(ctrl => ctrl.value.enabled === true)
-    .map(ctrl => ctrl.value.label);
-    const commaSeparated = selectedKeys.join(',');
-    const subPermission = commaSeparated
-    this.switchService.updateSubPermission(permissionId,subPermission).subscribe({
-      next: (res: any) => {
+    const selectedKeys = this.editsubPermissionArray.controls
+      .filter(ctrl => ctrl.value.enabled === true)
+      .map(ctrl => ctrl.value.label.trim());
+    const subPermission = selectedKeys.join(',');
+    this.switchService.updateSubPermission(permissionId, subPermission).subscribe({
+      next: () => {
         this.toastr.success('SubPermissions updated successfully');
         this.getAllPermissions();
-        modal.close()
-      },
+        this.getAssignedDeptRolePermissions();
+        this.refreshUserAccess();
+        modal.close();
+      }
     });
   }
+
+  refreshUserAccess() {
+    const email = JSON.parse(this.userData || '{}')?.email;
+    if (!email) return;
+
+    this.switchService.getUserAccess(email).subscribe({
+      next: (res: any) => {
+        const formatted: Record<string, boolean> = {};
+
+        (res?.departments || []).forEach((dept: any) => {
+          (dept?.roles || []).forEach((role: any) => {
+
+            const perms = role?.permissions || {};
+
+            Object.keys(perms).forEach(permissionName => {
+              formatted[permissionName] = true;
+
+              const subString = perms[permissionName];
+              if (!subString) return;
+
+              subString
+                .split(',')
+                .map((s: string) => s.trim())
+                .filter(Boolean)
+                .forEach((sub: string) => {
+                  formatted[`${permissionName}_${sub}`] = true;
+                });
+            });
+
+          });
+        });
+
+        localStorage.setItem('userAccess', JSON.stringify(formatted));
+        console.log('Updated userAccess', formatted);
+      }
+    });
+  }
+
+
 
   hasPermission(key: string): boolean {
   return this.userPermissionSet.has(key);

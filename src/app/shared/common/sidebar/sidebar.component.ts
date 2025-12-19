@@ -67,13 +67,18 @@ export class SidebarComponent implements AfterViewInit {
     });
      combineLatest([
     this.navServices.adonaiRole$,
-    this.navServices.crmRole$
-    ]).subscribe(([adonaiRole, crmRole]: [string, string]) => {
-      this.adonaiRole = adonaiRole;
-      this.crmRole = crmRole;
-      this.buildMenu();
-    });
+    this.navServices.crmRole$,
+    this.switchService.userAccess$  
+  ]).subscribe(([adonaiRole, crmRole, access]) => {
+
+    this.adonaiRole = adonaiRole;
+    this.crmRole = crmRole;
+    this.access = access;
+
+    this.buildMenu();
+  });
    
+    
   
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -96,60 +101,44 @@ export class SidebarComponent implements AfterViewInit {
   }
   
   buildMenu(): void {
-  this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
-  this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
+    this.menuitemsSubscribe$ = this.navServices.items.subscribe((items) => {
 
-    items.forEach((item: any) => {
-      switch (item.title) {
+      items.forEach((item: any) => {
 
-        case 'CRM':
-          item.isVisible = !!this.access.CRM;
-          break;
+        switch (item.title) {
+          case 'CRM':
+            item.isVisible = !!this.access.CRM;
+            break;
 
-        case 'Projects':
-          item.isVisible = !!this.access.Projects;
-          break;
+          case 'Projects':
+            item.isVisible = !!this.access.Projects;
+            break;
 
-        case 'Dashboard':
-          item.isVisible = true;
-          break;
-        case 'Tasks':
-        // case 'Knowledge':
-        // case 'optimizer':
-        //   item.isVisible = true;
-        //   break;
+          case 'Dashboard':
+            item.isVisible = true;
+            break;
 
-        default:
-          if (!item.children) item.isVisible = item.isVisible ?? false;
-          break;
-      }
-      if (item.children && item.children.length > 0) {
+          default:
+            item.isVisible = false;
+            break;
+        }
 
-        item.children.forEach((child: any) => {
+        if (item.children?.length) {
+          item.children.forEach((child: any) => {
+            child.isVisible = child.permissionKey
+              ? !!this.access[child.permissionKey]
+              : false;
+          });
 
-          if (child.permissionKey) {
-            child.isVisible = !!this.access[child.permissionKey];
-          } 
-           if (item.children && item.children.length > 0) {
-        item.children.forEach((child: any) => {
-          
-          child.isVisible = child.permissionKey 
-                              ? !!this.access[child.permissionKey] 
-                              : false; 
+          item.isVisible = item.children.some((c: any) => c.isVisible);
+        }
 
-        });
-        item.isVisible = item.children.some((c: any) => c.isVisible);
-      }
+      });
 
-        });
-        item.isVisible = item.children.some((c: any) => c.isVisible);
-      }
-
+      this.menuItems = items;
     });
+  }
 
-    this.menuItems = items;
-  });
-}
 
 
 
