@@ -77,7 +77,6 @@ export class CampaignsComponent extends BaseComponent {
     if(this.adoanAiRole == 'ADMIN'|| this.userType == 1){
       this.getCampaignData();
     }
-    // this.getCampaignData();
     if(this.userType == 2){
       this.getCampaignSecific();
     }

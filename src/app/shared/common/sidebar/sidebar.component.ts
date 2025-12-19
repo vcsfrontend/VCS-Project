@@ -73,7 +73,7 @@ export class SidebarComponent implements AfterViewInit {
       this.crmRole = crmRole;
       this.buildMenu();
     });
-
+   
   
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

@@ -91,7 +91,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   selectedFile: File | null = null; previewUrl: string | ArrayBuffer | null = null; projectId: any;
   selectedProjectId: string = ''; selectedProjectName: string = '';  selectedProjectStage: string = '';
   selectedProjectArea: string = '';recceList: any[] = [];selectedStageTab: string = '';
-    filteredRecce: any[] = [];recceStagesList: string[] = [];
+  filteredRecce: any[] = [];recceStagesList: string[] = [];access : any;
   myProjectDataSource = new MatTableDataSource<any>();
   eliteDataSource = new MatTableDataSource<any>();
   @ViewChild('picker') picker: any;
@@ -202,6 +202,10 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     this.modalService.open(content11, { size: 'lg' },);
   }
   VerticallyScrol(content12: any) {
+    if (!this.hasPermission('Projects_project_estimation')) {
+      this.toastr.warning('Access Denied: You do not have the required permission to add the project estimation amount');
+      return;
+    }
     if (this.pmntStageLst?.f1 == '' || this.pmntStageLst?.f1 == null) {
       alert('Please add payment stages before adding project Estimation')
     } else if (this.pmntStageLst?.f1Percent == 0) {
@@ -227,6 +231,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     if (this.userRole === 'ADMIN') {
       this.displayedColumns.push('assign');
     }
+    this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
     const payload = {
       email: JSON.parse(this.userDetails)?.email,
       type: JSON.parse(this.userDetails)?.type,
@@ -2116,6 +2121,10 @@ downloadButtons: { label: string; url: string }[] = [];
   }
 
   goToBoq(element: any) {
+    if (!this.hasPermission('Projects_recce_access')) {
+      this.toastr.warning('Access Denied: You do not have the required permission to view the BOQ for this project');
+      return;
+    }
     localStorage.setItem('selectedTab', '1'); 
     this.router.navigate(
       ['/dashboard/boq'],
@@ -2282,5 +2291,17 @@ getRecceData() {
     this.createProjectForm.patchValue({ projectStartDate: formatted });
     this.picker.close();
   }
-    
+  hasPermission(key: string): boolean {
+  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
+  return !!access[key];
+  }
+
+  onAssignClick(modal: any, element: any) {
+  
+  if (!this.access.Projects_project_assign) {
+    this.toastr.warning('You do not have access to assign this project');
+    return;
+  }
+  this.assignToUser(modal, element);
+  }
 }

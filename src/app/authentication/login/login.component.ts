@@ -296,9 +296,9 @@ getUsersAccess(email:string) {
 
       });
     });
-
+    console.log('permisions',formatted);
     localStorage.setItem("userAccess", JSON.stringify(formatted));
-    window.location.reload();
+    // window.location.reload();
   }
     });
   }

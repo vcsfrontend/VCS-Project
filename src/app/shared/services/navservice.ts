@@ -514,7 +514,6 @@ export class NavService implements OnDestroy {
         path: '/dashboard/appointments',
         permissionKey : 'CRM_appointment_access'
         },
-
         {
           title: 'Clients',
           icon: 'bi-suitcase-lg side-menu__icon',
@@ -804,4 +803,5 @@ export class NavService implements OnDestroy {
     this.crmRole$.next(role);
   }
 
+  
 }

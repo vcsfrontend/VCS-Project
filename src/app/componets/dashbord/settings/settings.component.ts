@@ -115,10 +115,10 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       'campaign_edit','leads_stage_status','lead_mail_template_creation','appointmnet_creation','campaign_access','leads_allocate',
       'completion_lead','leads_move_campaign','analytics_display','Campaign_Users','leads_view','deals_view','deals_mail_create','deals_mail_teamplet_create',
       'deals_campaign_move','deals_appointment','deals_task_create','leads_task_create','deal_completion','deals_analytics','deals_allocate','campaign_users_dispaly',
-      'users_dispaly'
+      'users_dispaly','task_edit'
       
     ],
-    Projects :['project_create','project_delete','project_update'],
+    Projects :['project_create','Top_Projects','my_projects_table','add_project_stage','view_project_cycle','recce_access','project_assign','project_estimation'],
     SALES: ['products_add', 'products_edit'],
     HR: ['employee_add', 'employee_edit']
   };
