@@ -2199,7 +2199,7 @@
                         class="nav nav-tabs flex-column nav-style-5 gap-3 sidebar-container" role="tablist">
                         <ng-container ngbNavItem="Home">
                             <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="false"><i class="bi bi-clipboard-data side-menu__icon me-1"></i>Departments</a>
+                                aria-selected="false" (click)="getAllDepartments()"><i class="bi bi-clipboard-data side-menu__icon me-1"></i>Departments</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="card custom-card">
@@ -2530,7 +2530,7 @@
                         </ng-container>
                          <ng-container ngbNavItem="About">
                             <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="false"><i class="bi bi-person side-menu__icon me-1"></i>Roles</a>
+                                aria-selected="false" (click)="getRoles()"><i class="bi bi-person side-menu__icon me-1"></i>Roles</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -2628,7 +2628,7 @@
                         </ng-container>
                         <ng-container ngbNavItem="Services">
                             <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true"><i class="bx bx-lock-alt me-1"></i>Permissions</a>
+                                aria-selected="true" (click)="getAllPermissions()"><i class="bx bx-lock-alt me-1"></i>Permissions</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="col-lg-12">
@@ -2726,7 +2726,7 @@
                         </ng-container>
                         <ng-container ngbNavItem="departments">
                             <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true">
+                                aria-selected="true" (click)="getUsersAccess()">
                                 <i class="bi bi-shield-check side-menu__icon me-1"></i>Department Access Overview</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">

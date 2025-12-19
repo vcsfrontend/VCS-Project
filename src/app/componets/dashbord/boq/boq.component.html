@@ -1518,8 +1518,10 @@
                                                                             <div class="card-header d-flex flex-wrap align-items-center justify-content-between">
                                                                                 <div class="d-flex align-items-center gap-2">
                                                                                     <div class="card-title">{{ key | titlecase }}</div>
-                                                                                    <button type="button" class="btn btn-outline-primary btn-sm btn-wave" (click)="moveToRoom(content22)"
-                                                                                        *ngIf="currentRoomName !== 'All' && roomNameList.length > 1">
+                                                                                    <button type="button" class="btn btn-outline-primary btn-sm btn-wave" (click)="moveToRoom(content22)" *ngIf="
+                                                                                        currentRoomName !== 'All' &&
+                                                                                        roomNameList.length > 1 &&
+                                                                                        hasPermission('Projects_create_proposal')">
                                                                                         <i class="bi bi-arrows-move"></i>
                                                                                     </button>
                                                                                 </div>

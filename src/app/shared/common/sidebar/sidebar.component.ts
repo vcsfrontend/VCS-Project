@@ -9,7 +9,7 @@ import {
   
 } from '@angular/core';
 import { Menu, NavService } from '../../services/navservice';
-import { Subscription, fromEvent,combineLatest  } from 'rxjs';
+import { Subscription, fromEvent,combineLatest, takeUntil, Subject  } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 import { checkHoriMenu } from './sidebar';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -23,6 +23,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class SidebarComponent implements AfterViewInit {
   //////
+  private destroy$ = new Subject<void>();
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage ? JSON.parse(this.userDataStorage) : null;
   userEmail: string = this.userData ? this.userData.email : '';
@@ -57,26 +58,32 @@ export class SidebarComponent implements AfterViewInit {
       });
     });
   }
-  ngOnInit():void {
-    this.navServices.adonaiRole$.subscribe(val => {
-      this.adonaiRole = val;
+  ngOnInit(): void {
+
+  // 1️⃣ Subscribe to menu items ONCE
+  this.navServices.items
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(items => {
+      this.menuItems = items;
+      this.applyPermissions(); 
     });
 
-    this.navServices.crmRole$.subscribe(val => {
-      this.crmRole = val;
-    });
-     combineLatest([
+  // 2️⃣ React to role + permission changes
+  combineLatest([
     this.navServices.adonaiRole$,
     this.navServices.crmRole$,
-    this.switchService.userAccess$  
-  ]).subscribe(([adonaiRole, crmRole, access]) => {
+    this.switchService.userAccess$
+  ])
+  .pipe(takeUntil(this.destroy$))
+  .subscribe(([adonaiRole, crmRole, access]) => {
 
     this.adonaiRole = adonaiRole;
     this.crmRole = crmRole;
     this.access = access;
 
-    this.buildMenu();
+    this.applyPermissions(); // 🔥 live update (NO logout)
   });
+
    
     
   
@@ -616,6 +623,42 @@ hasPermission(key: string | undefined): boolean {
   if (!key) return true;
   return !!this.access[key];
 }
+
+applyPermissions(): void {
+  if (!this.menuItems?.length) return;
+
+  this.menuItems.forEach((item: any) => {
+
+    switch (item.title) {
+      case 'CRM':
+        item.isVisible = !!this.access.CRM;
+        break;
+
+      case 'Projects':
+        item.isVisible = !!this.access.Projects;
+        break;
+
+      case 'Dashboard':
+        item.isVisible = true;
+        break;
+
+      default:
+        item.isVisible = false;
+        break;
+    }
+
+    if (item.children?.length) {
+      item.children.forEach((child: any) => {
+        child.isVisible = child.permissionKey
+          ? !!this.access[child.permissionKey]
+          : false;
+      });
+
+      item.isVisible = item.children.some((c: any) => c.isVisible);
+    }
+  });
+}
+
 
 
 }

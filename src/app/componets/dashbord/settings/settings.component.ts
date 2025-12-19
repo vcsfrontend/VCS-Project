@@ -120,7 +120,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
     ],
     Projects :['project_create','Top_Projects','my_projects_table','add_project_stage','view_project_cycle','recce_access','project_assign','project_estimation', 'recce_stage', 'design_stage', 
       'boq_stage', 'project_scope', 'payments_from_client',  'client_invoice', 'client_orders', 'proposal_for_client', 'project_boq_data','cut_list', 'create_proposal', 'custom_element', 
-      'import_items', 'proposal_approve', 'proposal_share', 'cutlist_change','cutlist_download', 
+      'import_items', 'proposal_approve', 'proposal_share', 'cutlist_change','cutlist_download', 'move_item' 
     ],
     SALES: ['products_add', 'products_edit'],
     HR: ['employee_add', 'employee_edit']
@@ -289,13 +289,10 @@ selectedPermissions: any[] = [];
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
-    this.getRoles();
     this.getAllDepartments();
-    this.getAllPermissions();
     this.getAssignedRoles();
     this.getAssignedDeptRolePermissions();
     this.getAssignedUsers();
-    this.getUsersAccess();
     this.adminAccessAllUsers();
     this.buildDepartmentView();
     this.getOptimizerCut();
@@ -2477,22 +2474,36 @@ selectedPermissions: any[] = [];
   }
   getAssignedDeptRolePermissions(assignedRoleIds?: number[]) {
     const companyCode = JSON.parse(this.userData)?.companyCode;
-    const idsToUse = assignedRoleIds && assignedRoleIds.length > 0 ? assignedRoleIds : this.assignedRoleIds;
+    const idsToUse =
+      assignedRoleIds && assignedRoleIds.length > 0
+        ? assignedRoleIds
+        : this.assignedRoleIds;
 
     if (!idsToUse || idsToUse.length === 0) {
       return;
     }
+
     this.switchService.getAssignPermissions(idsToUse, companyCode).subscribe({
-      next: (res) => {
-        this.assignedPermissionLst = res;
-        this.filteredPermissionList = this.assignedPermissionLst;
+      next: (res: any[]) => {
+        const uniqueMap = new Map<string, any>();
+        res.forEach(item => {
+          const key = `${item.departmentRoleId}_${item.permissionId}`;
+          if (!uniqueMap.has(key)) {
+            uniqueMap.set(key, item);
+          }
+        });
+        this.assignedPermissionLst = Array.from(uniqueMap.values());
+        this.filteredPermissionList = [...this.assignedPermissionLst];
         if (this.assignedPermissionLst.length > 0) {
-          this.permissiondeptroleId = this.assignedPermissionLst[0].departmentRoleId;
-          this.assignPermissionId = this.assignedPermissionLst[0].permissionId;
+          this.permissiondeptroleId =
+            this.assignedPermissionLst[0].departmentRoleId;
+          this.assignPermissionId =
+            this.assignedPermissionLst[0].permissionId;
         }
       }
     });
   }
+
   deleteAssignPermission(assignedPermission: any) {
     const deptRoleId = assignedPermission?.departmentRoleId || assignedPermission?.depRoleId;
     const permissionId = assignedPermission?.permissionId || assignedPermission?.id;
