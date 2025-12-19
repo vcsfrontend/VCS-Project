@@ -8,6 +8,8 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class SwitherService {
+  private userAccessSubject = new BehaviorSubject<Record<string, boolean>>({});
+  userAccess$ = this.userAccessSubject.asObservable();
   openOffcanvas$: any; userInfoCache: any = null; profilePic: string | null = null;
   userName: string | null = null;
   userInfoLoaded: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -20,6 +22,10 @@ export class SwitherService {
       this.userName =
         this.userInfoCache?.name || this.userInfoCache?.username || null;
       this.userInfoLoaded.next(true);
+    }
+    const stored = localStorage.getItem('userAccess');
+    if (stored) {
+      this.userAccessSubject.next(JSON.parse(stored));
     }
   }
 
@@ -302,7 +308,18 @@ export class SwitherService {
 
   getUserAccess(email :any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/${email}/access`); }  
 
-  
+  setUserAccess(access: Record<string, boolean>) {
+    localStorage.setItem('userAccess', JSON.stringify(access));
+    this.userAccessSubject.next(access);
+  }
+
+  hasPermission(key: string): boolean {
+    return !!this.userAccessSubject.value[key];
+  }
+  clearUserAccess() {
+    localStorage.removeItem('userAccess');
+    this.userAccessSubject.next({});
+  }
   
   createRecce(data: any): Observable<any> {
     const formData = new FormData();

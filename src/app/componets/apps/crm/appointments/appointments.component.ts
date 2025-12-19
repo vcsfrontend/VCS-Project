@@ -505,9 +505,9 @@ private getDefaultColor(str: string): string {
     if (!mobile) return "";
     return Number(mobile).toFixed(0);
   }
-  hasPermission(key: string): boolean {
-  const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
-  return !!access[key];
+  hasPermission(key?: string): boolean {
+    if (!key) return true;
+    return this.switchService.hasPermission(key);
   }
 
 }

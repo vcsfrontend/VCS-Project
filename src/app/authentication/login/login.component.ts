@@ -259,47 +259,39 @@ preventCopyPaste(event: ClipboardEvent): void {
   //   timeOut: 3000, positionClass: 'toast-top-right' });
 }
 
-getUsersAccess(email:string) {
-    const user = JSON.parse(this.userData || '{}');   
-   
-    if (!email) {
-      return;
-    }
+  getUsersAccess(email: string) {
     if (!email) return;
+
     this.switchService.getUserAccess(email).subscribe({
-       next: (res: any) => {
+      next: (res: any) => {
 
-    const formatted: any = {};
-   
-    // Loop departments
-    res.departments.forEach((dept: any) => {
-      // Loop roles
-      dept.roles.forEach((role: any) => {
+        const formatted: Record<string, boolean> = {};
 
-        const perms = role.permissions; // this is an object
+        (res?.departments || []).forEach((dept: any) => {
+          (dept?.roles || []).forEach((role: any) => {
 
-        // Example perms = { Projects: "project_delete", CRM: "leads_add,deals_add" }
+            const perms = role?.permissions || {};
 
-        Object.keys(perms).forEach(permissionName => {
-          
-          // Store main permission
-          formatted[permissionName] = true;  
+            Object.keys(perms).forEach(permissionName => {
+              formatted[permissionName] = true;
 
-          const subString = perms[permissionName]; // e.g. "leads_add,deals_add"
+              perms[permissionName]
+                ?.split(',')
+                .map((s: string) => s.trim())
+                .filter(Boolean)
+                .forEach((sub: string) => {
+                  formatted[`${permissionName}_${sub}`] = true;
+                });
+            });
 
-          const subList = subString.split(',');  // convert to array
-
-          subList.forEach((sub:any) => {
-            formatted[`${permissionName}_${sub}`] = true;
           });
         });
 
-      });
-    });
-    console.log('permisions',formatted);
-    localStorage.setItem("userAccess", JSON.stringify(formatted));
-    // window.location.reload();
-  }
+        console.log('permissions', formatted);
+
+        // 🔥 THIS FIXES LOGOUT ISSUE
+        this.switchService.setUserAccess(formatted);
+      }
     });
   }
 

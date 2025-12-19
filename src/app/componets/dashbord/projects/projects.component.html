@@ -517,7 +517,9 @@
                     <ng-container matColumnDef="projectEstimation">
                         <th mat-header-cell *matHeaderCellDef>Project Estimation</th>
                         <td mat-cell *matCellDef="let element" data-bs-toggle="modal" data-bs-target="#exampleModalLg" class="clickable-col"
-                            (click)="VerticallyScrol(Content12); fetchPaymentStages(element)">
+                            (click)="VerticallyScrol(Content12); fetchPaymentStages(element)"
+                            [class.disabled]="!access.Projects_project_estimation"
+                            [attr.aria-disabled]="!access.Projects_project_estimation">
                             {{element.projectEstimation}} </td>
                     </ng-container>
                     <ng-container matColumnDef="projectArea">
@@ -534,7 +536,7 @@
                         <td mat-cell *matCellDef="let element"> {{element.projectEndDate | date:'dd-MM-yyyy'}}
                             ({{calculateDateDifference(element.projectEndDate)}}) </td>
                     </ng-container>
-                    <ng-container matColumnDef="assign" *ngIf="userRole === 'ADMIN'">
+                    <ng-container matColumnDef="assign">
                         <th mat-header-cell *matHeaderCellDef>Asign To User</th>
                         <td mat-cell *matCellDef="let element">
                             <button class="btn btn-primary btn-sm shadow d-flex align-items-center justify-content-center px-3 px-1"

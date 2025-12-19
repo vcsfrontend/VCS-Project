@@ -3006,19 +3006,24 @@ closeAllDropdowns() {
   this.activeNavId = nextId;
   this.currentRoomName = this.tabKeys[nextId - 1];
 }
-getStatusBadge(status: string): string {
-  switch (status) {
-    case 'Approve':
-      return 'bg-success';
-    case 'Pending for Approval':
-      return 'bg-warning text-dark';
-    case 'Rejected':
-      return 'bg-danger';
-    default:
-      return 'bg-secondary';
-  }
-}
+    getStatusBadge(status: string): string {
+        switch (status) {
+            case 'Approve':
+                return 'bg-success';
+            case 'Pending for Approval':
+                return 'bg-warning text-dark';
+            case 'Rejected':
+                return 'bg-danger';
+            default:
+                return 'bg-secondary';
+        }
+    }
 
+
+    hasPermission(key?: string): boolean {
+        if (!key) return true;
+        return this.switchService.hasPermission(key);
+    }
 
 
 
