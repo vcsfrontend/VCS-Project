@@ -698,7 +698,7 @@ selectedPermissions: any[] = [];
           this.initializeDynamicFields();
           this.dynamicFields.length != 0 ? this.showStages = true : this.showStages = false;
         } else {
-          this.toastr.error(res.message)
+          // this.toastr.error(res.message)
         }
       }
     })
@@ -759,13 +759,11 @@ selectedPermissions: any[] = [];
           // this.stageLst = [];
           // this.getAllStages();
           this.showStages = false, this.isStage = false;
-        } else {
-          this.toastr.error(res.message)
-        }
+        } 
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      // error: (error) => {
+      //   this.toastr.error(error.statusText);
+      // },
     })
   }
 
@@ -831,12 +829,10 @@ selectedPermissions: any[] = [];
           if (res) {
             this.toastr.success('Stages saved successfully');
             // this.getAllStages();
-          } else {
+          } 
+          else {
             this.toastr.error(res.message)
           }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
         },
       })
     } else if (totalPercent < 100) {
@@ -864,9 +860,7 @@ selectedPermissions: any[] = [];
           this.toastr.error(res.message)
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+     
     })
   }
 
@@ -888,9 +882,7 @@ selectedPermissions: any[] = [];
             });
           }
         },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+       
       })
     }
   }
@@ -1066,7 +1058,7 @@ selectedPermissions: any[] = [];
           this.toastr.success(res.message);
         } else {
           this.btnDisable = false;
-          this.toastr.error(res.message);
+          // this.toastr.error(res.message);
         }
       }
     })
@@ -1839,9 +1831,7 @@ selectedPermissions: any[] = [];
           this.getProjectConfig();
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
-      }
+     
     });
   }
 
@@ -1866,9 +1856,7 @@ selectedPermissions: any[] = [];
           this.quotationNumber = res.quotationNumber;
         }
       },
-      error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while saving the product.");
-      }
+      
     });
   }
 
@@ -1992,7 +1980,7 @@ selectedPermissions: any[] = [];
       return;
     }
     if (this.isEditmode) {
-      this.updatePermission(modal);
+      this.updateSubPermissions(modal);
     } else {
       this.createPermission(modal);
     }
@@ -2209,23 +2197,23 @@ selectedPermissions: any[] = [];
       }
     });
   }
-  updatePermission(modal: any) {
-    const permissionId = this.permissionId;
-    const permissionName = this.permissionName;
-    const description = this.permissionDescription;
-     const selectedKeys = this.subPermissionArray.controls
-    .filter(ctrl => ctrl.value.enabled === true)
-    .map(ctrl => ctrl.value.key);
-    const commaSeparated = selectedKeys.join(',');
-    const subPermission = commaSeparated
-    // this.switchService.updatePermission(permissionId, permissionName, description,subPermission).subscribe({
-    //   next: (res: any) => {
-    //     this.toastr.success('Department updated successfully');
-    //     this.getAllPermissions();
-    //     modal.close()
-    //   },
-    // });
-  }
+  // updatePermission(modal: any) {
+  //   const permissionId = this.permissionId;
+  //   const permissionName = this.permissionName;
+  //   const description = this.permissionDescription;
+  //    const selectedKeys = this.subPermissionArray.controls
+  //   .filter(ctrl => ctrl.value.enabled === true)
+  //   .map(ctrl => ctrl.value.key);
+  //   const commaSeparated = selectedKeys.join(',');
+  //   const subPermission = commaSeparated
+  //   this.switchService.updatePermission(permissionId, permissionName, description,subPermission).subscribe({
+  //     next: (res: any) => {
+  //       this.toastr.success('Department updated successfully');
+  //       this.getAllPermissions();
+  //       modal.close()
+  //     },
+  //   });
+  // }
   deletePermission(id: number) {
     if (!id) return;
     if (confirm('Are you sure you want to delete this Permission?')) {
@@ -2826,7 +2814,7 @@ const fullList = this.allPermissions[permission?.permissionName as PermissionNam
   });
   this.modalService.open(content115, { size: 'lg' });
 }
-  updateSubPermissions(modal: any) {
+  updateSubPermissions(modal: any,departmentIds?: number[]) {
     const permissionId = this.SubpermissionId;
     const selectedKeys = this.editsubPermissionArray.controls
       .filter(ctrl => ctrl.value.enabled === true)
@@ -2836,7 +2824,15 @@ const fullList = this.allPermissions[permission?.permissionName as PermissionNam
       next: () => {
         this.toastr.success('SubPermissions updated successfully');
         this.getAllPermissions();
-        this.getAssignedDeptRolePermissions();
+         const assignedRoleIds: number[] = Array.from(
+          new Set(
+            this.assignedRoleLst
+              .map((dept: any) => Number(dept?.id))
+              .filter((id: any) => !isNaN(id))
+          )
+        );
+        this.assignedRoleIds = departmentIds;
+        this.getAssignedDeptRolePermissions(assignedRoleIds);
         this.refreshUserAccess();
         modal.close();
       }
