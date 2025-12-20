@@ -295,7 +295,7 @@
                             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
                                 <h6 class="mb-0 fw-bold">Project Details</h6>
                                 <a href="javascript:void(0)" class="btn btn-sm btn-icon btn-wave btn-secondary rounded-circle"
-                                    (click)="openProjectModal(content45, project)">
+                                    (click)="openProjectModal(content45, project)" *ngIf="hasPermission('Projects_edit_design')">
                                     <i class="ri-edit-line"></i>
                                     {{ project.projectId | slice: 0:14 }}
                                 </a>
@@ -1521,7 +1521,7 @@
                                                                                     <button type="button" class="btn btn-outline-primary btn-sm btn-wave" (click)="moveToRoom(content22)" *ngIf="
                                                                                         currentRoomName !== 'All' &&
                                                                                         roomNameList.length > 1 &&
-                                                                                        hasPermission('Projects_create_proposal')">
+                                                                                        hasPermission('Projects_move_item')">
                                                                                         <i class="bi bi-arrows-move"></i>
                                                                                     </button>
                                                                                 </div>
@@ -2219,9 +2219,12 @@
                         <textarea class="form-control" formControlName="description" rows="11"></textarea>
                     </div>
                     <div class="col-xl-6">
-                        <label class="form-label">Widht</label>
+                        <label class="form-label">Width</label>
                         <input type="number" class="form-control" formControlName="length" placeholder="Enter Length"
                            min="0" (keydown)="blockMinus($event)">
+                        <div *ngIf="elementForm.get('length')?.touched && elementForm.get('length')?.hasError('required')" class="text-danger fs-14">
+                            Width is required when UOM is MM
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Depth</label>
@@ -2232,11 +2235,17 @@
                         <label class="form-label">Height</label>
                         <input type="number" class="form-control" formControlName="height" placeholder="Enter Height"
                            min="0" (keydown)="blockMinus($event)">
+                        <div *ngIf="elementForm.get('height')?.touched && elementForm.get('height')?.hasError('required')" class="text-danger fs-14">
+                            height is required when UOM is MM
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Client Rate (₹)</label>
                         <input type="number" class="form-control" formControlName="clientRate"
-                            placeholder="Enter Client Rate">
+                            placeholder="Enter Client Rate" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['clientRate'].errors }">
+                        <div *ngIf="elementFormSubmitted && es['clientRate'].errors" class="invalid-feedback">
+                            <div *ngIf="es['clientRate'].errors['required']">clientRate is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Code & Category</label>
@@ -2256,13 +2265,19 @@
                     <div class="col-xl-6">
                         <label class="form-label">UOM</label>
                         <ng-select [items]="UOM" bindLabel="name" bindValue="name" placeholder="Select any"
-                            formControlName="uom">
+                            formControlName="uom" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['uom'].errors }">
                         </ng-select>
+                        <div *ngIf="elementFormSubmitted && es['uom'].errors" class="invalid-feedback">
+                            <div *ngIf="es['uom'].errors['required']">uom is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Quantity</label>
                         <input type="number" class="form-control" formControlName="quantity" placeholder="Enter Quantity" min="0"
-                            (keydown)="blockMinus($event)">
+                            (keydown)="blockMinus($event)" [ngClass]="{ 'is-invalid': elementFormSubmitted && es['quantity'].errors }">
+                        <div *ngIf="elementFormSubmitted && es['quantity'].errors" class="invalid-feedback">
+                            <div *ngIf="es['quantity'].errors['required']">Quantity is required</div>
+                        </div>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Item Type</label>

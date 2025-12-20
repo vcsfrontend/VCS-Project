@@ -88,7 +88,7 @@ export class BoqComponent extends BaseComponent {
     showLeftArrow = false;showRightArrow = false; pannelResponse: any[] = [];
     project : any; boqLoaded = false; allowBoqRun = false; boqAvailable: boolean | null = null; 
     activeInnerTab = 'scope';  activeScopeTab = 1; private isInitialLoad = true; private tabLoaded = false;
-    elementUrl: string | null = null;  
+    elementUrl: string | null = null;finalAmount : number =0;
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     activeTableSource = new MatTableDataSource<any>();
@@ -328,10 +328,10 @@ export class BoqComponent extends BaseComponent {
             length: [0, [Validators.min(0)]],
             breadth: [0, [Validators.min(0)]],
             height: [0, [Validators.min(0)]],
-            quantity: [0, [Validators.min(1)]],
-            uom: [''],
+            quantity: [0, [Validators.min(1),Validators.required]],
+            uom: ['',Validators.required],
             draftQuantity: [0,[Validators.min(1)]],
-            clientRate: [0,[Validators.min(0)]],
+            clientRate: [0,[Validators.min(0),Validators.required]],
             finalAmount: [0],
             brandOrMake: [''],
             discount: [0,[Validators.min(0)]],
@@ -347,6 +347,13 @@ export class BoqComponent extends BaseComponent {
             companyCode: this.userCompanyCode,
             email: this.userEmail,
             type: this.userType
+        });
+        this.elementForm.get('uom')?.valueChanges.subscribe(uom => {
+            this.toggleDimensionFields(uom);
+            this.calculateFinalAmount();
+        });
+        this.elementForm.valueChanges.subscribe(() => {
+            this.calculateFinalAmount();
         });
         this.proposalForm = this.fb.group({
             margin:[''],
@@ -1150,8 +1157,8 @@ closeAllDropdowns() {
             this.toastr.warning('Please fill in all required fields.');
             return;
         }
+         const formData = new FormData();
         const formValue = this.elementForm.value;
-        const formData = new FormData();
         let elementNameAndDescription = '';
         if (formValue.elementName?.trim()) {
             elementNameAndDescription = `Name : ${formValue.elementName.trim()}`;
@@ -1164,13 +1171,13 @@ closeAllDropdowns() {
         }
         formData.append('elementNameAndDescription', elementNameAndDescription);
         formData.append('budgetRate', String(formValue.budgetRate || 0));
-        formData.append('clientRate', String(formValue.clientRate || 0));
-        formData.append('gstPrecent', String(formValue.gstPrecent || 0));
-        formData.append('hsn', String(formValue.hsn || 0));
-        formData.append('breadth', String(formValue.breadth || 0));
-        formData.append('height', String(formValue.height || 0));
-        formData.append('length', String(formValue.length || 0));
-        formData.append('quantity', String(formValue.quantity || 1));
+        formData.append('clientRate', String(Number(formValue.clientRate || 0)));
+        formData.append('gstPrecent', String(Number(formValue.gstPrecent || 0)));
+        formData.append('hsn', String(Number(formValue.hsn || 0)));
+        formData.append('breadth', String(Number(formValue.breadth || 0)));
+        formData.append('height', String(Number(formValue.height || 0)));
+        formData.append('length', String(Number(formValue.length || 0)));
+        formData.append('quantity', String(Number(formValue.quantity || 1)));
         formData.append('uom', formValue.uom || '');
         formData.append('elementUrl', this.elementUrl || '');
         formData.append('imageUploadFrom', 'manual');
@@ -1183,12 +1190,16 @@ closeAllDropdowns() {
         formData.append('companyCode', this.userCompanyCode);
         formData.append('email', this.userEmail);
         formData.append('type', this.userType);
+        formData.append('finalAmount', String(Number(this.finalAmount || 0)));
+
+        
         if (this.imageFile) {
             formData.append('image', this.imageFile);
         }
-        formData.forEach((value, key) => {
-            console.log(key, value);
-        });
+        // formData.forEach((value, key) => {
+        //     console.log(key, value);
+        // });
+       
         this.switchService.saveElementData(formData).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -1201,8 +1212,6 @@ closeAllDropdowns() {
             }
         });
     }
-
-
 
     saveLibraryItem() {
         if (this.selectedItems.length === 0) {
@@ -1237,7 +1246,6 @@ closeAllDropdowns() {
             height: item.dimensions?.height || 0,
             designId: this.designingId
         };
-        console.log(payload);
         this.switchService.saveElementData(payload).subscribe({
             next: (res: any) => {
                if (res?.status === true) {
@@ -1423,7 +1431,6 @@ closeAllDropdowns() {
             designId: this.designingId,
             clientDataJs: JSON.stringify(clientDataToSend),
         };
-        console.log('creation form payload', proposalPayload);
         this.updateElementsAndCreateProposal(proposalPayload, modal);
     }
     private updateElementsAndCreateProposal(proposalPayload: any, modal: any) {
@@ -3035,6 +3042,79 @@ closeAllDropdowns() {
     hasPermission(key?: string): boolean {
         if (!key) return true;
         return this.switchService.hasPermission(key);
+    }
+    calculateFinalAmount(): void {
+        const {
+            uom,
+            length,
+            height,
+            quantity,
+            clientRate
+        } = this.elementForm.getRawValue();
+        let amount = 0;
+
+        if (uom === 'Lumpsum') {
+            amount = quantity * clientRate;
+        }
+
+        if (uom === 'MM' && length > 0 && height > 0) {
+            amount = (length * height / 92903) * clientRate * quantity;
+        }
+        if (uom === 'SQFT' && length > 0 && height > 0) {
+            amount = (length * height) * clientRate * quantity;
+        }
+        if (uom === 'Nos') {
+            amount = clientRate * quantity;
+        }
+        if (uom === 'RFT') {
+            amount = length * clientRate;
+        }
+
+        this.finalAmount = Number(amount);
+
+    }
+    toggleDimensionFields(uom: string): void {
+        const lengthCtrl = this.elementForm.get('length');
+        const heightCtrl = this.elementForm.get('height');
+
+        const uomValue = uom?.toLowerCase();
+        if (!uom) {
+            lengthCtrl?.enable({ emitEvent: false });
+            heightCtrl?.enable({ emitEvent: false });
+            return;
+        }
+        if(uomValue === 'rft'){
+            lengthCtrl?.enable({ emitEvent: false });
+        }
+        if (uomValue === 'mm') {
+            lengthCtrl?.enable({ emitEvent: false });
+            heightCtrl?.enable({ emitEvent: false });
+
+            lengthCtrl?.setValidators([Validators.required, Validators.min(1)]);
+            heightCtrl?.setValidators([Validators.required, Validators.min(1)]);
+        } 
+        else if (uomValue === 'rft') {
+            lengthCtrl?.enable({ emitEvent: false });
+            heightCtrl?.disable({ emitEvent: false });
+
+            lengthCtrl?.clearValidators();
+            heightCtrl?.clearValidators();
+
+            heightCtrl?.setValue(0, { emitEvent: false });
+        }
+        else {
+            lengthCtrl?.clearValidators();
+            heightCtrl?.clearValidators();
+
+            lengthCtrl?.setValue(0, { emitEvent: false });
+            heightCtrl?.setValue(0, { emitEvent: false });
+
+            lengthCtrl?.disable({ emitEvent: false });
+            heightCtrl?.disable({ emitEvent: false });
+        }
+
+        lengthCtrl?.updateValueAndValidity({ emitEvent: false });
+        heightCtrl?.updateValueAndValidity({ emitEvent: false });
     }
 
 
