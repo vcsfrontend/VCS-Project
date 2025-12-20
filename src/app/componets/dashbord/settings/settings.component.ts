@@ -115,12 +115,12 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       'campaign_edit','leads_stage_status','lead_mail_template_creation','appointmnet_creation','campaign_access','leads_allocate',
       'completion_lead','leads_move_campaign','analytics_display','Campaign_Users','leads_view','deals_view','deals_mail_create','deals_mail_teamplet_create',
       'deals_campaign_move','deals_appointment','deals_task_create','leads_task_create','deal_completion','deals_analytics','deals_allocate','campaign_users_dispaly',
-      'users_dispaly','task_edit'
+      'users_dispaly','task_edit', 'task_access', 'client_access', 'appointment_access'
       
     ],
-    Projects :['project_create','Top_Projects','my_projects_table','add_project_stage','view_project_cycle','recce_access','project_assign','project_estimation', 'recce_stage', 'design_stage', 
+    Projects :['project_create','Top_Projects','my_projects_table','add_project_stage','view_project_cycle','recce_access','project_assign','project_estimation', 'recce_stage', 'design_stage', 'edit_design',
       'boq_stage', 'project_scope', 'payments_from_client',  'client_invoice', 'client_orders', 'proposal_for_client', 'project_boq_data','cut_list', 'create_proposal', 'custom_element', 
-      'import_items', 'proposal_approve', 'proposal_share', 'cutlist_change','cutlist_download', 'move_item' 
+      'import_items', 'proposal_approve', 'proposal_share', 'cutlist_change','cutlist_download', 'move_item',
     ],
     SALES: ['products_add', 'products_edit'],
     HR: ['employee_add', 'employee_edit']
@@ -291,9 +291,7 @@ selectedPermissions: any[] = [];
     this.getProjectConfig();
     this.getAllDepartments();
     this.getAssignedRoles();
-    this.getAssignedDeptRolePermissions();
     this.getAssignedUsers();
-    this.adminAccessAllUsers();
     this.buildDepartmentView();
     this.getOptimizerCut();
     this.userEmail = JSON.parse(this.userData).email;
@@ -2094,18 +2092,16 @@ selectedPermissions: any[] = [];
           this.departmentName = res[0].name;
           this.departmentDescription = res[0].description;
         }
-        const departmentIds: number[] = Array.from(
-          new Set(
-            this.departmentList
-              .map((dept: any) => Number(dept?.id))
-              .filter((id: any) => !isNaN(id))
-          )
-        );
-        this.departmentIds = departmentIds;
-        this.getAssignedRoles(departmentIds);
       }
     });
   }
+
+  onViewDepartment(department: any) {
+    if (!department?.id) return;
+    this.toggleTable(department);
+    this.getAssignedRoles([department.id]);
+  }
+
 
   updateDepartment(modal: any) {
     const departmentId = this.departmentId;
@@ -2310,7 +2306,6 @@ selectedPermissions: any[] = [];
     );
     this.selectedDepartment = department;
     this.showRoles = true;
-
   }
   showPermissions = false;
   tablePermissionView(assignedRole?: any) {
@@ -2482,7 +2477,6 @@ selectedPermissions: any[] = [];
     if (!idsToUse || idsToUse.length === 0) {
       return;
     }
-
     this.switchService.getAssignPermissions(idsToUse, companyCode).subscribe({
       next: (res: any[]) => {
         const uniqueMap = new Map<string, any>();
