@@ -202,7 +202,7 @@
                                                                         <a class="text-primary fw-semibold small d-inline-flex align-items-center gap-1 cu"
                                                                             *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)"
                                                                             (click)="openRecce(content44, recce.recceStage)">
-                                                                          + Upload Images
+                                                                          + Upload Images 
                                                                         </a>
                                                                     </div>
                                                                     <div class="row g-3 mt-2 pt-2" style="max-height: 270px; overflow-y:auto;">
@@ -215,7 +215,7 @@
                                                                                 <div class="gallery-actions hover-show icon-bg d-flex gap-2">
                                                                                     <i class="bi bi-plus-circle text-white fs-6" (click)="onAdd(i);$event.stopPropagation()"></i>
                                                                                     <i class="bi bi-download text-white fs-6" (click)="downloadImage(img);$event.stopPropagation()"></i>
-                                                                                    <i class="bi bi-trash text-danger fs-6" (click)="deleteImage(recce, i);$event.stopPropagation()"></i>
+                                                                                    <!-- <i class="bi bi-trash text-danger fs-6" (click)="deleteImage(recce, i);$event.stopPropagation()"></i> -->
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -2216,7 +2216,7 @@
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Element Description</label>
-                        <textarea class="form-control" formControlName="elementDescription" rows="11"></textarea>
+                        <textarea class="form-control" formControlName="description" rows="11"></textarea>
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Widht</label>
@@ -2302,7 +2302,7 @@
                     <div class="col-xl-6">
                         <label class="form-label">Upload Image</label>
                         <div class="d-flex align-items-center gap-3">
-                            <input class="form-control" type="file" (change)="onFileChange($event)" />
+                            <input type="file" class="form-control" accept="image/*" (change)="onFileChange($event)" />
                             <img *ngIf="previewUrl && isEditMode" [src]="previewUrl" alt="Existing Image" class="img-thumbnail"
                                 width="100" />
                         </div>
