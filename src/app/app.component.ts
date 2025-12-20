@@ -32,9 +32,9 @@ export class AppComponent {
       this.switchService.userInfo(this.userEmail)
         .pipe(take(1))
         .subscribe();
+      this.switchService.loadUserAccess(this.userEmail);
     }
   }
-
 
 
 }

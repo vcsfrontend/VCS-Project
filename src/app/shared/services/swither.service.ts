@@ -308,14 +308,45 @@ export class SwitherService {
 
   getUserAccess(email :any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/${email}/access`); }  
 
-  setUserAccess(access: Record<string, boolean>) {
-    localStorage.setItem('userAccess', JSON.stringify(access));
-    this.userAccessSubject.next(access);
+  loadUserAccess(email: string): void {
+    if (!email) return;
+
+    this.getUserAccess(email).subscribe({
+      next: (res: any) => {
+
+        const formatted: Record<string, boolean> = {};
+
+        res?.departments?.forEach((dept: any) => {
+          dept?.roles?.forEach((role: any) => {
+
+            Object.entries(role.permissions || {}).forEach(
+              ([key, value]: any) => {
+
+                formatted[key] = true;
+
+                value?.split(',')
+                  .map((v: string) => v.trim())
+                  .filter(Boolean)
+                  .forEach((sub: string) => {
+                    formatted[`${key}_${sub}`] = true;
+                  });
+              }
+            );
+
+          });
+        });
+
+        localStorage.setItem('userAccess', JSON.stringify(formatted));
+        this.userAccessSubject.next(formatted);
+      },
+      error: () => this.clearUserAccess()
+    });
   }
 
   hasPermission(key: string): boolean {
     return !!this.userAccessSubject.value[key];
   }
+
   clearUserAccess() {
     localStorage.removeItem('userAccess');
     this.userAccessSubject.next({});
