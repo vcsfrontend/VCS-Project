@@ -88,7 +88,7 @@ export class BoqComponent extends BaseComponent {
     showLeftArrow = false;showRightArrow = false; pannelResponse: any[] = [];
     project : any; boqLoaded = false; allowBoqRun = false; boqAvailable: boolean | null = null; 
     activeInnerTab = 'scope';  activeScopeTab = 1; private isInitialLoad = true; private tabLoaded = false;
-    elementUrl: string | null = null; 
+    elementUrl: string | null = null;  
     // selectedColumns: Set<string> = new Set();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     activeTableSource = new MatTableDataSource<any>();
@@ -128,7 +128,7 @@ export class BoqComponent extends BaseComponent {
     selectedRecce: any; libraryCategoriesList: any[] = []; isRecceEmpty: boolean = false; isDesignNotAssigned: boolean = false;
     designUrl: string = ''; showSubmitButton: boolean = true; isLoadingAssignProjects: boolean = false;
     showDownloadButton = false; isBoqLoading = false;activeNavId: number = 1; currentRoomName: string = 'All';
-    boqChecked = false; hasDesign = false;
+    boqChecked = false; hasDesign = false; 
     setThumbsSwiper(swiper: any) {
         this.thumbsSwiper = swiper;
     }
@@ -315,8 +315,10 @@ export class BoqComponent extends BaseComponent {
         };
         flatpickr('#addignedDate', this.flatpickrOptions);
         this.elementForm = this.fb.group({
+            image: [''],
             elementUrl: [''],
             elementName: [''],
+            description:[''],
             elementDescription: [''],
             codeAndCategory: [''],
             orderStatus: [''],
@@ -1145,43 +1147,49 @@ closeAllDropdowns() {
     elementSubmit() {
         this.elementFormSubmitted = true;
         if (this.elementForm.invalid) {
-            this.toastr.warning("Please fill in all required fields.");
+            this.toastr.warning('Please fill in all required fields.');
             return;
         }
         const formValue = this.elementForm.value;
+        const formData = new FormData();
         let elementNameAndDescription = '';
-        if (formValue.elementName && formValue.elementName.trim()) {
+        if (formValue.elementName?.trim()) {
             elementNameAndDescription = `Name : ${formValue.elementName.trim()}`;
         }
-        if (formValue.brandOrMake && formValue.brandOrMake.trim()) {
+        if (formValue.brandOrMake?.trim()) {
             elementNameAndDescription += `\nBrand : ${formValue.brandOrMake.trim()}`;
         }
-        if (formValue.elementDescription && formValue.elementDescription.trim()) {
-            elementNameAndDescription += `\nDescription : ${formValue.elementDescription.trim()}`;
+        if (formValue.description?.trim()) { 
+            elementNameAndDescription += `\nDescription : ${formValue.description.trim()}`;
         }
-        const payload = {
-            elementNameAndDescription,
-            budgetRate: Number(formValue.budgetRate),
-            clientRate: Number(formValue.clientRate),
-            gstPrecent: Number(formValue.gstPrecent),
-            hsn: Number(formValue.hsn),
-            breadth: Number(formValue.breadth),
-            height: Number(formValue.height),
-            length: Number(formValue.length),
-            quantity: Number(formValue.quantity),
-            uom: formValue.uom || '',
-            elementUrl: this.elementUrl,
-            itemCode: formValue.itemCode || '',
-            roomName: formValue.roomName || '',
-            draftQuantity: Number(formValue.draftQuantity) || 0,
-            codeAndCategory: formValue.codeAndCategory || '',
-            itemType: formValue.itemType || '',
-            designId: this.designingId,
-            companyCode: this.userCompanyCode,
-            email: this.userEmail,
-            type: this.userType
-        };
-        this.switchService.saveElementData(payload).subscribe({
+        formData.append('elementNameAndDescription', elementNameAndDescription);
+        formData.append('budgetRate', String(formValue.budgetRate || 0));
+        formData.append('clientRate', String(formValue.clientRate || 0));
+        formData.append('gstPrecent', String(formValue.gstPrecent || 0));
+        formData.append('hsn', String(formValue.hsn || 0));
+        formData.append('breadth', String(formValue.breadth || 0));
+        formData.append('height', String(formValue.height || 0));
+        formData.append('length', String(formValue.length || 0));
+        formData.append('quantity', String(formValue.quantity || 1));
+        formData.append('uom', formValue.uom || '');
+        formData.append('elementUrl', this.elementUrl || '');
+        formData.append('imageUploadFrom', 'manual');
+        formData.append('itemCode', formValue.itemCode || '');
+        formData.append('roomName', formValue.roomName || '');
+        formData.append('draftQuantity', String(formValue.draftQuantity || 0));
+        formData.append('codeAndCategory', formValue.codeAndCategory || '');
+        formData.append('itemType', formValue.itemType || '');
+        formData.append('designId', this.designingId);
+        formData.append('companyCode', this.userCompanyCode);
+        formData.append('email', this.userEmail);
+        formData.append('type', this.userType);
+        if (this.imageFile) {
+            formData.append('image', this.imageFile);
+        }
+        formData.forEach((value, key) => {
+            console.log(key, value);
+        });
+        this.switchService.saveElementData(formData).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
                     this.toastr.success(res.message || 'Element Saved');
@@ -1193,6 +1201,8 @@ closeAllDropdowns() {
             }
         });
     }
+
+
 
     saveLibraryItem() {
         if (this.selectedItems.length === 0) {
@@ -1665,14 +1675,16 @@ closeAllDropdowns() {
     //     this.displayedColumns = ['select', 'slNo', 'elementUrl', ...Array.from(this.selectedColumns)];
     // }
 
+    imageFile!: File;
+
     onFileChange(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.files && input.files.length > 0) {
-            const file = input.files[0];
-            this.elementUrl = file.name;
-            this.previewUrl = URL.createObjectURL(file);
+            this.imageFile = input.files[0];
         }
     }
+
+
 
 
     libraryDataSource = new MatTableDataSource<any>([

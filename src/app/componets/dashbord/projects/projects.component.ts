@@ -64,7 +64,7 @@ export type ChartOptions = {
 })
 export class ProjectsComponent extends BaseComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['sourceFlag','slNo', 'projectId', 'projectName', 'clientName', 'projStatus', 'projectEstimation',
-    'projectArea', 'projectStartDate', 'projectEndDate',  ];
+    'projectArea', 'projectStartDate', 'projectEndDate', ];
   EliteDisplayedColumn: string[] = ['slNo', 'created', 'planPic', 'name', 'modifiedTime', 'status', 'quotation'];
 
   pjData: any = {}; isSts: boolean = true; submitted: boolean = false; recceSubmitted : boolean = false;
@@ -229,6 +229,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
 
   ngOnInit(): void {
     this.access = JSON.parse(localStorage.getItem('userAccess') || '{}');
+    if (this.access?.Projects_project_assign) {
+      this.displayedColumns.push('assign');
+    }
     const payload = {
       email: JSON.parse(this.userDetails)?.email,
       type: JSON.parse(this.userDetails)?.type,
