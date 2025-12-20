@@ -156,7 +156,6 @@ login() {
           this.navSvc.isCRMApplicable$.next(res.crm);
           this.navSvc.adonaiRole$.next(res.adonaiRole);
           this.navSvc.crmRole$.next(res.crmRole)
-          this.getUsersAccess(this.email);
           this.switchService.userInfo(res.email).subscribe(() => {
             this.router.navigate(['/pages/profile']);
           });
@@ -259,63 +258,8 @@ preventCopyPaste(event: ClipboardEvent): void {
   //   timeOut: 3000, positionClass: 'toast-top-right' });
 }
 
-  getUsersAccess(email: string) {
-    if (!email) return;
-
-    this.switchService.getUserAccess(email).subscribe({
-      next: (res: any) => {
-
-        const formatted: Record<string, boolean> = {};
-
-        (res?.departments || []).forEach((dept: any) => {
-          (dept?.roles || []).forEach((role: any) => {
-
-            const perms = role?.permissions || {};
-
-            Object.keys(perms).forEach(permissionName => {
-              formatted[permissionName] = true;
-
-              perms[permissionName]
-                ?.split(',')
-                .map((s: string) => s.trim())
-                .filter(Boolean)
-                .forEach((sub: string) => {
-                  formatted[`${permissionName}_${sub}`] = true;
-                });
-            });
-
-          });
-        });
-
-        console.log('permissions', formatted);
-
-        // 🔥 THIS FIXES LOGOUT ISSUE
-        this.switchService.setUserAccess(formatted);
-      }
-    });
+  onLoginSuccess(email: string) {
+    this.switchService.loadUserAccess(email);
   }
-
-  setUserAccessFromResponse(res: any) {
-  const formatted: any = {};
-
-  res.departments?.forEach((dept: any) => {
-    dept.roles?.forEach((role: any) => {
-
-      Object.entries(role.permissions || {}).forEach(
-        ([key, value]: any) => {
-
-          formatted[key] = true;
-
-          value?.split(',').forEach((sub: string) => {
-            formatted[`${key}_${sub}`] = true;
-          });
-        }
-      );
-
-    });
-  });
-
-  localStorage.setItem('userAccess', JSON.stringify(formatted));
-}
 
 }
