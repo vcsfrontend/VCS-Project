@@ -2248,9 +2248,9 @@
                                                                 <td>
                                                                     <div class="hstack gap-2 fs-1">
                                                                         <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light"
-                                                                            (click)="toggleTable(department)">
-                                                                            <i class="ri-eye-line"></i>
+                                                                         (click)="onViewDepartment(department)"> <i class="ri-eye-line"></i>
                                                                         </a>
+
                                                                         <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light"
                                                                             (click)="editDepartmentFormSelected(department, Content113)">
                                                                             <i class="ri-edit-line"></i>
@@ -2726,7 +2726,7 @@
                         </ng-container>
                         <ng-container ngbNavItem="departments">
                             <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true" (click)="getUsersAccess()">
+                                aria-selected="true" (click)="adminAccessAllUsers()">
                                 <i class="bi bi-shield-check side-menu__icon me-1"></i>Department Access Overview</a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">

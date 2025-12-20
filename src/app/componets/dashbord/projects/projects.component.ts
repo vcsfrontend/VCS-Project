@@ -2118,22 +2118,47 @@ downloadButtons: { label: string; url: string }[] = [];
   }
 
   goToBoq(element: any) {
-    if (!this.hasPermission('Projects_recce_access')) {
-      this.toastr.warning('Access Denied: You do not have the required permission to view the BOQ for this project');
-      return;
-    }
-    localStorage.setItem('selectedTab', '1'); 
-    this.router.navigate(
-      ['/dashboard/boq'],
-      {
+    if (this.switchService.hasPermission('Projects_recce_stage')) {
+      localStorage.setItem('selectedTab', '1');
+      this.router.navigate(['/dashboard/boq'], {
         queryParams: {
           projectId: element.projectId,
-          projectName: element.projectName
+          projectName: element.projectName,
+          stage: 'recce_stage'
         },
         state: { projectObj: element }
-      }
+      });
+      return;
+    }
+    if (this.switchService.hasPermission('Projects_design_stage')) {
+      localStorage.setItem('selectedTab', '2');
+      this.router.navigate(['/dashboard/boq'], {
+        queryParams: {
+          projectId: element.projectId,
+          projectName: element.projectName,
+          stage: 'design_stage'
+        },
+        state: { projectObj: element }
+      });
+      return;
+    }
+    if (this.switchService.hasPermission('Projects_boq_stage')) {
+      localStorage.setItem('selectedTab', '3');
+      this.router.navigate(['/dashboard/boq'], {
+        queryParams: {
+          projectId: element.projectId,
+          projectName: element.projectName,
+          stage: 'boq_stage'
+        },
+        state: { projectObj: element }
+      });
+      return;
+    }
+    this.toastr.warning(
+      'Access Denied: You do not have permission to access this project'
     );
   }
+
 
 
   onTypeChange(type: any) {
@@ -2309,4 +2334,5 @@ getRecceData() {
     }
     this.VerticallyScrol(modal);
   }
+
 }
