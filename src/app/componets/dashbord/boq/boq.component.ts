@@ -3117,6 +3117,27 @@ closeAllDropdowns() {
         heightCtrl?.updateValueAndValidity({ emitEvent: false });
     }
 
+    deleteRecceStage(stage: string) {
+        if (!stage) return;
+        const projectId = this.projectId;
+        if (!projectId) return;
+        if (!confirm(`Delete recce stage "${stage}"?`)) return;
+        console.log('Project ID:', projectId, 'Stage:', stage);
+        this.switchService.deleterecce(projectId, stage).subscribe({
+            next: (res: any) => {
+                if (res) {
+                    this.toastr.success('Deleted successfully');
+                    this.recceList = this.recceList.filter(
+                        r => r.recceStage !== stage
+                    );
+                    this.recceStagesList = this.recceStagesList.filter(
+                        s => s !== stage
+                    );
+                }
+            }
+        });
+    }
+
 
 
 

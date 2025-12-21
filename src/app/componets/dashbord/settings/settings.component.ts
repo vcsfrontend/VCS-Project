@@ -116,7 +116,6 @@ export class SettingsComponent extends BaseComponent implements OnInit {
       'completion_lead','leads_move_campaign','analytics_display','Campaign_Users','leads_view','deals_view','deals_mail_create','deals_mail_teamplet_create',
       'deals_campaign_move','deals_appointment','deals_task_create','leads_task_create','deal_completion','deals_analytics','deals_allocate','campaign_users_dispaly',
       'users_dispaly','task_edit', 'task_access', 'client_access', 'appointment_access'
-      
     ],
     Projects :['project_create','Top_Projects','my_projects_table','add_project_stage','view_project_cycle','recce_access','project_assign','project_estimation', 'recce_stage', 'design_stage', 'edit_design',
       'boq_stage', 'project_scope', 'payments_from_client',  'client_invoice', 'client_orders', 'proposal_for_client', 'project_boq_data','cut_list', 'create_proposal', 'custom_element', 
@@ -1986,44 +1985,76 @@ selectedPermissions: any[] = [];
     }
   }
 
+  isAdminRoleExists(): boolean {
+    return this.roleLst?.some(
+      (role: any) => role.name?.trim().toLowerCase() === 'admin'
+    );
+  }
+
+
   addRoles(modal: any) {
-    const rolesData = this.roleForm.value;
-    const roleName = this.roleForm.value.name;
+    const roleName = this.roleForm.value.name?.trim();
+    if (roleName?.toLowerCase() === 'admin' && this.isAdminRoleExists()) {
+      this.toastr.error('Admin role already exists');
+      return;
+    }
     if (this.isRoleExists(roleName)) {
-      this.toastr.error("Role already exists!");
+      this.toastr.error('Role already exists!');
       return;
     }
-    this.roleSubmitted = true
+    this.roleSubmitted = true;
     if (this.roleForm.invalid) {
-      this.toastr.error("Please fill all mandatory fields.");
+      this.toastr.error('Please fill all mandatory fields.');
       return;
     }
-    let payload = {
-      ...rolesData,
+    const payload = {
+      ...this.roleForm.value,
       companyName: JSON.parse(this.userData)?.companyName,
       companyCode: JSON.parse(this.userData)?.companyCode,
       type: JSON.parse(this.userData)?.type,
-    }
+    };
     this.switchService.addRole(payload).subscribe({
       next: () => {
-        this.toastr.success('role added successfully');
-        modal.close()
+        this.toastr.success('Role added successfully');
+        modal.close();
         this.roleSubmitted = false;
         this.getRoles();
-      },
-    })
+      }
+    });
   }
+
 
   getRoles() {
     const companyCode = JSON.parse(this.userData)?.companyCode;
     this.switchService.getRole(companyCode).subscribe({
-      next: (res: any) => {
-        this.roleLst = res;
-        this.roleCreationId = res.id;
-        this.roleName = res.name
-      },
-    })
+      next: (res: any[]) => {
+        this.roleLst = res || [];
+        if (!this.isAdminRoleExists()) {
+          this.createDefaultAdminRole();
+        }
+      }
+    });
   }
+
+  createDefaultAdminRole() {
+    const payload = {
+      name: 'Admin',
+      description: 'Default Admin Role',
+      permissions: [], 
+      companyName: JSON.parse(this.userData)?.companyName,
+      companyCode: JSON.parse(this.userData)?.companyCode,
+      type: JSON.parse(this.userData)?.type,
+      isSystemRole: true
+    };
+
+    this.switchService.addRole(payload).subscribe({
+      next: () => {
+        this.getRoles();
+      },
+    });
+  }
+
+
 
   updateRoles() {
     const roleId = this.roleCreationId;
@@ -2796,24 +2827,25 @@ selectedPermissions: any[] = [];
   }
 
   editSubpermmissions(permission: any, content115: any) {
-  this.selectedPermissionName = permission.permissionName;
-  this.SubpermissionId = permission.id;
-  this.editsubPermissionArray.clear();
-  const assignedList = permission.subPermission
-    ? permission.subPermission.split(',').map((p: string) => p.trim())
-    : [];
-const fullList = this.allPermissions[permission?.permissionName as PermissionName] ?? [];
+    this.selectedPermissionName = permission.permissionName;
+    this.SubpermissionId = permission.id;
+    this.editsubPermissionArray.clear();
+    const assignedList = permission.subPermission
+      ? permission.subPermission.split(',').map((p: string) => p.trim())
+      : [];
+    const fullList = this.allPermissions[permission?.permissionName as PermissionName] ?? [];
 
-  fullList.forEach((sub:any) => {
-    this.editsubPermissionArray.push(
-      this.fb.group({
-        label: [sub],
-        enabled: [assignedList.includes(sub)]
-      })
-    );
-  });
-  this.modalService.open(content115, { size: 'lg' });
-}
+    fullList.forEach((sub: any) => {
+      this.editsubPermissionArray.push(
+        this.fb.group({
+          label: [sub],
+          enabled: [assignedList.includes(sub)]
+        })
+      );
+    });
+    this.modalService.open(content115, { size: 'lg' });
+  }
+
   updateSubPermissions(modal: any,departmentIds?: number[]) {
     const permissionId = this.SubpermissionId;
     const selectedKeys = this.editsubPermissionArray.controls
@@ -2842,22 +2874,16 @@ const fullList = this.allPermissions[permission?.permissionName as PermissionNam
   refreshUserAccess() {
     const email = JSON.parse(this.userData || '{}')?.email;
     if (!email) return;
-
     this.switchService.getUserAccess(email).subscribe({
       next: (res: any) => {
         const formatted: Record<string, boolean> = {};
-
         (res?.departments || []).forEach((dept: any) => {
           (dept?.roles || []).forEach((role: any) => {
-
             const perms = role?.permissions || {};
-
             Object.keys(perms).forEach(permissionName => {
               formatted[permissionName] = true;
-
               const subString = perms[permissionName];
               if (!subString) return;
-
               subString
                 .split(',')
                 .map((s: string) => s.trim())
@@ -2866,7 +2892,6 @@ const fullList = this.allPermissions[permission?.permissionName as PermissionNam
                   formatted[`${permissionName}_${sub}`] = true;
                 });
             });
-
           });
         });
 
