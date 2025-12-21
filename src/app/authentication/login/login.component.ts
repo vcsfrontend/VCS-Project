@@ -139,7 +139,8 @@ login() {
           timeOut: 3000,
           positionClass: 'toast-top-right',
         });
-         localStorage.setItem(
+
+        localStorage.setItem(
           'loginPayload',
           JSON.stringify({
             email: this.loginForm.value.email,
@@ -156,6 +157,7 @@ login() {
           this.navSvc.isCRMApplicable$.next(res.crm);
           this.navSvc.adonaiRole$.next(res.adonaiRole);
           this.navSvc.crmRole$.next(res.crmRole)
+          this.onLoginSuccess(this.email);
           this.switchService.userInfo(res.email).subscribe(() => {
             this.router.navigate(['/pages/profile']);
           });

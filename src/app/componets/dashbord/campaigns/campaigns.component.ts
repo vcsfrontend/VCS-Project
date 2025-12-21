@@ -72,18 +72,13 @@ export class CampaignsComponent extends BaseComponent {
   }
 
   ngOnInit(): void {
-    this.getCrmStages();
-    this.getUsers();
     if(this.adoanAiRole == 'ADMIN'|| this.userType == 1){
       this.getCampaignData();
     }
-    if(this.userType == 2){
+    if(this.adoanAiRole == 'USER'){
       this.getCampaignSecific();
-    }
-    
-    this.getLeadCountForCampaign();
-    
-
+    }    
+    this.getLeadCountForCampaign();  
     this.campaignForm = this.fb.group({
       campaignId: [0],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
@@ -445,7 +440,7 @@ export class CampaignsComponent extends BaseComponent {
    this.isEditMode = false;
   this.selectedCampgnId = null;
   this.selectedCampaignId = null;
-
+    this.getUsers();
   // Reset the form completely
   this.campaignForm.reset();
 
