@@ -2338,9 +2338,9 @@ selectedPermissions: any[] = [];
     this.filteredPermissionList = this.assignedPermissionLst.filter(
       permission => permission.departmentRoleId === assignedRole.id
     );
-    this.showPermissions = true;
     this.selectedPermission = assignedRole;
     this.getAssignedDeptRolePermissions([assignedRole.id]);
+    this.showPermissions = true;
   }
 
   onRoleChange(id: number) {
@@ -2497,7 +2497,6 @@ selectedPermissions: any[] = [];
   getAssignedDeptRolePermissions(assignedRoleIds?: number[]) {
     const user = JSON.parse(this.userData);
     const companyCode = user?.companyCode;
-
     const idsToUse =
       assignedRoleIds && assignedRoleIds.length > 0
         ? assignedRoleIds
@@ -2507,6 +2506,7 @@ selectedPermissions: any[] = [];
 
     this.switchService.getAssignPermissions(idsToUse, companyCode).subscribe({
       next: (res: any[]) => {
+         this.filteredPermissionList = res;
         if (!this.roleLst || this.roleLst.length === 0) {
           return;
         }
@@ -2532,14 +2532,12 @@ selectedPermissions: any[] = [];
                   companyName: user.companyName,
                   companyCode: user.companyCode,
                   type: user.type,
-                  subPermission: permission.subPermission // ✅ ALL SUB PERMISSIONS
+                  subPermission: permission.subPermission 
                 };
 
                 this.switchService.assignPermissionToRole(payload).subscribe({
                   next: () => {
                     completed++;
-
-                    // 🔁 REFRESH ONLY AFTER LAST INSERT
                     if (completed === allPermissions.length) {
                       this.getAssignedDeptRolePermissions(idsToUse);
                     }
@@ -2594,6 +2592,7 @@ selectedPermissions: any[] = [];
   tableUserView(assigneUser?: any) {
     this.showUser = true;
     this.selectedUser = assigneUser;
+    this.adminAccessAllUsers();
   }
   assignUserToDeptRole(modal?: any) {
     let companyCode = JSON.parse(this.userData)?.companyCode;
