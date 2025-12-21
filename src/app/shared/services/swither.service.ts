@@ -368,6 +368,7 @@ export class SwitherService {
     });
     return this.http.post(`${this.adonaiURL}projo_boq/recce_creation`, formData);
   }
+
    updateRecce(data: any): Observable<any> {
     const formData = new FormData();
     Object.keys(data).forEach(key => {
@@ -384,7 +385,7 @@ export class SwitherService {
     });
     return this.http.post(`${this.adonaiURL}projo_boq/update_recce`, formData);
   }
-
+  deleterecce(projectId:any, stage:any): Observable<any> { return this.http.get(`${this.adonaiURL}projo_boq/deleteRecceOnStage?projectId=${projectId}&stage=${stage}`);}
   createGloabalTaks(data:any): Observable<any> { return this.http.post(`${this.apiUrl}api/globalTasks/createGlobalTask`, data); }
   getAllGlobalTasks(companyCode:any): Observable<any> { return this.http.get(`${this.apiUrl}api/globalTasks/listGlobalTaskData?companyCode=${companyCode}`);}
   updateGlobalTask(taskData: any): Observable<any> { return this.http.put(`${this.apiUrl}api/globalTasks/update/${taskData.id}`, taskData);}

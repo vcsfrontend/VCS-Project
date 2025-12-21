@@ -197,8 +197,12 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="d-flex justify-content-between mt-2 mb-2">
-                                                                         <div class="card-title text-dark large fs-15" (click)="recce(recceView, recce)">{{ recce.recceStage }} Photos & videos     
-                                                                         </div>
+                                                                        <div class="card-title"><strong>{{ recce.recceStage}} <a href="javascript:void(0);"
+                                                                                    class="btn btn-icon btn-wave waves-effect waves-light btn-sm btn-danger-light rounded-circle"
+                                                                                    (click)="deleteRecceStage(recce.recceStage)">
+                                                                                    <i class="ri-delete-bin-line"></i>
+                                                                                </a></strong>
+                                                                        </div>
                                                                         <a class="text-primary fw-semibold small d-inline-flex align-items-center gap-1 cu"
                                                                             *ngIf="adoanAiRole === 'ADMIN' || recce.recceAssigneEmails.includes(userEmail)"
                                                                             (click)="openRecce(content44, recce.recceStage)">
