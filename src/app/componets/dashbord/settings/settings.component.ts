@@ -289,7 +289,6 @@ selectedPermissions: any[] = [];
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
     this.getAllDepartments();
-    this.getAssignedRoles();
     this.getAssignedUsers();
     this.buildDepartmentView();
     this.getOptimizerCut();
@@ -1268,6 +1267,13 @@ selectedPermissions: any[] = [];
     this.modalService.open(content14, { centered: true, });
   }
 
+  assginRoles(content15: any) {
+    this.getRoles();        
+    this.getAssignedRoles(); 
+    this.modalService.open(content15, { centered: true });
+  }
+
+
 
 
   // Resets the input and unselects the checkboxes
@@ -2032,9 +2038,10 @@ selectedPermissions: any[] = [];
         if (!this.isAdminRoleExists()) {
           this.createDefaultAdminRole();
         }
-      }
+      },
     });
   }
+
 
   createDefaultAdminRole() {
     const payload = {
@@ -2333,6 +2340,7 @@ selectedPermissions: any[] = [];
     );
     this.showPermissions = true;
     this.selectedPermission = assignedRole;
+    this.getAssignedDeptRolePermissions([assignedRole.id]);
   }
 
   onRoleChange(id: number) {
@@ -2359,7 +2367,6 @@ selectedPermissions: any[] = [];
           )
         );
         this.assignedRoleIds = departmentIds;
-        this.getAssignedDeptRolePermissions(assignedRoleIds);
       }
     });
   }
@@ -2486,27 +2493,78 @@ selectedPermissions: any[] = [];
       }
     });
   }
+  
   getAssignedDeptRolePermissions(assignedRoleIds?: number[]) {
-    const companyCode = JSON.parse(this.userData)?.companyCode;
+    const user = JSON.parse(this.userData);
+    const companyCode = user?.companyCode;
+
     const idsToUse =
       assignedRoleIds && assignedRoleIds.length > 0
         ? assignedRoleIds
         : this.assignedRoleIds;
 
-    if (!idsToUse || idsToUse.length === 0) {
-      return;
-    }
+    if (!idsToUse || idsToUse.length === 0) return;
+
     this.switchService.getAssignPermissions(idsToUse, companyCode).subscribe({
       next: (res: any[]) => {
+        if (!this.roleLst || this.roleLst.length === 0) {
+          return;
+        }
+        const selectedRole = this.roleLst.find(
+          (r: any) => idsToUse.includes(r.departmentRoleId)
+        );
+        const isAdmin =
+          selectedRole?.name?.toLowerCase() === 'admin';
+        if (isAdmin && (!res || res.length === 0)) {
+          this.switchService.getPermissions(companyCode).subscribe({
+            next: (allPermissions: any[]) => {
+
+              let completed = 0;
+
+              allPermissions.forEach(permission => {
+
+                const payload = {
+                  depRole: selectedRole.departmentRoleId,
+                  permissionRole: permission.permissionId,
+                  departmentRole: selectedRole.departmentRoleId,
+                  permission: permission.permissionName,
+                  description: 'Admin full access',
+                  companyName: user.companyName,
+                  companyCode: user.companyCode,
+                  type: user.type,
+                  subPermission: permission.subPermission // ✅ ALL SUB PERMISSIONS
+                };
+
+                this.switchService.assignPermissionToRole(payload).subscribe({
+                  next: () => {
+                    completed++;
+
+                    // 🔁 REFRESH ONLY AFTER LAST INSERT
+                    if (completed === allPermissions.length) {
+                      this.getAssignedDeptRolePermissions(idsToUse);
+                    }
+                  }
+                });
+              });
+            }
+          });
+
+          return; // ⛔ stop normal flow, refresh will reload
+        }
+
+        // 🔹 NORMAL EXISTING LOGIC (UNCHANGED)
         const uniqueMap = new Map<string, any>();
+
         res.forEach(item => {
           const key = `${item.departmentRoleId}_${item.permissionId}`;
           if (!uniqueMap.has(key)) {
             uniqueMap.set(key, item);
           }
         });
+
         this.assignedPermissionLst = Array.from(uniqueMap.values());
         this.filteredPermissionList = [...this.assignedPermissionLst];
+
         if (this.assignedPermissionLst.length > 0) {
           this.permissiondeptroleId =
             this.assignedPermissionLst[0].departmentRoleId;
@@ -2516,6 +2574,8 @@ selectedPermissions: any[] = [];
       }
     });
   }
+
+
 
   deleteAssignPermission(assignedPermission: any) {
     const deptRoleId = assignedPermission?.departmentRoleId || assignedPermission?.depRoleId;
