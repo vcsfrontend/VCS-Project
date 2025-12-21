@@ -398,9 +398,9 @@ export class LeadsComponent extends BaseComponent {
       if (this.access.CRM_lead_mail_template_creation) {
         this.getAllEmailTemplates();
       }
-      if (this.access.CRM_appointmnet_creation) {
-        this.getAppointment();
-      }
+      // if (this.access.CRM_appointmnet_creation) {
+      //   this.getAppointment();
+      // }
 
     // this.getCrmLeads();
 
@@ -575,7 +575,7 @@ export class LeadsComponent extends BaseComponent {
       projectEstimation : ['',Validators.required],
     });
 
-    this.getUsers();
+    // this.getUsers();
     this.searchControl.valueChanges.subscribe((searchText) => {
       if (searchText && typeof searchText === 'string') {
         const filtered = this.options.filter((option) =>

@@ -38,9 +38,9 @@ export class CampaignsComponent extends BaseComponent {
   stageCounts: { [campaignId: string]: { [stage: string]: number } } = {}; campaignCount: any; totalLeadCount: any;
   fetchCrmLeadsList: any[] = [];topshowMore = false;showMore = true;
   matcardLst: any; topDisplayedCards: any;filteredUserList: any[] = [];
-  preSelectedUsers: string[] = []; isEditMode : boolean = false;
+  preSelectedUsers: string[] = []; isEditMode : boolean = false;campaigns: any[] = [];
   userColors = ['bg-primary', 'bg-success', 'bg-warning', 'bg-danger', 'bg-info', 'bg-secondary'];
-  newItemColor: string = '#000000'; listNew: any; isLoading = true;
+  newItemColor: string = '#000000'; listNew: any; isLoading = true;cmapignLeadCount :any = {};
   dataSource = new MatTableDataSource<any>();  campaignId!: string;selectedCampaignId:any;selectedCampgnId:any;
  
   displayedColumns: string[] = [
@@ -81,9 +81,7 @@ export class CampaignsComponent extends BaseComponent {
       this.getCampaignSecific();
     }
     
-    this.campaignList.forEach(campaign => {
-      this.getLeadCountForCampaign(campaign.campgnId);
-    });
+    this.getLeadCountForCampaign();
     
 
     this.campaignForm = this.fb.group({
@@ -145,7 +143,7 @@ export class CampaignsComponent extends BaseComponent {
             email: this.userEmail,
             type: this.userType,
           });
-          this.getLeadCountForCampaign(res.campgnId)
+          this.getLeadCountForCampaign()
           this.getCampaignData();
           this.selectedCampgnId = null;
           this.selectedCampaignId = null;
@@ -248,9 +246,6 @@ export class CampaignsComponent extends BaseComponent {
           this.campaignList = res;
           this.isLoading = false;
           this.campaignCount = this.campaignList.length;
-          this.campaignList.forEach(campaign => {
-            this.getLeadCountForCampaign(campaign.campgnId);
-          });
         }
       },
     });
@@ -266,11 +261,7 @@ export class CampaignsComponent extends BaseComponent {
       next: (res: any) => {
         this.listNew = res;
         this.isLoading = false;
-        if (this.userType == 2) {
-          this.listNew.forEach((campaign: any) => {
-            this.getLeadCountForCampaign(campaign.campgnId);
-          });
-        }
+        
       },
     });
   }
@@ -354,34 +345,47 @@ export class CampaignsComponent extends BaseComponent {
       this.toastr.warning('You do not have permission to view leads');
       return;
     }
-    this.getLeadCountForCampaign(campaign.campgnId);
     this.router.navigate(['/apps/crm/leads'], {
       queryParams: { campaignId: campaign.campgnId },
       state: { agents: campaign.agents }
     });
   }
- 
-
-  getLeadCountForCampaign(campaignId: string) {
-    this.switchService.FetchLeadData(this.userEmail, campaignId).subscribe({
+  getLeadCountForCampaign() {
+    const payload = {
+      companyCode : this.userCompanyCode,
+      email : this.userEmail,
+      type : this.userType
+    }
+    this.switchService.getCampaignDataWithCount(payload).subscribe({
       next: (res: any) => {
-        const executiveList = res.executiveList || [];
-        const entryList = res.entryList || [];
-        const combined = [...executiveList, ...entryList];
-        this.leadCounts[campaignId] = executiveList.length + entryList.length;
-        const stageMap: { [key: string]: number } = {};
-        const count = combined.length;
-        this.leadCounts[campaignId] = count;
-        this.updateTotalLeadCount();
-        combined.forEach(lead => {
-          const stage = lead.stage || 'Unknown';
-          stageMap[stage] = (stageMap[stage] || 0) + 1;
+        this.cmapignLeadCount = res;
+        const list = res?.list || {};
+
+        this.campaigns = [];
+        this.stageCounts = {};
+
+        Object.keys(list).forEach(campaignId => {
+          const campaign = list[campaignId];
+
+          // skip invalid campaign id if needed
+          if (!campaignId) {
+            console.warn('Skipping empty campaignId', campaign);
+            return;
+          }
+
+          this.campaigns.push({
+            campgnId: campaignId,
+            campaignName: campaign.campaignName,
+            managerName: campaign.managerName,
+            priority: campaign.priority
+          });
+          this.stageCounts[campaignId] = campaign.stageCount || {};
         });
-        this.stageCounts[campaignId] = stageMap;
+
+        console.log('analytics count', this.stageCounts);
+
       },
-      error: () => {
-        this.leadCounts[campaignId] = 0;
-      }
+
     });
   }
   updateTotalLeadCount() {
@@ -485,4 +489,13 @@ export class CampaignsComponent extends BaseComponent {
   const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
   return !!access[key];
   }
+  getTotalLeads(campaignId: string): number {
+  const stages = this.stageCounts[campaignId] || {};
+  return Object.values(stages).reduce(
+    (total: number, count: any) => total + Number(count),
+    0
+  );
+}
+
+  
 }
