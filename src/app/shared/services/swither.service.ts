@@ -416,6 +416,8 @@ export class SwitherService {
 
   fetchLeads(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/v2_fetch_lead_data_individual`, data); }
   fetchLeadsInCampaigns(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/v2_fetch_lead_data`, data); }
+  getCampaignDataWithCount(data:any): Observable<any> { return this.http.post(`${this.apiUrl}crmActions/getCampaignDataWithCount`, data); }
+
 
   // https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/adonai/get_proj_details/{companyname}
 }
