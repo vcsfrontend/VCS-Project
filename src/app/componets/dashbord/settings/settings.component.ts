@@ -95,7 +95,7 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   appointmentId: number = 0; assignRoleForm !: FormGroup; selectedDepartment: any = {}; selectedPermission: any = {};
   selectedRole: any = {}; assignedRoleLst: any[] = []; depId: number = 0; responseList: any; selectedAssignedRole: any = {};
   selectedPermissionRole: any = {}; assignRoleResponse: any = {}; selectedRoleObj: any; selectedDeptObj: any;
-  selectedId: number = 0;selectedPermissionId : number =0;
+  selectedId: number = 0;selectedPermissionId : number =0;subPermissionupdateId :any;
   savedRoles: { [companyCode: string]: any[] } = {};
   savedDepartmentRoles: any[] = []; assignedPermissionLst: any[] = [];
   assignPermissionForm !: FormGroup; assignUserForm !: FormGroup; assignUserEmail: string = '';
@@ -283,13 +283,13 @@ selectedPermissions: any[] = [];
     }
   }
 
-  ngOnInit() {
-    
+  ngOnInit() { 
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
     this.getAllDepartments();
     this.getAssignedUsers();
+    this.getAllPermissions();
     this.buildDepartmentView();
     this.getOptimizerCut();
     this.userEmail = JSON.parse(this.userData).email;
@@ -1262,6 +1262,7 @@ selectedPermissions: any[] = [];
   }
   roleModal(content16: any) {
     this.modalService.open(content16, { centered: true, scrollable : true });
+    
   }
   openRight14(content14: any) {
     this.modalService.open(content14, { centered: true, });
@@ -2339,6 +2340,7 @@ selectedPermissions: any[] = [];
       permission => permission.departmentRoleId === assignedRole.id
     );
     this.selectedPermission = assignedRole;
+    this.subPermissionupdateId = [assignedRole.id];
     this.getAssignedDeptRolePermissions([assignedRole.id]);
     this.showPermissions = true;
   }
@@ -2472,7 +2474,6 @@ selectedPermissions: any[] = [];
       const selectedKeys = this.subPermissionArray.controls
     .filter(ctrl => ctrl.value.enabled === true)
     .map(ctrl => ctrl.value.key);
-
     const commaSeparated = selectedKeys.join(',');
     const payload = {
       depRole: this.selectedPermission.id,
@@ -2547,10 +2548,8 @@ selectedPermissions: any[] = [];
             }
           });
 
-          return; // ⛔ stop normal flow, refresh will reload
+          return; 
         }
-
-        // 🔹 NORMAL EXISTING LOGIC (UNCHANGED)
         const uniqueMap = new Map<string, any>();
 
         res.forEach(item => {
@@ -2923,7 +2922,7 @@ selectedPermissions: any[] = [];
           )
         );
         this.assignedRoleIds = departmentIds;
-        this.getAssignedDeptRolePermissions(assignedRoleIds);
+        this.getAssignedDeptRolePermissions(this.subPermissionupdateId);
         this.refreshUserAccess();
         modal.close();
       }
@@ -2955,7 +2954,6 @@ selectedPermissions: any[] = [];
         });
 
         localStorage.setItem('userAccess', JSON.stringify(formatted));
-        console.log('Updated userAccess', formatted);
       }
     });
   }
