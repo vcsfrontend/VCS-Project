@@ -480,17 +480,19 @@ export class CampaignsComponent extends BaseComponent {
     const index = this.hashString(key) % this.userColors.length;
     return this.userColors[index];
   }
+
   hasPermission(key: string): boolean {
   const access = JSON.parse(localStorage.getItem("userAccess") || "{}");
   return !!access[key];
   }
+
   getTotalLeads(campaignId: string): number {
-  const stages = this.stageCounts[campaignId] || {};
-  return Object.values(stages).reduce(
-    (total: number, count: any) => total + Number(count),
-    0
-  );
-}
+    const stages = this.stageCounts[campaignId] || {};
+    return Object.values(stages).reduce(
+      (total: number, count: any) => total + Number(count),
+      0
+    );
+  }
 
   
 }

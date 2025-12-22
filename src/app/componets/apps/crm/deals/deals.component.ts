@@ -95,7 +95,7 @@ export class DealsComponent extends BaseComponent {
    minimumDate : string ='';mobileNumber: any; clientName: any;  projectName: any;
   uploadLeads :boolean=false;moveCmapignSubmitted : boolean= false;
   executiveEmail : string ='';isAllocating: boolean = false;selectedAppointment : any[]=[];
-  access : any;
+  access : any; selectedTemplateForMail: any = null; showMailTemplate: boolean = true;
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -314,21 +314,28 @@ export class DealsComponent extends BaseComponent {
     });
   }
 
+  selectedEmailForFollowup: string | null = null;
   openRight4(content4: any) {
     this.offcanvasService.open(content4, { position: 'end' });
   }
   openFollowupLeadForm(element: any, content4: any): void {
-    this.followupName = element.name;
+    this.selectedEmailForFollowup = element.email || null;
+    this.followupName = element.name || '';
     this.notconnectedstatusClicked = false;
     this.showForm = false;
-    let executive = this.userData ? JSON.parse(this.userData).email : '';
+    const executive = this.userData ? JSON.parse(this.userData).email : '';
     this.executiveName = executive;
     this.leadId = element.leadId;
-    this.originalStatus = element.status?.toLowerCase().trim();
+    this.originalStatus = element.status?.toLowerCase().trim() || '';
+    this.showMailTemplate = !!this.selectedEmailForFollowup;
+    if (!this.showMailTemplate) {
+      this.followupLeadForm.get('template')?.reset();
+      this.selectedTemplateForMail = null;
+    }
     this.openRight4(content4);
     this.ViewCrmLeads(element);
-    
   }
+
   
   openTaskModal(content: any) {
     if (!this.selectedLeads || this.selectedLeads.length === 0) {
@@ -465,6 +472,7 @@ export class DealsComponent extends BaseComponent {
       status: ['', [Validators.required]],
       comments: ['', [Validators.required]],
       followUpBy: [''],
+      template: ['']
     });
 
     this.LeadToCampaignForm = this.fb.group({
@@ -1406,7 +1414,6 @@ export class DealsComponent extends BaseComponent {
         // bcc: this.sendLeadForm.get('bcc')?.value,
         content: this.sendLeadForm.get('content')?.value,
       };
-
       this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
         next: (res: any) => {
           if (res.status == true) {
@@ -1414,24 +1421,33 @@ export class DealsComponent extends BaseComponent {
             this.submitted = false;
             modal.close();
             this.sendLeadForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });           
+            this.toastr.success('mail sent');           
           } 
-          else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
         },
       });
     }
   }
+
+  sendFollowupMailSubmit(modal: any) {
+    const payload = {
+      email: this.sendLeadForm.get('email')?.value,
+      template: this.selectedTemplateForMail.templateGenId,
+      subject: this.sendLeadForm.get('subject')?.value,
+      cc: 'elite@designadonai.com',
+      content: this.sendLeadForm.get('content')?.value,
+    };
+    this.switchService.CRMLeadSendMailFollowup(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.offcanvasRef.dismiss();
+          this.sendLeadForm.reset();
+          this.selectedTemplateForMail = null;
+          this.toastr.success( 'mail sent');
+        } 
+      },
+    });
+  }
+
 
   get e() {
     return this.followupLeadForm.controls;
@@ -1439,6 +1455,10 @@ export class DealsComponent extends BaseComponent {
 
   followupLeadSubmit(modal: any) {
     this.followupLeadSubmitted = true;
+    if (!this.followupLeadForm.valid) {
+      this.uploadSpinner = false;
+      return;
+    }
     this.uploadSpinner = true;
     const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
     const originalStatus = this.originalStatus?.toLowerCase().trim();
@@ -1505,6 +1525,12 @@ export class DealsComponent extends BaseComponent {
       this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
         next: (res: any) => {
           if (res.status == true) {
+            if (
+              this.selectedStatus === 'Connected' &&
+              this.selectedTemplateForMail
+            ) {
+              this.triggerFollowupMailSend();
+            }
             modal.close();
             this.followupLeadSubmitted = false;
             this.uploadSpinner = false;
@@ -3477,6 +3503,24 @@ isIndeterminate(): boolean {
   }
   this.openCompletionModal(modal, element);
 }
+
+
+  triggerFollowupMailSend(): void {
+    this.sendFollowupMailSubmit({});
+  }
+
+  onFollowupTemplateSelected(template: any): void {
+    if (!template) return;
+    this.selectedTemplateForMail = template;
+    this.sendLeadForm.patchValue({
+      template: template,
+      email: this.selectedEmailForFollowup,
+      subject: template.subject || 'Follow up',
+      cc: 'elite@designadonai.com',
+      content: template.content || 'Follow up mail'
+    });
+  }
+
 
 
 
