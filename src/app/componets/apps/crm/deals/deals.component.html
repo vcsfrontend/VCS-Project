@@ -461,6 +461,7 @@
                             class="btn btn-success btn-sm shadow d-flex align-items-center justify-content-center px-3 py-1"
                             (click)="sentProposal(element)" data-bs-toggle="modal"
                             data-bs-target="#completionModal">
+                            <i class="bi bi-send-fill me-1"></i>
                             <strong>Sent Proposal</strong>
                         </button>
                         <button *ngIf="element.completionStatus === 'completed'"
@@ -1151,13 +1152,16 @@
         <button (click)="offcanvas.dismiss('Cross click')" type="button" class="btn-close" data-bs-dismiss="offcanvas"
             aria-label="Close"></button>
     </div>
-    <div class="d-flex pt-4 gap-3 ms-2">
-        <button type="button" class="btn btn-primary"(click)="onStatusButtonClick('Connected',offcanvas)">Connected</button>
-        <button type="button" class="btn btn-primary" (click)="onStatusButtonClick('Not Connected', offcanvas)" [disabled]="notconnectedstatusClicked">Not Connected</button>
+    <div class="d-flex pt-3 gap-3 ms-4">
+        <button type="button" class="btn btn-teal-gradient btn-wave" (click)="onStatusButtonClick('Connected',offcanvas)">
+            <i class="ri-check-double-line me-1"></i>Connected</button>
+        <button type="button" class="btn btn-danger-gradient btn-wave"
+            (click)="onStatusButtonClick('Not Connected', offcanvas)" [disabled]="notconnectedstatusClicked">
+            <i class="ri-close-circle-line me-1"></i>Not Connected</button>
     </div>
     <div  *ngIf="showForm && selectedStatus !== 'not connected'" class="mt-2">
         <form [formGroup]="followupLeadForm" (ngSubmit)="followupLeadSubmit(offcanvas)" class="overflowSendMailForm" style="max-height: 70vh;">
-            <div class="offcanvas-body p-0 m-4 h-100" style="max-height: 100vh;">
+            <div class="offcanvas-body p-4 m-0 h-100" style="max-height: 100vh;">
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 mb-4">
                         <label class="form-label">Next Follow up date</label>
@@ -1170,10 +1174,7 @@
                                 <mat-icon>calendar_today</mat-icon>
                             </button>
                         </div>
-                    
-                        <!-- Angular Material Date Picker -->
                         <mat-datepicker #pickerFollow (dateChange)="onFollowupDateSelect($event)"></mat-datepicker>
-                    
                         <div *ngIf="followupLeadSubmitted && e['followupDate'].errors" class="invalid-feedback d-block">
                             <div *ngIf="e['followupDate'].errors['required']">
                                 Followup Date is required
@@ -1210,18 +1211,17 @@
                         <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
                     </div>
                 </div>
-                <!-- <angular-editor [config]="editorConfig" formControlName="comments"
-                    [ngClass]="{ 'is-invalid': followupLeadSubmitted && e['comments'].errors }"></angular-editor>
-                <div *ngIf="followupLeadSubmitted && e['comments'].errors" class="invalid-feedback">
-                    <span *ngIf="e['comments'].errors['required']">Comments is required.</span>
-                </div> -->
-
+                <div class="mb-4" *ngIf="showMailTemplate">
+                    <label class="form-label">Mail Template</label>
+                    <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList" bindLabel="templateName"
+                        (change)="onFollowupTemplateSelected($event)" class="border rounded">
+                    </ng-select>
+                </div>
             </div>
             <div class="col-xl-12 col-lg-12 col-md-12 mt-3 p-4 border-top">
                 <div class="d-flex justify-content-start gap-3">
                     <button class="btn btn-primary mr-3" type="submit" [disabled]="uploadSpinner">Update Status</button>
-                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger mr-3"
-                        type="submit">Cancel</button>
+                    <button (click)="offcanvas.dismiss('Cross click')" class="btn btn-danger mr-3">Cancel</button>
                 </div>
             </div>
             <div class="text-center uploadSpinner" *ngIf="uploadSpinner">

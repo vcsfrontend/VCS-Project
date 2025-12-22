@@ -398,6 +398,7 @@ export class LeadsComponent extends BaseComponent {
       if (this.access.CRM_lead_mail_template_creation) {
         this.getAllEmailTemplates();
       }
+      this.getCampaignData();
       // if (this.access.CRM_appointmnet_creation) {
       //   this.getAppointment();
       // }

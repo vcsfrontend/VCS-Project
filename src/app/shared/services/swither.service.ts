@@ -8,6 +8,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class SwitherService {
+  private userAccessLoaded = false;
   private userAccessSubject = new BehaviorSubject<Record<string, boolean>>({});
   userAccess$ = this.userAccessSubject.asObservable();
   openOffcanvas$: any; userInfoCache: any = null; profilePic: string | null = null;
@@ -309,7 +310,11 @@ export class SwitherService {
   getUserAccess(email :any): Observable<any> { return this.http.get(`${this.apiUrl}api/users/${email}/access`); }  
 
   loadUserAccess(email: string): void {
-    if (!email) return;
+    if (!email || this.userAccessLoaded) {
+      return; // 🚫 prevent multiple API calls
+    }
+
+    this.userAccessLoaded = true; // ✅ lock API
 
     this.getUserAccess(email).subscribe({
       next: (res: any) => {
@@ -318,7 +323,6 @@ export class SwitherService {
 
         res?.departments?.forEach((dept: any) => {
           dept?.roles?.forEach((role: any) => {
-
             Object.entries(role.permissions || {}).forEach(
               ([key, value]: any) => {
 
@@ -332,14 +336,16 @@ export class SwitherService {
                   });
               }
             );
-
           });
         });
 
         localStorage.setItem('userAccess', JSON.stringify(formatted));
         this.userAccessSubject.next(formatted);
       },
-      error: () => this.clearUserAccess()
+      error: () => {
+        this.userAccessLoaded = false;
+        this.clearUserAccess();
+      }
     });
   }
 
