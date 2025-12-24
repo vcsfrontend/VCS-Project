@@ -96,6 +96,7 @@ export class DealsComponent extends BaseComponent {
   uploadLeads :boolean=false;moveCmapignSubmitted : boolean= false;
   executiveEmail : string ='';isAllocating: boolean = false;selectedAppointment : any[]=[];
   access : any; selectedTemplateForMail: any = null; showMailTemplate: boolean = true;
+  statusesFromApi : any[]=[];
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -2169,7 +2170,7 @@ isIndeterminate(): boolean {
                this.statusOptionsByStageforDisplay[stageName] = JSON.parse(
               JSON.stringify(options)
             );
-
+            this.statusesFromApi = this.statusOptionsByStageforDisplay;
             if (options.length > 0) {
               hasSavedStageStatuses.push(stageName);
             }
@@ -3521,6 +3522,30 @@ isIndeterminate(): boolean {
     });
   }
 
+  loadStatusesByStage(selectedStage: any): void {
+    this.checkboxStageOptions = [];
+    if (!selectedStage || !this.statusesFromApi) {
+      return;
+    }
+    const stageName =
+      typeof selectedStage === 'string'
+        ? selectedStage
+        : selectedStage.stageName;
+
+    if (!stageName) {
+      return;
+    }
+    const statuses = this.statusesFromApi[stageName];
+    if (!Array.isArray(statuses)) {
+      return;
+    }
+    this.checkboxStageOptions = statuses.map(status => ({
+      name: status.name,
+      color: status.color,
+      checked: status.checked ?? false,
+      isCustom: status.isCustom ?? false
+    }));
+  }
 
 
 
