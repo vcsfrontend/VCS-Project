@@ -398,7 +398,6 @@ export class LeadsComponent extends BaseComponent {
       if (this.access.CRM_lead_mail_template_creation) {
         this.getAllEmailTemplates();
       }
-      this.getCampaignData();
       // if (this.access.CRM_appointmnet_creation) {
       //   this.getAppointment();
       // }
@@ -2490,7 +2489,6 @@ export class LeadsComponent extends BaseComponent {
     }
   }
 
-
   getCampaignData() {
     const payload = {
       email: this.userEmail,
@@ -2499,30 +2497,48 @@ export class LeadsComponent extends BaseComponent {
     };
     this.switchService.displayCampaignData(payload).subscribe({
       next: (res: any[]) => {
-        if (Array.isArray(res)) {
-          this.campaignList = res.map((c: any) => ({
-            id: c.campgnId,
-            campaignName: c.campaignName,
-            agents: c.agents,
-          }));
-          const campaign = res.find((c) => c.campgnId === this.campaignId);
-          if (campaign) {
-            this.selectedCampaign = campaign;
-            const agentEmails = campaign.agents
-              ?.split(',')
-              ?.map((email: string) => email.trim())
-              ?.filter((email: string) => email);
-            if (agentEmails?.length) {
-              this.getAgentUsers(agentEmails);
-            }
+        if (!Array.isArray(res)) return;
+        this.campaignList = res.map((c: any) => ({
+          id: c.campgnId,
+          campaignName: c.campaignName,
+          agents: c.agents,
+          isMotherData: false
+        }));
+
+        const motherCampaignId =
+          this.userType === 1
+            ? 'SINGLE9DD1748413866634'
+            : 'DUMMY9DD1748413866634';
+
+        const motherCampaign = {
+          id: motherCampaignId,      
+          campaignName: 'Mother Data', 
+          agents: null,
+          isMotherData: true
+        };
+
+        this.campaignList = this.campaignList.filter(
+          c => c.id !== motherCampaignId
+        );
+
+        this.campaignList.unshift(motherCampaign);
+        this.selectedCampaign = motherCampaign;
+
+        const backendCampaign = res.find(
+          (c: any) => c.campgnId === motherCampaignId
+        );
+
+        if (backendCampaign?.agents) {
+          const agentEmails = backendCampaign.agents
+            .split(',')
+            .map((email: string) => email.trim())
+            .filter(Boolean);
+
+          if (agentEmails.length) {
+            this.getAgentUsers(agentEmails);
           }
-        } else {
-          this.toastr.error('Unexpected response format.');
         }
-      },
-      // error: (err) => {
-      //   this.toastr.error(err.statusText || 'Error while fetching campaigns.');
-      // },
+      }
     });
   }
 
@@ -3011,19 +3027,18 @@ isIndeterminate(): boolean {
     this.currentCampaignId = this.campaignId;
     const leadIds = payloadArray.map(item => item.leadId);
     const campaignId = payloadArray[0].campaignId;
-     if (!this.isCreateCampaignOpen) {
-    this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
-      next: (res) => {
-        this.leadList = this.leadList.filter(
-          (lead: any) => !leadIds.includes(lead.leadId)
-        );
-        this.toastr.success(`Leads moved successfully!`);
-        modal.close();
-        this.submitted = false;
-        this.leadForm.reset();
-        // this.getFetchLeadData(this.currentCampaignId);
-      }
-    });
+    if (!this.isCreateCampaignOpen) {
+      this.switchService.update_existing_campaign(leadIds, campaignId).subscribe({
+        next: (res) => {
+          this.leadList = this.leadList.filter(
+            (lead: any) => !leadIds.includes(lead.leadId)
+          );
+          this.toastr.success(`Leads moved successfully!`);
+          modal.close();
+          this.submitted = false;
+          this.leadForm.reset();
+        }
+      });
     }
   }
 

@@ -361,10 +361,7 @@ export class CampaignsComponent extends BaseComponent {
 
         Object.keys(list).forEach(campaignId => {
           const campaign = list[campaignId];
-
-          // skip invalid campaign id if needed
           if (!campaignId) {
-            console.warn('Skipping empty campaignId', campaign);
             return;
           }
 
@@ -376,9 +373,6 @@ export class CampaignsComponent extends BaseComponent {
           });
           this.stageCounts[campaignId] = campaign.stageCount || {};
         });
-
-        console.log('analytics count', this.stageCounts);
-
       },
 
     });
