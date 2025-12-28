@@ -96,7 +96,8 @@ export class DealsComponent extends BaseComponent {
   uploadLeads :boolean=false;moveCmapignSubmitted : boolean= false;
   executiveEmail : string ='';isAllocating: boolean = false;selectedAppointment : any[]=[];
   access : any; selectedTemplateForMail: any = null; showMailTemplate: boolean = true;
-  statusesFromApi : any[]=[];
+  statusesFromApi : any[]=[];previousStages: string[] = []; selectStageOptions: any[]=[];
+  f25Value : string ='';crmStagesResponse : any[]=[];defaultDisplayStage : any[] = [];
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -407,6 +408,7 @@ export class DealsComponent extends BaseComponent {
   filteredOptions: BehaviorSubject<string[]> = new BehaviorSubject<string[]>(this.options);
 
   ngOnInit(): void {
+    this.loadStatusesByStage();
     this.LeadForm('DUMMY9DD1748413866634');
     
     // this.getFormTemplate();
@@ -650,7 +652,7 @@ export class DealsComponent extends BaseComponent {
       f22: '',
       f23: '',
       f24: '',
-      f25: '',
+      f25: this.f25Value,
       f1Color: '',
       f2Color: '',
       f3Color: '',
@@ -1930,31 +1932,50 @@ isIndeterminate(): boolean {
     const selectedStages = this.crmStaticStages.filter(
       (stage) => stage.checked
     );
-    if (selectedStages.length === 0) {
-      this.toastr.error('Please select at least one stage before saving.');
-      return;
-    }
+    // if (selectedStages.length === 0) {
+    //   this.toastr.error('Please select at least one stage before saving.');
+    //   return;
+    // }
+    
     this.prepareCrmStageData();
-    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.toastr.success('Stages saved successfully');
-          this.offcanvasService.dismiss();
-          this.getCrmStages();
-          this.isAddStagesDisabled = true;
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
-    });
+    const allStages = [
+      ...this.previousStages,
+      ...(this.selectedStage ? [this.selectedStage] : [])
+    ];
+    // this.switchService.SaveCrmStages(this.crmStageData).subscribe({
+    //   next: (res: any) => {
+    //     if (res) {
+    //       this.toastr.success('Stages saved successfully');
+    //       this.offcanvasService.dismiss();
+    //       this.getCrmStages();
+    //       this.isAddStagesDisabled = true;
+    //     } else {
+    //       this.toastr.error(res.message);
+    //     }
+    //   },
+    //   error: (error) => {
+    //     this.toastr.error(error.statusText);
+    //   },
+    // });
   }
 
+  // prepareCrmStageData() {
+  // const selectedStages = this.crmStaticStages.filter(stage => stage.checked);
+  // for (let i = 0; i < 24; i++) {
+  //   this.crmStageData[`f${i + 1}`] = '';
+  //   this.crmStageData[`f${i + 1}Color`] = '';
+  // }
+
+  // selectedStages.forEach((stage, index) => {
+  //   if (index < 24) {
+  //     this.crmStageData[`f${index + 1}`] = stage.name;
+  //     this.crmStageData[`f${index + 1}Color`] = stage.color || '#cccccc';
+  //   }
+  // });
+  // }
   prepareCrmStageData() {
     const selectedStages = this.crmStaticStages.filter(
-      (stage) => stage.checked
+      stage => stage.checked
     );
     for (let i = 0; i < 25; i++) {
       this.crmStageData[`f${i + 1}`] = '';
@@ -1966,7 +1987,7 @@ isIndeterminate(): boolean {
         this.crmStageData[`f${index + 1}Color`] = stage.color || '#cccccc';
       }
     });
-  }
+    }
 
    getCrmStages(): void {
     this.isStagesLoading = true;
@@ -1979,6 +2000,11 @@ isIndeterminate(): boolean {
     };
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
+         const f25FromLocal = localStorage.getItem('save25');
+        if (f25FromLocal) {
+          res.f25 = f25FromLocal;
+        }
+        this.crmStagesResponse = res;
         if (res && res.length > 0) {
           const stageObj = res[0];
           this.processStageData(res[0]);
@@ -1987,21 +2013,18 @@ isIndeterminate(): boolean {
           );
           const anyStagesSelected = this.crmStaticStages.some(stage => stage.checked);
           this.isAddStagesDisabled = anyStagesSelected;
-
           const firstStageKey = stageKeys.find(
             (key) => stageObj[key]?.trim() !== ''
           );
-          // this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
           this.defaultStageName = 'open';
           const isAdonaiUser = this.Adonai;
-          // this.defaultStageName = firstStageKey ? stageObj[firstStageKey] : '';
           const defaultStageExists = this.stageLst.some((s: any) => s.stageName === 'Design Stage');
            const defaultProposalStageExists = this.stageLst.some(
             (s: any) => s.stageName === 'proposalStage'
           );
 
           if (isAdonaiUser && !defaultStageExists) {
-            const insertIndex = Math.max(1, this.stageLst.length - 2);  // ensures index is at least 1
+            const insertIndex = Math.max(1, this.stageLst.length - 2); 
             const defaultStage = {
               stageName: 'Design Stage',
               color:'#000000',
@@ -2011,7 +2034,7 @@ isIndeterminate(): boolean {
             this.stageLst.splice(insertIndex, 0, defaultStage); 
           }
            if (isAdonaiUser && !defaultProposalStageExists) {
-            const insertIndex = Math.max(1, this.stageLst.length - 2); // ensures index is at least 1
+            const insertIndex = Math.max(1, this.stageLst.length - 2); 
             const defaultStage = {
               stageName: 'proposal Stage',
               color: '#187edeff',
@@ -2024,12 +2047,21 @@ isIndeterminate(): boolean {
           const defaultStageColor = '#007bff'; 
 
           if (!this.stageLst.find((s:any) => s.stageName === defaultStageName)) {
-          this.stageLst.unshift({
-          stageName: defaultStageName,
-          color: defaultStageColor
+              this.stageLst.unshift({
+              stageName: defaultStageName,
+              color: defaultStageColor
             });
           }
-          
+          const stageNames = this.stageLst
+          .map((stage:any) => stage.stageName)
+          .filter(Boolean);
+            localStorage.setItem('stageList', JSON.stringify(stageNames)); 
+            this.showFirstStageByDefault();
+           if (res && res.f25) {
+              this.previousStages = res.f25
+                .split(',')
+                .map((s: string) => s.trim());
+            }          
           this.getCrmStatus();
           this.isAddStagesDisabled=true;
         } else {
@@ -2171,6 +2203,7 @@ isIndeterminate(): boolean {
               JSON.stringify(options)
             );
             this.statusesFromApi = this.statusOptionsByStageforDisplay;
+            this.showFirstStageByDefault();
             if (options.length > 0) {
               hasSavedStageStatuses.push(stageName);
             }
@@ -2187,16 +2220,12 @@ isIndeterminate(): boolean {
 
           if (completedRequests === this.stageLst.length) {
             this.statusLst = [];
-
-            // ✅ Push valid status lists only
             for (const [stage, fields] of Object.entries(
               this.statusOptionsByStageforDisplay
             )) {
-              const clonedFields = JSON.parse(JSON.stringify(fields)); // avoid reference bugs
+              const clonedFields = JSON.parse(JSON.stringify(fields));
               this.statusLst.push({ stage, fields: clonedFields });
             }
-
-            // ✅ Inject OPEN stage if not already
             const openExists = this.statusLst.some(
               (s: any) => s.stage.toLowerCase() === 'open'
             );
@@ -3521,33 +3550,59 @@ isIndeterminate(): boolean {
       content: template.content || 'Follow up mail'
     });
   }
-
-  loadStatusesByStage(selectedStage: any): void {
-    this.checkboxStageOptions = [];
-    if (!selectedStage || !this.statusesFromApi) {
+  loadStatusesByStage(selectedStages?: any[]): void {
+    this.selectStageOptions = [];
+    if (!Array.isArray(selectedStages) || !this.statusesFromApi) {
       return;
     }
-    const stageName =
-      typeof selectedStage === 'string'
-        ? selectedStage
-        : selectedStage.stageName;
-
-    if (!stageName) {
-      return;
-    }
-    const statuses = this.statusesFromApi[stageName];
-    if (!Array.isArray(statuses)) {
-      return;
-    }
-    this.checkboxStageOptions = statuses.map(status => ({
-      name: status.name,
-      color: status.color,
-      checked: status.checked ?? false,
-      isCustom: status.isCustom ?? false
-    }));
+    const mergedStatusesMap = new Map<string, any>();
+    selectedStages.forEach(stage => {
+      const stageName =
+        typeof stage === 'string' ? stage : stage?.stageName;
+      if (!stageName) {
+        return;
+      }
+      const statuses = this.statusesFromApi[stageName];
+      if (!Array.isArray(statuses)) {
+        return;
+      }
+      statuses.forEach(status => {
+        if (!mergedStatusesMap.has(status.name)) {
+          mergedStatusesMap.set(status.name, {
+            name: status.name,
+            color: status.color,
+            checked: status.checked ?? false,
+            isCustom: status.isCustom ?? false
+          });
+        }
+      });
+      const f25Value = selectedStages
+        .map(stage => typeof stage === 'string' ? stage : stage?.stageName)
+        .filter(Boolean)
+        .join(',');
+      this.f25Value = f25Value
+      const payload = this.buildSavePayload();
+      // this.switchService.SaveCrmStages(payload).subscribe({})
+    });
+    this.selectStageOptions = Array.from(mergedStatusesMap.values());
+    localStorage.setItem('save25',this.f25Value);
   }
-
-
-
+  buildSavePayload(): any {
+    const f25FromLocal = localStorage.getItem('save25') || '';
+    return {
+      ...this.crmStagesResponse, 
+      f25: f25FromLocal          
+    };
+  }
+  showFirstStageByDefault(): void {
+  if (!this.stageLst?.length || !this.statusesFromApi) {
+    return;
+  }
+  const firstStage = this.stageLst[0];
+    this.defaultDisplayStage = [firstStage.stageName];
+  setTimeout(() => {
+    this.loadStatusesByStage(this.defaultDisplayStage);
+  }, 0);
+  }
 
 }
