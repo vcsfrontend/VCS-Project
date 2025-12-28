@@ -325,4 +325,36 @@ table.mat-mdc-table {
     padding-top: 5px;
     align-items: center;
 }
+/* IMPORTANT: break Angular encapsulation */
+::ng-deep ng-select .ng-select-container {
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* Keep selected items in one line */
+::ng-deep ng-select .ng-value-container {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+}
+
+/* Prevent chips from expanding */
+::ng-deep ng-select .ng-value {
+  white-space: nowrap;
+  max-width: 150px;
+  flex-shrink: 0;
+}
+
+/* Truncate long text */
+::ng-deep ng-select .ng-value-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Optional: hide scrollbar (Chrome) */
+::ng-deep ng-select .ng-value-container::-webkit-scrollbar {
+  height: 4px;
+}
 
