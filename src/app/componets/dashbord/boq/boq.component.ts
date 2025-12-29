@@ -1191,15 +1191,9 @@ closeAllDropdowns() {
         formData.append('email', this.userEmail);
         formData.append('type', this.userType);
         formData.append('finalAmount', String(Number(this.finalAmount || 0)));
-
-        
         if (this.imageFile) {
             formData.append('image', this.imageFile);
         }
-        // formData.forEach((value, key) => {
-        //     console.log(key, value);
-        // });
-       
         this.switchService.saveElementData(formData).subscribe({
             next: (res: any) => {
                 if (res?.status === true) {
@@ -3122,7 +3116,6 @@ closeAllDropdowns() {
         const projectId = this.projectId;
         if (!projectId) return;
         if (!confirm(`Delete recce stage "${stage}"?`)) return;
-        console.log('Project ID:', projectId, 'Stage:', stage);
         this.switchService.deleterecce(projectId, stage).subscribe({
             next: (res: any) => {
                 if (res) {

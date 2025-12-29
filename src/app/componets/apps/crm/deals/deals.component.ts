@@ -267,7 +267,7 @@ export class DealsComponent extends BaseComponent {
     { name: 'Not Connected', checked: false, isDefault: true,color: '#ffc107' },
     { name: 'Invalid', checked: false, isDefault: true,color: '#dc3545' },
   ];
-   proposalStage = [
+  proposalStage = [
     { name: 'proposal Required', checked: false, isDefault: true, color: '#486a1bff' },
     { name: 'proposal sent', checked: false, isDefault: true, color: '#28a743' },
     {
@@ -298,18 +298,20 @@ export class DealsComponent extends BaseComponent {
   }
   openRight3(content31: any, element: any) {
     this.selectedLeadData = element;
-    this.moveCmapignSubmitted = false; 
-  this.LeadToCampaignForm.reset();
+    this.moveCmapignSubmitted = false;
+    this.LeadToCampaignForm.reset();
     this.modalService.open(content31, { centered: true });
     this.getCampaignData();
   }
   openRight12(content12: any) {
     this.offcanvasService.open(content12, { position: 'end' });
   }
+  openCrmStages(content17: any) {
+    this.modalService.open(content17, { centered: true });
+  }
   openRight5(content5: any) {
     this.offcanvasService.open(content5, { position: 'end' });
   }
-
   openRight7(content: any) {
     this.offcanvasRef = this.offcanvasService.open(content, {
       position: 'end',
@@ -848,16 +850,8 @@ export class DealsComponent extends BaseComponent {
             if (followUpDate) {
             this.followupLeadSubmit(modal); 
             }
-          } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+          } 
+        }
       });
   }
 
@@ -1091,13 +1085,8 @@ export class DealsComponent extends BaseComponent {
         if (res) {
           this.crmLeadsList = res;
           this.dataSource.data = this.crmLeadsList;
-        } else {
-          this.toastr.error(res.message || 'Failed to load leads.');
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || 'Server Error');
-      },
+      }
     });
   }
 
@@ -1120,9 +1109,7 @@ export class DealsComponent extends BaseComponent {
       this.selectedFileName = '';
       this.uploadSubmitted = false;
       this.uploadLead.reset();
-      this.toastr.warning('Please choose Valid file', 'lead', {
-        timeOut: 3000, positionClass: 'toast-top-right'
-      });
+      this.toastr.warning('Please choose Valid file', 'lead',);
     } else {
       this.imageFileSrcData = files;
     }
@@ -1294,13 +1281,11 @@ export class DealsComponent extends BaseComponent {
             this.getfetchLeadsIndividual();
           } else {
             this.uploadSpinner = false;
-            // this.toastr.error(res.message, 'lead');
             this.toastr.warning('invalid file');
           }
         },
         error: (err: any) => {
           this.uploadSpinner = false;
-          this.toastr.error('Error uploading CRM leads', 'lead');
         },
       });
     }
@@ -1376,16 +1361,8 @@ export class DealsComponent extends BaseComponent {
               timeOut: 3000,
               positionClass: 'toast-top-right',
             });
-          } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
-        },
+          } 
+        }
       });
   }
 
@@ -1458,105 +1435,119 @@ export class DealsComponent extends BaseComponent {
 
   followupLeadSubmit(modal: any) {
     this.followupLeadSubmitted = true;
+
     if (!this.followupLeadForm.valid) {
       this.uploadSpinner = false;
       return;
     }
+
     this.uploadSpinner = true;
-    const currentStatus = this.followupLeadForm.get('status')?.value?.toLowerCase().trim();
-    const originalStatus = this.originalStatus?.toLowerCase().trim();
-    if (this.followupLeadForm?.valid) {
-      this.followupLeadForm.patchValue({ followUpBy: this.executiveName });
-      const formValue = this.followupLeadForm.value;
-       const date = new Date(formValue.followupDate);
 
-       let formattedDate: string | null = null;
+    this.followupLeadForm.patchValue({
+      followUpBy: this.executiveName
+    });
 
-      if (formValue.followupDate) {
+    const formValue = this.followupLeadForm.value;
+
+    let formattedDate: string | null = null;
+    if (formValue.followupDate) {
       const date = new Date(formValue.followupDate);
-
       if (!isNaN(date.getTime())) {
         formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
           .toString()
-          .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}T${date
-          .getHours()
-          .toString()
-          .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:00`;
+          .padStart(2, '0')}-${date.getDate()
+            .toString()
+            .padStart(2, '0')}T${date.getHours()
+              .toString()
+              .padStart(2, '0')}:${date.getMinutes()
+                .toString()
+                .padStart(2, '0')}:00`;
       }
-      }
-      const updatedTime = this.getFormattedNow();
-      const followUpDetails = {
-        followupDate: formattedDate,
-        followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
+    }
+
+    const updatedTime = this.getFormattedNow();
+
+    const followUpDetails = {
+      followupDate: formattedDate,
+      followupTime: this.convertTo12HourFormat(formValue.followupTime || ''),
+      stage: formValue.stage,
+      status: formValue.status,
+      comments: formValue.comments,
+      followUpBy: this.executiveName,
+      updatedTime: updatedTime,
+      currentStage: formValue.stage,
+      leadEntry: {
+        leadId: this.leadId,
+        name: formValue.name || '',
+        companyName: formValue.companyName || '',
+        executive: formValue.executive || this.executiveName || '',
+        products: formValue.products || '',
+        country: formValue.country || '',
         stage: formValue.stage,
         status: formValue.status,
-        comments: formValue.comments,
-        followUpBy: this.executiveName,
-        updatedTime: updatedTime,
+        leadSource: formValue.leadSource || '',
+        zipCode: formValue.zipCode || '',
+        followUpDate: formValue.followupDate || '',
+        state: formValue.state || '',
+        city: formValue.city || '',
+        address: formValue.address || '',
+        contact: formValue.contact || '',
+        email: formValue.email || '',
         currentStage: formValue.stage,
-        leadEntry: {
-          leadId: this.leadId,
-          name: formValue.name || '',
-          companyName: formValue.companyName || '',
-          executive: formValue.executive || this.executiveName || '',
-          products: formValue.products || '',
-          country: formValue.country || '',
-          stage: formValue.stage,
-          status: formValue.status,
-          leadSource: formValue.leadSource || '',
-          zipCode: formValue.zipCode || '',
-          followUpDate: formValue.followupDate || '',
-          state: formValue.state || '',
-          city: formValue.city || '',
-          address: formValue.address || '',
-          contact: formValue.contact || '',
-          email: formValue.email || '',
-          currentStage: formValue.stage,
-          updatedBy: this.executiveName || '',
-          updatedTime: updatedTime,
-          entryBy: formValue.entryBy || '',
-          campaignId: formValue.campaignId || '',
-          companyCode: formValue.companyCode || '',
-          individualEmail: formValue.individualEmail || '',
-          type: formValue.type || 0,
-          taskGenId: formValue.taskGenId || '',
-          completionStatus: formValue.completionStatus || '',
-          completedBy: formValue.completedBy || '',
-          completionTime: formValue.completionTime || ''
-        }
-      };
-      this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
-        next: (res: any) => {
-          if (res.status == true) {
-            if (
-              this.selectedStatus === 'Connected' &&
-              this.selectedTemplateForMail
-            ) {
-              this.triggerFollowupMailSend();
-            }
-            modal.close();
-            this.followupLeadSubmitted = false;
-            this.uploadSpinner = false;
-            this.showForm = false;
-            this.followupLeadForm.reset();
-            this.executiveName = '';
-            this.followupName = '';
-            this.leadId = 0;
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-            this.getfetchLeadsIndividual();
-          } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          }
-        }
-      })
-    }
-  }
+        updatedBy: this.executiveName || '',
+        updatedTime: updatedTime,
+        entryBy: formValue.entryBy || '',
+        campaignId: formValue.campaignId || '',
+        companyCode: formValue.companyCode || '',
+        individualEmail: formValue.individualEmail || '',
+        type: formValue.type || 0,
+        taskGenId: formValue.taskGenId || '',
+        completionStatus: formValue.completionStatus || '',
+        completedBy: formValue.completedBy || '',
+        completionTime: formValue.completionTime || ''
+      }
+    };
 
-   private getFormattedNow(): string {
+    this.switchService.CRMAddFollowupLead(followUpDetails).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          if (
+            this.selectedStatus === 'Connected' &&
+            this.followupLeadForm.value.template
+          ) {
+            this.triggerFollowupMailSend();
+          }
+
+          modal.close();
+          this.followupLeadSubmitted = false;
+          this.uploadSpinner = false;
+          this.showForm = false;
+          this.followupLeadForm.reset();
+          this.selectedTemplateForMail = null;
+
+          this.executiveName = '';
+          this.followupName = '';
+          this.leadId = 0;
+
+          this.toastr.success(res.message, 'lead', {
+            timeOut: 3000,
+            positionClass: 'toast-top-right'
+          });
+
+          this.getfetchLeadsIndividual();
+        } else {
+          this.uploadSpinner = false;
+        }
+      },
+      error: () => {
+        this.uploadSpinner = false;
+      }
+    });
+  }
+  
+  
+
+  private getFormattedNow(): string {
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, '0');
 
@@ -1569,6 +1560,7 @@ export class DealsComponent extends BaseComponent {
 
     return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
   }
+
   convertTo12HourFormat(time24: string): string {
     if (!time24) return '';
     const [hourStr, minuteStr] = time24.split(':');
@@ -1577,10 +1569,8 @@ export class DealsComponent extends BaseComponent {
     hour = hour % 12 || 12;
     return `${hour.toString().padStart(2, '0')}:${minuteStr} ${suffix}`;
   }
-
   getUsers() {
     if (JSON.parse(this.userData).type == 2) {
-      // this.switchService.getAllUsers().subscribe({ next: (res:any) => {
       let cn = JSON.parse(this.userData).companyName;
       let cc = JSON.parse(this.userData).companyCode;
       this.switchService.cmpnyUsers(cn, cc).subscribe({
@@ -1590,15 +1580,7 @@ export class DealsComponent extends BaseComponent {
              this.filteredUserList = this.userList.filter(
               (user: any) => user.adonaiRole?.toUpperCase() !== 'ADMIN'
             );
-          } else {
-            this.toastr.error(res.message, 'signup', {
-              timeOut: 3000,
-              positionClass: 'toast-top-right',
-            });
-          }
-        },
-        error: (error) => {
-          // this.toastr.error(error.statusText);
+          } 
         },
       })
     }
@@ -1655,64 +1637,50 @@ export class DealsComponent extends BaseComponent {
             this.allocateSubmitted = false;
             this.allocateForm.reset();
             this.selectedLeads=[];
-            this.toastr.success(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
+            this.toastr.success(res.message, 'lead',);
              this.isAllocating = false;  
             this.getfetchLeadsIndividual();
-          } else {
-            this.toastr.error(res.message, 'lead', { timeOut: 3000, positionClass: 'toast-top-right' });
-          }
-        },
-        error: (error) => {
-          this.toastr.error(error.statusText);
+          } 
         },
       });
     }
   }
 
- onRowCheckboxChange(lead: any, event: any) {
-  if (event.checked) {
-
-    // Add only if not already added
-    if (!this.selectedLeads.some(l =>
-      (typeof l === 'object' ? l.leadId : l) === lead.leadId
-    )) {
-      this.selectedLeads.push(lead);   // store full object in single select
+  onRowCheckboxChange(lead: any, event: any) {
+    if (event.checked) {
+      if (!this.selectedLeads.some(l =>
+        (typeof l === 'object' ? l.leadId : l) === lead.leadId
+      )) {
+        this.selectedLeads.push(lead);
+      }
+      this.selectedLeadForAppointment = lead;
+    } else {
+      this.selectedLeads = this.selectedLeads.filter(l =>
+        (typeof l === 'object' ? l.leadId : l) !== lead.leadId
+      );
+      if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
+        this.selectedLeadForAppointment = null;
+      }
     }
-
-    this.selectedLeadForAppointment = lead;
-
-  } else {
-
-    // Remove both object or number format
-    this.selectedLeads = this.selectedLeads.filter(l =>
-      (typeof l === 'object' ? l.leadId : l) !== lead.leadId
-    );
-
-    if (this.selectedLeadForAppointment?.leadId === lead.leadId) {
-      this.selectedLeadForAppointment = null;
-    }
-  }
   }
 
   onSelectAllChange(event: any) {
-  if (event.checked) {
-    const rows = this.dataSource.data
-      .filter(row => row.completionStatus !== 'completed');
-    this.selectedLeads = rows.map(r => r.leadId);
-  } else {
-    this.selectedLeads = [];
+    if (event.checked) {
+      const rows = this.dataSource.data
+        .filter(row => row.completionStatus !== 'completed');
+      this.selectedLeads = rows.map(r => r.leadId);
+    } else {
+      this.selectedLeads = [];
+    }
   }
+
+  isSelected(leadId: number): boolean {
+    return this.selectedLeads.some(item =>
+      typeof item === 'number'
+        ? item === leadId
+        : item.leadId === leadId
+    );
   }
-
-isSelected(leadId: number): boolean {
-  return this.selectedLeads.some(item =>
-    typeof item === 'number'
-      ? item === leadId
-      : item.leadId === leadId
-  );
-}
-
-
 
   isAllSelected(): boolean {
   const enabledRows = this.dataSource.data
@@ -2069,9 +2037,6 @@ isIndeterminate(): boolean {
           this.isAddStagesDisabled=false;
         }
       },
-      error: (err) => {
-        // this.toastr.error('Failed to fetch CRM stages.');
-      },
     });
   }
 
@@ -2079,7 +2044,7 @@ isIndeterminate(): boolean {
   saveCrmStatus(): void {
     if (!this.selectedStage) {
       this.showValidationError = true;
-      this.toastr.error('Please select a stage before saving.');
+      this.toastr.warning('Please select a stage before saving.');
       return;
     } else {
       this.showValidationError = false;
@@ -2088,7 +2053,7 @@ isIndeterminate(): boolean {
     const selectedOptions = this.checkboxStageOptions.filter(opt => opt.checked);
     if (selectedOptions.length === 0) {
       this.showCheckboxError = true;
-      this.toastr.error('Please select at least one status.');
+      this.toastr.warning('Please select at least one status.');
       return;
     } else {
       this.showCheckboxError = false;
@@ -2149,13 +2114,7 @@ isIndeterminate(): boolean {
           this.offcanvasService.dismiss();
           this.uploadSpinner = false;
           this.getCrmStages();
-          
-        } else {
-          this.toastr.error(res.message);
-        }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
+        } 
       },
     });
   }
@@ -2163,8 +2122,6 @@ isIndeterminate(): boolean {
   getCrmStatus(): void {
     let completedRequests = 0;
     const hasSavedStageStatuses: string[] = [];
-
-    // ❗ Important: Reset these before reloading data
     this.statusOptionsByStageforDisplay = {};
     this.statusLst = [];
     for (let i = 0; i < this.stageLst.length; i++) {
@@ -2210,14 +2167,10 @@ isIndeterminate(): boolean {
           }
         },
         error: (error) => {
-          const errorMessage =
-            error.statusText || 'Something went wrong while fetching statuses.';
-          this.toastr.error(errorMessage);
           this.statusOptionsByStageforDisplay[stageName] = [];
         },
         complete: () => {
           completedRequests++;
-
           if (completedRequests === this.stageLst.length) {
             this.statusLst = [];
             for (const [stage, fields] of Object.entries(
@@ -2343,9 +2296,6 @@ isIndeterminate(): boolean {
           this.toastr.success(response.message);
           this.getCrmStages();
           this.getCrmStatus();
-        },
-        error: (error) => {
-          this.toastr.error("Failed to delete Lead stages.");
         }
       });
     }
@@ -2364,9 +2314,6 @@ isIndeterminate(): boolean {
           this.toastr.success(response.message);
           this.getCrmStatus();
         },
-        error: (error) => {
-          this.toastr.error("Failed to delete Lead status.");
-        }
       });
     }
   }
@@ -2396,9 +2343,6 @@ isIndeterminate(): boolean {
         this.offcanvasService.dismiss();
         this.selectTemplateForm.reset();
       },
-      error: (err) => {
-        this.toastr.error(err.statusText || 'Error submitting the template.');
-      },
     });
   }
 
@@ -2409,9 +2353,6 @@ isIndeterminate(): boolean {
     forkJoin(requests).subscribe({
       next: (responses: any[]) => {
         this.tempFormList = responses;
-      },
-      error: (err) => {
-        // this.toastr.error('Error fetching template details');
       },
     });
   }
@@ -2599,10 +2540,7 @@ isIndeterminate(): boolean {
         this.toastr.success('Leads deleted successfully');
         this.getfetchLeadsIndividual();
         this.selectedLeads = [];
-      },
-      error: (error) => {
-        this.toastr.error('Failed to delete leads.');
-      },
+      }
     });
   }
   }
@@ -2614,9 +2552,6 @@ isIndeterminate(): boolean {
           this.toastr.success('Lead deleted successfully');
           this.getfetchLeadsIndividual();
           this.selectedLeads = this.selectedLeads.filter(id => id !== leadId);
-        },
-        error: () => {
-          this.toastr.error('Failed to delete lead.');
         },
       });
     }
@@ -2631,10 +2566,7 @@ isIndeterminate(): boolean {
     this.switchService.allEmailTemplates(payload).subscribe({
       next: (res: any[]) => {
         this.tempFormList = res;
-      },
-      error: (err) => {
-        // this.toastr.error('Error fetching template details');
-      },
+      }
     });
   }
 
@@ -2726,9 +2658,6 @@ isIndeterminate(): boolean {
     this.switchService.listLeadEntry(payload).subscribe({
       next: (res: any) => {
         this.companyLst = res;             
-      },
-      error: (error) => {
-        // this.toastr.error(error.statusText);
       }
     });
   }
@@ -2772,12 +2701,8 @@ isIndeterminate(): boolean {
           this.toastr.success('filter leads successfully');
           this.filterApplied = true;
         } else {
-          this.toastr.error(res.message, 'Lead');
           this.filterApplied = false;
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || 'Something went wrong', 'Error');
       }
     });
   }
@@ -2963,12 +2888,7 @@ isIndeterminate(): boolean {
           this.sendLeadForm.reset();
           this.sendMultiMailSubmitted = false;
           this.selectedLeads = []; 
-        } else {
-          this.toastr.error(res.message || 'Mail sending failed.');
         }
-      },
-      error: () => {
-        this.toastr.error('An error occurred while sending mail.');
       }
     });
   }
@@ -3134,11 +3054,7 @@ isIndeterminate(): boolean {
         }
         setTimeout(() => {
           this.currentStep = 1;
-        }, 300);
-
-      },
-      error: (err) => {
-        this.toastr.error('Something went wrong!');
+        }, 300)
       }
     });
   }
@@ -3237,7 +3153,7 @@ isIndeterminate(): boolean {
   submitCampaign(modal: any) {
     this.campaignSubmitted = true;
     if (this.campaignForm.invalid) {
-      this.toastr.error("Please fill in all required fields.");
+      this.toastr.warning("Please fill in all required fields.");
       return;
     }
     this.isSubmitting = true;
@@ -3299,15 +3215,9 @@ isIndeterminate(): boolean {
               ?.split(',')
               ?.map((email: string) => email.trim())
               ?.filter((email: string) => email);
-           
           }
-        } else {
-          this.toastr.error('Unexpected response format.');
         }
-      },
-      // error: (err) => {
-      //   this.toastr.error(err.statusText || 'Error while fetching campaigns.');
-      // },
+      }
     });
   }
   
@@ -3476,46 +3386,43 @@ isIndeterminate(): boolean {
   }
   }
   getAppointment() {
-  const startOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
-  const endOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
-  const isAdmin = this.adoanAiRole === 'ADMIN' || this.crmRole === 'ADMIN';
-  const payload = {
-    startDate: startOfMonth,
-    endDate: endOfMonth,
-    companyCode: this.userCompanyCode,
-    email: this.userEmail,
-    type: this.userType,
-    currentUser : isAdmin ? 'from_admin' : this.userEmail
-  };
-
-  this.switchService.fetchAppointment(payload).subscribe({
-    next: (res) => {
-      this.selectedAppointment = res.map((item: any) => item.leadEntry?.leadId);
-    
-    },
-    error: () => this.toastr.error('Failed to fetch appointments')
-  });
+    const startOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+    const endOfMonth = this.formatDateOnly(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0));
+    const isAdmin = this.adoanAiRole === 'ADMIN' || this.crmRole === 'ADMIN';
+    const payload = {
+      startDate: startOfMonth,
+      endDate: endOfMonth,
+      companyCode: this.userCompanyCode,
+      email: this.userEmail,
+      type: this.userType,
+      currentUser: isAdmin ? 'from_admin' : this.userEmail
+    };
+    this.switchService.fetchAppointment(payload).subscribe({
+      next: (res) => {
+        this.selectedAppointment = res.map((item: any) => item.leadEntry?.leadId);
+      },
+    });
   }
 
-   formatDateOnly(dateInput: string | Date): string {
-  let date: Date;
+  formatDateOnly(dateInput: string | Date): string {
+    let date: Date;
 
-  if (typeof dateInput === 'string') {
-    date = new Date(dateInput);
-  } else {
-    date = dateInput;
-  }
+    if (typeof dateInput === 'string') {
+      date = new Date(dateInput);
+    } else {
+      date = dateInput;
+    }
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
 
-  return `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}`;
   }
  
- hasAppointment(leadId: number): boolean {
-  return Array.isArray(this.selectedAppointment) &&
-    this.selectedAppointment.includes(leadId);
+  hasAppointment(leadId: number): boolean {
+    return Array.isArray(this.selectedAppointment) &&
+      this.selectedAppointment.includes(leadId);
   }
 
   hasPermission(key?: string): boolean {
@@ -3523,16 +3430,16 @@ isIndeterminate(): boolean {
     return this.switchService.hasPermission(key);
   }
   onCompletionClick(modal: any, element: any) {
-  if (element.completionStatus === 'completed') {
-    this.toastr.info('This lead is already completed');
-    return;
+    if (element.completionStatus === 'completed') {
+      this.toastr.info('This lead is already completed');
+      return;
+    }
+    if (!this.access.CRM_deal_completion) {
+      this.toastr.warning('You do not have access to this lead close');
+      return;
+    }
+    this.openCompletionModal(modal, element);
   }
-  if (!this.access.CRM_deal_completion) {
-    this.toastr.warning('You do not have access to this lead close');
-    return;
-  }
-  this.openCompletionModal(modal, element);
-}
 
 
   triggerFollowupMailSend(): void {
@@ -3540,7 +3447,9 @@ isIndeterminate(): boolean {
   }
 
   onFollowupTemplateSelected(template: any): void {
-    if (!template) return;
+    if (!template || !this.selectedEmailForFollowup) {
+      return;
+    }
     this.selectedTemplateForMail = template;
     this.sendLeadForm.patchValue({
       template: template,
@@ -3550,6 +3459,7 @@ isIndeterminate(): boolean {
       content: template.content || 'Follow up mail'
     });
   }
+
   loadStatusesByStage(selectedStages?: any[]): void {
     this.selectStageOptions = [];
     if (!Array.isArray(selectedStages) || !this.statusesFromApi) {
