@@ -1,22 +1,7 @@
 <div class="row">
     <div class="col-lg-12 mt-3">
         <div class="row">
-            <div class="col-xl-12">
-                <div class="card custom-card">
-                    <div class="card-header justify-content-between border-bottom-0">
-                        <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Lead Analytics</div>
-                        <div class="text-center d-flex gap-3">
-                            <!-- <button class="btn btn-primary" (click)="toggleTopShowMore()">
-                                {{ topshowMore ? 'Show Less' : 'Show More' }}
-                            </button> -->
-                            <ng-select [items]="stageLst" bindLabel="stageName" bindValue="stageName"
-                                placeholder="Select a stage" [multiple]="true" [(ngModel)]="defaultDisplayStage" (change)="loadStatusesByStage($event)" style=" width: 100%;max-width: 300px; ">
-                            </ng-select >
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-4" *ngIf="selectStageOptions?.length">
+            <div class="row mt-4">
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-3" *ngFor="let status of selectStageOptions">
                     <div class="card custom-card overflow-hidden">
                         <div class="card-body">
@@ -57,12 +42,41 @@
                                     <div class="d-flex align-items-center justify-content-between flex-wrap">
                                         <div>
                                             <p class="text-muted mb-3">Active Leads</p>
-                                            <h4 class="mt-1">{{activeCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                                            <h4 class="mt-1">{{activeCount}} <span class="text-muted op-7 fs-11">Leads</span>
+                                            </h4>
                                         </div>
                                     </div>
                                     <!-- <div class="d-flex align-items-center justify-content-between">
+                                                <div class="text-end">
+                                                    <p class="mb-0 text-success">+40%</p>
+                                                    <span class="text-muted op-7 fs-11">this month</span>
+                                                </div>
+                                            </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3">
+                    <div class="card custom-card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex align-items-top justify-content-between">
+                                <div>
+                                    <span class="avatar bg-danger-transparent">
+                                        <i class="ri-user-unfollow-line fs-5"></i>
+                                    </span>
+                                </div>
+                                <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                        <div>
+                                            <p class="text-muted mb-3">Not Connected</p>
+                                            <h4 class="mt-1">{{notConnectedCount}} <span
+                                                    class="text-muted op-7 fs-11">Leads</span></h4>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="d-flex align-items-center justify-content-between mt-1">
                                         <div class="text-end">
-                                            <p class="mb-0 text-success">+40%</p>
+                                            <p class="mb-0 text-success">+25%</p>
                                             <span class="text-muted op-7 fs-11">this month</span>
                                         </div>
                                     </div> -->
@@ -71,94 +85,69 @@
                         </div>
                     </div>
                 </div>
-    <div class="col-xl-3">
-        <div class="card custom-card overflow-hidden">
-            <div class="card-body">
-                <div class="d-flex align-items-top justify-content-between">
-                    <div>
-                        <span class="avatar bg-danger-transparent">
-                            <i class="ri-user-unfollow-line fs-5"></i>
-                        </span>
-                    </div>
-                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <div>
-                                <p class="text-muted mb-3">Not Connected</p>
-                                <h4 class="mt-1">{{notConnectedCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                <div class="col-xl-3">
+                    <div class="card custom-card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex align-items-top justify-content-between">
+                                <div>
+                                    <span class="avatar p-2 bg-orange-transparent svg-orange">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
+                                            fill="#000000">
+                                            <path d="M0 0h24v24H0V0z" fill="none" />
+                                            <path
+                                                d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+                                        </svg>
+                                    </span>
+                                </div>
+                                <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                        <div>
+                                            <p class="text-muted mb-3">Followup's</p>
+                                            <h4 class="mt-1">{{followUpCount}} <span class="text-muted op-7 fs-11">Leads</span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="d-flex align-items-center justify-content-between mt-1">
+                                        <div class="text-end">
+                                            <p class="mb-0 text-success">+19%</p>
+                                            <span class="text-muted op-7 fs-11">this month</span>
+                                        </div>
+                                    </div> -->
+                                </div>
                             </div>
                         </div>
-                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
-                                <div class="text-end">
-                                    <p class="mb-0 text-success">+25%</p>
-                                    <span class="text-muted op-7 fs-11">this month</span>
-                                </div>
-                            </div> -->
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3">
-        <div class="card custom-card overflow-hidden">
-            <div class="card-body">
-                <div class="d-flex align-items-top justify-content-between">
-                    <div>
-                        <span class="avatar p-2 bg-orange-transparent svg-orange">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                                fill="#000000">
-                                <path d="M0 0h24v24H0V0z" fill="none" />
-                                <path
-                                    d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <div>
-                                <p class="text-muted mb-3">Followup's</p>
-                                <h4 class="mt-1">{{followUpCount}} <span class="text-muted op-7 fs-11">Leads</span></h4>
+                <div class="col-xl-3">
+                    <div class="card custom-card overflow-hidden">
+                        <div class="card-body">
+                            <div class="d-flex align-items-top justify-content-between">
+                                <div>
+                                    <div>
+                                        <span class="avatar avatar-rounded bg-secondary-transparent">
+                                            <i class="ti ti-file-check fs-20"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
+                                    <div class="d-flex align-items-center justify-content-between flex-wrap">
+                                        <div>
+                                            <p class="text-muted mb-3">Completed</p>
+                                            <h4 class="mt-1">{{statusCompletion}} <span
+                                                    class="text-muted op-7 fs-11">Leads</span></h4>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="d-flex align-items-center justify-content-between mt-1">
+                                        <div class="text-end">
+                                            <p class="mb-0 text-danger">-12%</p>
+                                            <span class="text-muted op-7 fs-11">this month</span>
+                                        </div>
+                                    </div> -->
+                                </div>
                             </div>
                         </div>
-                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
-                                <div class="text-end">
-                                    <p class="mb-0 text-success">+19%</p>
-                                    <span class="text-muted op-7 fs-11">this month</span>
-                                </div>
-                            </div> -->
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3">
-        <div class="card custom-card overflow-hidden">
-            <div class="card-body">
-                <div class="d-flex align-items-top justify-content-between">
-                    <div>
-                        <div>
-                            <span class="avatar avatar-rounded bg-secondary-transparent">
-                                <i class="ti ti-file-check fs-20"></i>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="flex-fill ms-3 d-flex align-items-start justify-content-between">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <div>
-                                <p class="text-muted mb-3">Completed</p>
-                                <h4 class="mt-1">{{statusCompletion}} <span class="text-muted op-7 fs-11">Leads</span></h4>
-                            </div>
-                        </div>
-                        <!-- <div class="d-flex align-items-center justify-content-between mt-1">
-                                <div class="text-end">
-                                    <p class="mb-0 text-danger">-12%</p>
-                                    <span class="text-muted op-7 fs-11">this month</span>
-                                </div>
-                            </div> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 <div class="col-xl-12" *ngIf="hasPermission('CRM_deals_view')">
     <div class="card custom-card">
@@ -1263,8 +1252,10 @@
                 </div>
                 <div class="mb-4" *ngIf="showMailTemplate">
                     <label class="form-label">Mail Template</label>
+
                     <ng-select placeholder="Select Template" formControlName="template" [items]="tempFormList" bindLabel="templateName"
-                        (change)="onFollowupTemplateSelected($event)" class="border rounded">
+                        [disabled]="!selectedEmailForFollowup" (change)="selectedEmailForFollowup && onFollowupTemplateSelected($event)"
+                        class="border rounded">
                     </ng-select>
                 </div>
             </div>
@@ -1397,6 +1388,7 @@
                 <div class="card-header justify-content-between border-bottom-0">
                     <div class="card-title col-md-2 col-xl-6 col-xxl-6 col-lg-6 col-sm-3">Lead Analytics</div>
                     <div class="text-center">
+                        <button class="btn btn-primary me-2" (click)="openCrmStages(content17)">Save Analytics</button>
                         <button class="btn btn-primary" (click)="toggleTopShowMore()">
                             {{ topshowMore ? 'Show Less' : 'Show More' }}
                         </button>
@@ -2207,4 +2199,31 @@
       </div>
     </div>
   </form>
+</ng-template>
+
+<ng-template #content17 id="addtask" let-modal>
+    <form [formGroup]="LeadToCampaignForm" (ngSubmit)="leadToCampaignSubmit(modal)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="mail-ComposeLabel"><strong>Save Analytics</strong></h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="row gy-2">
+                    <div class="col-xl-12">
+                        <label class="form-label">Select Analytics</label>
+                        <ng-select [items]="stageLst" bindLabel="stageName" bindValue="stageName" placeholder="Select a stage" [multiple]="true"
+                            [(ngModel)]="defaultDisplayStage" (change)="loadStatusesByStage($event)">
+                        </ng-select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+                    (click)="modal.close('Cross click')">Cancel</button>
+                <button type="submit" class="btn btn-primary" [disabled]="uploadSpinner">Submit</button>
+            </div>
+        </div>
+    </form>
 </ng-template>

@@ -450,8 +450,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.stageLst = res;
           this.initializeDynamicFields();
-        } else {
-          this.toastr.error(res.message)
         }
         this.stopLoading();
       },
@@ -485,8 +483,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res) {
           this.pmntStageLst = res;
           this.initializeDynamicPmntFields();
-        } else {
-          this.toastr.error(res.message)
         }
         this.stopLoading();
       },
@@ -524,17 +520,14 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res.url) {
           window.open(res.url, '_blank');
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText || "An error occurred while fetching design details.");
-      },
+      }
     });
   }
 
   onSubmit(): void {
     this.submitted = true;
     if (this.createProjectForm.invalid) {
-      this.toastr.error('Please fill mandatory fields');
+      this.toastr.warning('Please fill mandatory fields');
       this.createProjectForm.markAllAsTouched();
       return;
     }
@@ -600,8 +593,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         if (res.status == true) {
           this.toastr.success(res.message);
           return;
-        } else {
-          this.toastr.error(res.message);
         }
       },
     })
@@ -800,11 +791,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
       next: (res: any) => {
         if (res) {
           this.pjData = res;
-        } else {
-          this.toastr.error(res.message, '', {
-            timeOut: 3000,
-            positionClass: 'toast-top-right',
-          });
         }
       },
     })
@@ -847,13 +833,8 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
           this.paymentStages = res.map((item: any) => ({ ...item, isNew: false }));
           this.paymentStages.forEach((e: any) => { e.updatedTime = this.convertToIST(e.updatedTime); });
           this.calculateTotalReceivedAmount();
-        } else {
-          this.toastr.error(res.message);
         }
-      },
-      error: (error) => {
-        this.toastr.error(error.statusText);
-      },
+      }
     })
   }
 
@@ -918,7 +899,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     const newTotalPercentage = totalPercentageExcludingCurrent + (payment.percantage ? parseFloat(payment.percantage) : 0);
 
     if (newTotalPercentage > 100) {
-      this.toastr.error('Total percentage cannot exceed 100. Please enter a valid value.', 'Validation Error');
+      this.toastr.warning('Total percentage cannot exceed 100. Please enter a valid value.', 'Validation Error');
       payment.percantage = ''; payment.amountToBeRecieved = '';
     }
   }
@@ -987,7 +968,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
   savePaymentDetails() {
     const incompleteRow = this.paymentStages.find((e: any) => !e.paymentStage || !e.percantage || !e.receivedAmount);
     if (!this.hasAddedRow) {
-      this.toastr.error('Please add a new row before submitting the form.', 'Error');
+      this.toastr.warning('Please add a new row before submitting the form.', 'Error');
       return;
     }
     else if (incompleteRow) {
@@ -1012,10 +993,7 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
         next: (response) => {
           this.toastr.success(response.message);
           this.modalService.dismissAll();
-        },
-        error: (error) => {
-          // this.toastr.error('Error save payment details', error);
-        },
+        }
       });
     }
   }
@@ -1706,45 +1684,6 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
     }
   }
 
-  // getProjectList() {
-  //   this.startLoading();
-  //   const userEmail = JSON.parse(this.userDetails)?.email;
-  //   if (!userEmail) {
-  //     this.toastr.error("User email not found.");
-  //     return;
-  //   }
-  //   this.switchService.ProjectDataList(userEmail).subscribe({
-  //     next: (res: any) => {
-  //       if (res?.values && Array.isArray(res.values)) {
-  //         this.projectList = res.values.map((project: any) => ({
-  //           area: project.area || "N/A",
-  //           modifiedTime: project.modifiedTime || "N/A",
-  //           city: project.city || "N/A",
-  //           created: project.created || "N/A",
-  //           planPic: project.planPic || "N/A",
-  //           specName: project.specName || "N/A",
-  //           srcArea: project.srcArea || "N/A",
-  //           name: project.name || "Unnamed Project",
-  //           designId: project.designId || "N/A",
-  //           planId: project.planId || "N/A",
-  //           commName: project.commName || "N/A",
-  //           coverPic: project.coverPic || "N/A",
-  //           status: project.status || "Unknown",
-  //           tagId: project.tagId || "N/A",
-  //           designPanoUrl: project.designPanoUrl || "N/A",
-  //         }));
-
-  //         this.eliteDataSource.data = this.projectList;
-  //         if (this.elitePaginator) {
-  //           this.elitePaginator.length = this.projectList.length;
-  //         }
-  //       }
-  //       this.stopLoading();
-  //     },
-  //   });
-  // }
-
-
   get i() {
     return this.inventoryForm.controls;
   }
@@ -1758,18 +1697,9 @@ export class ProjectsComponent extends BaseComponent implements OnInit, AfterVie
             modal.close();
             this.inventorySubmitted = false;
             this.inventoryForm.reset();
-            this.toastr.success(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          } else {
-            this.toastr.error(res.message, 'lead', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
+            this.toastr.success(res.message, 'lead',);
           }
-        },
-        // error: (error) => {
-        //   this.toastr.error(error.statusText);
-        // },
+        }
       })
     }
   }
@@ -1839,7 +1769,7 @@ downloadButtons: { label: string; url: string }[] = [];
     const shutterListChecked = this.quotationForm.get('isDetailPannelRequired')?.value;
     const shutterOptionsGroup = this.quotationForm.get('shutterOptions') as FormGroup;
     if (this.quotationForm.invalid) {
-      this.toastr.error('Please fill mandatory fields');
+      this.toastr.warning('Please fill mandatory fields');
       return;
     }
     this.isLoading = true;
@@ -1898,27 +1828,18 @@ downloadButtons: { label: string; url: string }[] = [];
           { label: 'Customized Quote', url: res.customizedQuoteurl },
           { label: 'Hardware List', url: res.hardwareListUrl }
         ].filter(file => file.url?.trim() && file.url.startsWith('http'));
-
-        // Extract URLs for auto-download
         const validFileUrls = this.downloadButtons.map(file => file.url);
 
         if (validFileUrls.length > 0) {
           this.downloadAllFiles(validFileUrls);
         } 
-
-        // Cleanup
         modal.close();
         this.onQuotationSubmitted = false;
         this.quotationForm.reset();
         }
-        
-
-        // Save main quotation file URL (if needed elsewhere)
-       
       }
     },
     error: (err) => {
-      // this.toastr.error(err.statusText || 'Something went wrong');
       this.isLoading = false;
     }
   });
@@ -2098,12 +2019,9 @@ downloadButtons: { label: string; url: string }[] = [];
     };
     this.switchService.quotationHistory(payload).subscribe({
       next: (res: any) => {
-        if (res ) {
+        if (res) {
           selectedRow.quotationHistoryList = res;
-        } 
-        },
-      error: (error) => {
-        this.toastr.error(error.statusText || 'An error occurred while fetching the quotation history.');
+        }
       }
     });
   }

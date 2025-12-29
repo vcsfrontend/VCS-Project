@@ -1796,7 +1796,7 @@
                                             <div class="card-title d-flex align-items-center">
                                                 <a href="javascript:void(0);" class="btn btn-link p-0 me-2" (click)="backToPermissions()">
                                                     <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
-                                                </a>Assigne Permission To {{selectedPermission?.roleName}}
+                                                </a>Assign Permission To {{selectedPermission?.roleName}}
                                             </div>
                                             <div class="d-flex flex-wrap align-items-center gap-2">
                                                 <div class="input-group" style="max-width: 150px;">
@@ -1805,7 +1805,7 @@
                                                     <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
                                                             class="ri-search-line text-muted"></i></button>
                                                 </div>
-                                                <button class="btn btn-primary btn-sm" (click)="openLg(Content16);">Assign Permissions</button>
+                                                <button class="btn btn-primary btn-sm" (click)="permissionModal(Content16);">Assign Permissions</button>
                                 
                                             </div>
                                         </div>
@@ -1878,7 +1878,7 @@
                                                 <a href="javascript:void(0);" class="btn btn-link p-0 me-2"
                                                     (click)="backToUsers()">
                                                     <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
-                                                </a>Assigne User to department Role
+                                                </a>Assign User to department Role
                                             </div>
                                             <div class="d-flex flex-wrap align-items-center gap-2">
                                                 <div class="input-group" style="max-width: 150px;">
@@ -2044,103 +2044,6 @@
                                 </div>
                             </ng-template>
                         </ng-container>
-                        <ng-container ngbNavItem="Services">
-                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true" (click)="getAllPermissions()"><i class="bx bx-lock-alt me-1"></i>Permissions</a>
-                            <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="card custom-card">
-                                            <div class="card-header justify-content-between">
-                                                <div class="card-title d-flex align-items-center">
-                                                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light me-2">
-                                                        <i class="ri-arrow-left-line"></i>
-                                                    </a>Permissions
-                                                </div>
-                                                <div class="d-flex flex-wrap align-items-center gap-2">
-                                                    <div class="input-group" style="max-width: 150px;">
-                                                        <input type="text" class="form-control" placeholder="Search Departments"
-                                                            aria-describedby="button-addon2">
-                                                        <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
-                                                                class="ri-search-line text-muted"></i></button>
-                                                    </div>
-                                                    <button class="btn btn-primary btn-sm" (click)="openLg(Content114);">Add Permission</button>
-                                                </div>
-                                            </div>
-                                            <div class="card-body p-0">
-                                                <div class="table-responsive">
-                                                    <table class="table text-nowrap">
-                                                        <thead class="custom-header">
-                                                            <tr>
-                                                                <th scope="col">S.No</th>
-                                                                <th scope="col">Name</th>
-                                                                <th scope="col">Description</th>
-                                                                <th scope="col">Actions</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody *ngFor="let permission of permissionList; let i = index">
-                                                            <tr>
-                                                                <td> {{ i + 1 }}</td>
-                                                                <td>
-                                                                    <div class="d-flex align-items-center lh-1">
-                                                                        <div class="me-2">
-                                                                            <span
-                                                                                class="avatar avatar-sm avatar-rounded text-white fw-bold d-flex align-items-center justify-content-center"
-                                                                                [ngClass]="getDeptColor(permission.name)">
-                                                                                {{ permission.name?.charAt(0) | uppercase }}
-                                                                            </span>
-                                                                        </div>
-                                                                        <div>{{permission.name}}</div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>{{permission.description}}</td>
-                                                                <td>
-                                                                    <div class="hstack gap-2 fs-1">
-                                                                        <a aria-label="anchor" href="javascript:void(0);"
-                                                                            class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"
-                                                                            (click)="editPermissionFormSelected(permission, Content114)"><i
-                                                                                class="ri-edit-line"></i></a>
-                                                                        <a aria-label="anchor" href="javascript:void(0);"
-                                                                            class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                                                            (click)="deletePermission(permission.id)"><i
-                                                                                class="ri-delete-bin-line"></i></a>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="card-footer border-top-0">
-                                                <div class="d-flex flex-wrap align-items-center">
-                                                    <div>
-                                                        Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
-                                                    </div>
-                                                    <div class="ms-auto">
-                                                        <nav aria-label="Page navigation" class="pagination-style-4">
-                                                            <ul class="pagination mb-0">
-                                                                <li class="page-item disabled">
-                                                                    <a class="page-link" href="javascript:void(0);">
-                                                                        Prev
-                                                                    </a>
-                                                                </li>
-                                                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                                <li class="page-item">
-                                                                    <a class="page-link text-primary" href="javascript:void(0);">
-                                                                        next
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </nav>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ng-template>
-                        </ng-container>
                         <ng-container ngbNavItem="departments">
                             <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
                                 aria-selected="true" (click)="adminAccessAllUsers()">
@@ -2158,7 +2061,6 @@
                                                     Total Departments: {{ departmentList.length || 0 }}
                                                 </span>
                                             </div>
-                                    
                                             <div class="card-body">
                                                 <div *ngFor="let dep of departmentListTable; let i = index" class="mb-3 border rounded p-2 shadow-sm">
                                                     <div class="d-flex justify-content-between align-items-center" (click)="toggleDepartment(i)"
@@ -2168,7 +2070,7 @@
                                                             {{ dep.departmentName }}
                                                         </h6>
                                                         <div>
-                                                            <span class="me-3 text-muted">{{ dep.roles?.length ||0 }} Roles</span>
+                                                            <span class="me-3 text-muted">{{ dep.roles?.length || 0 }} Roles</span>
                                                             <span class="me-3 text-muted">{{ getTotalPermissions(dep) }} Permissions</span>
                                                             <span class="text-muted">{{ dep.users?.length || 0 }} Users</span>
                                                             <i class="ri-arrow-down-s-line ms-1" [class.rotate]="isDepartmentOpen(i)"></i>
@@ -2180,25 +2082,32 @@
                                                                 <div class="d-flex justify-content-between align-items-center" (click)="toggleRole(i, j)"
                                                                     style="cursor:pointer;">
                                                                     <div class="fw-medium text-primary">
-                                                                        <i class="ri-shield-user-line me-1"></i> {{ role.roleName }} - {{
-                                                                        role.permissions?.length || 0 }} Permissions
+                                                                        <i class="ri-shield-user-line me-2"></i>
+                                                                        {{ role.roleName }}
+                                                                        <span *ngIf="dep.users?.[j]" class="badge bg-primary">
+                                                                            {{ dep.users[j] }}
+                                                                        </span>
                                                                     </div>
-                                                                    <span class="badge bg-primary-gradient">
-                                                                        {{ role.permissions?.length || 0 }} Permissions
-                                                                        <i class="ri-arrow-down-s-line ms-1" [class.rotate]="isRoleOpen(i, j)"></i>
-                                                                    </span>
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <span class="badge bg-primary-gradient">
+                                                                            {{ role.roleName === 'ADMIN' ? 69 : (role.permissions?.length || 0) }}
+                                                                            Permissions
+                                                                            <i class="ri-arrow-down-s-line ms-1" [class.rotate]="isRoleOpen(i, j)"></i>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                                 <div *ngIf="isRoleOpen(i, j)" class="mt-2 ms-3">
-                                                                    <span *ngFor="let perm of role.permissions"
-                                                                        class="badge bg-info text-white me-1 mb-1">{{ perm }}</span>
+                                                                    <span *ngFor="let perm of role.permissions" class="badge bg-info text-white me-1 mb-1">
+                                                                        {{ perm }}
+                                                                    </span>
                                                                 </div>
                                                             </li>
                                                         </ul>
-                                    
                                                         <div class="mt-3">
                                                             <strong class="me-3">Users:</strong>
-                                                            <span *ngFor="let user of dep.users" class="badge bg-secondary text-white me-1 p-2">{{ user
-                                                                }}</span>
+                                                            <span *ngFor="let user of dep.users" class="badge bg-primary text-white me-1 p-2">
+                                                                {{ user }}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2259,107 +2168,7 @@
         </div>
     </form>
 </ng-template>
-<!-- <div class="row">
-  <div class="col-6">
-    <div class="card custom-card">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="card-title mb-0">
-          <i class="ri-shield-keyhole-line me-2 text-primary"></i>
-          Admin Access Overview
-        </h5>
-        <span class="badge bg-primary fs-6">
-          Total Users: {{ adminAccessUsersLst.length || 0 }}
-        </span>
-      </div>
 
-      <div class="card-body">
-          <div
-            class="col-xl-12 col-lg-12 col-md-12"
-            *ngFor="let adminAccess of adminAccessUsersLst; let i = index"
-          >
-            <div class="card custom-card m-2 border shadow-sm">
-              <div
-                class="card-header d-flex justify-content-between align-items-center bg-light"
-              >
-                <h6 class="card-title mb-0 text-dark">
-                  <i class="ri-user-line me-2 text-primary"></i>
-                  {{ adminAccess.userEmail }}
-                </h6>
-                <span class="badge bg-primary rounded-pill">#{{ i + 1 }}</span>
-              </div>
-              <div class="card-body">
-                <ul class="list-group">
-                  <li
-                    class="list-group-item flex-column align-items-start p-2"
-                    *ngFor="let dep of adminAccess.departments; let j = index"
-                  >
-                    <div
-                      class="d-flex justify-content-between align-items-center mb-1"
-                      (click)="toggleDepartment(i, j)"
-                      style="cursor: pointer;"
-                    >
-                      <span class="fw-semibold text-dark">
-                        <i class="ri-building-line me-1 text-primary"></i>
-                        {{ dep.departmentName }}
-                      </span>
-                      <span class="badge bg-secondary-light text-dark">
-                        {{ dep.roles.length }} Roles
-                        <i
-                          class="ri-arrow-down-s-line ms-1"
-                          [class.rotate]="isDepartmentOpen(i, j)"
-                        ></i>
-                      </span>
-                    </div>
-                    <div *ngIf="isDepartmentOpen(i, j)" class="mt-2">
-                      <ul class="list-group ms-3">
-                        <li
-                          class="list-group-item flex-column align-items-start p-2"
-                          *ngFor="let role of dep.roles; let k = index"
-                        >
-                          <div
-                            class="d-flex justify-content-between align-items-center"
-                            (click)="toggleRole(i, j, k)"
-                            style="cursor: pointer;"
-                          >
-                            <span class="fw-medium text-primary">
-                              <i class="ri-shield-user-line me-1"></i>
-                              {{ role.roleName }}
-                            </span>
-                            <span class="badge bg-primary-gradient">
-                              {{ role.permissions.length }} Permissions
-                              <i
-                                class="ri-arrow-down-s-line ms-1"
-                                [class.rotate]="isRoleOpen(i, j, k)"
-                              ></i>
-                            </span>
-                          </div>
-                          <div *ngIf="isRoleOpen(i, j, k)" class="mt-2 ms-3">
-                            <span
-                              *ngFor="let perm of role.permissions"
-                              class="badge bg-info text-white me-1 mb-1"
-                            >
-                              {{ perm }}
-                            </span>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-        </div>
-        <div
-          *ngIf="!adminAccessUsersLst || adminAccessUsersLst.length === 0"
-          class="text-center p-4 text-muted"
-        >
-          <i class="ri-information-line fs-3 d-block mb-2"></i>
-          No user access data found.
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 
 

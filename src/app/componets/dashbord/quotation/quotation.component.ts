@@ -316,13 +316,9 @@ export class QuotationComponent {
 
   sendWhatsAppMessage() {
   if (!this.userContent || !this.userContent.clientMobileNumber) {
-    console.error('Client mobile number not found');
     return;
   }
-
-  const clientNumber = this.userContent.clientMobileNumber.toString().replace(/\D/g, ''); // clean digits only
-
-  // ✅ Get IDs safely
+  const clientNumber = this.userContent.clientMobileNumber.toString().replace(/\D/g, '');
   const designId =
     this.selectedProposalContent?.designId ||
     this.selectedProposalContent?.design_Id ||
@@ -332,21 +328,12 @@ export class QuotationComponent {
     this.selectedProposalContent?.proposalContentId ||
     this.selectedProposalContent?.proposalContId ||
     '';
-
   if (!designId || !proposalContentId) {
-    console.warn('Design ID or Proposal Content ID missing.');
-    console.log('Selected proposal content:', this.selectedProposalContent);
     return;
   }
-
-  // ✅ Your production domain
   const domain = 'https://vcs.plus';
   const quotationUrl = `${domain}/dashboard/quotation?designId=${designId}&proposalContentId=${proposalContentId}`;
-
-  // ✅ WhatsApp message text
   const message = `Hello ${this.userContent.clientName || ''},\n\nHere is your quotation link:\n${quotationUrl}\n\nThank you,\nAdonai Design Team`;
-
-  // ✅ Encode and send via WhatsApp
   const whatsappUrl = `https://api.whatsapp.com/send?phone=91${clientNumber}&text=${encodeURIComponent(message)}`;
 
   window.open(whatsappUrl, '_blank');
