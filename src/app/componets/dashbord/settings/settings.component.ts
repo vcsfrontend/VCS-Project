@@ -86,8 +86,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   quotationNumber: any; previousMarginResponse: any = {}; previousConfigResponse: any = {};
   quotationSubmitted = false; quotationmarginsubmit: boolean = false; projectconfigsubmit: boolean = false;
   submittedQuotationNumber: any; addmargindisable: boolean = false; f1submitCount: number = 0;
-  userEmail: any; roleForm !: FormGroup; roleLst: any; roleCreationId: number = 0; roleName: string = "";
-  deptName: string = "";
+  userEmail: any; roleForm !: FormGroup; roleLst: any[] = [];  roleCreationId: number = 0; roleName: string = "";
+  deptName: string = ""; isDeptLoading = false; isRoleLoading = false; isRoleLoaded = false;
   isEditmode: boolean = false; departmentList: any[] = []; departmentId: number = 0; departmentName: string = "";
   departmentDescription: string = ""; roleDescription: string = ''; roleSubmitted: boolean = false;
   createPermissionForm !: FormGroup; permissionFormSubmitted: boolean = false;
@@ -109,7 +109,8 @@ export class SettingsComponent extends BaseComponent implements OnInit {
   selectedSubPermissions: string[] = [];selectedPermissionName : string ='';SubpermissionId : number=0;
   showSubPermissionDropdown = false;editSubpermissionForm !:FormGroup;
   codeLabels: { [key: string]: string } = { AK_PA: 'Panel', AK_SH: 'Shutter'};
-  
+  isAssignedRolesLoading = false; isPermissionsLoading = false; isUsersLoading = false; activeTab = 'departments';
+  isDepartmentOverviewLoading = false;
   allPermissions: Record<PermissionName, string[]> = {
     CRM: ['deals_delete', 'deals_edit', 'deals_stage_status','leads_add','leads_delete','deals_add','leads_edit','leads_view','deals_access','campaign_create','campaign_deletion',
       'campaign_edit','leads_stage_status','lead_mail_template_creation','appointmnet_creation','campaign_access','leads_allocate',
@@ -269,6 +270,31 @@ selectedPermissions: any[] = [];
     }
   }
 
+
+  onTabChange(event: any) {
+  const tab = event.nextId;
+
+  // reset shared states
+  this.showRoles = false;
+  this.showPermissions = false;
+  this.showUser = false;
+
+    switch (tab) {
+      case 'departments':
+        this.getAllDepartments();
+        break;
+
+      case 'roles':
+        this.getRoles();
+        break;
+
+      case 'departmentoverview':
+        this.loadDepartmentOverview();
+        break;
+    }
+  }
+
+
   onPmntCheckboxChange() {
     const selectedPlans = this.paymentDetails.filter((plan) => plan.checked);
 
@@ -287,6 +313,7 @@ selectedPermissions: any[] = [];
     this.onClkDesign('i');
     this.formInit(); this.getUsers(); this.getAllStages(); this.getAllPmntStages();
     this.getProjectConfig();
+    this.activeTab = 'departments';
     this.getAllDepartments();
     this.getAssignedUsers();
     this.buildDepartmentView();
@@ -465,7 +492,7 @@ selectedPermissions: any[] = [];
 
     this.quoteMarignForm = this.fb.group({
       f1: ['', [Validators.required]],
-      f1Percent: [0, [Validators.required, Validators.pattern(/^[0-9]+$/)]],
+      f1Percent: [0, [Validators.required, Validators.pattern(/^[0-9]+$/), Validators.max(99) ]],
       f2: [''],
       f2Percent: [0],
       f3: [''],
@@ -983,36 +1010,36 @@ selectedPermissions: any[] = [];
   }
 
   onMailCheck() {
-    if (this.mailId == '') {
-      this.toastr.warning('Please Enter email', 'signup', {
-        timeOut: 3000, positionClass: 'toast-top-right'
-      });
-    } else {
-      this.switchService.onMailValidSignup(this.mailId).subscribe({
-        next: (res: any) => {
-          if (res.status == true) {
-            if (this.isResend == false) {
-              this.openModal();
-            }
-            this.btnDisable = true,
-              this.userForm.get('email')?.disable();
-            this.toastr.success(res.message, 'signup', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          } else {
-            this.btnDisable = false;
-          }
-        }
-      })
+    if (!this.mailId) {
+      this.toastr.warning('Please enter email', 'Signup');
+      return;
     }
+    this.switchService.onMailValidSignup(this.mailId).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          if (!this.isResend) {
+            this.openModal();
+          }
+          this.btnDisable = true;
+          this.userForm.get('email')?.disable();
+          this.toastr.success(res.message, 'Signup');
+        } else {
+          this.btnDisable = false;
+          this.toastr.warning(res.message, 'Signup');
+        }
+      },
+      error: () => {
+        this.btnDisable = false;
+      }
+    });
   }
 
+
   onClickButton() {
-    this.openModal();  // Open the modal on successful response
+    this.openModal(); 
   }
 
   openModal() {
-    // Create an embedded view from the modal template
     this.modalRef = this.viewContainerRef.createEmbeddedView(this.modalTemplate);
   }
   openLg(content112: any) {
@@ -1041,37 +1068,34 @@ selectedPermissions: any[] = [];
   }
 
   onOtpCheck() {
-    // this.isOtpDisabled = true;
-    // this.btnDisable = false;
-    // if(this.otp == ''){
-    //   this.toastr.warning('Please Enter OTP','signup', {
-    //     timeOut: 3000, positionClass: 'toast-top-right' });
-    // } 
     const enteredOtp = this.otp.join('');
-
-    // Check if OTP length is less than 6
     if (enteredOtp.length < 6) {
       this.isOtpValid = false;
       this.errorMessage = 'Please enter the complete OTP.';
       return;
     }
-    else {
-      this.switchService.onOtpSignup(this.mailId, enteredOtp).subscribe({
-        next: (res: any) => {
-          if (res.status == true) {
-            // this.btnDisable = false, this.isOtpDisabled = true, 
-            this.isOkBtn = true;
-            this.onSignupApi();
-            this.toastr.success(res.message, 'signup', {
-              timeOut: 3000, positionClass: 'toast-top-right'
-            });
-          } else {
-            this.isOkBtn = false;
-          }
+    this.switchService.onOtpSignup(this.mailId, enteredOtp).subscribe({
+      next: (res: any) => {
+        if (res.status === true) {
+          this.isOkBtn = true;
+          this.isOtpValid = true;
+          this.errorMessage = '';
+          this.onSignupApi();
+          this.toastr.success(res.message, 'Signup');
+        } else {
+          this.isOkBtn = false;
+          this.isOtpValid = false;
+          this.errorMessage = res.message || 'Invalid OTP';
+          this.toastr.warning(this.errorMessage, 'Signup');
         }
-      })
-    }
+      },
+      error: () => {
+        this.isOkBtn = false;
+        this.isOtpValid = false;
+      }
+    });
   }
+
 
   otpArray = Array(6).fill(null);
   otp: string[] = Array(this.otpArray.length).fill('');
@@ -1569,7 +1593,6 @@ selectedPermissions: any[] = [];
     const newMarginName = this.quoteMarignForm.get('f1')?.value || '';
     const newMarginPercent = this.quoteMarignForm.get('f1Percent')?.value || 0;
     let mergedMargins = this.previousMarginResponse ? { ...this.previousMarginResponse } : {};
-
     let nextIndex = -1;
     for (let i = 1; i <= 15; i++) {
       if (!mergedMargins[`f${i}`]) {
@@ -1577,30 +1600,22 @@ selectedPermissions: any[] = [];
         break;
       }
     }
-
     if (nextIndex === -1) {
       this.toastr.warning("Maximum 15 margin entries reached.");
       return;
     }
-
     mergedMargins[`f${nextIndex}`] = newMarginName;
     mergedMargins[`f${nextIndex}Percent`] = newMarginPercent;
-
-    // 5. Ensure all f1–f15 & f1Percent–f15Percent keys exist
     for (let i = 1; i <= 15; i++) {
       const fKey = `f${i}`;
       const pKey = `f${i}Percent`;
-
       if (!mergedMargins.hasOwnProperty(fKey)) {
         mergedMargins[fKey] = '';
       }
-
       if (!mergedMargins.hasOwnProperty(pKey)) {
         mergedMargins[pKey] = 0;
       }
     }
-
-
     const companyInfo = {
       companyName: JSON.parse(this.userData).companyName,
       companyCode: JSON.parse(this.userData).companyCode,
@@ -1618,13 +1633,12 @@ selectedPermissions: any[] = [];
       next: (res: any) => {
         if (res && res.marginId !== undefined) {
           this.toastr.success('Margin Saved Successfully!');
-          this.quoteMarignForm.reset();
-          this.previousMarginResponse = res;
-          // localStorage.setItem('previousMarginResponse', JSON.stringify(res));
-          modal.close();
           this.quoteMarignForm.reset({ f1: '', f1Percent: 0 });
+          this.quotationmarginsubmit = false;
+          this.previousMarginResponse = res;
+          modal.close();
           this.getMarginData();
-        } 
+        }
       }
     });
   }
@@ -1655,18 +1669,14 @@ selectedPermissions: any[] = [];
 
   onProjectConfigSubmit(modal: any) {
     this.projectconfigsubmit = true;
-    this.quoteSubmitted = true;
     const quotationValue = this.projectConfigForm.get('quotationNumber')?.value;
     if (this.projectConfigForm.invalid) {
       this.toastr.warning("Please enter Project Configuration.");
       return;
     }
     const rawQuote = this.projectConfigForm.get('quotationNumber')?.value || '';
-
     const newConfigValue = this.projectConfigForm.get('f1')?.value || '';
-
     let mergedPayload = this.previousConfigResponse ? { ...this.previousConfigResponse } : {};
-
     let nextIndex = -1;
     for (let i = 1; i <= 10; i++) {
       if (!mergedPayload[`f${i}`]) {
@@ -1674,21 +1684,16 @@ selectedPermissions: any[] = [];
         break;
       }
     }
-
     if (nextIndex === -1) {
       this.toastr.warning("Maximum 10 Project Configurations reached.");
       return;
     }
-
     mergedPayload[`f${nextIndex}`] = newConfigValue;
-
     this.projectConfigForm.get('f1')?.reset();
-
     for (let i = 1; i <= 10; i++) {
       const key = `f${i}`;
       if (!mergedPayload[key]) mergedPayload[key] = '';
     }
-
     const companyInfo: any = {
       configId: 0,
       companyName: JSON.parse(this.userData)?.companyName,
@@ -1698,7 +1703,6 @@ selectedPermissions: any[] = [];
       updatedBy: localStorage.getItem('username'),
       updatedTime: new Date().toISOString()
     };
-
     if (Object.keys(this.previousConfigResponse).length === 0 && rawQuote) {
       companyInfo.quotationNumber = rawQuote;
     }
@@ -1714,19 +1718,14 @@ selectedPermissions: any[] = [];
         if (res && res.configId !== undefined) {
           this.toastr.success('Project Configuration saved!');
           this.previousConfigResponse = res;
-
-          const enteredQuotation = this.projectConfigForm.get('quotationNumber')?.value;
-          this.quotationSubmitted = true;
-          // localStorage.setItem('quotationSubmitted', 'true');
-          // localStorage.setItem('submittedQuotationNumber', enteredQuotation);
+          this.projectConfigForm.reset();
+          this.projectconfigsubmit = false;
+          this.projectConfigForm.markAsPristine();
+          this.projectConfigForm.markAsUntouched();
           modal.close();
-          this.projectConfigForm.reset({
-            projectConfigs: [],
-          });
           this.getProjectConfig();
         }
-      },
-     
+      }
     });
   }
 
@@ -1922,15 +1921,25 @@ selectedPermissions: any[] = [];
 
   getRoles() {
     const companyCode = JSON.parse(this.userData)?.companyCode;
+
+    this.isRoleLoading = true;
+    this.isRoleLoaded = false;
+
     this.switchService.getRole(companyCode).subscribe({
       next: (res: any[]) => {
-        this.roleLst = res || [];
-        if (!this.isAdminRoleExists()) {
-          this.createDefaultAdminRole();
-        }
+        this.roleLst = Array.isArray(res) ? res : [];
+        this.isRoleLoading = false;
+        this.isRoleLoaded = true;
       },
+      error: () => {
+        this.roleLst = [];
+        this.isRoleLoading = false;
+        this.isRoleLoaded = true;
+      }
     });
   }
+
+
 
   createDefaultAdminRole() {
     const payload = {
@@ -1999,14 +2008,22 @@ selectedPermissions: any[] = [];
 
   getAllDepartments() {
     const companyCode = JSON.parse(this.userData)?.companyCode;
+    this.isDeptLoading = true;
+    this.departmentList = [];
     this.switchService.getDepartment(companyCode).subscribe({
       next: (res: any[]) => {
-        this.departmentList = res;
-        if (res.length > 0) {
-          this.departmentId = res[0].id;
-          this.departmentName = res[0].name;
-          this.departmentDescription = res[0].description;
+        this.departmentList = Array.isArray(res) ? res : [];
+        if (this.departmentList.length > 0) {
+          const first = this.departmentList[0];
+          this.departmentId = first.id;
+          this.departmentName = first.name;
+          this.departmentDescription = first.description;
         }
+        this.isDeptLoading = false;
+      },
+      error: () => {
+        this.departmentList = [];
+        this.isDeptLoading = false;
       }
     });
   }
@@ -2241,14 +2258,16 @@ selectedPermissions: any[] = [];
   }
   showPermissions = false;
   tablePermissionView(assignedRole?: any) {
-    this.filteredPermissionList = this.assignedPermissionLst.filter(
-      permission => permission.departmentRoleId === assignedRole.id
-    );
+    if (!assignedRole?.id) return;
+    this.showPermissions = true;
+    this.isPermissionsLoading = true;
+    this.filteredPermissionList = [];
+    this.assignedPermissionLst = [];
     this.selectedPermission = assignedRole;
     this.subPermissionupdateId = [assignedRole.id];
     this.getAssignedDeptRolePermissions([assignedRole.id]);
-    this.showPermissions = true;
   }
+
 
   onRoleChange(id: number) {
     this.selectedRole = id;
@@ -2256,27 +2275,32 @@ selectedPermissions: any[] = [];
 
   getAssignedRoles(departmentIds?: number[]) {
     const companyCode = JSON.parse(this.userData)?.companyCode;
-    const idsToUse = departmentIds && departmentIds.length > 0 ? departmentIds : this.departmentIds;
-
+    const idsToUse =
+      departmentIds && departmentIds.length > 0
+        ? departmentIds
+        : this.departmentIds;
     if (!idsToUse || idsToUse.length === 0) {
       return;
     }
+    this.isAssignedRolesLoading = true;
+    this.assignedRoleLst = [];
+    this.filteredRoleList = [];
     this.switchService.getAssignedRoles(idsToUse, companyCode).subscribe({
-      next: (res) => {
-        this.assignedRoleLst = res;
+      next: (res: any[]) => {
+        this.assignedRoleLst = Array.isArray(res) ? res : [];
         this.filteredRoleList = this.assignedRoleLst;
-        this.departroleId = res[0].departmentId;
-        const assignedRoleIds: number[] = Array.from(
-          new Set(
-            this.assignedRoleLst
-              .map((dept: any) => Number(dept?.id))
-              .filter((id: any) => !isNaN(id))
-          )
-        );
-        this.assignedRoleIds = departmentIds;
+        this.departroleId = res?.[0]?.departmentId ?? null;
+        this.assignedRoleIds = departmentIds ?? [];
+        this.isAssignedRolesLoading = false;
+      },
+      error: () => {
+        this.assignedRoleLst = [];
+        this.filteredRoleList = [];
+        this.isAssignedRolesLoading = false;
       }
     });
   }
+
 
   deleteDepartmentRole(id: number) {
     if (!id) return;
@@ -2407,75 +2431,37 @@ selectedPermissions: any[] = [];
       assignedRoleIds && assignedRoleIds.length > 0
         ? assignedRoleIds
         : this.assignedRoleIds;
-
-    if (!idsToUse || idsToUse.length === 0) return;
-
+    if (!idsToUse || idsToUse.length === 0) {
+      this.isPermissionsLoading = false;
+      return;
+    }
     this.switchService.getAssignPermissions(idsToUse, companyCode).subscribe({
       next: (res: any[]) => {
-         this.filteredPermissionList = res;
-        if (!this.roleLst || this.roleLst.length === 0) {
-          return;
-        }
-        const selectedRole = this.roleLst.find(
-          (r: any) => idsToUse.includes(r.departmentRoleId)
-        );
-        const isAdmin =
-          selectedRole?.name?.toLowerCase() === 'admin';
-        if (isAdmin && (!res || res.length === 0)) {
-          this.switchService.getPermissions(companyCode).subscribe({
-            next: (allPermissions: any[]) => {
-
-              let completed = 0;
-
-              allPermissions.forEach(permission => {
-
-                const payload = {
-                  depRole: selectedRole.departmentRoleId,
-                  permissionRole: permission.permissionId,
-                  departmentRole: selectedRole.departmentRoleId,
-                  permission: permission.permissionName,
-                  description: 'Admin full access',
-                  companyName: user.companyName,
-                  companyCode: user.companyCode,
-                  type: user.type,
-                  subPermission: permission.subPermission 
-                };
-
-                this.switchService.assignPermissionToRole(payload).subscribe({
-                  next: () => {
-                    completed++;
-                    if (completed === allPermissions.length) {
-                      this.getAssignedDeptRolePermissions(idsToUse);
-                    }
-                  }
-                });
-              });
-            }
-          });
-
-          return; 
-        }
         const uniqueMap = new Map<string, any>();
-
-        res.forEach(item => {
+        (res || []).forEach(item => {
           const key = `${item.departmentRoleId}_${item.permissionId}`;
           if (!uniqueMap.has(key)) {
             uniqueMap.set(key, item);
           }
         });
-
         this.assignedPermissionLst = Array.from(uniqueMap.values());
         this.filteredPermissionList = [...this.assignedPermissionLst];
-
         if (this.assignedPermissionLst.length > 0) {
           this.permissiondeptroleId =
             this.assignedPermissionLst[0].departmentRoleId;
           this.assignPermissionId =
             this.assignedPermissionLst[0].permissionId;
         }
+        this.isPermissionsLoading = false;
+      },
+      error: () => {
+        this.filteredPermissionList = [];
+        this.assignedPermissionLst = [];
+        this.isPermissionsLoading = false;
       }
     });
   }
+
 
 
 
@@ -2493,11 +2479,14 @@ selectedPermissions: any[] = [];
     }
   }
 
-  tableUserView(assigneUser?: any) {
+  tableUserView(assignedUser?: any) {
     this.showUser = true;
-    this.selectedUser = assigneUser;
+    this.selectedUser = assignedUser;
+    this.isUsersLoading = true;
+    this.adminAccessUsersLst = [];
     this.adminAccessAllUsers();
   }
+
   assignUserToDeptRole(modal?: any) {
     let companyCode = JSON.parse(this.userData)?.companyCode;
     let selectedId = this.selectedPermission.id;
@@ -2521,7 +2510,6 @@ selectedPermissions: any[] = [];
         modal.close();
         this.getAssignedUsers();
         this.adminAccessAllUsers();
-
       }
     });
   }
@@ -2562,33 +2550,89 @@ selectedPermissions: any[] = [];
 
   adminAccessAllUsers() {
     const companyCode = JSON.parse(this.userData).companyCode;
-    const loggedEmail = localStorage.getItem('userEmail');
     this.switchService.adminAccessAllUsers(companyCode).subscribe({
-      next: (res: any) => {
-        if (res) {
-          this.adminAccessUsersLst = res;
-          this.buildDepartmentView();
-        }
+      next: (res: any[]) => {
+        this.adminAccessUsersLst = Array.isArray(res) ? res : []
+        this.buildDepartmentList(this.adminAccessUsersLst);
+        this.isUsersLoading = false;
+      },
+      error: () => {
+        this.adminAccessUsersLst = [];
+        this.departmentList = [];
+        this.isUsersLoading = false;
       }
     });
   }
 
+  buildDepartmentList(data: any[]) {
+    const deptMap = new Map<string, any>();
+
+    data.forEach(user => {
+      const userEmail = user.userEmail;
+      user.departments?.forEach((dept: any) => {
+        if (!deptMap.has(dept.departmentName)) {
+          deptMap.set(dept.departmentName, {
+            departmentName: dept.departmentName,
+            roles: [],
+            users: []
+          });
+        }
+        const deptObj = deptMap.get(dept.departmentName);
+        if (!deptObj.users.includes(userEmail)) {
+          deptObj.users.push(userEmail);
+        }
+        dept.roles?.forEach((role: any) => {
+          let existingRole = deptObj.roles.find(
+            (r: any) => r.roleName === role.roleName
+          );
+          if (!existingRole) {
+            existingRole = {
+              roleName: role.roleName,
+              permissions: []
+            };
+            deptObj.roles.push(existingRole);
+          }
+          Object.values(role.permissions || {}).forEach((permStr: any) => {
+            permStr.split(',').forEach((perm: string) => {
+              if (!existingRole.permissions.includes(perm)) {
+                existingRole.permissions.push(perm);
+              }
+            });
+          });
+        });
+      });
+    });
+    this.departmentList = Array.from(deptMap.values());
+  }
+
+
+
+
   openDepartments: { [key: string]: boolean } = {};
-  openRoles: { [key: string]: boolean } = {};
   toggleDepartment(deptIndex: number) {
     this.openDepartments[deptIndex] = !this.openDepartments[deptIndex];
   }
   isDepartmentOpen(deptIndex: number): boolean {
     return this.openDepartments[deptIndex];
   }
+  openRoles = new Set<string>();
 
-  toggleRole(deptIndex: number, roleIndex: number) {
+  toggleRole(deptIndex: number, roleIndex: number, event?: Event) {
+    event?.stopPropagation(); 
+
     const key = `${deptIndex}-${roleIndex}`;
-    this.openRoles[key] = !this.openRoles[key];
+
+    if (this.openRoles.has(key)) {
+      this.openRoles.delete(key);
+    } else {
+      this.openRoles.add(key);
+    }
   }
+
   isRoleOpen(deptIndex: number, roleIndex: number): boolean {
-    return this.openRoles[`${deptIndex}-${roleIndex}`];
+    return this.openRoles.has(`${deptIndex}-${roleIndex}`);
   }
+
   
  getTotalPermissions(dep: any): number {
   if (!dep || !dep.roles) return 0;
@@ -2868,6 +2912,28 @@ selectedPermissions: any[] = [];
   hasPermission(key: string): boolean {
     return this.userPermissionSet.has(key);
   }
+
+  loadDepartmentOverview() {
+  const companyCode = JSON.parse(this.userData).companyCode;
+
+  // ✅ start ONLY overview loader
+  this.isDepartmentOverviewLoading = true;
+
+  this.switchService.adminAccessAllUsers(companyCode).subscribe({
+    next: (res: any[]) => {
+      const users = Array.isArray(res) ? res : [];
+
+      // 🔥 build departmentList for overview UI
+      this.buildDepartmentList(users);
+
+      this.isDepartmentOverviewLoading = false;
+    },
+    error: () => {
+      this.departmentList = [];
+      this.isDepartmentOverviewLoading = false;
+    }
+  });
+}
 
 
 

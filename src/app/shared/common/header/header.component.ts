@@ -4,7 +4,7 @@ import { SwitcherComponent } from '../switcher/switcher.component';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { AppStateService } from '../../services/app-state.service';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule ,UrlTree } from '@angular/router';
-import { filter ,interval,Subscription,take} from 'rxjs';
+import { filter ,interval,Subject,Subscription,take, takeUntil} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,7 +35,7 @@ export class HeaderComponent implements OnInit {
    public leadCount = 0;
   projectName: string | null = null;
   projectId: string | null = null;
-
+  private destroy$ = new Subject<void>();
   collapse: any; userList: any; loggedInUser: any;
   closeResult = ''; campaignId!: string; followUpCount: any; nextLeadStatus :any;
   themeType: string | undefined; userName:any; userData:any;  userEmail :any
@@ -280,13 +280,19 @@ export class HeaderComponent implements OnInit {
       }
     });
     this.switchService.userInfoLoaded
-      .pipe(filter(loaded => loaded))
+      .pipe(
+        filter(Boolean),
+        takeUntil(this.destroy$)
+      )
       .subscribe(() => {
         const cached = this.switchService.userInfoCache;
         if (!cached) return;
+
+        const ts = Date.now();
+        this.userData = cached;
         this.userName = cached.username || cached.name;
         this.profilePic = cached.profilePic
-          ? this.addBaseUrlIfNeeded(cached.profilePic)
+          ? this.addBaseUrlIfNeeded(cached.profilePic) + `?v=${ts}`
           : 'assets/images/brand-logos/profile1.jpg';
       });
     this.logRoute();

@@ -207,7 +207,6 @@
             </div>
         </form>
     </div>
-
     <div class="row ms-1 scrollable-container" [ngStyle]="{
         'max-height': topshowMore ? '220px' : '220px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
@@ -250,7 +249,7 @@
         <div class="modal-dialog p-2 text-white ">
             <div class="modal-content p-2 text-white ">
                 <div class="modal-header justify-content-center">
-                    <h5 class="modal-title">OTP</h5>
+                    <h5 class="modal-title"><strong>OTP</strong></h5>
                     <!-- <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button> -->
                 </div>
                 <div class="modal-body">
@@ -270,7 +269,7 @@
                     </div>
                 </div>
                 <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-lg p-2 font-weight-bold text-dark border border-dark"
+                    <button type="button" class="btn-grad"
                         (click)="onOtpCheck()" [disabled]="isOkBtn">Submit</button>
                 </div>
             </div>
@@ -1092,7 +1091,7 @@
         </div>
     </div>
 </div>
-<div *ngIf="roleid==5">
+<div *ngIf="adoanAiRole== 'ADMIN'">
     <div class="row">
         <div class="col-xl-4">
             <div class="card custom-card overflow-hidden">
@@ -1104,7 +1103,7 @@
                         Add Margin
                     </button>
                 </div>
-                <div class="card-body px-0 pt-2 pb-0" style="min-height: 300px; overflow-y: auto;">
+                <div class="card-body px-0 pt-2 pb-0" style="min-height: 300px; max-height: 300px; overflow-y: auto;">
                     <div class="table-responsive">
                         <table class="table text-nowrap">
                             <thead>
@@ -1133,12 +1132,12 @@
                     <a href="javascript:void(0);" class="btn btn-primary btn-sm" (click)="openRight14(content14)">Add
                         Configuration</a>
                 </div>
-                <div class="card-body px-0 pt-2 pb-0" style="min-height: 300px; overflow-y: auto;">
+                <div class="card-body px-0 pt-2 pb-0" style="min-height: 300px; max-height: 300px; overflow-y: auto;">
                     <div class="table-responsive">
                         <table class="table text-nowrap">
                             <thead>
                                 <tr>
-                                    <th scope="col">Quotation Number</th>
+                                    <th scope="col">Quotation Series</th>
                                     <th scope="col">Project Configuration</th>
                                 </tr>
                             </thead>
@@ -1208,7 +1207,7 @@
     <form [formGroup]="quoteMarignForm" (ngSubmit)="quoteMarginSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="mail-ComposeLabel">Margin Details</h6>
+                <h6 class="modal-title" id="mail-ComposeLabel"><strong>Margin Details</strong></h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
@@ -1224,11 +1223,18 @@
                     </div>
                     <div class="col-xl-6">
                         <label class="form-label">Margin Price %</label>
-                        <input type="text" class="form-control" id="task-name" placeholder="Margin Price"
-                            formControlName="f1Percent" (keypress)="allowOnlynum($event)" [ngClass]="{ 'is-invalid': quotationmarginsubmit && g['f1Percent'].invalid }">
+                        <input type="text" class="form-control" placeholder="Margin Price" formControlName="f1Percent"
+                            (keypress)="allowOnlynum($event)" [ngClass]="{'is-invalid': quotationmarginsubmit && g['f1Percent'].invalid}" />
                         <div *ngIf="quotationmarginsubmit && g['f1Percent'].invalid" class="text-danger">
-                            <div *ngIf="g['f1Percent'].errors?.['required']"> Margin percent is required.</div>
-                            <div *ngIf="g['f1Percent'].errors?.['pattern']"> Only numbers are allowed. </div>
+                            <div *ngIf="g['f1Percent'].errors?.['required']">
+                                Margin percent is required.
+                            </div>
+                            <div *ngIf="g['f1Percent'].errors?.['pattern']">
+                                Only numbers are allowed.
+                            </div>
+                            <div *ngIf="g['f1Percent'].errors?.['max']">
+                                Margin percent should not be more than 99.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1246,7 +1252,7 @@
     <form [formGroup]="projectConfigForm" (ngSubmit)="onProjectConfigSubmit(modal)">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title">Project Configuration</h6>
+                <h6 class="modal-title"><strong>Project Configuration</strong></h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" (click)="modal.close('Cross click')"
                     aria-label="Close"></button>
             </div>
@@ -1260,7 +1266,7 @@
                     </div>
                 </div>
                 <div class="col-xl-6"  *ngIf="!quotationSubmitted">
-                    <label for="quotationNumber" class="form-label">Quotation Number</label>
+                    <label for="quotationNumber" class="form-label">Quotation Series</label>
                     <input type="text" class="form-control" id="quotationNumber" placeholder="Quotation Number"
                         formControlName="quotationNumber" [disabled]="quotationSubmitted">
                 </div>
@@ -1616,14 +1622,16 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-xl-3">
-                    <nav ngbNav #nav7="ngbNav" orientation="vertical"
-                        class="nav nav-tabs flex-column nav-style-5 gap-3 sidebar-container" role="tablist">
-                        <ng-container ngbNavItem="Home">
-                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="false" (click)="getAllDepartments()"><i class="bi bi-clipboard-data side-menu__icon me-1"></i>Departments</a>
+                    <nav ngbNav #nav7="ngbNav" [(activeId)]="activeTab" (navChange)="onTabChange($event)" orientation="vertical"
+                        class="nav nav-tabs flex-column nav-style-5 gap-3" role="tablist">
+                        <ng-container ngbNavItem="departments">
+                            <a ngbNavLink class="btn-light">
+                                <i class="bi bi-clipboard-data side-menu__icon me-1"></i>
+                                Departments
+                            </a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
-                                    <div class="card custom-card">
+                                    <div class="card custom-card border">
                                         <div *ngIf="!showRoles && !showPermissions">
                                             <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                                                 <div class="card-title mb-2 mb-sm-0">Departments</div>
@@ -1638,9 +1646,13 @@
                                                     <button class="btn btn-primary btn-sm me-2" (click)="openLg(Content113)">Add Department</button>
                                                 </div>
                                             </div>
-                                
                                             <div class="card-body p-0">
-                                                <div class="table-responsive">
+                                                <div *ngIf="isDeptLoading" class="text-center py-4">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
+                                                    </div>
+                                                </div>
+                                                <div class="table-responsive" *ngIf="!isDeptLoading">
                                                     <table class="table text-nowrap">
                                                         <thead class="custom-header">
                                                             <tr>
@@ -1650,7 +1662,7 @@
                                                                 <th scope="col">Actions</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody *ngIf="!isDeptLoading && departmentList.length > 0; else noDepartments">
                                                             <tr *ngFor="let department of departmentList; let i = index">
                                                                 <td>{{ i + 1 }}</td>
                                                                 <td>
@@ -1665,19 +1677,23 @@
                                                                         <div>{{ department.name }}</div>
                                                                     </div>
                                                                 </td>
-                                                                <td>{{ department.description | slice:0:25 }}</td>
+                                                                <td>
+                                                                    <span class="d-inline-block text-truncate" style="max-width: 200px; cursor: pointer;" placement="top"
+                                                                        tooltipClass="tooltip-primary"
+                                                                        [ngbTooltip]="department.description?.length > 30 ? department.description : null">
+                                                                        {{ department.description | slice:0:30 }}
+                                                                    </span>
+                                                                </td>
                                                                 <td>
                                                                     <div class="hstack gap-2 fs-1">
-                                                                        <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light"
-                                                                         (click)="onViewDepartment(department)"> <i class="ri-eye-line"></i>
+                                                                        <a class="btn btn-icon btn-sm btn-primary-light" (click)="onViewDepartment(department)">
+                                                                            <i class="ri-eye-line"></i>
                                                                         </a>
-
-                                                                        <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light"
+                                                                        <a class="btn btn-icon btn-sm btn-secondary-light"
                                                                             (click)="editDepartmentFormSelected(department, Content113)">
                                                                             <i class="ri-edit-line"></i>
                                                                         </a>
-                                                                        <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-danger-light"
-                                                                            (click)="deleteDepartment(department.id)">
+                                                                        <a class="btn btn-icon btn-sm btn-danger-light" (click)="deleteDepartment(department.id)">
                                                                             <i class="ri-delete-bin-line"></i>
                                                                         </a>
                                                                     </div>
@@ -1685,6 +1701,15 @@
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                    <ng-template #noDepartments>
+                                                        <table class="table">
+                                                            <tr>
+                                                                <td colspan="4" class="text-center py-4 text-muted">
+                                                                    No departments found
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </ng-template>
                                                 </div>
                                             </div>
                                             <div class="card-footer border-top-0">
@@ -1707,85 +1732,95 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="card custom-card">
                                         <div class="row" *ngIf="showRoles  && !showPermissions">
-                                            <div class="col-lg-12">
-                                                <div class="card custom-card">
-                                                    <div class="card-header justify-content-between">
-                                                        <div class="card-title d-flex align-items-center">
-                                                            <a href="javascript:void(0);" class="btn btn-link p-0 me-2" (click)="backToDepartments()">
-                                                                <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
-                                                            </a>Assigned Roles to {{ selectedDepartment?.name }}
-                                                        </div>
-                                                        <div class="d-flex flex-wrap align-items-center gap-2">
-                                                            <div class="input-group" style="max-width: 150px;">
-                                                                <input type="text" class="form-control" placeholder="Search Departments"
-                                                                    aria-describedby="button-addon2">
-                                                                <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
-                                                                        class="ri-search-line text-muted"></i></button>
-                                                            </div>
-                                                            <button class="btn btn-primary btn-sm" (click)="assginRoles(Content15);">Assign RoleTo
-                                                                Department</button>
-                                                        </div>
+                                            <div class="card-header justify-content-between">
+                                                <div class="card-title d-flex align-items-center">
+                                                    <a href="javascript:void(0);" class="btn btn-link p-0 me-2" (click)="backToDepartments()">
+                                                        <i class="bi bi-arrow-left-circle text-dark fs-4"></i>
+                                                    </a>Assigned Roles to {{ selectedDepartment?.name }}
+                                                </div>
+                                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                                    <div class="input-group" style="max-width: 150px;">
+                                                        <input type="text" class="form-control" placeholder="Search Departments"
+                                                            aria-describedby="button-addon2">
+                                                        <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
+                                                                class="ri-search-line text-muted"></i></button>
                                                     </div>
-                                                    <div class="card-body p-0">
-                                                        <div class="table-responsive">
-                                                            <table class="table text-nowrap">
-                                                                <thead class="custom-header">
-                                                                    <tr>
-                                                                        <th scope="col">S.No</th>
-                                                                        <th scope="col">Role Name</th>
-                                                                        <th scope="col">Description</th>
-                                                                        <th scope="col">Actions</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody *ngFor="let assignedRole of filteredRoleList; let i = index">
-                                                                    <tr>
-                                                                        <td> {{ i + 1 }}</td>
-                                                                        <td>{{assignedRole.roleName}}</td>
-                                                                        <td>{{assignedRole.description}}</td>
-                                                                        <td>
-                                                                            <div class="hstack gap-2 fs-1">
-                                                                                <a href="javascript:void(0);"
-                                                                                    class="btn btn-icon btn-sm btn-primary-light"
-                                                                                    (click)="tablePermissionView(assignedRole)">
-                                                                                    <i class="ri-eye-line"></i>
-                                                                                </a>
-                                                                                <a aria-label="anchor" href="javascript:void(0);"
-                                                                                    class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                                                                    (click)="deleteDepartmentRole(assignedRole.id)"><i
-                                                                                        class="ri-delete-bin-line"></i></a>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
+                                                    <button class="btn btn-primary btn-sm" (click)="assginRoles(Content15);">Assign RoleTo
+                                                        Department</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive ms-2">
+                                                    <table class="table text-nowrap">
+                                                        <thead class="custom-header">
+                                                            <tr>
+                                                                <th scope="col">S.No</th>
+                                                                <th scope="col">Role Name</th>
+                                                                <th scope="col">Description</th>
+                                                                <th scope="col">Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody *ngIf="isAssignedRolesLoading">
+                                                            <tr>
+                                                                <td colspan="4" class="text-center py-4">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tbody *ngIf="!isAssignedRolesLoading && filteredRoleList.length > 0">
+                                                            <tr *ngFor="let assignedRole of filteredRoleList; let i = index">
+                                                                <td>{{ i + 1 }}</td>
+                                                                <td>{{ assignedRole.roleName }}</td>
+                                                                <td>{{ assignedRole.description }}</td>
+                                                                <td>
+                                                                    <div class="hstack gap-2 fs-1">
+                                                                        <a class="btn btn-icon btn-sm btn-primary-light"
+                                                                            (click)="tablePermissionView(assignedRole)">
+                                                                            <i class="ri-eye-line"></i>
+                                                                        </a>
+                                                                        <a class="btn btn-icon btn-sm btn-danger-light"
+                                                                            (click)="deleteDepartmentRole(assignedRole.id)">
+                                                                            <i class="ri-delete-bin-line"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tbody *ngIf="!isAssignedRolesLoading && filteredRoleList.length === 0">
+                                                            <tr>
+                                                                <td colspan="4" class="text-center py-4 text-muted">
+                                                                    No roles Assigned
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="card-footer border-top-0">
+                                                <div class="d-flex flex-wrap align-items-center">
+                                                    <div>
+                                                        Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
                                                     </div>
-                                                    <div class="card-footer border-top-0">
-                                                        <div class="d-flex flex-wrap align-items-center">
-                                                            <div>
-                                                                Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
-                                                            </div>
-                                                            <div class="ms-auto">
-                                                                <nav aria-label="Page navigation" class="pagination-style-4">
-                                                                    <ul class="pagination mb-0">
-                                                                        <li class="page-item disabled">
-                                                                            <a class="page-link" href="javascript:void(0);">
-                                                                                Prev
-                                                                            </a>
-                                                                        </li>
-                                                                        <li class="page-item active"><a class="page-link"
-                                                                                href="javascript:void(0);">1</a></li>
-                                                                        <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
-                                                                        <li class="page-item">
-                                                                            <a class="page-link text-primary" href="javascript:void(0);">
-                                                                                next
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </nav>
-                                                            </div>
-                                                        </div>
+                                                    <div class="ms-auto">
+                                                        <nav aria-label="Page navigation" class="pagination-style-4">
+                                                            <ul class="pagination mb-0">
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link" href="javascript:void(0);">
+                                                                        Prev
+                                                                    </a>
+                                                                </li>
+                                                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
+                                                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                                                <li class="page-item">
+                                                                    <a class="page-link text-primary" href="javascript:void(0);">
+                                                                        next
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1806,7 +1841,6 @@
                                                             class="ri-search-line text-muted"></i></button>
                                                 </div>
                                                 <button class="btn btn-primary btn-sm" (click)="permissionModal(Content16);">Assign Permissions</button>
-                                
                                             </div>
                                         </div>
                                         <div class="card-body p-0">
@@ -1814,36 +1848,51 @@
                                                 <table class="table text-nowrap">
                                                     <thead class="custom-header">
                                                         <tr>
-                                                            <th scope="col">S.No</th>
-                                                            <th scope="col">Permission Name</th>
-                                                            <th scope="col">Description</th>
-                                                            <th scope="col">Actions</th>
+                                                            <th>S.No</th>
+                                                            <th>Permission Name</th>
+                                                            <th>Description</th>
+                                                            <th>Actions</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody *ngFor="let assignedPermission of filteredPermissionList; let i = index">
+                                                    <tbody *ngIf="isPermissionsLoading">
                                                         <tr>
-                                                            <td> {{ i + 1 }}</td>
-                                                            <td>{{assignedPermission.permissionName}}</td>
-                                                            <td>{{assignedPermission.description}}</td>
+                                                            <td colspan="4" class="text-center py-4">
+                                                                <div class="spinner-border text-primary"></div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody *ngIf="!isPermissionsLoading && filteredPermissionList.length > 0">
+                                                        <tr *ngFor="let assignedPermission of filteredPermissionList; let i = index">
+                                                            <td>{{ i + 1 }}</td>
+                                                            <td>{{ assignedPermission.permissionName }}</td>
+                                                            <td>{{ assignedPermission.description }}</td>
                                                             <td>
                                                                 <div class="hstack gap-2 fs-1">
-                                                                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-primary-light"
-                                                                        (click)="tableUserView()">
+                                                                    <a class="btn btn-icon btn-sm btn-primary-light" (click)="tableUserView()">
                                                                         <i class="ri-eye-line"></i>
                                                                     </a>
-                                                                    <a href="javascript:void(0);" class="btn btn-icon btn-sm btn-secondary-light"
+                                                                    <a class="btn btn-icon btn-sm btn-secondary-light"
                                                                         (click)="editSubpermmissions(assignedPermission, Content115)">
                                                                         <i class="ri-edit-line"></i>
                                                                     </a>
-                                                                    <a aria-label="anchor" href="javascript:void(0);"
-                                                                        class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                                                        (click)="deleteAssignPermission(assignedPermission)"><i
-                                                                            class="ri-delete-bin-line"></i></a>
+                                                                    <a class="btn btn-icon btn-sm btn-danger-light"
+                                                                        (click)="deleteAssignPermission(assignedPermission)">
+                                                                        <i class="ri-delete-bin-line"></i>
+                                                                    </a>
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     </tbody>
+                                                    <tbody *ngIf="!isPermissionsLoading && filteredPermissionList.length === 0">
+                                                        <tr>
+                                                            <td colspan="4" class="text-center py-4 text-muted">
+                                                                No permissions found
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                        
                                                 </table>
+                                        
                                             </div>
                                         </div>
                                         <div class="card-footer border-top-0">
@@ -1895,24 +1944,37 @@
                                                 <table class="table text-nowrap">
                                                     <thead class="custom-header">
                                                         <tr>
-                                                            <th scope="col">S.No</th>
-                                                            <th scope="col">Email</th>
-                                                            <th scope="col">Description</th>
-                                                            <th scope="col">Actions</th>
+                                                            <th>S.No</th>
+                                                            <th>Email</th>
+                                                            <th>Description</th>
+                                                            <th>Actions</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody *ngFor="let assignedUser of adminAccessUsersLst; let i = index">
+                                                    <tbody *ngIf="isUsersLoading">
                                                         <tr>
-                                                            <td> {{ i + 1 }}</td>
-                                
-                                                            <td>{{assignedUser.userEmail}}</td>
-                                                            <td>{{assignedUser.description}}</td>
+                                                            <td colspan="4" class="text-center py-4">
+                                                                <div class="spinner-border text-primary"></div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody *ngIf="!isUsersLoading && adminAccessUsersLst.length > 0">
+                                                        <tr *ngFor="let assignedUser of adminAccessUsersLst; let i = index">
+                                                            <td>{{ i + 1 }}</td>
+                                                            <td>{{ assignedUser.userEmail }}</td>
+                                                            <td>{{ assignedUser.description }}</td>
                                                             <td>
                                                                 <div class="hstack gap-2 fs-1">
-                                                                    <a aria-label="anchor" href="javascript:void(0);"
-                                                                        class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                                                        (click)="deleteAssignUsers()"><i class="ri-delete-bin-line"></i></a>
+                                                                    <a class="btn btn-icon btn-sm btn-danger-light" (click)="deleteAssignUsers()">
+                                                                        <i class="ri-delete-bin-line"></i>
+                                                                    </a>
                                                                 </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tbody *ngIf="!isUsersLoading && adminAccessUsersLst.length === 0">
+                                                        <tr>
+                                                            <td colspan="4" class="text-center py-4 text-muted">
+                                                                No users found
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -1948,41 +2010,48 @@
                                 </div>
                             </ng-template>
                         </ng-container>
-                         <ng-container ngbNavItem="About">
-                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="false" (click)="getRoles()"><i class="bi bi-person side-menu__icon me-1"></i>Roles</a>
+                         <ng-container ngbNavItem="roles">
+                            <a ngbNavLink class="btn-light">
+                                <i class="bi bi-person-badge side-menu__icon me-1"></i>
+                                Roles
+                            </a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <div class="card custom-card">
                                             <div class="card-header justify-content-between">
-                                                <div class="card-title d-flex align-items-center">
-                                                    Roles
-                                                </div>
+                                                <div class="card-title d-flex align-items-center">Roles</div>
+                                    
                                                 <div class="d-flex flex-wrap align-items-center gap-2">
                                                     <div class="input-group" style="max-width: 150px;">
-                                                        <input type="text" class="form-control" placeholder="Search Departments"
-                                                            aria-describedby="button-addon2">
-                                                        <button class="btn btn-ghost-light border" type="button" id="button-addon2"><i
-                                                                class="ri-search-line text-muted"></i></button>
+                                                        <input type="text" class="form-control" placeholder="Search Roles">
+                                                        <button class="btn btn-ghost-light border">
+                                                            <i class="ri-search-line text-muted"></i>
+                                                        </button>
                                                     </div>
-                                                    <button class="btn btn-primary btn-sm" (click)="openLg(Content112);">Add Role</button>
+                                                    <button class="btn btn-primary btn-sm" (click)="openLg(Content112)">
+                                                        Add Role
+                                                    </button>
                                                 </div>
                                             </div>
                                             <div class="card-body p-0">
-                                                <div class="table-responsive">
+                                                <div *ngIf="isRoleLoading" class="text-center py-4">
+                                                    <div class="spinner-border text-primary" role="status"></div>
+                                                </div>
+                                                <div class="table-responsive" *ngIf="!isRoleLoading">
                                                     <table class="table text-nowrap">
                                                         <thead class="custom-header">
                                                             <tr>
-                                                                <th scope="col">S.No</th>
-                                                                <th scope="col">Name</th>
-                                                                <th scope="col">Description</th>
-                                                                <th scope="col">Actions</th>
+                                                                <th>S.No</th>
+                                                                <th>Name</th>
+                                                                <th>Description</th>
+                                                                <th>Actions</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody *ngFor="let role of roleLst; let i = index">
-                                                            <tr>
-                                                                <td> {{ i + 1 }}</td>
+                                                        <tbody *ngIf="roleLst.length > 0; else noRoles">
+                                                            <tr *ngFor="let role of roleLst; let i = index">
+                                                                <td>{{ i + 1 }}</td>
+                                    
                                                                 <td>
                                                                     <div class="d-flex align-items-center lh-1">
                                                                         <div class="me-2">
@@ -1992,62 +2061,72 @@
                                                                                 {{ role.name?.charAt(0) | uppercase }}
                                                                             </span>
                                                                         </div>
-                                                                        <div>{{role.name}}</div>
+                                                                        <div>{{ role.name }}</div>
                                                                     </div>
                                                                 </td>
                                                                 <td [matTooltip]="role.description?.length > 20 ? role.description : ''"
-                                                                    matTooltipPosition="above" matTooltipClass="custom-tooltip">{{role.description |
-                                                                    slice:0:20}}</td>
+                                                                    matTooltipPosition="above" matTooltipClass="custom-tooltip">
+                                                                    {{ role.description | slice:0:20 }}
+                                                                </td>
                                                                 <td>
                                                                     <div class="hstack gap-2 fs-1">
-                                                                        <a aria-label="anchor" href="javascript:void(0);"
-                                                                            class="btn btn-icon btn-sm btn-secondary-light btn-wave waves-effect waves-light"
-                                                                            (click)="openEditFromSelected(role, Content112)"><i
-                                                                                class="ri-edit-line"></i></a>
-                                                                        <a aria-label="anchor" href="javascript:void(0);"
-                                                                            class="btn btn-icon btn-sm btn-danger-light btn-wave waves-effect waves-light"
-                                                                            (click)="deleteRole(role.id)"><i class="ri-delete-bin-line"></i></a>
+                                                                        <a class="btn btn-icon btn-sm btn-secondary-light"
+                                                                            (click)="openEditFromSelected(role, Content112)">
+                                                                            <i class="ri-edit-line"></i>
+                                                                        </a>
+                                                                        <a class="btn btn-icon btn-sm btn-danger-light" (click)="deleteRole(role.id)">
+                                                                            <i class="ri-delete-bin-line"></i>
+                                                                        </a>
                                                                     </div>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                    <ng-template #noRoles>
+                                                        <table class="table">
+                                                            <tr>
+                                                                <td colspan="4" class="text-center py-4 text-muted">
+                                                                    No roles found
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </ng-template>
                                                 </div>
                                             </div>
                                             <div class="card-footer border-top-0">
                                                 <div class="d-flex flex-wrap align-items-center">
-                                                    <div>
-                                                        Showing 6 Entries <i class="bi bi-arrow-right ms-2 fw-medium"></i>
-                                                    </div>
+                                                    <div>Showing 6 Entries</div>
                                                     <div class="ms-auto">
-                                                        <nav aria-label="Page navigation" class="pagination-style-4">
+                                                        <nav class="pagination-style-4">
                                                             <ul class="pagination mb-0">
                                                                 <li class="page-item disabled">
-                                                                    <a class="page-link" href="javascript:void(0);">
-                                                                        Prev
-                                                                    </a>
+                                                                    <a class="page-link">Prev</a>
                                                                 </li>
-                                                                <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
-                                                                <li class="page-item"><a class="page-link" href="javascript:void(0);">2</a></li>
+                                                                <li class="page-item active">
+                                                                    <a class="page-link">1</a>
+                                                                </li>
                                                                 <li class="page-item">
-                                                                    <a class="page-link text-primary" href="javascript:void(0);">
-                                                                        next
-                                                                    </a>
+                                                                    <a class="page-link">2</a>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <a class="page-link text-primary">Next</a>
                                                                 </li>
                                                             </ul>
                                                         </nav>
                                                     </div>
                                                 </div>
                                             </div>
+                                    
                                         </div>
                                     </div>
                                 </div>
                             </ng-template>
                         </ng-container>
-                        <ng-container ngbNavItem="departments">
-                            <a ngbNavLink class="btn-light" data-bs-toggle="tab" role="tab" aria-current="page"
-                                aria-selected="true" (click)="adminAccessAllUsers()">
-                                <i class="bi bi-shield-check side-menu__icon me-1"></i>Department Access Overview</a>
+                        <ng-container ngbNavItem="departmentoverview">
+                            <a ngbNavLink class="btn-light">
+                                <i class="bi bi-shield-check side-menu__icon me-1"></i>
+                                Department Overview
+                            </a>
                             <ng-template ngbNavContent class="tab-content mt-2 mt-xl-0">
                                 <div class="row">
                                     <div class="col-xl-12">
@@ -2062,55 +2141,71 @@
                                                 </span>
                                             </div>
                                             <div class="card-body">
-                                                <div *ngFor="let dep of departmentListTable; let i = index" class="mb-3 border rounded p-2 shadow-sm">
-                                                    <div class="d-flex justify-content-between align-items-center" (click)="toggleDepartment(i)"
-                                                        style="cursor:pointer;">
-                                                        <h6 class="fw-semibold text-dark mb-0">
-                                                            <i class="ri-building-4-line me-1 text-primary"></i>
-                                                            {{ dep.departmentName }}
-                                                        </h6>
-                                                        <div>
-                                                            <span class="me-3 text-muted">{{ dep.roles?.length || 0 }} Roles</span>
-                                                            <span class="me-3 text-muted">{{ getTotalPermissions(dep) }} Permissions</span>
-                                                            <span class="text-muted">{{ dep.users?.length || 0 }} Users</span>
-                                                            <i class="ri-arrow-down-s-line ms-1" [class.rotate]="isDepartmentOpen(i)"></i>
-                                                        </div>
+                                                <div class="text-center py-4" *ngIf="isDepartmentOverviewLoading">
+                                                    <div class="spinner-border text-primary" role="status">
+                                                        <span class="visually-hidden">Loading...</span>
                                                     </div>
-                                                    <div *ngIf="isDepartmentOpen(i)" class="mt-2 ms-3">
-                                                        <ul class="list-group p-2">
-                                                            <li *ngFor="let role of dep.roles; let j = index" class="list-group-item p-2">
-                                                                <div class="d-flex justify-content-between align-items-center" (click)="toggleRole(i, j)"
-                                                                    style="cursor:pointer;">
-                                                                    <div class="fw-medium text-primary">
-                                                                        <i class="ri-shield-user-line me-2"></i>
-                                                                        {{ role.roleName }}
-                                                                        <span *ngIf="dep.users?.[j]" class="badge bg-primary">
-                                                                            {{ dep.users[j] }}
-                                                                        </span>
-                                                                    </div>
-                                                                    <div class="d-flex align-items-center gap-2">
+                                                </div>
+                                                <ng-container *ngIf="!isDepartmentOverviewLoading">
+                                                    <div *ngFor="let dep of departmentList; let i = index" class="mb-3 border rounded p-2 shadow-sm">
+                                                        <div class="d-flex justify-content-between align-items-center" (click)="toggleDepartment(i)"
+                                                            style="cursor:pointer;">
+                                                            <h6 class="fw-semibold text-dark mb-0">
+                                                                <i class="ri-building-4-line me-1 text-primary"></i>
+                                                                {{ dep.departmentName }}
+                                                            </h6>
+                                                            <div>
+                                                                <span class="me-3 text-muted">
+                                                                    {{ dep.roles?.length || 0 }} Roles
+                                                                </span>
+                                                                <span class="me-3 text-muted">
+                                                                    {{ getTotalPermissions(dep) }} Permissions
+                                                                </span>
+                                                                <span class="text-muted">
+                                                                    {{ dep.users?.length || 0 }} Users
+                                                                </span>
+                                                                <i class="ri-arrow-down-s-line ms-1" [class.rotate]="isDepartmentOpen(i)"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div *ngIf="isDepartmentOpen(i)" class="mt-2 ms-3">
+                                                            <ul class="list-group p-2">
+                                                                <li *ngFor="let role of dep.roles; let j = index" class="list-group-item p-2">
+                                                                    <div class="d-flex justify-content-between align-items-center"
+                                                                        (click)="toggleRole(i, j); $event.stopPropagation()" style="cursor:pointer;">
+                                                                        <div class="fw-medium text-primary">
+                                                                            <i class="ri-shield-user-line me-2"></i>
+                                                                            {{ role.roleName }}
+                                                                            <span *ngIf="dep.users?.[j]" class="badge bg-primary ms-2">
+                                                                                {{ dep.users[j] }}
+                                                                            </span>
+                                                                        </div>
                                                                         <span class="badge bg-primary-gradient">
-                                                                            {{ role.roleName === 'ADMIN' ? 69 : (role.permissions?.length || 0) }}
+                                                                            {{
+                                                                            role.roleName === 'ADMIN'
+                                                                            ? 69
+                                                                            : (role.permissions?.length || 0)
+                                                                            }}
                                                                             Permissions
                                                                             <i class="ri-arrow-down-s-line ms-1" [class.rotate]="isRoleOpen(i, j)"></i>
                                                                         </span>
                                                                     </div>
-                                                                </div>
-                                                                <div *ngIf="isRoleOpen(i, j)" class="mt-2 ms-3">
-                                                                    <span *ngFor="let perm of role.permissions" class="badge bg-info text-white me-1 mb-1">
-                                                                        {{ perm }}
-                                                                    </span>
-                                                                </div>
-                                                            </li>
-                                                        </ul>
-                                                        <div class="mt-3">
-                                                            <strong class="me-3">Users:</strong>
-                                                            <span *ngFor="let user of dep.users" class="badge bg-primary text-white me-1 p-2">
-                                                                {{ user }}
-                                                            </span>
+                                                                    <div *ngIf="isRoleOpen(i, j)" class="mt-2 ms-3">
+                                                                        <span *ngFor="let perm of role.permissions"
+                                                                            class="badge bg-info text-white me-1 mb-1">
+                                                                            {{ perm.permissionName || perm }}
+                                                                        </span>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <div class="mt-3">
+                                                                <strong class="me-3">Users:</strong>
+                                                                <span *ngFor="let user of dep.users" class="badge bg-primary text-white me-1 p-2">
+                                                                    {{ user }}
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </ng-container>
                                             </div>
                                         </div>
                                     </div>
@@ -2119,7 +2214,7 @@
                         </ng-container>
                     </nav>
                 </div>
-                <div class="col-xl-9 border rounded-1 content-container ">
+                <div class="col-xl-9 border-start content-container ">
                     <div class="scrollable-section ">
                         <div [ngbNavOutlet]="nav7" class="">
                         </div>

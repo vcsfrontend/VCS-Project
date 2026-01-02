@@ -719,9 +719,9 @@
 </ng-template>
 
 <ng-template #content12 let-modal>
-    <form [formGroup]="profilePicForm" (ngSubmit)="updateProfile()">
+    <form [formGroup]="profilePicForm" (ngSubmit)="updateProfile(modal)">
         <div class="modal-header">
-            <h5 class="modal-title">Update Profile</h5>
+            <h5 class="modal-title"><strong>Update Profile</strong></h5>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
         </div>
         <div class="modal-body">
