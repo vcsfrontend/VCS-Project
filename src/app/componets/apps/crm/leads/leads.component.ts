@@ -100,13 +100,14 @@ export class LeadsComponent extends BaseComponent {
   moveCampaignSubmit:boolean=false;currentStage : string ='';sendProposalEnable : boolean= false;proposalsentSubmitted : boolean=false;
   pageIndex = 0;displayData: any[] = [];totalRecords: number = 0;
   uploadLeads :boolean=false;isAllocating : boolean = false;access : any;
-  showMailTemplate: boolean = true; selectedTemplateForMail: any = null; 
+  showMailTemplate: boolean = true; selectedTemplateForMail: any = null; crmStagesResponse: any = {}; defaultDisplayStage : any[] = [];
+  saveAnalyticsForm !: FormGroup;selectStageOptions: any[]=[];statusesFromApi : any[]=[];
+  f25Value : string ='';
   crmStaticStages = [ 
     { name: 'In Progress Leads', checked: false, isDefault: true, isCustom: false, color: '#28a745', },
     { name: 'Lost Leads', checked: false, isDefault: true, isCustom: false, color: '#dc3545', },
     { name: 'Converted Leads', checked: false, isDefault: true, isCustom: false, color: '#007bff', },
   ];
-
   stageColor: { [key: string]: string } = { open: '#007bff',};
   statusColor: { [key: string]: string } = { active: '#007bff', };
   uploadStageDisplay: { name: string; color: string } = { name: '', color: '' };
@@ -374,6 +375,7 @@ export class LeadsComponent extends BaseComponent {
   );
 
   ngOnInit(): void {
+    this.loadStatusesByStage();
     const now = new Date();
     // Pad with 0 if needed
     const pad = (n: number) => n.toString().padStart(2, '0');
@@ -491,6 +493,9 @@ export class LeadsComponent extends BaseComponent {
     if (this.userType === 1) {
       this.campaignForm.patchValue({ campaignPoc: this.userEmail });
     }
+     this.saveAnalyticsForm = this.fb.group({
+      f25: [[]]
+      })
 
       this.sendLeadForm.get('template')
         ?.valueChanges.subscribe((templateGenId) => {
@@ -1256,7 +1261,8 @@ export class LeadsComponent extends BaseComponent {
             this.statusOptionsByStageforDisplay[stageName] = JSON.parse(
               JSON.stringify(options)
             );
-
+            this.statusesFromApi = this.statusOptionsByStageforDisplay;
+            this.showFirstStageByDefault();
             if (options.length > 0) {
               hasSavedStageStatuses.push(stageName);
             }
@@ -2416,9 +2422,7 @@ export class LeadsComponent extends BaseComponent {
       ];
     }
     this.moveLeadToAnotherCampaign(payloadArray, modal);
-    if(this.moveCampaignSubmit){
-        this.getFetchLeadData(this.currentCampaignId);
-    }
+   
     this.campaignId = selectedCampaignId;
   }
 
@@ -2740,6 +2744,9 @@ isIndeterminate(): boolean {
   openRight5(content5: any) {
     this.offcanvasService.open(content5, { position: 'end' });
   }
+  openCrmStages(content17: any) {
+    this.modalService.open(content17, { centered: true });
+  }
   openRight12(content12: any) {
     if (this.stageLst.length === 0) {
     this.toastr.warning("please add alteleast one stage");
@@ -3006,7 +3013,11 @@ isIndeterminate(): boolean {
             (lead: any) => !leadIds.includes(lead.leadId)
           );
           this.toastr.success(`Leads moved successfully!`);
+          
           modal.close();
+           if(this.moveCampaignSubmit){
+        this.getFetchLeadData(this.selectedCampaignId);
+    }
           this.submitted = false;
           this.leadForm.reset();
         }
@@ -3711,6 +3722,43 @@ formatToLocal(dateString: string): string {
     this.openCompletionModal(modal, element);
   }
 
+   loadStatusesByStage(selectedStages?: any[]): void {
+    this.selectStageOptions = [];
+    if (!Array.isArray(selectedStages) || !this.statusesFromApi) {
+      return;
+    }
+    console.log('this method is called');
+    const mergedStatusesMap = new Map<string, any>();
+    selectedStages.forEach(stage => {
+      const stageName =
+        typeof stage === 'string' ? stage : stage?.stageName;
+      if (!stageName) {
+        return;
+      }
+      const statuses = this.statusesFromApi[stageName];
+      if (!Array.isArray(statuses)) {
+        return;
+      }
+      statuses.forEach(status => {
+        if (!mergedStatusesMap.has(status.name)) {
+          mergedStatusesMap.set(status.name, {
+            name: status.name,
+            color: status.color,
+            checked: status.checked ?? false,
+            isCustom: status.isCustom ?? false
+          });
+        }
+      });
+      const f25Value = selectedStages
+        .map(stage => typeof stage === 'string' ? stage : stage?.stageName)
+        .filter(Boolean)
+        .join(',');
+      this.f25Value = f25Value
+    });
+    this.selectStageOptions = Array.from(mergedStatusesMap.values());
+    localStorage.setItem('save25',this.f25Value);
+  }
+
   onFollowupTemplateSelected(template: any): void {
     if (!template || !this.selectedEmailForFollowup) {
       return;
@@ -3724,7 +3772,37 @@ formatToLocal(dateString: string): string {
       content: template.content || 'Follow up mail'
     });
   }
+   showFirstStageByDefault(): void {
+  if (!this.stageLst?.length || !this.statusesFromApi) {
+    return;
+  }
+    const firstStage = this.stageLst[0];
+    this.defaultDisplayStage = [firstStage.stageName];
+    setTimeout(() => {
+      this.loadStatusesByStage(this.defaultDisplayStage);
+    }, 0);
+  }
 
+  onSubmitSaveAnalytics(): void {
+  const previousStages: string[] = this.crmStagesResponse?.f25
+    ? this.crmStagesResponse.f25.split(',').map((s:any) => s.trim())
+    : [];
+  const currentStages: string[] =
+    this.saveAnalyticsForm?.value?.f25 || [];
+  const mergedStages = Array.from(
+    new Set([...previousStages, ...currentStages])
+  );
+  this.crmStagesResponse = {
+    ...this.crmStagesResponse,
+    f25: mergedStages.join(',')
+  };
+
+  console.log('FINAL PAYLOAD', this.crmStagesResponse);
+  // this.switchService.SaveCrmStages(this.crmStagesResponse).subscribe({
+  //   next: () => console.log('Analytics saved successfully'),
+  //   error: err => console.error('Save failed', err)
+  // });
+}
 
 
 

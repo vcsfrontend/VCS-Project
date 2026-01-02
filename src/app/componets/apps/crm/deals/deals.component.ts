@@ -86,7 +86,7 @@ export class DealsComponent extends BaseComponent {
   leadStatusCount:any;activeCount:Number =0;connectedCount :Number =0;
   notConnectedCount:Number =0;statusCompletion:Number =0 ;followUpCount:Number =0;selecteTemplateFormSubmitted:boolean=false;
   crmRole:string = '';LeadToCampaignForm!: FormGroup;leadList :any[]=[];  selectedLeadData: any;
-  campaignList: any[] = [];selectedCampaign: any;
+  campaignList: any[] = [];selectedCampaign: any;saveAnalyticsForm !: FormGroup;
   campaignForm !:FormGroup;selectedCampaignId:any;selectedCampgnId:any;
   campaignSubmitted : boolean = false;isSubmitting : boolean = false;isEditMode : boolean = false;modal:any;
   override cityList:any[]=[];companyList : any[]=[];
@@ -97,7 +97,7 @@ export class DealsComponent extends BaseComponent {
   executiveEmail : string ='';isAllocating: boolean = false;selectedAppointment : any[]=[];
   access : any; selectedTemplateForMail: any = null; showMailTemplate: boolean = true;
   statusesFromApi : any[]=[];previousStages: string[] = []; selectStageOptions: any[]=[];
-  f25Value : string ='';crmStagesResponse : any[]=[];defaultDisplayStage : any[] = [];
+  f25Value : string ='';crmStagesResponse: any = {}; defaultDisplayStage : any[] = [];
   stageColor : { [key: string]: string }={ 
   'Open': '#007bff',           
   };
@@ -487,6 +487,9 @@ export class DealsComponent extends BaseComponent {
       campaignId: this.campaignId,
     });
 
+    this.saveAnalyticsForm = this.fb.group({
+      f25: [[]]
+    })
     this.campaignForm = this.fb.group({
       campaignId: [],
       campaignName: ['', [Validators.required, Validators.minLength(4)]],
@@ -654,7 +657,7 @@ export class DealsComponent extends BaseComponent {
       f22: '',
       f23: '',
       f24: '',
-      f25: this.f25Value,
+      f25: '',
       f1Color: '',
       f2Color: '',
       f3Color: '',
@@ -916,7 +919,6 @@ export class DealsComponent extends BaseComponent {
           combined.forEach(lead => {
             const status = lead.status?.trim() || 'Unknown';
             statusCounts[status] = (statusCounts[status] || 0) + 1;
-
             const completionStatus = lead.completionStatus;
             statusCompletion[completionStatus] = (statusCompletion[completionStatus] || 0) + 1;
           });
@@ -1883,7 +1885,7 @@ isIndeterminate(): boolean {
 
     this.toastr.info('Item added Successfully');
     this.newItem = '';
-    this.newItemColor = '#000000'; // Reset color picker
+    this.newItemColor = '#000000';
   }
 
   deleteLeadItem(index: number) {
@@ -1900,31 +1902,32 @@ isIndeterminate(): boolean {
     const selectedStages = this.crmStaticStages.filter(
       (stage) => stage.checked
     );
-    // if (selectedStages.length === 0) {
-    //   this.toastr.error('Please select at least one stage before saving.');
-    //   return;
-    // }
+    if (selectedStages.length === 0) {
+      this.toastr.error('Please select at least one stage before saving.');
+      return;
+    }
     
     this.prepareCrmStageData();
     const allStages = [
       ...this.previousStages,
       ...(this.selectedStage ? [this.selectedStage] : [])
     ];
-    // this.switchService.SaveCrmStages(this.crmStageData).subscribe({
-    //   next: (res: any) => {
-    //     if (res) {
-    //       this.toastr.success('Stages saved successfully');
-    //       this.offcanvasService.dismiss();
-    //       this.getCrmStages();
-    //       this.isAddStagesDisabled = true;
-    //     } else {
-    //       this.toastr.error(res.message);
-    //     }
-    //   },
-    //   error: (error) => {
-    //     this.toastr.error(error.statusText);
-    //   },
-    // });
+    console.log('method caleded')
+    this.switchService.SaveCrmStages(this.crmStageData).subscribe({
+      next: (res: any) => {
+        if (res) {
+          this.toastr.success('Stages saved successfully');
+          this.offcanvasService.dismiss();
+          this.getCrmStages();
+          this.isAddStagesDisabled = true;
+        } else {
+          this.toastr.error(res.message);
+        }
+      },
+      error: (error) => {
+        this.toastr.error(error.statusText);
+      },
+    });
   }
 
   // prepareCrmStageData() {
@@ -1968,11 +1971,13 @@ isIndeterminate(): boolean {
     };
     this.switchService.CrmStages(payload).subscribe({
       next: (res: any) => {
-         const f25FromLocal = localStorage.getItem('save25');
+        const responseObj = Array.isArray(res) ? res[0] : res;
+        const f25FromLocal = localStorage.getItem('save25');
         if (f25FromLocal) {
           res.f25 = f25FromLocal;
         }
-        this.crmStagesResponse = res;
+        this.crmStagesResponse = responseObj;
+        console.log('get response',this.crmStagesResponse);
         if (res && res.length > 0) {
           const stageObj = res[0];
           this.processStageData(res[0]);
@@ -3459,12 +3464,12 @@ isIndeterminate(): boolean {
       content: template.content || 'Follow up mail'
     });
   }
-
   loadStatusesByStage(selectedStages?: any[]): void {
     this.selectStageOptions = [];
     if (!Array.isArray(selectedStages) || !this.statusesFromApi) {
       return;
     }
+    console.log('this method is called');
     const mergedStatusesMap = new Map<string, any>();
     selectedStages.forEach(stage => {
       const stageName =
@@ -3491,28 +3496,45 @@ isIndeterminate(): boolean {
         .filter(Boolean)
         .join(',');
       this.f25Value = f25Value
-      const payload = this.buildSavePayload();
-      // this.switchService.SaveCrmStages(payload).subscribe({})
+      // const payload = this.buildSavePayload();
     });
     this.selectStageOptions = Array.from(mergedStatusesMap.values());
     localStorage.setItem('save25',this.f25Value);
   }
-  buildSavePayload(): any {
-    const f25FromLocal = localStorage.getItem('save25') || '';
-    return {
-      ...this.crmStagesResponse, 
-      f25: f25FromLocal          
-    };
-  }
+  // buildSavePayload(): any {
+  //   return {
+  //     ...this.crmStagesResponse,      
+  //   };
+  // }
   showFirstStageByDefault(): void {
   if (!this.stageLst?.length || !this.statusesFromApi) {
     return;
   }
-  const firstStage = this.stageLst[0];
+    const firstStage = this.stageLst[0];
     this.defaultDisplayStage = [firstStage.stageName];
-  setTimeout(() => {
-    this.loadStatusesByStage(this.defaultDisplayStage);
-  }, 0);
+    setTimeout(() => {
+      this.loadStatusesByStage(this.defaultDisplayStage);
+    }, 0);
   }
 
+  onSubmitSaveAnalytics(): void {
+  const previousStages: string[] = this.crmStagesResponse?.f25
+    ? this.crmStagesResponse.f25.split(',').map((s:any) => s.trim())
+    : [];
+  const currentStages: string[] =
+    this.saveAnalyticsForm?.value?.f25 || [];
+  const mergedStages = Array.from(
+    new Set([...previousStages, ...currentStages])
+  );
+  this.crmStagesResponse = {
+    ...this.crmStagesResponse,
+    f25: mergedStages.join(',')
+  };
+
+  console.log('FINAL PAYLOAD', this.crmStagesResponse);
+  // this.switchService.SaveCrmStages(this.crmStagesResponse).subscribe({
+  //   next: () => console.log('Analytics saved successfully'),
+  //   error: err => console.error('Save failed', err)
+  // });
+}
 }
