@@ -26,7 +26,7 @@ export class CampaignsComponent extends BaseComponent {
   userCompanyCode: string = this.userData ? this.userData.companyCode : '';
   userType: any = this.userData ? this.userData.type : '';
   userCompanyName: string = this.userData ? this.userData.companyName : '';
-  campaignForm!: FormGroup; adoanAiRole: any;
+  campaignForm!: FormGroup; adoanAiRole: any;crmRole : any;
   isSubmitting: boolean = false; modal: any;
   public campaignSubmitted = false; campaignList: any[] = [];
   public userList: any; newItem: string = ''; leaditems: { checked: boolean; label: string }[] = [];
@@ -66,16 +66,17 @@ export class CampaignsComponent extends BaseComponent {
     super()
     this.userData = localStorage.getItem('userDetails');
     this.adoanAiRole = JSON.parse(this.userData).adonaiRole;
+    this.crmRole = JSON.parse(this.userData).crmRole;
   }
   toggleAddMore() {
     this.addMoreVisible = !this.addMoreVisible;
   }
 
   ngOnInit(): void {
-    if(this.adoanAiRole == 'ADMIN'|| this.userType == 1){
+    if(this.adoanAiRole == 'ADMIN'|| this.userType == 1 || this.crmRole == 'ADMIN'){
       this.getCampaignData();
     }
-    if(this.adoanAiRole == 'USER'){
+    if(this.adoanAiRole == 'USER' || this.crmRole == 'USER'){
       this.getCampaignSecific();
     }    
     this.getLeadCountForCampaign();  

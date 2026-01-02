@@ -113,9 +113,9 @@
         'max-height': topshowMore ? '395px' : '400px',
         'overflow-y': topshowMore ? 'auto' : 'hidden',
         'transition': 'max-height 0.5s ease' }">
-    <ng-container *ngIf="((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList?.length : listNew?.length) > 0; else noData">
+    <ng-container *ngIf="((adoanAiRole === 'ADMIN' || userType == 1 || crmRole === 'ADMIN') ? campaignList?.length : listNew?.length) > 0; else noData">
       <div class="row">
-        <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"  *ngFor="let campaign of ((adoanAiRole === 'ADMIN' || userType == 1) ? campaignList : listNew)">
+        <div class="col-xxl-3 col-lg-3 col-md-3 col-xl-3 col-sm-6"  *ngFor="let campaign of ((adoanAiRole === 'ADMIN' || userType == 1 || crmRole === 'ADMIN') ? campaignList : listNew)">
           <div class="card custom-card fixed-height-card kt">
             <div class="card-header d-flex align-items-start justify-content-between" (click)="viewCampaignLeads(campaign)">
               <div class="align-items-center">
