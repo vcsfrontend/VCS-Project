@@ -1,4 +1,4 @@
-import { Component,TemplateRef, ViewChild ,NgModule } from '@angular/core';
+import { Component,TemplateRef, ViewChild ,NgModule, OnDestroy } from '@angular/core';
 import { SharedModule } from '../../../shared/common/sharedmodule';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { NgbNavModule,NgbDropdownModule ,NgbModal, NgbModalConfig, NgbModule, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
@@ -11,7 +11,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../environments/environment';
-import { take ,filter} from 'rxjs';
+import { take ,filter, takeUntil, Subject,} from 'rxjs';
 
 
 const data = [
@@ -58,7 +58,8 @@ const data = [
   styleUrl: './profile.component.scss'
 })
 
-export class ProfileComponent {
+export class ProfileComponent implements OnDestroy{
+  private destroy$ = new Subject<void>();
   userDataStorage = localStorage.getItem('userDetails');
   userData: any = this.userDataStorage
     ? JSON.parse(this.userDataStorage)
@@ -82,46 +83,56 @@ export class ProfileComponent {
   //  isCollapsed = true;
   isCollapsed1 = true;
   isCollapsed2 = true; profilePic: string | null = null;
-  constructor(public gallery: Gallery, public lightbox: Lightbox ,
-    public switchService: SwitherService,private toastr: ToastrService,private fb: FormBuilder,
-  private offcanvasService: NgbOffcanvas, private modalService: NgbModal,) {
-      
-    }
-  ngOnInit():void {
+  constructor(public gallery: Gallery, public lightbox: Lightbox,
+    public switchService: SwitherService, private toastr: ToastrService, private fb: FormBuilder,
+    private offcanvasService: NgbOffcanvas, private modalService: NgbModal,) {
+
+  }
+  ngOnInit(): void {
+
     this.switchService.userInfoLoaded
-    .pipe(
-      filter(loaded => loaded),
-      take(1) 
-    )
-    .subscribe(() => {
-      const cached = this.switchService.userInfoCache;
-      if (!cached) return;
-      this.userData = cached;
-      this.userName = cached.username || cached.name;
-      this.profilePic = cached.profilePic
-        ? this.addBaseUrlIfNeeded(cached.profilePic)
-        : 'assets/images/brand-logos/profile1.jpg';
-    });
+      .pipe(
+        filter(Boolean),
+        takeUntil(this.destroy$)   // ❌ remove take(1)
+      )
+      .subscribe(() => {
+        const cached = this.switchService.userInfoCache;
+        if (!cached) return;
+
+        const ts = Date.now(); // 🔥 force image refresh
+        this.userData = cached;
+        this.userName = cached.username || cached.name;
+        this.profilePic = cached.profilePic
+          ? this.addBaseUrlIfNeeded(cached.profilePic) + `?v=${ts}`
+          : 'assets/images/brand-logos/profile1.jpg';
+      });
 
     this.getAllStages();
     this.getUsers();
     this.fetchTasks();
+
     this.profilePicForm = this.fb.group({
       profilePic: [''],
       email: [this.userEmail],
       action: ['']
     });
+
     this.items = this.imageData.map(
-      (item) => new ImageItem({ src: item.srcUrl, thumb: item.previewUrl })
+      item => new ImageItem({ src: item.srcUrl, thumb: item.previewUrl })
     );
+
     const lightboxRef = this.gallery.ref('lightbox');
     lightboxRef.setConfig({
       imageSize: ImageSize.Cover,
       thumbPosition: ThumbnailsPosition.Top,
     });
 
-   
     lightboxRef.load(this.items);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   addBaseUrlIfNeeded(pic: string) {
@@ -295,29 +306,46 @@ export class ProfileComponent {
     this.modalService.open(content12, { centered: true });
   }
 
-  updateProfile() {
+  updateProfile(modal: any) {
     if (this.profilePicForm.valid) {
       const file: File = this.profilePicForm.get('profilePic')?.value;
       const formData = new FormData();
       formData.append('profilePic', file);
       formData.append('email', this.userData.email);
       formData.append('action', '');
-      this.switchService.updateProfilePic(formData).subscribe({
-        next: (res: any) => {
-          if (res) {
-            this.modal.close();
-            this.toastr.success('Profile updated successfully!',);
-            this.getUserInfo(this.userEmail);
+      this.switchService.updateProfilePic(formData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (res: any) => {
+            if (res?.status === true) {
+              modal.close();
+              this.toastr.success('Profile updated successfully!');
+              (this.switchService as any).userInfoCache = null;
+              (this.switchService as any).userInfoInFlight = false;
+              this.switchService.userInfo(this.userEmail)
+                .pipe(take(1))
+                .subscribe((user: any) => {
+                  if (!user) return;
+                  const rawPic = user.profilePic;
+                  const updatedUser = { ...user, profilePic: rawPic };
+                  this.switchService.userInfoCache = updatedUser;
+                  localStorage.setItem('userInfo', JSON.stringify(updatedUser));
+                  const ts = Date.now();
+                  this.profilePic = rawPic
+                    ? this.addBaseUrlIfNeeded(rawPic) + `?v=${ts}`
+                    : 'assets/images/brand-logos/profile1.jpg';
+                  this.userName = updatedUser.username || updatedUser.name;
+                  this.switchService.userInfoLoaded.next(true);
+                });
+            }
           }
-        }
-      });
+        });
     }
   }
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
-
     const file = input.files[0];
     if (file) {
       this.profilePicForm.patchValue({
@@ -326,7 +354,6 @@ export class ProfileComponent {
       this.profilePicForm.get('profilePic')?.updateValueAndValidity();
     }
   }
- 
 
 
 }
