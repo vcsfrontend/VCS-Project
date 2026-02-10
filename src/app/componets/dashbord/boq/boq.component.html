@@ -509,7 +509,7 @@
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2">
                                                         <button class="btn btn-danger btn-sm" (click)="openLg5(content5)" *ngIf="hasPermission('Projects_proposal_approve')">Approve</button>
-                                                        <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)" *ngIf="hasPermission('Projects_proposal_share')">Share</button>
+                                                        <button class="btn btn-primary btn-sm" (click)="onShare(selectedProposalContent)">Share</button>
                                                         <button class="btn btn-primary btn-sm" (click)="toggleCollapse()">
                                                             <i class="bi" [ngClass]="isCollapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i>
                                                         </button>
