@@ -8,8 +8,8 @@ export const environment = {
     messagingSenderId: "**********************************************",
     appId: "**********************************************",
     measurementId: "**********************************************",
-    webURL: 'https://auth-service.vcs.plus/',
-    masterURL: 'https://adonai-serv.vcs.plus/',
+    webURL: 'https://vcsauthservice-gqbbhpcvgnfjceas.canadacentral-01.azurewebsites.net/',
+  masterURL: 'https://adonai-vcs-fmbqfgbudgendtfu.israelcentral-01.azurewebsites.net/',
     bizPortal: 'https://super-admin-service.azurewebsites.net/',
   },
 };
